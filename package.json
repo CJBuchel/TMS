@@ -1,0 +1,30 @@
+{
+	"name": "fll-scoring-system",
+	"version": "1.0.0",
+	"description": "FLL Scoring System for Curtin University",
+	"main": "index.js",
+	"scripts": {
+		"server-install": "npm install --prefix server",
+		"fss-install": "npm install --prefix fss",
+		"install": "concurrently \"npm run server-install\" \"npm run fss-install\"",
+		"server": "npm run start --prefix server",
+		"fss": "npm run start --prefix fss",
+		"server-dev": "npm run dev --prefix server",
+		"start": "concurrently \"npm run server\" \"npm run fss\"",
+		"dev": "concurrently \"npm run server-dev\" \"npm run fss\"",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CJBuchel/FLL-Scoring-System.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/CJBuchel/FLL-Scoring-System/issues"
+	},
+	"homepage": "https://github.com/CJBuchel/FLL-Scoring-System#readme",
+	"dependencies": {
+		"concurrently": "^6.4.0"
+	}
+}

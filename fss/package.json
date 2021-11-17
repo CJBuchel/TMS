@@ -6,10 +6,15 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "axios": "^0.24.0",
     "react": "^17.0.2",
+    "react-devtools": "^4.21.0",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1"
+    "react-router-dom": "^6.0.2",
+    "react-scripts": "^0.9.5",
+    "react-select": "^5.2.1",
+    "web-vitals": "^1.0.1",
+    "webpacker": "^4.6.0"
   },
   "scripts": {
     "start": "react-scripts start",

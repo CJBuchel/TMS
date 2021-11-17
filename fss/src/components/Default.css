@@ -1,15 +1,21 @@
+body {
+	height: 100vh;
+	background: linear-gradient(#3800e7, #8a15ff);
+}
+
 .App {
+	/* background: linear-gradient(blue, purple); */
 	text-align: center;
 }
 
-.links {
+.passwords {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 }
 
-.links input {
+.passwords input {
 	width: 300px;
 	height: 60px;
 	margin: 10px;

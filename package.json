@@ -25,6 +25,7 @@
 	},
 	"homepage": "https://github.com/CJBuchel/FLL-Scoring-System#readme",
 	"dependencies": {
-		"concurrently": "^6.4.0"
+		"concurrently": "^6.4.0",
+		"mysql": "^2.18.1"
 	}
 }

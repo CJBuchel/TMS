@@ -1,0 +1,1 @@
+{"type":"HeaderStoreStorage","version":1,"state":{"/something/to/test":{"topic":"/something/to/test","data":{"test":"data"},"headers":{"keep":true}}}}

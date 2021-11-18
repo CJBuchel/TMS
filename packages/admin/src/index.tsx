@@ -1,17 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import MainApp from './components/MainApp';
 import reportWebVitals from './reportWebVitals';
+import {Login, useToken} from '@cj/shared';
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+
+function App() {
+	const { token, setToken } = useToken();
+
+	if (!token) {
+		console.log("Token not made, redirecting")
+		return <Login setToken={setToken}/>
+	}
+
+	return (
+		<Router>
+			<Routes>
+				<Route path="/" element={<MainApp/>}/>
+			</Routes>
+		</Router>
+	);
+}
+
+export default App;
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+	<App/>,
+	document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

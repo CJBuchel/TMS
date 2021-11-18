@@ -1,2 +1,3 @@
 import Login from './Login';
-export { Login };
+import useToken from './useToken';
+export { Login, useToken };

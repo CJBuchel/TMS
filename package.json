@@ -14,8 +14,9 @@
 		]
 	},
 	"scripts": {
-		"build": "lerna run build",
-		"serverStart": "npm run start --prefix packages/server",
+		"preBuild": "npm run build --prefix packages/shared",
+		"build": "yarn run preBuild; lerna run build",
+		"serverStart": "npm run start --prefix server",
 		"start": "concurrently \"yarn run serverStart\" \"lerna run start\""
 	}
 }

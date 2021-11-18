@@ -1,0 +1,40 @@
+@keyframes blink {  
+	0% { opacity: 1; }
+	100% { opacity: 0.1; }
+}
+@-webkit-keyframes blink {
+	0% { opacity: 1; }
+	100% { opacity: 0.1; }
+}
+
+.clock {
+	user-select: none;
+	font-size: 75vh;
+	font-family: lcdbold, monospace;
+	display: flex;
+	justify-content: center;
+	vertical-align: middle;
+	align-items: center;
+
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.ended{
+	color: red;
+}
+
+.armed {
+	color: yellow;
+}
+
+.prerunning {
+	color: orange;
+}
+
+.running {
+	color: lime;
+}

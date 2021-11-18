@@ -1,8 +1,13 @@
+// const comm_service = require('./comm_service');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
+const sendEvent = require('./comm_service');
+const { clear } = require('console');
+const { clearInterval } = require('timers');
 
 const user_table = "users";
 const fll_teams_table = "fll_teams";
@@ -71,6 +76,89 @@ app.post('/api/updateUser', (req, res) => {
 		}
 	});
 });
+
+// 
+// Clock
+// 
+
+// Main countdown
+var countDownTime = 150; // 150
+var prerunTime = 5;
+
+function startCountdown(duration) {
+	var start = Date.now(),diff;
+	var stop = false;
+
+	function timer() {
+		diff = duration - (((Date.now() - start) / 1000) | 0);
+
+		console.log(diff);
+		sendEvent("cj_node", "clock:time", {time: diff});
+
+		if (diff <= 30) {
+			sendEvent("cj_node", "clock:endgame", true);
+		}
+
+		if (diff <= 0) {
+			console.log("Stopping counter");
+			sendEvent("cj_node", "clock:end", true);
+			clearInterval(this)
+		}
+	}
+
+	timer();
+	setInterval(timer, 1000);
+}
+
+function startPrerun(duration) {
+	var start = Date.now(),diff;
+	var stop = false;
+
+	function timer() {
+		diff = duration - (((Date.now() - start) / 1000) | 0);
+
+		console.log(diff);
+		sendEvent("cj_node", "clock:prestart", true);
+		sendEvent("cj_node", "clock:time", {time: diff});
+
+		if (diff <= 0) {
+			startCountdown(countDownTime);
+			sendEvent("cj_node", "clock:start", true);
+			clearInterval(this)
+		}
+	}
+
+	timer();
+	setInterval(timer, 1000);
+}
+
+
+// prestart
+app.post('/api/clock/prestart', (req, res) => {
+	console.log("Timer set to prestart");
+	sendEvent("cj_node", "clock:prestart", true);
+	startPrerun(prerunTime);
+});
+
+// start
+app.post('/api/clock/start', (req, res) => {
+	console.log("Timer set to start");
+	sendEvent("cj_node", "clock:start", true);
+	startCountdown(countDownTime);
+});
+
+// stop/abort
+app.post('/api/clock/stop', (req, res) => {
+	console.log("Timer set to stop");
+	sendEvent("cj_node", "clock:stop", true);
+});
+
+// reload
+app.post('/api/clock/reload', (req, res) => {
+	console.log("Timer set to reload");
+	sendEvent("cj_node", "clock:reload", true);
+});
+
 
 app.listen(3001, () => {
 	console.log('running on port 3001');

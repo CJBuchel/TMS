@@ -3,9 +3,29 @@ body {
 	background: linear-gradient(#3800e7, #8a15ff);
 }
 
-.App {
+.PasswordChange, .Login {
 	/* background: linear-gradient(blue, purple); */
 	text-align: center;
+}
+
+.Login {
+	margin-top: 50%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.Login label {
+	font-size: 50px;
+	color: white;
+}
+
+.forms Select, input {
+	width: 300px;
+	height: 60px;
+	margin: 10px;
+	font-size: 25px;
 }
 
 .passwords {

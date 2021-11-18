@@ -29,6 +29,31 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.use('/api/login', (req, res) => {
+	const username = req.body.user;
+	const password = req.body.password;
+
+	const sql = "SELECT * FROM users WHERE name = ? AND password = ?";
+	db.query(sql, [username, password], (err, result) => {
+		if (err) {
+			res.send({err: err});
+			console.log("User Update error");
+		} else {
+			if (result.length > 0) {
+				res.send({
+					// token: Math.random()
+					token: "test123"
+				});
+			} else {
+				res.send({message: "Wrong username/password"});
+			}
+
+			console.log(sql);
+			console.log(result);
+		}
+	});
+});
+
 app.post('/api/updateUser', (req, res) => {
 	const user = req.body.user;
 	const value = req.body.password;

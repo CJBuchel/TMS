@@ -5,30 +5,6 @@ import {Login, useToken} from '@cj/shared';
 
 import './main.css';
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-import {
-	sendClockEndEvent,
-	sendClockEndgameEvent,
-	sendClockPrestartEvent,
-	sendClockReload,
-	sendClockStartEvent,
-	sendClockStopEvent,
-	sendClockTimeEvent,
-	sendEvent
-} from "./comm_service";
-
-import {
-	onClockEndEvent,
-	onClockEndGameEvent,
-	onClockPrestartEvent,
-	onClockReloadEvent,
-	onClockStartEvent,
-	onClockStopEvent,
-	onClockTimeEvent
-} from "./comm_service";
-
-import ReactResizeDetector from 'react-resize-detector';
 
 import Clock from './clock'
 import Sound from './sound'
@@ -44,7 +20,7 @@ function App() {
 
 	return (
 		<div id='main-container' className={`ui centered grid ${0 ? 'fullscreen' : ''}`}>
-			<Clock status={0} time={100} format={'seconds'} />
+			<Clock/>
 		</div>
 	);
 }

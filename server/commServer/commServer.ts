@@ -20,19 +20,15 @@ async function createHub(): Promise<Hub> {
 	// Create a hub
 	const hub = new Hub(auth);
 
-	auth.setUser("cj_fss", "fss");
 	hub.setRights({
-		"": {
-			// Anonymous/guest
-			subscribe: true,
-			publish: false,
-		},
+		"": true,
 		admin: true, // allow everything
-		cj_fss: true,
 	});
 
-	const cj_node = new HeaderStore("cj_node", { persistent: true });
+	const cj_node = new HeaderStore("cj_node");
 	hub.add(cj_node);
+
+	// cj_node.bind(defaultNode)
 
 	// Configure storage on disk by using the simple built-in storage drivers
 	const simpleStorage = new ThrottledStorage(
@@ -62,7 +58,10 @@ async function startWebsocketServer(hub: Hub): Promise<void> {
 
 	const port = 13900;
 	await new Promise((resolve, reject) => {
-		wss.once("error", (err) => reject(err));
+		wss.once("error", (err) => {
+			console.log(err);
+			reject(err);
+		});
 		httpServer.listen(port, (): void => {
 			log.info(`WebSocket Server started on port ${port}`);
 			resolve(port);

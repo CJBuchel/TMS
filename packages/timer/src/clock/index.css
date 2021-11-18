@@ -23,6 +23,26 @@
 	transform: translate(-50%, -50%);
 }
 
+.timer_controls {
+	margin: 0;
+	display: flex;
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+	justify-content: center;
+	vertical-align: middle;
+	align-items: center;
+
+	transform: translate(-50%, -50%);
+}
+
+.timer_controls button {
+	width: 45vw;
+	height: 10vh;
+	border-radius: 10px;
+	font-size: 5vh;
+}
+
 .ended{
 	color: red;
 }

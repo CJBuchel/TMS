@@ -8,7 +8,7 @@ import "./Login.css";
 import { Axios } from 'axios';
 import { message } from 'statuses';
 
-const loginRequest = "http://localhost:3001/api/login";
+const loginRequest = "http://" + window.location.hostname + ":3001/api/login";
 
 const options = [
 	{value: 'admin', label: 'admin'},
@@ -51,6 +51,7 @@ function Login({setToken}) {
 	const onUserChange = (user) => {
 		setUser(user);
 		console.log("Selected User: " + user);
+		console.log(window.location.hostname);
 	}
 
 

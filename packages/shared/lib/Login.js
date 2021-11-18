@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import "./Buttons.css";
 import "./Login.css";
-const loginRequest = "http://localhost:3001/api/login";
+const loginRequest = "http://" + window.location.hostname + ":3001/api/login";
 const options = [
     { value: 'admin', label: 'admin' },
     { value: 'scorekeeper', label: 'scorekeeper' },
@@ -36,6 +36,7 @@ function Login({ setToken }) {
     const onUserChange = (user) => {
         setUser(user);
         console.log("Selected User: " + user);
+        console.log(window.location.hostname);
     };
     return (React.createElement("div", { className: "Login" },
         React.createElement("form", { onSubmit: handleSubmit },

@@ -19,18 +19,13 @@ function createHub() {
         const auth = new mhub_1.PlainAuthenticator();
         // Create a hub
         const hub = new mhub_1.Hub(auth);
-        auth.setUser("cj_fss", "fss");
         hub.setRights({
-            "": {
-                // Anonymous/guest
-                subscribe: true,
-                publish: false,
-            },
-            admin: true,
-            cj_fss: true,
+            "": true,
+            admin: true, // allow everything
         });
-        const cj_node = new mhub_1.HeaderStore("cj_node", { persistent: true });
+        const cj_node = new mhub_1.HeaderStore("cj_node");
         hub.add(cj_node);
+        // cj_node.bind(defaultNode)
         // Configure storage on disk by using the simple built-in storage drivers
         const simpleStorage = new mhub_1.ThrottledStorage(new mhub_1.SimpleFileStorage("./my-storage"));
         hub.setStorage(simpleStorage);
@@ -51,7 +46,10 @@ function startWebsocketServer(hub) {
         wss.on("connection", (conn) => new mhub_1.WSConnection(hub, conn, "websocket" + connectionId++));
         const port = 13900;
         yield new Promise((resolve, reject) => {
-            wss.once("error", (err) => reject(err));
+            wss.once("error", (err) => {
+                console.log(err);
+                reject(err);
+            });
             httpServer.listen(port, () => {
                 mhub_1.log.info(`WebSocket Server started on port ${port}`);
                 resolve(port);

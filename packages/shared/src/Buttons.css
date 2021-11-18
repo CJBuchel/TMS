@@ -1,0 +1,56 @@
+.buttonGreen {
+	border-radius: 4px;
+	background-color: green;
+	border: none;
+	color: white;
+	padding: 16px 100px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+
+.buttonGreen:hover {
+	background-color: white;
+	color: black;
+}
+
+.hoverButton {
+	border-radius: 4px;
+	/* background-color: green; */
+	border: none;
+	color: white;
+	padding: 16px 100px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+}
+
+.hoverButton:hover {
+	background-color: white;
+	color: black;
+}
+
+.green {
+	background-color: green;
+}
+
+.yellow {
+	background-color: yellow;
+}
+
+.orange {
+	background-color: orange;
+}
+
+.red {
+	background-color: red;
+}
+

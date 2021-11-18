@@ -16,14 +16,10 @@ const ws = require("ws");
 const mhub_1 = require("mhub");
 function createHub() {
     return __awaiter(this, void 0, void 0, function* () {
-        // Instantiate a simple authenticator. You can also easily create
-        // your own by implementing the (trivial) `Authenticator` interface.
         const auth = new mhub_1.PlainAuthenticator();
         // Create a hub
         const hub = new mhub_1.Hub(auth);
-        // Set up authentication and authorization
-        // See README.md for more info on permissions
-        auth.setUser("someUser", "somePassword");
+        auth.setUser("cj_fss", "fss");
         hub.setRights({
             "": {
                 // Anonymous/guest
@@ -31,29 +27,10 @@ function createHub() {
                 publish: false,
             },
             admin: true,
-            someUser: {
-                subscribe: true,
-                publish: {
-                    someNode: true,
-                    otherNode: "/some/**",
-                    default: ["/some/**", "/other"], // allow e.g. "/some/foo/bar" and "/other"
-                },
-            },
+            cj_fss: true,
         });
-        // Create and add some nodes.
-        // HeaderStore is a good all-purpose node type, which acts like an Exchange,
-        // but also allows to 'pin' certain messages with a `keep: true` header.
-        // By setting `persistent: true` in the node's config, such messages are
-        // also persisted across reboots.
-        const defaultNode = new mhub_1.HeaderStore("default", { persistent: true });
-        const otherNode = new mhub_1.HeaderStore("otherNode");
-        const someNode = new mhub_1.Exchange("someNode");
-        hub.add(defaultNode);
-        hub.add(otherNode);
-        hub.add(someNode);
-        // Set up some bindings between nodes if you need them
-        someNode.bind(defaultNode, "/something/**");
-        otherNode.bind(defaultNode, "/some/**");
+        const cj_node = new mhub_1.HeaderStore("cj_node", { persistent: true });
+        hub.add(cj_node);
         // Configure storage on disk by using the simple built-in storage drivers
         const simpleStorage = new mhub_1.ThrottledStorage(new mhub_1.SimpleFileStorage("./my-storage"));
         hub.setStorage(simpleStorage);
@@ -82,37 +59,16 @@ function startWebsocketServer(hub) {
         });
     });
 }
-function demoInternalConnection(hub) {
-    return __awaiter(this, void 0, void 0, function* () {
-        // Create a local connection to the hub (i.e. not going through any
-        // network connections etc), useful for any in-program exchanges to
-        // the hub.
-        // You can create as many as you like, and the API is just like your
-        // normal networked client.
-        const client = new mhub_1.LocalClient(hub, "local");
-        client.on("message", (msg, subscriptionId) => {
-            mhub_1.log.info(`Received on ${subscriptionId} for ${msg.topic}: ${JSON.stringify(msg.data)}`);
-        });
-        yield client.connect();
-        yield client.login("someUser", "somePassword");
-        yield client.subscribe("default", "/something/**", "default-something");
-        yield client.publish("someNode", "/something/to/test", { test: "data" }, { keep: true });
-        yield client.close();
-    });
-}
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // Configure logging (optional)
         mhub_1.log.logLevel = mhub_1.LogLevel.Debug;
         mhub_1.log.onMessage = (msg) => {
-            // This is already the default, but you can override it like this
             console.log(msg); // tslint:disable-line:no-console
         };
         const hub = yield createHub();
         yield startWebsocketServer(hub);
-        yield demoInternalConnection(hub);
-        mhub_1.log.info("");
-        mhub_1.log.info("Use `mhub-client -l` to see the published test message");
+        mhub_1.log.info("Comm Server Active");
         mhub_1.log.info("using the websocket connection.");
         mhub_1.log.info("Press Ctrl-C to stop the server.");
     });

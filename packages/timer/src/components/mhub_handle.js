@@ -6,7 +6,7 @@ let loginPromise = null;
 function login() {
 	if (!loginPromise) {
 		loginPromise = Promise.resolve(client.connect())
-		.then(() => client.login("someUser", "somePassword"))
+		.then(() => client.login("cj_fss", "fss"));
 	}
 
 	return loginPromise;
@@ -17,7 +17,7 @@ function login() {
 // }
 
 function sendTimeEvent(e) {
-	return login().then(() => client.publish('default', 'clock:time', e));
+	return login().then(() => client.publish('cj_node', 'clock:time', e));
 }
 
 export default sendTimeEvent;

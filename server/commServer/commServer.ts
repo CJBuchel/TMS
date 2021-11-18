@@ -20,9 +20,15 @@ async function createHub(): Promise<Hub> {
 	// Create a hub
 	const hub = new Hub(auth);
 
+	auth.setUser("cj_fss", "fss");
 	hub.setRights({
-		"": true,
+		"": {
+			// Anonymous/guest
+			subscribe: true,
+			publish: false,
+		},
 		admin: true, // allow everything
+		cj_fss: true,
 	});
 
 	const cj_node = new HeaderStore("cj_node");

@@ -1,6 +1,7 @@
 import MHubClient from "mhub/dist/src/browserclient";
 
-var client = new MHubClient("ws://localhost:13900");
+
+var client = new MHubClient("ws://"+window.location.hostname+":13900");
 
 // 
 // ----------------- On Change Events ---------------------
@@ -12,15 +13,6 @@ const listeners = {}
 
 // let loginPromise = null
 let connectPromise = null
-
-// function login() {
-// 	if (!loginPromise) {
-// 		loginPromise = Promise.resolve(client.connect())
-// 		.then(() => client.login("cj_fss", "fss"));
-// 	}
-
-// 	return loginPromise;
-// }
 
 function connect () {
 	if (!connectPromise) {
@@ -89,47 +81,47 @@ export const onClockEndGameEvent = onClockEvent.bind(null, 'endgame')
 // // ----------------- Sender Event ---------------------
 // // 
 
-// let loginPromise = null;
-// function login() {
-// 	if (!loginPromise) {
-// 		loginPromise = Promise.resolve(client.connect())
-// 		.then(() => client.login("cj_fss", "fss"));
-// 	}
+let loginPromise = null;
+function login() {
+	if (!loginPromise) {
+		loginPromise = Promise.resolve(client.connect())
+		.then(() => client.login("cj_fss", "fss"));
+	}
 
-// 	return loginPromise;
-// }
+	return loginPromise;
+}
 
 
-// // Main send event
-// export function sendEvent(node, topic, e) {
-// 	return login().then(() => client.publish(node, topic, e));
-// }
+// Main send event
+export function sendEvent(node, topic, e) {
+	return login().then(() => client.publish(node, topic, e));
+}
 
-// // Main senders for Time
-// export function sendClockTimeEvent(e) {
-// 	return sendEvent("cj_node", "clock:time", e);
-// }
+// Main senders for Time
+export function sendClockTimeEvent(e) {
+	return sendEvent("cj_node", "clock:time", e);
+}
 
-// export function sendClockStartEvent(e) {
-// 	return sendEvent("cj_node", "clock:start", e);
-// }
+export function sendClockStartEvent(e) {
+	return sendEvent("cj_node", "clock:start", e);
+}
 
-// export function sendClockStopEvent(e) {
-// 	return sendEvent("cj_node", "clock:stop", e);
-// }
+export function sendClockStopEvent(e) {
+	return sendEvent("cj_node", "clock:stop", e);
+}
 
-// export function sendClockEndgameEvent(e) {
-// 	return sendEvent("cj_node", "clock:endgame", e);
-// }
+export function sendClockEndgameEvent(e) {
+	return sendEvent("cj_node", "clock:endgame", e);
+}
 
-// export function sendClockEndEvent(e) {
-// 	return sendEvent("cj_node", "clock:end", e);
-// }
+export function sendClockEndEvent(e) {
+	return sendEvent("cj_node", "clock:end", e);
+}
 
-// export function sendClockPrestartEvent(e) {
-// 	return sendEvent("cj_node", "clock:prestart", e);
-// }
+export function sendClockPrestartEvent(e) {
+	return sendEvent("cj_node", "clock:prestart", e);
+}
 
-// export function sendClockReload(e) {
-// 	return sendEvent("cj_node", "clock:reload", e);
-// }
+export function sendClockReload(e) {
+	return sendEvent("cj_node", "clock:reload", e);
+}

@@ -19,9 +19,15 @@ function createHub() {
         const auth = new mhub_1.PlainAuthenticator();
         // Create a hub
         const hub = new mhub_1.Hub(auth);
+        auth.setUser("cj_fss", "fss");
         hub.setRights({
-            "": true,
-            admin: true, // allow everything
+            "": {
+                // Anonymous/guest
+                subscribe: true,
+                publish: false,
+            },
+            admin: true,
+            cj_fss: true,
         });
         const cj_node = new mhub_1.HeaderStore("cj_node");
         hub.add(cj_node);

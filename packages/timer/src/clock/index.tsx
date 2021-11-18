@@ -1,9 +1,8 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 
 import Axios from 'axios';
 import './index.css'
 import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockStartEvent, onClockTimeEvent } from '../comm_service';
-import { Interface } from 'readline';
 
 // const clockRequest = "http://localhost"
 const clockRequest = "http://" + window.location.hostname + ":3001/api/clock";
@@ -21,93 +20,72 @@ function parseTime (time: number) {
 	}
 }
 
-interface IProps {
+export default function Clock (props: any) {
+	const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
-}
+	const [timerState, setState] = useState(''); // {armed, prerunning, running, ended}
+	const [currentTime, setTime] = useState(0);
 
-interface IState {
-	_removeSubscriptions: [];
-	buttonsDisabled: boolean;
-	timerState: string;
-	currentTime: number;
-}
+	const _removeSubscriptions = [];
 
-const _removeSubscriptions = [];
-export default class Clock extends Component<IProps, IState> {
-	constructor(props:any) {
-		super(props)
-
-		this.state = {
-			_removeSubscriptions: [],
-			buttonsDisabled: false,
-			timerState: '',
-			currentTime: 0
-		}
-	}
-
-	componentDidMount () {
-		onClockPrestartEvent(() => {
-			this.setState({timerState: 'prerunning'})
-		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-		.catch((err:any) => {
-			console.error(err)
-		});
-	
-		onClockStartEvent(() => {
-			this.setState({timerState: 'running'})
-		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-		.catch((err:any) => {
-			console.error(err)
-		});
-	
-		onClockTimeEvent(({time}:{time:any}) => {
-			this.setState({currentTime: time})
-			console.log(time);
-		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-		.catch((err:any) => {
-			console.error(err)
-		});
-	
-		onClockEndGameEvent(() => {
-			this.setState({timerState: 'armed'})
-		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-		.catch((err:any) => {
-			console.error(err)
-		});
-		
-		onClockEndEvent(() => {
-			this.setState({timerState: 'ended'})
-		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-		.catch((err:any) => {
-			console.error(err)
-		});
-	}
-
-	postTimerControl(e:string) {
-		this.setState({buttonsDisabled: true})
+	function postTimerControl(e:string) {
+		setButtonsDisabled(true);
 		Axios.post(clockRequest+"/"+e);
-		setTimeout(() => this.setState({buttonsDisabled: false}), 2000);
+		setTimeout(() => setButtonsDisabled(false), 2000);
 	}
 
 
-	setPrestart() {this.postTimerControl("prestart")}
-	setStart() {this.postTimerControl("start")}
-	setStop() {this.postTimerControl("stop")}
-	setReload() {this.postTimerControl("reload")}
+	function setPrestart() {postTimerControl("prestart")}
+	function setStart() {postTimerControl("start")}
+	function setStop() {postTimerControl("stop")}
+	function setReload() {postTimerControl("reload")}
 
-	getTimerState() { return  }
+	onClockPrestartEvent(() => {
+		setState('prerunning');
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
 
-	render () {
-		return (
-			<div>
-				<div className={`clock ${this.state.timerState}`}>
-					{ parseTime(this.state.currentTime) }
-				</div>
-				<div className='timer_controls'>
-						<button className="hoverButton green" onClick={this.setStart} disabled={this.state.buttonsDisabled}>Start</button>
-						<button className="hoverButton orange" onClick={this.setPrestart} disabled={this.state.buttonsDisabled}>Pre Start</button>
-				</div>
+	onClockStartEvent(() => {
+		setState('running');
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
+
+	onClockTimeEvent(({time}:{time:any}) => {
+		setTime(time);
+		console.log(time);
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
+
+	onClockEndGameEvent(() => {
+		setState('armed');
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
+	
+	onClockEndEvent(() => {
+		setState('ended');
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
+
+	return (
+		<div>
+			<div className={`clock ${timerState}`}>
+				{ parseTime(currentTime) }
 			</div>
-		);
-	}
+			<div className='timer_controls'>
+					<button className="hoverButton green" onClick={setStart} disabled={buttonsDisabled}>Start</button>
+					<button className="hoverButton orange" onClick={setPrestart} disabled={buttonsDisabled}>Pre Start</button>
+			</div>
+		</div>
+	)
 }

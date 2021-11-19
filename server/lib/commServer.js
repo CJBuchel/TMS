@@ -40,6 +40,7 @@ function createHub() {
         return hub;
     });
 }
+
 function startWebsocketServer(hub) {
     return __awaiter(this, void 0, void 0, function* () {
         // Create transports to the server, in this case a websocket server.

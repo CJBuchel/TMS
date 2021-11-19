@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import Axios from 'axios';
 import './index.css'
-import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockStartEvent, onClockTimeEvent } from '../comm_service';
+import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent } from '../comm_service';
 
 // const clockRequest = "http://localhost"
 const clockRequest = "http://" + window.location.hostname + ":3001/api/clock";
@@ -26,6 +26,11 @@ export default function Clock (props: any) {
 	const [timerState, setState] = useState(''); // {armed, prerunning, running, ended}
 	const [currentTime, setTime] = useState(0);
 
+	const [main_config, setMainCfg] = useState(true);
+	const [running_config, setRunningCfg] = useState(false);
+	const [stopped_config, setStoppedCfg] = useState(false);
+
+
 	const _removeSubscriptions = [];
 
 	function postTimerControl(e:string) {
@@ -34,7 +39,6 @@ export default function Clock (props: any) {
 		setTimeout(() => setButtonsDisabled(false), 2000);
 	}
 
-
 	function setPrestart() {postTimerControl("prestart")}
 	function setStart() {postTimerControl("start")}
 	function setStop() {postTimerControl("stop")}
@@ -42,6 +46,9 @@ export default function Clock (props: any) {
 
 	onClockPrestartEvent(() => {
 		setState('prerunning');
+		setMainCfg(false);
+		setRunningCfg(true);
+		setStoppedCfg(false);
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.catch((err:any) => {
@@ -50,6 +57,9 @@ export default function Clock (props: any) {
 
 	onClockStartEvent(() => {
 		setState('running');
+		setMainCfg(false);
+		setRunningCfg(true);
+		setStoppedCfg(false);
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.catch((err:any) => {
 		console.error(err)
@@ -65,6 +75,9 @@ export default function Clock (props: any) {
 
 	onClockEndGameEvent(() => {
 		setState('armed');
+		setMainCfg(false);
+		setRunningCfg(true);
+		setStoppedCfg(false);
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.catch((err:any) => {
 		console.error(err)
@@ -72,20 +85,64 @@ export default function Clock (props: any) {
 	
 	onClockEndEvent(() => {
 		setState('ended');
+		setMainCfg(false);
+		setRunningCfg(false);
+		setStoppedCfg(true);
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.catch((err:any) => {
 		console.error(err)
 	});
+
+	onClockStopEvent(() => {
+		setState('ended');
+		setMainCfg(false);
+		setRunningCfg(false);
+		setStoppedCfg(true);
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
+
+	onClockReloadEvent(() => {
+		setState('running');
+		setTime(150);
+		setMainCfg(true);
+		setRunningCfg(false);
+		setStoppedCfg(false);
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
+
+	const MainConfig = () => (
+		<div id='main_config' className='timer_controls'>
+				<button className="hoverButton green" onClick={setStart} disabled={buttonsDisabled}>Start</button>
+				<button className="hoverButton orange" onClick={setPrestart} disabled={buttonsDisabled}>Pre Start</button>
+		</div>
+	)
+
+	const RunningConfig = () => (
+		<div id='running_config' className='timer_controls'>
+			<button className="hoverButton red" onClick={setStop} disabled={buttonsDisabled}>Abort</button>
+		</div>
+	)
+
+	const StoppedConfig = () => (
+		<div id='stopped_config' className='timer_controls'>
+			<button className="hoverButton orange" onClick={setReload} disabled={buttonsDisabled}>Reload</button>
+		</div>
+	)
 
 	return (
 		<div>
 			<div className={`clock ${timerState}`}>
 				{ parseTime(currentTime) }
 			</div>
-			<div className='timer_controls'>
-					<button className="hoverButton green" onClick={setStart} disabled={buttonsDisabled}>Start</button>
-					<button className="hoverButton orange" onClick={setPrestart} disabled={buttonsDisabled}>Pre Start</button>
-			</div>
+
+			{running_config && <RunningConfig/>}
+			{stopped_config && <StoppedConfig/>}
+			{main_config && <MainConfig/>}
+
 		</div>
 	)
 }

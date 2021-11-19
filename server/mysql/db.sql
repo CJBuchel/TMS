@@ -29,12 +29,14 @@ INSERT INTO users (name, password) VALUES ('referee', 'password');
 -- A team will have a team number, their name, their school, what each of their match score was, and their overall rank
 CREATE TABLE IF NOT EXISTS `fll_teams` (
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`team_number` INT,
+	`team_number` VARCHAR(10),
 	`team_name` TEXT,
 	`school_name` TEXT,
 	`match_score_1` DOUBLE,
 	`match_score_2` DOUBLE,
 	`match_score_3` DOUBLE,
-	`rank` INT,
+	`ranking` INT NOT NULL default 0,
 	PRIMARY KEY (`id`)
 );
+
+INSERT INTO fll_teams (team_number, team_name, school_name) VALUES ('0000', 'cj dev', 'Curtin University');

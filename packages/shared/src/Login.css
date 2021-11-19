@@ -7,7 +7,8 @@
 	align-items: center;
 	justify-content: center;
 	width: 100vw;
-	height: 100vh
+	height: 100vh;
+	color: black;
 }
 
 .Login label {
@@ -15,10 +16,19 @@
 	color: white;
 }
 
+.Select, input {
+	/* width: 300px; */
+	width: 100%;
+	height: 60px;
+	/* margin: 10px; */
+	font-size: 25px;
+	color: black;
+}
+
 form {
 	/* margin-top: ; */
 	text-align: center;
 	vertical-align: middle;
-
+	color: black;
 	width: 50%;
 }

@@ -13,6 +13,7 @@ const { clearInterval } = require('timers');
 const user_table = "users";
 const fll_teams_table = "fll_teams";
 
+
 const db = mysql.createConnection({
 	host: 'localhost',
 	user: 'fss',
@@ -34,6 +35,10 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// 
+// ------------------------- Login ----------------------------
+// 
 
 app.use('/api/login', (req, res) => {
 	const username = req.body.user;
@@ -66,8 +71,6 @@ app.post('/api/updateUser', (req, res) => {
 
 
 	db.query(sql, (err, result) => {
-		console.log("User: " + user);
-		console.log("Pass: " + value);
 		if (err) {
 			console.log("User Update error");
 			throw err;
@@ -79,7 +82,64 @@ app.post('/api/updateUser', (req, res) => {
 });
 
 // 
-// Clock
+// ------------------------ Team getters ---------------------
+// 
+app.get('/api/teams/get', (req, res) => {
+	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC";
+	db.query(sql, (err, result) => {
+		console.log(result);
+		res.send(result);
+	});
+});
+
+
+// 
+// -------------------------Scoring ------------------------------
+// 
+app.post('/api/teams/new', (req, res) => {
+	const teams_data = req.body.teams_data;
+
+	for (const team of teams_data.data) {
+		const team_number = team[0];
+		const team_name = team[1];
+		const team_school = team[2];
+
+		const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;";
+		const sql_insert = "INSERT INTO fll_teams (team_number, team_name, school_name) VALUES (?, ?, ?);";
+		db.query(sql_get, [team_name], (err, result) => {
+	
+			if (err) {
+				res.send({err: err, message: "Team new error => Get CJ"});
+				console.log("DB Team create error");
+			} else {
+				if (result.length > 0) {
+					// res.send("Error Team/Teams already exists. Check server log for detail");
+					console.log("Error Team [" + team_name + "] already exists");
+				} else {
+					if (typeof team_name !== 'undefined') {
+						db.query(sql_insert, [team_number, team_name, team_school], (err, result) => {
+							// console.log(result);
+							console.log("New team: " + team_name);
+						});
+					} else {
+						console.log("Found empty row, not posting to database");
+						
+						// console.log()
+					}
+				}
+			}
+		});
+	}
+});
+
+app.post('/api/teams/score', (req, res) => {
+	const team_name = req.body.team_name;
+})
+
+
+
+// 
+// ------------------------ Clock ---------------------------------
 // 
 
 // Main countdown

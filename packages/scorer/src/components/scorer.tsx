@@ -6,6 +6,7 @@ import "./scorer.css"
 
 import Axios from 'axios';
 import { IndexRouteProps } from 'react-router';
+import { sendScoreUpdate } from '../comm_service';
 
 const request = "http://" + window.location.hostname + ":3001/api";
 const get_teams_request = request+"/teams/get";
@@ -18,15 +19,24 @@ const rankOptions = [
 	{value: 3, label: 'Rank 3'},
 ]
 
+const GP_Options = [
+	{value: "Beginning", label: 'Beginning'},
+	{value: "Developing", label: 'Developing'},
+	{value: "Accomplished", label: 'Accomplished'},
+	{value: "Exceeds", label: 'Exceeds'},
+]
+
 interface IProps {
 }
 
 interface IState {
-  rank_number?: number;
+	rank_number?: number;
 	team_number?: string;
 
 	team_score?: number;
+	team_gp?: string;
 	team_name?: any;
+	team_notes?: any;
 
 	team_arr?: Array<any>;
 }
@@ -42,6 +52,8 @@ class Scorer extends Component<IProps, IState> {
 			team_number: undefined,
 			team_score: undefined,
 			team_name: undefined,
+			team_gp: undefined,
+			team_notes: undefined,
 
 			team_arr: [],
 		}
@@ -73,6 +85,14 @@ class Scorer extends Component<IProps, IState> {
 		this.setState({rank_number: rankNumber});
 	}
 
+	handleGPChange(gp:string) {
+		this.setState({team_gp: gp});
+	}
+
+	handleNotesChange(notes:any) {
+		this.setState({team_notes: notes});
+	}
+
 	handleScoreChange(score:number) {
 		this.setState({team_score: score});
 	}
@@ -96,12 +116,13 @@ class Scorer extends Component<IProps, IState> {
 	}
 
 
-	handleSubmit(e:any, name:any, rank:any, score:any) {
-		this.sendTeamData({name, rank, score})
+	handleSubmit(e:any, name:any, rank:any, score:any, gp:any, notes:any) {
+		this.sendTeamData({name, rank, score, gp, notes})
+		// sendScoreUpdate(name);
 	}
 
 	handleClear(e:any) {
-		this.setState({rank_number: 0, team_score: 0, team_name: null, team_number: " "})
+		this.setState({rank_number: 0, team_score: 0, team_name: null, team_number: " ", team_gp: " ", team_notes: " "});
 		window.location.reload();
 	}
 
@@ -128,6 +149,16 @@ class Scorer extends Component<IProps, IState> {
 						<label>Score</label>
 						<input type="number" onChange={e => this.handleScoreChange(parseFloat(e.target.value))}/>
 
+						<label>GP (Only seen by admins and judges)</label>
+						<Select
+							name="Select GP"
+							onChange={(e:any) => this.handleGPChange(e.value)}
+							options={GP_Options}
+						/>
+
+						<label>Notes on Team (Only seen by admins and judges)</label>
+						<input type="text" onChange={e => this.handleNotesChange(e.target.value)}/>
+
 						{/* Clear button */}
 						<div className="clearData">
 							<button type="reset" className="hoverButton red" onClick={e=>this.handleClear(e)}>Clear</button>
@@ -135,21 +166,20 @@ class Scorer extends Component<IProps, IState> {
 
 						{/* Options */}
 						<div className="scorer-options">
-							<br></br>
 							<label>Chosen Options:</label>
 							<li className="scorer-options">
 								<ul>- Team Number: [<span className="green-text">{this.state.team_number}</span>]</ul>
 								<ul>- Team Name: [<span className="green-text">{this.state.team_name}</span>]</ul>
 								<ul>- Rank Number: [<span className="green-text">{this.state.rank_number}</span>]</ul>
+								<ul>- GP: [<span className="green-text">{this.state.team_gp}</span>]</ul>
 								<ul>- Final Score: [<span className="green-text">{this.state.team_score}</span>]</ul>
 							</li>
 						</div>
 
 						<div>
 							<div className="red-text">CHECK THESE VALUES BEFORE SUBMITTING</div>
-							<button className="buttonGreen" onClick={e=>this.handleSubmit(e, this.state.team_name, this.state.rank_number, this.state.team_score)}>Submit</button>
+							<button className="buttonGreen" onClick={e=>this.handleSubmit(e, this.state.team_name, this.state.rank_number, this.state.team_score, this.state.team_gp, this.state.team_notes)}>Submit</button>
 						</div>
-
 
 					</div>
 			</div>

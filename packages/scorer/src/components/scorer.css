@@ -20,6 +20,7 @@ html {
 
 .scorer-options {
 	text-align: left;
+	font-size: 3vh;
 }
 
 dl, dt, dd, ul {
@@ -38,7 +39,9 @@ dt, ul {
 	color: green;
 }
 
-
+ul {
+	font-size: 2vh;
+}
 
 .inputs {
 	height: 100vh;

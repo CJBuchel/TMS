@@ -8,9 +8,6 @@ const mysql = require('mysql');
 const sendEvent = require('./comm_service');
 const { clearInterval } = require('timers');
 
-// const user_table = "users";
-// const fll_teams_table = "fll_teams";
-
 
 const db = mysql.createConnection({
 	host: 'localhost',
@@ -33,6 +30,55 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// 
+// ------------------------- Main Control -----------------------
+// 
+app.use('/api/database/purge', (req, res) => {
+	const sql_teams = "TRUNCATE TABLE fll_teams;";
+	const sql_users = "TRUNCATE TABLE users;";
+	const sql_insert_user = "INSERT INTO users (name, password) VALUES (?,?)";
+
+	db.query(sql_teams, (err, result) => {
+		console.log("Teams purge");
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_users, (err, result) => {
+		console.log("Users purge");
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_insert_user,["admin", "password"] , (err, result) => {
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_insert_user, ["scorekeeper", "password"], (err, result) => {
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_insert_user, ["referee", "password"], (err, result) => {
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); } else {
+			res.send({message: "Purged teams, and reset password to default 'password'"});
+		}
+	});
+});
+
 
 // 
 // ------------------------- Login ----------------------------
@@ -83,7 +129,7 @@ app.post('/api/updateUser', (req, res) => {
 // ------------------------ Team getters ---------------------
 // 
 app.get('/api/teams/get', (req, res) => {
-	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC";
+	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
 	db.query(sql, (err, result) => {
 		// console.log(result);
 		console.log("Team request from db")
@@ -101,8 +147,46 @@ app.get('/api/teams/get', (req, res) => {
 // -------------------------Scoring ------------------------------
 // 
 
-// New team
-app.post('/api/teams/new', (req, res) => {
+// Add new team
+app.post('/api/team/new', (req, res) => {
+	console.log("adding team");
+	const team_number = req.body.number;
+	const team_name = req.body.name;
+	const team_affiliation = req.body.aff;
+
+	const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;";
+	const sql_insert = "INSERT INTO fll_teams (team_number, team_name, school_name) VALUES (?, ?, ?);";
+	db.query(sql_get, [team_name], (err, result) => {
+	
+		if (err) {
+			res.send({err: err, message: "Team new error => Get CJ"});
+			console.log("DB Team create error");
+		} else {
+			if (result.length > 0) {
+				// res.send("Error Team/Teams already exists. Check server log for detail");
+				console.log("Error Team [" + team_name + "] already exists");
+				res.send({err: err, message: "Error: [" + team_name + "] already exists"})
+			} else {
+				if (typeof team_name !== 'undefined') {
+					db.query(sql_insert, [team_number, team_name, team_affiliation], (err, result) => {
+						if (err) {
+							console.log("Error: " + err);
+							res.send({err: err, message: "Team insert error"})
+						} else {
+							console.log("New team: " + team_name);
+							res.send({message: "Team [" + team_name + "] added"})
+						}
+					});
+				} else {
+					console.log("Found empty row, not posting to database");
+				}
+			}
+		}
+	});
+});
+
+// New set of teams
+app.post('/api/teamset/new', (req, res) => {
 	const teams_data = req.body.teams_data;
 
 	for (const team of teams_data.data) {
@@ -141,29 +225,229 @@ app.post('/api/teams/new', (req, res) => {
 	}
 });
 
+function changeTeam(team_number, req, res) {
+	const original_team = team_number;
+	const name = req.body.name;
+	const aff = req.body.aff;
+
+	const score1 = req.body.score1;
+	const score2 = req.body.score2;
+	const score3 = req.body.score3;
+
+	const gp1 = req.body.gp1;
+	const gp2 = req.body.gp2;
+	const gp3 = req.body.gp3;
+
+	const notes1 = req.body.notes1;
+	const notes2 = req.body.notes2;
+	const notes3 = req.body.notes3;
+
+	console.log("Team number: " + original_team);
+
+	if (typeof name !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_name = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [name], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof aff !== 'undefined') {
+		const sql = "UPDATE fll_teams SET school_name = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [aff], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	// Scores
+	if (typeof score1 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_score_1 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [score1], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof score2 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_score_2 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [score2], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof score3 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_score_3 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [score3], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	// GP
+	if (typeof gp1 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_gp_1 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [gp1], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof gp2 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_gp_2 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [gp2], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof gp3 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_gp_3 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [gp3], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	// Notes
+	if (typeof notes1 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_notes_1 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [notes1], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	} else {
+		console.log("Notes 1 undefined");
+	}
+
+	if (typeof notes2 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_notes_2 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [notes2], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof notes3 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_notes_3 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [notes3], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	sendEvent("cj_node", "clock:endgame", true);
+}
+
+app.post('/api/team/modify', (req, res) => {
+	var original_team = req.body.original_team.number;
+	const number = req.body.number;
+
+	// Main update section
+	if (typeof number !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_number = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [number], (err, result) => {
+			console.log(result)
+			if (err) { 
+				console.log(err); 
+				res.send({message: "Error updating team"}); 
+			} else {
+				changeTeam(number, req, res);
+				updateRanking();
+			}
+		});
+	} else {
+		console.log("Team number not changed. Running regular changes");
+		changeTeam(original_team, req, res);
+		updateRanking();
+	}
+});
+
+async function updateRanking() {
+	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
+	db.query(sql, (err, result) => {
+		// console.log(result[0]);
+		var teams = [];
+
+		for (const team of result) {
+			var scores = [team.match_score_1, team.match_score_2, team.match_score_3];
+			scores.sort();
+			var highest = scores[0];
+			if (highest == null) {
+				highest = 0;
+			}
+
+
+
+			teams.push({name: team.team_name, highest_score: highest, rank: 0});
+		}
+
+		for (var i = 0; i < teams.length; i++) {
+			var ranking = 1;
+			for (var j = 0; j < teams.length; j++) {
+				if (teams[j].highest_score > teams[i].highest_score) {
+					// teams[i].rank = ranking;
+					ranking++;
+				}
+				
+			}
+
+			teams[i].rank = ranking;
+		}
+
+		for (const team of teams) {
+			db.query("UPDATE fll_teams SET ranking = ? WHERE team_name = ?;", [team.rank, team.name], (err, result) => {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log(result);
+				}
+			}); 
+		}
+
+		console.log(teams);
+		sendEvent("cj_node", "score:update", "rankings");
+	})
+}
+
+app.post('/api/teams/updateRanking', (req, res) => {
+	updateRanking();
+});
+
 // Update team score
 app.post('/api/teams/score', (req, res) => {
 	console.log("Team score update requested");
 	const team_name = req.body.name;
 	const rank_number = req.body.rank;
 	const team_score = req.body.score;
+	const team_gp = req.body.gp;
+	const team_notes = req.body.notes;
 
 	if (rank_number < 1 || rank_number > 3) {
 		res.send({message: "Unknown rank number"});
 	}
 
 	var rank_sql = "";
+	var gp_sql = "";
+	var notes_sql = "";
 	switch (rank_number) {
 		case 1:
 			rank_sql = "match_score_1";
+			gp_sql = "match_gp_1";
+			notes_sql = "team_notes_1";
 			break;
 		
 		case 2:
 			rank_sql = "match_score_2";
+			gp_sql = "match_gp_2";
+			notes_sql = "team_notes_2";
 			break;
 		
 		case 3:
 			rank_sql = "match_score_3";
+			gp_sql = "match_gp_3";
+			notes_sql = "team_notes_3";
 			break;
 
 		default:
@@ -173,8 +457,12 @@ app.post('/api/teams/score', (req, res) => {
 
 	console.log("Rank num: '" + rank_number + "' sql: " + rank_sql);
 
+	const sql_team_score = rank_sql + " = '" + team_score + "', ";
+	const sql_team_gp = gp_sql + " = '" + team_gp + "', ";
+	const sql_team_notes = notes_sql + " = '" + team_notes + "' ";
+	
 	const sql_get = "SELECT * from fll_teams WHERE team_name = ?;"
-	const sql_update = "UPDATE fll_teams SET " + rank_sql + " = '" + team_score + "' WHERE team_name = ?;";
+	const sql_update = "UPDATE fll_teams SET "+sql_team_score+sql_team_gp+sql_team_notes+" WHERE team_name = ?;";
 	console.log(sql_get);
 	console.log(sql_update);
 
@@ -217,14 +505,14 @@ app.post('/api/teams/score', (req, res) => {
 						res.send({err: err, message: "Error sending score => Get CJ if issue"});
 					} else {
 						console.log("Team updated");
-						res.send({err: err, message: "Team " + team_name + " updated"});
+						res.send({err: err, message: "Team [" + team_name + "] updated"});
+						updateRanking();
 					}
 				});
 			}
 		}
 	})
-
-})
+});
 
 
 // 

@@ -9,7 +9,7 @@
 
 .clock {
 	user-select: none;
-	font-size: 60vh;
+	font-size: 40vw;
 	font-family: lcdbold, monospace;
 	display: flex;
 	justify-content: center;

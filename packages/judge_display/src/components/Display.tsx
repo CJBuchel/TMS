@@ -114,8 +114,7 @@ function Display() {
 
 
 	return(
-		<div id="fll_display">
-			<div id="top"></div>
+		<div className="display" id="fll_display">
 			<h2>Judge Display (give 5 seconds to load)</h2>
 			<div id="fll_table_header_wrapper" className="table-wrapper">
 				<table className="fl-table">
@@ -141,13 +140,8 @@ function Display() {
 					<tbody id="fll_teams_table">
 						{/* React controller above */}
 					</tbody>
-
-					<tbody id="is-clone">
-						{/* React controller above */}
-					</tbody>
 				</table>
 			</div>
-			<div id="bottom"></div>
 		</div>
 
 	);

@@ -87,12 +87,12 @@ export const onClockStartEvent = onClockEvent.bind(null, 'start')
 export const onClockReloadEvent = onClockEvent.bind(null, 'reload')
 export const onClockEndGameEvent = onClockEvent.bind(null, 'endgame')
 
-export const onScoreUpdateEvent = onClockEvent.bind(null, 'update')
+export const onScoreUpdateEvent = onScoreEvent.bind(null, 'update')
 
 
-// // 
-// // ----------------- Sender Event ---------------------
-// // 
+// 
+// ----------------- Sender Event ---------------------
+// 
 
 let loginPromise = null;
 function login() {

@@ -91,3 +91,18 @@ dt, ul {
 .inputs {
 	height: 100vh;
 }
+
+.column {
+	float: left;
+	width: 50%;
+}
+
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.teamAddition {
+	width: 50%;
+}

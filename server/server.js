@@ -147,8 +147,45 @@ app.get('/api/teams/get', (req, res) => {
 // -------------------------Scoring ------------------------------
 // 
 
-// New team
-app.post('/api/teams/new', (req, res) => {
+// Add new team
+app.post('/api/team/new', (req, res) => {
+	const team_number = req.body.number;
+	const team_name = req.body.name;
+	const team_affiliation = req.body.aff;
+
+	const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;";
+	const sql_insert = "INSERT INTO fll_teams (team_number, team_name, school_name) VALUES (?, ?, ?);";
+	db.query(sql_get, [team_name], (err, result) => {
+	
+		if (err) {
+			res.send({err: err, message: "Team new error => Get CJ"});
+			console.log("DB Team create error");
+		} else {
+			if (result.length > 0) {
+				// res.send("Error Team/Teams already exists. Check server log for detail");
+				console.log("Error Team [" + team_name + "] already exists");
+				res.send({err: err, message: "Error: [" + team_name + "] already exists"})
+			} else {
+				if (typeof team_name !== 'undefined') {
+					db.query(sql_insert, [team_number, team_name, team_affiliation], (err, result) => {
+						if (err) {
+							console.log("Error: " + err);
+							res.send({err: err, message: "Team insert error"})
+						} else {
+							console.log("New team: " + team_name);
+							res.send({message: "Team [" + team_name + "] added"})
+						}
+					});
+				} else {
+					console.log("Found empty row, not posting to database");
+				}
+			}
+		}
+	});
+});
+
+// New set of teams
+app.post('/api/teamset/new', (req, res) => {
 	const teams_data = req.body.teams_data;
 
 	for (const team of teams_data.data) {
@@ -193,23 +230,33 @@ app.post('/api/teams/score', (req, res) => {
 	const team_name = req.body.name;
 	const rank_number = req.body.rank;
 	const team_score = req.body.score;
+	const team_gp = req.body.gp;
+	const team_notes = req.body.notes;
 
 	if (rank_number < 1 || rank_number > 3) {
 		res.send({message: "Unknown rank number"});
 	}
 
 	var rank_sql = "";
+	var gp_sql = "";
+	var notes_sql = "";
 	switch (rank_number) {
 		case 1:
 			rank_sql = "match_score_1";
+			gp_sql = "match_gp_1";
+			notes_sql = "team_notes_1";
 			break;
 		
 		case 2:
 			rank_sql = "match_score_2";
+			gp_sql = "match_gp_2";
+			notes_sql = "team_notes_2";
 			break;
 		
 		case 3:
 			rank_sql = "match_score_3";
+			gp_sql = "match_gp_3";
+			notes_sql = "team_notes_3";
 			break;
 
 		default:
@@ -219,8 +266,12 @@ app.post('/api/teams/score', (req, res) => {
 
 	console.log("Rank num: '" + rank_number + "' sql: " + rank_sql);
 
+	const sql_team_score = rank_sql + " = '" + team_score + "', ";
+	const sql_team_gp = gp_sql + " = '" + team_gp + "', ";
+	const sql_team_notes = notes_sql + " = '" + team_notes + "' ";
+	
 	const sql_get = "SELECT * from fll_teams WHERE team_name = ?;"
-	const sql_update = "UPDATE fll_teams SET " + rank_sql + " = '" + team_score + "' WHERE team_name = ?;";
+	const sql_update = "UPDATE fll_teams SET "+sql_team_score+sql_team_gp+sql_team_notes+" WHERE team_name = ?;";
 	console.log(sql_get);
 	console.log(sql_update);
 

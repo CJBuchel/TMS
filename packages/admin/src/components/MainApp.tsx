@@ -15,7 +15,8 @@ const purge_database = request + "/database/purge";
 const new_teams = request + "/teamset/new";
 const new_team = request + "/team/new";
 const modify_team = request + "/team/modify";
-const get_teams_request = request+"/teams/get";
+const get_teams_request = request + "/teams/get";
+const update_ranks = request + "/teams/updateRanking";
 const post_score_request = request+"/teams/score";
 
 const GP_Options = [
@@ -389,6 +390,7 @@ class MainApp extends React.Component<IProps, IState> {
 						<TeamsDropzone/>
 						<h3>Display Controls</h3>
 						<button onClick={updateDisplay} className="hoverButton green">Force Update Display</button>
+						<button onClick={e => this.sendTeamData(update_ranks, {})} className="hoverButton green">Force Update Rankings</button>
 					</div>
 				</div>
 				<div className="column">

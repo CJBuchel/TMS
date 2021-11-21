@@ -118,7 +118,7 @@ class Scorer extends Component<IProps, IState> {
 
 	handleSubmit(e:any, name:any, rank:any, score:any, gp:any, notes:any) {
 		this.sendTeamData({name, rank, score, gp, notes})
-		sendScoreUpdate(name);
+		// sendScoreUpdate(name);
 	}
 
 	handleClear(e:any) {

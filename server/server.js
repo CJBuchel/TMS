@@ -129,7 +129,7 @@ app.post('/api/updateUser', (req, res) => {
 // ------------------------ Team getters ---------------------
 // 
 app.get('/api/teams/get', (req, res) => {
-	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC";
+	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
 	db.query(sql, (err, result) => {
 		// console.log(result);
 		console.log("Team request from db")
@@ -336,6 +336,8 @@ function changeTeam(team_number, req, res) {
 			if (err) { console.log(err); res.send({message: "Error updating team"}); }
 		});
 	}
+
+	sendEvent("cj_node", "clock:endgame", true);
 }
 
 app.post('/api/team/modify', (req, res) => {
@@ -352,13 +354,65 @@ app.post('/api/team/modify', (req, res) => {
 				res.send({message: "Error updating team"}); 
 			} else {
 				changeTeam(number, req, res);
+				updateRanking();
 			}
 		});
 	} else {
 		console.log("Team number not changed. Running regular changes");
 		changeTeam(original_team, req, res);
+		updateRanking();
 	}
+});
 
+async function updateRanking() {
+	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
+	db.query(sql, (err, result) => {
+		// console.log(result[0]);
+		var teams = [];
+
+		for (const team of result) {
+			var scores = [team.match_score_1, team.match_score_2, team.match_score_3];
+			scores.sort();
+			var highest = scores[0];
+			if (highest == null) {
+				highest = 0;
+			}
+
+
+
+			teams.push({name: team.team_name, highest_score: highest, rank: 0});
+		}
+
+		for (var i = 0; i < teams.length; i++) {
+			var ranking = 1;
+			for (var j = 0; j < teams.length; j++) {
+				if (teams[j].highest_score > teams[i].highest_score) {
+					// teams[i].rank = ranking;
+					ranking++;
+				}
+				
+			}
+
+			teams[i].rank = ranking;
+		}
+
+		for (const team of teams) {
+			db.query("UPDATE fll_teams SET ranking = ? WHERE team_name = ?;", [team.rank, team.name], (err, result) => {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log(result);
+				}
+			}); 
+		}
+
+		console.log(teams);
+		sendEvent("cj_node", "score:update", "rankings");
+	})
+}
+
+app.post('/api/teams/updateRanking', (req, res) => {
+	updateRanking();
 });
 
 // Update team score
@@ -452,13 +506,13 @@ app.post('/api/teams/score', (req, res) => {
 					} else {
 						console.log("Team updated");
 						res.send({err: err, message: "Team [" + team_name + "] updated"});
+						updateRanking();
 					}
 				});
 			}
 		}
 	})
-
-})
+});
 
 
 // 

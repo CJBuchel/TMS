@@ -8,9 +8,6 @@ const mysql = require('mysql');
 const sendEvent = require('./comm_service');
 const { clearInterval } = require('timers');
 
-// const user_table = "users";
-// const fll_teams_table = "fll_teams";
-
 
 const db = mysql.createConnection({
 	host: 'localhost',
@@ -33,6 +30,55 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// 
+// ------------------------- Main Control -----------------------
+// 
+app.use('/api/database/purge', (req, res) => {
+	const sql_teams = "TRUNCATE TABLE fll_teams;";
+	const sql_users = "TRUNCATE TABLE users;";
+	const sql_insert_user = "INSERT INTO users (name, password) VALUES (?,?)";
+
+	db.query(sql_teams, (err, result) => {
+		console.log("Teams purge");
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_users, (err, result) => {
+		console.log("Users purge");
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_insert_user,["admin", "password"] , (err, result) => {
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_insert_user, ["scorekeeper", "password"], (err, result) => {
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_insert_user, ["referee", "password"], (err, result) => {
+		console.log(err);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); } else {
+			res.send({message: "Purged teams, and reset password to default 'password'"});
+		}
+	});
+});
+
 
 // 
 // ------------------------- Login ----------------------------
@@ -217,7 +263,7 @@ app.post('/api/teams/score', (req, res) => {
 						res.send({err: err, message: "Error sending score => Get CJ if issue"});
 					} else {
 						console.log("Team updated");
-						res.send({err: err, message: "Team " + team_name + " updated"});
+						res.send({err: err, message: "Team [" + team_name + "] updated"});
 					}
 				});
 			}

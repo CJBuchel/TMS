@@ -36,6 +36,7 @@ export default function Clock (props: any) {
 	function postTimerControl(e:string) {
 		setButtonsDisabled(true);
 		Axios.post(clockRequest+"/"+e);
+
 		setTimeout(() => setButtonsDisabled(false), 2000);
 	}
 
@@ -139,9 +140,11 @@ export default function Clock (props: any) {
 				{ parseTime(currentTime) }
 			</div>
 
-			{running_config && <RunningConfig/>}
-			{stopped_config && <StoppedConfig/>}
-			{main_config && <MainConfig/>}
+
+				{running_config && !buttonsDisabled && <RunningConfig/>}
+				{stopped_config && !buttonsDisabled && <StoppedConfig/>}
+				{main_config && !buttonsDisabled && <MainConfig/>}
+		
 
 		</div>
 	)

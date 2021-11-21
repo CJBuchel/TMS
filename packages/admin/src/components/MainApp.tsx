@@ -9,17 +9,11 @@ import './admin.css'
 
 const request = "http://" + window.location.hostname + ":3001/api";
 
-const setup_database = request + "/database/setup"; 
+const purge_database = request + "/database/purge"; 
 const new_teams = request + "/teams/new"; 
-
-function wait(ms:any) {
-	return new Promise((resolve) => {setTimeout(resolve, ms)});
-}
 
 const sendTeams = async (csv_data:any) => {
 	// const row = csv_data.data.map();
-
-	const iterator = csv_data.data;
 
 	Axios.post(new_teams, {
 		teams_data: csv_data
@@ -32,13 +26,20 @@ const sendTeams = async (csv_data:any) => {
 	})
 }
 
+const purgeTeams = async () => {
+	await fetch(purge_database)
+	.then(response => {
+		return response.json();
+	}).then(data => {
+		console.log(data)
+		alert(data.message);
+	});
+}
+
 function TeamsDropzone() {
 	const onDrop = useCallback((acceptedFiles) => {
 		acceptedFiles.forEach((file:any) => {
 			const reader = new FileReader()
-			
-			// let reader = file.body.getReader();
-			// let decoder = new TextDecoder('utf-8');
 
 			
 			reader.onabort = () => console.log('file reading was aborted')
@@ -59,20 +60,18 @@ function TeamsDropzone() {
 	return (
 		<div {...getRootProps()}>
 			<input {...getInputProps()} />
-			<p>Drag 'n' drop some files here, or click to select files</p>
+			<button className="hoverButton green">Click to import CSV [number, name, school]</button>
+			{/* <p>Drag 'n' drop some files here, or click to select files</p> */}
 		</div>
 	)
 }
 
 function MainApp() {
 	return(
-		<div>
-			<br/>
-			<br/>
-			<br/>
-			<button>Setup/Purge Database</button>
-			<br/>
-			<br/>
+		<div className="center centerContent">
+			<h1>Admin</h1>
+			<button onClick={purgeTeams} className="hoverButton red">Setup/Purge Database</button>
+			<h3>CSV Control</h3>
 			<TeamsDropzone/>
 		</div>
 	);

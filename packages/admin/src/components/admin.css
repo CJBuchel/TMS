@@ -8,6 +8,7 @@ html {
 	/* max-height: 100vh; */
 	background: linear-gradient(#3800e7, #8a15ff);
 	/* margin: auto; */
+	height: 100%;
 }
 
 .Select, input {
@@ -30,4 +31,63 @@ html {
 	height: 60px;
 	margin: 10px;
 	font-size: 25px;
+}
+
+.center {
+	height: 200px;
+	position: relative;
+}
+
+.center p {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.center {
+	height: 200px;
+	position: relative;
+}
+
+.centerContent {
+	margin: 0;
+	position: absolute;
+	left: 45%;
+	top: 10%;
+	transform: translate(-50%, -50%);
+}
+
+/* .center p {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+} */
+
+.scorer-options {
+	text-align: left;
+}
+
+dl, dt, dd, ul {
+	color: white;
+}
+
+dt, ul {
+	font-size: 2vw;
+}
+
+.red-text {
+	color: red;
+}
+
+.green-text {
+	color: green;
+}
+
+
+.inputs {
+	height: 100vh;
 }

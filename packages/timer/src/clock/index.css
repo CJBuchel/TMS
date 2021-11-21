@@ -9,12 +9,14 @@
 
 .clock {
 	user-select: none;
-	font-size: 75vh;
+	font-size: 60vh;
 	font-family: lcdbold, monospace;
 	display: flex;
 	justify-content: center;
 	vertical-align: middle;
 	align-items: center;
+
+	color: white;
 
 	margin: 0;
 	position: absolute;

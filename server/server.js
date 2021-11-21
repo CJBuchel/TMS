@@ -6,12 +6,11 @@ const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
 const sendEvent = require('./comm_service');
-const getEvent = require('./comm_receiver');
-const { clear } = require('console');
 const { clearInterval } = require('timers');
 
-const user_table = "users";
-const fll_teams_table = "fll_teams";
+// const user_table = "users";
+// const fll_teams_table = "fll_teams";
+
 
 const db = mysql.createConnection({
 	host: 'localhost',
@@ -34,6 +33,10 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// 
+// ------------------------- Login ----------------------------
+// 
 
 app.use('/api/login', (req, res) => {
 	const username = req.body.user;
@@ -66,8 +69,6 @@ app.post('/api/updateUser', (req, res) => {
 
 
 	db.query(sql, (err, result) => {
-		console.log("User: " + user);
-		console.log("Pass: " + value);
 		if (err) {
 			console.log("User Update error");
 			throw err;
@@ -79,7 +80,155 @@ app.post('/api/updateUser', (req, res) => {
 });
 
 // 
-// Clock
+// ------------------------ Team getters ---------------------
+// 
+app.get('/api/teams/get', (req, res) => {
+	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC";
+	db.query(sql, (err, result) => {
+		// console.log(result);
+		console.log("Team request from db")
+
+		if (err) {
+			console.log("Teams get error");
+		} else {
+			res.send(result);
+		}
+	});
+});
+
+
+// 
+// -------------------------Scoring ------------------------------
+// 
+
+// New team
+app.post('/api/teams/new', (req, res) => {
+	const teams_data = req.body.teams_data;
+
+	for (const team of teams_data.data) {
+		const team_number = team[0];
+		const team_name = team[1];
+		const team_school = team[2];
+
+		const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;";
+		const sql_insert = "INSERT INTO fll_teams (team_number, team_name, school_name) VALUES (?, ?, ?);";
+		db.query(sql_get, [team_name], (err, result) => {
+	
+			if (err) {
+				res.send({err: err, message: "Team new error => Get CJ"});
+				console.log("DB Team create error");
+			} else {
+				if (result.length > 0) {
+					// res.send("Error Team/Teams already exists. Check server log for detail");
+					console.log("Error Team [" + team_name + "] already exists");
+				} else {
+					if (typeof team_name !== 'undefined') {
+						db.query(sql_insert, [team_number, team_name, team_school], (err, result) => {
+							if (err) {
+								console.log("Error: " + err);
+								// res.send({err: err, message: "Team insert error"})
+							}
+							console.log("New team: " + team_name);
+						});
+					} else {
+						console.log("Found empty row, not posting to database");
+						
+						// console.log()
+					}
+				}
+			}
+		});
+	}
+});
+
+// Update team score
+app.post('/api/teams/score', (req, res) => {
+	console.log("Team score update requested");
+	const team_name = req.body.name;
+	const rank_number = req.body.rank;
+	const team_score = req.body.score;
+
+	if (rank_number < 1 || rank_number > 3) {
+		res.send({message: "Unknown rank number"});
+	}
+
+	var rank_sql = "";
+	switch (rank_number) {
+		case 1:
+			rank_sql = "match_score_1";
+			break;
+		
+		case 2:
+			rank_sql = "match_score_2";
+			break;
+		
+		case 3:
+			rank_sql = "match_score_3";
+			break;
+
+		default:
+			res.send({message: "Unknown rank number"});
+			return;
+	}
+
+	console.log("Rank num: '" + rank_number + "' sql: " + rank_sql);
+
+	const sql_get = "SELECT * from fll_teams WHERE team_name = ?;"
+	const sql_update = "UPDATE fll_teams SET " + rank_sql + " = '" + team_score + "' WHERE team_name = ?;";
+	console.log(sql_get);
+	console.log(sql_update);
+
+	db.query(sql_get, [team_name], (err, result) => {
+		console.log("Checking existing scores")
+		// console.log(result);
+		var score_exists = false;
+		switch (rank_number) {
+			case 1:
+				if (result[0].match_score_1) {
+					score_exists = true;
+				}
+				break;
+			case 2:
+				if (result[0].match_score_2) {
+					score_exists = true;
+				}
+				break;
+			case 3:
+				if (result[0].match_score_3) {
+					score_exists = true;
+				}
+				break;
+		}
+		if (err) {
+			console.log(err);
+			res.send({err: err, message: err});
+		} else {
+			console.log("No error. Updating score");
+			// console.log(result.data.length);
+			if (score_exists) {
+				res.send({message: "Team score already exists! => Get CJ if duplicate issue"})
+				console.log("Score exists already");
+			} else {
+				db.query(sql_update, [team_name], (err, result) => {
+					console.log("Updating score");
+					console.log(result);
+					if (err) {
+						console.log(err);
+						res.send({err: err, message: "Error sending score => Get CJ if issue"});
+					} else {
+						console.log("Team updated");
+						res.send({err: err, message: "Team " + team_name + " updated"});
+					}
+				});
+			}
+		}
+	})
+
+})
+
+
+// 
+// ------------------------ Clock ---------------------------------
 // 
 
 // Main countdown

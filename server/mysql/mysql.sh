@@ -11,4 +11,4 @@ sudo systemctl start mysql
 sudo systemctl status mysql
 
 sudo chmod +x create_db.sh
-sudo ./mysql/create_db.sh
+sudo ./create_db.sh

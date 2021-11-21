@@ -1,7 +1,7 @@
 # FLL-Scoring-System
 FLL Scoring System for Curtin University
 
-# Ports (from actual TMS)
+# Ports
 
 - Timer:      2828
 - Scoreboard: 2829
@@ -16,5 +16,5 @@ FLL Scoring System for Curtin University
 
 # Running
 - Install mysql using `sudo chmod +x mysql.sh; sudo ./mysql.sh`
-- Install using `npm install` (should install for both server and fss app)
-- Run using `npm start` or `npm dev` for tracked server changes
+- Install using `yarn run build` (should install for both server and fss app)
+- Run using `yarn run build` for tracked server changes

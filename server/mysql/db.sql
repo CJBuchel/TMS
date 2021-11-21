@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS `fll_teams` (
 	`match_score_2` DOUBLE,
 	`match_score_3` DOUBLE,
 
-	`match_gp_1` VARCHAR(30),
-	`match_gp_2` VARCHAR(30),
-	`match_gp_3` VARCHAR(30),
+	`match_gp_1` TEXT,
+	`match_gp_2` TEXT,
+	`match_gp_3` TEXT,
 
 	`team_notes_1` TEXT,
 	`team_notes_2` TEXT,

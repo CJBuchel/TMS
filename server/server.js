@@ -149,6 +149,7 @@ app.get('/api/teams/get', (req, res) => {
 
 // Add new team
 app.post('/api/team/new', (req, res) => {
+	console.log("adding team");
 	const team_number = req.body.number;
 	const team_name = req.body.name;
 	const team_affiliation = req.body.aff;
@@ -222,6 +223,142 @@ app.post('/api/teamset/new', (req, res) => {
 			}
 		});
 	}
+});
+
+function changeTeam(team_number, req, res) {
+	const original_team = team_number;
+	const name = req.body.name;
+	const aff = req.body.aff;
+
+	const score1 = req.body.score1;
+	const score2 = req.body.score2;
+	const score3 = req.body.score3;
+
+	const gp1 = req.body.gp1;
+	const gp2 = req.body.gp2;
+	const gp3 = req.body.gp3;
+
+	const notes1 = req.body.notes1;
+	const notes2 = req.body.notes2;
+	const notes3 = req.body.notes3;
+
+	console.log("Team number: " + original_team);
+
+	if (typeof name !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_name = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [name], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof aff !== 'undefined') {
+		const sql = "UPDATE fll_teams SET school_name = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [aff], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	// Scores
+	if (typeof score1 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_score_1 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [score1], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof score2 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_score_2 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [score2], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof score3 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_score_3 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [score3], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	// GP
+	if (typeof gp1 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_gp_1 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [gp1], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof gp2 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_gp_2 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [gp2], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof gp3 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET match_gp_3 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [gp3], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	// Notes
+	if (typeof notes1 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_notes_1 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [notes1], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	} else {
+		console.log("Notes 1 undefined");
+	}
+
+	if (typeof notes2 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_notes_2 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [notes2], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+
+	if (typeof notes3 !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_notes_3 = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [notes3], (err, result) => {
+			console.log(result)
+			if (err) { console.log(err); res.send({message: "Error updating team"}); }
+		});
+	}
+}
+
+app.post('/api/team/modify', (req, res) => {
+	var original_team = req.body.original_team.number;
+	const number = req.body.number;
+
+	// Main update section
+	if (typeof number !== 'undefined') {
+		const sql = "UPDATE fll_teams SET team_number = ? WHERE team_number = '" + original_team + "';";
+		db.query(sql, [number], (err, result) => {
+			console.log(result)
+			if (err) { 
+				console.log(err); 
+				res.send({message: "Error updating team"}); 
+			} else {
+				changeTeam(number, req, res);
+			}
+		});
+	} else {
+		console.log("Team number not changed. Running regular changes");
+		changeTeam(original_team, req, res);
+	}
+
 });
 
 // Update team score

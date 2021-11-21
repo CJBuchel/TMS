@@ -181,7 +181,6 @@ class Scorer extends Component<IProps, IState> {
 							<button className="buttonGreen" onClick={e=>this.handleSubmit(e, this.state.team_name, this.state.rank_number, this.state.team_score, this.state.team_gp, this.state.team_notes)}>Submit</button>
 						</div>
 
-
 					</div>
 			</div>
 		);

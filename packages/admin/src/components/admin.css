@@ -8,7 +8,11 @@ html {
 	/* max-height: 100vh; */
 	background: linear-gradient(#3800e7, #8a15ff);
 	/* margin: auto; */
-	height: 100%;
+	height: auto;
+}
+
+body {
+	height: 100vh;
 }
 
 .Select, input {
@@ -17,6 +21,7 @@ html {
 	height: 60px;
 	/* margin: 10px; */
 	font-size: 25px;
+	/* padding: auto; */
 }
 
 .passwords {
@@ -59,14 +64,6 @@ html {
 	transform: translate(-50%, -50%);
 }
 
-/* .center p {
-	margin: 0;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-} */
-
 .scorer-options {
 	text-align: left;
 }
@@ -105,4 +102,10 @@ dt, ul {
 
 .teamAddition {
 	width: 50%;
+}
+
+.modifyGeneral, .modifyRank1, .modifyRank2, .modifyRank3 {
+	margin-top: 3vh;
+
+	border: 2px solid red;
 }

@@ -1,6 +1,8 @@
 html {
 	background-color: #000000;
 	/* overflow: hidden; */
+	margin: 0;
+	padding: 0;
 }
 
 .center {
@@ -14,4 +16,30 @@ html {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+.scorer-options {
+	text-align: left;
+}
+
+dl, dt, dd, ul {
+	color: white;
+}
+
+dt, ul {
+	font-size: 2vw;
+}
+
+.red-text {
+	color: red;
+}
+
+.green-text {
+	color: green;
+}
+
+
+
+.inputs {
+	height: 100vh;
 }

@@ -2,12 +2,9 @@ import Select from 'react-select';
 import React, { Component, useState } from "react";
 import PropTypes from 'prop-types';
 
-// import "./Buttons.css";
-// import "./Login.css";
-
 import "./scorer.css"
 
-import { Axios } from 'axios';
+import Axios from 'axios';
 import { IndexRouteProps } from 'react-router';
 
 const request = "http://" + window.location.hostname + ":3001/api";
@@ -15,67 +12,23 @@ const get_teams_request = request+"/teams/get";
 const post_score_request = request+"/teams/score";
 
 
-const options = [
-	{value: 'rank1', label: 'Rank 1'},
-	{value: 'rank2', label: 'Rank 2'},
-	{value: 'rank3', label: 'Rank 3'},
+const rankOptions = [
+	{value: 1, label: 'Rank 1'},
+	{value: 2, label: 'Rank 2'},
+	{value: 3, label: 'Rank 3'},
 ]
-
-async function postScore(credentials:any) {
-
-	const response = await fetch(post_score_request, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(credentials)
-	});
-
-	return response.json();
-}
-
-
-async function getTeamOptions() {
-	var teamOptions = await fetch(get_teams_request)
-	.then((response) => {
-		// console.log(response);
-		return response.json();
-	}).then(data => {
-	// for (const team of data) {
-		// 	console.log(team.team_name);
-		// }
-		
-		let teamOptions = data.map(function (team:any) {
-			// console.log(team);
-			// return {value: team.team_name, label: team.team_name};
-			return teamOptions;
-		});
-
-		// console.log(returner);
-		return teamOptions;
-		
-	}).catch((error) => {
-		console.log(error);
-	});
-
-	return teamOptions;
-
-	// return (
-	// 	<Select
-	// 		// onChange={(e:any) => onScoreChange(e.value)}
-	// 		// options={teamOptions}
-	// 	/>
-	// );
-}
 
 interface IProps {
 }
 
 interface IState {
-  seletableOption?: string;
-	clearable?: boolean;
+  rank_number?: number;
+	team_number?: string;
+
 	team_score?: number;
-	team_names?: Array<any>;
+	team_name?: any;
+
+	team_arr?: Array<any>;
 }
 
 class Scorer extends Component<IProps, IState> {
@@ -84,87 +37,122 @@ class Scorer extends Component<IProps, IState> {
 		super(props);
 
 		this.state = {
-			seletableOption: '',
-			clearable: true,
-			team_score: 0,
-			team_names: [],
+			rank_number: undefined, // Can only be 1,2,3 => i put 0 there so scorers will get error if they submit wrong... coz i know they will
+			
+			team_number: undefined,
+			team_score: undefined,
+			team_name: undefined,
+
+			team_arr: [],
 		}
 	}
 
 	componentDidMount() {
-		let fll_display:any = document.getElementById("fll_teams_list");
-		// let teams:any[] = [];
-
-		
-
-
-		// console.log(teams);
-		// this.setState({
-		// 	team_names: initialTeams,
-		// });
-
-		console.log(this.state.team_names);
-	}
-
-	handleChange(team_options:string) {
-		this.setState({seletableOption: team_options});
-	}
-
-	handleSubmit() {
-
-	}
-
-	handleTeamNumber(e:any) {
-		var teamOptions = fetch(get_teams_request)
+		// this.setState({team_options: ['wonderbats', 'this and that', 'test 3']})
+		let teams:any = [];
+		fetch(get_teams_request)
 		.then((response) => {
 			return response.json();
-		}).then(data => {
-			let teamOptions = data.map(function (team:any) {
-				// console.log(team);
-				// return {value: team.team_name, label: team.team_name};
-				// if ()
-				return teamOptions;
-			});
+		}).
+		then((data) => {
+			for (const team of data) {
+				teams.push({value: team.team_name, label: team.team_name, number: team.team_number});
+			}
 
-			// console.log(returner);
-			return teamOptions;
-			
-		}).catch((error) => {
-			console.log(error);
-		});
-
-		return teamOptions;
+			this.setState({team_arr: teams});
+		})
 	}
 
+	handleTeamChange(team:any) {
+		// for (const)
+		this.setState({team_number: team?.number});
+		this.setState({team_name: team?.value});
+	}
+
+	handleRankChange(rankNumber:number) {
+		this.setState({rank_number: rankNumber});
+	}
+
+	handleScoreChange(score:number) {
+		this.setState({team_score: score});
+	}
+
+	async sendTeamData(data:any) {
+		// e.preventDefaults();
+
+		await fetch(post_score_request, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+
+			body: JSON.stringify(data)
+		}).then(response => {
+			return response.json();
+		}).then(data => {
+			console.log(data)
+			alert(data.message);
+		});
+	}
+
+
+	handleSubmit(e:any, name:any, rank:any, score:any) {
+		this.sendTeamData({name, rank, score})
+	}
+
+	handleClear(e:any) {
+		this.setState({rank_number: 0, team_score: 0, team_name: null, team_number: " "})
+		window.location.reload();
+	}
+
+
 	render() {
-		// let teamOptions = this.state.team_names?.map(function (name) {
-		// 	return name.team_name;
-		// });
-
-		// console.log(this.state.team_names);
-
-		// console.log(teamOptions);
-
 		return (
 			<div className="Login">
-			<form onSubmit={this.handleSubmit}>
-				<label>Rank Number</label>
-				<Select
-					// onChange={(e:any) => onScoreChange(e.value)}
-					// options={teams}
-				/>
-				<label>Team Number</label><br/>
-				<input type="text" onChange={e => this.handleTeamNumber(e.target.value)}/>
-				<div>
-					<button className="buttonGreen" type="submit">Submit</button>
-				</div>
+					<div className="inputs">
 
-				<div id="team_disp">
+						{/* Inputs */}
+						<label>Rank Number</label>
+						<Select
+							name="Select Rank"
+							onChange={(e:any) => this.handleRankChange(e.value)}
+							options={rankOptions}
+						/>
 
-				</div>
-			</form>
-		</div>
-	
+						<label>Team Name</label>
+						<Select
+							onChange={(e:any) => this.handleTeamChange(e)}
+							options={this.state.team_arr}
+						/>
+
+						<label>Score</label>
+						<input type="number" onChange={e => this.handleScoreChange(parseFloat(e.target.value))}/>
+
+						{/* Clear button */}
+						<div className="clearData">
+							<button type="reset" className="hoverButton red" onClick={e=>this.handleClear(e)}>Clear</button>
+						</div>
+
+						{/* Options */}
+						<div className="scorer-options">
+							<br></br>
+							<label>Chosen Options:</label>
+							<li className="scorer-options">
+								<ul>- Team Number: [<span className="green-text">{this.state.team_number}</span>]</ul>
+								<ul>- Team Name: [<span className="green-text">{this.state.team_name}</span>]</ul>
+								<ul>- Rank Number: [<span className="green-text">{this.state.rank_number}</span>]</ul>
+								<ul>- Final Score: [<span className="green-text">{this.state.team_score}</span>]</ul>
+							</li>
+						</div>
+
+						<div>
+							<div className="red-text">CHECK THESE VALUES BEFORE SUBMITTING</div>
+							<button className="buttonGreen" onClick={e=>this.handleSubmit(e, this.state.team_name, this.state.rank_number, this.state.team_score)}>Submit</button>
+						</div>
+
+
+					</div>
+			</div>
 		);
 	}
 

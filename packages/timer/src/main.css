@@ -9,11 +9,38 @@
 html,body {
 	overflow: hidden;
 	font-family: verdana, sans-serif;
+	height: auto;
 }
 
 body {
 	background-color: #000000;
-	/* color: white; */
+}
+
+.Select, input {
+	/* width: 300px; */
+	/* width: 50vh; */
+	height: 60px;
+	/* margin: 10px; */
+	font-size: 25px;
+	padding: auto;
+}
+
+form {
+	width: 100%;
+}
+
+.passwords {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.passwords input {
+	width: 300px;
+	height: 60px;
+	margin: 10px;
+	font-size: 25px;
 }
 
 #root {
@@ -42,3 +69,5 @@ body {
 .button.clear {
 	outline: none !important;
 }
+
+

@@ -1,8 +1,6 @@
-import Select from 'react-select';
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, onScoreUpdateEvent, sendClockPrestartEvent } from '../comm_service';
-import AutoScroll from '@brianmcallister/react-auto-scroll';
 
 
 // import './Display.css'
@@ -66,6 +64,8 @@ function getTeams() {
 		console.log(error);
 	});
 }
+
+<Table></Table>
 
 function Display() {
 	const _removeSubscriptions = [];

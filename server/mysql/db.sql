@@ -1,12 +1,12 @@
 -- SQL Template for FLL --
 
-DROP USER 'fss'@'localhost';
+-- DROP USER 'fss'@'localhost';
 CREATE USER IF NOT EXISTS 'fss'@'localhost' IDENTIFIED BY 'fss';
 GRANT ALL PRIVILEGES ON * . * TO 'fss'@'localhost';
 ALTER USER 'fss'@'localhost' IDENTIFIED WITH mysql_native_password BY 'fss';
 flush privileges;
 
-DROP DATABASE fss_fll_database;
+-- DROP DATABASE fss_fll_database;
 CREATE DATABASE IF NOT EXISTS fss_fll_database;
 
 USE fss_fll_database;
@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS `fll_teams` (
 	`match_score_1` DOUBLE,
 	`match_score_2` DOUBLE,
 	`match_score_3` DOUBLE,
-	`ranking` INT NOT NULL default 0,
+	`ranking` INT,
 	PRIMARY KEY (`id`)
 );
 
-INSERT INTO fll_teams (team_number, team_name, school_name) VALUES ('0000', 'cj dev', 'Curtin University');
+-- INSERT INTO fll_teams (team_number, team_name, school_name) VALUES ('0000', 'cj dev', 'Curtin University');

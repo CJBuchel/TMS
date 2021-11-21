@@ -32,9 +32,19 @@ CREATE TABLE IF NOT EXISTS `fll_teams` (
 	`team_number` VARCHAR(10),
 	`team_name` TEXT,
 	`school_name` TEXT,
+
 	`match_score_1` DOUBLE,
 	`match_score_2` DOUBLE,
 	`match_score_3` DOUBLE,
+
+	`match_gp_1` VARCHAR(30),
+	`match_gp_2` VARCHAR(30),
+	`match_gp_3` VARCHAR(30),
+
+	`team_notes_1` TEXT,
+	`team_notes_2` TEXT,
+	`team_notes_3` TEXT,
+
 	`ranking` INT,
 	PRIMARY KEY (`id`)
 );

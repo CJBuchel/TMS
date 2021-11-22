@@ -7,7 +7,6 @@ import './main.css';
 
 
 import Clock from './clock'
-import Sound from './sound'
 
 
 function App() {

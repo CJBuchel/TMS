@@ -15,7 +15,7 @@ export default class Sound extends Component {
   constructor (props) {
     super(props)
 
-    this.startAudio = new window.Audio(startSound)
+    this.startAudio = new Audio(startSound)
     this.stopAudio = new window.Audio(stopSound)
     this.endgameAudio = new window.Audio(endgameSound)
     this.endAudio = new window.Audio(endSound)

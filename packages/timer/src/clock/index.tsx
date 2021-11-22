@@ -4,9 +4,8 @@ import Axios from 'axios';
 import './index.css'
 import { onSystemRefreshEvent, onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent } from '../comm_service';
 
-// const clockRequest = "http://localhost"
-const clockRequest = "http://" + window.location.hostname + ":3001/api/clock";
 
+const clockRequest = "http://" + window.location.hostname + ":3001/api/clock";
 
 function pad (number: any, length: any) {
 	return (new Array(length + 1).join('0') + number).slice(-length)
@@ -20,16 +19,25 @@ function parseTime (time: number) {
 	}
 }
 
+// Game sounds
+const startAudio = new window.Audio('/start.mp3');
+const endAudio = new window.Audio("/end.mp3");
+const endgameAudio = new window.Audio("/end-game.mp3");
+const stopAudio = new window.Audio("/stop.mp3");
+
+const playSound = (sound:any) => {
+	sound.play();
+}
+
 export default function Clock (props: any) {
 	const [buttonsDisabled, setButtonsDisabled] = useState(false);
 
 	const [timerState, setState] = useState(''); // {armed, prerunning, running, ended}
-	const [currentTime, setTime] = useState(0);
+	const [currentTime, setTime] = useState(150);
 
 	const [main_config, setMainCfg] = useState(true);
 	const [running_config, setRunningCfg] = useState(false);
 	const [stopped_config, setStoppedCfg] = useState(false);
-
 
 	const _removeSubscriptions = [];
 
@@ -46,6 +54,7 @@ export default function Clock (props: any) {
 	function setReload() {postTimerControl("reload")}
 
 	onSystemRefreshEvent(() => {
+		console.log("refresh event");
 		setStop();
 		window.location.reload();
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
@@ -54,6 +63,7 @@ export default function Clock (props: any) {
 	});
 
 	onClockPrestartEvent(() => {
+		console.log("prestart event");
 		setState('prerunning');
 		setMainCfg(false);
 		setRunningCfg(true);
@@ -65,6 +75,8 @@ export default function Clock (props: any) {
 	});
 
 	onClockStartEvent(() => {
+		playSound(startAudio);
+		console.log("Start event");
 		setState('running');
 		setMainCfg(false);
 		setRunningCfg(true);
@@ -75,14 +87,17 @@ export default function Clock (props: any) {
 	});
 
 	onClockTimeEvent(({time}:{time:any}) => {
+		// console.log("Time event")
 		setTime(time);
-		console.log(time);
+		// console.log(time);
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.catch((err:any) => {
 		console.error(err)
 	});
 
 	onClockEndGameEvent(() => {
+		playSound(endgameAudio);
+		console.log("End game event");
 		setState('armed');
 		setMainCfg(false);
 		setRunningCfg(true);
@@ -93,6 +108,8 @@ export default function Clock (props: any) {
 	});
 	
 	onClockEndEvent(() => {
+		playSound(endAudio);
+		console.log("End event");
 		setState('ended');
 		setMainCfg(false);
 		setRunningCfg(false);
@@ -103,6 +120,8 @@ export default function Clock (props: any) {
 	});
 
 	onClockStopEvent(() => {
+		playSound(stopAudio);
+		console.log("Stop/Abort event");
 		setState('ended');
 		setMainCfg(false);
 		setRunningCfg(false);
@@ -113,8 +132,9 @@ export default function Clock (props: any) {
 	});
 
 	onClockReloadEvent(() => {
-		setState('running');
-		setTime(150);
+		console.log("Reload event");
+		// setState('running');
+		window.location.reload();
 		setMainCfg(true);
 		setRunningCfg(false);
 		setStoppedCfg(false);
@@ -149,11 +169,10 @@ export default function Clock (props: any) {
 			</div>
 
 
-				{running_config && !buttonsDisabled && <RunningConfig/>}
-				{stopped_config && !buttonsDisabled && <StoppedConfig/>}
-				{main_config && !buttonsDisabled && <MainConfig/>}
+			{running_config && !buttonsDisabled && <RunningConfig/>}
+			{stopped_config && !buttonsDisabled && <StoppedConfig/>}
+			{main_config && !buttonsDisabled && <MainConfig/>}
 		
-
 		</div>
 	)
 }

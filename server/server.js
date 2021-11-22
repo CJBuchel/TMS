@@ -527,6 +527,7 @@ var clockStop = false;
 
 function startCountdown(duration) {
 	var start = Date.now(),diff;
+	var endgame = false;
 
 	function timer() {
 		if (!clockStop) {
@@ -536,7 +537,10 @@ function startCountdown(duration) {
 			sendEvent("cj_node", "clock:time", {time: diff});
 	
 			if (diff <= 30) {
-				sendEvent("cj_node", "clock:endgame", true);
+				if (!endgame) {
+					endgame = true;
+					sendEvent("cj_node", "clock:endgame", true);
+				}
 			}
 	
 			if (diff <= 0) {
@@ -557,6 +561,7 @@ function startCountdown(duration) {
 function startPrerun(duration) {
 	var start = Date.now(),diff;
 	var stop = false;
+	sendEvent("cj_node", "clock:prestart", true);
 
 	function timer() {
 		diff = duration - (((Date.now() - start) / 1000) | 0);
@@ -564,7 +569,6 @@ function startPrerun(duration) {
 	
 			console.log(diff);
 	
-			sendEvent("cj_node", "clock:prestart", true);
 			sendEvent("cj_node", "clock:time", {time: diff});
 	
 			if (diff <= 0 || clockStop) {

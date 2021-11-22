@@ -14,7 +14,7 @@ function App() {
 
 	if (!token) {
 		console.log("Token not made, redirecting")
-		return <Login setToken={setToken}/>
+		return <Login setToken={setToken} allowedUser={'scorekeeper'}/>
 	}
 
 	return (

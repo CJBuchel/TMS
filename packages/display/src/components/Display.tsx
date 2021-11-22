@@ -155,7 +155,6 @@ function Display() {
 				</table>
 			</div>
 		</div>
-
 	);
 }
 

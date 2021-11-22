@@ -5,6 +5,8 @@ import Papa from 'papaparse';
 import { readFileSync } from "fs";
 import { sendEvent, sendScoreUpdate } from "../comm_service";
 import ModifyTeams from "./ModifyTeam";
+import CSVUpload from "./CSVUpload"
+import PasswordChange from "./PasswordChange";
 import Select from 'react-select';
 
 import './admin.css'
@@ -15,31 +17,8 @@ const request = "http://" + window.location.hostname + ":3001/api";
 const purge_database = request + "/database/purge";
 const new_teams = request + "/teamset/new";
 const new_team = request + "/team/new";
-const modify_team = request + "/team/modify";
 const get_teams_request = request + "/teams/get";
 const update_ranks = request + "/teams/updateRanking";
-
-const GP_Options = [
-	{value: "Beginning", label: 'Beginning'},
-	{value: "Developing", label: 'Developing'},
-	{value: "Accomplished", label: 'Accomplished'},
-	{value: "Exceeds", label: 'Exceeds'},
-]
-
-const sendTeams = async (csv_data:any) => {
-	// const row = csv_data.data.map();
-
-	await Axios.post(new_teams, {
-		teams_data: csv_data
-	}).then(response => {
-		console.log(response);
-		alert(response.data.message);
-		sendScoreUpdate("new_teams_update");
-	}).catch((error) => {
-		alert("Error: " + error);
-		console.log(error);
-	});
-}
 
 const purgeTeams = async () => {
 	await fetch(purge_database)
@@ -59,39 +38,6 @@ const updateDisplay = async () => {
 
 const refreshDisplays = async () => {
 	sendEvent("cj_node", "system:refresh");
-}
-
-function TeamsDropzone() {
-	const onDrop = useCallback((acceptedFiles) => {
-		acceptedFiles.forEach((file:any) => {
-			const reader = new FileReader()
-			
-			reader.onabort = () => console.log('file reading was aborted')
-			reader.onerror = () => console.log('file reading has failed')
-			reader.onload = () => {
-			// Do whatever you want with the file contents
-				const csv:any = reader.result;
-				const csv_result = Papa.parse(csv, {header: false});
-				
-				sendTeams(csv_result);
-			}
-			// reader.readAsArrayBuffer(file)
-			reader.readAsText(file);
-		})
-	}, [])
-	const {getRootProps, getInputProps} = useDropzone({onDrop})
-
-	return (
-		<div>
-
-			<div {...getRootProps()}>
-				<input {...getInputProps()} />
-
-				<button className="hoverButton orange">Click to import CSV [number, name, school]</button>
-				{/* <p>Drag 'n' drop some files here, or click to select files</p> */}
-			</div>
-		</div>
-	)
 }
 
 interface IProps {
@@ -236,12 +182,14 @@ class MainApp extends React.Component<IProps, IState> {
 						<h1>Admin Controls</h1>
 						<button onClick={purgeTeams} className="hoverButton red">Setup/Purge Database</button>
 						<h3>CSV Control</h3>
-						<TeamsDropzone/>
+						<CSVUpload/>
 						<h3>Display Controls</h3>
 						<button onClick={updateDisplay} className="hoverButton green">Force Update Display</button>
 						<button onClick={e => this.sendTeamData(update_ranks, {})} className="hoverButton green">Force Update Rankings</button>
 						<h3>System Controls</h3>
 						<button onClick={refreshDisplays} className="hoverButton red">Force Reload All Pages</button>
+						<h3>Change User Passwords</h3>
+						<PasswordChange/>
 					</div>
 				</div>
 				<div className="column">

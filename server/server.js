@@ -110,17 +110,19 @@ app.use('/api/login', (req, res) => {
 
 app.post('/api/updateUser', (req, res) => {
 	const user = req.body.user;
-	const value = req.body.password;
+	const value = req.body.pass;
 	const sql = "UPDATE users SET password = '" + value + "' WHERE name = '" + user + "';";
 
 
 	db.query(sql, (err, result) => {
 		if (err) {
 			console.log("User Update error");
+			res.send({message: "Error Updaing user (Check logs)"});
 			throw err;
 		} else {
 			console.log(sql);
 			console.log(result);
+			res.send({message: "Update successful for user [" + user + "]"});
 		}
 	});
 });

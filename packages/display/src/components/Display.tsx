@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
-import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, onScoreUpdateEvent, sendClockPrestartEvent } from '../comm_service';
+import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, onScoreUpdateEvent, onSystemRefreshEvent, sendClockPrestartEvent } from '../comm_service';
 
 
 // import './Display.css'
@@ -50,37 +50,16 @@ function appendTable(data:any) {
 		console.log("Height from direct" + tr.offsetHeight)
 	}
 
-	for (const team of data) {
-		let tr = document.createElement("tr");
-		tr.setAttribute('id', 'team_row');
-		
-		
-		let td_rank = document.createElement("td");
-		td_rank.appendChild(document.createTextNode(team.ranking));
-		
-		let td_teamName = document.createElement("td");
-		td_teamName.appendChild(document.createTextNode(team.team_name));
+	return height;
+}
 
-		let td_r1 = document.createElement("td");
-		td_r1.appendChild(document.createTextNode(team.match_score_1));
-
-		let td_r2 = document.createElement("td");
-		td_r2.appendChild(document.createTextNode(team.match_score_2));
-
-		let td_r3 = document.createElement("td");
-		td_r3.appendChild(document.createTextNode(team.match_score_3));
-
-		tr.appendChild(td_rank);
-		tr.appendChild(td_teamName);
-		tr.appendChild(td_r1);
-		tr.appendChild(td_r2);
-		tr.appendChild(td_r3);
-		
-		fll_display.appendChild(tr);
-		height += tr.offsetHeight;
-		console.log("Height from direct" + tr.offsetHeight)
-	}
-
+function createTable(data:any) {
+	var height = 0;
+	height += appendTable(data);
+	height += appendTable(data);
+	height += appendTable(data);
+	height += appendTable(data);
+	height += appendTable(data);
 	return height;
 }
 
@@ -128,7 +107,7 @@ function getTeams() {
 		// console.log(response);
 		return response.json();
 	}).then(data => {
-		totalHeight = appendTable(data)-totalHeight;
+		totalHeight = createTable(data)-totalHeight;
 	}).catch((error) => {
 		console.log(error);
 	});
@@ -137,13 +116,19 @@ function getTeams() {
 function Display() {
 	const _removeSubscriptions = [];
 
-	setTimeout(getTeams, 1000);
-	setTimeout(infiniteScroller, 2000);
+	setTimeout(getTeams, 5000);
+	setTimeout(infiniteScroller, 7000);
+
+	onSystemRefreshEvent(() => {
+		window.location.reload();
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
 
 	onScoreUpdateEvent(() => {
 		getTeams();
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.catch((err:any) => {
 		console.error(err)
 	});

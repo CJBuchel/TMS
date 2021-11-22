@@ -1,7 +1,7 @@
 import Select from 'react-select';
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
-import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, onScoreUpdateEvent, sendClockPrestartEvent } from '../comm_service';
+import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, onScoreUpdateEvent, onSystemRefreshEvent, sendClockPrestartEvent } from '../comm_service';
 import AutoScroll from '@brianmcallister/react-auto-scroll';
 
 
@@ -107,10 +107,17 @@ function Display() {
 	onScoreUpdateEvent(() => {
 		getTeams();
 	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 	.catch((err:any) => {
 		console.error(err)
 	});
+
+	onSystemRefreshEvent(() => {
+		window.location.reload();
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
+
 
 
 	return(

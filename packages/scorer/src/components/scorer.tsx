@@ -6,12 +6,13 @@ import "./scorer.css"
 
 import Axios from 'axios';
 import { IndexRouteProps } from 'react-router';
-import { sendScoreUpdate } from '../comm_service';
+import { onSystemRefreshEvent } from '../comm_service';
 
 const request = "http://" + window.location.hostname + ":3001/api";
 const get_teams_request = request+"/teams/get";
 const post_score_request = request+"/teams/score";
 
+const _removeSubscriptions = [];
 
 const rankOptions = [
 	{value: 1, label: 'Rank 1'},
@@ -40,6 +41,13 @@ interface IState {
 
 	team_arr?: Array<any>;
 }
+
+onSystemRefreshEvent(() => {
+	window.location.reload();
+}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+.catch((err:any) => {
+	console.error(err)
+});
 
 class Scorer extends Component<IProps, IState> {
 
@@ -126,8 +134,10 @@ class Scorer extends Component<IProps, IState> {
 		window.location.reload();
 	}
 
-
+	
+	
 	render() {
+		
 		return (
 			<div className="Login">
 					<div className="inputs">

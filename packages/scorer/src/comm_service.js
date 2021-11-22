@@ -69,6 +69,26 @@ function onClockEvent (event, listener) {
 		.then(() => removeClockListener.bind(null, event, listener))
 }
 
+function onSystemEvent(event, listener) {
+	const topic = `system:${event}`
+	listeners[topic] = listeners[topic] || []
+
+	return connect()
+		.then(() => client.subscribe('cj_node', topic))
+		.then(() => { listeners[topic].push(listener) })
+		.then(() => removeClockListener.bind(null, event, listener))
+}
+
+function onScoreEvent (event, listener) {
+	const topic = `score:${event}`
+	listeners[topic] = listeners[topic] || []
+
+	return connect()
+		.then(() => client.subscribe('cj_node', topic))
+		.then(() => { listeners[topic].push(listener) })
+		.then(() => removeClockListener.bind(null, event, listener))
+}
+
 export const onClockEndEvent = onClockEvent.bind(null, 'end')
 export const onClockStopEvent = onClockEvent.bind(null, 'stop')
 export const onClockTimeEvent = onClockEvent.bind(null, 'time')
@@ -77,9 +97,13 @@ export const onClockStartEvent = onClockEvent.bind(null, 'start')
 export const onClockReloadEvent = onClockEvent.bind(null, 'reload')
 export const onClockEndGameEvent = onClockEvent.bind(null, 'endgame')
 
-// // 
-// // ----------------- Sender Event ---------------------
-// // 
+export const onScoreUpdateEvent = onScoreEvent.bind(null, 'update')
+export const onSystemRefreshEvent = onSystemEvent.bind(null, 'refresh');
+
+
+// 
+// ----------------- Sender Event ---------------------
+// 
 
 let loginPromise = null;
 function login() {
@@ -124,8 +148,4 @@ export function sendClockPrestartEvent(e) {
 
 export function sendClockReload(e) {
 	return sendEvent("cj_node", "clock:reload", e);
-}
-
-export function sendScoreUpdate(e) {
-	return sendEvent("cj_node", "score:update", e);
 }

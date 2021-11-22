@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import Axios from 'axios';
 import './index.css'
-import { onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent } from '../comm_service';
+import { onSystemRefreshEvent, onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent } from '../comm_service';
 
 // const clockRequest = "http://localhost"
 const clockRequest = "http://" + window.location.hostname + ":3001/api/clock";
@@ -44,6 +44,14 @@ export default function Clock (props: any) {
 	function setStart() {postTimerControl("start")}
 	function setStop() {postTimerControl("stop")}
 	function setReload() {postTimerControl("reload")}
+
+	onSystemRefreshEvent(() => {
+		setStop();
+		window.location.reload();
+	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+	.catch((err:any) => {
+		console.error(err)
+	});
 
 	onClockPrestartEvent(() => {
 		setState('prerunning');

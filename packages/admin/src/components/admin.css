@@ -6,7 +6,7 @@
 html {
 	/* height: 100vh; */
 	/* max-height: 100vh; */
-	background: linear-gradient(#3800e7, #8a15ff);
+	background: rgba( 71, 147, 227, 1);
 	/* margin: auto; */
 	height: auto;
 }

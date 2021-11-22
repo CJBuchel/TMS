@@ -69,6 +69,16 @@ function onClockEvent (event, listener) {
 		.then(() => removeClockListener.bind(null, event, listener))
 }
 
+function onSystemEvent(event, listener) {
+	const topic = `system:${event}`
+	listeners[topic] = listeners[topic] || []
+
+	return connect()
+		.then(() => client.subscribe('cj_node', topic))
+		.then(() => { listeners[topic].push(listener) })
+		.then(() => removeClockListener.bind(null, event, listener))
+}
+
 function onScoreEvent (event, listener) {
 	const topic = `score:${event}`
 	listeners[topic] = listeners[topic] || []
@@ -88,6 +98,7 @@ export const onClockReloadEvent = onClockEvent.bind(null, 'reload')
 export const onClockEndGameEvent = onClockEvent.bind(null, 'endgame')
 
 export const onScoreUpdateEvent = onScoreEvent.bind(null, 'update')
+export const onSystemRefreshEvent = onSystemEvent.bind(null, 'refresh');
 
 
 // 

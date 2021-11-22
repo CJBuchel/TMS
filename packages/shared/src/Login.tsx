@@ -16,20 +16,24 @@ const options = [
 	{value: 'referee', label: 'referee'},
 ]
 
-async function loginUser(credentials) {
-
-	const response = await fetch(loginRequest, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(credentials)
-	});
-
-	return response.json();
+async function loginUser(credentials, allowedUser) {
+	if (credentials.user !== allowedUser && credentials.user !== 'admin') {
+		alert("User [" + credentials.user + "] is not permited on this page");
+		return false;
+	} else {
+		const response = await fetch(loginRequest, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(credentials)
+		});
+	
+		return response.json();
+	}
 }
 
-function Login({setToken}) {
+function Login({setToken, allowedUser}) {
 
 	const [user, setUser] = useState('');
 	const [password, setPassword] = useState('');
@@ -39,19 +43,19 @@ function Login({setToken}) {
 		const token = await loginUser({
 			user,
 			password
-		});
+		}, allowedUser);
 
-		if (token.message) {
-			alert("From Server: " + token.message);
+		if (token !== false) {
+			if (token.message) {
+				alert("From Server: " + token.message);
+			}
+			setToken(token);
 		}
-
-		setToken(token);
 	}
 
 	const onUserChange = (user) => {
 		setUser(user);
 		console.log("Selected User: " + user);
-		console.log(window.location.hostname);
 	}
 
 

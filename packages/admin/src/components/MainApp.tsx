@@ -198,7 +198,6 @@ class MainApp extends React.Component<IProps, IState> {
 		this.setState({team_score: score});
 	}
 
-	
 
 
 

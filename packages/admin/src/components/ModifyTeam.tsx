@@ -8,13 +8,25 @@ import Select from 'react-select';
 
 import './admin.css'
 
+const request = "http://" + window.location.hostname + ":3001/api";
+const modify_team = request + "/team/modify";
+
 interface IProps {
 	team_arr?: any;
 }
 
 interface IState {
+	modifyTeam?: boolean;
+
+	rank_number?: number;
+	team_number?: string;
+
+	team_score?: number;
+	team_gp?: string;
+	team_name?: any;
+	team_notes?: any;
+
 	// Team
-	team_name?: string;
 
 	// Modify states
 	team_modify_number?: string;
@@ -40,8 +52,33 @@ class ModifyTeams extends React.Component<IProps, IState> {
 		super(props);
 
 		this.state = {
+			modifyTeam: false,
+		}
 
-		} 
+		this.ShowModifyTeams = this.ShowModifyTeams.bind(this);
+	}
+
+	// Sending/Recv
+	async sendTeamData(request:any, data:any) {
+
+		await fetch(request, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+
+			body: JSON.stringify(data)
+		}).then(response => {
+			return response.json();
+		}).then(data => {
+			console.log(data)
+			alert(data.message);
+		});
+	}
+
+	handleClear(e:any) {
+		this.setState({rank_number: 0, team_score: 0, team_name: null, team_number: " ", team_gp: " ", team_notes: " "});
+		window.location.reload();
 	}
 
 	handleTeamChange(team:any) {
@@ -97,7 +134,39 @@ class ModifyTeams extends React.Component<IProps, IState> {
 		this.setState({team_modify_notes_3: notes});
 	}
 
-	render() {
+
+	handleModifySubmit(e:any) {
+		const submission = {
+			original_team: this.state.team_name,
+			number: this.state.team_modify_number,
+			name: this.state.team_modify_name,
+			aff: this.state.team_modify_affiliation,
+
+			score1: this.state.team_modify_score1,
+			score2: this.state.team_modify_score2,
+			score3: this.state.team_modify_score3,
+
+			gp1: this.state.team_modify_gp_1,
+			gp2: this.state.team_modify_gp_2,
+			gp3: this.state.team_modify_gp_3,
+
+			notes1: this.state.team_modify_notes_1,
+			notes2: this.state.team_modify_notes_2,
+			notes3: this.state.team_modify_notes_3,
+		}
+		console.log(submission);
+		this.sendTeamData(modify_team, submission);
+		sendScoreUpdate(this.state.team_name);
+	}
+
+	displayModifyTeam(show:boolean) {
+		this.setState({modifyTeam: show});
+		if (!show) {
+			this.handleClear("");
+		}
+	}
+
+	ShowModifyTeams() {
 		return(
 			<div className="teamAddition">
 				<label>Select Team</label>
@@ -146,5 +215,18 @@ class ModifyTeams extends React.Component<IProps, IState> {
 			</div>
 		);
 	}
+
+	render() {
+		return(
+			<div>
+				<h3>Modify Team</h3>
+				{!this.state.modifyTeam && <button onClick={e => this.displayModifyTeam(true)} className="hoverButton green">Modify</button>}
+				{ this.state.modifyTeam && <this.ShowModifyTeams/> }
+				{this.state.modifyTeam && <button onClick={e => this.handleModifySubmit(e)} className="hoverButton green">Modify</button>}
+				{this.state.modifyTeam && <button onClick={e => this.displayModifyTeam(false)} className="hoverButton orange">Close</button>}
+			</div>
+		);
+	}
 }
 
+export default ModifyTeams;

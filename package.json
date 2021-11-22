@@ -5,7 +5,8 @@
 	"license": "MIT",
 	"dependencies": {
 		"concurrently": "^6.4.0",
-		"lerna": "^4.0.0"
+		"lerna": "^4.0.0",
+		"react-window-infinite-loader": "^1.0.7"
 	},
 	"private": true,
 	"workspaces": {
@@ -20,5 +21,8 @@
 		"build": "yarn run preBuild; lerna run build",
 		"serverStart": "npm run start --prefix server",
 		"start": "concurrently \"yarn run serverStart\" \"lerna run start\""
+	},
+	"devDependencies": {
+		"@types/react-window-infinite-loader": "^1.0.5"
 	}
 }

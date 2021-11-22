@@ -68,13 +68,13 @@ function getTeams() {
 
 			// Notes
 			let td_r8 = document.createElement("td");
-			td_r8.appendChild(document.createTextNode(team.match_notes_1));
+			td_r8.appendChild(document.createTextNode(team.team_notes_1));
 
 			let td_r9 = document.createElement("td");
-			td_r9.appendChild(document.createTextNode(team.match_notes_2));
+			td_r9.appendChild(document.createTextNode(team.team_notes_2));
 
 			let td_r10 = document.createElement("td");
-			td_r10.appendChild(document.createTextNode(team.match_notes_3));
+			td_r10.appendChild(document.createTextNode(team.team_notes_3));
 
 			tr.appendChild(td_rank);
 			tr.appendChild(td_teamName);

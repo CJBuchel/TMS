@@ -1,3 +1,5 @@
+@import url('./lcd-bold/index.css');
+
 *{
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -31,6 +33,24 @@ h2{
 
 .fll-table {
 	overflow: auto;
+}
+
+.timer-display {
+	background-color: white;
+	position: sticky;
+	display: flex;
+	font-family: lcdbold, monospace;
+	height: 20vh;
+	width: 40vw;
+	font-size: 10vw;
+	justify-content: center;
+	vertical-align: middle;
+	align-items: center;
+	margin: 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 2;
 }
 
 thead th {

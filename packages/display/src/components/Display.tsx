@@ -113,8 +113,15 @@ function getTeams() {
 	});
 }
 
+function Timer() {
+	return (
+		<div className="timer-display">Test</div>
+	);
+}
+
 function Display() {
 	const _removeSubscriptions = [];
+	const [timerView, setTimerView] = useState(false);
 
 	setTimeout(getTeams, 5000);
 	setTimeout(infiniteScroller, 7000);
@@ -132,9 +139,6 @@ function Display() {
 	.catch((err:any) => {
 		console.error(err)
 	});
-
-	console.log()
-
 
 	return(
 		<div id="fll_display">

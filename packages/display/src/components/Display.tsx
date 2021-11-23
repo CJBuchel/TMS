@@ -128,7 +128,8 @@ class Display extends Component<IProps, IState> {
 						window.scroll({left: 0, top: targetY, behavior: 'smooth'});
 					}
 				}
-				targetY = 0;
+				// console.log("Reached end");
+				this.setState({targetY: 0});
 			} else {
 				await new Promise(r => setTimeout(r, 2000));
 			}

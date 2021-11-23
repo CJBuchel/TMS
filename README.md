@@ -18,5 +18,5 @@ FLL Scoring System for Curtin University
 
 # Running
 - Install mysql using `sudo chmod +x mysql.sh; sudo ./mysql.sh`
-- Install using `yarn run build` (should install for both server and fss app)
-- Run using `yarn run build` for tracked server changes
+- Install using `yarn; yarn run build` (should install for both server and fss app)
+- Run using `yarn run start` for tracked server changes

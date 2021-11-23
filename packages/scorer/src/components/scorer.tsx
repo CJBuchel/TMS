@@ -21,10 +21,9 @@ const rankOptions = [
 ]
 
 const GP_Options = [
-	{value: "Beginning", label: 'Beginning'},
-	{value: "Developing", label: 'Developing'},
-	{value: "Accomplished", label: 'Accomplished'},
-	{value: "Exceeds", label: 'Exceeds'},
+	{value: "Developing [2]", label: 'Developing [2]'},
+	{value: "Accomplished [3]", label: 'Accomplished [3]'},
+	{value: "Exceeds [4]", label: 'Exceeds [4]'},
 ]
 
 interface IProps {
@@ -157,7 +156,7 @@ class Scorer extends Component<IProps, IState> {
 						/>
 
 						<label>Score</label>
-						<input type="number" onChange={e => this.handleScoreChange(parseFloat(e.target.value))}/>
+						<input placeholder="Input Score" type="number" onChange={e => this.handleScoreChange(parseFloat(e.target.value))}/>
 
 						<label>GP (Only seen by admins and judges)</label>
 						<Select
@@ -167,7 +166,7 @@ class Scorer extends Component<IProps, IState> {
 						/>
 
 						<label>Notes on Team (Only seen by admins and judges)</label>
-						<input type="text" onChange={e => this.handleNotesChange(e.target.value)}/>
+						<input placeholder="Notes (Optional)" type="text" onChange={e => this.handleNotesChange(e.target.value)}/>
 
 						{/* Clear button */}
 						<div className="clearData">

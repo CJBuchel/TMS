@@ -197,12 +197,10 @@ class MainApp extends React.Component<IProps, IState> {
 		
 					<h3>Add Team</h3>
 					{!this.state.teamAdd && <button onClick={e => this.displayAddTeam(true)} className="hoverButton green">Add Team</button>}
-					{ this.state.teamAdd && <this.ShowAddTeam/> }
+					{this.state.teamAdd && <this.ShowAddTeam/>}
 					{this.state.teamAdd && <button onClick={e => this.handleSubmit(e, this.state.team_number, this.state.team_name, this.state.team_affiliation)} className="hoverButton green">Submit</button>}
 					{this.state.teamAdd && <button onClick={e => this.displayAddTeam(false)} className="hoverButton orange">Close</button>}
-
 					<ModifyTeams team_arr={this.state.team_arr}/>
-
 				</div>
 			</div>
 		);

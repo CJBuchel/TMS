@@ -11,10 +11,24 @@ import './admin.css'
 
 const request = "http://" + window.location.hostname + ":3001/api";
 const new_teams = request + "/teamset/new";
+const new_schedule = request + "/scheduleset/new";
 
 const sendTeams = async (csv_data:any) => {
 	await Axios.post(new_teams, {
 		teams_data: csv_data
+	}).then(response => {
+		console.log(response);
+		alert(response.data.message);
+		sendScoreUpdate("new_teams_update");
+	}).catch((error) => {
+		alert("Error: " + error);
+		console.log(error);
+	});
+}
+
+const sendSchedule = async (csv_data:any) => {
+	await Axios.post(new_schedule, {
+		schedule_data: csv_data
 	}).then(response => {
 		console.log(response);
 		alert(response.data.message);
@@ -57,6 +71,40 @@ function TeamsDropzone() {
 	)
 }
 
+function ScheduleDropzone() {
+	const onDrop = useCallback((acceptedFiles) => {
+		acceptedFiles.forEach((file:any) => {
+			const reader = new FileReader()
+			
+			reader.onabort = () => console.log('file reading was aborted')
+			reader.onerror = () => console.log('file reading has failed')
+			reader.onload = () => {
+			// Do whatever you want with the file contents
+				const csv:any = reader.result;
+				const csv_result = Papa.parse(csv, {header: false});
+
+				console.log(csv_result);
+				
+				sendSchedule(csv_result);
+			}
+			// reader.readAsArrayBuffer(file)
+			reader.readAsText(file);
+		})
+	}, [])
+	const {getRootProps, getInputProps} = useDropzone({onDrop})
+
+	return (
+		<div>
+			<div {...getRootProps()}>
+				<input {...getInputProps()} />
+
+				<button className="hoverButton orange">Click to import Schedule CSV [match number, time, team number]</button>
+				{/* <p>Drag 'n' drop some files here, or click to select files</p> */}
+			</div>
+		</div>
+	)
+}
+
 interface IProps {
 
 }
@@ -76,7 +124,10 @@ class CSVUpload extends React.Component<IProps, IState> {
 
 	render() {
 		return (
-			<TeamsDropzone/>
+			<div>
+				<TeamsDropzone/>
+				<ScheduleDropzone/>
+			</div>
 		);
 	}
 }

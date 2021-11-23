@@ -36,13 +36,22 @@ app.use(bodyParser.urlencoded({
 // 
 app.use('/api/database/purge', (req, res) => {
 	const sql_teams = "TRUNCATE TABLE fll_teams;";
+	const sql_schedule = "TRUNCATE TABLE fll_teams_schedule;";
 	const sql_users = "TRUNCATE TABLE users;";
 	const sql_insert_user = "INSERT INTO users (name, password) VALUES (?,?)";
 
 	db.query(sql_teams, (err, result) => {
 		console.log("Teams purge");
 		console.log(err);
-		// console.log(result);
+		console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_schedule, (err, result) => {
+		console.log("Teams purge");
+		console.log(err);
+		console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
@@ -50,28 +59,28 @@ app.use('/api/database/purge', (req, res) => {
 	db.query(sql_users, (err, result) => {
 		console.log("Users purge");
 		console.log(err);
-		// console.log(result);
+		console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
 
 	db.query(sql_insert_user,["admin", "password"] , (err, result) => {
 		console.log(err);
-		// console.log(result);
+		console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
 
 	db.query(sql_insert_user, ["scorekeeper", "password"], (err, result) => {
 		console.log(err);
-		// console.log(result);
+		console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
 
 	db.query(sql_insert_user, ["referee", "password"], (err, result) => {
 		console.log(err);
-		// console.log(result);
+		console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); } else {
 			res.send({message: "Purged teams, and reset password to default 'password'"});
@@ -128,26 +137,73 @@ app.post('/api/updateUser', (req, res) => {
 });
 
 // 
-// ------------------------ Team getters ---------------------
+// ------------------------ Team/Schedule getters ---------------------
 // 
-app.get('/api/teams/get', (req, res) => {
-	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
+
+app.get('/api/scheduleSet/get', (req, res) => {
+	const sql = "SELECT * FROM fll_teams_schedule ORDER BY id ASC;";
 	db.query(sql, (err, result) => {
 		// console.log(result);
-		console.log("Team request from db")
-
+		console.log("Schedule requested")
 		if (err) {
-			console.log("Teams get error");
+			console.log("Schedule request error");
 		} else {
 			res.send(result);
 		}
 	});
 });
 
+app.post('/api/schedule/new', (req, res) => {
+	console.log("New schedule not implemented yet!");
+});
+
+app.post('/api/scheduleSet/new', (req, res) => {
+	const schedule_data = req.body.schedule_data;
+
+	for (const match of schedule_data.data) {
+		for (var i = 3; i < match.length; i++) {
+			if (typeof match[i] !== 'undefined' && match[i] !== null && match[i] !== '' && match[i] !== ' ') {
+				const match_number = match[0];
+				const start_time = match[1];
+				const end_time = match[2];
+				const team_number = match[i];
+				
+				const sql_insert = "INSERT INTO fll_teams_schedule (match_number, start_time, end_time, team_number) VALUES (?,?,?,?);";
+				
+				if (typeof match_number !== 'undefined') {
+					db.query(sql_insert, [match_number, start_time, end_time, team_number], (err, result) => {
+						if (err) {
+							res.send({err: err, message: "Schedule new error => Get CJ"});
+							console.log("DB Create Schedule error");
+						} else {
+							console.log("New Match -> " + "Number: " + match[0] + ", StartTime: " + match[1] + ", EndTime: " + match[2] + ", TeamNumber: " + match[i]);
+						}
+					});
+				} else {
+					console.log("Found empty row, not posting to db");
+				}
+			}
+		}
+	}
+});
 
 // 
-// -------------------------Scoring ------------------------------
+// ------------------------- Teams ------------------------------
 // 
+
+app.get('/api/teams/get', (req, res) => {
+	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
+	db.query(sql, (err, result) => {
+		// console.log(result);
+		console.log("Teams requested")
+
+		if (err) {
+			console.log("Teams request error");
+		} else {
+			res.send(result);
+		}
+	});
+});
 
 // Add new team
 app.post('/api/team/new', (req, res) => {
@@ -213,8 +269,9 @@ app.post('/api/teamset/new', (req, res) => {
 							if (err) {
 								console.log("Error: " + err);
 								// res.send({err: err, message: "Team insert error"})
+							} else {
+								console.log("New team: " + team_name);
 							}
-							console.log("New team: " + team_name);
 						});
 					} else {
 						console.log("Found empty row, not posting to database");
@@ -416,6 +473,11 @@ async function updateRanking() {
 app.post('/api/teams/updateRanking', (req, res) => {
 	updateRanking();
 });
+
+// 
+// ------------------------- Scoring ------------------------------
+// 
+
 
 // Update team score
 app.post('/api/teams/score', (req, res) => {

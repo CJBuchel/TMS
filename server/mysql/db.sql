@@ -49,4 +49,14 @@ CREATE TABLE IF NOT EXISTS `fll_teams` (
 	PRIMARY KEY (`id`)
 );
 
+-- Schedule data
+CREATE TABLE IF NOT EXISTS `fll_teams_schedule` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`match_number` VARCHAR(10),
+	`start_time` TEXT, -- CSV Import is not date and time 
+	`end_time` TEXT,
+	`team_number` VARCHAR(10),
+	PRIMARY KEY (`id`)
+);
+
 -- INSERT INTO fll_teams (team_number, team_name, school_name) VALUES ('0000', 'cj dev', 'Curtin University');

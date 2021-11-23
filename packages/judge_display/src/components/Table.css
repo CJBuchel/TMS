@@ -17,6 +17,10 @@ body{
 	background: rgba( 71, 147, 227, 1);
 }
 
+.display {
+	text-align: center;
+}
+
 h2{
 	text-align: center;
 	font-size: 18px;

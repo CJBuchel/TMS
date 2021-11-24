@@ -15,9 +15,9 @@ const post_score_request = request+"/teams/score";
 const _removeSubscriptions = [];
 
 const rankOptions = [
-	{value: 1, label: 'Rank 1'},
-	{value: 2, label: 'Rank 2'},
-	{value: 3, label: 'Rank 3'},
+	{value: 1, label: 'Round 1'},
+	{value: 2, label: 'Round 2'},
+	{value: 3, label: 'Round 3'},
 ]
 
 const GP_Options = [
@@ -75,7 +75,7 @@ class Scorer extends Component<IProps, IState> {
 		}).
 		then((data) => {
 			for (const team of data) {
-				teams.push({value: team.team_name, label: team.team_name, number: team.team_number});
+				teams.push({value: team.team_name, label: team.team_number + " | " + team.team_name, number: team.team_number});
 			}
 
 			this.setState({team_arr: teams});
@@ -118,7 +118,12 @@ class Scorer extends Component<IProps, IState> {
 			return response.json();
 		}).then(data => {
 			console.log(data)
-			alert(data.message);
+			if (data.err) {
+				alert(data.message);
+			} else {
+				alert(data.message);
+				window.location.reload();
+			}
 		});
 	}
 
@@ -142,9 +147,9 @@ class Scorer extends Component<IProps, IState> {
 					<div className="inputs">
 
 						{/* Inputs */}
-						<label>Rank Number</label>
+						<label>Round Number</label>
 						<Select
-							name="Select Rank"
+							name="Select Round"
 							onChange={(e:any) => this.handleRankChange(e.value)}
 							options={rankOptions}
 						/>

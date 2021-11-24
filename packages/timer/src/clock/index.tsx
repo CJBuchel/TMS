@@ -47,24 +47,6 @@ class Clock extends Component<IProps,IState> {
 	constructor(props:any) {
 		super(props);
 
-		// local storage only supports strings on certain platforms
-		// window.localStorage.setItem('sound-window', "true");
-
-		// window.onbeforeunload = function() {
-		// 	return 'Closing this window will stop the sounds of the timer. Are you sure?';
-		// }
-
-		// window.onunload = () => {
-		// 	window.localStorage.removeItem('sound-window');
-		// }
-
-		// window.onstorage = event => {
-		// 	if (event.key == 'focus' && event.newValue) {
-		// 		window.focus();
-		// 		window.localStorage.removeItem('focus');
-		// 	}
-		// }
-
 		onSystemRefreshEvent(() => {
 			console.log("refresh event");
 			this.setStop();

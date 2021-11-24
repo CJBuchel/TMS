@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `fll_teams` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`team_number` VARCHAR(10),
 	`team_name` TEXT,
-	`school_name` TEXT,
+	`affiliation` TEXT,
 
 	`match_score_1` DOUBLE,
 	`match_score_2` DOUBLE,
@@ -59,4 +59,4 @@ CREATE TABLE IF NOT EXISTS `fll_teams_schedule` (
 	PRIMARY KEY (`id`)
 );
 
--- INSERT INTO fll_teams (team_number, team_name, school_name) VALUES ('0000', 'cj dev', 'Curtin University');
+-- INSERT INTO fll_teams (team_number, team_name, affiliation) VALUES ('0000', 'cj dev', 'Curtin University');

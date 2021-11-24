@@ -12,6 +12,6 @@ FLL Scoring & Management System for Curtin University/WA FLL Competition
 <!-- - Status:     2834 -->
 
 # Running
-- Install mysql using `sudo chmod +x mysql.sh; sudo ./mysql.sh`
+- Install mysql using `sudo chmod +x ./server/mysql/mysql.sh; sudo .server/mysql/mysql.sh`
 - Install using `yarn; yarn run build` (should install for both server and fss app)
 - Run using `yarn run start` for tracked server changes

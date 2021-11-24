@@ -66,7 +66,7 @@ function startWebsocketServer(hub) {
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         // Configure logging (optional)
-        mhub_1.log.logLevel = mhub_1.LogLevel.Debug;
+        mhub_1.log.logLevel = mhub_1.LogLevel.Info;
         mhub_1.log.onMessage = (msg) => {
             console.log(msg); // tslint:disable-line:no-console
         };

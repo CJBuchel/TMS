@@ -213,7 +213,7 @@ app.post('/api/team/new', (req, res) => {
 	const team_affiliation = req.body.aff;
 
 	const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;";
-	const sql_insert = "INSERT INTO fll_teams (team_number, team_name, school_name) VALUES (?, ?, ?);";
+	const sql_insert = "INSERT INTO fll_teams (team_number, team_name, affiliation) VALUES (?, ?, ?);";
 	db.query(sql_get, [team_name], (err, result) => {
 	
 		if (err) {
@@ -253,7 +253,7 @@ app.post('/api/teamset/new', (req, res) => {
 		const team_school = team[2];
 
 		const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;";
-		const sql_insert = "INSERT INTO fll_teams (team_number, team_name, school_name) VALUES (?, ?, ?);";
+		const sql_insert = "INSERT INTO fll_teams (team_number, team_name, affiliation) VALUES (?, ?, ?);";
 		db.query(sql_get, [team_name], (err, result) => {
 	
 			if (err) {
@@ -312,7 +312,7 @@ function changeTeam(team_number, req, res) {
 	}
 
 	if (typeof aff !== 'undefined') {
-		const sql = "UPDATE fll_teams SET school_name = ? WHERE team_number = '" + original_team + "';";
+		const sql = "UPDATE fll_teams SET affiliation = ? WHERE team_number = '" + original_team + "';";
 		db.query(sql, [aff], (err, result) => {
 			console.log(result)
 			if (err) { console.log(err); res.send({message: "Error updating team"}); }
@@ -431,13 +431,18 @@ async function updateRanking() {
 
 		for (const team of result) {
 			var scores = [team.match_score_1, team.match_score_2, team.match_score_3];
-			scores.sort();
-			var highest = scores[0];
+			
+			var highest = 0;
+			for (var i = 0; i < scores.length; i++) {
+				if (scores[i] > highest) {
+					highest = scores[i];
+				}
+			}
+
 			if (highest == null) {
 				highest = 0;
 			}
-
-
+			console.log("team: " + team.team_name + ", highest score: " + scores[0]);
 
 			teams.push({name: team.team_name, highest_score: highest, rank: 0});
 		}
@@ -446,7 +451,6 @@ async function updateRanking() {
 			var ranking = 1;
 			for (var j = 0; j < teams.length; j++) {
 				if (teams[j].highest_score > teams[i].highest_score) {
-					// teams[i].rank = ranking;
 					ranking++;
 				}
 				
@@ -489,7 +493,7 @@ app.post('/api/teams/score', (req, res) => {
 	const team_notes = req.body.notes;
 
 	if (rank_number < 1 || rank_number > 3) {
-		res.send({message: "Unknown rank number"});
+		res.send({err: "ranking", message: "Unknown rank number"});
 	}
 
 	var rank_sql = "";
@@ -515,7 +519,7 @@ app.post('/api/teams/score', (req, res) => {
 			break;
 
 		default:
-			res.send({message: "Unknown rank number"});
+			res.send({err: "ranking", message: "Unknown rank number"});
 			return;
 	}
 
@@ -558,7 +562,7 @@ app.post('/api/teams/score', (req, res) => {
 			console.log("No error. Updating score");
 			// console.log(result.data.length);
 			if (score_exists) {
-				res.send({message: "Team score already exists! => Get CJ if duplicate issue"})
+				res.send({err: "Duplicate Error", message: "Team score already exists! => Get CJ if duplicate issue"})
 				console.log("Score exists already");
 			} else {
 				db.query(sql_update, [team_name], (err, result) => {
@@ -569,7 +573,7 @@ app.post('/api/teams/score', (req, res) => {
 						res.send({err: err, message: "Error sending score => Get CJ if issue"});
 					} else {
 						console.log("Team updated");
-						res.send({err: err, message: "Team [" + team_name + "] updated"});
+						res.send({message: "Team [" + team_name + "] updated"});
 						updateRanking();
 					}
 				});

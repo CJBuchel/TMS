@@ -66,6 +66,14 @@ class Display extends Component<IProps, IState> {
 		window.location.reload();
 	}
 
+	notNull(value:any) {
+		if (value !== null) {
+			return value;
+		} else {
+			return '';
+		}
+	}
+
 	appendTable(data:any) {
 		let fll_display:any = document.getElementById("fll_teams_table");
 		var height = 0;
@@ -75,19 +83,19 @@ class Display extends Component<IProps, IState> {
 			
 			
 			let td_rank = document.createElement("td");
-			td_rank.appendChild(document.createTextNode(team.ranking));
+			td_rank.appendChild(document.createTextNode(this.notNull(team.ranking)));
 			
 			let td_teamName = document.createElement("td");
-			td_teamName.appendChild(document.createTextNode(team.team_name));
+			td_teamName.appendChild(document.createTextNode(this.notNull(team.team_name)));
 	
 			let td_r1 = document.createElement("td");
-			td_r1.appendChild(document.createTextNode(team.match_score_1));
+			td_r1.appendChild(document.createTextNode(this.notNull(team.match_score_1)));
 	
 			let td_r2 = document.createElement("td");
-			td_r2.appendChild(document.createTextNode(team.match_score_2));
+			td_r2.appendChild(document.createTextNode(this.notNull(team.match_score_2)));
 	
 			let td_r3 = document.createElement("td");
-			td_r3.appendChild(document.createTextNode(team.match_score_3));
+			td_r3.appendChild(document.createTextNode(this.notNull(team.match_score_3)));
 	
 			tr.appendChild(td_rank);
 			tr.appendChild(td_teamName);

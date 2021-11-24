@@ -53,12 +53,15 @@ function appendTeamTable(team:any) {
 		
 	let td_rank = document.createElement("td");
 	td_rank.appendChild(document.createTextNode(team.ranking));
+
+	let td_teamNumber = document.createElement("td");
+	td_teamNumber.appendChild(document.createTextNode(team.team_number));
 	
 	let td_teamName = document.createElement("td");
 	td_teamName.appendChild(document.createTextNode(team.team_name));
 
 	let td_r1 = document.createElement("td");
-	td_r1.appendChild(document.createTextNode(team.school_name));
+	td_r1.appendChild(document.createTextNode(team.affiliation));
 
 	// Score
 	let td_r2 = document.createElement("td");
@@ -91,6 +94,7 @@ function appendTeamTable(team:any) {
 	td_r10.appendChild(document.createTextNode(team.team_notes_3));
 
 	tr.appendChild(td_rank);
+	tr.appendChild(td_teamNumber);
 	tr.appendChild(td_teamName);
 	tr.appendChild(td_r1);
 	tr.appendChild(td_r2);
@@ -189,15 +193,15 @@ async function handleDownloadCSV() {
 	};
 
 	const getNonNullData = (data:any) => {
-		return ( data == 'undefined' ? 'null' : data == 'null' ? 'null' : data );
+		return ( data == 'undefined' ? 'null' : data == 'null' ? 'null' : data == null ? 'null' : data );
 	}
 
 	for (const team of data) {
 		teams.push({
-			team_number :getNonNullData(team.team_number),
 			ranking: getNonNullData(team.ranking),
+			team_number :getNonNullData(team.team_number),
 			team: getNonNullData(team.team_name),
-			affiliation: getNonNullData(team.school_name),
+			affiliation: getNonNullData(team.affiliation),
 
 			match_1_score: getNonNullData(team.match_score_1),
 			match_2_score: getNonNullData(team.match_score_2),
@@ -231,17 +235,17 @@ async function filterTeams(query:any) {
 	const teams = await getTeams();
 	const matches = await getSchedule();
 
-	if (query != '') {
-		if (!query) {
-			return displayTeams(true);
-		} else {
-			for (const team of teams) {
-				const teamName = team.team_name.toLowerCase();
+	if (!query) {
+		return displayTeams(true);
+	} else {
+		for (const team of teams) {
+			const teamNumber = team.team_number.toLowerCase();
+			const teamName = team.team_name.toLowerCase();
+			const teamAffilation = team.affiliation.toLowerCase();
 
-				if (teamName.includes(query.toLowerCase())) {
-					appendTeamTable(team);
-					appendTeamSchedule(matches, team);
-				}
+			if (teamName.includes(query.toLowerCase()) || teamNumber.includes(query.toLowerCase()) || teamAffilation.includes(query.toLowerCase())) {
+				appendTeamTable(team);
+				appendTeamSchedule(matches, team);
 			}
 		}
 	}
@@ -254,6 +258,7 @@ const TeamTable = () => {
 				<thead>
 					<tr>
 						<th>Rank</th>
+						<th>Team Number</th>
 						<th>TeamName</th>
 						<th>Affiliation</th>
 

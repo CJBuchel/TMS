@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Component, useState } from 'react'
 
 import Axios from 'axios';
 import './index.css'
@@ -19,160 +19,213 @@ function parseTime (time: number) {
 	}
 }
 
-// Game sounds
-const startAudio = new window.Audio('/start.mp3');
-const endAudio = new window.Audio("/end.mp3");
-const endgameAudio = new window.Audio("/end-game.mp3");
-const stopAudio = new window.Audio("/stop.mp3");
+const _removeSubscriptions = [];
 
-const playSound = (sound:any) => {
-	sound.play();
+const startAudio = new window.Audio("./sounds/start.mp3");
+const stopAudio = new window.Audio("./sounds/stop.mp3");
+const endGameAudio = new window.Audio("./sounds/end-game.mp3");
+const endAudio = new window.Audio("./sounds/end.mp3");
+
+interface IProps {
+
 }
 
-export default function Clock (props: any) {
-	const [buttonsDisabled, setButtonsDisabled] = useState(false);
+interface IState {
+	soundsEnabled?: boolean;
 
-	const [timerState, setState] = useState(''); // {armed, prerunning, running, ended}
-	const [currentTime, setTime] = useState(150);
+	buttonsDisabled?: boolean;
 
-	const [main_config, setMainCfg] = useState(true);
-	const [running_config, setRunningCfg] = useState(false);
-	const [stopped_config, setStoppedCfg] = useState(false);
+	timerState?: string;
+	currentTime?: number;
 
-	const _removeSubscriptions = [];
+	mainConfigState?: boolean;
+	runningConfigState?: boolean;
+	stoppedConfigState?: boolean;
+}
 
-	function postTimerControl(e:string) {
-		setButtonsDisabled(true);
-		Axios.post(clockRequest+"/"+e);
+class Clock extends Component<IProps,IState> {
+	constructor(props:any) {
+		super(props);
 
-		setTimeout(() => setButtonsDisabled(false), 2000);
+		// local storage only supports strings on certain platforms
+		// window.localStorage.setItem('sound-window', "true");
+
+		// window.onbeforeunload = function() {
+		// 	return 'Closing this window will stop the sounds of the timer. Are you sure?';
+		// }
+
+		// window.onunload = () => {
+		// 	window.localStorage.removeItem('sound-window');
+		// }
+
+		// window.onstorage = event => {
+		// 	if (event.key == 'focus' && event.newValue) {
+		// 		window.focus();
+		// 		window.localStorage.removeItem('focus');
+		// 	}
+		// }
+
+		onSystemRefreshEvent(() => {
+			console.log("refresh event");
+			this.setStop();
+			window.location.reload();
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockPrestartEvent(() => {
+			this.setState({timerState: 'prerunning'});
+			this.setState({mainConfigState: false});
+			this.setState({runningConfigState: true});
+			this.setState({stoppedConfigState: false});
+		});
+
+		onClockStartEvent(() => {
+			this.setState({timerState: 'running'});
+			this.setState({mainConfigState: false});
+			this.setState({runningConfigState: true});
+			this.setState({stoppedConfigState: false});
+			this.playSoundsIfEnabled(startAudio);
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockEndGameEvent(() => {
+			this.setState({timerState: 'armed'});
+			this.setState({mainConfigState: false});
+			this.setState({runningConfigState: true});
+			this.setState({stoppedConfigState: false});
+			this.playSoundsIfEnabled(endGameAudio);
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockEndEvent(() => {
+			this.setState({timerState: 'ended'});
+			this.setState({mainConfigState: false});
+			this.setState({runningConfigState: false});
+			this.setState({stoppedConfigState: true});
+			this.playSoundsIfEnabled(endAudio);
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockStopEvent(() => {
+			this.setState({timerState: 'ended'});
+			this.setState({mainConfigState: false});
+			this.setState({runningConfigState: false});
+			this.setState({stoppedConfigState: true});
+			this.playSoundsIfEnabled(stopAudio);
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockReloadEvent(() => {
+			window.location.reload();
+			this.setState({mainConfigState: true});
+			this.setState({runningConfigState: false});
+			this.setState({stoppedConfigState: false});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockTimeEvent(({time}:{time:number}) => {
+			this.setState({currentTime: time});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		this.state = {
+			soundsEnabled: true,
+			mainConfigState: true,
+			runningConfigState: false,
+			stoppedConfigState: false,
+
+			currentTime: 150,
+		}
+
+		this.postTimerControl = this.postTimerControl.bind(this);
+
+		this.setPrestart = this.setPrestart.bind(this);
+		this.setStart = this.setStart.bind(this);
+		this.setStop = this.setStop.bind(this);
+		this.setReload = this.setReload.bind(this);
 	}
 
-	function setPrestart() {postTimerControl("prestart")}
-	function setStart() {postTimerControl("start")}
-	function setStop() {postTimerControl("stop")}
-	function setReload() {postTimerControl("reload")}
+	playsound(audio:HTMLAudioElement) {
+		audio.play()
+		.catch(err => {
+			console.log(err);
+		});
+	}
 
-	onSystemRefreshEvent(() => {
-		console.log("refresh event");
-		setStop();
-		window.location.reload();
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
+	toggleSound(isEnabled:boolean) {
+		if (isEnabled) {
+			this.setState({soundsEnabled: false});
+		} else {
+			this.setState({soundsEnabled: true});
+		}
+	}
 
-	onClockPrestartEvent(() => {
-		console.log("prestart event");
-		setState('prerunning');
-		setMainCfg(false);
-		setRunningCfg(true);
-		setStoppedCfg(false);
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
+	playSoundsIfEnabled(audio:HTMLAudioElement) {
+		if (this.state.soundsEnabled) {
+			this.playsound(audio);
+		}
+	}
 
-	onClockStartEvent(() => {
-		playSound(startAudio);
-		console.log("Start event");
-		setState('running');
-		setMainCfg(false);
-		setRunningCfg(true);
-		setStoppedCfg(false);
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
+	postTimerControl(e:string) {
+		this.setState({buttonsDisabled: true});
+		Axios.post(clockRequest+"/"+e);
+		setTimeout(() => this.setState({buttonsDisabled: false}), 2000);
+	}
 
-	onClockTimeEvent(({time}:{time:any}) => {
-		// console.log("Time event")
-		setTime(time);
-		// console.log(time);
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
+	setPrestart() {this.postTimerControl("prestart")}
+	setStart() {this.postTimerControl("start")}
+	setStop() {this.postTimerControl("stop")}
+	setReload() {this.postTimerControl("reload")}
 
-	onClockEndGameEvent(() => {
-		playSound(endgameAudio);
-		console.log("End game event");
-		setState('armed');
-		setMainCfg(false);
-		setRunningCfg(true);
-		setStoppedCfg(false);
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
-	
-	onClockEndEvent(() => {
-		playSound(endAudio);
-		console.log("End event");
-		setState('ended');
-		setMainCfg(false);
-		setRunningCfg(false);
-		setStoppedCfg(true);
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
 
-	onClockStopEvent(() => {
-		playSound(stopAudio);
-		console.log("Stop/Abort event");
-		setState('ended');
-		setMainCfg(false);
-		setRunningCfg(false);
-		setStoppedCfg(true);
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
-
-	onClockReloadEvent(() => {
-		console.log("Reload event");
-		// setState('running');
-		window.location.reload();
-		setMainCfg(true);
-		setRunningCfg(false);
-		setStoppedCfg(false);
-	}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
-	.catch((err:any) => {
-		console.error(err)
-	});
-
-	const MainConfig = () => (
-		<div id='main_config' className='timer_controls'>
-				<button className="hoverButton green" onClick={setStart} disabled={buttonsDisabled}>Start</button>
-				<button className="hoverButton orange" onClick={setPrestart} disabled={buttonsDisabled}>Pre Start</button>
-		</div>
-	)
-
-	const RunningConfig = () => (
-		<div id='running_config' className='timer_controls'>
-			<button className="hoverButton red" onClick={setStop} disabled={buttonsDisabled}>Abort</button>
-		</div>
-	)
-
-	const StoppedConfig = () => (
-		<div id='stopped_config' className='timer_controls'>
-			<button className="hoverButton orange" onClick={setReload} disabled={buttonsDisabled}>Reload</button>
-		</div>
-	)
-
-	return (
-		<div>
-			<div className={`clock ${timerState}`}>
-				{ parseTime(currentTime) }
+	render() {
+		const MainConfig = () => (
+			<div id='main_config' className='timer_controls'>
+					<button className="hoverButton green" onClick={this.setStart} disabled={this.state.buttonsDisabled}>Start</button>
+					<button className="hoverButton orange" onClick={this.setPrestart} disabled={this.state.buttonsDisabled}>Pre Start</button>
 			</div>
-
-
-			{running_config && !buttonsDisabled && <RunningConfig/>}
-			{stopped_config && !buttonsDisabled && <StoppedConfig/>}
-			{main_config && !buttonsDisabled && <MainConfig/>}
+		)
+	
+		const RunningConfig = () => (
+			<div id='running_config' className='timer_controls'>
+				<button className="hoverButton red" onClick={this.setStop} disabled={this.state.buttonsDisabled}>Abort</button>
+			</div>
+		)
+	
+		const StoppedConfig = () => (
+			<div id='stopped_config' className='timer_controls'>
+				<button className="hoverButton orange" onClick={this.setReload} disabled={this.state.buttonsDisabled}>Reload</button>
+			</div>
+		)
 		
-		</div>
-	)
+		return (
+			<div>
+				<div className={`clock ${this.state.timerState}`}>
+					{ parseTime(this.state.currentTime||0) }
+				</div>
+
+
+				{this.state.runningConfigState && !this.state.buttonsDisabled && <RunningConfig/>}
+				{this.state.stoppedConfigState && !this.state.buttonsDisabled && <StoppedConfig/>}
+				{this.state.mainConfigState && !this.state.buttonsDisabled && <MainConfig/>}
+		
+			</div>
+		);
+	}
 }
+
+export default Clock;

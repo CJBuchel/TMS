@@ -77,7 +77,7 @@ async function startWebsocketServer(hub: Hub): Promise<void> {
 
 async function main(): Promise<void> {
 	// Configure logging (optional)
-	log.logLevel = LogLevel.Debug;
+	log.logLevel = LogLevel.Info;
 	log.onMessage = (msg: string) => {
 		console.log(msg); // tslint:disable-line:no-console
 	};

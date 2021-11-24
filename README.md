@@ -1,5 +1,5 @@
-# FLL-Scoring-System
-FLL Scoring System for Curtin University
+# CJ's Management System
+FLL Scoring & Management System for Curtin University/WA FLL Competition
 
 # Ports
 

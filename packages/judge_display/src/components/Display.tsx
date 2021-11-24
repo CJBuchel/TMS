@@ -120,7 +120,7 @@ function appendTeamSchedule(matches:any, team:any) {
 			let tr = document.createElement("tr");
 			
 			let td_name = document.createElement("td");
-			td_name.appendChild(document.createTextNode("Match: " + team.team_name));
+			td_name.appendChild(document.createTextNode("Name: " + team.team_name));
 
 			let td_match = document.createElement("td");
 			td_match.appendChild(document.createTextNode("Match: " + match.match_number));
@@ -194,6 +194,7 @@ async function handleDownloadCSV() {
 
 	for (const team of data) {
 		teams.push({
+			team_number :getNonNullData(team.team_number),
 			ranking: getNonNullData(team.ranking),
 			team: getNonNullData(team.team_name),
 			affiliation: getNonNullData(team.school_name),

@@ -51,7 +51,7 @@ class Display extends Component<IProps, IState> {
 		});
 
 		onScoreUpdateEvent(() => {
-			this.setState({disableScroll: true});
+			this.setState({disableScroll: false});
 			this.getTeams();
 		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 		.catch((err:any) => {
@@ -129,6 +129,7 @@ class Display extends Component<IProps, IState> {
 					}
 				}
 				// console.log("Reached end");
+				await new Promise(r => setTimeout(r, 100)); // 40 is good speed
 				this.setState({targetY: 0});
 			} else {
 				await new Promise(r => setTimeout(r, 2000));

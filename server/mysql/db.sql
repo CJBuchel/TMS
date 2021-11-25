@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO users (name, password) VALUES ('admin', 'password');
 INSERT INTO users (name, password) VALUES ('scorekeeper', 'password');
 INSERT INTO users (name, password) VALUES ('referee', 'password');
+INSERT INTO users (name, password) VALUES ('head_referee', 'password');
 
 
 -- Team table of data --

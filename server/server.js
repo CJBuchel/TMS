@@ -49,7 +49,7 @@ app.use('/api/database/purge', (req, res) => {
 	});
 
 	db.query(sql_schedule, (err, result) => {
-		console.log("Teams purge");
+		console.log("Schedule purge");
 		console.log(err);
 		console.log(result);
 
@@ -79,6 +79,13 @@ app.use('/api/database/purge', (req, res) => {
 	});
 
 	db.query(sql_insert_user, ["referee", "password"], (err, result) => {
+		console.log(err);
+		console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_insert_user, ["head_referee", "password"], (err, result) => {
 		console.log(err);
 		console.log(result);
 
@@ -161,6 +168,7 @@ app.post('/api/scheduleSet/new', (req, res) => {
 	const schedule_data = req.body.schedule_data;
 
 	for (const match of schedule_data.data) {
+
 		for (var i = 3; i < match.length; i++) {
 			if (typeof match[i] !== 'undefined' && match[i] !== null && match[i] !== '' && match[i] !== ' ') {
 				const match_number = match[0];
@@ -170,18 +178,30 @@ app.post('/api/scheduleSet/new', (req, res) => {
 				
 				const sql_insert = "INSERT INTO fll_teams_schedule (match_number, start_time, end_time, team_number) VALUES (?,?,?,?);";
 				
-				if (typeof match_number !== 'undefined') {
-					db.query(sql_insert, [match_number, start_time, end_time, team_number], (err, result) => {
-						if (err) {
-							res.send({err: err, message: "Schedule new error => Get CJ"});
-							console.log("DB Create Schedule error");
+				// Check if schedule exists
+				db.query("SELECT * FROM fll_teams_schedule WHERE match_number = ? AND team_number = ?", [match_number, team_number], (err, result) => {
+					if (err) {
+						res.send({err: err, message: "Schedule error while trying to grab from table"});
+						console.log("DB Select schedule error");
+					} else {
+						if (result.length > 0) {
+							console.log("Error Match [" + match_number + "] With Team [" + team_number + "] already exists");
 						} else {
-							console.log("New Match -> " + "Number: " + match[0] + ", StartTime: " + match[1] + ", EndTime: " + match[2] + ", TeamNumber: " + match[i]);
+							if (typeof match_number !== 'undefined') {
+								db.query(sql_insert, [match_number, start_time, end_time, team_number], (err, result) => {
+									if (err) {
+										res.send({err: err, message: "Schedule new error => Get CJ"});
+										console.log("DB Create Schedule error");
+									} else {
+										console.log("New Match -> " + "Number: " + match[0] + ", StartTime: " + match[1] + ", EndTime: " + match[2] + ", TeamNumber: " + match[i]);
+									}
+								});
+							} else {
+								console.log("Found empty row, not posting to db");
+							}
 						}
-					});
-				} else {
-					console.log("Found empty row, not posting to db");
-				}
+					}
+				});
 			}
 		}
 	}

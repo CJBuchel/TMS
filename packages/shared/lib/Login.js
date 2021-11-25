@@ -5,9 +5,10 @@ import "./Buttons.css";
 import "./Login.css";
 const loginRequest = "http://" + window.location.hostname + ":3001/api/login";
 const options = [
-    { value: 'admin', label: 'admin' },
-    { value: 'scorekeeper', label: 'scorekeeper' },
-    { value: 'referee', label: 'referee' },
+    { value: 'admin', label: 'Admin' },
+    { value: 'scorekeeper', label: 'Score Keeper' },
+    { value: 'referee', label: 'Referee' },
+    { value: 'head_referee', label: 'Head Referee' },
 ];
 async function loginUser(credentials, allowedUser) {
     if (credentials.user !== allowedUser && credentials.user !== 'admin') {

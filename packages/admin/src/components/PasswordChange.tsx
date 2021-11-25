@@ -14,6 +14,7 @@ interface IState {
 	admin: string;
 	scorekeeper: string;
 	referee: string;
+	head_referee: string;
 }
 
 async function userPost(user:any, pass:any) {
@@ -40,6 +41,7 @@ class PasswordChange extends Component<IProps, IState> {
 			admin: '',
 			scorekeeper: '',
 			referee: '',
+			head_referee: '',
 		}
 	}
 
@@ -47,6 +49,7 @@ class PasswordChange extends Component<IProps, IState> {
 		if (this.state.admin !== '') { userPost("admin", this.state.admin); }
 		if (this.state.scorekeeper !== '') { userPost("scorekeeper", this.state.scorekeeper); }
 		if (this.state.referee !== '') { userPost("referee", this.state.referee); }
+		if (this.state.head_referee !== '') { userPost("head_referee", this.state.head_referee); }
 	}
 
 	render() {
@@ -76,6 +79,14 @@ class PasswordChange extends Component<IProps, IState> {
 						this.setState({referee: e.target.value})
 					}}/>
 					<p>{this.state.referee}</p>
+					<br></br>
+					<br></br>
+
+					<label>Head Referee password</label>
+					<input type="text" name="ref_password" onChange={(e)=> {
+						this.setState({head_referee: e.target.value})
+					}}/>
+					<p>{this.state.head_referee}</p>
 					<br></br>
 					<br></br>
 					<button className='hoverButton orange' onClick={this.submitUser}>Submit</button>

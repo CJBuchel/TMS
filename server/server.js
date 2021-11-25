@@ -7,6 +7,7 @@ const app = express();
 const mysql = require('mysql');
 const sendEvent = require('./comm_service');
 const { clearInterval } = require('timers');
+const { match } = require('assert');
 
 
 const db = mysql.createConnection({
@@ -144,7 +145,7 @@ app.post('/api/updateUser', (req, res) => {
 });
 
 // 
-// ------------------------ Team/Schedule getters ---------------------
+// ------------------------ Schedule ---------------------
 // 
 
 app.get('/api/scheduleSet/get', (req, res) => {
@@ -166,17 +167,22 @@ app.post('/api/schedule/new', (req, res) => {
 
 app.post('/api/scheduleSet/new', (req, res) => {
 	const schedule_data = req.body.schedule_data;
+	const tables = schedule_data.tables;
+	const matches = schedule_data.matches;
 
-	for (const match of schedule_data.data) {
-
+	// Specific Schedule insert
+	for (const match of matches) {
 		for (var i = 3; i < match.length; i++) {
 			if (typeof match[i] !== 'undefined' && match[i] !== null && match[i] !== '' && match[i] !== ' ') {
 				const match_number = match[0];
 				const start_time = match[1];
 				const end_time = match[2];
 				const team_number = match[i];
+				const on_table = tables[i-3].table;
+
+				// console.log("Match " + match_number + " table: " + on_table + ", team: " + team_number)
 				
-				const sql_insert = "INSERT INTO fll_teams_schedule (match_number, start_time, end_time, team_number) VALUES (?,?,?,?);";
+				const sql_insert = "INSERT INTO fll_teams_schedule (match_number, start_time, end_time, team_number, on_table) VALUES (?,?,?,?,?);";
 				
 				// Check if schedule exists
 				db.query("SELECT * FROM fll_teams_schedule WHERE match_number = ? AND team_number = ?", [match_number, team_number], (err, result) => {
@@ -187,21 +193,45 @@ app.post('/api/scheduleSet/new', (req, res) => {
 						if (result.length > 0) {
 							console.log("Error Match [" + match_number + "] With Team [" + team_number + "] already exists");
 						} else {
-							if (typeof match_number !== 'undefined') {
-								db.query(sql_insert, [match_number, start_time, end_time, team_number], (err, result) => {
+							if (typeof match_number !== 'undefined' && typeof team_number !== 'undefined') {
+
+								// Send Schedule
+								db.query(sql_insert, [match_number, start_time, end_time, team_number, on_table], (err, result) => {
+									// console.log(result);
 									if (err) {
 										res.send({err: err, message: "Schedule new error => Get CJ"});
 										console.log("DB Create Schedule error");
+										console.log(err);
 									} else {
-										console.log("New Match -> " + "Number: " + match[0] + ", StartTime: " + match[1] + ", EndTime: " + match[2] + ", TeamNumber: " + match[i]);
+										console.log("New Match -> " + "Number: " + match[0] + ", StartTime: " + match[1] + ", EndTime: " + match[2] + ", TeamNumber: " + match[i]  + ", On Table: " + on_table);
 									}
 								});
+
+
 							} else {
 								console.log("Found empty row, not posting to db");
 							}
 						}
 					}
 				});
+			}
+		}
+	}
+
+	// Match insert
+	for (var i = 0; i < matches.length; i+=2) {
+		const match_team1 = matches[i];
+		const match_team2 = matches[i+1];
+
+		if (match_team1[0] == match_team2[0]) {
+			for (var j = 3; j < match_team1.length; j++) {
+				const on_table = tables[j-3];
+				if (typeof match_team1[j] !== 'undefined' && match_team1[j] !== null && match_team1[j] !== '' && match_team1[j] !== ' '
+				&& typeof match_team2[j] !== 'undefined' && match_team2[j] !== null && match_team2[j] !== '' && match_team2[j] !== ' ') {
+					const sql_insert = "INSERT INTO fll_matches (next_match_number, next_start_time, next_end_time, on_table, next_team1_number, next_team2_number) VALUES (?,?,?,?,?,?);";
+
+					// db.query(sql_insert, [match_team1[0], match_team1[]])
+				}
 			}
 		}
 	}
@@ -267,10 +297,10 @@ app.post('/api/team/new', (req, res) => {
 app.post('/api/teamset/new', (req, res) => {
 	const teams_data = req.body.teams_data;
 
-	for (const team of teams_data.data) {
+	for (const team of teams_data) {
 		const team_number = team[0];
 		const team_name = team[1];
-		const team_school = team[2];
+		const team_aff = team[2];
 
 		const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;";
 		const sql_insert = "INSERT INTO fll_teams (team_number, team_name, affiliation) VALUES (?, ?, ?);";
@@ -285,7 +315,7 @@ app.post('/api/teamset/new', (req, res) => {
 					console.log("Error Team [" + team_name + "] already exists");
 				} else {
 					if (typeof team_name !== 'undefined') {
-						db.query(sql_insert, [team_number, team_name, team_school], (err, result) => {
+						db.query(sql_insert, [team_number, team_name, team_aff], (err, result) => {
 							if (err) {
 								console.log("Error: " + err);
 								// res.send({err: err, message: "Team insert error"})
@@ -611,67 +641,78 @@ app.post('/api/teams/score', (req, res) => {
 var countDownTime = 150; // 150
 var prerunTime = 5;
 var clockStop = false;
+var existingClock = false;
 
 
 function startCountdown(duration) {
-	var start = Date.now(),diff;
-	var endgame = false;
-
-	function timer() {
-		if (!clockStop) {
-			diff = duration - (((Date.now() - start) / 1000) | 0);
+	if (!existingClock) {
+		existingClock = true;
+		var start = Date.now(),diff;
+		var endgame = false;
 	
-			console.log(diff);
-			sendEvent("cj_node", "clock:time", {time: diff});
-	
-			if (diff <= 30) {
-				if (!endgame) {
-					endgame = true;
-					sendEvent("cj_node", "clock:endgame", true);
+		function timer() {
+			if (!clockStop) {
+				diff = duration - (((Date.now() - start) / 1000) | 0);
+		
+				console.log(diff);
+				sendEvent("cj_node", "clock:time", {time: diff});
+		
+				if (diff <= 30) {
+					if (!endgame) {
+						endgame = true;
+						sendEvent("cj_node", "clock:endgame", true);
+					}
 				}
-			}
-	
-			if (diff <= 0) {
-				console.log("Stopping counter");
-				sendEvent("cj_node", "clock:end", true);
+		
+				if (diff <= 0) {
+					existingClock = false;
+					console.log("Stopping counter");
+					sendEvent("cj_node", "clock:end", true);
+					clearInterval(this)
+				}
+			} else {
+				existingClock = false;
+				sendEvent("cj_node", "clock:stop", true);
 				clearInterval(this)
 			}
-		} else {
-			sendEvent("cj_node", "clock:stop", true);
-			clearInterval(this)
 		}
+	
+		timer();
+		setInterval(timer, 1000);
 	}
-
-	timer();
-	setInterval(timer, 1000);
 }
 
 function startPrerun(duration) {
-	var start = Date.now(),diff;
-	var stop = false;
-	sendEvent("cj_node", "clock:prestart", true);
-
-	function timer() {
-		diff = duration - (((Date.now() - start) / 1000) | 0);
-		if (!clockStop) {
+	if (!existingClock) {
+		existingClock = true;
+		var start = Date.now(),diff;
+		var stop = false;
+		sendEvent("cj_node", "clock:prestart", true);
 	
-			console.log(diff);
-	
-			sendEvent("cj_node", "clock:time", {time: diff});
-	
-			if (diff <= 0 || clockStop) {
-				startCountdown(countDownTime);
-				sendEvent("cj_node", "clock:start", true);
+		function timer() {
+			diff = duration - (((Date.now() - start) / 1000) | 0);
+			if (!clockStop) {
+		
+				console.log(diff);
+		
+				sendEvent("cj_node", "clock:time", {time: diff});
+		
+				if (diff <= 0 || clockStop) {
+					existingClock = false;
+					startCountdown(countDownTime);
+					sendEvent("cj_node", "clock:start", true);
+					clearInterval(this)
+				}
+			} else {
+				existingClock = false;
+				sendEvent("cj_node", "clock:stop", true);
 				clearInterval(this)
 			}
-		} else {
-			sendEvent("cj_node", "clock:stop", true);
-			clearInterval(this)
 		}
+	
+		timer();
+		setInterval(timer, 1000);
 	}
-
-	timer();
-	setInterval(timer, 1000);
 }
 
 

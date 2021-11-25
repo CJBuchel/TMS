@@ -83,18 +83,18 @@ class MainApp extends React.Component<IProps, IState> {
 	}
 
 	componentDidMount() {
-		let teams:any = [];
-		fetch(get_teams_request)
-		.then((response) => {
-			return response.json();
-		}).
-		then((data) => {
-			for (const team of data) {
-				teams.push({value: team.team_name, label: team.team_name, number: team.team_number});
-			}
+		// let teams:any = [];
+		// fetch(get_teams_request)
+		// .then((response) => {
+		// 	return response.json();
+		// }).
+		// then((data) => {
+		// 	for (const team of data) {
+		// 		teams.push({value: team.team_name, label: team.team_name, number: team.team_number});
+		// 	}
 
-			this.setState({team_arr: teams});
-		})
+		// 	this.setState({team_arr: teams});
+		// })
 	}
 
 	// ------------------------- Team Handles -------------------------------

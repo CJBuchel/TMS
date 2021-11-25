@@ -1,5 +1,5 @@
 {
-  "name": "@cj/head_ref_display",
+  "name": "@cj/status",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -23,7 +23,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "BROWSER=none PORT=2827 react-scripts start",
+    "start": "BROWSER=none PORT=2833 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

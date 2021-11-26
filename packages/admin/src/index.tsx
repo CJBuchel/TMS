@@ -10,10 +10,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
 	const { token, setToken } = useToken();
 
-	if (!token) {
-		console.log("Token not made, redirecting")
-		return <Login setToken={setToken} allowedUser={'admin'}/>
-	}
+	// if (!token) {
+	// 	console.log("Token not made, redirecting")
+	// 	return <Login setToken={setToken} allowedUser={'admin'}/>
+	// }
 
 	return (
 		<Router>

@@ -31,10 +31,6 @@ function createHub() {
         });
         const cj_node = new mhub_1.HeaderStore("cj_node");
         hub.add(cj_node);
-        // cj_node.bind(defaultNode)
-        // Configure storage on disk by using the simple built-in storage drivers
-        const simpleStorage = new mhub_1.ThrottledStorage(new mhub_1.SimpleFileStorage("./my-storage"));
-        hub.setStorage(simpleStorage);
         // Initialize nodes (e.g. load persistent messages from disk)
         yield hub.init();
         return hub;

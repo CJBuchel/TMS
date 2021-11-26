@@ -9,8 +9,6 @@ import {
 	log,
 	LogLevel,
 	PlainAuthenticator,
-	SimpleFileStorage,
-	ThrottledStorage,
 	WSConnection,
 } from "mhub";
 
@@ -33,14 +31,6 @@ async function createHub(): Promise<Hub> {
 
 	const cj_node = new HeaderStore("cj_node");
 	hub.add(cj_node);
-
-	// cj_node.bind(defaultNode)
-
-	// Configure storage on disk by using the simple built-in storage drivers
-	const simpleStorage = new ThrottledStorage(
-		new SimpleFileStorage("./my-storage")
-	);
-	hub.setStorage(simpleStorage);
 
 	// Initialize nodes (e.g. load persistent messages from disk)
 	await hub.init();

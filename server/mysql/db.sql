@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO users (name, password) VALUES ('admin', 'password');
 INSERT INTO users (name, password) VALUES ('scorekeeper', 'password');
 INSERT INTO users (name, password) VALUES ('referee', 'password');
+INSERT INTO users (name, password) VALUES ('head_referee', 'password');
 
 
 -- Team table of data --
@@ -56,6 +57,26 @@ CREATE TABLE IF NOT EXISTS `fll_teams_schedule` (
 	`start_time` TEXT, -- CSV Import is not date and time 
 	`end_time` TEXT,
 	`team_number` VARCHAR(10),
+	`on_table` TEXT,
+	PRIMARY KEY (`id`)
+);
+
+-- Matches
+CREATE TABLE IF NOT EXISTS `fll_matches` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`next_match_number` VARCHAR(10),
+
+	`next_start_time` TEXT, -- CSV Import is not date and time 
+	`next_end_time` TEXT,
+
+	`on_table1` TEXT,
+	`on_table2` TEXT,
+
+	`next_team1_number` VARCHAR(10),
+	`next_team2_number` VARCHAR(10),
+
+	`rescheduled` BOOLEAN NOT NULL DEFAULT 0,
+
 	PRIMARY KEY (`id`)
 );
 

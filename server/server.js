@@ -219,21 +219,26 @@ app.post('/api/scheduleSet/new', (req, res) => {
 	}
 
 	// Match insert
-	for (var i = 0; i < matches.length; i+=2) {
-		const match_team1 = matches[i];
-		const match_team2 = matches[i+1];
-
-		if (match_team1[0] == match_team2[0]) {
-			for (var j = 3; j < match_team1.length; j++) {
-				const on_table = tables[j-3];
-				if (typeof match_team1[j] !== 'undefined' && match_team1[j] !== null && match_team1[j] !== '' && match_team1[j] !== ' '
-				&& typeof match_team2[j] !== 'undefined' && match_team2[j] !== null && match_team2[j] !== '' && match_team2[j] !== ' ') {
-					const sql_insert = "INSERT INTO fll_matches (next_match_number, next_start_time, next_end_time, on_table, next_team1_number, next_team2_number) VALUES (?,?,?,?,?,?);";
-
-					// db.query(sql_insert, [match_team1[0], match_team1[]])
-				}
+	for (const match of matches) {
+		var team_number = [];
+		var on_table = [];
+		for (var i = 3; i < match.length; i++) {
+			if (typeof match[i] !== 'undefined' && match[i] !== null && match[i] !== '' && match[i] !== ' ') {
+				team_number.push(match[i]);
+				on_table.push(tables[i-3].table);
 			}
 		}
+
+		const sql_insert = "INSERT INTO fll_matches (next_match_number, next_start_time, next_end_time, on_table1, on_table2, next_team1_number, next_team2_number) VALUES (?,?,?,?,?,?,?);";
+		db.query(sql_insert, [match[0], match[1], match[2], on_table[0], on_table[1], team_number[0], team_number[1]], (err,result) => {
+			if (err) {
+				res.send({err: err, message: "Match new error => Get CJ"});
+				console.log("DB Create match error");
+				console.log(err);
+			} else {
+				console.log("New match -> " + "Number: " + [match[0] + ", Start time: " + match[1] + ", End time: " + match[2] + ", On table: " + on_table[0] + ", On table: " + on_table[1] + ", team1: " + team_number[0] + ", tem2: " + team_number[1]]);
+			}
+		});
 	}
 });
 

@@ -66,10 +66,11 @@ CREATE TABLE IF NOT EXISTS `fll_matches` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`next_match_number` VARCHAR(10),
 
-	`next_start_time` TIME, -- CSV Import is not date and time 
-	`next_end_time` TIME,
+	`next_start_time` TEXT, -- CSV Import is not date and time 
+	`next_end_time` TEXT,
 
-	`on_table` TEXT,
+	`on_table1` TEXT,
+	`on_table2` TEXT,
 
 	`next_team1_number` VARCHAR(10),
 	`next_team2_number` VARCHAR(10),

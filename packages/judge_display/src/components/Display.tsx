@@ -45,6 +45,34 @@ function getSchedule() {
 	});
 }
 
+const getNonNullData = (data:any) => {
+	return ( data === 'undefined' ? 'null' : data === 'null' ? 'null' : data === null ? 'null' : data );
+}
+
+const getBlankIfNull = (data:any) => {
+	return (getNonNullData(data) === 'null' ? '' : data);
+}
+
+const getNumberGP = (data:any) => {
+	switch (data) {
+		case "Developing [2]":
+			return getNonNullData("2");
+			break;
+
+		case "Accomplished [3]":
+			return getNonNullData("3");
+			break;
+		
+		case "Exceeds [4]":
+			return getNonNullData("4");
+			break;
+
+		default:
+			return "";
+			break;
+	}
+}
+
 function appendTeamTable(team:any) {
 	let fll_display:any = document.getElementById("fll_teams_table");
 
@@ -52,49 +80,49 @@ function appendTeamTable(team:any) {
 		
 		
 	let td_rank = document.createElement("td");
-	td_rank.appendChild(document.createTextNode(team.ranking));
+	td_rank.appendChild(document.createTextNode(getBlankIfNull(team.ranking)));
 
 	let td_teamNumber = document.createElement("td");
-	td_teamNumber.appendChild(document.createTextNode(team.team_number));
+	td_teamNumber.appendChild(document.createTextNode(getBlankIfNull(team.team_number)));
 	
 	let td_teamName = document.createElement("td");
-	td_teamName.appendChild(document.createTextNode(team.team_name));
+	td_teamName.appendChild(document.createTextNode(getBlankIfNull(team.team_name)));
 
 	let td_r1 = document.createElement("td");
-	td_r1.appendChild(document.createTextNode(team.affiliation));
+	td_r1.appendChild(document.createTextNode(getBlankIfNull(team.affiliation)));
 
 	// Score
 	let td_r2 = document.createElement("td");
-	td_r2.appendChild(document.createTextNode(team.match_score_1));
+	td_r2.appendChild(document.createTextNode(getBlankIfNull(team.match_score_1)));
 
 	let td_r3 = document.createElement("td");
-	td_r3.appendChild(document.createTextNode(team.match_gp_1));
+	td_r3.appendChild(document.createTextNode(getBlankIfNull(team.match_gp_1)));
 
 	let td_r4 = document.createElement("td");
-	td_r4.appendChild(document.createTextNode(team.team_notes_1));
+	td_r4.appendChild(document.createTextNode(getBlankIfNull(team.team_notes_1)));
 
 
 
 	let td_r5 = document.createElement("td");
-	td_r5.appendChild(document.createTextNode(team.match_score_2));
+	td_r5.appendChild(document.createTextNode(getBlankIfNull(team.match_score_2)));
 
 	let td_r6 = document.createElement("td");
-	td_r6.appendChild(document.createTextNode(team.match_gp_2));
+	td_r6.appendChild(document.createTextNode(getBlankIfNull(team.match_gp_2)));
 
 	let td_r7 = document.createElement("td");
-	td_r7.appendChild(document.createTextNode(team.team_notes_2));
+	td_r7.appendChild(document.createTextNode(getBlankIfNull(team.team_notes_2)));
 
 
 
 	let td_r8 = document.createElement("td");
-	td_r8.appendChild(document.createTextNode(team.match_score_3));
+	td_r8.appendChild(document.createTextNode(getBlankIfNull(team.match_score_3)));
 
 	// GP
 	let td_r9 = document.createElement("td");
-	td_r9.appendChild(document.createTextNode(team.match_gp_3));
+	td_r9.appendChild(document.createTextNode(getBlankIfNull(team.match_gp_3)));
 
 	let td_r10 = document.createElement("td");
-	td_r10.appendChild(document.createTextNode(team.team_notes_3));
+	td_r10.appendChild(document.createTextNode(getBlankIfNull(team.team_notes_3)));
 
 
 
@@ -199,48 +227,24 @@ async function handleDownloadCSV() {
 		useKeysAsHeaders: true,
 	};
 
-	const getNonNullData = (data:any) => {
-		return ( data == 'undefined' ? 'null' : data == 'null' ? 'null' : data == null ? 'null' : data );
-	}
-
-	const getNumberGP = (data:any) => {
-		switch (data) {
-			case "Developing [2]":
-				return getNonNullData("2");
-				break;
-
-			case "Accomplished [3]":
-				return getNonNullData("3");
-				break;
-			
-			case "Exceeds [4]":
-				return getNonNullData("4");
-				break;
-
-			default:
-				return "";
-				break;
-		}
-	}
-
 	for (const team of data) {
 		teams.push({
-			ranking: getNonNullData(team.ranking),
-			team_number :getNonNullData(team.team_number),
-			team: getNonNullData(team.team_name),
-			affiliation: getNonNullData(team.affiliation),
+			ranking: getBlankIfNull(team.ranking),
+			team_number :getBlankIfNull(team.team_number),
+			team: getBlankIfNull(team.team_name),
+			affiliation: getBlankIfNull(team.affiliation),
 
-			match_1_score: getNonNullData(team.match_score_1),
+			match_1_score: getBlankIfNull(team.match_score_1),
 			match_1_gp: getNumberGP(team.match_gp_1),
-			match_1_notes: getNonNullData(team.team_notes_1),
+			match_1_notes: getBlankIfNull(team.team_notes_1),
 
-			match_2_score: getNonNullData(team.match_score_2),
+			match_2_score: getBlankIfNull(team.match_score_2),
 			match_2_gp: getNumberGP(team.match_gp_2),
-			match_2_notes: getNonNullData(team.team_notes_2),
+			match_2_notes: getBlankIfNull(team.team_notes_2),
 
-			match_3_score: getNonNullData(team.match_score_3),
+			match_3_score: getBlankIfNull(team.match_score_3),
 			match_3_gp: getNumberGP(team.match_gp_3),
-			match_3_notes: getNonNullData(team.team_notes_3)
+			match_3_notes: getBlankIfNull(team.team_notes_3)
 		});
 	}
 

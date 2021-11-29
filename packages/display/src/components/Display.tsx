@@ -12,6 +12,20 @@ import { setInterval } from "timers";
 const request = "http://" + window.location.hostname + ":3001/api";
 const get_teams_request = request+"/teams/get";
 
+const _removeSubscriptions = [];
+
+function pad (number: any, length: any) {
+	return (new Array(length + 1).join('0') + number).slice(-length)
+}
+
+function parseTime (time: number) {
+	if (time <= 30) {
+		return `${time | 0}`
+	} else {
+		return `${pad(Math.floor(time / 60), 2)}:${pad(time % 60, 2)}`
+	}
+}
+
 interface IProps {
 }
 
@@ -20,23 +34,56 @@ interface IState {
 	disableScroll?: boolean;
 	totalHeight?: number;
 	targetY?: number;
+	currentTime?: number;
+	timerHidden?: boolean;
 }
 
 class Display extends Component<IProps, IState> {
 	constructor(props:any) {
 		super(props);
 
+		onClockStartEvent(() => {
+			this.setState({timerHidden: false});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockStopEvent(() => {
+			this.setState({timerHidden: true});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockEndEvent(() => {
+			this.setState({timerHidden: true});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onClockTimeEvent(({time}:{time:number}) => {
+			this.setState({currentTime: time});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
 		this.state = {
 			existingInfScroll: false,
 			disableScroll: false,
 			totalHeight: document.documentElement.scrollHeight,
 			targetY: 0,
+			currentTime: 150,
+			timerHidden: true,
 		}
 
 		this.infiniteScroller = this.infiniteScroller.bind(this);
 		this.scrollTask = this.scrollTask.bind(this);
 		this.createTable = this.createTable.bind(this);
 		this.getTeams = this.getTeams.bind(this);
+		this.Timer = this.Timer.bind(this);
 	}
 
 	componentDidMount() {
@@ -57,8 +104,8 @@ class Display extends Component<IProps, IState> {
 		.catch((err:any) => {
 			console.error(err)
 		});
-		setTimeout(this.getTeams, 5000);
-		setTimeout(this.infiniteScroller, 7000);
+		setTimeout(this.getTeams, 200);
+		setTimeout(this.infiniteScroller, 400);
 	}
 
 	componentWillUnmount() {
@@ -105,7 +152,6 @@ class Display extends Component<IProps, IState> {
 			
 			fll_display.appendChild(tr);
 			height += tr.offsetHeight;
-			// console.log("Height from direct" + tr.offsetHeight)
 		}
 	
 		return height;
@@ -127,17 +173,15 @@ class Display extends Component<IProps, IState> {
 				for (; (this.state.targetY||0) < (this.state.totalHeight||0); this.setState({targetY: (this.state.targetY||0)+1})) {
 					await new Promise(r => setTimeout(r, 40)); // 40 is good speed
 					var targetY = (this.state.targetY||0);
-					// var totalHeight = (this.state.totalHeight||0);
-					
-					// console.log("Target Pos: " + targetY + " CurrentPos: " + document.documentElement.scrollTop + " Total Height: " + totalHeight);
+
 					if (document.documentElement.scrollTop < targetY-10 || document.documentElement.scrollTop > targetY+10) { // i'm a genius. lol
 						window.scroll({left: 0, top: targetY});
 					} else {
 						window.scroll({left: 0, top: targetY, behavior: 'smooth'});
 					}
 				}
-				// console.log("Reached end");
-				await new Promise(r => setTimeout(r, 100)); // 40 is good speed
+
+				await new Promise(r => setTimeout(r, 100));
 				this.setState({targetY: 0});
 			} else {
 				await new Promise(r => setTimeout(r, 2000));
@@ -167,7 +211,6 @@ class Display extends Component<IProps, IState> {
 		// Then get create the fetch
 		fetch(get_teams_request)
 		.then((response) => {
-			// console.log(response);
 			return response.json();
 		}).then(data => {
 			this.setState({totalHeight: this.createTable(data)-(this.state.totalHeight || 0)});
@@ -176,11 +219,20 @@ class Display extends Component<IProps, IState> {
 		});
 	}
 
+	Timer() {
+		return (
+			<div className={"timer-display"}>
+				{ parseTime(this.state.currentTime||0) }
+			</div>
+		)
+	}
+
 	render() {
 
 		return(
 			<div id="fll_display">
 				<div id="fll_table_header_wrapper" className="table-wrapper">
+					{!this.state.timerHidden && <this.Timer/>}
 					<table className="fl-table">
 						<thead>
 							<tr>

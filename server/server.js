@@ -451,7 +451,7 @@ function changeTeam(team_number, req, res) {
 		});
 	}
 
-	sendEvent("cj_node", "clock:endgame", true);
+	// sendEvent("cj_node", "clock:endgame", true);
 }
 
 app.post('/api/team/modify', (req, res) => {

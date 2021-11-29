@@ -186,9 +186,9 @@ class Display extends Component<IProps, IState> {
 							<tr>
 								<th>Rank</th>
 								<th>TeamName</th>
-								<th>Ranking 1</th>
-								<th>Ranking 2</th>
-								<th>Ranking 3</th>
+								<th>Round 1</th>
+								<th>Round 2</th>
+								<th>Round 3</th>
 							</tr>
 						</thead>
 						<tbody id="fll_teams_table">

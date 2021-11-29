@@ -68,30 +68,37 @@ function appendTeamTable(team:any) {
 	td_r2.appendChild(document.createTextNode(team.match_score_1));
 
 	let td_r3 = document.createElement("td");
-	td_r3.appendChild(document.createTextNode(team.match_score_2));
+	td_r3.appendChild(document.createTextNode(team.match_gp_1));
 
 	let td_r4 = document.createElement("td");
-	td_r4.appendChild(document.createTextNode(team.match_score_3));
+	td_r4.appendChild(document.createTextNode(team.team_notes_1));
 
-	// GP
+
+
 	let td_r5 = document.createElement("td");
-	td_r5.appendChild(document.createTextNode(team.match_gp_1));
+	td_r5.appendChild(document.createTextNode(team.match_score_2));
 
 	let td_r6 = document.createElement("td");
 	td_r6.appendChild(document.createTextNode(team.match_gp_2));
 
 	let td_r7 = document.createElement("td");
-	td_r7.appendChild(document.createTextNode(team.match_gp_3));
+	td_r7.appendChild(document.createTextNode(team.team_notes_2));
 
-	// Notes
+
+
 	let td_r8 = document.createElement("td");
-	td_r8.appendChild(document.createTextNode(team.team_notes_1));
+	td_r8.appendChild(document.createTextNode(team.match_score_3));
 
+	// GP
 	let td_r9 = document.createElement("td");
-	td_r9.appendChild(document.createTextNode(team.team_notes_2));
+	td_r9.appendChild(document.createTextNode(team.match_gp_3));
 
 	let td_r10 = document.createElement("td");
 	td_r10.appendChild(document.createTextNode(team.team_notes_3));
+
+
+
+
 
 	tr.appendChild(td_rank);
 	tr.appendChild(td_teamNumber);
@@ -196,6 +203,26 @@ async function handleDownloadCSV() {
 		return ( data == 'undefined' ? 'null' : data == 'null' ? 'null' : data == null ? 'null' : data );
 	}
 
+	const getNumberGP = (data:any) => {
+		switch (data) {
+			case "Developing [2]":
+				return getNonNullData("2");
+				break;
+
+			case "Accomplished [3]":
+				return getNonNullData("3");
+				break;
+			
+			case "Exceeds [4]":
+				return getNonNullData("4");
+				break;
+
+			default:
+				return "";
+				break;
+		}
+	}
+
 	for (const team of data) {
 		teams.push({
 			ranking: getNonNullData(team.ranking),
@@ -204,15 +231,15 @@ async function handleDownloadCSV() {
 			affiliation: getNonNullData(team.affiliation),
 
 			match_1_score: getNonNullData(team.match_score_1),
-			match_2_score: getNonNullData(team.match_score_2),
-			match_3_score: getNonNullData(team.match_score_3),
-			
-			match_1_gp: getNonNullData(team.match_gp_1),
-			match_2_gp: getNonNullData(team.match_gp_2),
-			match_3_gp: getNonNullData(team.match_gp_3),
-
+			match_1_gp: getNumberGP(team.match_gp_1),
 			match_1_notes: getNonNullData(team.team_notes_1),
+
+			match_2_score: getNonNullData(team.match_score_2),
+			match_2_gp: getNumberGP(team.match_gp_2),
 			match_2_notes: getNonNullData(team.team_notes_2),
+
+			match_3_score: getNonNullData(team.match_score_3),
+			match_3_gp: getNumberGP(team.match_gp_3),
 			match_3_notes: getNonNullData(team.team_notes_3)
 		});
 	}
@@ -263,15 +290,15 @@ const TeamTable = () => {
 						<th>Affiliation</th>
 
 						<th>R1 Score</th>
-						<th>R2 Score</th>
-						<th>R3 Score</th>
-
 						<th>R1 GP</th>
-						<th>R2 GP</th>
-						<th>R3 GP</th>
-
 						<th>R1 Notes</th>
+
+						<th>R2 Score</th>
+						<th>R2 GP</th>
 						<th>R2 Notes</th>
+
+						<th>R3 Score</th>
+						<th>R3 GP</th>
 						<th>R3 Notes</th>
 					</tr>
 				</thead>

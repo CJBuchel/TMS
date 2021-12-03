@@ -153,6 +153,11 @@ class Display extends Component<IProps, IState> {
 			fll_display.appendChild(tr);
 			height += tr.offsetHeight;
 		}
+
+		// if (!this.state.timerHidden) {
+		// 	let timer_display:any = document.getElementById("timer-display");
+		// 	height -= timer_display.offsetHeight;
+		// }
 	
 		return height;
 	}
@@ -232,7 +237,7 @@ class Display extends Component<IProps, IState> {
 		return(
 			<div id="fll_display">
 				<div id="fll_table_header_wrapper" className="table-wrapper">
-					{!this.state.timerHidden && <this.Timer/>}
+					{/* {!this.state.timerHidden && <this.Timer/>} */}
 					<table className="fl-table">
 						<thead>
 							<tr>

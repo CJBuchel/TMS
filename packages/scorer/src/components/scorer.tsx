@@ -173,9 +173,10 @@ class Scorer extends Component<IProps, IState> {
 						<label>Notes on Team (Only seen by admins and judges)</label>
 						<input placeholder="Notes (Optional)" type="text" onChange={e => this.handleNotesChange(e.target.value)}/>
 
-						{/* Clear button */}
-						<div className="clearData">
-							<button type="reset" className="hoverButton red" onClick={e=>this.handleClear(e)}>Clear</button>
+						{/* Submit button */}
+						<div>
+							<div className="red-text">CHECK THESE VALUES BEFORE SUBMITTING</div>
+							<button className="buttonGreen" onClick={e=>this.handleSubmit(e, this.state.team_name, this.state.rank_number, this.state.team_score, this.state.team_gp, this.state.team_notes)}>Submit</button>
 						</div>
 
 						{/* Options */}
@@ -190,9 +191,9 @@ class Scorer extends Component<IProps, IState> {
 							</li>
 						</div>
 
-						<div>
-							<div className="red-text">CHECK THESE VALUES BEFORE SUBMITTING</div>
-							<button className="buttonGreen" onClick={e=>this.handleSubmit(e, this.state.team_name, this.state.rank_number, this.state.team_score, this.state.team_gp, this.state.team_notes)}>Submit</button>
+						{/* Clear button */}
+						<div className="clearData">
+							<button type="reset" className="hoverButton red" onClick={e=>this.handleClear(e)}>Clear</button>
 						</div>
 
 					</div>

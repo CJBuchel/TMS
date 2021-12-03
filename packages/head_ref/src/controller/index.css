@@ -1,0 +1,111 @@
+@keyframes blink {  
+	0% { opacity: 1; }
+	100% { opacity: 0.1; }
+}
+@-webkit-keyframes blink {
+	0% { opacity: 1; }
+	100% { opacity: 0.1; }
+}
+
+.column-left {
+	float: left;
+	width: 50%;
+	height: 100vh
+	/* max-width: 50%; */
+}
+
+.column-right {
+	float: left;
+	width: 50%;
+	height: 95vh;
+	overflow: scroll;
+	/* max-width: 50%; */
+}
+
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.clock {
+	user-select: none;
+	font-size: 15vw;
+	font-family: lcdbold, monospace;
+	display: flex;
+	justify-content: center;
+	vertical-align: middle;
+	align-items: center;
+
+	color: white;
+
+	margin: 0;
+	padding-top: 5%;
+	/* position: absolute; */
+	/* top: 50%; */
+	/* left: 50%; */
+	/* transform: translate(-50%, -50%); */
+}
+
+h1 {
+	color: white;
+}
+
+table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	overflow: scroll;
+	max-width: 50vw;
+	width: 45vw;
+
+	max-height: 50px;
+	height: 45vh;
+}
+
+td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	/* padding-left: 2vw; */
+	/* padding-right: 2vw; */
+	/* font-size: 1.5vh; */
+}
+
+tr:nth-child(even) {
+	background-color: #dddddd;
+}
+
+tr:nth-child(odd) {
+	background: darkgray;
+}
+
+
+.timer_controls {
+	padding-left: 1vh;
+}
+
+.timer_controls button {
+	/* width: 45vw; */
+	/* height: 10vh; */
+	/* border-radius: 10px; */
+	/* font-size: 5vh; */
+}
+
+.ended{
+	color: red;
+}
+
+.armed {
+	color: yellow;
+}
+
+.prerunning {
+	color: orange;
+}
+
+.running {
+	color: lime;
+}
+
+.debugBorder1 {
+	border: 5px, solid, red;
+}

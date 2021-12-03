@@ -243,6 +243,21 @@ app.post('/api/scheduleSet/new', (req, res) => {
 });
 
 // 
+// Matches
+// 
+app.get('/api/matches/get', (req, res) => {
+	const sql = "SELECT * FROM fll_matches ORDER BY next_match_number ASC;";
+	db.query(sql, (err, result) => {
+		console.log("Matches Requested");
+		if (err) {
+			console.log("Match request error");
+		} else {
+			res.send(result);
+		}
+	});
+});
+
+// 
 // ------------------------- Teams ------------------------------
 // 
 

@@ -31,6 +31,7 @@ interface IProps {
 
 interface IState {
 	rank_number?: number;
+	rank_label?: string;
 	team_number?: string;
 
 	team_score?: number;
@@ -39,6 +40,8 @@ interface IState {
 	team_notes?: any;
 
 	team_arr?: Array<any>;
+
+	fll_teams?: Array<any>;
 }
 
 onSystemRefreshEvent(() => {
@@ -74,6 +77,7 @@ class Scorer extends Component<IProps, IState> {
 			return response.json();
 		}).
 		then((data) => {
+			this.setState({fll_teams: data});
 			for (const team of data) {
 				teams.push({value: team.team_name, label: team.team_number + " | " + team.team_name, number: team.team_number});
 			}
@@ -83,13 +87,40 @@ class Scorer extends Component<IProps, IState> {
 	}
 
 	handleTeamChange(team:any) {
-		// for (const)
 		this.setState({team_number: team?.number});
 		this.setState({team_name: team?.value});
+
+		for (const t of this.state.fll_teams||[]) {
+			if (team?.number == t.team_number) {
+				console.log("Team match");
+				if (t.match_score_1 == null || t.match_score_1 == undefined) { 
+					this.setState({rank_number: 1, rank_label: 'Round 1 [Assumed]'});
+				} else if (t.match_score_2 == null || t.match_score_2 == undefined) {
+					this.setState({rank_number: 2, rank_label: 'Round 2 [Assumed]'});
+				} else if (t.match_score_3 == null || t.match_score_3 == undefined) {
+					this.setState({rank_number: 3, rank_label: 'Round 3 [Assumed]'});
+				}
+			}
+		}
+
 	}
 
 	handleRankChange(rankNumber:number) {
 		this.setState({rank_number: rankNumber});
+		var label;
+		switch (rankNumber) {
+			case 1:
+				label = "Round 1";
+				break;
+			case 2:
+				label = "Round 2";
+				break;
+			case 3:
+				label = "Round 3";
+				break;
+		}
+
+		this.setState({rank_label: label})
 	}
 
 	handleGPChange(gp:string) {
@@ -129,16 +160,23 @@ class Scorer extends Component<IProps, IState> {
 
 
 	handleSubmit(e:any, name:any, rank:any, score:any, gp:any, notes:any) {
-		this.sendTeamData({name, rank, score, gp, notes})
-		// sendScoreUpdate(name);
+		if (window.confirm("Submit score?")) {
+			this.sendTeamData({name, rank, score, gp, notes})
+		}
 	}
 
 	handleClear(e:any) {
-		this.setState({rank_number: 0, team_score: 0, team_name: null, team_number: " ", team_gp: " ", team_notes: " "});
-		window.location.reload();
+		if (window.confirm("Clear values?")) {
+			this.setState({rank_number: 0, team_score: 0, team_name: null, team_number: " ", team_gp: " ", team_notes: " "});
+			window.location.reload();
+		}
 	}
 
-	
+	handleNoShow(e:any, name:any, rank:any) {
+		if (window.confirm("Set Team No Show?")) {
+			this.sendTeamData({name, rank, score:0, gp:'', notes:'No Show'});
+		}
+	}
 	
 	render() {
 		
@@ -147,17 +185,19 @@ class Scorer extends Component<IProps, IState> {
 					<div className="inputs">
 
 						{/* Inputs */}
-						<label>Round Number</label>
-						<Select
-							name="Select Round"
-							onChange={(e:any) => this.handleRankChange(e.value)}
-							options={rankOptions}
-						/>
-
 						<label>Team Name</label>
 						<Select
 							onChange={(e:any) => this.handleTeamChange(e)}
 							options={this.state.team_arr}
+						/>
+
+
+						<label>Round Number</label>
+						<Select
+							name="Select Round"
+							value={{value: this.state.rank_number, label: this.state.rank_label}}
+							onChange={(e:any) => this.handleRankChange(e.value)}
+							options={rankOptions}
 						/>
 
 						<label>Score</label>
@@ -189,6 +229,11 @@ class Scorer extends Component<IProps, IState> {
 								<ul>- GP: [<span className="green-text">{this.state.team_gp}</span>]</ul>
 								<ul>- Final Score: [<span className="green-text">{this.state.team_score}</span>]</ul>
 							</li>
+						</div>
+
+						{/* No Show */}
+						<div className="clearData">
+							<button className="hoverButton red" onClick={e=>this.handleNoShow(e, this.state.team_name, this.state.rank_number)}>NO SHOW</button>
 						</div>
 
 						{/* Clear button */}

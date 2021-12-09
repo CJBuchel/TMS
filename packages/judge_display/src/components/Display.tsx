@@ -9,7 +9,7 @@ import './Table.css'
 const request = "http://" + window.location.hostname + ":3001/api";
 const get_teams_request = request+"/teams/get";
 const get_schedule_request = request+"/scheduleSet/get";
-
+const get_matches_request = request+"/matches/get";
 
 // 
 // Team stuff
@@ -32,6 +32,21 @@ function getTeams() {
 
 function getSchedule() {
 	return fetch(get_schedule_request)
+	.then((response) => {
+		return response.json();
+	}).then(data => {
+		if (data.message) {
+			alert(data.message);
+		} else {
+			return data;
+		}
+	}).catch((error) => {
+		console.log("Error: " + error);
+	});
+}
+
+function getMatches() {
+	return fetch(get_matches_request)
 	.then((response) => {
 		return response.json();
 	}).then(data => {
@@ -73,11 +88,37 @@ const getNumberGP = (data:any) => {
 	}
 }
 
-function appendTeamTable(team:any) {
+function appendTeamTable(matches:any, team:any) {
 	let fll_display:any = document.getElementById("fll_teams_table");
 
+	var bad_matches = [false, false, false];
+	var rescheduled_matches = [false, false, false];
+
+	// const matches = await getMatches();
+	var match_index = 0;
+	for (const match of matches) {
+		if (team.team_number === match.next_team1_number || team.team_number === match.next_team2_number) {
+			if (match.rescheduled) {
+				rescheduled_matches[match_index] = true;
+			} else if (match.complete) {
+				switch(match_index) {
+					case 0:
+						if (getBlankIfNull(team.match_score_1) === '') { bad_matches[match_index] = true; }
+						break;
+					case 1:
+						if (getBlankIfNull(team.match_score_2) === '') { bad_matches[match_index] = true; }
+						break;
+					case 2:
+						if (getBlankIfNull(team.match_score_3) === '') { bad_matches[match_index] = true; }
+						break;
+				}
+			}
+			match_index = match_index + 1;
+		}
+	}
+
 	let tr = document.createElement("tr");
-		
+
 		
 	let td_rank = document.createElement("td");
 	td_rank.appendChild(document.createTextNode(getBlankIfNull(team.ranking)));
@@ -94,6 +135,11 @@ function appendTeamTable(team:any) {
 	// Score
 	let td_r2 = document.createElement("td");
 	td_r2.appendChild(document.createTextNode(getBlankIfNull(team.match_score_1)));
+	if (rescheduled_matches[0]) {
+		td_r2.style.backgroundColor = "orange";
+	} else if (bad_matches[0]) {
+		td_r2.style.backgroundColor = "red";
+	}
 
 	let td_r3 = document.createElement("td");
 	td_r3.appendChild(document.createTextNode(getBlankIfNull(team.match_gp_1)));
@@ -105,6 +151,11 @@ function appendTeamTable(team:any) {
 
 	let td_r5 = document.createElement("td");
 	td_r5.appendChild(document.createTextNode(getBlankIfNull(team.match_score_2)));
+	if (rescheduled_matches[1]) {
+		td_r5.style.backgroundColor = "orange";
+	} else if (bad_matches[1]) {
+		td_r5.style.backgroundColor = "red";
+	}
 
 	let td_r6 = document.createElement("td");
 	td_r6.appendChild(document.createTextNode(getBlankIfNull(team.match_gp_2)));
@@ -116,6 +167,11 @@ function appendTeamTable(team:any) {
 
 	let td_r8 = document.createElement("td");
 	td_r8.appendChild(document.createTextNode(getBlankIfNull(team.match_score_3)));
+	if (rescheduled_matches[2]) {
+		td_r8.style.backgroundColor = "orange";
+	} else if (bad_matches[2]) {
+		td_r8.style.backgroundColor = "red";
+	}
 
 	// GP
 	let td_r9 = document.createElement("td");
@@ -200,13 +256,14 @@ function clearTeamsScheduleTable() {
 	}
 }
 
-function appendTeamsTable(data:any) {
+async function appendTeamsTable(data:any) {
 
 	clearTeamsTable();
 	clearTeamsScheduleTable();
 	
+	const matches = await getMatches();
 	for (const team of data) {
-		appendTeamTable(team);
+		appendTeamTable(matches, team);
 	}
 }
 
@@ -265,6 +322,7 @@ async function filterTeams(query:any) {
 	clearTeamsScheduleTable();
 	const teams = await getTeams();
 	const matches = await getSchedule();
+	const scheduled_matches = await getMatches();
 
 	if (!query) {
 		return displayTeams(true);
@@ -275,7 +333,7 @@ async function filterTeams(query:any) {
 			const teamAffilation = team.affiliation.toLowerCase();
 
 			if (teamName.includes(query.toLowerCase()) || teamNumber.includes(query.toLowerCase()) || teamAffilation.includes(query.toLowerCase())) {
-				appendTeamTable(team);
+				appendTeamTable(scheduled_matches, team);
 				appendTeamSchedule(matches, team);
 			}
 		}

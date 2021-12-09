@@ -9,6 +9,14 @@ const sendEvent = require('./comm_service');
 const { clearInterval } = require('timers');
 const { match } = require('assert');
 
+function sleep(ms) {
+	const date = Date.now();
+	let currDate = null;
+	do {
+		currDate = Date.now();
+	} while (currDate - date < ms);
+}
+
 
 const db = mysql.createConnection({
 	host: 'localhost',
@@ -38,13 +46,14 @@ app.use(bodyParser.urlencoded({
 app.use('/api/database/purge', (req, res) => {
 	const sql_teams = "TRUNCATE TABLE fll_teams;";
 	const sql_schedule = "TRUNCATE TABLE fll_teams_schedule;";
+	const sql_matches = "TRUNCATE TABLE fll_matches;";
 	const sql_users = "TRUNCATE TABLE users;";
 	const sql_insert_user = "INSERT INTO users (name, password) VALUES (?,?)";
 
 	db.query(sql_teams, (err, result) => {
 		console.log("Teams purge");
 		console.log(err);
-		console.log(result);
+		// console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
@@ -52,7 +61,15 @@ app.use('/api/database/purge', (req, res) => {
 	db.query(sql_schedule, (err, result) => {
 		console.log("Schedule purge");
 		console.log(err);
-		console.log(result);
+		// console.log(result);
+
+		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
+	});
+
+	db.query(sql_matches, (err, result) => {
+		console.log("Matches purge");
+		console.log(err);
+		// console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
@@ -60,35 +77,35 @@ app.use('/api/database/purge', (req, res) => {
 	db.query(sql_users, (err, result) => {
 		console.log("Users purge");
 		console.log(err);
-		console.log(result);
+		// console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
 
 	db.query(sql_insert_user,["admin", "password"] , (err, result) => {
 		console.log(err);
-		console.log(result);
+		// console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
 
 	db.query(sql_insert_user, ["scorekeeper", "password"], (err, result) => {
 		console.log(err);
-		console.log(result);
+		// console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
 
 	db.query(sql_insert_user, ["referee", "password"], (err, result) => {
 		console.log(err);
-		console.log(result);
+		// console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); }
 	});
 
 	db.query(sql_insert_user, ["head_referee", "password"], (err, result) => {
 		console.log(err);
-		console.log(result);
+		// console.log(result);
 
 		if (err) { res.send({message: "Failed to purge database. Check if it exists"}); } else {
 			res.send({message: "Purged teams, and reset password to default 'password'"});
@@ -248,7 +265,7 @@ app.post('/api/scheduleSet/new', (req, res) => {
 app.get('/api/matches/get', (req, res) => {
 	const sql = "SELECT * FROM fll_matches ORDER BY next_match_number ASC;";
 	db.query(sql, (err, result) => {
-		console.log("Matches Requested");
+		// console.log("Matches Requested");
 		if (err) {
 			console.log("Match request error");
 		} else {
@@ -265,7 +282,7 @@ app.get('/api/teams/get', (req, res) => {
 	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
 	db.query(sql, (err, result) => {
 		// console.log(result);
-		console.log("Teams requested")
+		// console.log("Teams requested")
 
 		if (err) {
 			console.log("Teams request error");
@@ -512,7 +529,7 @@ async function updateRanking() {
 			if (highest == null) {
 				highest = 0;
 			}
-			console.log("team: " + team.team_name + ", highest score: " + scores[0]);
+			// console.log("team: " + team.team_name + ", highest score: " + scores[0]);
 
 			teams.push({name: team.team_name, highest_score: highest, rank: 0});
 		}
@@ -534,12 +551,12 @@ async function updateRanking() {
 				if (err) {
 					console.log(err);
 				} else {
-					console.log(result);
+					// console.log(result);
 				}
 			}); 
 		}
 
-		console.log(teams);
+		// console.log(teams);
 		sendEvent("cj_node", "score:update", "rankings");
 	})
 }
@@ -563,7 +580,18 @@ app.post('/api/teams/score', (req, res) => {
 	const team_notes = req.body.notes;
 
 	if (rank_number < 1 || rank_number > 3) {
-		res.send({err: "ranking", message: "Unknown rank number"});
+		res.send({err: "ranking", message: "Unknown rank number (submit again)"});
+		return;
+	}
+
+	if (team_score === null || team_score === undefined) {
+		res.send({err: "score", message: "Unknown score value (submit again)"});
+		return;
+	}
+
+	if (team_gp === null || team_gp === undefined ) {
+		res.send({err: "gp", message: "Unknown GP value (submit again)"});
+		return;
 	}
 
 	var rank_sql = "";
@@ -599,10 +627,11 @@ app.post('/api/teams/score', (req, res) => {
 	const sql_team_gp = gp_sql + " = '" + team_gp + "', ";
 	const sql_team_notes = notes_sql + " = '" + team_notes + "' ";
 	
-	const sql_get = "SELECT * from fll_teams WHERE team_name = ?;"
+	const sql_matches_get = "SELECT * FROM fll_matches ORDER BY next_match_number ASC;";
+	const sql_get = "SELECT * FROM fll_teams WHERE team_name = ?;"
 	const sql_update = "UPDATE fll_teams SET "+sql_team_score+sql_team_gp+sql_team_notes+" WHERE team_name = ?;";
-	console.log(sql_get);
-	console.log(sql_update);
+	// console.log(sql_get);
+	// console.log(sql_update);
 
 	db.query(sql_get, [team_name], (err, result) => {
 		console.log("Checking existing scores")
@@ -635,13 +664,44 @@ app.post('/api/teams/score', (req, res) => {
 				res.send({err: "Duplicate Error", message: "Team score already exists! => Get CJ if duplicate issue"})
 				console.log("Score exists already");
 			} else {
+				var team = result[0];
 				db.query(sql_update, [team_name], (err, result) => {
 					console.log("Updating score");
-					console.log(result);
+					// console.log(result);
 					if (err) {
 						console.log(err);
 						res.send({err: err, message: "Error sending score => Get CJ if issue"});
 					} else {
+						db.query(sql_matches_get, (err, result) => {
+							var count = 0;
+							console.log("Got some matches");
+							for (const match of result) {
+								// console.log("Inside match");
+								// console.log(match);
+								// console.log(team);
+								if (match.next_team1_number === team.team_number || match.next_team2_number === team.team_number) {
+									count++;
+									if (count == rank_number) {
+										console.log("Matched count to rank number");
+										if (match.next_team1_number === team.team_number) {
+											db.query("UPDATE fll_matches SET next_team1_score_submitted = 1 WHERE next_match_number = ?", [match.next_match_number], (err,result) => {
+												if (!err) {console.log(result);}
+												console.log("Set a submission for team 1");
+											});
+										}
+		
+										if (match.next_team2_number === team.team_number) {
+											db.query("UPDATE fll_matches SET next_team2_score_submitted = 1 WHERE next_match_number = ?", [match.next_match_number], (err,result) => {
+												if (!err) {console.log(result);}
+												console.log("Set a submission for team 2");
+											});
+										}
+									}
+									console.log("Matched team_match to team in db");
+								}
+
+							}
+						});
 						console.log("Team updated");
 						res.send({message: "Team [" + team_name + "] updated"});
 						updateRanking();
@@ -654,11 +714,152 @@ app.post('/api/teams/score', (req, res) => {
 
 
 // 
+// ------------------------ Time & Scheduling ---------------------
+// 
+var next_match_number = 1;
+
+function setNextMatch() {
+	db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [true, next_match_number], (err, result) => {
+		console.log(result);
+	});
+	next_match_number = next_match_number + 1;
+	console.log("Set next match");
+}
+
+function setPrevMatch() {
+	db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [false, next_match_number], (err, result) => {
+		console.log(result);
+	});
+	db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [false, next_match_number-1], (err, result) => {
+		console.log(result);
+	});
+	next_match_number = next_match_number - 1;
+	console.log("set prev match");
+}
+
+function setMatch(match) {
+	next_match_number = match;
+	for (var i = 1; i < next_match_number; i++) {
+		db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [false, i], (err, result) => {
+			console.log(result);
+		});
+
+		db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [true, i], (err, result) => {
+			console.log(result);
+		});
+	}
+	console.log("set match");
+}
+
+function setRescheduleMatch() {
+	db.query("UPDATE fll_matches SET rescheduled = ? WHERE next_match_number = ?;", [true, next_match_number], (err, result) => {
+		console.log(result);
+	});
+	next_match_number = next_match_number + 1;
+}
+
+// increment match
+app.get('/api/match/next', (req, res) => {
+	console.log("ref incremented match");
+	setNextMatch();
+	res.send({message: "Set match to " + next_match_number});
+});
+
+// decrement match
+app.get('/api/match/prev', (req, res) => {
+	console.log("ref decremented match");
+	setPrevMatch();
+	res.send({message: "Set match to " + next_match_number});
+});
+
+// set match
+app.post('/api/match/set', (req, res) => {
+	console.log("Match set");
+	setMatch(req.body.number);
+	res.send({message: "Set match to " + next_match_number});
+});
+
+// reschedule match
+app.get('/api/match/reschedule', (req, res) => {
+	console.log("ref rescheduled match");
+	setRescheduleMatch();
+	res.send({message: "Rescheduled Match"});
+});
+
+async function time_scheduling() {
+	var next_match_time = 0; // 24 hour secconds (seconds since 00:00:00)
+	var now_time = 0; // 24 hour secconds (seconds since 00:00:00)
+	var schedule_ok = false;
+
+	
+	// Get which matches have been completed
+	function setScheduledMatch() {
+		const sql = "SELECT * FROM fll_matches ORDER BY id ASC;";
+		db.query(sql, (err, result) => {
+			if (err) {
+				console.log("Error getting time_schedule");
+				console.log(err);
+				return;
+			} else {
+				for (const match of result) {
+					if (match.complete == 0 && match.rescheduled == 0) {
+						next_match_number = match.next_match_number;
+						schedule_ok = true;
+						break;
+					}
+				}
+			}
+		});
+	}
+	
+	function time_schedule() {
+
+		if (next_match_number !== undefined) {
+			setScheduledMatch();
+			
+			const next_match = "SELECT * FROM fll_matches WHERE next_match_number = ?;";
+			db.query(next_match, [next_match_number], (err, result) => {
+				if (err) {
+					console.log("error");
+					console.log(err);
+				} else {
+					for (const next_match_result of result) { // there should only be one. Just some extra security
+						var next_time_string = (next_match_result.next_start_time.substr(0,8));
+						var now = new Date();
+						var now_time_string = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+						const [hours_next_s, minutes_next_s, seconds_next_s] = next_time_string.split(":");
+						const [hours_now_s, minutes_now_s, seconds_now_s] = now_time_string.split(":");
+
+						now_time = (+hours_now_s) * 60 * 60 + (+minutes_now_s) * 60 + (+seconds_now_s);
+						next_match_time = (+hours_next_s) * 60 * 60 + (+minutes_next_s) * 60 + (+seconds_next_s);
+
+						const ttl = (next_match_time-now_time);
+
+						sendEvent("cj_node", "schedule:current_time", {now_time: now_time});
+						sendEvent("cj_node", "schedule:next_time", {next_match_time: next_match_time});
+						sendEvent("cj_node", "schedule:ttl", {time: ttl});
+						sendEvent("cj_node", "schedule:next_match", {next_match: next_match_number});
+					}
+				}
+			});
+		} else {
+			console.log("Schedule Timing error");
+
+		}
+	}
+
+	time_schedule();
+	setInterval(time_schedule, 1000);
+}
+
+
+// 
 // ------------------------ Clock ---------------------------------
 // 
 
 // Main countdown
-var countDownTime = 150; // 150
+var countDownTime = 5; // 150
 var prerunTime = 5;
 var clockStop = false;
 var existingClock = false;
@@ -750,14 +951,15 @@ app.post('/api/clock/start', (req, res) => {
 	clockStop = false;
 	sendEvent("cj_node", "clock:start", true);
 	startCountdown(countDownTime);
+	setNextMatch();
 });
 
 // stop/abort
 app.post('/api/clock/stop', (req, res) => {
 	clockStop = true;
 	console.log("Timer set to stop");
-
 	sendEvent("cj_node", "clock:stop", true);
+	setPrevMatch();
 });
 
 // reload
@@ -767,6 +969,7 @@ app.post('/api/clock/reload', (req, res) => {
 	sendEvent("cj_node", "clock:reload", true);
 });
 
+time_scheduling();
 
 app.listen(3001, () => {
 	console.log('running on port 3001');

@@ -248,7 +248,7 @@ app.post('/api/scheduleSet/new', (req, res) => {
 app.get('/api/matches/get', (req, res) => {
 	const sql = "SELECT * FROM fll_matches ORDER BY next_match_number ASC;";
 	db.query(sql, (err, result) => {
-		console.log("Matches Requested");
+		// console.log("Matches Requested");
 		if (err) {
 			console.log("Match request error");
 		} else {
@@ -265,7 +265,7 @@ app.get('/api/teams/get', (req, res) => {
 	const sql = "SELECT * FROM fll_teams ORDER BY ranking ASC;";
 	db.query(sql, (err, result) => {
 		// console.log(result);
-		console.log("Teams requested")
+		// console.log("Teams requested")
 
 		if (err) {
 			console.log("Teams request error");
@@ -658,20 +658,72 @@ app.post('/api/teams/score', (req, res) => {
 // 
 var next_match_number = undefined;
 
-// increment match
-app.post('/api/match/next', (req, res) => {
+function setNextMatch() {
+	db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [true, next_match_number], (err, result) => {
+		console.log(result);
+	});
 	next_match_number = next_match_number + 1;
+	console.log("Set next match");
+}
+
+function setPrevMatch() {
+	db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [false, next_match_number], (err, result) => {
+		console.log(result);
+	});
+	db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [false, next_match_number-1], (err, result) => {
+		console.log(result);
+	});
+	next_match_number = next_match_number - 1;
+	console.log("set prev match");
+}
+
+function setMatch(match) {
+	db.query("UPDATE fll_matches SET complete = ?;", [false, next_match_number], (err, result) => {
+		console.log(result);
+	});
+
+	for (var i = 0; i < next_match_number; i++) {
+		db.query("UPDATE fll_matches SET complete = ? WHERE next_match_number = ?;", [true, i], (err, result) => {
+			console.log(result);
+		});
+	}
+	next_match_number = match;
+	console.log("set match");
+}
+
+function setRescheduleMatch() {
+	db.query("UPDATE fll_matches SET rescheduled = ? WHERE next_match_number = ?;", [true, next_match_number], (err, result) => {
+		console.log(result);
+	});
+	next_match_number = next_match_number + 1;
+}
+
+// increment match
+app.get('/api/match/next', (req, res) => {
+	console.log("ref incremented match");
+	setNextMatch();
+	res.send({message: "Set match to " + next_match_number});
 });
 
 // decrement match
-app.post('/api/match/prev', (req, res) => {
-	next_match_number = next_match_number - 1;
+app.get('/api/match/prev', (req, res) => {
+	console.log("ref decremented match");
+	setPrevMatch();
+	res.send({message: "Set match to " + next_match_number});
 });
 
 // set match
-app.post('/match/set', (req, res) => {
-	next_match_number = req.body.number;
+app.post('/api/match/set', (req, res) => {
+	console.log("Match set");
+	setMatch(req.body.number);
 	res.send({message: "Set match to " + next_match_number});
+});
+
+// reschedule match
+app.get('/api/match/reschedule', (req, res) => {
+	console.log("ref rescheduled match");
+	setRescheduleMatch();
+	res.send({message: "Rescheduled Match"});
 });
 
 async function time_scheduling() {
@@ -718,10 +770,11 @@ async function time_scheduling() {
 						next_match_time = (+hours_next_s) * 60 * 60 + (+minutes_next_s) * 60 + (+seconds_next_s);
 
 						const ttl = (next_match_time-now_time);
-						// console.log(ttl);
+
 						sendEvent("cj_node", "schedule:current_time", now_time);
 						sendEvent("cj_node", "schedule:next_time", next_match_time);
-						sendEvent("cj_node", "schedule:ttl", ttl);
+						sendEvent("cj_node", "schedule:ttl", {time: ttl});
+						// console.log(ttl);
 					}
 				}
 			});
@@ -738,7 +791,7 @@ async function time_scheduling() {
 // 
 
 // Main countdown
-var countDownTime = 150; // 150
+var countDownTime = 5; // 150
 var prerunTime = 5;
 var clockStop = false;
 var existingClock = false;
@@ -830,14 +883,15 @@ app.post('/api/clock/start', (req, res) => {
 	clockStop = false;
 	sendEvent("cj_node", "clock:start", true);
 	startCountdown(countDownTime);
+	setNextMatch();
 });
 
 // stop/abort
 app.post('/api/clock/stop', (req, res) => {
 	clockStop = true;
 	console.log("Timer set to stop");
-
 	sendEvent("cj_node", "clock:stop", true);
+	setPrevMatch();
 });
 
 // reload

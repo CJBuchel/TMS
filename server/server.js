@@ -654,6 +654,86 @@ app.post('/api/teams/score', (req, res) => {
 
 
 // 
+// ------------------------ Time & Scheduling ---------------------
+// 
+var next_match_number = undefined;
+
+// increment match
+app.post('/api/match/next', (req, res) => {
+	next_match_number = next_match_number + 1;
+});
+
+// decrement match
+app.post('/api/match/prev', (req, res) => {
+	next_match_number = next_match_number - 1;
+});
+
+// set match
+app.post('/match/set', (req, res) => {
+	next_match_number = req.body.number;
+	res.send({message: "Set match to " + next_match_number});
+});
+
+async function time_scheduling() {
+	var next_match_time = 0; // 24 hour secconds (seconds since 00:00:00)
+	var now_time = 0; // 24 hour secconds (seconds since 00:00:00)
+
+	const sql = "SELECT * FROM fll_matches ORDER BY id ASC;";
+
+	// Get which matches have been completed
+	db.query(sql, (err, result) => {
+		if (err) {
+			console.log("Error getting time_schedule");
+			console.log(err);
+			return;
+		} else {
+			for (const match of result) {
+				if (match.complete == 0 && match.rescheduled == 0) {
+					next_match_number = match.next_match_number;
+					console.log("next match: " + next_match_number);
+					break;
+				}
+			}
+		}
+	});
+	
+	function time_schedule() {
+		if (next_match_number !== undefined) {
+			
+			const next_match = "SELECT * FROM fll_matches WHERE next_match_number = ?;";
+			db.query(next_match, [next_match_number], (err, result) => {
+				if (err) {
+					console.log("error");
+					console.log(err);
+				} else {
+					for (const next_match_result of result) { // there should only be one. Just some extra security
+						var next_time_string = (next_match_result.next_start_time.substr(0,8));
+						var now = new Date();
+						var now_time_string = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+						const [hours_next_s, minutes_next_s, seconds_next_s] = next_time_string.split(":");
+						const [hours_now_s, minutes_now_s, seconds_now_s] = now_time_string.split(":");
+
+						now_time = (+hours_now_s) * 60 * 60 + (+minutes_now_s) * 60 + (+seconds_now_s);
+						next_match_time = (+hours_next_s) * 60 * 60 + (+minutes_next_s) * 60 + (+seconds_next_s);
+
+						const ttl = (next_match_time-now_time);
+						// console.log(ttl);
+						sendEvent("cj_node", "schedule:current_time", now_time);
+						sendEvent("cj_node", "schedule:next_time", next_match_time);
+						sendEvent("cj_node", "schedule:ttl", ttl);
+					}
+				}
+			});
+		}
+	}
+
+	time_schedule();
+	setInterval(time_schedule, 1000);
+}
+
+
+// 
 // ------------------------ Clock ---------------------------------
 // 
 
@@ -767,6 +847,7 @@ app.post('/api/clock/reload', (req, res) => {
 	sendEvent("cj_node", "clock:reload", true);
 });
 
+time_scheduling();
 
 app.listen(3001, () => {
 	console.log('running on port 3001');

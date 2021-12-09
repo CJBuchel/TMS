@@ -2,7 +2,7 @@ import React, { Component, useState } from 'react'
 
 import Axios from 'axios';
 import './index.css'
-import { onSystemRefreshEvent, onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent, onScheduleTTLEvent } from '../comm_service';
+import { onSystemRefreshEvent, onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent, onScheduleTTLEvent, sendEvent, sendScoreUpdate, onScheduleNextMatchEvent } from '../comm_service';
 
 
 const request = "http://" + window.location.hostname + ":3001/api";
@@ -36,14 +36,16 @@ function parseTTL(time:number) {
 }
 
 function setPrevMatch() {
-	if (window.confirm("Are you sure?")) {
+	if (window.confirm("Set to prior match?")) {
 		return fetch(set_prev_match_request)
 		.then((response) => {
 			return response.json();
 		}).then(data => {
 			if (data.message) {
 				alert(data.message);
+				sendScoreUpdate("ref_update");
 			} else {
+				sendScoreUpdate("ref_update");
 				return data;
 			}
 		}).catch((error) => {
@@ -54,14 +56,16 @@ function setPrevMatch() {
 }
 
 function setNextMatch() {
-	if (window.confirm("Are you sure?")) {
+	if (window.confirm("Set to next match?")) {
 		return fetch(set_next_match_request)
 		.then((response) => {
 			return response.json();
 		}).then(data => {
 			if (data.message) {
 				alert(data.message);
+				sendScoreUpdate("ref_update");
 			} else {
+				sendScoreUpdate("ref_update");
 				return data;
 			}
 		}).catch((error) => {
@@ -72,14 +76,16 @@ function setNextMatch() {
 }
 
 function rescheduleMatch() {
-	if (window.confirm("Are you sure?")) {
+	if (window.confirm("Reschedule Match?")) {
 		return fetch(reschedule_match_request)
 		.then((response) => {
 			return response.json();
 		}).then(data => {
 			if (data.message) {
 				alert(data.message);
+				sendScoreUpdate("ref_update");
 			} else {
+				sendScoreUpdate("ref_update");
 				return data;
 			}
 		}).catch((error) => {
@@ -155,6 +161,8 @@ interface IState {
 	// ttl state
 	ttlState?: string;
 	ttlTime?: number;
+
+	nextMatch?: any;
 
 	// matches?: any;
 }
@@ -252,6 +260,13 @@ class Controller extends Component<IProps,IState> {
 			console.error(err)
 		});
 
+		onScheduleNextMatchEvent(({next_match}:{next_match:any}) => {
+			this.setState({nextMatch: next_match});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
 		this.state = {
 			soundsEnabled: true,
 			mainConfigState: true,
@@ -305,20 +320,25 @@ class Controller extends Component<IProps,IState> {
 		let fll_matches_display:any = document.getElementById("fll_matches_table");
 
 		const team1_number_val = match.next_team1_number;
+		const team2_number_val = match.next_team2_number;
 		var team1_name_val;
+		var team2_name_val;
+
+		var team1_ok = true;
+		var team2_ok = true;
 
 		for (const team of teams) {
 			if (team.team_number === team1_number_val) {
 				team1_name_val = team.team_name;
+				if (match.complete && !match.rescheduled && !match.next_team1_score_submitted) {
+					team1_ok = false; // big bad refs :(
+				}
 			}
-		}
-
-		const team2_number_val = match.next_team2_number;
-		var team2_name_val;
-
-		for (const team of teams) {
 			if (team.team_number === team2_number_val) {
 				team2_name_val = team.team_name;
+				if (match.complete && !match.rescheduled && !match.next_team2_score_submitted) {
+					team2_ok = false; // big bad refs :(
+				}
 			}
 		}
 
@@ -333,6 +353,10 @@ class Controller extends Component<IProps,IState> {
 
 		let team1_number = document.createElement("td");
 		team1_number.appendChild(document.createTextNode(team1_number_val));
+		if (!team1_ok) {
+			team1_number.style.backgroundColor = "red";
+		}
+
 
 		let team1_name = document.createElement("td");
 		team1_name.appendChild(document.createTextNode(team1_name_val));
@@ -342,6 +366,9 @@ class Controller extends Component<IProps,IState> {
 		
 		let team2_number = document.createElement("td");
 		team2_number.appendChild(document.createTextNode(team2_number_val));
+		if (!team2_ok) {
+			team2_number.style.backgroundColor = "red";
+		}
 
 		let team2_name = document.createElement("td");
 		team2_name.appendChild(document.createTextNode(team2_name_val));
@@ -448,6 +475,7 @@ class Controller extends Component<IProps,IState> {
 					<div className="status_controls">
 						<h1>Status Controls</h1>
 						<h3>TTL - Status</h3>
+						<h3>Next Match {`${this.state.nextMatch||''}`}</h3>
 						<div className={`ttl_time ${this.state.ttlState}`}>
 							{ parseTTL(this.state.ttlTime||0) }
 						</div>

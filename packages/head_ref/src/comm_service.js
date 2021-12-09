@@ -116,9 +116,11 @@ export const onClockEndGameEvent = onClockEvent.bind(null, 'endgame')
 export const onScheduleTimeEvent = onScheduleEvent.bind(null, 'current_time');
 export const onScheduleNextTimeEvent = onScheduleEvent.bind(null, 'next_time');
 export const onScheduleTTLEvent = onScheduleEvent.bind(null, 'ttl');
+export const onScheduleNextMatchEvent = onScheduleEvent.bind(null, 'next_match');
 
 export const onScoreUpdateEvent = onScoreEvent.bind(null, 'update')
 export const onSystemRefreshEvent = onSystemEvent.bind(null, 'refresh');
+
 
 
 // 
@@ -168,4 +170,8 @@ export function sendClockPrestartEvent(e) {
 
 export function sendClockReload(e) {
 	return sendEvent("cj_node", "clock:reload", e);
+}
+
+export function sendScoreUpdate(e) {
+	return sendEvent("cj_node", "score:update", e);
 }

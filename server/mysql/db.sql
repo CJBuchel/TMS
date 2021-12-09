@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `fll_teams` (
 -- Schedule data
 CREATE TABLE IF NOT EXISTS `fll_teams_schedule` (
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`match_number` VARCHAR(10),
+	`match_number` INT,
 	`start_time` TEXT, -- CSV Import is not date and time 
 	`end_time` TEXT,
 	`team_number` VARCHAR(10),
@@ -74,6 +74,9 @@ CREATE TABLE IF NOT EXISTS `fll_matches` (
 
 	`next_team1_number` VARCHAR(10),
 	`next_team2_number` VARCHAR(10),
+
+	`next_team1_score_submitted` BOOLEAN NOT NULL DEFAULT 0,
+	`next_team2_score_submitted` BOOLEAN NOT NULL DEFAULT 0,
 
 	`complete` BOOLEAN NOT NULL DEFAULT 0,
 	`rescheduled` BOOLEAN NOT NULL DEFAULT 0, -- has this match been rescheduled

@@ -6,7 +6,7 @@ GRANT ALL PRIVILEGES ON * . * TO 'fss'@'localhost';
 ALTER USER 'fss'@'localhost' IDENTIFIED WITH mysql_native_password BY 'fss';
 flush privileges;
 
--- DROP DATABASE fss_fll_database;
+DROP DATABASE IF EXISTS fss_fll_database;
 CREATE DATABASE IF NOT EXISTS fss_fll_database;
 
 USE fss_fll_database;

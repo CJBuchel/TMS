@@ -492,7 +492,7 @@ class Controller extends Component<IProps,IState> {
 
 				{/* Scheduling */}
 				<div className="column-right">
-					<h1>Schedule Controls</h1>
+					<h1>Schedule Status</h1>
 					
 					{/* Round Status Time */}
 					<div className="row">

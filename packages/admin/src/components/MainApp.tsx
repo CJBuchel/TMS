@@ -19,6 +19,7 @@ const new_teams = request + "/teamset/new";
 const new_team = request + "/team/new";
 const get_teams_request = request + "/teams/get";
 const update_ranks = request + "/teams/updateRanking";
+const set_match = request + "/match/set";
 
 const purgeTeams = async () => {
 	await fetch(purge_database)
@@ -34,6 +35,22 @@ const purgeTeams = async () => {
 const updateDisplay = async () => {
 	sendScoreUpdate("admin_update");
 	console.log("Display force update")
+}
+
+const setMatch = async (match:number) => {
+	await fetch(set_match, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+
+		body: JSON.stringify({number: match})
+	})
+	.then(response => {
+		return response.json();
+	}).then(data => {
+		alert(data.message);
+	});
 }
 
 const refreshDisplays = async () => {
@@ -56,6 +73,8 @@ interface IState {
 	team_arr?: Array<any>;
 
 	teamAdd?: boolean;
+
+	next_match?: number;
 }
 
 class MainApp extends React.Component<IProps, IState> {
@@ -73,7 +92,6 @@ class MainApp extends React.Component<IProps, IState> {
 			team_affiliation: undefined,
 
 			teamAdd: false,
-			// modifyTeam: false,
 
 			team_arr: [],
 		}
@@ -140,6 +158,7 @@ class MainApp extends React.Component<IProps, IState> {
 		}).then(data => {
 			console.log(data)
 			alert(data.message);
+			window.location.reload();
 		});
 	}
 
@@ -187,6 +206,11 @@ class MainApp extends React.Component<IProps, IState> {
 						<button onClick={updateDisplay} className="hoverButton green">Force Update Display</button>
 						<button onClick={e => this.sendTeamData(update_ranks, {})} className="hoverButton green">Force Update Rankings</button>
 						<h3>System Controls</h3>
+						<input type="text" name="current_match" onChange={(e:any) => {
+							console.log(e.target.value);
+							this.setState({next_match: e.target.value})
+						}}/>
+						<button className="hoverButton green" onClick={(e) => {setMatch(this.state.next_match||0)}} >Set Next Match Number</button>
 						<button onClick={refreshDisplays} className="hoverButton red">Force Reload All Pages</button>
 						<h3>Change User Passwords</h3>
 						<PasswordChange/>

@@ -2,7 +2,7 @@ import React, { Component, useState } from 'react'
 
 import Axios from 'axios';
 import './index.css'
-import { onSystemRefreshEvent, onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent } from '../comm_service';
+import { onSystemRefreshEvent, onClockEndEvent, onClockEndGameEvent, onClockPrestartEvent, onClockReloadEvent, onClockStartEvent, onClockStopEvent, onClockTimeEvent, sendClockPrestartEvent, onScheduleTTLEvent } from '../comm_service';
 
 
 const request = "http://" + window.location.hostname + ":3001/api";
@@ -11,15 +11,81 @@ const get_teams_request = request+"/teams/get";
 const get_schedule_request = request+"/scheduleSet/get";
 const get_matches_request = request+"/matches/get";
 
-function pad (number: any, length: any) {
+const set_next_match_request  = request+"/match/next";
+const set_prev_match_request  = request+"/match/prev";
+const reschedule_match_request = request+"/match/reschedule";
+
+function pad(number: any, length: any) {
 	return (new Array(length + 1).join('0') + number).slice(-length)
 }
 
-function parseTime (time: number) {
+function parseTime(time:number) {
 	if (time <= 30) {
 		return `${time | 0}`
 	} else {
 		return `${pad(Math.floor(time / 60), 2)}:${pad(time % 60, 2)}`
+	}
+}
+
+function parseTTL(time:number) {
+	if (time < 0) {
+		return `-${pad(Math.floor(time/ 60 / 60), 2)}:${pad(Math.floor(time / 60), 2)}:${pad(time % 60, 2)}`
+	} else {
+		return `+${pad(Math.floor(time/ 60 / 60), 2)}:${pad(Math.floor(time / 60), 2)}:${pad(time % 60, 2)}`
+	}
+}
+
+function setPrevMatch() {
+	if (window.confirm("Are you sure?")) {
+		return fetch(set_prev_match_request)
+		.then((response) => {
+			return response.json();
+		}).then(data => {
+			if (data.message) {
+				alert(data.message);
+			} else {
+				return data;
+			}
+		}).catch((error) => {
+			// console.log(error);
+			console.log("Error while processing match request");
+		});
+	}
+}
+
+function setNextMatch() {
+	if (window.confirm("Are you sure?")) {
+		return fetch(set_next_match_request)
+		.then((response) => {
+			return response.json();
+		}).then(data => {
+			if (data.message) {
+				alert(data.message);
+			} else {
+				return data;
+			}
+		}).catch((error) => {
+			// console.log(error);
+			console.log("Error while processing match request");
+		});
+	}
+}
+
+function rescheduleMatch() {
+	if (window.confirm("Are you sure?")) {
+		return fetch(reschedule_match_request)
+		.then((response) => {
+			return response.json();
+		}).then(data => {
+			if (data.message) {
+				alert(data.message);
+			} else {
+				return data;
+			}
+		}).catch((error) => {
+			// console.log(error);
+			console.log("Error while processing match request");
+		});
 	}
 }
 
@@ -85,6 +151,10 @@ interface IState {
 	mainConfigState?: boolean;
 	runningConfigState?: boolean;
 	stoppedConfigState?: boolean;
+
+	// ttl state
+	ttlState?: string;
+	ttlTime?: number;
 
 	// matches?: any;
 }
@@ -161,6 +231,22 @@ class Controller extends Component<IProps,IState> {
 
 		onClockTimeEvent(({time}:{time:number}) => {
 			this.setState({currentTime: time});
+		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
+		.catch((err:any) => {
+			console.error(err)
+		});
+
+		onScheduleTTLEvent(({time}:{time:number}) => {
+			if (time > 30) {
+				this.setState({ttlState: 'running'});
+			} else if (time < 0) {
+				this.setState({ttlState: 'ended'});
+			} else if (time < 30) {
+				this.setState({ttlState: 'armed'});
+			}
+
+			this.setState({ttlTime: time});
+			// console.log("Time: " + time);
 		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 		.catch((err:any) => {
 			console.error(err)
@@ -273,6 +359,12 @@ class Controller extends Component<IProps,IState> {
 		tr.appendChild(team2_number);
 		tr.appendChild(team2_name);
 		tr.appendChild(team2_ontable);
+		
+		if (match.rescheduled) {
+			tr.style.backgroundColor = "orange";
+		} else if (match.complete) {
+			tr.style.backgroundColor = "green";
+		}
 
 		fll_matches_display.appendChild(tr);
 	}
@@ -289,7 +381,6 @@ class Controller extends Component<IProps,IState> {
 		const teams = await getTeams();
 		this.clearMatches();
 		for (const match of matches) {
-			// console.log(match);
 			this.appendMatchTable(match, teams);
 		}
 	}
@@ -325,8 +416,8 @@ class Controller extends Component<IProps,IState> {
 		return (
 			<div className="row">
 
-				{/* Timer controls */}
 				<div className="column-left">
+					{/* Timer controls */}
 					<div className="timer_controls">
 
 						<h1>Timer Controls</h1>
@@ -352,9 +443,26 @@ class Controller extends Component<IProps,IState> {
 							<button className="hoverButton red" onClick={this.setStop} disabled={this.state.buttonsDisabled}>Abort</button>
 						</div>
 					</div>
+
+					{/* Status controls */}
+					<div className="status_controls">
+						<h1>Status Controls</h1>
+						<h3>TTL - Status</h3>
+						<div className={`ttl_time ${this.state.ttlState}`}>
+							{ parseTTL(this.state.ttlTime||0) }
+						</div>
+						<div className="row">
+							<button className="hoverButton orange" onClick={setPrevMatch} disabled={this.state.buttonsDisabled}>Prev Match</button>
+							<button className="hoverButton orange" onClick={setNextMatch} disabled={this.state.buttonsDisabled}>Next Match</button>
+						</div>
+						<div className="row">
+							<button className="hoverButton red" onClick={rescheduleMatch} disabled={this.state.buttonsDisabled}>Reschedule</button>
+						</div>
+					</div>
 				</div>
 
-				{/* Status/Scheduling */}
+
+				{/* Scheduling */}
 				<div className="column-right">
 					<h1>Schedule Controls</h1>
 					

@@ -59,14 +59,30 @@ function removeClockListener (event, listener) {
 	listeners[topic].splice(index, 1)
 }
 
+function removeScheduleListener (event, listener) {
+	const topic = `schedule:${event}`
+	const index = listeners[topic].indexOf(listener)
+	listeners[topic].splice(index, 1)
+}
+
 function onClockEvent (event, listener) {
-	const topic = `clock:${event}`
-	listeners[topic] = listeners[topic] || []
+	const topic = `clock:${event}`;
+	listeners[topic] = listeners[topic] || [];
 
 	return connect()
 		.then(() => client.subscribe('cj_node', topic))
 		.then(() => { listeners[topic].push(listener) })
 		.then(() => removeClockListener.bind(null, event, listener))
+}
+
+function onScheduleEvent (event, listener) {
+	const topic = `schedule:${event}`
+	listeners[topic] = listeners[topic] || [];
+
+	return connect()
+		.then(() => client.subscribe('cj_node', topic))
+		.then(() => { listeners[topic].push(listener) })
+		.then(() => removeScheduleListener.bind(null, event, listener))
 }
 
 function onSystemEvent(event, listener) {
@@ -96,6 +112,10 @@ export const onClockPrestartEvent = onClockEvent.bind(null, 'prestart')
 export const onClockStartEvent = onClockEvent.bind(null, 'start')
 export const onClockReloadEvent = onClockEvent.bind(null, 'reload')
 export const onClockEndGameEvent = onClockEvent.bind(null, 'endgame')
+
+export const onScheduleTimeEvent = onScheduleEvent.bind(null, 'current_time');
+export const onScheduleNextTimeEvent = onScheduleEvent.bind(null, 'next_time');
+export const onScheduleTTLEvent = onScheduleEvent.bind(null, 'ttl');
 
 export const onScoreUpdateEvent = onScoreEvent.bind(null, 'update')
 export const onSystemRefreshEvent = onSystemEvent.bind(null, 'refresh');

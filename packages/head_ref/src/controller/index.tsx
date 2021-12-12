@@ -27,12 +27,19 @@ function parseTime(time:number) {
 	}
 }
 
+
 function parseTTL(time:number) {
+	var sign = '+';
 	if (time < 0) {
-		return `-${pad(Math.floor(time/ 60 / 60), 2)}:${pad(Math.floor(time / 60), 2)}:${pad(time % 60, 2)}`
-	} else {
-		return `+${pad(Math.floor(time/ 60 / 60), 2)}:${pad(Math.floor(time / 60), 2)}:${pad(time % 60, 2)}`
+		sign = '-';
+		time = -time;
 	}
+
+	var hours = Math.floor((time)/3600);
+	var minutes = Math.floor((time - (hours * 3600)) / 60);
+	var seconds = time - (hours * 3600) - (minutes * 60);
+
+	return `${sign}${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}`
 }
 
 function setPrevMatch() {
@@ -212,6 +219,7 @@ class Controller extends Component<IProps,IState> {
 			this.setState({mainConfigState: false});
 			this.setState({runningConfigState: false});
 			this.setState({stoppedConfigState: true});
+			setTimeout(() => this.postTimerControl("reload"), 3000);
 		}).then((removeSubscription:any) => { _removeSubscriptions.push(removeSubscription) })
 		.catch((err:any) => {
 			console.error(err)
@@ -414,7 +422,7 @@ class Controller extends Component<IProps,IState> {
 
 	setPrestart() {this.postTimerControl("prestart")}
 	setStart() {this.postTimerControl("start")}
-	setStop() {this.postTimerControl("stop")}
+	setStop() {this.postTimerControl("stop");}
 	setReload() {this.postTimerControl("reload")}
 
 

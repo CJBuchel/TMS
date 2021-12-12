@@ -14,7 +14,7 @@ FLL Scoring & Management System for Curtin University/WA FLL Competition
 - Judge Disp: 2830
 
 - Scoring:    2832
-- Status:     2833
+<!-- - Status:     2833 -->
 <!-- - Setup:      2833 -->
 
 # Running

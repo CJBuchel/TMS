@@ -859,7 +859,7 @@ async function time_scheduling() {
 // 
 
 // Main countdown
-var countDownTime = 5; // 150
+var countDownTime = 150; // 150
 var prerunTime = 5;
 var clockStop = false;
 var existingClock = false;
@@ -868,6 +868,8 @@ var existingClock = false;
 function startCountdown(duration) {
 	if (!existingClock) {
 		existingClock = true;
+
+		setNextMatch();
 		var start = Date.now(),diff;
 		var endgame = false;
 	
@@ -951,7 +953,6 @@ app.post('/api/clock/start', (req, res) => {
 	clockStop = false;
 	sendEvent("cj_node", "clock:start", true);
 	startCountdown(countDownTime);
-	setNextMatch();
 });
 
 // stop/abort

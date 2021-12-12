@@ -22,14 +22,16 @@ const update_ranks = request + "/teams/updateRanking";
 const set_match = request + "/match/set";
 
 const purgeTeams = async () => {
-	await fetch(purge_database)
-	.then(response => {
-		return response.json();
-	}).then(data => {
-		console.log(data)
-		sendScoreUpdate("new_teams_update");
-		alert(data.message);
-	});
+	if (window.confirm("Purge Database?")) {
+		await fetch(purge_database)
+		.then(response => {
+			return response.json();
+		}).then(data => {
+			console.log(data)
+			sendScoreUpdate("new_teams_update");
+			alert(data.message);
+		});
+	}
 }
 
 const updateDisplay = async () => {

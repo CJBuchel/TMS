@@ -4,8 +4,18 @@
 #   MYSQL_PASSWORD: cjms
 
 services:
-  cjms:
-    image: 'cjbuchel/cjms:testing'
+  cjms-latest:
+    image: 'cjbuchel/cjms:latest'
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '2000-3000:2000-3000'
+      - '9906:3306'
+
+  cjms-version:
+    image: 'cjbuchel/cjms:1.0.0'
     restart: always
     build:
       context: .

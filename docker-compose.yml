@@ -1,0 +1,15 @@
+# x-common-variables: &common-variables
+#   MYSQL_DATABASE: cjms-database
+#   MYSQL_USER: cjms
+#   MYSQL_PASSWORD: cjms
+
+services:
+  cjms:
+    image: 'cjbuchel/cjms:testing'
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '2000-3000:2000-3000'
+      - '9906:3306'

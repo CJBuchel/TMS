@@ -15,7 +15,7 @@ services:
       - '9906:3306'
 
   cjms-version:
-    image: 'cjbuchel/cjms:1.0.0'
+    image: 'cjbuchel/cjms:2022.0.0'
     restart: always
     build:
       context: .

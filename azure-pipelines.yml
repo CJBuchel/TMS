@@ -21,7 +21,6 @@ jobs:
 
 - job: Publish
   displayName: Publish CJ-MS
-  dependsOn: Build
   condition: and(succeeded(), eq(variables.isPublishable, 'true'))
   pool:
     vmImage: ubuntu-latest

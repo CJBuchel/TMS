@@ -26,13 +26,9 @@ jobs:
 
   - task: CmdLine@2
     inputs:
-      script: docker -v
-      script: docker-compose -v
       script: docker-compose build --pull
 
   - task: CmdLine@2
     condition: and(succeeded(), eq(variables.isPublishable, 'true'))
     inputs:
-      script: docker login -u cjbuchel -p $(cjms-token)
-      script: docker-compose push
-      script: docker logout
+      script: docker login -u cjbuchel -p $(cjms-token);docker-compose push; docker logout

@@ -10,7 +10,7 @@ variables:
   tag: '$(Build.BuildId)'
 
 jobs:
-- job: Build
+- job: Build & Publish
   displayName: Build CJ-MS
   pool:
     vmImage: ubuntu-latest
@@ -18,15 +18,14 @@ jobs:
   - script: docker -v
   - script: docker-compose -v
   - script: docker-compose build --pull
-  condition: and(succeeded(), eq(variables.isPublishable, 'true'))
-  - script: docker-compose push -u cjbuchel -p $(cjms-token)
 
-# - job: Publish
-#   dependsOn: Build
-#   displayName: Publish CJ-MS
-#   pool:
-#     vmImage: ubuntu-latest
-#   steps:
-#   - script: docker -v
-#   - script: docker-compose -v
-#   - script: docker-compose build --pull
+- job: Publish
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables.isPublishable, 'true'))
+  displayName: Publish CJ-MS
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - script: docker -v
+  - script: docker-compose -v
+  - script: docker-compose build --pull

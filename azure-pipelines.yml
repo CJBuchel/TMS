@@ -20,9 +20,9 @@ jobs:
     inputs:
       versionSpec: latest
     displayName: 'Install Node.js'
-  - script: |
-    yarn install
-    yarn run build
+  - script: npm install -g yarn
+  - script: yarn install
+  - script: yarn run build
 
   - task: CmdLine@2
     inputs:

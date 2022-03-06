@@ -16,6 +16,7 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
+  # Build Node App
   - task: NodeTool@0
     inputs:
       versionSpec: '>=10.x'
@@ -24,11 +25,13 @@ jobs:
   - script: yarn install
   - script: yarn run build
 
+  # Build Docker app
   - task: CmdLine@2
     inputs:
       script: docker-compose build --pull
 
+  # Publish Docker app
   - task: CmdLine@2
     condition: and(succeeded(), eq(variables.isPublishable, 'true'))
     inputs:
-      script: docker login -u cjbuchel -p $(cjms-token);docker-compose push; docker logout
+      script: docker login -u cjbuchel -p $(cjms-token); docker-compose push; docker logout

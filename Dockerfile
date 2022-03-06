@@ -26,7 +26,6 @@ EXPOSE 2000-3000/udp
 # COPY ./ ./
 WORKDIR /cjms
 
-
 # Copy CJMS App to the docker image dir /cjms
 COPY ./CJMS-Interfaces ./CJMS-Interfaces
 COPY ./CJMS-Servers ./CJMS-Servers
@@ -36,14 +35,10 @@ COPY ./yarn.lock ./
 COPY ./node_modules ./node_modules
 COPY ./docker-start.sh ./
 
-
-# RUN yarn install
-# RUN yarn run build
-# RUN ls -la /
-RUN ls -la ./
+# Install deps and scripts
 RUN apt-get -y update
 RUN apt-get install -y net-tools
 RUN chmod +x ./docker-start.sh
 
-# ENTRYPOINT [ "docker-start.sh" ]
+# Execute docker start script on container start
 CMD ["./docker-start.sh"]

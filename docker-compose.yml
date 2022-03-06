@@ -1,8 +1,3 @@
-# x-common-variables: &common-variables
-#   MYSQL_DATABASE: cjms-database
-#   MYSQL_USER: cjms
-#   MYSQL_PASSWORD: cjms
-
 services:
   cjms-latest:
     image: 'cjbuchel/cjms:latest'
@@ -11,15 +6,15 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      # - '2000-3000:2000-3000'
+      - '2000-3000:2000-3000'
       - '9906:3306'
 
-  # cjms-version:
-  #   image: 'cjbuchel/cjms:2022.0.0'
-  #   restart: always
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - '2000-3000:2000-3000'
-  #     - '9906:3306'
+  cjms-version:
+    image: 'cjbuchel/cjms:2022.0.0'
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '2000-3000:2000-3000'
+      - '9906:3306'

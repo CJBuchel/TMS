@@ -6,13 +6,13 @@ max_retries=5
 # Start MySQL
 /entrypoint.sh mysqld &
 
-
 # # Start CJMS if mysql is up
+sleep 5
 while [ $retries -le $max_retries ]
 do
   if netstat -tulpn | grep :3306 >/dev/null ; then
     echo "Database Online. Starting CJMS"
-    yarn --cwd ./CJMS-Servers/Server/ run start &
+    yarn run start &
     retries=$((retries+max_retries))
   else
     echo "CJMS Start failed, Retry $retries reloading..."
@@ -21,11 +21,6 @@ do
 
   retries=$((retries+1))
 done
-
-# yarn --cwd ./CJMS-Servers/Server/ run start &
-# sleep 130
-# yarn run start &
-
 
 wait -n
 exit $?

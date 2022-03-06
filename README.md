@@ -17,18 +17,22 @@
   - Creating the CJMS Image
     - Pull the docker image via the command `docker pull cjbuchel/cjms` alternatively `docker pull cjbuchel/cjms:<version tag>` for a specific version
   - Running the image in a container
-    - Run the command `docker run -d -p 2000-3000:2000-3000 -p 9906:3306 --name cjms cjbuchel/cjms` or with `cjbuchel/cjms:<version tag>`
-    - The prior command will run the image in a container named `cjms`, with the exposed ports from `2000-3000`, along with the database port `9906` as to not conflict with any existing `3306` db ports already in use. And by default the image will use the `cjbuchel/cjms:latest` tag when none is specified.
+    - Run the command `docker run -d -it -p 2000-3000:2000-3000 --name cjms cjbuchel/cjms` or with `cjbuchel/cjms:<version tag>`
+    - The prior command will run the image in a container named `cjms`, with the exposed ports from `2000-3000`. And by default the image will use the `cjbuchel/cjms:latest` tag when none is specified.
+    - Note that first time running will take a few minutes to setup. Subsequent stopping and starting of the container will be faster
 - Running the CJMS
   - Commands:
     - `docker stop cjms` to stop the cjms container (if named cjms)
     - `docker start cjms` to start the cjms container
     - `docker container ls -a` to list the status of the containers active and inactive
+    - `docker attach cjms` attach to the container and view console `Ctrl+p+q` will exit, `Ctrl+c` wil stop the container
+    - `docker rm cjms` this will remove the container and all it's data. (Use only if you're updating to a newer version WILL DELETE DATABASE)
 
 ## Docker/Docker Compose Install
 - Using [Docker-Compose](https://docs.docker.com/compose/install/) we can also clone the project locally and spin up the docker images for more customization
 - Installation Steps:
   - Prerequisites:
+    - [Node.js](https://nodejs.org/en/download/)
     - [Git](https://git-scm.com/downloads)
     - [Docker](https://docs.docker.com/get-docker/)
     - [Docker-Compose](https://docs.docker.com/compose/install/)
@@ -39,19 +43,23 @@
 - Customize the compose file inside `CJ-MS/docker-compose.yml` for your own needs
 - Running the CJMS
   - Commands:
-    - `docker-compose up`
+    - `npm install -g yarn`
+    - `yarn install`
+    - `yarn run build`
+    - `docker-compose build`
+    - `docker run -d -it -p 2000-3000:2000-3000 --name cjms cjbuchel/cjms`
 
 ## Manual/Development Build
 - Using the raw project and building locally for live reactive changes is also possible
 - Not recommended for any events or persons who are prone to... deleting files by accident :)
 - Installation Steps:
   - Prerequisites:
+    - [Node.js](https://nodejs.org/en/download/)
     - [Git](https://git-scm.com/downloads)
-    - [node](https://nodejs.org/en/download/)
     - [mysql](https://dev.mysql.com/doc/mysql-getting-started/en/)
   - Setting up Database
     - Start the mysql server
-    - Create a database called `cjms-database` on port `9906`
+    - Create a database called `cjms-database` on port `3306`
     - Create an admin user called `cjms` with a password of `cjms` <- this is secure as the server is the only service that can interface with the database directly.
     - Afterwards, import the `Database/setup.sql` file into the mysql server using `mysql -u cjms -p cjms < setup.sql`
   - Installing Dependencies. Inside the root project run
@@ -64,7 +72,8 @@
   
 ## Port Numbers And rememberals
 ### Database/Storage
-- Database port:  `9906`
+- Database port:  `3306`
 
 ### Server
-- Server Port:    `3001`
+- Server Port:    `2121`
+- CommServer Port: `2122`

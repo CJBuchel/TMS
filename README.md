@@ -3,6 +3,10 @@
 - Built to automate, store display and simplify scoring teams in FLL.
 # 2022 UPDATE IN DEVELOPMENT
 
+[![Build Status](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_apis/build/status/CJBuchel.CJ-MS?branchName=master)](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_build/latest?definitionId=20&branchName=master)
+![Docker Pulls](https://img.shields.io/docker/pulls/cjbuchel/cjms)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/cjbuchel/cjms)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cjbuchel/cjms)
 ## Production Install
 - This Project is published as a docker image to package up dependencies for easy deployment to devices.
 - You can view the docker image here https://hub.docker.com/r/cjbuchel/cjms
@@ -21,8 +25,43 @@
     - `docker start cjms` to start the cjms container
     - `docker container ls -a` to list the status of the containers active and inactive
 
+## Docker/Docker Compose Install
+- Using [Docker-Compose](https://docs.docker.com/compose/install/) we can also clone the project locally and spin up the docker images for more customization
+- Installation Steps:
+  - Prerequisites:
+    - [Git](https://git-scm.com/downloads)
+    - [Docker](https://docs.docker.com/get-docker/)
+    - [Docker-Compose](https://docs.docker.com/compose/install/)
+    - Clone the project locally using `git clone https://github.com/CJBuchel/CJ-MS.git`
+  - Building/Start Image locally
+    - To build/start the project run `docker-compose up --build`
+    - Or just build using `docker-compose build --pull`
+- Customize the compose file inside `CJ-MS/docker-compose.yml` for your own needs
+- Running the CJMS
+  - Commands:
+    - `docker-compose up`
 
-
+## Manual/Development Build
+- Using the raw project and building locally for live reactive changes is also possible
+- Not recommended for any events or persons who are prone to... deleting files by accident :)
+- Installation Steps:
+  - Prerequisites:
+    - [Git](https://git-scm.com/downloads)
+    - [node](https://nodejs.org/en/download/)
+    - [mysql](https://dev.mysql.com/doc/mysql-getting-started/en/)
+  - Setting up Database
+    - Start the mysql server
+    - Create a database called `cjms-database` on port `9906`
+    - Create an admin user called `cjms` with a password of `cjms` <- this is secure as the server is the only service that can interface with the database directly.
+    - Afterwards, import the `Database/setup.sql` file into the mysql server using `mysql -u cjms -p cjms < setup.sql`
+  - Installing Dependencies. Inside the root project run
+    - `npm install -g yarn`
+    - `yarn install`
+    - `yarn run build`
+- Running the CJMS
+  - Commands:
+    - `yarn run start`
+  
 ## Port Numbers And rememberals
 ### Database/Storage
 - Database port:  `9906`

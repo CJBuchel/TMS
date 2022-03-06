@@ -20,11 +20,12 @@ jobs:
   - script: docker-compose build --pull
 
 - job: Publish
-  condition: and(succeeded(), eq(variables.isPublishable, 'true'))
   displayName: Publish CJ-MS
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables.isPublishable, 'true'))
   pool:
     vmImage: ubuntu-latest
   steps:
   - script: docker -v
   - script: docker-compose -v
-  - script: docker-compose build --pull
+  - script: docker-compose push -u cjbuchel -p $(cjms-token)

@@ -10,40 +10,23 @@ variables:
   tag: '$(Build.BuildId)'
 
 jobs:
-- job: BuildAndPublish
-  displayName: Build & Publish CJ-MS
+- job: Build
+  displayName: Build CJ-MS
   pool:
     vmImage: ubuntu-latest
   steps:
   - script: docker -v
-  # - task: NodeTool@0
+  - script: docker-compose -v
+  - script: docker-compose build --pull
 
-  # - task: Docker@2
-  #   displayName: Build Image
-  #   inputs:
-  #     command: build
-  #     Dockerfile: '**/Dockerfile'
-  #     tags: |
-  #       latest
-  #       $(tag)
-
-# - job: Publish
-#   displayName: Publish JMS
-#   condition: and(succeeded(), eq(variables.isPublishable, 'true'))
-#   pool:
-#     vmImage: ubuntu-latest
-#   steps:
-#     - task: Docker@2
-#       displayName: Publish Image
-#       inputs:
-#         command: buildAndPush
-#         containerRegistry: CJBuchel-Dockerhub1
-#         Dockerfile: '**/Dockerfile'
-#         tags: |
-#           latest
-#           $(tag)
-#     - task: Docker@2
-#       displayName: Logout
-#       inputs:
-#         command: logout
-#         containerRegistry: CJBuchel-Dockerhub1
+- job: Publish
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables.isPublishable, 'true'))
+  displayName: Publish CJ-MS
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+  - script: docker -v
+  - script: docker-compose -v
+  - script: docker-compose build --pull
+  - script: docker-compose push -u cjbuchel -p $(cjms-token)

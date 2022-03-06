@@ -28,4 +28,5 @@ jobs:
   steps:
   - script: docker -v
   - script: docker-compose -v
+  - script: docker-compose build --pull
   - script: docker-compose push -u cjbuchel -p $(cjms-token)

@@ -11,15 +11,15 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '2000-3000:2000-3000'
+      # - '2000-3000:2000-3000'
       - '9906:3306'
 
-  cjms-version:
-    image: 'cjbuchel/cjms:2022.0.0'
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '2000-3000:2000-3000'
-      - '9906:3306'
+  # cjms-version:
+  #   image: 'cjbuchel/cjms:2022.0.0'
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '2000-3000:2000-3000'
+  #     - '9906:3306'

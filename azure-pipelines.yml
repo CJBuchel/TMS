@@ -10,24 +10,31 @@ variables:
   tag: '$(Build.BuildId)'
 
 jobs:
-- job: Build
-  displayName: Build CJ-MS
+- job: BuildPublish
+  displayName: Build & Publish CJ-MS
   pool:
     vmImage: ubuntu-latest
   steps:
-  - script: docker -v
-  - script: docker-compose -v
-  - script: docker-compose build --pull
 
-- job: Publish
-  displayName: Publish CJ-MS
-  condition: and(succeeded(), eq(variables.isPublishable, 'true'))
-  pool:
-    vmImage: ubuntu-latest
-  steps:
-  - script: docker -v
-  - script: docker-compose -v
-  - script: docker-compose build --pull
-  - script: docker login -u cjbuchel -p $(cjms-token)
-  - script: docker-compose push
-  - script: docker logout
+  - task: NodeTool@0
+    inputs:
+      versionSpec: latest
+    displayName: 'Install Node.js'
+  - script: |
+    yarn install
+    yarn run build
+
+  - task: CmdLine@2
+    inputs:
+      script: |
+      docker -v
+      docker-compose -v
+      docker-compose build --pull
+
+  - task: CmdLine@2
+    condition: and(succeeded(), eq(variables.isPublishable, 'true'))
+    inputs:
+      script: |
+      docker login -u cjbuchel -p $(cjms-token)
+      docker-compose push
+      docker logout

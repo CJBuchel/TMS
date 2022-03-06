@@ -67,4 +67,4 @@
 - Database port:  `9906`
 
 ### Server
-- Server Port:     3001
+- Server Port:    `3001`

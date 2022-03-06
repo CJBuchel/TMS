@@ -10,7 +10,7 @@ variables:
   tag: '$(Build.BuildId)'
 
 jobs:
-- job: Build & Publish
+- job: Build
   displayName: Build CJ-MS
   pool:
     vmImage: ubuntu-latest
@@ -20,7 +20,6 @@ jobs:
   - script: docker-compose build --pull
 
 - job: Publish
-  dependsOn: Build
   condition: and(succeeded(), eq(variables.isPublishable, 'true'))
   displayName: Publish CJ-MS
   pool:

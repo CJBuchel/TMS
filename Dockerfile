@@ -1,7 +1,7 @@
 
 # CJMS Database
 FROM mysql as mysql_stage
-COPY ./Database/scripts/*.sql /docker-entrypoint-initdb.d/
+COPY ./Database/sql/*.sql /docker-entrypoint-initdb.d/
 
 # Main Core CJMS System
 FROM node as node_stage
@@ -13,7 +13,7 @@ WORKDIR /cjms
 
 # Environemnt Variables
 ENV MYSQL_HOST: localhost
-ENV MYSQL_DATABASE cjms-database
+ENV MYSQL_DATABASE cjms_database
 ENV MYSQL_ROOT_PASSWORD root
 ENV MYSQL_USER cjms
 ENV MYSQL_PASSWORD cjms

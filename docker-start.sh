@@ -11,11 +11,11 @@ sleep 5
 while [ $retries -le $max_retries ]
 do
   if netstat -tulpn | grep :3306 >/dev/null ; then
-    echo "Database Online. Starting CJMS"
+    echo "CJMS Database Online. Starting CJMS"
     yarn run start &
     retries=$((retries+max_retries))
   else
-    echo "CJMS Start failed, Retry $retries reloading..."
+    echo "CJMS Database Not Detected, Retry #$retries. Reloading in 30s..."
     sleep 30
   fi
 

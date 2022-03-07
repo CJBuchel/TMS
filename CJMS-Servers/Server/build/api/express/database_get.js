@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ex_names = __importStar(require("./express_namespaces"));
-const query_scripts = __importStar(require("../mysql/queryScripts"));
+const query_scripts = __importStar(require("../mysql/query_scripts"));
 class ExpressDatabaseGet {
     constructor(expressConnection, dbConnection) {
         // Generic Query Wrapper
@@ -41,7 +41,8 @@ class ExpressDatabaseGet {
             const password = req.body.password;
             const response = dbQueryPH(query_scripts.sql_get_user, [username, password]);
             if (response.err) {
-                res.send(response);
+                console.log("Query Error");
+                res.send(response.err);
             }
             else {
                 if (response.result.length > 0) {
@@ -53,7 +54,51 @@ class ExpressDatabaseGet {
                     res.send({ message: "Wrong username/password" });
                 }
             }
-            console.log(response);
+        });
+        // Get Match Schedule
+        expressConnection.get().get(ex_names.express_database_get_match_schedule, (req, res) => {
+            const response = dbQuery(query_scripts.sql_get_all_match_schedule);
+            if (response.err) {
+                console.log("Query Error");
+                res.send(response.err);
+            }
+            else {
+                res.send(response);
+            }
+        });
+        // Get Judging Schedule
+        expressConnection.get().get(ex_names.express_database_get_judging_schedule, (req, res) => {
+            const response = dbQuery(query_scripts.sql_get_all_judging_schedule);
+            if (response.err) {
+                console.log("Query Error");
+                res.send(response.err);
+            }
+            else {
+                res.send(response);
+            }
+        });
+        // Get Matches
+        expressConnection.get().get(ex_names.express_database_get_matches, (req, res) => {
+            const response = dbQuery(query_scripts.sql_get_matches);
+            if (response.err) {
+                console.log("Query Error");
+                res.send(response.err);
+            }
+            else {
+                res.send(response);
+            }
+        });
+        // Get Teams
+        expressConnection.get().get(ex_names.express_database_get_teams, (req, res) => {
+            const response = dbQuery(query_scripts.sql_get_teams);
+            if (response.err) {
+                console.log("Query Error");
+                res.send(response.err);
+            }
+            else {
+                res.send(response);
+            }
         });
     }
 }
+exports.default = ExpressDatabaseGet;

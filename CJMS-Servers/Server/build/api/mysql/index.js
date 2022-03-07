@@ -23,6 +23,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryScripts = exports.db = void 0;
+exports.query_scripts = exports.db = void 0;
 exports.db = __importStar(require("./connection"));
-exports.queryScripts = __importStar(require("./queryScripts"));
+exports.query_scripts = __importStar(require("./query_scripts"));

@@ -1,2 +1,2 @@
 export * as db from "./connection";
-export * as queryScripts from "./queryScripts"
+export * as query_scripts from "./query_scripts"

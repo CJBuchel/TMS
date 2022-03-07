@@ -26,7 +26,7 @@ export function get_sql_update(table:string, set:string, set_value:string, where
 // 
 export const sql_purge_table = "TRUNCATE TABLE";
 export function get_sql_purge_script(table_names_arr:any) {
-  var sql_purge_script:string[] = [];
+  var sql_purge_script:any;
   for (var table_name of table_names_arr) {
     sql_purge_script.push(`${sql_purge_table} ${table_name};`);
   }
@@ -69,7 +69,6 @@ export function get_sql_update_judging_schedule(set:string, set_value:string, wh
 // 
 export const sql_get_matches = "SELECT * FROM matches ORDER BY next_match_number ASC;";
 export const sql_new_match = "INSERT INTO matches (next_match_number, next_start_time, next_end_time, on_table1, on_table2, next_team1_number, next_team2_number) VALUES (?,?,?,?,?,?,?);";
-export const sql_update_match = "UPDATE matches SET";
 export function get_sql_update_match(set:string, set_value:string, where:string, where_value:string) {
   return get_sql_update("matches", set, set_value, where, where_value);
 }
@@ -80,7 +79,7 @@ export function get_sql_update_match(set:string, set_value:string, where:string,
 export const sql_get_teams = "SELECT * FROM teams ORDER BY ranking ASC;";
 export const sql_get_team_by_name = "SELECT * FROM teams WHERE team_name = ?;";
 export const sql_new_team = "INSERT INTO teams (team_number, team_name, affiliation) VALUES (?, ?, ?);";
-export const sql_update_team = "UPDATE teams SET";
+export const sql_update_team_row = "UPDATE teams SET team_number = ?, team_name = ?, affiliation = ?, match_score_1 = ?, match_score_2 = ?, match_score_3 = ?, match_gp_1 = ?, match_gp_2 = ?, match_gp_3 = ?, team_notes_1 = ?, team_notes_2 = ?, team_notes_3 = ?, ranking = ? WHERE team_number = ?";
 export function get_sql_update_team(set:string, set_value:string, where:string, where_value:string) {
   return get_sql_update("teams", set, set_value, where, where_value);
 }

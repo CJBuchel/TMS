@@ -36,7 +36,7 @@ class ExpressDatabaseSet {
             return dbConnection.query_ph(query, objects);
         }
         // Purge Database
-        expressConnection.get().get(ex_names.express_database_set_purge, (req, res) => {
+        expressConnection.get().post(ex_names.express_database_set_purge, (req, res) => {
             for (const purge_script of query_scripts.get_sql_purge_script(query_scripts.sql_table_names_arr)) {
                 const response = dbQuery(purge_script);
                 if (response.err) {
@@ -49,7 +49,7 @@ class ExpressDatabaseSet {
             }
         });
         // Update User
-        expressConnection.get().get(ex_names.express_database_set_user, (req, res) => {
+        expressConnection.get().post(ex_names.express_database_set_user, (req, res) => {
             const user = req.body.user;
             const new_password = req.body.pass;
             const response = dbQueryPH(query_scripts.sql_update_user, [new_password, user]);

@@ -42,6 +42,10 @@ CREATE TABLE IF NOT EXISTS `teams` (
   `match_gp_2` TEXT,
   `match_gp_3` TEXT,
 
+  `match_json_1` JSON DEFAULT NULL,
+  `match_json_1` JSON DEFAULT NULL,
+  `match_json_1` JSON DEFAULT NULL,
+
   `team_notes_1` TEXT,
   `team_notes_2` TEXT,
   `team_notes_3` TEXT,

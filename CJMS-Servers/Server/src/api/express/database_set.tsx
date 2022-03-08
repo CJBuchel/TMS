@@ -2,6 +2,7 @@ import ExpressConnection from "./express_connection";
 import { Database } from "../mysql/connection";
 import * as ex_names from "./express_namespaces";
 import * as query_scripts from "../mysql/query_scripts";
+import { updateRankings } from "../mysql/query_functions";
 
 class ExpressDatabaseSet {
   constructor(expressConnection:ExpressConnection, dbConnection:Database) {
@@ -16,7 +17,7 @@ class ExpressDatabaseSet {
     }
 
     // Purge Database
-    expressConnection.get().get(ex_names.express_database_set_purge, (req:any, res:any) => {
+    expressConnection.get().post(ex_names.express_database_set_purge, (req:any, res:any) => {
       for (const purge_script of query_scripts.get_sql_purge_script(query_scripts.sql_table_names_arr)) {
         const response = dbQuery(purge_script);
         if (response.err) {
@@ -29,7 +30,7 @@ class ExpressDatabaseSet {
     });
 
     // Update User
-    expressConnection.get().get(ex_names.express_database_set_user, (req:any, res:any) => {
+    expressConnection.get().post(ex_names.express_database_set_user, (req:any, res:any) => {
       const user = req.body.user;
       const new_password = req.body.pass;
       const response = dbQueryPH(query_scripts.sql_update_user, [new_password, user]);
@@ -43,7 +44,7 @@ class ExpressDatabaseSet {
     });
 
     // Update Team (Remember to update rankings after modify)
-    expressConnection.get().get(ex_names.express_database_set_team, (req:any, res:any) => {
+    expressConnection.get().post(ex_names.express_database_set_team, (req:any, res:any) => {
       const old_team = req.body.old_team;
       const new_team = req.body.new_team;
       if (old_team.team_number === undefined) {
@@ -78,6 +79,32 @@ class ExpressDatabaseSet {
           res.send(response);
         }
       }
+    });
+
+    // Update ranks
+    expressConnection.get().post(ex_names.express_database_set_update_rankings, (req:any, res:any) => {
+      updateRankings(dbConnection);
+    });
+
+    // Set score
+    expressConnection.get().post(ex_names.express_database_set_team_score, (req:any, res:any) => {
+      function checkNull(value:any) {
+        if (value === null || value === undefined) { 
+          res.send({message: "Unknown value send, (submit again)"});
+          return true; 
+        } else { 
+          return false;
+        }
+      }
+
+      if (checkNull(req.body.rank_number)) { return; }
+      if (checkNull(req.body.team_score)) { return; }
+      if (checkNull(req.body.team_gp)) { return; }
+
+      var match_sql = "match_score_"+req.body.rank_number.toString();
+      var gp_sql = "match_score_"+req.body.rank_number.toString();
+      var notes_sql = "match_score_"+req.body.rank_number.toString();
+
     });
   }
 }

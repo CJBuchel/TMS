@@ -1,5 +1,6 @@
 services:
   cjms-latest:
+    container_name: cjms
     image: 'cjbuchel/cjms:latest'
     restart: always
     build:
@@ -7,14 +8,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - '2000-3000:2000-3000'
-      - '9906:3306'
+      - '37017:27017'
 
-  cjms-version:
-    image: 'cjbuchel/cjms:2022.0.0'
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '2000-3000:2000-3000'
-      - '9906:3306'
+  # cjms-version:
+  #   container_name: cjms-v
+  #   image: 'cjbuchel/cjms:2022.0.0'
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '2000-3000:2000-3000'
+  #     - '37017:270127'

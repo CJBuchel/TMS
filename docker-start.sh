@@ -3,19 +3,27 @@
 retries=1
 max_retries=5
 
-# Start MySQL
-/entrypoint.sh mysqld &
+# Start Database
+printf '\e[1;32m'
+printf "\nStarting Database\n"
+printf '\e[0m'
+echo starting mongo
+/usr/local/bin/docker-entrypoint.sh mongod &
 
-# # Start CJMS if mysql is up
+# Start CJMS if db is up
 sleep 5
 while [ $retries -le $max_retries ]
 do
-  if netstat -tulpn | grep :3306 >/dev/null ; then
-    echo "Database Online. Starting CJMS"
+  if netstat -tulpn | grep :27017 >/dev/null ; then
+    printf '\e[1;32m'
+    printf "\nDatabase Online: Starting CJMS\n"
+    printf '\e[0m'
     yarn run start &
     retries=$((retries+max_retries))
   else
-    echo "CJMS Start failed, Retry $retries reloading..."
+    printf '\e[1;31m'
+    printf "\nCJMS Database Not Detected, Retry #$retries. Reloading in 30s...\n"
+    printf '\e[0m'
     sleep 30
   fi
 

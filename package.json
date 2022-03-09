@@ -18,7 +18,8 @@
     ]
   },
   "scripts": {
-    "build": "lerna run build",
-    "start": "lerna run start"
+    "build": "lerna run build --stream",
+    "start": "lerna run start --stream",
+    "dev": "lerna run dev"
   }
 }

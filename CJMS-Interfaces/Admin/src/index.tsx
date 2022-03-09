@@ -1,7 +1,6 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-
-import { Shared } from "@cjms/shared";
+import { Shared } from '@cjms_interfaces/shared';
 
 const NoInternetConnection = (props:any) => {
   // state variable holds the state of the internet connection

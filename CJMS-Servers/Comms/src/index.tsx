@@ -73,5 +73,5 @@ function die(fmt: string, ...args: any[]): void {
   process.exit(1);
 }
 
-// Startup the Comm Server
+// Startup the Comm Serverx
 Server().catch((err) => die("Comm Server Crashed!", err));

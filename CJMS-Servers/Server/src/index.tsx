@@ -1,12 +1,8 @@
 import express from 'express';
-import { DatabaseConnection } from './api/db';
 
-const app = express();
-const port = 2121;
+import mongoose from 'mongoose';
+import { Database } from './api/database';
+import { Requests } from './api/requests';
 
-let cjms_db = new DatabaseConnection();
-cjms_db.connect();
-
-// app.listen(port, () => {
-//   console.log(`Server Running on port ${port}`);
-// });
+const cjms_database = new Database();
+const cjms_requests = new Requests();

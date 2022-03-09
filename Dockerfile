@@ -1,30 +1,26 @@
 
 # CJMS Database
-FROM mysql as mysql_stage
-COPY ./Database/scripts/*.sql /docker-entrypoint-initdb.d/
+FROM mongo as database_stage
+EXPOSE 27017/tcp
+EXPOSE 27017/udp
 
 # Main Core CJMS System
-FROM node as node_stage
+FROM node as build_stage
 
-# Did somone say inefficiency?
-COPY --from=mysql_stage / /
-
+# # Did somone say inefficiency?
+COPY --from=database_stage / /
 WORKDIR /cjms
 
-# Environemnt Variables
-ENV MYSQL_HOST: localhost
-ENV MYSQL_DATABASE cjms-database
-ENV MYSQL_ROOT_PASSWORD root
-ENV MYSQL_USER cjms
-ENV MYSQL_PASSWORD cjms
+# # Environemnt Variables
+ENV MONGO_INITDB_ROOT_USERNAME=cjms
+ENV MONGO_INITDB_ROOT_PASSWORD=cjms
+ENV MONGO_INITDB_DATABASE: cjms_database
 
-EXPOSE 3306/tcp
-EXPOSE 3306/udp
+EXPOSE 27017/tcp
+EXPOSE 27017/udp
 EXPOSE 2000-3000/tcp
 EXPOSE 2000-3000/udp
 
-# COPY ./ ./
-WORKDIR /cjms
 
 # Copy CJMS App to the docker image dir /cjms
 COPY ./CJMS-Interfaces ./CJMS-Interfaces
@@ -35,10 +31,10 @@ COPY ./yarn.lock ./
 COPY ./node_modules ./node_modules
 COPY ./docker-start.sh ./
 
-# Install deps and scripts
+# # # Install deps and scripts
 RUN apt-get -y update
 RUN apt-get install -y net-tools
 RUN chmod +x ./docker-start.sh
 
-# Execute docker start script on container start
+# # Execute docker start script on container start
 CMD ["./docker-start.sh"]

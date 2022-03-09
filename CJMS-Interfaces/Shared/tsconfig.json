@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "plugins": [
+      {"name": "typescript-plugin-css-modules"}
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "outDir": "lib",
+    "module": "esnext",
+    "target": "esnext",
+    "declaration": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "lib"]
+}

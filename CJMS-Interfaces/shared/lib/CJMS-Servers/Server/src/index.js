@@ -1,15 +1,22 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const database_1 = require("./api/database/database");
-const cjms_database = new database_1.Database();
-const app = (0, express_1.default)();
+import express from 'express';
+// import * as cjms_db from './api/mysql';
+import mongoose from 'mongoose';
+mongoose.connect('mongodb://localhost:27017', {
+    dbName: 'cjms_database',
+    user: 'cjms',
+    pass: 'cjms',
+    autoCreate: true
+});
+const PersonSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    lastName: { type: String, },
+    age: { type: Number }
+});
+const Person = mongoose.model("PersonData", PersonSchema);
+const app = express();
 const port = 2121;
 const Test = 5;
-exports.default = Test;
+export default Test;
 // var response = db.query(cjms_db.queryScripts.sql_get_users);
 // if (response.results != null) {
 //   console.log("Response");

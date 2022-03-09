@@ -1,2 +1,2 @@
-declare function Shared(): JSX.Element;
+declare function Shared(): string;
 export { Shared };

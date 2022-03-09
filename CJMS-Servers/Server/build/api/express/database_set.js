@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ex_names = __importStar(require("./express_namespaces"));
 const query_scripts = __importStar(require("../mysql/query_scripts"));
+const query_functions_1 = require("../mysql/query_functions");
 class ExpressDatabaseSet {
     constructor(expressConnection, dbConnection) {
         // Generic Query Wrapper
@@ -63,7 +64,7 @@ class ExpressDatabaseSet {
             }
         });
         // Update Team (Remember to update rankings after modify)
-        expressConnection.get().get(ex_names.express_database_set_team, (req, res) => {
+        expressConnection.get().post(ex_names.express_database_set_team, (req, res) => {
             const old_team = req.body.old_team;
             const new_team = req.body.new_team;
             if (old_team.team_number === undefined) {
@@ -94,6 +95,34 @@ class ExpressDatabaseSet {
                     res.send(response);
                 }
             }
+        });
+        // Update ranks
+        expressConnection.get().post(ex_names.express_database_set_update_rankings, (req, res) => {
+            (0, query_functions_1.updateRankings)(dbConnection);
+        });
+        // Set score
+        expressConnection.get().post(ex_names.express_database_set_team_score, (req, res) => {
+            function checkNull(value) {
+                if (value === null || value === undefined) {
+                    res.send({ message: "Unknown value send, (submit again)" });
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            if (checkNull(req.body.rank_number)) {
+                return;
+            }
+            if (checkNull(req.body.team_score)) {
+                return;
+            }
+            if (checkNull(req.body.team_gp)) {
+                return;
+            }
+            var match_sql = "match_score_" + req.body.rank_number.toString();
+            var gp_sql = "match_score_" + req.body.rank_number.toString();
+            var notes_sql = "match_score_" + req.body.rank_number.toString();
         });
     }
 }

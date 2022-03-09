@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors';
 import bodyParser from "body-parser";
 
-class Requests {
+export class Requests {
   private requestApp = express();
   constructor() {
     // Setup the request application
@@ -11,5 +11,16 @@ class Requests {
     this.requestApp.use(bodyParser.urlencoded({
       extended: true
     }));
+  }
+
+  // Get the express application
+  get() {
+    return this.requestApp;
+  }
+
+  connect(port: 2121) {
+    this.requestApp.listen(port, () => {
+      console.log("Request Server Running on: " + port);
+    });
   }
 }

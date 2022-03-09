@@ -42,7 +42,5 @@ export class Database {
       console.log("Error Connecting to Database");
       console.error(error);
     });
-
-    
   }
 }

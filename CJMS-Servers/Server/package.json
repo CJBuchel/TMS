@@ -1,5 +1,5 @@
 {
-  "name": "@cjms/server",
+  "name": "@cjms_servers/server",
   "version": "1.0.0",
   "description": "Main Server for CJMS",
   "main": "index.js",

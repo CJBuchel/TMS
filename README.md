@@ -72,8 +72,8 @@
   
 ## Port Numbers And rememberals
 ### Database/Storage
-- Database port:  `3306`
+- Database port: `27017` (internal unless specified to be external)
 
 ### Server
-- Server Port:    `2121`
+- Main Server Port: `2121`
 - CommServer Port: `2122`

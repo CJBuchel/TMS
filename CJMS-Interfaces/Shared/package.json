@@ -1,5 +1,5 @@
 {
-  "name": "@cjms/shared",
+  "name": "@cjms_interfaces/shared",
   "version": "1.0.0",
   "main": "lib/index.js",
   "license": "MIT",

@@ -27,7 +27,7 @@ export const ConnectionCheck = (props) => {
             return (React.createElement("div", null, props.children));
         }
         else {
-            return (React.createElement("div", null,
+            return (React.createElement("div", { className: "ConnectionWrapper" },
                 React.createElement("div", { className: "ConnectionModalApp" }, props.children),
                 React.createElement("div", { className: "ConnectionModalBackdrop" }),
                 React.createElement("div", { className: "ConnectionModal animated fadeIn" },

@@ -32,7 +32,7 @@ export const ConnectionCheck = (props:any) => {
       )
     } else {
       return (
-        <div>
+        <div className="ConnectionWrapper">
           <div className="ConnectionModalApp">{props.children}</div>
           <div className="ConnectionModalBackdrop"></div>
           <div className="ConnectionModal animated fadeIn">

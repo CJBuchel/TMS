@@ -1,5 +1,2 @@
-// import Test from '../../../CJMS-Servers/Server/src';
-function Shared() {
-    return ("Share Test");
-}
-export { Shared };
+import { CJMS_Application } from "./components/Application/Application";
+export { CJMS_Application };

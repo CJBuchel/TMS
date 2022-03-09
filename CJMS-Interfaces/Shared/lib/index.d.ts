@@ -1,2 +1,2 @@
-declare function Shared(): string;
-export { Shared };
+import { CJMS_Application } from "./components/Application/Application";
+export { CJMS_Application };

@@ -1,8 +1,9 @@
 import React from 'react';
+// import Test from '../../../CJMS-Servers/Server/src';
 
 function Shared() {
   return (
-    <div>Test</div>
+    "Share Test"
   );
 }
 

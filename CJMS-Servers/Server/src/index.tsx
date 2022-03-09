@@ -1,11 +1,15 @@
 import express from 'express';
-import * as cjms_db from './api/mysql';
+
+import mongoose from 'mongoose';
+import { Database } from './api/database/database';
+
+const cjms_database = new Database();
 
 const app = express();
 const port = 2121;
 
-let db = new cjms_db.db.Database();
-db.connect();
+const Test = 5;
+export default Test;
 
 // var response = db.query(cjms_db.queryScripts.sql_get_users);
 // if (response.results != null) {

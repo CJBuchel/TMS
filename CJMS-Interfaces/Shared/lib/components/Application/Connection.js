@@ -2,7 +2,7 @@
 // Connection to the server (monitor modal)
 // 
 import React, { useEffect, useState } from "react";
-import "../../assets/ConnectionModal.scss";
+import "../../assets/stylesheets/ConnectionModal.scss";
 var count = 0;
 export const ConnectionCheck = (props) => {
     const [isOnline, setOnline] = useState(true);

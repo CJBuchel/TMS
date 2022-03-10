@@ -2,6 +2,7 @@
 // Generic Shared login
 // 
 import React, { useCallback } from "react";
+import Select from 'react-select';
 import * as Requests from "../Requests/Request";
 
 interface IProps {
@@ -11,16 +12,23 @@ interface IProps {
 
 interface IState {
   username:String,
-  password:String
+  password:String,
+  userOptions:any
 }
 
-class Login extends React.Component<IProps, IState> {
+export class Login extends React.Component<IProps, IState> {
   constructor(props:any) {
     super(props);
 
     this.state = {
       username: undefined,
-      password: undefined
+      password: undefined,
+      userOptions: [
+        {value: 'admin', label: 'Admin'},
+        {value: 'scorekeeper', label: 'Score Keeper'},
+        {value: 'referee', label: 'Referee'},
+        {value: 'head_referee', label: 'Head Referee'}
+      ]
     }
   }
 
@@ -50,5 +58,19 @@ class Login extends React.Component<IProps, IState> {
     console.log("Selected User: " + this.state.username);
   }
 
-  // @TODO
+  render() {
+    return (
+      <div className="Login">
+        <form onSubmit={this.handleSubmit}>
+          <label>User</label>
+          <Select onChange={(e:any) => this.onUserChange(e.value)} options={this.state.userOptions}/>
+          <label>Password</label>
+          <input type="password" onChange={(e:any) => this.setState({password: e.target.value})}/>
+          <div>
+            <button className="buttonGreen" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    );
+  }
 }

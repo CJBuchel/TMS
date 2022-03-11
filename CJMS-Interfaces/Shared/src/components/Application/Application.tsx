@@ -3,9 +3,13 @@
 // 
 import React from "react";
 import ReactDOM from "react-dom";
+import useToken from "../Login/UseToken";
 import { ConnectionCheck } from "./Connection";
 
 function Application(App:any) {
+  // Using this to test
+  const { token, setToken } = useToken();
+
   return (
     <ConnectionCheck><App/></ConnectionCheck>
   );

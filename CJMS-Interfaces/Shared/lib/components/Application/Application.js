@@ -3,8 +3,11 @@
 // 
 import React from "react";
 import ReactDOM from "react-dom";
+import useToken from "../Login/UseToken";
 import { ConnectionCheck } from "./Connection";
 function Application(App) {
+    // Using this to test
+    const { token, setToken } = useToken();
     return (React.createElement(ConnectionCheck, null,
         React.createElement(App, null)));
 }

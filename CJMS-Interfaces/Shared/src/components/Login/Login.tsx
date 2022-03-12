@@ -1,78 +1,73 @@
 // 
 // Generic Shared login
 // 
-import React, { useCallback } from "react";
-import Select from 'react-select';
+import React, { useCallback, useState } from "react";
+import Select, { defaultTheme } from 'react-select';
+import PropTypes from 'prop-types';
 import * as Requests from "../Requests/Request";
 
 import "../../assets/stylesheets/Login.scss"
 
-interface IProps {
-  setToken:any,
-  allowedUser:any
+function loginUser(credentials, allowedUser) {
+  if (credentials.username !== allowedUser && credentials.username !== 'admin') {
+    alert("User [" + credentials.username + "] is not permitted on this page");
+    return false;
+  } else {
+    return Requests.CJMS_REQUEST_LOGIN(credentials);
+  }
 }
 
-interface IState {
-  username:String,
-  password:String,
-  userOptions:any
-}
+const userOptions = [
+  {value: 'admin', label: 'Admin'},
+  {value: 'scorekeeper', label: 'Score Keeper'},
+  {value: 'referee', label: 'Referee'},
+  {value: 'head_referee', label: 'Head Referee'}
+];
 
-export class Login extends React.Component<IProps, IState> {
-  constructor(props:any) {
-    super(props);
+function Login({setToken, allowedUser}) {
+  const [username, setUser] = useState('');
+  const [password, setPassword] = useState('');
 
-    this.state = {
-      username: undefined,
-      password: undefined,
-      userOptions: [
-        {value: 'admin', label: 'Admin'},
-        {value: 'scorekeeper', label: 'Score Keeper'},
-        {value: 'referee', label: 'Referee'},
-        {value: 'head_referee', label: 'Head Referee'}
-      ]
-    }
-  }
-
-  async loginUser(credentials, allowedUser) {
-    if (credentials.user !== allowedUser && credentials.user !== 'admin') {
-      alert("User [" + credentials.user + "] is not permitted on this page");
-      return false;
-    } else {
-      return Requests.CJMS_REQUEST_LOGIN(credentials);
-    }
-  }
-
-  handleSubmit = async (e:any) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    const token:any = await this.loginUser({
-      username: this.state.username,
-      password: this.state.password
-    }, this.props.allowedUser)
+    const token:any = await loginUser({
+      username: username,
+      password: password
+    }, allowedUser);
 
-    if (token) {
-      this.props.setToken(token);
+    console.log(token);
+
+    // console.log(token);
+    if (token !== false && token.token) {
+      console.log("Good Token");
+      setToken(token);
+    } else {
+      console.log("Bad Token");
     }
   }
 
-  onUserChange = (user:string) => {
-    this.setState({username: user});
-    console.log("Selected User: " + this.state.username);
+  const onUserChange = (user) => {
+    setUser(user);
+    console.log("Selected User: " + user);
   }
 
-  render() {
-    return (
-      <div className="Login">
-        <form onSubmit={this.handleSubmit}>
-          <label>User</label>
-          <Select onChange={(e:any) => this.onUserChange(e.value)} options={this.state.userOptions}/>
-          <label>Password</label>
-          <input type="password" onChange={(e:any) => this.setState({password: e.target.value})}/>
-          <div>
-            <button className="buttonGreen" type="submit">Submit</button>
-          </div>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className="Login">
+      <form onSubmit={handleSubmit}>
+        <label>User</label>
+        <Select onChange={e => onUserChange(e.value)} options={userOptions}/>
+        <label>Password</label>
+        <input type="password" onChange={e => setPassword(e.target.value)}/>
+        <div>
+          <button className="buttonGreen" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  );
 }
+
+Login.propTypes = {
+  setToken: PropTypes.func.isRequired
+}
+
+export default Login;

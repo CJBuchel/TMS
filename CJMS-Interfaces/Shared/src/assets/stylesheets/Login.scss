@@ -1,7 +1,13 @@
+body {
+  margin: 0;
+}
 
-// Login Form page
 .Login {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   display: flex;
+  background-color: black;
   text-align: center;
   margin: 0;
   flex-direction: column;
@@ -11,7 +17,7 @@
 
 .Login label {
   font-size: 2vh;
-  color: white;
+  color: white; 
 }
 
 .Select, input {

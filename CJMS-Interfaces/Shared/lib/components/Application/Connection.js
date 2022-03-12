@@ -3,7 +3,7 @@
 // 
 import React, { useEffect, useState } from "react";
 import "../../assets/stylesheets/ConnectionModal.scss";
-var count = 50;
+var count = 0;
 export const ConnectionCheck = (props) => {
     const [isOnline, setOnline] = useState(true);
     const [retryCount, setRetryCount] = useState(0);
@@ -12,8 +12,8 @@ export const ConnectionCheck = (props) => {
             fetch("http://" + window.location.host)
                 .then(res => {
                 setOnline(true);
-                count = 50;
-                setRetryCount(50);
+                count = 0;
+                setRetryCount(0);
             }).catch((error) => {
                 count++;
                 setRetryCount(count);

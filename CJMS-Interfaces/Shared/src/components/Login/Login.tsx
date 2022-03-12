@@ -5,6 +5,8 @@ import React, { useCallback } from "react";
 import Select from 'react-select';
 import * as Requests from "../Requests/Request";
 
+import "../../assets/stylesheets/Login.scss"
+
 interface IProps {
   setToken:any,
   allowedUser:any

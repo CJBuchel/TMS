@@ -3,9 +3,7 @@ import React, {useState, useEffect} from 'react';
 import { CJMS_Application, useToken, Login } from '@cjms_interfaces/shared';
 
 function App() {
-  // Login system
   const { token, setToken } = useToken();
-
   if (!token) {
     return (<Login setToken={setToken} allowedUser={'admin'}/>);
   } else {

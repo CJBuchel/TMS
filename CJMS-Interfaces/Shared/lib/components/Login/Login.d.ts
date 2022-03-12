@@ -1,4 +1,5 @@
 import React from "react";
+import "../../assets/stylesheets/Login.scss";
 interface IProps {
     setToken: any;
     allowedUser: any;

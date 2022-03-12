@@ -3,7 +3,7 @@
 // 
 import React, { useEffect, useState } from "react";
 import "../../assets/stylesheets/ConnectionModal.scss";
-var count = 0;
+var count = 50;
 export const ConnectionCheck = (props) => {
     const [isOnline, setOnline] = useState(true);
     const [retryCount, setRetryCount] = useState(0);
@@ -12,8 +12,8 @@ export const ConnectionCheck = (props) => {
             fetch("http://" + window.location.host)
                 .then(res => {
                 setOnline(true);
-                count = 0;
-                setRetryCount(0);
+                count = 50;
+                setRetryCount(50);
             }).catch((error) => {
                 count++;
                 setRetryCount(count);
@@ -27,6 +27,10 @@ export const ConnectionCheck = (props) => {
             return (React.createElement("div", null, props.children));
         }
         else {
+            var retryString = retryCount.toString();
+            if (retryCount === 69) {
+                retryString = retryString + " Nice";
+            }
             return (React.createElement("div", { className: "ConnectionWrapper" },
                 React.createElement("div", { className: "ConnectionModalApp" }, props.children),
                 React.createElement("div", { className: "ConnectionModalBackdrop" }),
@@ -35,7 +39,7 @@ export const ConnectionCheck = (props) => {
                     React.createElement("h4", null, "Server Fault: Cannot Ping CJMS"),
                     React.createElement("h5", null,
                         "Retry Count: ",
-                        retryCount))));
+                        retryString))));
         }
     }
     return (AppRender());

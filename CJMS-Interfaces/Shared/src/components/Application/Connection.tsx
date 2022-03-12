@@ -31,6 +31,11 @@ export const ConnectionCheck = (props:any) => {
         <div>{props.children}</div>
       )
     } else {
+      var retryString = retryCount.toString();
+      if (retryCount === 69) {
+        retryString = retryString + " Nice";
+      }
+
       return (
         <div className="ConnectionWrapper">
           <div className="ConnectionModalApp">{props.children}</div>
@@ -38,7 +43,7 @@ export const ConnectionCheck = (props:any) => {
           <div className="ConnectionModal animated fadeIn">
             <h1>NO CONNECTION</h1>
             <h4>Server Fault: Cannot Ping CJMS</h4>
-            <h5>Retry Count: {retryCount}</h5>
+            <h5>Retry Count: {retryString}</h5>
           </div>
         </div>
       )

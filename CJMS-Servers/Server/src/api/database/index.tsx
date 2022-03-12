@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { UserModel } from "./models/user";
+import { UserModel } from "./models/User";
 
 export class Database {
 

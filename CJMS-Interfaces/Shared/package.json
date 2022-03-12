@@ -4,16 +4,19 @@
   "main": "lib/index.js",
   "license": "MIT",
   "dependencies": {
-    "@types/react": "^17.0.39",
+    "axios": "^0.26.1",
     "copyfiles": "^2.4.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "react-overlays": "^5.1.1",
+    "react-select": "^5.2.2",
     "rimraf": "^3.0.2",
     "sass": "^1.49.9",
     "scss": "^0.2.4",
     "typescript": "^4.6.2",
     "typescript-plugin-css-modules": "^3.4.0"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "scripts": {
     "clean": "rimraf lib/",

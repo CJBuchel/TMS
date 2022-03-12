@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { TeamScoreSchema } from "./team_score";
+import { TeamScoreSchema } from "./TeamScore";
 
 export const TeamSchema = new mongoose.Schema({
   team_numer: {type: String, required: true },

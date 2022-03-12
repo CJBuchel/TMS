@@ -8,7 +8,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "concurrently": "^7.0.0",
     "lerna": "^4.0.0"
   },
   "workspaces": {
@@ -20,6 +19,6 @@
   "scripts": {
     "build": "lerna run build --stream",
     "start": "lerna run start --stream",
-    "dev": "lerna run dev"
+    "dev": "lerna run dev --stream"
   }
 }

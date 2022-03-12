@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { TableSchema } from "./table";
+import { TableSchema } from "./Table";
 
 // Team on table Schema, (used internally only with Match Schema)
 const OnTableSchema = new mongoose.Schema({

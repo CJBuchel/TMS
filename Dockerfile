@@ -1,8 +1,6 @@
 
 # CJMS Database
 FROM mongo as database_stage
-EXPOSE 27017/tcp
-EXPOSE 27017/udp
 
 # Main Core CJMS System
 FROM node as build_stage

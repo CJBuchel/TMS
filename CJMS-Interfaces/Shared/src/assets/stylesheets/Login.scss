@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+}
+
+.Login {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  background-color: black;
+  text-align: center;
+  margin: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.Login label {
+  font-size: 2vh;
+  color: white; 
+}
+
+.Select, input {
+  width: 100%;
+  height: 5vh;
+  font-size: 3vh;
+  color: black;
+}
+
+.Login form {
+  text-align: center;
+  vertical-align: middle;
+  color: black;
+  width: 50%;
+}

@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.26.1",
     "copyfiles": "^2.4.1",
+    "mhub": "^2.1.0",
     "react-overlays": "^5.1.1",
     "react-select": "^5.2.2",
     "rimraf": "^3.0.2",

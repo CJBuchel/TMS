@@ -1,0 +1,31 @@
+{
+  "name": "@cjms_interfaces/clock",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@cjms_interfaces/shared": "^1.0.0",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.13",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^5.0.0",
+    "typescript": "^4.6.2"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "start": "BROWSER=none PORT=2828 react-scripts start",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

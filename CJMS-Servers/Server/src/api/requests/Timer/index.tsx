@@ -1,30 +1,118 @@
 import { RequestServer } from "../RequestServer";
-// import * as request_namespace from "../RequestServer/Namespaces";
+import { request_namespaces, comm_service } from "@cjms_shared/services";
 
-// export class Timer {
-//   constructor(requestServer:RequestServer) {
-//     console.log("User Requests Constructed");
+export class Timer {
+  constructor(requestServer:RequestServer) {
+    console.log("Timer Requests Constructed");
 
-//     // Login
-//     requestServer.get().use(request_namespace.request_post_login, (req, res) => {
-//       console.log(req.body);
-//       const username = req.body.username;
-//       const password = req.body.password;
+    // Main countdown
+    var countDownTime = 150; // 150
+    var prerunTime = 5;
+    var clockStop = false;
+    var existingClock = false;
 
-//       const query = UserModel.find({username: username, password: password});
-//       query.exec(function(err, user) {
-//         if (err) {
-//           console.log(err);
-//           res.send({message: "Server: User Login Error"});
-//           throw err;
-//         } else {
-//           if (user.length > 0) {
-//             res.send({token: "connection-" + Math.random().toString()});
-//           } else {
-//             res.send({message: "Server: Incorrect Username/Password"});
-//           }
-//         }
-//       });
-//     });
-//   }
-// }
+
+    function startCountdown(duration:number) {
+      if (!existingClock) {
+        existingClock = true;
+
+        // setNextMatch(); @TODO
+        var start = Date.now(),diff;
+        var endgame = false;
+        
+        const timerInterval = setInterval(timer, 1000);
+        function timer() {
+          if (!clockStop) {
+            diff = duration - (((Date.now() - start) / 1000) | 0);
+        
+            console.log(diff);
+            comm_service.senders.sendClockTimeEvent(diff);
+        
+            if (diff <= 30) {
+              if (!endgame) {
+                endgame = true;
+                comm_service.senders.sendClockEndGameEvent(true);
+              }
+            }
+        
+            if (diff <= 0) {
+              existingClock = false;
+              console.log("Stopping counter");
+              comm_service.senders.sendClockEndEvent(true);
+              clearInterval(timerInterval);
+            }
+          } else {
+            existingClock = false;
+            comm_service.senders.sendClockStopEvent(true);
+            clearInterval(timerInterval);
+          }
+        }
+      
+        // timer();
+      }
+    }
+
+    function startPrerun(duration:number) {
+      console.log("Prerun start");
+      if (!existingClock) {
+        existingClock = true;
+        var start = Date.now(),diff;
+        // comm_service.senders.sendClockPrestartEvent(true);
+      
+        const timerInterval = setInterval(timer, 1000);
+        function timer() {
+          console.log("Timer loop");
+          diff = duration - (((Date.now() - start) / 1000) | 0);
+          if (!clockStop) {
+        
+            console.log(diff);
+        
+            comm_service.senders.sendClockTimeEvent(diff);
+        
+            if (diff <= 0 || clockStop) {
+              existingClock = false;
+              startCountdown(countDownTime);
+              comm_service.senders.sendClockStartEvent(true);
+              clearInterval(timerInterval)
+            }
+          } else {
+            existingClock = false;
+            comm_service.senders.sendClockStopEvent(true);
+            clearInterval(timerInterval)
+          }
+        }
+      
+        // timer();
+
+      }
+    }
+
+    // Login
+    requestServer.get().post(request_namespaces.request_post_timer, (req, res) => {
+      const state = req.body.timerState;
+      console.log("From Timer: " + state);
+      if (state === 'prestart') {
+        clockStop = false;
+        comm_service.senders.sendClockPrestartEvent(true);
+        startPrerun(prerunTime);
+      }
+
+      if (state === 'start') {
+        clockStop = false
+        comm_service.senders.sendClockStartEvent(true);
+        startCountdown(countDownTime);
+      }
+
+      if (state === 'stop') {
+        clockStop = true
+        comm_service.senders.sendClockStopEvent(true);
+        // setPrevMatch(); @todo
+      }
+
+      if (state === 'reload') {
+        clockStop = true;
+        comm_service.senders.sendClockReloadEvent(true);
+      }
+    });
+  }
+}

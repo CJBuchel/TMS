@@ -2,15 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onEvent = void 0;
 const browserclient_1 = require("mhub/dist/src/browserclient");
-const bluebird_1 = require("bluebird");
 var client = new browserclient_1.default(typeof window !== 'undefined' ? `ws://${window.location.hostname}:2122` : `ws://localhost:2122`);
 const RETRY_TIMEOUT = 1000; // 1 second
-const listeners = {};
+var listeners = [];
 let connectPromise = null;
 // Connection promise
 function connect() {
     if (!connectPromise) {
-        connectPromise = bluebird_1.default.resolve(client.connect())
+        connectPromise = Promise.resolve(client.connect())
             .then(() => {
             console.log("Connected to Comm Service");
         }).catch(err => {

@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors';
 import bodyParser from "body-parser";
 
-import request_namespaces from "@cjms_servers/request_namespaces";
+import { request_namespaces } from "@cjms_shared/services";
 
 export class RequestServer {
   private requestApp = express();

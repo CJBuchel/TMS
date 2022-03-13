@@ -1,5 +1,5 @@
 import { RequestServer } from "../RequestServer";
-import request_namespaces from "@cjms_servers/request_namespaces";
+import { request_namespaces } from "@cjms_shared/services";
 
 import { UserModel } from "../../database/models/User";
 

@@ -16,7 +16,8 @@
   "workspaces": {
     "packages": [
       "CJMS-Interfaces/*",
-      "CJMS-Servers/*"
+      "CJMS-Servers/*",
+      "CJMS-SharedServices/*"
     ]
   },
   "scripts": {

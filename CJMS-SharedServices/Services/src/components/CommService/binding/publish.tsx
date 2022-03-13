@@ -1,8 +1,13 @@
 import MHubClient from "mhub/dist/src/browserclient";
-import Promise from 'bluebird';
-var client:MHubClient = new MHubClient(`ws://${window.location.hostname}:2122`);
 
-let loginPromise:Promise = null;
+var client:MHubClient;
+if (typeof window !== 'undefined') {
+  client = new MHubClient(`ws://${window.location.hostname}:2122`);
+} else {
+  client = new MHubClient(`ws://localhost:2122`);
+}
+
+let loginPromise = null;
 
 client.on('error', msg => {
   console.error("Error, unable to connect to comm server: \n" + msg);
@@ -18,11 +23,10 @@ function login() {
     console.log("Connecting to comm server...");
 
     loginPromise = Promise.resolve(client.connect())
-    .tap(() => console.log("Trying to login..."))
     .then(() => client.login("cjms", `${process.env.REACT_APP_PASSWORD_KEY}`))
-    .tap(() => console.log("Logged into comm server"))
-    .tapCatch(err => {
+    .catch(err => {
       console.error(`Error while logging into ${err.message}`);
+      loginPromise = null;
     });
   }
 

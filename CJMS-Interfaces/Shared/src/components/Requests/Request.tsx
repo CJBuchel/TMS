@@ -1,5 +1,5 @@
 // import * as req_namespaces from "./Namespaces";
-import request_namespaces from "@cjms_servers/request_namespaces"
+import { request_namespaces } from "@cjms_shared/services";
 const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
 
 export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any): Promise<Response> {

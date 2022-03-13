@@ -8,7 +8,10 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "lerna": "^4.0.0"
+    "@types/node": "^17.0.21",
+    "copyfiles": "^2.4.1",
+    "lerna": "^4.0.0",
+    "node": "^17.5.0"
   },
   "workspaces": {
     "packages": [
@@ -17,8 +20,9 @@
     ]
   },
   "scripts": {
-    "build": "lerna run build --stream",
-    "start": "lerna run start --stream",
+    "copy-env-files": "lerna run copy-env-file",
+    "build": "yarn run copy-env-files && lerna run build --stream",
+    "start": "yarn run copy-env-files && lerna run start --stream",
     "dev": "lerna run dev --stream"
   }
 }

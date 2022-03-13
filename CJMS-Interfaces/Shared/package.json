@@ -4,8 +4,13 @@
   "main": "lib/index.js",
   "license": "MIT",
   "dependencies": {
+    "assert": "^2.0.0",
     "axios": "^0.26.1",
+    "buffer": "^6.0.3",
     "copyfiles": "^2.4.1",
+    "dotenv": "^16.0.0",
+    "find-up": "^6.3.0",
+    "fs": "^0.0.1-security",
     "mhub": "^2.1.0",
     "react-overlays": "^5.1.1",
     "react-select": "^5.2.2",
@@ -20,8 +25,9 @@
     "react-dom": "^17.0.2"
   },
   "scripts": {
+    "copy-env-file": "copyfiles -u 1 ../../.env ./.env",
     "clean": "rimraf lib/",
-    "copy-files": "copyfiles -u 1 src/**/*.scss lib/",
+    "copy-files": "copyfiles -u 1 src/**/*.scss lib/; copyfiles -u 1 src/**/*.key lib/",
     "build": "yarn run clean && yarn run copy-files && tsc",
     "build-dev": "tsc -w"
   }

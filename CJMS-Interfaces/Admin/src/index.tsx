@@ -1,8 +1,10 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import {Login, CJMS_Application, useToken } from '@cjms_interfaces/shared';
+import {Login, CJMS_Application, useToken, commService } from '@cjms_interfaces/shared';
+
 
 function App() {
+  commService.senders.sendClockTimeEvent(5);
   const { token, setToken } = useToken();
   if (!token) {
     console.log("Token not made, redirecting...");

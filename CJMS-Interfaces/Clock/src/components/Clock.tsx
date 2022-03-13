@@ -14,24 +14,32 @@ interface IState {
 }
 
 class Clock extends Component<IProps, IState> {
+  _removeSubscriptions:any[] = [];
+
   constructor(props:any) {
     super(props);
-
     this.state = {
-      timerState: 'noState'
+      timerState: 'noState',
+      currentTime: 150
     }
   }
-
+  
   componentDidMount() {
     console.log("Rendered, subscribing to nodes");
-
     // Start event
-    commService.listeners.onClockTimeEvent((time:any) => {
-      console.log("Time event: " + time);
-      // this.setState({timerState: 'start'});
-      // console.log("State: " + this.state.timerState);
+    commService.listeners.onClockTimeEvent((time:number) => {
+      this.setState({currentTime: time});
+    }).then((removeSubscription:any) => {
+      this._removeSubscriptions.push(removeSubscription);
+    }).catch((err:any) => {
+      console.error(err);
     });
   }
+
+  setPrestart() {}
+  setStart() {}
+  setStop() {}
+  setReload() {}
 
   render(): React.ReactNode {
     return(

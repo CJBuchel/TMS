@@ -1,10 +1,10 @@
 // import * as req_namespaces from "./Namespaces";
 import { request_namespaces } from "@cjms_shared/services";
-const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
+// const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
 
 export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any): Promise<Response> {
-  console.log(server_location+request_namespaces.request_api_location);
-  const res:any = await fetch(server_location+request, {
+  console.log(request_namespaces.request_api_location);
+  const res:any = await fetch(request, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any)
 
 // Returns data as json
 export async function CJMS_FETCH_GENERIC_GET(request:any): Promise<Response> {
-  const res:any = await fetch(server_location+request).then((response) => {
+  const res:any = await fetch(request).then((response) => {
     // Return the response in json format
     return response.json();
   }).then((data:any) => {

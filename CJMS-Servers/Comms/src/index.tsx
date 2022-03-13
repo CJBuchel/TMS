@@ -2,8 +2,8 @@ import * as http from "http";
 import "source-map-support/register";
 import * as ws from "ws";
 
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
 
 import {
   HeaderStore,
@@ -19,6 +19,7 @@ async function createHub(): Promise<Hub> {
   const auth = new PlainAuthenticator();
   const hub = new Hub(auth);
   auth.setUser("cjms", `${process.env.REACT_APP_PASSWORD_KEY}`);
+  console.log("Password: " + process.env.REACT_APP_PASSWORD_KEY);
   hub.setRights({
     // Guests
     "": {
@@ -80,4 +81,3 @@ function die(fmt: string, ...args: any[]): void {
 
 // Startup the Comm Server
 Server().catch((err) => die("Comm Server Crashed!", err));
-console.log(`Password: ${process.env.REACT_APP_PASSWORD_KEY}`);

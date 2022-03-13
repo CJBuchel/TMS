@@ -1,5 +1,5 @@
 {
-  "name": "@cjms_servers/request_namespaces",
+  "name": "@cjms_shared/services",
   "version": "1.0.0",
   "main": "lib/index.js",
   "license": "MIT",

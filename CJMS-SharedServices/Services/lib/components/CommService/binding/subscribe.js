@@ -1,13 +1,16 @@
-import MHubClient from "mhub/dist/src/browserclient";
-import Promise from 'bluebird';
-var client = new MHubClient(`ws://${window.location.hostname}:2122`);
-const RETRY_TIMEOUT = 1000; // 1 seccond
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.onEvent = void 0;
+const browserclient_1 = require("mhub/dist/src/browserclient");
+const bluebird_1 = require("bluebird");
+var client = new browserclient_1.default(typeof window !== 'undefined' ? `ws://${window.location.hostname}:2122` : `ws://localhost:2122`);
+const RETRY_TIMEOUT = 1000; // 1 second
 const listeners = {};
 let connectPromise = null;
 // Connection promise
 function connect() {
     if (!connectPromise) {
-        connectPromise = Promise.resolve(client.connect())
+        connectPromise = bluebird_1.default.resolve(client.connect())
             .then(() => {
             console.log("Connected to Comm Service");
         }).catch(err => {
@@ -40,7 +43,7 @@ function removeListener(type, event, listener) {
     const index = listeners[topic].indexOf(listener);
     listeners[topic].splice(index, 1);
 }
-export function onEvent(type, event, listener) {
+function onEvent(type, event, listener) {
     const topic = `${type}:${event}`;
     console.log('Topic Message: ' + topic);
     listeners[topic] = listeners[topic] || [];
@@ -49,3 +52,4 @@ export function onEvent(type, event, listener) {
         .then(() => { listeners[topic].push(listener); })
         .then(() => removeListener.bind(null, event, listener));
 }
+exports.onEvent = onEvent;

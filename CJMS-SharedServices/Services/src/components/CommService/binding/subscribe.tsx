@@ -1,8 +1,9 @@
 import MHubClient from "mhub/dist/src/browserclient";
 import Promise from 'bluebird';
-var client = new MHubClient(`ws://${window.location.hostname}:2122`);
 
-const RETRY_TIMEOUT = 1000; // 1 seccond
+var client:MHubClient = new MHubClient(typeof window !== 'undefined' ? `ws://${window.location.hostname}:2122` : `ws://localhost:2122`);
+
+const RETRY_TIMEOUT = 1000; // 1 second
 
 const listeners = {};
 

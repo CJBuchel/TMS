@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { commService } from "@cjms_interfaces/shared";
+import { comm_service } from "@cjms_interfaces/shared";
 
 interface IProps {
 
@@ -27,7 +27,7 @@ class Clock extends Component<IProps, IState> {
   componentDidMount() {
     console.log("Rendered, subscribing to nodes");
     // Start event
-    commService.listeners.onClockTimeEvent((time:number) => {
+    comm_service.listeners.onClockTimeEvent((time:number) => {
       this.setState({currentTime: time});
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);

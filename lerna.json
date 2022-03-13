@@ -1,7 +1,8 @@
 {
   "packages": [
     "CJMS-Interfaces/*",
-    "CJMS-Servers/*"
+    "CJMS-Servers/*",
+    "CJMS-SharedServices/*"
   ],
   "version": "0.0.0",
   "npmClient": "yarn",

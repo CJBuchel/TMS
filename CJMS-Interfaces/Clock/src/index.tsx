@@ -1,13 +1,12 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import { CJMS_Application, commService } from '@cjms_interfaces/shared';
+import Clock from "./components/Clock";
+import { CJMS_Application } from '@cjms_interfaces/shared';
 
 function App() {
-  
+  console.log("Password: " + process.env.REACT_APP_PASSWORD_KEY);
   return (
-    <div>
-      <h1>This is a generic page</h1>
-    </div>
+    <Clock/>
   );
 }
 

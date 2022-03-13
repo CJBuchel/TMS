@@ -19,7 +19,6 @@ EXPOSE 27017/udp
 EXPOSE 2000-3000/tcp
 EXPOSE 2000-3000/udp
 
-
 # Copy CJMS App to the docker image dir /cjms
 COPY ./CJMS-Interfaces ./CJMS-Interfaces
 COPY ./CJMS-Servers ./CJMS-Servers
@@ -28,10 +27,12 @@ COPY ./lerna.json ./
 COPY ./yarn.lock ./
 COPY ./node_modules ./node_modules
 COPY ./docker-start.sh ./
+COPY ./docker-create-password.sh ./
 
 # # # Install deps and scripts
 RUN apt-get -y update
 RUN apt-get install -y net-tools
+RUN chmod +x ./docker-create-password.sh
 RUN chmod +x ./docker-start.sh
 
 # # Execute docker start script on container start

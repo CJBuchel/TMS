@@ -15,7 +15,7 @@ function connect() {
     .then(() => {
       console.log("Connected to Comm Service");
     }).catch(err => {
-      console.log(`Error while connecting to Comm service ${err.message}`);
+      console.error(`Error while connecting to Comm service ${err.message}`);
       throw err;
     });
   }
@@ -25,7 +25,7 @@ function connect() {
 
 function attemptReconnection() {
   connectPromise = null;
-  console.log("Disconnected from Comm Service");
+  console.warn("Disconnected from Comm Service");
   setTimeout(() => {
     console.log("Retrying connection...");
     connectPromise = null;
@@ -39,7 +39,6 @@ client.on('close', () => {
   attemptReconnection();
 });
 
-// @TODO: Need to find aa way to also send these messages... ironically
 client.on('message', message => {
   const topic = message.topic;
   listeners[topic].forEach(listener => listener(message.data));

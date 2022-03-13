@@ -3,11 +3,11 @@ import Promise from 'bluebird';
 var client = new MHubClient(`ws://${window.location.hostname}:2122`);
 let loginPromise = null;
 client.on('error', msg => {
-    console.log("Error, unable to connect to comm server: \n" + msg);
+    console.error("Error, unable to connect to comm server: \n" + msg);
 });
 client.on('close', () => {
     loginPromise = null;
-    console.log("Disconnected from comm server");
+    console.warn("Disconnected from comm server");
 });
 function login() {
     if (!loginPromise) {
@@ -17,7 +17,7 @@ function login() {
             .then(() => client.login("cjms", `${process.env.REACT_APP_PASSWORD_KEY}`))
             .tap(() => console.log("Logged into comm server"))
             .tapCatch(err => {
-            console.log(`Error while logging into ${err.message}`);
+            console.error(`Error while logging into ${err.message}`);
         });
     }
     return loginPromise;

@@ -1,5 +1,5 @@
 import { RequestServer } from "../RequestServer";
-import * as request_namespace from "../RequestServer/Namespaces";
+import request_namespaces from "@cjms_servers/request_namespaces";
 
 import { UserModel } from "../../database/models/User";
 
@@ -8,7 +8,7 @@ export class Users {
     console.log("User Requests Constructed");
 
     // Login
-    requestServer.get().use(request_namespace.request_post_login, (req, res) => {
+    requestServer.get().use(request_namespaces.request_post_login, (req, res) => {
       console.log(req.body);
       const username = req.body.username;
       const password = req.body.password;

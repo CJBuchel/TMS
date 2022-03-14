@@ -9,7 +9,13 @@ interface IProps {}
 interface IState {
   timerState?:string;
   currentTime?:number;
+  soundsEnabled?:boolean;
 }
+
+const startAudio = new window.Audio("./sounds/start.mp3");
+const stopAudio = new window.Audio("./sounds/stop.mp3");
+const endGameAudio = new window.Audio("./sounds/end-game.mp3");
+const endAudio = new window.Audio("./sounds/end.mp3");
 
 export default class Timer extends Component<IProps, IState> {
   _removeSubscriptions:any[] = [];
@@ -17,7 +23,24 @@ export default class Timer extends Component<IProps, IState> {
     super(props);
     this.state = {
       timerState: "default", // (default, armed, prerunning, running, ended)
-      currentTime: 150
+      currentTime: 150,
+      soundsEnabled: true,
+    }
+  }
+
+  playSound(audio:HTMLAudioElement) {
+    audio.play().catch(err => {
+      console.log(err);
+    });
+  }
+
+  toggleSounds(isEnabled:boolean) {
+    this.setState({soundsEnabled: isEnabled ? false : true});
+  }
+
+  playSoundIfEnabled(audio:HTMLAudioElement) {
+    if (this.state.soundsEnabled) {
+      this.playSound(audio);
     }
   }
 
@@ -44,6 +67,7 @@ export default class Timer extends Component<IProps, IState> {
     // Start Event
     comm_service.listeners.onClockStartEvent(() => {
       this.setState({timerState: 'running'});
+      this.playSoundIfEnabled(startAudio);
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {
@@ -52,7 +76,8 @@ export default class Timer extends Component<IProps, IState> {
 
     // Endgame
     comm_service.listeners.onClockEndGameEvent(() => {
-      this.setState({timerState: 'armed'});
+      this.setState({timerState: 'endgame'});
+      this.playSoundIfEnabled(endGameAudio);
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {
@@ -62,6 +87,7 @@ export default class Timer extends Component<IProps, IState> {
     // End event
     comm_service.listeners.onClockEndEvent(() => {
       this.setState({timerState: 'ended'});
+      this.playSoundIfEnabled(endAudio);
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {
@@ -71,6 +97,7 @@ export default class Timer extends Component<IProps, IState> {
     // Stop event
     comm_service.listeners.onClockStopEvent(() => {
       this.setState({timerState: 'ended'});
+      this.playSoundIfEnabled(stopAudio);
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {
@@ -79,7 +106,7 @@ export default class Timer extends Component<IProps, IState> {
 
     // Reload Event
     comm_service.listeners.onClockReloadEvent(() => {
-      this.setState({timerState: 'noState'});
+      this.setState({timerState: 'default'});
       this.setState({currentTime: 150});
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
@@ -89,7 +116,7 @@ export default class Timer extends Component<IProps, IState> {
 
     // End Event
     comm_service.listeners.onClockEndEvent(() => {
-      this.setState({timerState: 'noState'});
+      // this.setState({timerState: 'noState'});
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {
@@ -110,6 +137,7 @@ export default class Timer extends Component<IProps, IState> {
     return (
       <div>
         <Clock timerState={this.state.timerState} currentTime={this.state.currentTime}/>
+        <ClockControls timerState={this.state.timerState}/>
       </div>
     );
   }

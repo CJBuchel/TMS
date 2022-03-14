@@ -91,6 +91,11 @@ export class Timer {
     requestServer.get().post(request_namespaces.request_post_timer, (req, res) => {
       const state = req.body.timerState;
       console.log("From Timer: " + state);
+
+      if (state === 'arm') {
+        comm_service.senders.sendClockArmEvent(true);
+      }
+
       if (state === 'prestart') {
         clockStop = false;
         comm_service.senders.sendClockPrestartEvent(true);

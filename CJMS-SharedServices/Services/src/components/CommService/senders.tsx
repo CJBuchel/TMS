@@ -1,5 +1,6 @@
 import { sendEvent } from "./binding/publish";
 
+export function sendClockArmEvent(e) { sendEvent('clock', 'arm', e) }
 export function sendClockEndEvent(e) { sendEvent('clock', 'end', e) }
 export function sendClockStopEvent(e) { sendEvent('clock', 'stop', e) }
 export function sendClockTimeEvent(e) { sendEvent('clock', 'time', e) }

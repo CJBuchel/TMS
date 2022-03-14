@@ -1,3 +1,4 @@
+export declare function sendClockArmEvent(e: any): void;
 export declare function sendClockEndEvent(e: any): void;
 export declare function sendClockStopEvent(e: any): void;
 export declare function sendClockTimeEvent(e: any): void;

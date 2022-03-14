@@ -5,6 +5,9 @@
   "license": "MIT",
   "dependencies": {
     "@cjms_shared/services": "1.0.0",
+    "@types/node": "^17.0.21",
+    "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.13",
     "copyfiles": "^2.4.1",
     "dotenv": "^16.0.0",
     "react-overlays": "^5.1.1",
@@ -21,7 +24,7 @@
   "scripts": {
     "copy-env-file": "copyfiles -u 1 ../../.env ./.env",
     "clean": "rimraf lib/",
-    "copy-files": "copyfiles -u 1 src/**/*.scss lib/; copyfiles -u 1 src/**/*.key lib/",
+    "copy-files": "copyfiles -u 1 src/**/*.scss lib/",
     "build": "yarn run clean && yarn run copy-files && tsc",
     "build-dev": "tsc -w"
   }

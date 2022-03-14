@@ -5,11 +5,11 @@ FROM mongo as database_stage
 # Main Core CJMS System
 FROM node as build_stage
 
-# # Did somone say inefficiency?
+# Did somone say inefficiency?
 COPY --from=database_stage / /
 WORKDIR /cjms
 
-# # Environemnt Variables
+# Environemnt Variables
 ENV MONGO_INITDB_ROOT_USERNAME=cjms
 ENV MONGO_INITDB_ROOT_PASSWORD=cjms
 ENV MONGO_INITDB_DATABASE: cjms_database
@@ -27,12 +27,12 @@ COPY ./lerna.json ./
 COPY ./yarn.lock ./
 COPY ./node_modules ./node_modules
 COPY ./docker-start.sh ./
-COPY ./docker-create-password.sh ./
+COPY ./docker-create-env.sh ./
 
 # # # Install deps and scripts
 RUN apt-get -y update
 RUN apt-get install -y net-tools
-RUN chmod +x ./docker-create-password.sh
+RUN chmod +x ./docker-create-env.sh
 RUN chmod +x ./docker-start.sh
 
 # # Execute docker start script on container start

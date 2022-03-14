@@ -1,3 +1,4 @@
+export declare const onClockArmEvent: any;
 export declare const onClockEndEvent: any;
 export declare const onClockStopEvent: any;
 export declare const onClockTimeEvent: any;

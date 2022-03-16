@@ -72,36 +72,58 @@
 .armedModal {
   position: fixed;
   text-align: center;
-  top: 65%;
+  top: 25%;
   left: 25%;
   width: 50%;
   height: 50%;
-  font-size: 3vw;
+  font-size: 3vh;
   color: white;
   text-shadow: 2px 2px #000000;
   z-index: 2;
   background-color: #3b3b3b;
-  border-radius: 10px;
+  border-radius: 20px;
+  opacity: 1;
+
+  .controlButtons {
+    height: 15%;
+    button {
+
+      font-size: fit-content;
+      margin-top: 3%;
+      width: 85%;
+      height: 100%;
+      border-radius: 15px;
+    }
+
+  }
+
 }
+
 
 .timer_controls {
   margin: 0;
   display: flex;
   position: absolute;
-  bottom: 5%;
-  left: 50%;
+  bottom: 0%;
   justify-content: center;
-  vertical-align: middle;
+  // vertical-align: middle;
   align-items: center;
 
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 15%;
+
+  border-style: solid;
+  border-color: red;
+
+  transform: translate(-50%);
 }
 
 .timer_controls button {
-  width: 45vw;
-  height: 12vh;
+  width: 50%;
+  height: 80%;
   border-radius: 10px;
-  font-size: 6vw;
+  font-size: 300%;
+  font-size: fit-content;
   z-index: 0;
 }
 

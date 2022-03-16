@@ -87,7 +87,7 @@ export class Timer {
       }
     }
 
-    // Login
+    // Timer
     requestServer.get().post(request_namespaces.request_post_timer, (req, res) => {
       const state = req.body.timerState;
       console.log("From Timer: " + state);

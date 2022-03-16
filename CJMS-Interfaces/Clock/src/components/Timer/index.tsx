@@ -107,7 +107,7 @@ export default class Timer extends Component<IProps, IState> {
     // Reload Event
     comm_service.listeners.onClockReloadEvent(() => {
       this.setState({timerState: 'default'});
-      this.setState({currentTime: 150});
+      window.location.reload();
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {
@@ -116,7 +116,7 @@ export default class Timer extends Component<IProps, IState> {
 
     // End Event
     comm_service.listeners.onClockEndEvent(() => {
-      // this.setState({timerState: 'noState'});
+      this.setState({timerState: 'default'});
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {
@@ -134,6 +134,7 @@ export default class Timer extends Component<IProps, IState> {
   }
 
   render() {
+    console.log(this.state.timerState);
     return (
       <div>
         <Clock timerState={this.state.timerState} currentTime={this.state.currentTime}/>

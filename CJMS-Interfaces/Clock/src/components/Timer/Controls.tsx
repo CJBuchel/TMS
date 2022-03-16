@@ -46,9 +46,36 @@ export default class ClockControls extends Component<IProps, IState> {
         <div>
           <div className="armedModal">
             <h1>MATCH ARMED</h1>
+            <div className="controlButtons">
+              <button className="hoverButton back-orange" onClick={this.setPrestart}>PRESTART</button>
+              <button className="hoverButton back-green" onClick={this.setStart}>START</button>
+              <button className="hoverButton back-red" onClick={this.setReload}>CANCEL</button>
+            </div>
           </div>
           <div className="armedModalBackdrop">
         </div>
+        </div>
+      );
+    }
+  }
+
+  renderControls() {
+    if (this.props.timerState === 'default' || this.props.timerState === 'armed') {
+      return (
+        <div className="timer_controls">
+          <button className="hoverButton back-orange" onClick={this.setArm}>{this.props.timerState === 'armed' ? "ARMED" : "ARM"}</button>
+        </div>
+      );
+    } else if (this.props.timerState === 'ended') {
+      return (
+        <div className="timer_controls">
+          <button className="hoverButton back-orange" onClick={this.setReload}>RELOAD</button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="timer_controls">
+          <button className="hoverButton back-red" onClick={this.setStop}>ABORT</button>
         </div>
       );
     }
@@ -58,9 +85,7 @@ export default class ClockControls extends Component<IProps, IState> {
     return (
       <div>
         { this.renderArmed() }
-        <div id='main_config' className="timer_controls">
-          <button className="hoverButton back-orange" onClick={this.setArm}>{this.props.timerState === 'armed' ? "ARMED" : "ARM"}</button>
-        </div>
+        { this.renderControls() }
       </div>
     );
   }

@@ -1,0 +1,144 @@
+@import url('../fonts/lcd-bold/index.css');
+@import url('../fonts/radioland/index.css');
+
+@keyframes blink {  
+  0% { opacity: 1; }
+  100% { opacity: 0.1; }
+}
+@-webkit-keyframes blink {
+  0% { opacity: 1; }
+  100% { opacity: 0.1; }
+}
+
+.clock {
+  user-select: none;
+  font-size: 40vw;
+  font-family: lcdbold, monospace;
+  display: flex;
+  justify-content: center;
+  vertical-align: middle;
+  align-items: center;
+
+  color: white;
+
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.armedModalBackdrop {
+  position: fixed;
+  opacity: 0.4;
+  width: 120%;
+  height: 120%;
+  z-index: 1001;
+  left: -46px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  
+  background: -webkit-repeating-linear-gradient(
+    145deg,
+    #000000 1px,
+    #3b3b3b 2px,
+    #3b3b3b 11px,
+    #000000 12px,
+    #000000 20px
+  );
+  background: repeating-linear-gradient(
+    -55deg,
+    #000000 1px,
+    #3b3b3b 2px,
+    #3b3b3b 11px,
+    #000000 12px,
+    #000000 20px
+  );
+    
+  -webkit-animation-name: MOVE-BG;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  
+  animation-name: MOVE-BG;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.armedModal {
+  position: fixed;
+  text-align: center;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  font-size: 3vh;
+  color: white;
+  text-shadow: 2px 2px #000000;
+  z-index: 2;
+  background-color: #3b3b3b;
+  border-radius: 20px;
+  opacity: 1;
+
+  .controlButtons {
+    height: 15%;
+    button {
+
+      font-size: fit-content;
+      margin-top: 3%;
+      width: 85%;
+      height: 100%;
+      border-radius: 15px;
+    }
+
+  }
+
+}
+
+
+.timer_controls {
+  margin: 0;
+  display: flex;
+  position: absolute;
+  bottom: 0%;
+  justify-content: center;
+  // vertical-align: middle;
+  align-items: center;
+
+  width: 100%;
+  height: 15%;
+
+  border-style: solid;
+  border-color: red;
+
+  transform: translate(-50%);
+}
+
+.timer_controls button {
+  width: 50%;
+  height: 80%;
+  border-radius: 10px;
+  font-size: 300%;
+  font-size: fit-content;
+  z-index: 0;
+}
+
+.ended{
+  color: red;
+}
+
+.armed {
+  color: yellow;
+}
+
+.prerunning {
+  color: orange;
+}
+
+.running {
+  color: lime;
+}

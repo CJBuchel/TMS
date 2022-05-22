@@ -1,6 +1,6 @@
 # CJ's Management System
 - FIRST Lego League Management system used for WA FLL Events.
-- Built to automate, store display and simplify scoring teams in FLL.
+- Built to automate, store, display and simplify scoring teams in FLL.
 # 2022 UPDATE IN DEVELOPMENT
 
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_apis/build/status/CJBuchel.CJ-MS?branchName=master)](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_build/latest?definitionId=20&branchName=master)
@@ -72,8 +72,16 @@
   
 ## Port Numbers And rememberals
 ### Database/Storage
-- Database port: `27017` (internal unless specified to be external)
+- Database port: `27017` (internal unless specified otherwise)
 
 ### Server
-- Main Server Port: `2121`
-- CommServer Port: `2122`
+- Request Server Port: `2121`
+- Comm Server Port: `2122`
+
+### Interfaces
+- Admin: `3000`
+- Status Controller: `2827`
+- Clock/Timer: `2828`
+- Scoreboard: `2829`
+- Judge Display: `2830`
+- Scoring: `2832`

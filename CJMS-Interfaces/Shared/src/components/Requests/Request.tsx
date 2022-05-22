@@ -1,6 +1,9 @@
-import * as req_namespaces from "./Namespaces";
+// import * as req_namespaces from "./Namespaces";
+import { request_namespaces } from "@cjms_shared/services";
+// const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
 
 export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any): Promise<Response> {
+  console.log(request_namespaces.request_api_location);
   const res:any = await fetch(request, {
     method: 'POST',
     headers: {
@@ -47,6 +50,12 @@ export async function CJMS_FETCH_GENERIC_GET(request:any): Promise<Response> {
   return res.json();
 }
 
+// Login
 export async function CJMS_REQUEST_LOGIN(credentials:any): Promise<Response> {
-  return await CJMS_FETCH_GENERIC_POST(req_namespaces.request_post_login, credentials);
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_login, credentials);
+}
+
+// Clock/Timer
+export async function CJMS_REQUEST_TIMER(timerStatus:string): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, timerStatus);
 }

@@ -3,6 +3,7 @@
     "plugins": [
       {"name": "typescript-plugin-css-modules"}
     ],
+    "types": ["node"],
     "typeRoots": [
       "node_modules/@types"
     ],

@@ -3,6 +3,11 @@
 retries=1
 max_retries=5
 
+printf '\e[1;32m'
+printf "\nCreating random password\n"
+printf '\e[0m'
+./docker-create-env.sh
+
 # Start Database
 printf '\e[1;32m'
 printf "\nStarting Database\n"

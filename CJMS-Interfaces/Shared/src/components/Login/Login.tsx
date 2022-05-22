@@ -8,8 +8,16 @@ import * as Requests from "../Requests/Request";
 
 import "../../assets/stylesheets/Login.scss"
 
-function loginUser(credentials, allowedUser) {
-  if (credentials.username !== allowedUser && credentials.username !== 'admin') {
+function loginUser(credentials, allowedUsers) {
+  var permitted = false;
+  for (const allowedUser of allowedUsers) {
+    console.log(allowedUser)
+    if (credentials.username === allowedUser || credentials.username === 'admin') {
+      permitted = true;
+    }
+  }
+
+  if (!permitted) {
     alert("User [" + credentials.username + "] is not permitted on this page");
     return false;
   } else {
@@ -24,7 +32,7 @@ const userOptions = [
   {value: 'head_referee', label: 'Head Referee'}
 ];
 
-function Login({setToken, allowedUser}) {
+function Login({setToken, allowedUsers}) {
   const [username, setUser] = useState('');
   const [password, setPassword] = useState('');
 
@@ -33,7 +41,7 @@ function Login({setToken, allowedUser}) {
     const token:any = await loginUser({
       username: username,
       password: password
-    }, allowedUser);
+    }, allowedUsers);
 
     console.log(token);
 

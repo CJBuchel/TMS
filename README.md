@@ -1,6 +1,6 @@
 # CJ's Management System
 - FIRST Lego League Management system used for WA FLL Events.
-- Built to automate, store display and simplify scoring teams in FLL.
+- Built to automate, store, display and simplify scoring teams in FLL.
 # 2022 UPDATE IN DEVELOPMENT
 
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_apis/build/status/CJBuchel.CJ-MS?branchName=master)](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_build/latest?definitionId=20&branchName=master)

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import "../../assets/stylesheets/Login.scss";
-declare function Login({ setToken, allowedUser }: {
+declare function Login({ setToken, allowedUsers }: {
     setToken: any;
-    allowedUser: any;
+    allowedUsers: any;
 }): JSX.Element;
 declare namespace Login {
     var propTypes: {

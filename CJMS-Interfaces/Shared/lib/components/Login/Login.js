@@ -6,8 +6,15 @@ import Select from 'react-select';
 import PropTypes from 'prop-types';
 import * as Requests from "../Requests/Request";
 import "../../assets/stylesheets/Login.scss";
-function loginUser(credentials, allowedUser) {
-    if (credentials.username !== allowedUser && credentials.username !== 'admin') {
+function loginUser(credentials, allowedUsers) {
+    var permitted = false;
+    for (const allowedUser of allowedUsers) {
+        console.log(allowedUser);
+        if (credentials.username === allowedUser || credentials.username === 'admin') {
+            permitted = true;
+        }
+    }
+    if (!permitted) {
         alert("User [" + credentials.username + "] is not permitted on this page");
         return false;
     }
@@ -21,7 +28,7 @@ const userOptions = [
     { value: 'referee', label: 'Referee' },
     { value: 'head_referee', label: 'Head Referee' }
 ];
-function Login({ setToken, allowedUser }) {
+function Login({ setToken, allowedUsers }) {
     const [username, setUser] = useState('');
     const [password, setPassword] = useState('');
     const handleSubmit = async (e) => {
@@ -29,7 +36,7 @@ function Login({ setToken, allowedUser }) {
         const token = await loginUser({
             username: username,
             password: password
-        }, allowedUser);
+        }, allowedUsers);
         console.log(token);
         // console.log(token);
         if (token !== false && token.token) {

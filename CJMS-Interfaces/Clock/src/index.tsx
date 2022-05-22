@@ -1,5 +1,4 @@
 import ReactDOM from 'react-dom';
-import React, {useState, useEffect} from 'react';
 import Timer from './components/Timer';
 import { CJMS_Application, Login, useToken, comm_service } from '@cjms_interfaces/shared';
 

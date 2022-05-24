@@ -1,4 +1,5 @@
 import { Component } from "react";
+import "../../assets/stylesheets/SideNavigation.scss";
 export interface NavContentLink {
     icon: any;
     name: string;

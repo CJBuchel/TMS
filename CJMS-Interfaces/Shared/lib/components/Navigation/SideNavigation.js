@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Sidebar from "react-sidebar";
 import { AiOutlineBars } from 'react-icons/ai';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import "../../assets/stylesheets/SideNavigation.scss";
 export default class SideNavigation extends Component {
     constructor(props) {
         super(props);
@@ -38,12 +39,14 @@ export default class SideNavigation extends Component {
                 l.name));
         }
         return (React.createElement(React.Fragment, null,
-            this.getRoutes(),
             React.createElement("div", { className: "sideNavigation" }, refs)));
     }
     render() {
-        return (React.createElement(Sidebar, { sidebar: this.getContent(), open: this.state.sidebarOpen, onSetOpen: this.onSetSidebar, styles: { sidebar: { background: this.props.navContent.background ? this.props.navContent.background : "#565657" } } },
-            React.createElement("button", { onClick: () => this.onSetSidebar(true) },
-                React.createElement(AiOutlineBars, null))));
+        return (React.createElement(React.Fragment, null,
+            this.getRoutes(),
+            React.createElement(Sidebar, { sidebar: this.getContent(), open: this.state.sidebarOpen, onSetOpen: this.onSetSidebar, styles: { sidebar: { background: this.props.navContent.background ? this.props.navContent.background : "#565657" } } },
+                React.createElement("div", { className: "side-navbar" },
+                    React.createElement("button", { onClick: () => this.onSetSidebar(true) },
+                        React.createElement(AiOutlineBars, null))))));
     }
 }

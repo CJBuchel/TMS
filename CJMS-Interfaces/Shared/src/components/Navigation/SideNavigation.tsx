@@ -4,6 +4,8 @@ import { AiOutlineBars } from 'react-icons/ai';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { JsxElement } from "typescript/lib/tsserverlibrary";
 
+import "../../assets/stylesheets/SideNavigation.scss";
+
 export interface NavContentLink {
   icon:any;
   name:string;
@@ -76,7 +78,6 @@ export default class SideNavigation extends Component<IProps, IState> {
 
     return (
       <>
-        { this.getRoutes() }
         <div className="sideNavigation">
           { refs }
         </div>
@@ -86,15 +87,20 @@ export default class SideNavigation extends Component<IProps, IState> {
 
   render() {
     return (
-      <Sidebar
-        sidebar={ this.getContent() }
-        open={this.state.sidebarOpen}
-        onSetOpen={this.onSetSidebar}
-        styles={{sidebar: {background: this.props.navContent.background ? this.props.navContent.background : "#565657"}}}
-      >
+      <>
+        {this.getRoutes()}
+          <Sidebar
+            sidebar={ this.getContent() }
+            open={this.state.sidebarOpen}
+            onSetOpen={this.onSetSidebar}
+            styles={{sidebar: {background: this.props.navContent.background ? this.props.navContent.background : "#565657"}}}
+          >
 
-        <button onClick={() => this.onSetSidebar(true)} ><AiOutlineBars/></button>
-      </Sidebar>
+            <div className="side-navbar">
+              <button onClick={() => this.onSetSidebar(true)} ><AiOutlineBars/></button>
+            </div>
+          </Sidebar>
+      </>
     );
   }
 }

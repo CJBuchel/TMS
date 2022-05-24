@@ -1,7 +1,29 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import {Login, CJMS_Application, useToken, comm_service } from '@cjms_interfaces/shared';
+import {Login, CJMS_Application, useToken, comm_service, SideNavigation, NavContent, NavContentLink } from '@cjms_interfaces/shared';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Setup from './components/Setup';
 
+import "./assets/application.scss";
+
+
+/** Admin Structure,
+ * Main Page (Setup/Main Control)
+ * Events Control & Console (Comm server)
+ * Team Stats/Scoring Editor
+ * Scheduling?
+ */
+
+var navContent:NavContent = {
+  background:"#696969",
+  title:"Admin Nav",
+  links:[
+    { icon:null, name:"Setup", path:"/", linkTo:<Setup/> },
+    { icon:null, name:"Stats", path:"/Stats", linkTo:<Setup/> },
+  ],
+}
+
+// const sideNav = new SideNavigation();
 
 function App() {
   // comm_service.senders.sendClockTimeEvent(5); 
@@ -13,6 +35,7 @@ function App() {
     console.log("Token made");
     return (
       <div>
+        <SideNavigation navContent={navContent}/>
         <h1>This is a generic page</h1>
       </div>
     );

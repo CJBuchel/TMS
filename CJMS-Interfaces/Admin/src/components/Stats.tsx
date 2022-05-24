@@ -4,7 +4,7 @@ interface IProps {}
 
 interface IState {}
 
-export default class Setup extends Component<IProps, IState> {
+export default class Stats extends Component<IProps, IState> {
   constructor(props:any) {
     super(props);
 
@@ -13,7 +13,7 @@ export default class Setup extends Component<IProps, IState> {
 
   render() {
     return(
-      <h1>Setup Page</h1>
+      <h1>Stats Page</h1>
     );
   }
 }

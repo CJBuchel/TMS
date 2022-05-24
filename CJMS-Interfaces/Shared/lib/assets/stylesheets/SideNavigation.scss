@@ -1,0 +1,22 @@
+// Side navigation bar
+.side-navbar button {
+  display: flex;
+  position: absolute;
+  left: -170px;
+  transition: 0.3s ease-out;
+  width: 200px;
+  height: 20vh;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  border-radius: 0 5px 5px 0;
+  top: 50vh;
+  background-color: gray;
+  justify-content: right;
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.side-navbar button:hover {
+  left: -100px;
+}

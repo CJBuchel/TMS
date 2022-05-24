@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {Login, CJMS_Application, useToken, comm_service, SideNavigation, NavContent, NavContentLink } from '@cjms_interfaces/shared';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Setup from './components/Setup';
+import Stats from './components/Stats';
 
 import "./assets/application.scss";
 
@@ -19,14 +20,11 @@ var navContent:NavContent = {
   title:"Admin Nav",
   links:[
     { icon:null, name:"Setup", path:"/", linkTo:<Setup/> },
-    { icon:null, name:"Stats", path:"/Stats", linkTo:<Setup/> },
+    { icon:null, name:"Stats", path:"/Stats", linkTo:<Stats/> },
   ],
 }
 
-// const sideNav = new SideNavigation();
-
 function App() {
-  // comm_service.senders.sendClockTimeEvent(5); 
   const { token, setToken } = useToken();
   if (!token) {
     console.log("Token not made, redirecting...");
@@ -34,10 +32,7 @@ function App() {
   } else {
     console.log("Token made");
     return (
-      <div>
-        <SideNavigation navContent={navContent}/>
-        <h1>This is a generic page</h1>
-      </div>
+      <SideNavigation navContent={navContent}/>
     );
   }
 }

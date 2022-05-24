@@ -70,7 +70,7 @@
   - Commands:
     - `yarn run start`
   
-## Port Numbers And rememberals
+## Port Numbers
 ### Database/Storage
 - Database port: `27017` (internal unless specified otherwise)
 

@@ -31,7 +31,7 @@ class Clock extends Component<IProps, IState> {
   render() {
     return(
       <div className={`clock ${this.props.timerState}`}>
-        <div>{ parseTime(this.props.currentTime || 150) }</div>
+        <div>{ parseTime(this.props.currentTime || 0) }</div>
       </div>
     );
   }

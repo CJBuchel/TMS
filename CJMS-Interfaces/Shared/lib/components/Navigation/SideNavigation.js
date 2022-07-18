@@ -30,7 +30,6 @@ export default class SideNavigation extends Component {
     }
     getContent() {
         var refs = [];
-        console.log(this.props.navContent);
         for (let link in this.props.navContent.links) {
             const l = this.props.navContent.links[link];
             refs.push(React.createElement("a", { key: l.name, href: l.path },
@@ -38,8 +37,12 @@ export default class SideNavigation extends Component {
                 " ",
                 l.name));
         }
-        return (React.createElement(React.Fragment, null,
-            React.createElement("div", { className: "sideNavigation" }, refs)));
+        return (React.createElement("div", { className: "side-navbar-content" },
+            React.createElement("div", { className: "side-navbar-links" }, refs),
+            React.createElement("div", { className: "side-navbar-footer" },
+                React.createElement("h5", null,
+                    "v",
+                    process.env.REACT_APP_CJMS_VERSION))));
     }
     render() {
         return (React.createElement(React.Fragment, null,

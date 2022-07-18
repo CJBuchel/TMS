@@ -22,9 +22,9 @@ export default class Timer extends Component<IProps, IState> {
   constructor(props:any) {
     super(props);
     this.state = {
-      timerState: "default", // (default, armed, prerunning, running, ended)
+      timerState: "default", // (default, armed, endgame, prerunning, running, ended)
       currentTime: 150,
-      soundsEnabled: true,
+      soundsEnabled: false,
     }
   }
 
@@ -116,7 +116,7 @@ export default class Timer extends Component<IProps, IState> {
 
     // End Event
     comm_service.listeners.onClockEndEvent(() => {
-      this.setState({timerState: 'default'});
+      this.setState({timerState: 'ended'});
     }).then((removeSubscription:any) => {
       this._removeSubscriptions.push(removeSubscription);
     }).catch((err:any) => {

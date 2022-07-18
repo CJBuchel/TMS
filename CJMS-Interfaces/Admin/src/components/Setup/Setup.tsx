@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import "../../assets/Setup.scss";
 
 interface IProps {}
 
@@ -13,7 +14,15 @@ export default class Setup extends Component<IProps, IState> {
 
   render() {
     return(
-      <h1>Setup Page</h1>
+      <div className="row">
+        <div className="setup-main">
+          <h1>Setup</h1>
+        </div>
+
+        <div className="data-preview">
+          <h1>Data Preview</h1>
+        </div>
+      </div>
     );
   }
 }

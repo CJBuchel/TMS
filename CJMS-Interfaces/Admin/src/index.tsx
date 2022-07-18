@@ -1,9 +1,8 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import {Login, CJMS_Application, useToken, comm_service, SideNavigation, NavContent, NavContentLink } from '@cjms_interfaces/shared';
+import {Login, CJMS_Application, useToken, comm_service, SideNavigation, NavContent } from '@cjms_interfaces/shared';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Setup from './components/Setup';
-import Stats from './components/Stats';
+import { Setup } from './components/Setup';
 
 import "./assets/application.scss";
 
@@ -16,11 +15,10 @@ import "./assets/application.scss";
  */
 
 var navContent:NavContent = {
-  background:"#696969",
+  background:"#111",
   title:"Admin Nav",
   links:[
-    { icon:null, name:"Setup", path:"/", linkTo:<Setup/> },
-    { icon:null, name:"Stats", path:"/Stats", linkTo:<Stats/> },
+    { icon:null, name:"Setup", path:"/", linkTo:<Setup/> }
   ],
 }
 
@@ -32,7 +30,9 @@ function App() {
   } else {
     console.log("Token made");
     return (
-      <SideNavigation navContent={navContent}/>
+      <div className='admin-app'>
+        <SideNavigation navContent={navContent}/>
+      </div>
     );
   }
 }

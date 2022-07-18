@@ -1,3 +1,5 @@
+@import "structures";
+
 // Side navigation bar
 .side-navbar button {
   display: flex;
@@ -19,4 +21,32 @@
 
 .side-navbar button:hover {
   left: -100px;
+}
+
+.side-navbar-content {
+  height: 100vh;
+}
+
+.side-navbar-links {
+  height: 90%;
+}
+
+.side-navbar-links a {
+  padding-top: 3vh;
+  padding-left: 3vw;
+  padding-right: 3vw;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
+
+.side-navbar-links a:hover {
+  color: #f1f1f1;
+}
+
+.side-navbar-footer {
+  padding-left: 3vw;
+  padding-right: 3vw;
+  color: white;
 }

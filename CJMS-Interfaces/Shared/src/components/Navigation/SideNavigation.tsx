@@ -70,18 +70,20 @@ export default class SideNavigation extends Component<IProps, IState> {
   getContent() {
     var refs:Array<any> = [];
     
-    console.log(this.props.navContent)
     for (let link in this.props.navContent.links) {
       const l:NavContentLink = this.props.navContent.links[link];
       refs.push(<a key={l.name} href={l.path}>{l.icon ? l.icon : null} {l.name}</a>);
     }
 
     return (
-      <>
-        <div className="sideNavigation">
+      <div className="side-navbar-content">
+        <div className="side-navbar-links">
           { refs }
         </div>
-      </>
+        <div className="side-navbar-footer">
+          <h5>v{process.env.REACT_APP_CJMS_VERSION}</h5>
+        </div>
+      </div>
     );
   }
 

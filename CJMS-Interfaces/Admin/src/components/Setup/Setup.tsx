@@ -1,26 +1,27 @@
 import React, {Component} from "react";
-import "../../assets/Setup.scss";
+
+import "../../assets/Setup.scss"
 
 interface IProps {}
-
 interface IState {}
 
 export default class Setup extends Component<IProps, IState> {
   constructor(props:any) {
     super(props);
-
     this.state = {}
   }
 
   render() {
     return(
-      <div className="row">
-        <div className="setup-main">
-          <h1>Setup</h1>
-        </div>
+      <div className="setup-main">
+        <div className="container">
+          <h3>Schedule</h3>
+          <a href="">Upload CSV</a><br/>
+          <a href="https://firstaustralia.org/fll-scheduler/">Generate Schedule/CSV</a><br/>
 
-        <div className="data-preview">
-          <h1>Data Preview</h1>
+
+          <h3>Event Name</h3>
+          <input/>
         </div>
       </div>
     );

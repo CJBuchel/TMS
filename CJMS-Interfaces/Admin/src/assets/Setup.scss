@@ -1,22 +1,13 @@
-@import "@cjms_interfaces/shared/lib/assets/stylesheets/application";
+@use "@cjms_interfaces/shared/lib/assets/stylesheets/application";
 
-.row:after {
-  width: 100vw;
-  content: "";
-  display: table;
-  clear: both;
-}
 
 .setup-main {
-  height: 100vh;
-  @include column-struct(50vw);
-  background-color: rgb(75, 75, 75);
+  width: 33.33%;
+  background-color: #ccc;
+  @include application.border-struct;
   border-radius: 15px;
 }
 
-.data-preview {
-  height: 100vh;
-  @include column-struct(50vw);
-  background-color: rgb(59, 58, 58);
-  border-radius: 15px;
+.setup-main .container {
+  padding: 20px;
 }

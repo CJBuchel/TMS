@@ -5,9 +5,15 @@
   width: 33.33%;
   background-color: #ccc;
   @include application.border-struct;
+  margin-top: 25px;
+  margin-left: 33.33%;
   border-radius: 15px;
 }
 
 .setup-main .container {
   padding: 20px;
+}
+
+.container input {
+  font-size: medium;
 }

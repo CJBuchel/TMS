@@ -1,10 +1,11 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import {Login, CJMS_Application, useToken, comm_service, SideNavigation, NavContent } from '@cjms_interfaces/shared';
+import {Login, CJMS_Application, useToken, comm_service, NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Setup } from './components/Setup';
+// import { Setup } from './components/Setup';
 
 import "./assets/application.scss";
+import { Setup } from './components/Setup';
 
 
 /** Admin Structure,
@@ -13,13 +14,19 @@ import "./assets/application.scss";
  * Team Stats/Scoring Editor
  * Scheduling?
  */
-
-var navContent:NavContent = {
-  background:"#111",
-  title:"Admin Nav",
-  links:[
-    { icon:null, name:"Setup", path:"/", linkTo:<Setup/> }
-  ],
+var navContent:NavMenuContent = {
+  navCategories: [
+    {
+      name:"Setup",
+      links: [
+        {
+          name:"Event Setup", 
+          path:"/Setup", 
+          linkTo:<Setup/>
+        },
+      ]
+    }
+  ]
 }
 
 function App() {
@@ -31,7 +38,7 @@ function App() {
     console.log("Token made");
     return (
       <div className='admin-app'>
-        <SideNavigation navContent={navContent}/>
+        <NavMenu navContent={navContent}/>
       </div>
     );
   }

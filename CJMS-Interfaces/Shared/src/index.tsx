@@ -3,7 +3,7 @@ import useToken from "./components/Login/UseToken";
 import Login from "./components/Login/Login";
 import { comm_service } from "@cjms_shared/services";
 import * as requests from "./components/Requests/Request";
-import SideNavigation, {NavContent, NavContentLink} from "./components/Navigation/SideNavigation";
+import NavMenu, { NavMenuContent } from "./components/Navigation/NavMenu";
 
 export { 
   CJMS_Application, 
@@ -11,7 +11,6 @@ export {
   Login, 
   comm_service,
   requests,
-  SideNavigation,
-  NavContent,
-  NavContentLink
+  NavMenu,
+  NavMenuContent
 };

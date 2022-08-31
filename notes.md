@@ -9,12 +9,12 @@
 - Used for updates to database and holds the main server side timing and other services.
 
 # Interfaces
-- There are 7 interfaces. (Admin, Clock/Timer, MatchControl, Scorer, Display, CentralStats)
+- There are 6 interfaces. (Admin, Clock/Timer, MatchControl, Scorer, Display, CentralStats)
 
 ### Admin
 - Main page for admin, and first time setup
 
-### Clock/Timer
+### Clock/Timer/Match Display
 - A single page interface that displays the timer and the controls for timer.
 
 ### Match Control
@@ -25,8 +25,8 @@
 - A two page interface which provides either simple controls to add a score to the database.
 - Or provides a more complex page which allows input for each type of score and then calculates final score.
 
-### Display
-- A single page interface with no login. Displays current team scores in an infinite scrolling table
+### Audience Display
+- A single page interface with no login. Dynamically changes content based on current events and admin controls
 
 ### Central Stats
 - Displays statistics for teams and team scores. Also allows exporting of team score csv

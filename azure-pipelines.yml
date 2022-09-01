@@ -16,6 +16,8 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
+  - script: ./docker-create-env.sh
+
   # Build Node App
   - task: NodeTool@0
     inputs:

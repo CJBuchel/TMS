@@ -15,3 +15,7 @@ export const request_post_login = `${request_api_location_post}/login`;
 
 // Clock/Timer
 export const request_post_timer = `${request_api_location_post}/timer`;
+
+// setup
+export const request_post_setup = `${request_api_location_post}/setup`;
+export const request_post_purge = `${request_api_location_post}/purge`;

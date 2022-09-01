@@ -1,16 +1,15 @@
 import mongoose from "mongoose";
-import { TableSchema } from "./Table";
 
 // Team on table Schema, (used internally only with Match Schema)
 const OnTableSchema = new mongoose.Schema({
-  table: TableSchema,
+  table: {type: String},
   team_number: {type: String},
   score_submitted: {type: Boolean, default: false}
 });
 
 // Match
 export const MatchSchema = new mongoose.Schema({
-  match_number: {type: Number, required: true},
+  match_number: {type: String, required: true},
 
   // Time when match starts/ends
   start_time: {type: String},

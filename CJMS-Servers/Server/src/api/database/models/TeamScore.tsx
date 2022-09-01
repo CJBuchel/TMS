@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 export const TeamScoreSchema = new mongoose.Schema({
   score: {type: Number},
   gp: {type: Number},
+  scored_by: {type: String},
   scoresheet_values: [{type: Number}],
   notes: {type: String}
 });

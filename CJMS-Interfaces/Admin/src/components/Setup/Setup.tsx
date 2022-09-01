@@ -21,8 +21,9 @@ export default class Setup extends Component<IProps, IState> {
       eventName:""
     }
 
-    // this.updateCSV = this.updateCSV.bind(this);
-    // this.sendSetup = this.sendSetup.bind(this);
+    this.updateCSV = this.updateCSV.bind(this);
+    this.sendSetup = this.sendSetup.bind(this);
+    this.onEventNameChange = this.onEventNameChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onPurge = this.onPurge.bind(this);
   }

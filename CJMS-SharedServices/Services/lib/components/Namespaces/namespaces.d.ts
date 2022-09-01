@@ -4,3 +4,5 @@ export declare const request_api_location_fetch: string;
 export declare const request_api_location_post: string;
 export declare const request_post_login: string;
 export declare const request_post_timer: string;
+export declare const request_post_setup: string;
+export declare const request_post_purge: string;

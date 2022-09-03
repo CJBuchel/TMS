@@ -12,9 +12,9 @@ export default class Display extends Component<IProps, IState> {
 
   render() {
     return (
-      <>
+      <div className="audience-display-app sixteen wide column">
         <InfiniteTable/>
-      </>
+      </div>
     );
   }
 }

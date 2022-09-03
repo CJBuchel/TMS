@@ -16,7 +16,7 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
-  - script: chmod +x ./docker-create-end.sh
+  - script: chmod +x ./docker-create-env.sh
   - task: ShellScript@2
     inputs:
         scriptPath: ./docker-create-env.sh

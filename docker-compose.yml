@@ -12,7 +12,7 @@ services:
 
   cjms-version:
     container_name: cjms-v
-    image: 'cjbuchel/cjms:${TAG}'
+    image: 'cjbuchel/cjms:2022.0.0'
     restart: always
     build:
       context: .

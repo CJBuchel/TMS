@@ -17,7 +17,13 @@ jobs:
   steps:
 
   - script: chmod +x ./docker-create-env.sh
-  - script: ./docker-create-env.sh
+  # - script: ./docker-create-env.sh
+
+  - task: Bash@3
+    inputs:
+      filePath: '$(System.DefaultWorkingDirectory)/docker-create-env.sh'
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+      failOnStderr: true
 
   # Build Node App
   - task: NodeTool@0

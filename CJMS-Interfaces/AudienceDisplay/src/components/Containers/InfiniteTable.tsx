@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, useRef } from 'react'
+import "../../assets/application.scss";
 import "../../assets/InfiniteTable.scss";
 
 const DEFAULT_SPEED = 1;
@@ -15,30 +16,42 @@ export default class InfiniteTable extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      scrollTop: 0,
+      scrollTop: 0
     }
   }
-
-  componentDidMount() {
-    setTimeout(() => window.requestAnimationFrame(() => this.scrollCallback()), DEFAULT_DELAY);
-  }
-
-  newScroll(oldScroll:any) {
-    const height = document.body.scrollHeight;
-
-    if (oldScroll >= height/2) {
-      return oldScroll - height/2;
-    } else {
-      return oldScroll + (DEFAULT_SPEED);
-    }
-  }
+  
 
   scrollCallback() {
     this.setState({scrollTop: this.newScroll(this.state.scrollTop)});
     window.requestAnimationFrame(() => this.scrollCallback());
   }
 
-  renderTable() {
+  componentDidMount() {
+    setTimeout(() => window.requestAnimationFrame(() => this.scrollCallback()), DEFAULT_DELAY);
+  }
+
+  isScrolling() {
+    return (document.body.clientHeight < this.bodyScrollHeight());
+  }
+
+  bodyScrollHeight() {
+    return this.state.scrollTop + document.body.scrollHeight; // document.body.scrollHeight
+  }
+
+  newScroll(oldScroll:number) {
+    const height = this.bodyScrollHeight();
+
+    if (!this.isScrolling()) {
+      return 0;
+    } else if (oldScroll >= height/2) {
+      console.log("Resetting");
+      return oldScroll - height/2;
+    } else {
+      return oldScroll + (DEFAULT_SPEED/2);
+    }
+  }
+
+  getFormattedData() {
     const content:any[] = []
     for (var i = 0; i < 30; i++) {
       content.push(
@@ -54,21 +67,27 @@ export default class InfiniteTable extends Component<IProps, IState> {
 
 
     return(
-      <tbody>
-        {content}
+      content
+    );
+  }
+
+  renderTable() {
+    const firstTable = this.getFormattedData();
+    const secondTable = this.getFormattedData();
+
+    return(
+      <tbody style={{overflow: 'hidden'}}>
+        {firstTable}
+        {secondTable}
       </tbody>
     );
   }
 
-  renderScroll() {
-
-  }
-
   render() {
     return (
-      <div className='infiniteTable' style={{direction: 'ltr', marginTop: -this.state.scrollTop}}>
-        <table>
-          <thead>
+      <div className='infinite-table ui segment' style={{direction: 'ltr', marginTop: -this.state.scrollTop}}>
+        <table className='ui scrollable single line very basic compact table'>
+          <thead className='headers'>
             <tr>
               <th>Rank</th>
               <th>Team Name</th>
@@ -77,7 +96,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
               <th>Round 3</th>
             </tr>
           </thead>
-            { this.renderTable() }
+          { this.renderTable() }
         </table>
       </div>
     );

@@ -16,14 +16,13 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
-  - script: chmod +x ./docker-create-env.sh
+  - script: ls
   # - script: ./docker-create-env.sh
-
-  - task: Bash@3
+  
+  - task: ShellScript@2
     inputs:
-      filePath: '$(System.DefaultWorkingDirectory)/docker-create-env.sh'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'
-      failOnStderr: true
+      scriptPath: '$(System.DefaultWorkingDirectory)/docker-create-env.sh'
+      failOnStandardError: true
 
   # Build Node App
   - task: NodeTool@0
@@ -33,6 +32,8 @@ jobs:
   - script: npm install -g yarn
   - script: yarn install
   - script: yarn run build
+
+  - script: ls
 
   # Build Docker app
   - task: CmdLine@2

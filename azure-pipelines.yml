@@ -16,14 +16,6 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
-  - script: ls -a
-  # - script: ./docker-create-env.sh
-  
-  - task: ShellScript@2
-    inputs:
-      scriptPath: '$(System.DefaultWorkingDirectory)/docker-create-env.sh'
-      failOnStandardError: true
-
   # Build Node App
   - task: NodeTool@0
     inputs:
@@ -32,14 +24,11 @@ jobs:
   - script: npm install -g yarn
   - script: yarn install
   - script: yarn run build
-  
-  - script: ls -a
 
   # Build Docker app
   - task: CmdLine@2
     inputs:
       script: 'docker-compose build --pull'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'
       failOnStderr: true
 
   # Publish Docker app
@@ -47,5 +36,4 @@ jobs:
     condition: and(succeeded(), eq(variables.isPublishable, 'true'))
     inputs:
       script: 'docker login -u cjbuchel -p $(cjms-token); docker-compose push; docker logout'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'
       failOnStderr: true

@@ -16,7 +16,7 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
-  - script: ls
+  - script: ls -a
   # - script: ./docker-create-env.sh
   
   - task: ShellScript@2
@@ -33,7 +33,7 @@ jobs:
   - script: yarn install
   - script: yarn run build
 
-  - script: ls
+  - script: ls -a
 
   # Build Docker app
   - task: CmdLine@2

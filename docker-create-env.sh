@@ -11,3 +11,5 @@ PASSWORD+="$(echo $RANDOM | md5sum | head -c 20)";
 echo $PASSWORD"\"" > .env;
 echo $REACT_APP_CJMS_VERSION >> .env;
 echo $CJMS_VERSION >> .env;
+
+echo "Environment Created"

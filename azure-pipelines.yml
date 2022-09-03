@@ -17,9 +17,7 @@ jobs:
   steps:
 
   - script: chmod +x ./docker-create-env.sh
-  - task: ShellScript@2
-    inputs:
-        scriptPath: ./docker-create-env.sh
+  - script: ./docker-create-env.sh
 
   # Build Node App
   - task: NodeTool@0

@@ -1,7 +1,7 @@
 // import * as req_namespaces from "./Namespaces";
 import { request_namespaces } from "@cjms_shared/services";
 // const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
-export async function CJMS_FETCH_GENERIC_POST(request, postData) {
+export async function CJMS_FETCH_GENERIC_POST(request, postData, noAlert = false) {
     console.log(request_namespaces.request_api_location);
     const res = await fetch(request, {
         method: 'POST',
@@ -14,7 +14,7 @@ export async function CJMS_FETCH_GENERIC_POST(request, postData) {
         return response.json();
     }).then((data) => {
         // If message from request server
-        if (data.message) {
+        if (data.message && !noAlert) {
             alert(data.message);
         }
         return data;
@@ -27,13 +27,13 @@ export async function CJMS_FETCH_GENERIC_POST(request, postData) {
     return res;
 }
 // Returns data as json
-export async function CJMS_FETCH_GENERIC_GET(request) {
+export async function CJMS_FETCH_GENERIC_GET(request, noAlert = false) {
     const res = await fetch(request).then((response) => {
         // Return the response in json format
         return response.json();
     }).then((data) => {
         // If message from request server
-        if (data.message) {
+        if (data.message && !noAlert) {
             alert(data.message);
         }
         return data;
@@ -43,7 +43,7 @@ export async function CJMS_FETCH_GENERIC_GET(request) {
         console.log(error);
         throw error;
     });
-    return res.json();
+    return res;
 }
 // Login
 export async function CJMS_REQUEST_LOGIN(credentials) {

@@ -1,6 +1,6 @@
 import { MatchModel } from "../../database/models/Match";
 
-export function setupMatches(match_block:any[]) {
+export async function setupMatches(match_block:any[]) {
   const table_names:any[] = match_block[5].slice(1,-1); // only care about the names
   const matches:any[] = match_block.slice(6);
   for (const match of matches) {

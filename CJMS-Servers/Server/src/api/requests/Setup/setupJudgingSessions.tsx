@@ -1,7 +1,7 @@
 import { JudgingSessionModel } from "../../database/models/JudgingSession";
 
 
-export function setupJudgingSessions(judging_block:any[]) {
+export async function setupJudgingSessions(judging_block:any[]) {
   const room_names:any[] = judging_block[5].slice(1, -1);
   const sessions:any[] = judging_block.slice(6);
 

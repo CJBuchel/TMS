@@ -1,5 +1,5 @@
 import { RequestServer } from "../RequestServer";
-import { request_namespaces } from "@cjms_shared/services";
+import { comm_service, request_namespaces } from "@cjms_shared/services";
 import mongoose from "mongoose";
 import { setupUsers } from "../../database/models/User";
 import { EventModel } from "../../database/models/Event";
@@ -57,6 +57,7 @@ export class Setup {
       mongoose.connection.db.dropDatabase();
       setupUsers();
       res.send({message: "Successfully Purged Database"});
+      comm_service.senders.sendTeamUpdateEvent('purge');
     });
   }
 }

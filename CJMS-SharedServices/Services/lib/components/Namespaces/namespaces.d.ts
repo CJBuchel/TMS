@@ -6,3 +6,4 @@ export declare const request_post_login: string;
 export declare const request_post_timer: string;
 export declare const request_post_setup: string;
 export declare const request_post_purge: string;
+export declare const request_fetch_teams: string;

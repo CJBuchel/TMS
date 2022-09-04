@@ -29,11 +29,9 @@ jobs:
   - task: CmdLine@2
     inputs:
       script: 'docker-compose build --pull'
-      failOnStderr: true
 
   # Publish Docker app
   - task: CmdLine@2 
     condition: and(succeeded(), eq(variables.isPublishable, 'true'))
     inputs:
       script: 'docker login -u cjbuchel -p $(cjms-token); docker-compose push; docker logout'
-      failOnStderr: true

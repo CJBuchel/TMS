@@ -18,30 +18,46 @@ export default class InfiniteTable extends Component<IProps, IState> {
     this.state = {
       scrollTop: 0
     }
+
+    this.scrollCallback = this.scrollCallback.bind(this);
   }
   
+  unmountScroll = false;
 
   scrollCallback() {
-    this.setState({scrollTop: this.newScroll(this.state.scrollTop)});
-    window.requestAnimationFrame(() => this.scrollCallback());
+    if (this.unmountScroll) {
+      return;
+    } else {
+      this.setState({scrollTop: this.newScroll(this.state.scrollTop)});
+      window.requestAnimationFrame(() => this.scrollCallback());
+    }
   }
 
   componentDidMount() {
     setTimeout(() => window.requestAnimationFrame(() => this.scrollCallback()), DEFAULT_DELAY);
   }
 
-  isScrolling() {
-    return (document.body.clientHeight < this.bodyScrollHeight());
+  componentWillUnmount() {
+    this.unmountScroll = true;
+    // this.setState({unmountScroll:true});
+    // window.location.reload();
+    // clearInterval();
   }
 
   bodyScrollHeight() {
-    return this.state.scrollTop + document.body.scrollHeight; // document.body.scrollHeight
+    return this.state.scrollTop + (document.getElementById('table-body')?.scrollHeight || 0); // document.body.scrollHeight
+  }
+  
+  isScrolling() {
+    // console.log(document.getElementById('table-body')?.clientHeight);
+
+    return ((document.getElementById('table-body')?.clientHeight || 0) < this.bodyScrollHeight());
   }
 
   newScroll(oldScroll:number) {
     const height = this.bodyScrollHeight();
-
     if (!this.isScrolling()) {
+      // console.log("not scrolling");
       return 0;
     } else if (oldScroll >= height/2) {
       console.log("Resetting");
@@ -53,9 +69,9 @@ export default class InfiniteTable extends Component<IProps, IState> {
 
   getFormattedData() {
     const content:any[] = []
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 50; i++) {
       content.push(
-        <tr>
+        <tr key={i}>
           <td>{i}</td>
           <td>Yay</td>
           <td>Yay</td>
@@ -64,7 +80,6 @@ export default class InfiniteTable extends Component<IProps, IState> {
         </tr>
       );
     }
-
 
     return(
       content
@@ -76,7 +91,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
     const secondTable = this.getFormattedData();
 
     return(
-      <tbody style={{overflow: 'hidden'}}>
+      <tbody id='table-body' style={{overflow: 'hidden'}}>
         {firstTable}
         {secondTable}
       </tbody>
@@ -85,9 +100,9 @@ export default class InfiniteTable extends Component<IProps, IState> {
 
   render() {
     return (
-      <div className='infinite-table ui segment' style={{direction: 'ltr', marginTop: -this.state.scrollTop}}>
-        <table className='ui scrollable single line very basic compact table'>
-          <thead className='headers'>
+      <div className='table-wrapper ui segment' style={{direction: 'ltr', marginTop: -this.state.scrollTop}}>
+        <table id='table-parent' className='fl-table ui scrollable single line very basic compact table'>
+          <thead id='table-head'>
             <tr>
               <th>Rank</th>
               <th>Team Name</th>

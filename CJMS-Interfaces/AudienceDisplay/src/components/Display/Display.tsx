@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import InfiniteTable from "../Containers/InfiniteTable";
 
+import "../../assets/application.scss";
+
 interface IProps {}
 
 interface IState {}
@@ -12,7 +14,7 @@ export default class Display extends Component<IProps, IState> {
 
   render() {
     return (
-      <div className="audience-display-app sixteen wide column">
+      <div className='audience-display-app'>
         <InfiniteTable/>
       </div>
     );

@@ -6,3 +6,4 @@ export declare const onClockPrestartEvent: any;
 export declare const onClockStartEvent: any;
 export declare const onClockReloadEvent: any;
 export declare const onClockEndGameEvent: any;
+export declare const onTeamUpdate: any;

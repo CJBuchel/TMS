@@ -5,7 +5,10 @@ import "../../assets/InfiniteTable.scss";
 const DEFAULT_SPEED = 1;
 const DEFAULT_DELAY = 1000;
 
-interface IProps {}
+interface IProps {
+  headers:any;
+  data:any;
+}
 
 interface IState {
   scrollTop:number;
@@ -52,8 +55,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
 
   newScroll(oldScroll:number) {
     const height = this.bodyScrollHeight();
-    // console.log("Height: " + height);
-    // console.log("OldScroll: " + oldScroll);
+
     if (!this.isScrolling()) {
       return 0;
     } else if (oldScroll >= height/3) {
@@ -65,16 +67,17 @@ export default class InfiniteTable extends Component<IProps, IState> {
     }
   }
 
-  getFormattedData() {
-    const content:any[] = []
-    for (var i = 0; i < 50; i++) {
+  getFormattedData(data:any) {
+    const content:any[] = [];
+    for (const row of data) {
+      const columns:any[] = [];
+      for (const column of Object.keys(row)) {
+        columns.push(<td>{row[column]}</td>);
+      }
+
       content.push(
-        <tr key={i}>
-          <td>{i}</td>
-          <td>Yay</td>
-          <td>Yay</td>
-          <td>Yay</td>
-          <td>Yay</td>
+        <tr key={row.Team}>
+          {columns}
         </tr>
       );
     }
@@ -84,17 +87,20 @@ export default class InfiniteTable extends Component<IProps, IState> {
     );
   }
 
+  getFormatedHeaders(headers:any[]) {
+    const content:any[] = [];
+    for (const header of headers) {
+      content.push(<th>{header}</th>);
+    }
+
+    return (<tr>{content}</tr>);
+  }
 
   renderTable() {
-    const firstTable = this.getFormattedData();
-    const secondTable = this.getFormattedData();
+    const firstTable = this.getFormattedData(this.props.data);
+    const secondTable = this.getFormattedData(this.props.data);
 
-    // const scrolling = Object.keys(this.refs).length ? this.isScrolling() : false;
-    // const scrolling = this.isScrolling();
-
-    // if (this.isScrolling())
     const scrolling = this.isScrolling();
-    // const scrolling = this.isScrolling() == false ? false : true;
 
     if (scrolling) {
       return(
@@ -117,13 +123,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
       <div id='table-wrapper' className='table-wrapper' style={{direction: 'ltr', marginTop: -this.state.scrollTop}}>
         <table id='table-parent' className='fl-table ui scrollable single line very basic compact table'>
           <thead id='table-head'>
-            <tr>
-              <th>Rank</th>
-              <th>Team Name</th>
-              <th>Round 1</th>
-              <th>Round 2</th>
-              <th>Round 3</th>
-            </tr>
+            { this.getFormatedHeaders(this.props.headers) }
           </thead>
           { this.renderTable() }
         </table>

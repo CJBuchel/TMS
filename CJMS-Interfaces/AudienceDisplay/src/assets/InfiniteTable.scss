@@ -1,26 +1,45 @@
 *{
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
+  // box-sizing: border-box;
+  // -webkit-box-sizing: border-box;
+  // -moz-box-sizing: border-box;
+  // overflow: ;
 }
 body{
   font-family: Helvetica;
   -webkit-font-smoothing: antialiased;
   background: rgba( 71, 147, 227, 1);
+  overflow: hidden;
 }
-h2{
-  text-align: center;
-  font-size: 18px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: white;
-  padding: 30px 0;
-}
+// h2{
+//   text-align: center;
+//   font-size: 18px;
+//   text-transform: uppercase;
+//   letter-spacing: 1px;
+//   color: white;
+//   padding: 30px 0;
+// }
+
+// table {
+//   border-radius: 5px;
+//   font-size: 2.5vw;
+//   font-weight: normal;
+//   border: none;
+//   border-collapse: collapse;
+//   width: 100%;
+//   max-width: 100%;
+//   max-height: 1vh;
+//   white-space: nowrap;
+//   background-color: lightgrey;
+// }
 
 /* Table Styles */
 .table-wrapper{
+  height: 100%;
   margin: 10px 70px 70px;
   box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+  // border-style: dashed;
+  // border-color: red;
+  // overflow: hidden;
 }
 
 .fl-table {
@@ -33,34 +52,45 @@ h2{
   max-width: 100%;
   white-space: nowrap;
   background-color: white;
+  // overflow: hidden;
 }
 
 .fl-table td, .fl-table th {
   text-align: center;
   padding: 8px;
+  overflow: hidden;
+}
+
+.fl-table tbody {
+  overflow: hidden;
 }
 
 .fl-table td {
   border-right: 1px solid #f8f8f8;
   font-size: 12px;
+  overflow: hidden;
 }
 
-.fl-table thead th {
+.fl-table thead tr th {
   color: #ffffff;
   background: #4FC3A1;
   position: sticky;
+  // width: 25%;
   top: 0;
   z-index: 1;
+  overflow: hidden;
 }
 
 
 .fl-table thead th:nth-child(odd) {
   color: #ffffff;
   background: #324960;
+  overflow: hidden;
 }
 
 .fl-table tr:nth-child(even) {
   background: #F8F8F8;
+  // overflow: hidden;
 }
 
 // .column {

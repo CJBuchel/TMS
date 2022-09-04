@@ -14,9 +14,9 @@ export default class Display extends Component<IProps, IState> {
 
   render() {
     return (
-      <div className='audience-display-app'>
-        <InfiniteTable/>
-      </div>
+      // <div id='audience-display-app' className='audience-display-app'>
+      // </div>
+      <InfiniteTable/>
     );
   }
 }

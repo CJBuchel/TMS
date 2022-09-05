@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import InfiniteTable from "../Containers/InfiniteTable";
 
 import "../../assets/application.scss";
+import "../../assets/loader.scss";
 import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
 import { comm_service, request_namespaces } from "@cjms_shared/services";
 
@@ -9,6 +10,7 @@ interface IProps {}
 
 interface IState {
   teamData:any;
+  rounds:any[];
 }
 
 export default class Display extends Component<IProps, IState> {
@@ -16,22 +18,27 @@ export default class Display extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      teamData: []
+      teamData: [],
+      rounds: ['Round 1', 'Round 2', 'Round 3']
     }
+  }
+
+  setTeamData(data:any) {
+    this.setState({teamData: data.data});
   }
 
   async componentDidMount() {
     const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-    this.setState({teamData: data.data});
+    this.setTeamData(data);
 
     comm_service.listeners.onTeamUpdate(async () => {
       const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      this.setState({teamData: data.data});
+      this.setTeamData(data);
     });
   }
 
   tableHeaders() {
-    let headers = ['Rank', 'Team', 'Round 1', 'Round 2', 'Round 3'];
+    let headers = ['Rank', 'Team'].concat(this.state.rounds);
     return headers;
   }
 
@@ -42,13 +49,27 @@ export default class Display extends Component<IProps, IState> {
 
     for (const team of Object.keys(teamData)) {
       // console.log(teamData[team].team_name);
-      tableRowArray.push({
-        Rank: teamData[team].ranking,
-        Team: teamData[team].team_name,
-        Round1: teamData[team]?.scores[0]?.score || '',
-        Round2: teamData[team]?.scores[1]?.score || '',
-        Round3: teamData[team]?.scores[2]?.score || ''
-      });
+      let tableRow:any[] = [];
+      const teamScores:any[] = teamData[team]?.scores;
+      const roundScores:any[] = [];
+      
+  
+      for (let i = 0; i < this.state.rounds.length; i++) {
+        let scoreObject:any[] = teamScores.filter(scoreObj => scoreObj?.roundIndex == i);
+        if (scoreObject.length == 1) {
+          roundScores.push(scoreObject[0]?.score || 0);
+        } else if (scoreObject.length > 1) {
+          roundScores.push('Conflict');
+        } else if (scoreObject.length <= 0) {
+          roundScores.push('');
+        } else {
+          roundScores.push('Unknown');
+        }
+      }
+      
+      tableRow.push(teamData[team].ranking, teamData[team].team_name);
+      tableRow = tableRow.concat(roundScores);
+      tableRowArray.push(tableRow);
     }
 
     return tableRowArray;
@@ -64,7 +85,10 @@ export default class Display extends Component<IProps, IState> {
       );
     } else {
       return (
-        <h2>Waiting For Team Data</h2>
+        <div className="waiting-message">
+          <div className="loader"></div>
+          <h2>Waiting For Team Data</h2>
+        </div>
       )
     }
   }

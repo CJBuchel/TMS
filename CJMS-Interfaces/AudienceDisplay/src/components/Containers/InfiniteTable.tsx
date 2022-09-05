@@ -67,8 +67,9 @@ export default class InfiniteTable extends Component<IProps, IState> {
     }
   }
 
-  getFormattedData(data:any) {
+  getFormattedData(data:any[]) {
     const content:any[] = [];
+    // console.log(data);
     for (const row of data) {
       const columns:any[] = [];
       for (const column of Object.keys(row)) {

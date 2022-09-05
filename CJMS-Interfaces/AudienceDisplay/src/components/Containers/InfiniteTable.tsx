@@ -73,11 +73,11 @@ export default class InfiniteTable extends Component<IProps, IState> {
     for (const row of data) {
       const columns:any[] = [];
       for (const column of Object.keys(row)) {
-        columns.push(<td>{row[column]}</td>);
+        columns.push(<td key={column}>{row[column]}</td>);
       }
 
       content.push(
-        <tr key={row.Team}>
+        <tr key={row[1]}>
           {columns}
         </tr>
       );
@@ -91,10 +91,10 @@ export default class InfiniteTable extends Component<IProps, IState> {
   getFormatedHeaders(headers:any[]) {
     const content:any[] = [];
     for (const header of headers) {
-      content.push(<th>{header}</th>);
+      content.push(<th key={header}>{header}</th>);
     }
 
-    return (<tr>{content}</tr>);
+    return (<tr key={"headers"}>{content}</tr>);
   }
 
   renderTable() {

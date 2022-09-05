@@ -43,7 +43,7 @@ export default class Display extends Component<IProps, IState> {
   }
 
   tableData() {
-    console.log(this.state.teamData);
+    // console.log(this.state.teamData);
     const teamData = this.state.teamData;
     const tableRowArray:any[] = [];
 
@@ -77,7 +77,6 @@ export default class Display extends Component<IProps, IState> {
 
   render() {
     if (this.state.teamData) {
-      // this.tableData();
       return (
         <div id='audience-display-app' className='audience-display-app'>
           <InfiniteTable headers={this.tableHeaders()} data={this.tableData()}/>

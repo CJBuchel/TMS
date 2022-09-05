@@ -12,3 +12,6 @@ export function sendClockEndGameEvent(e) { sendEvent('clock', 'endgame', e) }
 
 // Team/Score Events
 export function sendTeamUpdateEvent(e) { sendEvent('team', 'update', e) }
+
+// Match Update events
+export function sendMatchUpdate(e) { sendEvent('match', 'update', e) }

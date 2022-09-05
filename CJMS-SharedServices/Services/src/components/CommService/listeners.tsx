@@ -12,3 +12,6 @@ export const onClockEndGameEvent = onEvent.bind(null, 'clock', 'endgame');
 
 // Team/Score Events
 export const onTeamUpdate = onEvent.bind(null, 'team', 'update');
+
+// Match Updates
+export const onMatchUpdate = onEvent.bind(null, 'match', 'update')

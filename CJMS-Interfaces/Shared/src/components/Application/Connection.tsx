@@ -28,7 +28,7 @@ export const ConnectionCheck = (props:any) => {
     // If there is a connection to server render normally
     if (isOnline) {
       return (
-        <div>{props.children}</div>
+        props.children
       )
     } else {
       var retryString = retryCount.toString();

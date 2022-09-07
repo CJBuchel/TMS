@@ -16,8 +16,6 @@ export class Setup {
       const eventName = req.body.eventName;
       const csv = req.body.csv;
 
-      new EventModel({event_name: eventName, event_csv: csv});
-
       const team_block:any[] = [];
       const match_block:any[] = [];
       const judging_block:any[] = [];
@@ -47,17 +45,27 @@ export class Setup {
         }
       }
 
+      const table_names = match_block[5].slice(1,-1);
+
+      // console.log(table_names[0]);
+
       setupTeams(team_block);
       setupMatches(match_block);
       setupJudgingSessions(judging_block);
+      
+      // Setup event model
+      new EventModel({event_name: eventName, event_csv: csv, event_tables: table_names}).save();
       res.send({message: "Successfully Imported Setup"});
+
+      comm_service.senders.sendEventUpdateEvent('setup');
     });
 
     requestServer.get().use(request_namespaces.request_post_purge, (req, res) => {
       mongoose.connection.db.dropDatabase();
       setupUsers();
       res.send({message: "Successfully Purged Database"});
-      comm_service.senders.sendTeamUpdateEvent('purge');
+      comm_service.senders.sendEventUpdateEvent('purge');
+      // comm_service.senders.sendTeamUpdateEvent('purge');
     });
   }
 }

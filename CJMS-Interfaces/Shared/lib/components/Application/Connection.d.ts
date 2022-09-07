@@ -1,3 +1,2 @@
-/// <reference types="react" />
 import "../../assets/stylesheets/ConnectionModal.scss";
-export declare const ConnectionCheck: (props: any) => JSX.Element;
+export declare const ConnectionCheck: (props: any) => any;

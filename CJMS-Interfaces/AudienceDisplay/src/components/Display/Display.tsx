@@ -35,6 +35,11 @@ export default class Display extends Component<IProps, IState> {
       const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
       this.setTeamData(data);
     });
+
+    comm_service.listeners.onEventUpdate(async () => {
+      const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      this.setTeamData(data);
+    });
   }
 
   tableHeaders() {
@@ -86,7 +91,7 @@ export default class Display extends Component<IProps, IState> {
       return (
         <div className="waiting-message">
           <div className="loader"></div>
-          <h2>Waiting For Team Data</h2>
+          <h2>Waiting For Event Data</h2>
         </div>
       )
     }

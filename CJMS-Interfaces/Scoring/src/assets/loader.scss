@@ -1,0 +1,30 @@
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid green;
+  width: 12vw;
+  height: 12vw;
+  margin: 0 auto;
+
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.waiting-message {
+  // margin;
+  margin: 0 auto;
+  padding-top: 25vh;
+  height: 50%;
+  width: 60%;
+  text-align: center;
+}

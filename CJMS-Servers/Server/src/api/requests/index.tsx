@@ -3,5 +3,6 @@ import { Users } from "./Users";
 import { Timer } from "./Timer";
 import { Setup } from "./Setup";
 import { Teams } from "./Teams";
+import { Tables } from "./Tables";
 
-export { RequestServer, Users, Timer, Setup, Teams };
+export { RequestServer, Users, Timer, Setup, Teams, Tables };

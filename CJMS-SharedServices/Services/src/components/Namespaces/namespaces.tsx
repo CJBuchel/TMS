@@ -22,6 +22,7 @@ export const request_post_purge = `${request_api_location_post}/purge`;
 
 // Team Database
 export const request_fetch_teams = `${request_api_location_fetch}/teams`;
+export const request_post_team_score = `${request_api_location_post}/teams/score`;
 
-// Table Database
-export const request_fetch_tables = `${request_api_location_fetch}/tables`;
+// Event Database
+export const request_fetch_event = `${request_api_location_fetch}/event`;

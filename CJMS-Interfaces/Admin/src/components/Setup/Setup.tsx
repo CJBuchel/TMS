@@ -64,8 +64,12 @@ export default class Setup extends Component<IProps, IState> {
   }
 
   onSubmit() {
-    if (confirm("Confirm Submit?") == true) {
-      this.sendSetup();
+    if (this.state.csv && this.state.eventName) {
+      if (confirm("Confirm Submit?") == true) {
+        this.sendSetup();
+      }
+    } else {
+      alert("Please input valid data");
     }
   }
 

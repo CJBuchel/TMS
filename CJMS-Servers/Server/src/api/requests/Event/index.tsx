@@ -2,11 +2,11 @@ import { request_namespaces } from "@cjms_shared/services";
 import { EventModel } from "../../database/models/Event";
 import { RequestServer } from "../RequestServer";
 
-export class Tables {
+export class Event {
   constructor(requestServer:RequestServer) {
-    console.log("Table Requests Constructed");
+    console.log("Event Requests Constructed");
 
-    requestServer.get().get(request_namespaces.request_fetch_tables, (req, res) => {
+    requestServer.get().get(request_namespaces.request_fetch_event, (req, res) => {
       
       const query = EventModel.findOne({});
       query.exec(function(err, response) {

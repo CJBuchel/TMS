@@ -1,6 +1,7 @@
 import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
 import { comm_service, request_namespaces } from "@cjms_shared/services";
 import React, { Component } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import Select, { SingleValue } from "react-select";
 
 import "../../assets/loader.scss";
@@ -22,6 +23,8 @@ interface IState {
 
   table:string;
   scorer:string;
+
+  setupComplete:boolean;
 }
 
 export default class Setup extends Component<IProps, IState> {
@@ -32,7 +35,8 @@ export default class Setup extends Component<IProps, IState> {
       tableOptions: [],
       eventData: [],
       table: '',
-      scorer: ''
+      scorer: '',
+      setupComplete: false,
     }
   }
 
@@ -47,21 +51,24 @@ export default class Setup extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_tables, true);
+    // sessionStorage.clear();
+    const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
     this.setTableOptions(data);
     
     comm_service.listeners.onEventUpdate(async () => {
-      const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_tables, true);
+      const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
       this.setTableOptions(data);
     });
   }
 
   async handleSubmit(e:React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    this.props.setScorer(this.state.scorer);
-    this.props.setTable(this.state.table);
+    this.props.setScorer({scorer: this.state.scorer});
+    this.props.setTable({table: this.state.table});
     console.log(this.state.scorer);
     console.log(this.state.table);
+    
+    this.setState({setupComplete: true});
   }
 
   onTableChange(e:SingleValue<SelectOption>) {

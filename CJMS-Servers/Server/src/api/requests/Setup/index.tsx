@@ -47,8 +47,6 @@ export class Setup {
 
       const table_names = match_block[5].slice(1,-1);
 
-      // console.log(table_names[0]);
-
       setupTeams(team_block);
       setupMatches(match_block);
       setupJudgingSessions(judging_block);
@@ -65,7 +63,6 @@ export class Setup {
       setupUsers();
       res.send({message: "Successfully Purged Database"});
       comm_service.senders.sendEventUpdateEvent('purge');
-      // comm_service.senders.sendTeamUpdateEvent('purge');
     });
   }
 }

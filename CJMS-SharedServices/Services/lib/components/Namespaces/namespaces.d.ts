@@ -7,4 +7,5 @@ export declare const request_post_timer: string;
 export declare const request_post_setup: string;
 export declare const request_post_purge: string;
 export declare const request_fetch_teams: string;
-export declare const request_fetch_tables: string;
+export declare const request_post_team_score: string;
+export declare const request_fetch_event: string;

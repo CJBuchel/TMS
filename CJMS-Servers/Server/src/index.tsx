@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import { comm_service } from '@cjms_shared/services';
 import { Database } from './api/database';
-import { RequestServer, Users, Timer, Setup, Teams, Tables } from './api/requests'
+import { RequestServer, Users, Timer, Setup, Teams, Event } from './api/requests'
 import { TeamModel } from './api/database/models/Team';
 
 const cjms_database = new Database();
@@ -14,7 +14,7 @@ const cjms_request_users = new Users(cjms_requests);
 const cjms_request_timer = new Timer(cjms_requests);
 const cjms_request_setup = new Setup(cjms_requests);
 const cjms_request_teams = new Teams(cjms_requests);
-const cjms_request_tables = new Tables(cjms_requests);
+const cjms_request_event = new Event(cjms_requests);
 
 // Test
 // var r = 0

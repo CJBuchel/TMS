@@ -10,6 +10,7 @@ interface IProps {}
 
 interface IState {
   teamData:any;
+  eventData:any;
   rounds:any[];
 }
 
@@ -19,26 +20,37 @@ export default class Display extends Component<IProps, IState> {
 
     this.state = {
       teamData: [],
-      rounds: ['Round 1', 'Round 2', 'Round 3']
+      eventData: [],
+      rounds: []
     }
   }
 
-  setTeamData(data:any) {
-    this.setState({teamData: data.data});
+  setData(teamData:any, eventData:any) {
+    this.setState({teamData: teamData.data, eventData: eventData.data});
+
+    const rounds:any[] = [];
+    for (var i = 0; i < eventData.data.event_rounds; i++) {
+      rounds.push(`Round ${i+1}`);
+    }
+
+    this.setState({rounds: rounds});
   }
 
   async componentDidMount() {
-    const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-    this.setTeamData(data);
+    const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+    this.setData(teamData, eventData);
 
     comm_service.listeners.onTeamUpdate(async () => {
-      const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      this.setTeamData(data);
+      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      this.setData(teamData, eventData);
     });
 
     comm_service.listeners.onEventUpdate(async () => {
-      const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      this.setTeamData(data);
+      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      this.setData(teamData, eventData);
     });
   }
 
@@ -60,7 +72,7 @@ export default class Display extends Component<IProps, IState> {
       
   
       for (let i = 0; i < this.state.rounds.length; i++) {
-        let scoreObject:any[] = teamScores.filter(scoreObj => scoreObj?.roundIndex == i);
+        let scoreObject:any[] = teamScores.filter(scoreObj => scoreObj?.roundIndex == (i+1));
         if (scoreObject.length == 1) {
           roundScores.push(scoreObject[0]?.score || 0);
         } else if (scoreObject.length > 1) {
@@ -81,7 +93,7 @@ export default class Display extends Component<IProps, IState> {
   }
 
   render() {
-    if (this.state.teamData) {
+    if (this.state.teamData && this.state.eventData) {
       return (
         <div id='audience-display-app' className='audience-display-app'>
           <InfiniteTable headers={this.tableHeaders()} data={this.tableData()}/>

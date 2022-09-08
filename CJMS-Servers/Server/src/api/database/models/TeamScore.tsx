@@ -7,5 +7,6 @@ export const TeamScoreSchema = new mongoose.Schema({
   gp: {type: Number},
   scored_by: {type: String},
   scoresheet_values: [{type: Number}],
-  notes: {type: String}
+  notes: {type: String},
+  no_show: {type: Boolean}
 });

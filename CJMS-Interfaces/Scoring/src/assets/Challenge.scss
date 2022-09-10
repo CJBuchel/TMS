@@ -1,0 +1,43 @@
+.challenge-scoring {
+  
+}
+
+.score-bar {
+  position: sticky;
+  // overflow: hidden;
+  background-color: #333;
+  top: 0px;
+  width: 100%;
+  height: fit-content;
+  // padding: 10px;
+  float: left;
+}
+
+.score-bar-column {
+  float: left;
+  width: 33.33%;
+}
+
+.score-bar-content {
+  width: 95%;
+  padding: 10px;
+  h1, h2 {
+    color: white;
+  }
+
+  float: center;
+  text-align: center;
+}
+
+// .score-bar-left h2{
+//   float: left;
+//   padding: 10px;
+// }
+
+// .score-bar-center {
+//   float: center;
+// }
+
+// .score-bar-right {
+//   float: right;
+// }

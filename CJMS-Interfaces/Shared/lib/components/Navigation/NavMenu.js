@@ -12,6 +12,10 @@ export default class NavMenu extends Component {
     getRoute(link) {
         return (React.createElement(Route, { key: link.name, path: link.path, element: link.linkTo }));
     }
+    clearSessionStorage() {
+        sessionStorage.clear();
+        window.location.reload();
+    }
     getRoutes() {
         var routes = [];
         for (const cat of this.props.navContent.navCategories) {
@@ -48,7 +52,9 @@ export default class NavMenu extends Component {
                             React.createElement("h4", null,
                                 "CJMS - ",
                                 process.env.REACT_APP_CJMS_VERSION)),
-                        this.getContent()))),
+                        this.getContent())),
+                React.createElement("div", { className: "navbar-right" },
+                    React.createElement("a", { onClick: this.clearSessionStorage }, "Logout"))),
             this.getRoutes()));
     }
 }

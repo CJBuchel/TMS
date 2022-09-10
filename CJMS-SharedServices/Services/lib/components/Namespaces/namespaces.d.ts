@@ -9,3 +9,4 @@ export declare const request_post_purge: string;
 export declare const request_fetch_teams: string;
 export declare const request_post_team_score: string;
 export declare const request_fetch_event: string;
+export declare const request_fetch_matches: string;

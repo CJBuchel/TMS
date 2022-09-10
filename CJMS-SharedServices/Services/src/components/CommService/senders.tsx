@@ -15,6 +15,7 @@ export function sendTeamUpdateEvent(e:any) { sendEvent('team', 'update', e) }
 
 // Match Update events
 export function sendMatchUpdateEvent(e:any) { sendEvent('match', 'update', e) }
+export function sendMatchLoadedEvent(e:any) { sendEvent('match', 'loaded', e) }
 
 // Event updates
 export function sendEventUpdateEvent(e:any) { sendEvent('event', 'update', e) }

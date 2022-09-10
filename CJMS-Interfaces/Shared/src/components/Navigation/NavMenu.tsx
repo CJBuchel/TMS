@@ -42,6 +42,11 @@ export default class NavMenu extends Component<IProps, IState> {
     );
   }
 
+  clearSessionStorage() {
+    sessionStorage.clear();
+    window.location.reload();
+  }
+
   getRoutes() {
     var routes:any[] = [];
     for (const cat of this.props.navContent.navCategories) {
@@ -89,7 +94,11 @@ export default class NavMenu extends Component<IProps, IState> {
     return (
       <>
         <div className="navbar">
+
+          {/* Home */}
           <a href="/">Home</a>
+
+          {/* Menu */}
           <div className="dropdown">
             <button className="dropbtn">Menu<i className="fa fa-caret-down"></i></button>
             <div className="dropdown-content">
@@ -98,6 +107,11 @@ export default class NavMenu extends Component<IProps, IState> {
               </div>
               {this.getContent()}
             </div>
+          </div>
+
+          {/* Logout */}
+          <div className="navbar-right">
+            <a onClick={this.clearSessionStorage}>Logout</a>
           </div>
         </div>
         {this.getRoutes()}

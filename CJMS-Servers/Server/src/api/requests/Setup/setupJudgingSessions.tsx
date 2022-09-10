@@ -17,12 +17,4 @@ export async function setupJudgingSessions(judging_block:any[]) {
       }).save();
     }
   }
-
-  setTimeout(() => {
-    const query = JudgingSessionModel.find({team_number: '1'});
-    query.exec(function(err, res) {
-      console.log(res);
-    });
-  }, 5000);
-  // console.log();
 }

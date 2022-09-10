@@ -8,7 +8,7 @@ export async function setupMatches(match_block:any[]) {
     const teams_on_table_index:number[] = [];
 
     for (let i = 0; i < teams_on_tables.length; i++) {
-      if (teams_on_tables[i] != undefined || teams_on_tables[i] != '') {
+      if (teams_on_tables[i] != undefined && teams_on_tables[i] != '') {
         teams_on_table_index.push(i);
       }
     }

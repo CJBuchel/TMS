@@ -16,7 +16,7 @@ export const request_post_login = `${request_api_location_post}/login`;
 // Clock/Timer
 export const request_post_timer = `${request_api_location_post}/timer`;
 
-// setup
+// Setup
 export const request_post_setup = `${request_api_location_post}/setup`;
 export const request_post_purge = `${request_api_location_post}/purge`;
 
@@ -26,3 +26,6 @@ export const request_post_team_score = `${request_api_location_post}/teams/score
 
 // Event Database
 export const request_fetch_event = `${request_api_location_fetch}/event`;
+
+// Match Database
+export const request_fetch_matches = `${request_api_location_fetch}/matches`;

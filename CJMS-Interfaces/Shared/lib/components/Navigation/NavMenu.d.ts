@@ -20,6 +20,7 @@ interface IState {
 export default class NavMenu extends Component<IProps, IState> {
     constructor(props: any);
     getRoute(link: NavMenuLink): JSX.Element;
+    clearSessionStorage(): void;
     getRoutes(): JSX.Element;
     getContent(): JSX.Element;
     render(): JSX.Element;

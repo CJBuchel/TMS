@@ -1,10 +1,13 @@
+
 .scoring-app {
   background: rgba( 71, 147, 227, 1);
+  height: 100vh;
+  // border-style: dashed;
+  // border-color: red;
 }
 
 .scoring-app .manual {
-  // background-color: #606468;
-  height: 100vh;
+  height: 80vh;
   width: 100vw;
   overflow: hidden;
   display: flex;

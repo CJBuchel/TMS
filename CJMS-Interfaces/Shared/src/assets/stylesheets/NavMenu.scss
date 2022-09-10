@@ -10,6 +10,14 @@
   @include application.border-struct($colour: green, $type: solid);
 }
 
+.navbar-center {
+  float: center;
+}
+
+.navbar-right {
+  float: right;
+}
+
 .navbar a {
   float: left;
   font-size: 16px;

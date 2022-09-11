@@ -8,4 +8,5 @@ export declare const onClockReloadEvent: any;
 export declare const onClockEndGameEvent: any;
 export declare const onTeamUpdate: any;
 export declare const onMatchUpdate: any;
+export declare const onMatchLoaded: any;
 export declare const onEventUpdate: any;

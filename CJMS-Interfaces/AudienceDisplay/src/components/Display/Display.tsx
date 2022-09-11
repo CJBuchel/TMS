@@ -23,6 +23,18 @@ export default class Display extends Component<IProps, IState> {
       eventData: [],
       rounds: []
     }
+
+    comm_service.listeners.onTeamUpdate(async () => {
+      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      this.setData(teamData, eventData);
+    });
+
+    comm_service.listeners.onEventUpdate(async () => {
+      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      this.setData(teamData, eventData);
+    });
   }
 
   setData(teamData:any, eventData:any) {
@@ -40,18 +52,6 @@ export default class Display extends Component<IProps, IState> {
     const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
     const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
     this.setData(teamData, eventData);
-
-    comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-      this.setData(teamData, eventData);
-    });
-
-    comm_service.listeners.onEventUpdate(async () => {
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-      this.setData(teamData, eventData);
-    });
   }
 
   tableHeaders() {

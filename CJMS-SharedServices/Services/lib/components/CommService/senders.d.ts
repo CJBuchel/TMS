@@ -8,4 +8,5 @@ export declare function sendClockReloadEvent(e: any): void;
 export declare function sendClockEndGameEvent(e: any): void;
 export declare function sendTeamUpdateEvent(e: any): void;
 export declare function sendMatchUpdateEvent(e: any): void;
+export declare function sendMatchLoadedEvent(e: any): void;
 export declare function sendEventUpdateEvent(e: any): void;

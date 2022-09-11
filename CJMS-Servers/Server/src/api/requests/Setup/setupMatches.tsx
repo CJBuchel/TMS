@@ -1,3 +1,4 @@
+import { comm_service } from "@cjms_shared/services";
 import { MatchModel } from "../../database/models/Match";
 
 export async function setupMatches(match_block:any[]) {
@@ -29,4 +30,8 @@ export async function setupMatches(match_block:any[]) {
       }
     }).save();
   }
+
+  setTimeout(() => {
+    comm_service.senders.sendMatchLoadedEvent("1");
+  }, 5000);
 }

@@ -26,12 +26,11 @@ interface IProps {
   table:any;
 
   match_data:MatchData;
-  event_data:EventData
+  event_data:EventData;
 }
 
 interface IState {
   options_teams:SelectOption[];
-  table_matches:any[];
 
   loaded_team:SelectOption;
   loaded_match:string;
@@ -44,52 +43,39 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
 
     this.state = {
       options_teams:[],
-      table_matches: [],
       calculated_score: 0,
 
       loaded_team: {value: '', label: ''},
       loaded_match: ''
     }
+
   }
 
-  // setOptions() {
-  //   const team_options:SelectOption[] = [];
-  //   const matches:any[] = [];
-  //   for (const team of this.props.teamData) {
-  //     team_options.push({value: team.team_number, label: `${team.team_number} | ${team.team_name}`});
-  //   }
+  setOptions() {
+    const team_options:SelectOption[] = [];
+    for (const team of this.props.event_data.teamData) {
+      team_options.push({value: team.team_number, label: `${team.team_number} | ${team.team_name}`});
+    }
 
-  //   for (const match of this.props.matchData) {
-  //     if (match.on_table1.table === this.props.table || match.on_table2.table === this.props.table) {
-  //       matches.push(match);
-  //     }
-  //   }
+    this.setState({
+      loaded_match: this.props.match_data.loaded_match.match_number,
+      loaded_team: {
+        value: this.props.match_data.loaded_team.team_number, 
+        label: `${this.props.match_data.loaded_team.team_number} | ${this.props.match_data.loaded_team.team_name}`
+      }
+    });
 
-  //   this.setState({options_teams: team_options, table_matches: matches});
-  // }
+    this.setState({options_teams: team_options});
+  }
 
-  // setLoadedMatch(match:string) {
-  //   console.log(match);
-  //   const match_loaded = this.state.table_matches.find(e => e.match_number == match);
-  //   const loaded_team_number = match_loaded?.on_table1.table == this.props.table ? match_loaded?.on_table1.team_number : match_loaded?.on_table2.team_number;
-  //   const team_loaded = this.props.teamData.find(e => e.team_number == loaded_team_number);
-
-  //   console.log(match_loaded);
-  //   console.log(team_loaded);
-
-  //   if (team_loaded != undefined || team_loaded != null) {
-  //     // this.setState({
-  //     //   loaded_team: {value: team_loaded.team_number, label: team_loaded.team_name},
-  //     //   loaded_match: match_loaded.match_number
-  //     // });
-  //     this.setState({loaded_team: {value: team_loaded.team_number, label: team_loaded.team_name}});
-  //     this.setState({loaded_match: match_loaded.match_number});
-  //   }
-
-  // }
+  componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
+    if (prevProps != this.props) {
+      this.setOptions();
+    }
+  }
 
   componentDidMount() {
-    // this.setOptions();
+    this.setOptions();
   }
 
   handleTeamChange(value:any) {
@@ -111,7 +97,7 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
         
         <div className="score-bar-column">
           <div className="score-bar-content">
-            <h1>Match #<span>{this.state.loaded_match}</span></h1>
+            <h1>Match <span style={{color: "green"}}>#{this.state.loaded_match}</span></h1>
           </div>
         </div>
 

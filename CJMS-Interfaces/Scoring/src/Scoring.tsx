@@ -50,15 +50,15 @@ export default class Scoring extends Component<IProps,IState> {
       this.processData();
     });
 
-    // comm_service.listeners.onTeamUpdate(async () => {
-    //   const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-    //   this.setTeamData(teamData);
-    // });
+    comm_service.listeners.onTeamUpdate(async () => {
+      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      this.setTeamData(teamData);
+    });
 
-    // comm_service.listeners.onMatchUpdate(async () => {
-    //   const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
-    //   this.setMatchData(matchData);
-    // });
+    comm_service.listeners.onMatchUpdate(async () => {
+      const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+      this.setMatchData(matchData);
+    });
 
     comm_service.listeners.onMatchLoaded((match:string) => {
       this.setLoadedMatch(match);
@@ -78,18 +78,19 @@ export default class Scoring extends Component<IProps,IState> {
   }
 
   processData() {
-    if (this.state.external_matchData == null || this.state.external_teamData == null) return;
+    // if (this.state.external_matchData == null || this.state.external_teamData == null) return;
     const teamData = this.state.external_teamData;
     const matchData = this.state.external_matchData;
     // Sort data then set the states
-
-    teamData.sort(function(a:any,b:any) { return a.team_number-b.team_number});
-    matchData.sort(function(a:any,b:any) { return a.match_number-b.match_number});
 
     if (matchData == null) {
       console.log("Data null, returning");
       return;
     }
+
+    teamData.sort(function(a:any,b:any) { return a.team_number-b.team_number});
+    matchData.sort(function(a:any,b:any) { return a.match_number-b.match_number});
+
 
     const table_matches:any[] = [];
     for (const match of matchData) {
@@ -131,9 +132,6 @@ export default class Scoring extends Component<IProps,IState> {
     const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
     const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
     const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
-    // console.log(eventData);
-    // console.log(teamData);
-    // console.log(matchData);
     this.setEventData(eventData);
     this.setTeamData(teamData);
     this.setMatchData(matchData);
@@ -153,8 +151,8 @@ export default class Scoring extends Component<IProps,IState> {
                 scorer={this.props.scorer} 
                 table={this.props.table}
                 match_data={{
-                  table_matches:this.state.table_matches, 
-                  loaded_team:this.state.loaded_team, 
+                  table_matches:this.state.table_matches,
+                  loaded_team:this.state.loaded_team,
                   loaded_match:this.state.loaded_match
                 }}
                 event_data={{
@@ -210,18 +208,28 @@ export default class Scoring extends Component<IProps,IState> {
     return navContent;
   }
 
+  checkData():boolean {
+    return (this.state.external_eventData &&
+      this.state.external_matchData &&
+      this.state.external_teamData &&
+      this.state.loaded_match &&
+      this.state.loaded_team &&
+      this.state.table_matches.length > 0
+    );
+  }
+
   render() {
-    if (!this.state.external_eventData) {
+    if (this.checkData()) {
       return(
-        <div className="waiting-message">
-          <div className="loader"></div>
-          <h2>Waiting For Event Data</h2>
+        <div className="scoring-app">
+          <NavMenu navContent={this.getNavContents()}/>
         </div>
       );
     } else {
       return(
-        <div className="scoring-app">
-          <NavMenu navContent={this.getNavContents()}/>
+        <div className="waiting-message">
+          <div className="loader"></div>
+          <h2>Waiting For Event Data</h2>
         </div>
       )
     }

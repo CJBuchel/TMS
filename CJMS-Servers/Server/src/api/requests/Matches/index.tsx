@@ -7,7 +7,7 @@ export class Matches {
   constructor(requestServer:RequestServer) {
     console.log("Match Requests Constructed");
 
-    requestServer.get().get(request_namespaces.request_fetch_matches, async (req, res) => {
+    requestServer.get().get(request_namespaces.request_fetch_matches, (req, res) => {
       const query = MatchModel.find({});
       query.exec(function(err, response) {
         if (err) {

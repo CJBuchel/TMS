@@ -11,7 +11,7 @@ interface SelectOption {
 
 export interface MatchData {
   table_matches:any[];
-  loaded_team:SelectOption;
+  loaded_team:any;
   loaded_match:any;
 }
 
@@ -50,10 +50,6 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
       loaded_team: {value: '', label: ''},
       loaded_match: ''
     }
-
-    comm_service.listeners.onMatchLoaded(async (match:string) => {
-      // this.setLoadedMatch(match);
-    });
   }
 
   // setOptions() {

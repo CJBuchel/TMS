@@ -12,7 +12,7 @@ export class Setup {
   constructor(requestServer:RequestServer) {
     console.log("Setup Requests Constructed");
 
-    requestServer.get().post(request_namespaces.request_post_setup, (req, res) => {
+    requestServer.get().post(request_namespaces.request_post_setup, async (req, res) => {
       const eventName = req.body.eventName;
       const csv = req.body.csv;
 
@@ -47,12 +47,12 @@ export class Setup {
 
       const table_names = match_block[5].slice(1,-1);
 
-      setupTeams(team_block);
-      setupMatches(match_block);
-      setupJudgingSessions(judging_block);
+      await setupTeams(team_block);
+      await setupMatches(match_block);
+      await setupJudgingSessions(judging_block);
       
       // Setup event model
-      new EventModel({event_name: eventName, event_csv: csv, event_tables: table_names}).save();
+      await new EventModel({event_name: eventName, event_csv: csv, event_tables: table_names}).save();
       res.send({message: "Successfully Imported Setup"});
 
       comm_service.senders.sendEventUpdateEvent('setup');

@@ -6,7 +6,7 @@ export class Teams {
   constructor(requestServer:RequestServer) {
     console.log("Team Requests Constructed");
 
-    requestServer.get().get(request_namespaces.request_fetch_teams, async (req, res) => {
+    requestServer.get().get(request_namespaces.request_fetch_teams, (req, res) => {
       const query = TeamModel.find({});
       query.exec(function(err, response) {
         if (err) {
@@ -24,7 +24,7 @@ export class Teams {
       // console.log(query);
     });
 
-    requestServer.get().post(request_namespaces.request_post_team_score, async (req, res) => {
+    requestServer.get().post(request_namespaces.request_post_team_score, (req, res) => {
       const score = req.body;
       const update = {
         $push: {scores: {

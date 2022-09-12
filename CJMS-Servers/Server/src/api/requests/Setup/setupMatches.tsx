@@ -14,7 +14,7 @@ export async function setupMatches(match_block:any[]) {
       }
     }
 
-    new MatchModel({
+    await new MatchModel({
       match_number: match[0],
       start_time: match[1],
       end_time: match[2],
@@ -31,7 +31,10 @@ export async function setupMatches(match_block:any[]) {
     }).save();
   }
 
+  comm_service.senders.sendMatchUpdateEvent('setup');
+
+  // Temp
   setTimeout(() => {
-    comm_service.senders.sendMatchLoadedEvent("1");
+    comm_service.senders.sendMatchLoadedEvent("16");
   }, 5000);
 }

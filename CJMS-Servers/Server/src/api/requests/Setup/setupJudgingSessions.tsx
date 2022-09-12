@@ -8,7 +8,7 @@ export async function setupJudgingSessions(judging_block:any[]) {
   for (const session of sessions) {
     const teams_numbers:any[] = session.slice(3, -1);
     for (var i = 0; i < teams_numbers.length; i++) {
-      new JudgingSessionModel({
+      await new JudgingSessionModel({
         session: session[0], 
         start_time: session[1],
         end_time: session[2],

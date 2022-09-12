@@ -7,7 +7,6 @@ export class Event {
     console.log("Event Requests Constructed");
 
     requestServer.get().get(request_namespaces.request_fetch_event, (req, res) => {
-      
       const query = EventModel.findOne({});
       query.exec(function(err, response) {
         if (err) {

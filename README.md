@@ -56,16 +56,16 @@
   - Prerequisites:
     - [Node.js](https://nodejs.org/en/download/)
     - [Git](https://git-scm.com/downloads)
-    - [mysql](https://dev.mysql.com/doc/mysql-getting-started/en/)
+    - [Docker](https://docs.docker.com/get-docker/)
   - Setting up Database
-    - Start the mysql server
-    - Create a database called `cjms-database` on port `3306`
-    - Create an admin user called `cjms` with a password of `cjms` <- this is secure as the server is the only service that can interface with the database directly.
-    - Afterwards, import the `Database/setup.sql` file into the mysql server using `mysql -u cjms -p cjms < setup.sql`
+    - Spin up a mongodb docker container using the included [script](/Database/scripts/create_local.sh)
+      - Or alternatively spin it up manually `docker run -d -it -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=cjms -e MONGO_INITDB_ROOT_PASSWORD=cjms -e MONGO_INITDB_DATABASE=cjms_database --name cjms_db -d mongo`
+    - The database should now be named `cjms_db` on port `27017`,  with the default user and password `cjms`
   - Installing Dependencies. Inside the root project run
     - `npm install -g yarn`
     - `yarn install`
     - `yarn run build`
+    - `./docker-create-env.sh` <- if possible. Otherwise the comm server passwords and environment will be blank
 - Running the CJMS
   - Commands:
     - `yarn run start`

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onEventUpdate = exports.onMatchLoaded = exports.onMatchUpdate = exports.onTeamUpdate = exports.onClockEndGameEvent = exports.onClockReloadEvent = exports.onClockStartEvent = exports.onClockPrestartEvent = exports.onClockTimeEvent = exports.onClockStopEvent = exports.onClockEndEvent = exports.onClockArmEvent = void 0;
+exports.onEventState = exports.onEventUpdate = exports.onMatchLoaded = exports.onMatchUpdate = exports.onTeamUpdate = exports.onClockEndGameEvent = exports.onClockReloadEvent = exports.onClockStartEvent = exports.onClockPrestartEvent = exports.onClockTimeEvent = exports.onClockStopEvent = exports.onClockEndEvent = exports.onClockArmEvent = void 0;
 const subscribe_1 = require("./binding/subscribe");
 // Clock Events
 exports.onClockArmEvent = subscribe_1.onEvent.bind(null, 'clock', 'arm');
@@ -18,3 +18,4 @@ exports.onMatchUpdate = subscribe_1.onEvent.bind(null, 'match', 'update');
 exports.onMatchLoaded = subscribe_1.onEvent.bind(null, 'match', 'loaded');
 // Event Update
 exports.onEventUpdate = subscribe_1.onEvent.bind(null, 'event', 'update');
+exports.onEventState = subscribe_1.onEvent.bind(null, 'event', 'state');

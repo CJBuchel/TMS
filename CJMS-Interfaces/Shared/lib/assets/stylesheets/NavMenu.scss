@@ -3,15 +3,12 @@
 // @import "structures";
 
 .navbar {
+  // position: relative;
   overflow: hidden;
   background-color: #333;
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 10px;
   @include application.border-struct($colour: green, $type: solid);
-}
-
-.navbar-center {
-  float: center;
 }
 
 .navbar-right {
@@ -27,6 +24,17 @@
   text-decoration: none;
 }
 
+.navbar b {
+  float: left;
+  font-size: 16px;
+  color: white;
+  background-color: #333;
+  text-align: center;
+  padding: 14px 16px;
+  border-color: orange;
+  // text-decoration: none;
+}
+
 .dropdown {
   float: left;
   overflow: hidden;
@@ -34,7 +42,7 @@
 }
 
 .dropdown .dropbtn {
-  font-size: 16px;  
+  font-size: 16px;
   border: none;
   outline: none;
   color: white;
@@ -79,7 +87,7 @@
   padding: 10px;
 }
 
-.column a {
+.column a, b {
   float: none;
   color: black;
   padding: 16px;

@@ -13,6 +13,7 @@ export interface MatchData {
   table_matches:any[];
   loaded_team:any;
   loaded_match:any;
+  match_locked:boolean;
 }
 
 export interface EventData {
@@ -31,9 +32,11 @@ interface IProps {
 
 interface IState {
   options_teams:SelectOption[];
+  options_rounds:SelectOption[];
 
-  loaded_team:SelectOption;
-  loaded_match:string;
+  selected_team:SelectOption;
+  selected_round:SelectOption;
+  selected_match:string;
   calculated_score:number;
 }
 
@@ -43,29 +46,36 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
 
     this.state = {
       options_teams:[],
+      options_rounds:[],
       calculated_score: 0,
 
-      loaded_team: {value: '', label: ''},
-      loaded_match: ''
+      selected_round: {value: '', label: ''},
+      selected_team: {value: '', label: ''},
+      selected_match: ''
     }
-
   }
 
   setOptions() {
     const team_options:SelectOption[] = [];
+    const round_options:SelectOption[] = [];
     for (const team of this.props.event_data.teamData) {
       team_options.push({value: team.team_number, label: `${team.team_number} | ${team.team_name}`});
     }
 
-    this.setState({
-      loaded_match: this.props.match_data.loaded_match.match_number,
-      loaded_team: {
+    for (var i = 0; i < this.props.event_data.eventData.event_rounds; i++) {
+      round_options.push({value: (i+1), label: `Round ${i+1}`});
+    }
+
+    if (this.props.match_data.match_locked) {
+      this.handleTeamChange({
         value: this.props.match_data.loaded_team.team_number, 
         label: `${this.props.match_data.loaded_team.team_number} | ${this.props.match_data.loaded_team.team_name}`
-      }
-    });
+      });
+      
+      this.setState({selected_match: this.props.match_data.loaded_match.match_number});
+    }
 
-    this.setState({options_teams: team_options});
+    this.setState({options_teams: team_options, options_rounds: round_options});
   }
 
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
@@ -78,8 +88,28 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
     this.setOptions();
   }
 
+  handleRoundChange(value:any) {
+    this.setState({selected_round: value});
+  }
+
   handleTeamChange(value:any) {
-    this.setState({loaded_team: value});
+    const team = this.props.event_data.teamData.find(e => e.team_number == value.value);
+    
+    var round = 0;
+    if (team.scores.length > 0) {
+      for (const score of team.scores) {
+        console.log(score.roundIndex);
+        round = score.roundIndex >= round ? score.roundIndex + 1 : round;
+      }
+    } else {
+      round = 1;
+    }
+
+    this.handleRoundChange({value: round, label: `Auto Round ${round}`});
+    
+    console.log(team);
+    console.log(round);
+    this.setState({selected_team: value});
   }
 
   renderScoreBar() {
@@ -89,21 +119,31 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
           <div className="score-bar-content">
             <Select 
               options={this.state.options_teams}
-              value={this.state.loaded_team}
+              value={this.state.selected_team}
               onChange={(value) => this.handleTeamChange(value)}
+            />
+          </div>
+        </div>
+
+        <div className="score-bar-column">
+          <div className="score-bar-content">
+            <Select 
+              options={this.state.options_rounds}
+              value={this.state.selected_round}
+              onChange={(value) => this.handleRoundChange(value)}
             />
           </div>
         </div>
         
         <div className="score-bar-column">
           <div className="score-bar-content">
-            <h1>Match <span style={{color: "green"}}>#{this.state.loaded_match}</span></h1>
+            <h2>Match <span style={{color: "green"}}>#{this.state.selected_match}</span></h2>
           </div>
         </div>
 
         <div className="score-bar-column">
           <div className="score-bar-content">
-            <h1>Score: <span style={{color: "green"}}>{this.state.calculated_score}</span></h1>
+            <h2>Score: <span style={{color: "green"}}>{this.state.calculated_score}</span></h2>
           </div>
         </div>
       </div>

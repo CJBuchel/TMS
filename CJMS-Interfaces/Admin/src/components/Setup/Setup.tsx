@@ -79,7 +79,7 @@ export default class Setup extends Component<IProps, IState> {
         <div className="container">
 
           {/* Main Form */}
-          <form>
+          <form onSubmit={(e) => {e.preventDefault()}}>
 
             {/* Schedule import */}
             <h3>Schedule</h3>

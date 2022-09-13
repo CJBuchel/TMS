@@ -16,13 +16,17 @@ interface IProps {
     navContent: NavMenuContent;
 }
 interface IState {
+    external_eventData: any;
 }
 export default class NavMenu extends Component<IProps, IState> {
     constructor(props: any);
+    setEventData(eventData: any): void;
+    componentDidMount(): Promise<void>;
     getRoute(link: NavMenuLink): JSX.Element;
     clearSessionStorage(): void;
     getRoutes(): JSX.Element;
     getContent(): JSX.Element;
+    getMode(): JSX.Element;
     render(): JSX.Element;
 }
 export {};

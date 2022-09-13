@@ -6,6 +6,8 @@ export const EventSchema = new mongoose.Schema({
 
   event_tables: [{type: String}],
   event_rounds: {type: Number, default: 3},
+
+  match_locked: {type: Boolean, default: true}
 }, {
   capped: { size: 102400, max: 1, autoIndexId: true } // we only want one event document
 });

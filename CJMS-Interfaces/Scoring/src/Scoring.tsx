@@ -19,6 +19,8 @@ interface IState {
   external_teamData:any[];
   external_matchData:any[];
 
+  match_locked:boolean;
+
   table_matches:any[]; // list of matches for this table
   loaded_match:any;
   loaded_team:any;
@@ -33,6 +35,8 @@ export default class Scoring extends Component<IProps,IState> {
       external_eventData: undefined,
       external_teamData: [],
       external_matchData: [],
+
+      match_locked:true,
 
       table_matches: [],
       loaded_match: undefined,
@@ -66,7 +70,7 @@ export default class Scoring extends Component<IProps,IState> {
   }
 
   setEventData(eventData:any) {
-    this.setState({external_eventData: eventData.data});
+    this.setState({external_eventData: eventData.data, match_locked: eventData.data?.match_locked});
   }
 
   setTeamData(teamData:any) {
@@ -99,9 +103,9 @@ export default class Scoring extends Component<IProps,IState> {
       }
     }
     
-    // Set the default loaded match to the next one (test this theory, because it might bug itself every time a score is updated)
     this.setState({table_matches: table_matches});
     
+    // Set the default loaded match to the next one in the (this table) list (test this theory, because it might bug itself every time a score is updated)
     for (const match of table_matches) {
       if (!match.complete) {
         this.setLoadedMatch(match.match_number);
@@ -153,7 +157,8 @@ export default class Scoring extends Component<IProps,IState> {
                 match_data={{
                   table_matches:this.state.table_matches,
                   loaded_team:this.state.loaded_team,
-                  loaded_match:this.state.loaded_match
+                  loaded_match:this.state.loaded_match,
+                  match_locked:this.state.match_locked
                 }}
                 event_data={{
                   eventData:this.state.external_eventData,

@@ -15,19 +15,21 @@
 
 .score-bar-column {
   float: left;
-  width: 33.33%;
+  width: 25%;
 }
 
 .score-bar-content {
   width: 95%;
   padding: 10px;
-  h1, h2 {
+  h1, h2, h3, h4, h5 {
     color: white;
   }
 
   float: center;
+  // vertical-align:middle;
   text-align: center;
 }
+
 
 // .score-bar-left h2{
 //   float: left;

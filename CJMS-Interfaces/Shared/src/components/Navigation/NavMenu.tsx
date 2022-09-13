@@ -1,10 +1,12 @@
 // 
 // Generic shared navbar
 // 
+import { comm_service, request_namespaces } from "@cjms_shared/services";
 import React, { Component } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import "../../assets/stylesheets/NavMenu.scss";
+import { CJMS_FETCH_GENERIC_GET } from "../Requests/Request";
 
 export interface NavMenuLink {
   name:string;
@@ -26,6 +28,7 @@ interface IProps {
 }
 
 interface IState {
+  external_eventData:any;
 }
 
 export default class NavMenu extends Component<IProps, IState> {
@@ -33,7 +36,22 @@ export default class NavMenu extends Component<IProps, IState> {
     super(props);
 
     this.state = {
+      external_eventData: undefined
     }
+
+    comm_service.listeners.onEventUpdate(async () => {
+      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      this.setEventData(eventData);
+    });
+  }
+
+  setEventData(eventData:any) {
+    this.setState({external_eventData: eventData.data});
+  }
+
+  async componentDidMount() {
+    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+    this.setEventData(eventData);
   }
 
   getRoute(link:NavMenuLink) {
@@ -89,6 +107,17 @@ export default class NavMenu extends Component<IProps, IState> {
     );
   }
 
+  getMode() {
+    var mode;
+    if (this.state.external_eventData?.match_locked) {
+      mode = <span style={{color: "red"}}>Match Locked</span>
+    } else {
+      mode = <span style={{color: "dodgerblue"}}>Match Free</span>
+    }
+
+    return <b>{this.state.external_eventData?.event_name} | Mode: {mode}</b>
+  }
+
 
   render() {
     return (
@@ -109,8 +138,10 @@ export default class NavMenu extends Component<IProps, IState> {
             </div>
           </div>
 
+
           {/* Logout */}
           <div className="navbar-right">
+            {this.getMode()}
             <a onClick={this.clearSessionStorage}>Logout</a>
           </div>
         </div>

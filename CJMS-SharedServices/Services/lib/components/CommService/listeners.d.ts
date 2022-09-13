@@ -10,3 +10,4 @@ export declare const onTeamUpdate: any;
 export declare const onMatchUpdate: any;
 export declare const onMatchLoaded: any;
 export declare const onEventUpdate: any;
+export declare const onEventState: any;

@@ -19,3 +19,4 @@ export function sendMatchLoadedEvent(e:any) { sendEvent('match', 'loaded', e) }
 
 // Event updates
 export function sendEventUpdateEvent(e:any) { sendEvent('event', 'update', e) }
+export function sendEventStateEvent(e:any) { sendEvent('event', 'state', e) }

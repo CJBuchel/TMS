@@ -24,7 +24,7 @@ export const ConnectionCheck = (props) => {
     function AppRender() {
         // If there is a connection to server render normally
         if (isOnline) {
-            return (React.createElement("div", null, props.children));
+            return (props.children);
         }
         else {
             var retryString = retryCount.toString();

@@ -1,0 +1,1 @@
+export { default as Challenge } from "./2022/Challenge";

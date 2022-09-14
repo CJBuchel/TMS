@@ -11,7 +11,9 @@
     "copyfiles": "^2.4.1",
     "dotenv": "^16.0.0",
     "react-overlays": "^5.1.1",
+    "react-router-dom": "^6.3.0",
     "react-select": "^5.2.2",
+    "react-sidebar": "^3.0.2",
     "rimraf": "^3.0.2",
     "sass": "^1.49.9",
     "typescript": "^4.6.2",
@@ -27,5 +29,7 @@
     "copy-files": "copyfiles -u 1 src/**/*.scss lib/",
     "build": "yarn run clean && yarn run copy-files && tsc",
     "build-dev": "tsc -w"
+  },
+  "devDependencies": {
   }
 }

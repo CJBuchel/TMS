@@ -1,10 +1,35 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import {Login, CJMS_Application, useToken, comm_service } from '@cjms_interfaces/shared';
+import {Login, CJMS_Application, useToken, comm_service, NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// import { Setup } from './components/Setup';
 
+import "./assets/application.scss";
+import { Setup } from './components/Setup';
+
+
+/** Admin Structure,
+ * Main Page (Setup/Main Control)
+ * Events Control & Console (Comm server)
+ * Team Stats/Scoring Editor
+ * Scheduling?
+ */
+var navContent:NavMenuContent = {
+  navCategories: [
+    {
+      name:"Setup",
+      links: [
+        {
+          name:"Event Setup", 
+          path:"/Setup", 
+          linkTo:<Setup/>
+        },
+      ]
+    }
+  ]
+}
 
 function App() {
-  // comm_service.senders.sendClockTimeEvent(5); 
   const { token, setToken } = useToken();
   if (!token) {
     console.log("Token not made, redirecting...");
@@ -12,8 +37,8 @@ function App() {
   } else {
     console.log("Token made");
     return (
-      <div>
-        <h1>This is a generic page</h1>
+      <div className='admin-app'>
+        <NavMenu navContent={navContent}/>
       </div>
     );
   }

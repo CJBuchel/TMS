@@ -6,11 +6,10 @@ export class Timer {
     console.log("Timer Requests Constructed");
 
     // Main countdown
-    var countDownTime = 150; // 150
-    var prerunTime = 5;
-    var clockStop = false;
-    var existingClock = false;
-
+    var countDownTime:number = 35; // 150
+    var prerunTime:number = 5;
+    var clockStop:boolean = false;
+    var existingClock:boolean = false;
 
     function startCountdown(duration:number) {
       if (!existingClock) {

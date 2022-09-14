@@ -23,7 +23,7 @@ do
     printf '\e[1;32m'
     printf "\nDatabase Online: Starting CJMS\n"
     printf '\e[0m'
-    yarn run start &
+    yarn run build; yarn run start &
     retries=$((retries+max_retries))
   else
     printf '\e[1;31m'

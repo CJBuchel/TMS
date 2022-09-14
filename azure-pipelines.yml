@@ -28,10 +28,12 @@ jobs:
   # Build Docker app
   - task: CmdLine@2
     inputs:
+      script: './docker-create-env.sh'
       script: 'docker-compose build --pull'
 
   # Publish Docker app
   - task: CmdLine@2 
     condition: and(succeeded(), eq(variables.isPublishable, 'true'))
     inputs:
+      script: './docker-create-env.sh'
       script: 'docker login -u cjbuchel -p $(cjms-token); docker-compose push; docker logout'

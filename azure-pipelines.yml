@@ -25,6 +25,7 @@ jobs:
   - script: yarn install
   - script: yarn run build
 
+  # Build environment
   - task: ShellScript@2
     inputs:
       scriptPath: './docker-create-env.sh'

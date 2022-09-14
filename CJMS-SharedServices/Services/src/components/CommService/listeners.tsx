@@ -9,3 +9,14 @@ export const onClockPrestartEvent = onEvent.bind(null, 'clock', 'prestart');
 export const onClockStartEvent = onEvent.bind(null, 'clock', 'start');
 export const onClockReloadEvent = onEvent.bind(null, 'clock', 'reload');
 export const onClockEndGameEvent = onEvent.bind(null, 'clock', 'endgame');
+
+// Team/Score Events
+export const onTeamUpdate = onEvent.bind(null, 'team', 'update');
+
+// Match Updates
+export const onMatchUpdate = onEvent.bind(null, 'match', 'update');
+export const onMatchLoaded = onEvent.bind(null, 'match', 'loaded');
+
+// Event Update
+export const onEventUpdate = onEvent.bind(null, 'event', 'update');
+export const onEventState = onEvent.bind(null, 'event', 'state');

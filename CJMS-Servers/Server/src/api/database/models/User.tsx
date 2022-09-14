@@ -6,3 +6,23 @@ export const UserSchema = new mongoose.Schema({
 });
 
 export const UserModel = mongoose.model('User', UserSchema);
+
+export function setupUsers() {
+  const query = UserModel.find({username: 'admin'});
+  query.exec(function(err, user) {
+    if (err) {
+      throw err;
+    } else {
+      console.log(user);
+      if (user.length > 0) {
+        console.log("Users already exist. Continuing setup");
+      } else {
+        console.log("Users undefined, creating defaults");
+        new UserModel({username: 'admin', password: 'password'}).save();
+        new UserModel({username: 'scorekeeper', password: 'password'}).save();
+        new UserModel({username: 'referee', password: 'password'}).save();
+        new UserModel({username: 'head_referee', password: 'password'}).save();
+      }
+    }
+  });
+}

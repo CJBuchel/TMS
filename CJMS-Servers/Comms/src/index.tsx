@@ -64,7 +64,7 @@ async function startServer(hub:Hub): Promise<void> {
 }
 
 async function Server(): Promise<void> {
-  log.logLevel = LogLevel.Debug;
+  log.logLevel = LogLevel.Info;
   log.onMessage = (msg:string) => {
     console.log(msg);
   }

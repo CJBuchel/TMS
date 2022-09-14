@@ -33,7 +33,7 @@ function login() {
 }
 function sendEvent(type, event, e) {
     return login()
-        .then(() => console.log(`Sending ${event} to comm server`))
+        // .then(() => console.log(`Sending ${event} to comm server`))
         .then(() => client.publish("cjms_node", `${type}:${event}`, e));
 }
 exports.sendEvent = sendEvent;

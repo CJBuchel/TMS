@@ -6,3 +6,8 @@ export declare function sendClockPrestartEvent(e: any): void;
 export declare function sendClockStartEvent(e: any): void;
 export declare function sendClockReloadEvent(e: any): void;
 export declare function sendClockEndGameEvent(e: any): void;
+export declare function sendTeamUpdateEvent(e: any): void;
+export declare function sendMatchUpdateEvent(e: any): void;
+export declare function sendMatchLoadedEvent(e: any): void;
+export declare function sendEventUpdateEvent(e: any): void;
+export declare function sendEventStateEvent(e: any): void;

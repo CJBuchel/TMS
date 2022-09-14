@@ -1,9 +1,9 @@
 
 # CJMS Database
-FROM mongo as database_stage
+FROM mongo:4.2.22-bionic as database_stage
 
 # Main Core CJMS System
-FROM node as build_stage
+FROM node:18.9.0-slim as build_stage
 
 # Did somone say inefficiency?
 COPY --from=database_stage / /

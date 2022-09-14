@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import PropTypes from 'prop-types';
 import "../../assets/stylesheets/Login.scss";
 declare function Login({ setToken, allowedUsers }: {

@@ -5,6 +5,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { ConnectionCheck } from "./Connection";
 // Import scss
+import "../../assets/stylesheets/application.scss";
 import "../../assets/stylesheets/Buttons.scss";
 import "../../assets/stylesheets/ColourScheme.scss";
 function Application(App) {

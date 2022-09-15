@@ -118,6 +118,8 @@ export class Timer {
         clockStop = true;
         comm_service.senders.sendClockReloadEvent(true);
       }
+
+      res.send({});
     });
   }
 }

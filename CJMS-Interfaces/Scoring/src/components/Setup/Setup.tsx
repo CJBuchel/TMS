@@ -43,8 +43,10 @@ export default class Setup extends Component<IProps, IState> {
   setTableOptions(data:any) {
     const tables:SelectOption[] = [];
     this.setState({eventData: data.data});
-    for (const table of data.data?.event_tables) {
-      tables.push({value: table, label: table});
+    if (data?.data) {
+      for (const table of data?.data?.event_tables) {
+        tables.push({value: table, label: table});
+      }
     }
 
     this.setState({tableOptions: tables});

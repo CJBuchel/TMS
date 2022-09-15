@@ -55,6 +55,8 @@ export class Matches {
         comm_service.senders.sendEventStateEvent("Idle");
         load_match = false;
       }
+
+      res.send({});
     });
   }
 }

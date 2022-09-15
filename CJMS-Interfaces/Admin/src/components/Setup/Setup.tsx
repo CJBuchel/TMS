@@ -35,6 +35,17 @@ export default class Setup extends Component<IProps, IState> {
     }
 
     CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_setup, submission);
+    window.location.reload();
+  }
+
+  loadMatchTest() {
+    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match:"3"});
+    // CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "prestart"});
+  }
+
+  loadMatchStop() {
+    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match:""});
+    // CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "stop"});
   }
 
   sendPurge() {
@@ -98,6 +109,8 @@ export default class Setup extends Component<IProps, IState> {
             {/* Controls */}
             <button className="hoverButton back-red" onClick={this.onPurge}>Purge Database</button>
             <button className="hoverButton back-green" onClick={this.onSubmit}>Submit</button>
+            <button onClick={this.loadMatchTest}>Load Match Test</button>
+            <button onClick={this.loadMatchStop}>Stop Match Test</button>
           </form>
 
         </div>

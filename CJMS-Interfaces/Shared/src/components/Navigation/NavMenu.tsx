@@ -29,6 +29,7 @@ interface IProps {
 
 interface IState {
   external_eventData:any;
+  eventState:string;
 }
 
 export default class NavMenu extends Component<IProps, IState> {
@@ -36,13 +37,22 @@ export default class NavMenu extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      external_eventData: undefined
+      external_eventData: undefined,
+      eventState: "Awaiting"
     }
 
     comm_service.listeners.onEventUpdate(async () => {
       const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
       this.setEventData(eventData);
     });
+
+    comm_service.listeners.onEventState(async (e:any) => {
+      this.setEventState(e);
+    });
+  }
+  
+  setEventState(stateData:any) {
+    this.setState({eventState: stateData});
   }
 
   setEventData(eventData:any) {
@@ -107,6 +117,25 @@ export default class NavMenu extends Component<IProps, IState> {
     );
   }
 
+  getState() {
+    var color = 'White';
+    if (this.state.eventState=='Awaiting') {
+      color = "White";
+    } else if (this.state.eventState=='Idle') {
+      color = "White";
+    } else if (this.state.eventState=='Match Loaded') {
+      color = "Orange";
+    } else if (this.state.eventState=='Pre-Running') {
+      color = "Yellow";
+    } else if (this.state.eventState=='Running') {
+      color = "Green";
+    } else if (this.state.eventState=='Aborted') {
+      color = "Red";
+    }
+
+    return <b>{this.state.external_eventData?.event_name} | State: <span style={{color: `${color}`}}>{this.state.eventState}</span></b>
+  }
+
   getMode() {
     var mode;
     if (this.state.external_eventData?.match_locked) {
@@ -115,7 +144,7 @@ export default class NavMenu extends Component<IProps, IState> {
       mode = <span style={{color: "dodgerblue"}}>Match Free</span>
     }
 
-    return <b>{this.state.external_eventData?.event_name} | Mode: {mode}</b>
+    return <b>Mode: {mode}</b>
   }
 
 
@@ -141,6 +170,7 @@ export default class NavMenu extends Component<IProps, IState> {
 
           {/* Logout */}
           <div className="navbar-right">
+            {this.getState()}
             {this.getMode()}
             <a onClick={this.clearSessionStorage}>Logout</a>
           </div>

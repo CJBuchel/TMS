@@ -15,7 +15,6 @@ export class Timer {
       if (!existingClock) {
         existingClock = true;
 
-        // setNextMatch(); @TODO
         var start = Date.now(),diff;
         var endgame = false;
         
@@ -26,6 +25,7 @@ export class Timer {
         
             console.log(diff);
             comm_service.senders.sendClockTimeEvent(diff);
+            comm_service.senders.sendEventStateEvent("Running");
         
             if (diff <= 30) {
               if (!endgame) {
@@ -38,11 +38,13 @@ export class Timer {
               existingClock = false;
               console.log("Stopping counter");
               comm_service.senders.sendClockEndEvent(true);
+              comm_service.senders.sendEventStateEvent("Idle");
               clearInterval(timerInterval);
             }
           } else {
             existingClock = false;
             comm_service.senders.sendClockStopEvent(true);
+            comm_service.senders.sendEventStateEvent("Aborted");
             clearInterval(timerInterval);
           }
         }
@@ -56,16 +58,17 @@ export class Timer {
       if (!existingClock) {
         existingClock = true;
         var start = Date.now(),diff;
-        // comm_service.senders.sendClockPrestartEvent(true);
-      
+        
         const timerInterval = setInterval(timer, 1000);
         function timer() {
           console.log("Timer loop");
           diff = duration - (((Date.now() - start) / 1000) | 0);
           if (!clockStop) {
-        
+            
             console.log(diff);
-        
+            
+            comm_service.senders.sendEventStateEvent("Pre-Running");
+            comm_service.senders.sendClockPrestartEvent(true);
             comm_service.senders.sendClockTimeEvent(diff);
         
             if (diff <= 0 || clockStop) {
@@ -81,8 +84,6 @@ export class Timer {
           }
         }
       
-        // timer();
-
       }
     }
 

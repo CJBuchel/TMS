@@ -17,10 +17,12 @@ export class Matches {
         const loopInterval = setInterval(loop, 1000);
         function loop() {
           if (load_match) {
+            console.log("Loading match: " + match);
             comm_service.senders.sendMatchLoadedEvent(match);
           } else {
-            clearInterval(loopInterval);
             existing_loadedMatch = false;
+            clearInterval(loopInterval);
+            comm_service.senders.sendMatchLoadedEvent(null);
           }
         }
       }
@@ -44,10 +46,13 @@ export class Matches {
     });
 
     requestServer.get().post(request_namespaces.request_post_match_load, (req, res) => {
+      console.log(req.body);
       if (req.body.load) {
         load_match = true;
+        comm_service.senders.sendEventStateEvent("Match Loaded");
         sendLoadedMatch(req.body.match);
       } else {
+        comm_service.senders.sendEventStateEvent("Idle");
         load_match = false;
       }
     });

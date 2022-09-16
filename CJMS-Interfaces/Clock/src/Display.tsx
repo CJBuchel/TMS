@@ -22,6 +22,7 @@ interface IState {
 }
 
 export default class Display extends Component<IProps, IState> {
+  _removeSubscriptions:any[] = [];
   constructor(props:any) {
     super(props);
 
@@ -57,7 +58,7 @@ export default class Display extends Component<IProps, IState> {
       this.setMatchData(matchData);
     });
 
-    comm_service.listeners.onMatchLoaded((match:string) => {
+    comm_service.listeners.onMatchLoaded(async (match:string) => {
       this.setLoadedMatch(match);
     });
 
@@ -85,20 +86,22 @@ export default class Display extends Component<IProps, IState> {
   }
 
   setLoadedMatch(match:string) {
-    const match_loaded = this.state.external_matchData.find(e => e.match_number == match);
+    if (this.state.external_matchData) {
+      const match_loaded = this.state.external_matchData.find(e => e.match_number == match);
 
-    if (match_loaded != undefined && match_loaded != null) {
-      this.setState({
-        loaded_match: match_loaded,
-        team1: this.state.external_teamData.find((e:any) => e.team_number == match_loaded.on_table1.team_number),
-        team2: this.state.external_teamData.find((e:any) => e.team_number == match_loaded.on_table2.team_number),
-      });
-    } else {
-      this.setState({
-        loaded_match: undefined,
-        team1: undefined,
-        team2: undefined
-      });
+      if (match_loaded != undefined && match_loaded != null) {
+        this.setState({
+          loaded_match: match_loaded,
+          team1: this.state.external_teamData.find((e:any) => e.team_number == match_loaded.on_table1.team_number),
+          team2: this.state.external_teamData.find((e:any) => e.team_number == match_loaded.on_table2.team_number),
+        });
+      } else {
+        this.setState({
+          loaded_match: undefined,
+          team1: undefined,
+          team2: undefined
+        });
+      }
     }
   }
 
@@ -110,11 +113,15 @@ export default class Display extends Component<IProps, IState> {
     this.setTeamData(teamData);
     this.setMatchData(matchData);
 
-    this.setState({loop: setInterval(this.blink, 1000)});
+    this.startLoop();
   }
 
   componentWillUnmount() {
     clearInterval(this.state.loop);
+  }
+
+  startLoop() {
+    this.setState({loop: setInterval(this.blink, 1000)});
   }
 
   getMode() {

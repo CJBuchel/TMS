@@ -1,9 +1,10 @@
 import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
 import { comm_service, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
-import "./assets/application.scss";
-import "./assets/loader.scss";
-import "./assets/Display.scss";
+import "./assets/stylesheets/application.scss";
+import "./assets/stylesheets/loader.scss";
+import "./assets/stylesheets/Display.scss";
+import { Timer } from "./components/Timer";
 
 interface IProps {}
 
@@ -153,7 +154,7 @@ export default class Display extends Component<IProps, IState> {
         </div>
 
         <div className="Display-Timer-Middle">
-          <h1>Timer placeholder</h1>
+          <Timer/>
         </div>
 
         <div className="Display-Timer-Bottom">

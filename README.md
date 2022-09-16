@@ -28,6 +28,12 @@
     - `docker attach cjms` attach to the container and view console `Ctrl+p+q` will exit, `Ctrl+c` wil stop the container
     - `docker rm cjms` this will remove the container and all it's data. (Use only if you're updating to a newer version WILL DELETE DATABASE)
 
+## Sound Notice
+- Chrome's new update makes auto playing sounds an impossibility without user intervention of some kind. 
+- To bypass this you must whitelist the website and allow sound. Click the info icon/lock symbol left of the site url, and then navigate to site settings -> sound, and then change to allow.
+- You should be able to reload and save. For every new ip address you will need to re-complete this action. (It's recommended to use the server as the sound player, as `localhost:2828` once whitelisted should never change)
+- Similar actions may need to be taken in safari and/or other untested browsers.
+
 ## Docker/Docker Compose Install
 - Using [Docker-Compose](https://docs.docker.com/compose/install/) we can also clone the project locally and spin up the docker images for more customization
 - Installation Steps:

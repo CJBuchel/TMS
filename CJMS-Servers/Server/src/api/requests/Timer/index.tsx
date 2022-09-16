@@ -6,7 +6,7 @@ export class Timer {
     console.log("Timer Requests Constructed");
 
     // Main countdown
-    var countDownTime:number = 35; // 150
+    var countDownTime:number = 150; // 150
     var prerunTime:number = 5;
     var clockStop:boolean = false;
     var existingClock:boolean = false;
@@ -14,7 +14,8 @@ export class Timer {
     function startCountdown(duration:number) {
       if (!existingClock) {
         existingClock = true;
-
+        
+        comm_service.senders.sendClockTimeEvent(duration);
         var start = Date.now(),diff;
         var endgame = false;
         

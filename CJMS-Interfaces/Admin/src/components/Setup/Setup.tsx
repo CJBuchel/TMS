@@ -40,12 +40,12 @@ export default class Setup extends Component<IProps, IState> {
 
   loadMatchTest() {
     CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match:"3"});
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "prestart"});
+    // CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "prestart"});
   }
 
   loadMatchStop() {
     CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match:""});
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "stop"});
+    // CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "stop"});
   }
 
   sendPurge() {

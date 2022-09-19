@@ -53,6 +53,7 @@ export class Matches {
         sendLoadedMatch(req.body.match);
       } else {
         comm_service.senders.sendEventStateEvent("Idle");
+        comm_service.senders.sendMatchLoadedEvent(null);
         load_match = false;
       }
 

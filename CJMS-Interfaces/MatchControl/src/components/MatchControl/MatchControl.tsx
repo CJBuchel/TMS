@@ -1,39 +1,35 @@
 import { Component } from "react";
 
 import "../../assets/stylesheets/MatchControl.scss";
-import "../../assets/stylesheets/MatchTable.scss";
+
+import Controls from "./Controls";
+import MatchTable from "./MatchTable";
 
 interface IProps {
   external_teamData:any[];
   external_matchData:any[];
 }
 
-interface IState {}
+interface IState {
+  selected_match:any;
+}
 
 export default class MatchControl extends Component<IProps, IState> {
 
   constructor(props:any) {
     super(props);
 
-    this.state = {}
-  }
-
-  getTable() {
-    const content:any[] = [];
-
-    for (var i = 0; i < 100; i++) {
-      content.push(
-        <tr key={i}>
-          <td>A</td>
-          <td>B</td>
-          <td>C</td>
-          <td>D</td>
-          <td>E</td>
-        </tr>
-      )
+    this.state = {
+      selected_match: undefined
     }
 
-    return content;
+    this.setSelectedMatch = this.setSelectedMatch.bind(this);
+  }
+
+  setSelectedMatch(match_number:string) {
+    const match = this.props.external_matchData.find(e => e.match_number == match_number);
+    console.log(match);
+    this.setState({selected_match: match});
   }
 
   render() {
@@ -41,13 +37,11 @@ export default class MatchControl extends Component<IProps, IState> {
       <div className="match-control">
         <div className="match-control-row">
           <div className="match-control-controls">
-            <h1>Placeholder</h1>
+            <Controls external_matchData={this.props.external_matchData} external_teamData={this.props.external_teamData} selected_match={this.state.selected_match}/>
           </div>
 
           <div className="match-control-matches">
-            <table className="mt-table">
-              <tbody>{this.getTable()}</tbody>
-            </table>
+            <MatchTable external_matchData={this.props.external_matchData} setSelectedMatch={this.setSelectedMatch}/>
           </div>
         </div>
       </div>

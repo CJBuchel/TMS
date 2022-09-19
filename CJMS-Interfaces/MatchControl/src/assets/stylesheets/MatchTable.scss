@@ -1,8 +1,8 @@
 
 .mt-table {
   border-radius: 5px;
-  font-size: 3vw;
-  font-weight: normal;
+  // font-size: 3vw;
+  // font-weight: normal;
   border: none;
   border-collapse: collapse;
   width: 100%;
@@ -14,37 +14,36 @@
 
 .mt-table td, .mt-table th {
   text-align: center;
-  padding: 8px;
+  padding: 0.5vw;
   // overflow: hidden;
 }
 
-.mt-table tbody {
-  // overflow: scroll;
+.mt-table tbody tr:hover {
+  background-color: #365778;
 }
 
 .mt-table td {
   border-right: 1px solid #f8f8f8;
   font-size: 2vw;
-  // overflow: hidden;
 }
 
 .mt-table thead tr th {
   color: #ffffff;
-  background: #4FC3A1;
+  background: #008cff;
   position: sticky;
 
-  top: 0;
-  z-index: 1;
-  // overflow: scroll;
-}
+  font-size: 1vw;
 
+  top: 0;
+  // z-index: 1;
+}
 
 .mt-table thead th:nth-child(odd) {
   color: #ffffff;
-  background: #324960;
+  background: #243240;
   // overflow: hidden;
 }
 
 .mt-table tr:nth-child(even) {
-  background: #F8F8F8;
+  background: #a3a3a3;
 }

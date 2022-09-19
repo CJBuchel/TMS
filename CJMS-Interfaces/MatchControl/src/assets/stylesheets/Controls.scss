@@ -1,0 +1,71 @@
+@import url('../fonts/lcd-bold/index.css');
+@import url('../fonts/radioland/index.css');
+
+.controls {
+  padding: 1vw;
+}
+
+.controls h1 {
+  font-size: 3vw;
+}
+
+.controls .match_info {
+  padding: 1vw;
+  border-color: white;
+  border-style: solid;
+}
+
+.controls .match_info h2 {
+  font-size: 2vw;
+  padding: 0;
+}
+
+.controls .match_info button {
+  width: 100%;
+  height: 5vh;
+  color: black;
+  font-size: 3vh;
+  font-weight: bold;
+}
+
+.controls .status_clock {
+  font-size: 6vw;
+
+  border-color: white;
+  border-style: solid;
+
+  width: 100%;
+
+  justify-content: center;
+  vertical-align: middle;
+  align-items: center;
+  text-align: center;
+}
+
+.controls .status_clock .clock {
+  font-family: lcdbold, monospace;
+  user-select: none;
+}
+
+.controls .loaded_info {
+  width: 100%;
+  border-color: white;
+  border-style: solid;
+  padding: 1vw;
+}
+
+.controls .loaded_info h2 {
+  font-size: 2vw;
+}
+
+.controls .loaded_info .buttons {
+  margin-left: 1vw;
+}
+
+.buttons button {
+  width: 45%;
+  height: 5vh;
+  font-size: 3vh;
+  font-weight: bold;
+  color: black;
+}

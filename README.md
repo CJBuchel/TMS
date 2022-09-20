@@ -10,7 +10,6 @@
 ## Production Install
 - This Project is published as a docker image to package up dependencies for easy deployment to devices.
 - You can view the docker image here https://hub.docker.com/r/cjbuchel/cjms
-- However this still requires setup for anyone who has not used docker
 - Installation Steps:
   - Prerequisites:
     - Install [Docker](https://docs.docker.com/get-docker/)

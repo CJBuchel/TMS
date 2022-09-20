@@ -2,15 +2,10 @@
   box-sizing: border-box;
 }
 
-html, body, #root {
-  height: 100%;
-  // overflow: hidden;
-}
-
 .match-control {
   height: 95%;
   box-sizing: border-box;
-  // overflow: scroll;
+  overflow: hidden;
 }
 
 .match-control-row {

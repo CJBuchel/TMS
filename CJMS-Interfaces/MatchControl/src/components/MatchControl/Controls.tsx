@@ -4,6 +4,7 @@ import { request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "../../assets/stylesheets/Controls.scss";
+import MatchTimer from "./MatchTimer";
 import StatusTimer from "./StatusTimer";
 
 interface IProps {
@@ -16,7 +17,16 @@ interface IState {
   loaded_match:any;
   blink_toggle:boolean;
   loop?:any;
+
+  timerState:string;
+  currentTime:number;
+  soundsEnabled:boolean;
 }
+
+const startAudio = new window.Audio("./sounds/start.mp3");
+const stopAudio = new window.Audio("./sounds/stop.mp3");
+const endGameAudio = new window.Audio("./sounds/end-game.mp3");
+const endAudio = new window.Audio("./sounds/end.mp3");
 
 export default class Controls extends Component<IProps, IState> {
   constructor(props:any) {
@@ -24,14 +34,79 @@ export default class Controls extends Component<IProps, IState> {
 
     this.state = {
       loaded_match: undefined,
-      blink_toggle: true
+      blink_toggle: true,
+
+      timerState: "default",
+      currentTime: 150,
+      soundsEnabled: false
     }
 
     comm_service.listeners.onMatchLoaded(async (match:string) => {
       this.setLoadedMatch(match);
     });
 
+    comm_service.listeners.onClockArmEvent(() => {
+      this.setTimerState('armed');
+    });
+
+    comm_service.listeners.onClockPrestartEvent(() => {
+      this.setTimerState('prerunning');
+    });
+
+    comm_service.listeners.onClockStartEvent(() => {
+      this.setTimerState('running');
+      this.playSoundIfEnabled(startAudio);
+    });
+
+    comm_service.listeners.onClockEndGameEvent(() => {
+      this.setTimerState('endgame');
+      this.playSoundIfEnabled(endGameAudio);
+    });
+
+    comm_service.listeners.onClockEndEvent(() => {
+      this.setTimerState('ended');
+      this.playSoundIfEnabled(endAudio);
+    });
+
+    comm_service.listeners.onClockStopEvent(() => {
+      this.setTimerState('ended');
+      this.playSoundIfEnabled(stopAudio)
+    });
+
+    comm_service.listeners.onClockReloadEvent(() => {
+      this.setTimerState('default');
+      this.setCurrentTime(150);
+    });
+
+    comm_service.listeners.onClockTimeEvent((time:number) => {
+      this.setCurrentTime(time);
+    });
+
     this.blink = this.blink.bind(this);
+  }
+
+  setCurrentTime(time:number) {
+    this.setState({currentTime:time});
+  }
+
+  setTimerState(state:string) {
+    this.setState({timerState: state});
+  }
+
+  playSound(audio:HTMLAudioElement) {
+    audio.play().catch(err => {
+      console.log(err);
+    });
+  }
+
+  enableSounds(enable:boolean) {
+    this.setState({soundsEnabled: enable});
+  }
+
+  playSoundIfEnabled(audio:HTMLAudioElement) {
+    if (this.state.soundsEnabled) {
+      this.playSound(audio);
+    }
   }
 
   blink() {
@@ -92,6 +167,36 @@ export default class Controls extends Component<IProps, IState> {
     return match;
   }
 
+  getLoadedTable1() {
+    if (this.state?.loaded_match) {
+      const team = this.props.external_teamData.find(e => e.team_number == this.state?.loaded_match?.on_table1?.team_number);
+      const table = this.state?.loaded_match?.on_table1?.table;
+      return (
+        <span style={{color: "orange"}}>
+          {table}: 
+          <span>
+            {team?.team_number} | {team?.team_name}
+          </span>
+        </span>
+      )
+    }
+  }
+
+  getLoadedTable2() {
+    if (this.state?.loaded_match) {
+      const team = this.props.external_teamData.find(e => e.team_number == this.state?.loaded_match?.on_table2?.team_number);
+      const table = this.state?.loaded_match?.on_table2?.table;
+      return (
+        <span style={{color: "orange"}}>
+          {table}: 
+          <span>
+            {team?.team_number} | {team?.team_name}
+          </span>
+        </span>
+      )
+    }
+  }
+
   handleLoadMatch() {
     if (this.props.selected_match) {
       CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match: this.props.selected_match?.match_number});
@@ -102,6 +207,68 @@ export default class Controls extends Component<IProps, IState> {
     CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match:""});
   }
 
+  handlePreStartMatch() {
+    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "prestart"});
+  }
+
+  handleStartMatch() {
+    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "start"});
+  }
+
+  handleAbortMatch() {
+    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "stop"});
+  }
+
+  handleReloadMatch() {
+    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "reload"});
+    this.setState({timerState: "default"});
+    this.setCurrentTime(150);
+  }
+
+  getTimerControls() {
+    if (this.state.timerState == "default" || this.state.timerState == "armed") {
+      return (
+        <div className="buttons">
+          {/* Prestart */}
+          <button 
+            onClick={() => this.handlePreStartMatch()}
+            className={`hoverButton ${this.state.loaded_match ? "back-orange" : "back-half-transparent"} buttons`}
+            disabled={!this.state.loaded_match}
+          >Pre Start</button>
+
+          {/* Start */}
+          <button 
+            onClick={() => this.handleStartMatch()}
+            className={`hoverButton ${this.state.loaded_match ? "back-green" : "back-half-transparent"} buttons`}
+            disabled={!this.state.loaded_match}
+          >Start</button>
+        </div>
+      );
+    } else if (this.state.timerState == 'ended') {
+      return (
+        <div className="singular">
+          {/* Prestart */}
+          <button 
+            onClick={() => this.handleReloadMatch()}
+            className={`hoverButton ${this.state.loaded_match ? "back-orange" : "back-half-transparent"}`}
+            disabled={!this.state.loaded_match}
+          >Reload</button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="singular">
+          {/* Prestart */}
+          <button 
+            onClick={() => this.handleAbortMatch()}
+            className={`hoverButton ${this.state.loaded_match ? "back-red" : "back-half-transparent"}`}
+            disabled={!this.state.loaded_match}
+          >Abort</button>
+        </div>
+      )
+    }
+  }
+
   render() {
     return(
       <div className="controls">
@@ -109,7 +276,11 @@ export default class Controls extends Component<IProps, IState> {
         <h1>Selected [ {this.getMatchNumber()} ]</h1>
           <h2>On Table {this.getOnTable1()}</h2>
           <h2>On Table {this.getOnTable2()}</h2>
-          <button onClick={() => this.handleLoadMatch()} className="hoverButton back-orange">Load Match</button>
+          <button 
+            onClick={() => this.handleLoadMatch()}
+            className={`hoverButton ${!this.state.loaded_match ? "back-orange" : "back-half-transparent"}`}
+            disabled={this.state.loaded_match}
+          >Load Match</button>
         </div>
 
         <div className="status_clock">
@@ -118,11 +289,26 @@ export default class Controls extends Component<IProps, IState> {
 
         <div className="loaded_info">
           <h2>Loaded: {this.getLoadedMatch()}</h2>
-
           <div className="buttons">
-            <button onClick={() => this.handleUnloadMatch()} className="hoverButton back-orange buttons">Unload</button>
-            <button className="hoverButton back-green buttons">Set Complete</button>
+
+            {/* Unload Match */}
+            <button 
+              onClick={() => this.handleUnloadMatch()}
+              className={`hoverButton ${this.state.loaded_match ? "back-orange" : "back-half-transparent"} buttons`}
+              disabled={!this.state.loaded_match}
+            >Unload</button>
+
+            {/* Set match as complete */}
+            <button 
+              className={`hoverButton ${this.state.loaded_match ? "back-green" : "back-half-transparent"} buttons`}
+              disabled={!this.state.loaded_match}
+            >Set Complete</button>
           </div>
+        </div>
+
+        <div className="timer_controls">
+          <MatchTimer timerState={this.state.timerState} currentTime={this.state.currentTime}/>
+          {this.getTimerControls()}
         </div>
 
       </div>

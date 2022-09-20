@@ -1,8 +1,6 @@
 import React, {ChangeEvent, Component, InputHTMLAttributes, useState} from "react";
 import Papa from "papaparse";
 
-import { requests } from "@cjms_interfaces/shared";
-
 import "../../assets/Setup.scss"
 import { CJMS_FETCH_GENERIC_POST, CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
 import { request_namespaces } from "@cjms_shared/services";

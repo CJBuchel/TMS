@@ -11,3 +11,5 @@ export declare const request_post_team_score: string;
 export declare const request_fetch_event: string;
 export declare const request_fetch_matches: string;
 export declare const request_post_match_load: string;
+export declare const request_post_match_complete: string;
+export declare const request_post_match_update: string;

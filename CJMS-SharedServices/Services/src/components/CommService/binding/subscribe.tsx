@@ -1,6 +1,13 @@
-import MHubClient from "mhub/dist/src/browserclient";
+import MHubClient_node from "mhub/dist/src/nodeclient";
+import MHubClient_browser from "mhub/dist/src/browserclient";
 
-var client:MHubClient = new MHubClient(typeof window !== 'undefined' ? `ws://${window.location.hostname}:2122` : `ws://localhost:2122`);
+var client:any;
+
+if (typeof window !== 'undefined') {
+  client = new MHubClient_browser(`ws://${window.location.hostname}:2122`);
+} else {
+  client = new MHubClient_node("ws://localhost:2122");
+}
 
 const RETRY_TIMEOUT = 1000; // 1 second
 

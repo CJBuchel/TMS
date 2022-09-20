@@ -15,19 +15,22 @@ interface IProps {
   table:any;
 
   eventData:any;
-  teamData:any;
+  teamData:any[];
+  matchData:any[];
 }
 
 interface IState {
   // Internal Set data
   form_TeamNumber?:string;
   form_RoundNumber?:number;
+  form_MatchNumber?:string;
   form_TeamScore?:number;
   form_TeamGP?:number;
   form_TeamNotes:any;
 
   options_teams?:SelectOption[];
   options_rounds?:SelectOption[];
+  options_matches?:SelectOption[];
 }
 
 const options_gp = [
@@ -50,6 +53,7 @@ export default class ManualScoring extends Component<IProps, IState> {
   setInternalData() {
     const team_options:SelectOption[] = [];
     const round_options:SelectOption[] = [];
+    const match_options:SelectOption[] = [];
 
     for (const team of this.props.teamData) {
       team_options.push({value: team.team_number, label: `${team.team_number} | ${team.team_name}`});
@@ -59,8 +63,13 @@ export default class ManualScoring extends Component<IProps, IState> {
       round_options.push({value: i, label: `Round ${i}`});
     }
 
+    for (const match of this.props.matchData) {
+      match_options.push({value: match.match_number, label: match.match_number});
+    }
+
     this.setState({options_teams: team_options});
     this.setState({options_rounds: round_options});
+    this.setState({options_matches: match_options});
   }
 
   async componentDidMount() {
@@ -73,6 +82,10 @@ export default class ManualScoring extends Component<IProps, IState> {
 
   onSelectRound(e:SingleValue<SelectOption>) {
     this.setState({form_RoundNumber: e?.value});
+  }
+
+  onSelectMatch(e:SingleValue<SelectOption>) {
+    this.setState({form_MatchNumber: e?.value});
   }
 
   onScoreChange(e:React.ChangeEvent<HTMLInputElement>) {
@@ -96,7 +109,18 @@ export default class ManualScoring extends Component<IProps, IState> {
   }
 
   async handleSubmit() {
-    const result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, {
+    const match = this.props.matchData.find(e => e.match_number == this.state.form_MatchNumber);
+    var update = match;
+    if (match.on_table1.team_number == this.state.form_TeamNumber) {
+      update.on_table1.score_submitted = true;
+    } else if (match.on_table2.team_number == this.state.form_TeamNumber) {
+      update.on_table2.score_submitted = true;
+    } else {
+      window.alert("Team does not exist in this match");
+      return;
+    }
+
+    const score_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, {
       team_number: this.state.form_TeamNumber,
       round: this.state.form_RoundNumber,
       score: this.state.form_TeamScore,
@@ -105,7 +129,12 @@ export default class ManualScoring extends Component<IProps, IState> {
       scored_by: this.props.scorer
     });
 
-    if (result.success) {
+    const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
+      match: this.state.form_MatchNumber,
+      update: update
+    });
+
+    if (score_result.success && match_result.success) {
       alert("Successfully updated team");
       window.location.reload();
     }
@@ -124,9 +153,13 @@ export default class ManualScoring extends Component<IProps, IState> {
           <label>Round Number</label>
           <Select onChange={(e) => this.onSelectRound(e)} options={this.state.options_rounds}/>
 
+          {/* Match Number */}
+          <label>Match Number</label>
+          <Select onChange={(e) => this.onSelectMatch(e)} options={this.state.options_matches}/>
+
           {/* Score */}
           <label>Score</label>
-          <input type={"number"} onChange={(e) => this.onScoreChange(e)} />
+          <input type={"number"} onChange={(e) => this.onScoreChange(e)}/>
 
           {/* GP */}
           <label>GP</label>

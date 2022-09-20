@@ -59,5 +59,38 @@ export class Matches {
 
       res.send({});
     });
+
+    requestServer.get().post(request_namespaces.request_post_match_complete, (req, res) => {
+      console.log(req.body);
+      
+      const filter = {match_number: req.body.match};
+      const update = {complete: req.body.complete};
+
+      MatchModel.findOneAndUpdate(filter, update, {}, (err) => {
+        if (err) {
+          res.send({message: "Error while updating team"});
+          console.log(err.message);
+        } else {
+          comm_service.senders.sendMatchUpdateEvent('update');
+        }
+      });
+    });
+
+    requestServer.get().post(request_namespaces.request_post_match_update, (req, res) => {
+      console.log(req.body);
+
+      const filter = {match_number: req.body.match};
+      const update = req.body.update;
+
+      MatchModel.findOneAndUpdate(filter, update, {}, (err) => {
+        if (err) {
+          res.send({message: "Error while updating team"});
+          console.log(err.message);
+        } else {
+          res.send({success: true});
+          comm_service.senders.sendMatchUpdateEvent('update');
+        }
+      });
+    });
   }
 }

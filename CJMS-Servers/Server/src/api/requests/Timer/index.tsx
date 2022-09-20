@@ -1,5 +1,7 @@
 import { RequestServer } from "../RequestServer";
 import { request_namespaces, comm_service } from "@cjms_shared/services";
+import { MatchModel } from "../../database/models/Match";
+
 
 export class Timer {
   constructor(requestServer:RequestServer) {
@@ -10,6 +12,23 @@ export class Timer {
     var prerunTime:number = 5;
     var clockStop:boolean = false;
     var existingClock:boolean = false;
+    var loaded_match:string = '';
+
+    comm_service.listeners.onMatchLoaded((match:string) => {
+      loaded_match = match;
+    });
+
+    function setMatchComplete(match:string, complete:boolean) {
+      const filter = {match_number: match};
+      const update = {complete: complete};
+      MatchModel.findOneAndUpdate(filter, update, {}, (err) => {
+        if (err) {
+          console.log(err.message);
+        } else {
+          comm_service.senders.sendMatchUpdateEvent('update');
+        }
+      });
+    }
 
     function startCountdown(duration:number) {
       if (!existingClock) {
@@ -40,6 +59,8 @@ export class Timer {
               console.log("Stopping counter");
               comm_service.senders.sendClockEndEvent(true);
               comm_service.senders.sendEventStateEvent("Idle");
+              setMatchComplete(loaded_match, true);
+
               clearInterval(timerInterval);
             }
           } else {

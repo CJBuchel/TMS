@@ -30,3 +30,5 @@ export const request_fetch_event = `${request_api_location_fetch}/event`;
 // Match Database
 export const request_fetch_matches = `${request_api_location_fetch}/matches`;
 export const request_post_match_load = `${request_api_location_post}/match/load`;
+export const request_post_match_complete = `${request_api_location_post}/match/complete`;
+export const request_post_match_update = `${request_api_location_post}/match/update`; // {match: number, update: {data...}}

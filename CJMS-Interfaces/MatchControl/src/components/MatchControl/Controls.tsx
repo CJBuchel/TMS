@@ -207,6 +207,12 @@ export default class Controls extends Component<IProps, IState> {
     CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match:""});
   }
 
+  handleSetMatchComplete(complete:boolean) {
+    if (this.state.loaded_match) {
+      CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_complete, {complete:complete, match:this.state.loaded_match?.match_number});
+    }
+  }
+
   handlePreStartMatch() {
     CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "prestart"});
   }
@@ -250,8 +256,8 @@ export default class Controls extends Component<IProps, IState> {
           {/* Prestart */}
           <button 
             onClick={() => this.handleReloadMatch()}
-            className={`hoverButton ${this.state.loaded_match ? "back-orange" : "back-half-transparent"}`}
-            disabled={!this.state.loaded_match}
+            className={`hoverButton back-orange`}
+            // disabled={!this.state.loaded_match && }
           >Reload</button>
         </div>
       );
@@ -278,8 +284,8 @@ export default class Controls extends Component<IProps, IState> {
           <h2>On Table {this.getOnTable2()}</h2>
           <button 
             onClick={() => this.handleLoadMatch()}
-            className={`hoverButton ${!this.state.loaded_match ? "back-orange" : "back-half-transparent"}`}
-            disabled={this.state.loaded_match}
+            className={`hoverButton ${(!this.state.loaded_match && this.props.selected_match) ? "back-orange" : "back-half-transparent"}`}
+            disabled={this.state.loaded_match || !this.props.selected_match}
           >Load Match</button>
         </div>
 
@@ -300,6 +306,7 @@ export default class Controls extends Component<IProps, IState> {
 
             {/* Set match as complete */}
             <button 
+              onClick={() => this.handleSetMatchComplete(true)}
               className={`hoverButton ${this.state.loaded_match ? "back-green" : "back-half-transparent"} buttons`}
               disabled={!this.state.loaded_match}
             >Set Complete</button>

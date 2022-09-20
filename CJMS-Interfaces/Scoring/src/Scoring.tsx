@@ -176,6 +176,7 @@ export default class Scoring extends Component<IProps,IState> {
                 table={this.props.table} 
                 eventData={this.state.external_eventData} 
                 teamData={this.state.external_teamData}
+                matchData={this.state.external_matchData}
               />
             }
           ]
@@ -192,6 +193,7 @@ export default class Scoring extends Component<IProps,IState> {
                 table={this.props.table} 
                 eventData={this.state.external_eventData} 
                 teamData={this.state.external_teamData}
+                matchData={this.state.external_matchData}
               />
             },
   
@@ -203,6 +205,7 @@ export default class Scoring extends Component<IProps,IState> {
                 table={this.props.table} 
                 eventData={this.state.external_eventData} 
                 teamData={this.state.external_teamData}
+                matchData={this.state.external_matchData}
               />
             }
           ]

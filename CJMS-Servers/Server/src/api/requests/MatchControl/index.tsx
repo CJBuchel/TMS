@@ -3,9 +3,31 @@ import { request_namespaces, comm_service } from "@cjms_shared/services";
 import { MatchModel } from "../../database/models/Match";
 
 
-export class Timer {
+export class MatchControl {
   constructor(requestServer:RequestServer) {
-    console.log("Timer Requests Constructed");
+    console.log("Match Control Requests Constructed");
+
+    var existing_loadedMatch:boolean = false;
+    var load_match:boolean = false;
+
+    function sendLoadedMatch(match:string) {
+      if (!existing_loadedMatch) {
+        existing_loadedMatch = true;
+        comm_service.senders.sendMatchLoadedEvent(match);
+
+        const loopInterval = setInterval(loop, 1000);
+        function loop() {
+          if (load_match) {
+            console.log("Loading match: " + match);
+            comm_service.senders.sendMatchLoadedEvent(match);
+          } else {
+            existing_loadedMatch = false;
+            clearInterval(loopInterval);
+            comm_service.senders.sendMatchLoadedEvent(null);
+          }
+        }
+      }
+    }
 
     // Main countdown
     var countDownTime:number = 35; // 150
@@ -61,6 +83,10 @@ export class Timer {
               comm_service.senders.sendEventStateEvent("Idle");
               setMatchComplete(loaded_match, true);
 
+              comm_service.senders.sendEventStateEvent("Idle");
+              comm_service.senders.sendMatchLoadedEvent(null);
+              load_match = false;
+
               clearInterval(timerInterval);
             }
           } else {
@@ -71,7 +97,6 @@ export class Timer {
           }
         }
       
-        // timer();
       }
     }
 
@@ -141,6 +166,22 @@ export class Timer {
         comm_service.senders.sendClockReloadEvent(true);
       }
 
+      res.send({});
+    });
+
+    // Match load
+    requestServer.get().post(request_namespaces.request_post_match_load, (req, res) => {
+      console.log(req.body);
+      if (req.body.load) {
+        load_match = true;
+        comm_service.senders.sendEventStateEvent("Match Loaded");
+        sendLoadedMatch(req.body.match);
+      } else {
+        comm_service.senders.sendEventStateEvent("Idle");
+        comm_service.senders.sendMatchLoadedEvent(null);
+        load_match = false;
+      }
+      
       res.send({});
     });
   }

@@ -167,6 +167,14 @@ export default class Controls extends Component<IProps, IState> {
     return match;
   }
 
+  getStatusMatch() {
+    if (this.state.loaded_match) {
+      return <span style={{color: "green"}}>Match Loaded</span>
+    } else {
+      return this.getLoadedMatch();
+    }
+  }
+
   getLoadedTable1() {
     if (this.state?.loaded_match) {
       const team = this.props.external_teamData.find(e => e.team_number == this.state?.loaded_match?.on_table1?.team_number);
@@ -275,18 +283,35 @@ export default class Controls extends Component<IProps, IState> {
     }
   }
 
+  getMatchContent() {
+    const select_name:string = this.state.loaded_match ? "Loaded" : "Selected";
+    return(
+      <>
+        <h1>{select_name} [ {this.state.loaded_match ? this.getLoadedMatch() : this.getMatchNumber()} ]</h1>
+        <h2>On Table {this.state.loaded_match ? this.getLoadedTable1() : this.getOnTable1()}</h2>
+        <h2>On Table {this.state.loaded_match ? this.getLoadedTable2() : this.getOnTable2()}</h2>
+        <div className="buttons">
+          <button 
+            onClick={() => this.handleLoadMatch()}
+            className={`hoverButton ${(!this.state.loaded_match) ? "back-orange" : "back-half-transparent"} buttons`}
+            disabled={this.state.loaded_match}
+          >Load Match</button>
+
+          <button 
+            onClick={() => this.handleUnloadMatch()}
+            className={`hoverButton ${(this.state.loaded_match) ? "back-orange" : "back-half-transparent"} buttons`}
+            disabled={!this.state.loaded_match}
+          >Unload Match</button>
+        </div>
+      </>
+    );
+  }
+
   render() {
     return(
       <div className="controls">
         <div className="match_info">
-        <h1>Selected [ {this.getMatchNumber()} ]</h1>
-          <h2>On Table {this.getOnTable1()}</h2>
-          <h2>On Table {this.getOnTable2()}</h2>
-          <button 
-            onClick={() => this.handleLoadMatch()}
-            className={`hoverButton ${(!this.state.loaded_match && this.props.selected_match) ? "back-orange" : "back-half-transparent"}`}
-            disabled={this.state.loaded_match || !this.props.selected_match}
-          >Load Match</button>
+          {this.getMatchContent()}
         </div>
 
         <div className="status_clock">
@@ -294,15 +319,15 @@ export default class Controls extends Component<IProps, IState> {
         </div>
 
         <div className="loaded_info">
-          <h2>Loaded: {this.getLoadedMatch()}</h2>
+          <h2>Status: {this.getStatusMatch()}</h2>
           <div className="buttons">
 
             {/* Unload Match */}
             <button 
-              onClick={() => this.handleUnloadMatch()}
-              className={`hoverButton ${this.state.loaded_match ? "back-orange" : "back-half-transparent"} buttons`}
+              onClick={() => this.handleSetMatchComplete(false)}
+              className={`hoverButton ${this.state.loaded_match ? "back-red" : "back-half-transparent"} buttons`}
               disabled={!this.state.loaded_match}
-            >Unload</button>
+            >Set Incomplete</button>
 
             {/* Set match as complete */}
             <button 

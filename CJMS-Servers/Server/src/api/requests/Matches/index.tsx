@@ -22,7 +22,6 @@ export class Matches {
           }
         }
       });
-
     });
 
     requestServer.get().post(request_namespaces.request_post_match_complete, (req, res) => {

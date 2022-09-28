@@ -2,8 +2,8 @@ import { Component } from "react";
 
 import "../../assets/stylesheets/MatchControl.scss";
 
-import Controls from "./Controls";
-import MatchTable from "./MatchTable";
+import { Controls } from "./Controls";
+import { MatchTable } from "./Table";
 
 interface IProps {
   external_teamData:any[];

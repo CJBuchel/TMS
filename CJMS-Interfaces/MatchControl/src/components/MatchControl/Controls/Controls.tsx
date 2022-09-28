@@ -3,7 +3,7 @@ import { CJMS_FETCH_GENERIC_POST } from "@cjms_interfaces/shared/lib/components/
 import { request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
-import "../../assets/stylesheets/Controls.scss";
+import "../../../assets/stylesheets/Controls.scss";
 import MatchTimer from "./MatchTimer";
 import StatusTimer from "./StatusTimer";
 
@@ -246,22 +246,22 @@ export default class Controls extends Component<IProps, IState> {
           {/* Prestart */}
           <button 
             onClick={() => this.handlePreStartMatch()}
-            className={`hoverButton ${this.state.loaded_match ? "back-orange" : "back-half-transparent"} buttons`}
-            disabled={!this.state.loaded_match}
+            className={`hoverButton ${this.state.loaded_match && !this.state.loaded_match?.complete ? "back-orange" : "back-half-transparent"} buttons`}
+            disabled={!this.state.loaded_match || this.state.loaded_match?.complete}
           >Pre Start</button>
 
           {/* Start */}
           <button 
             onClick={() => this.handleStartMatch()}
-            className={`hoverButton ${this.state.loaded_match ? "back-green" : "back-half-transparent"} buttons`}
-            disabled={!this.state.loaded_match}
+            className={`hoverButton ${this.state.loaded_match && !this.state.loaded_match?.complete ? "back-green" : "back-half-transparent"} buttons`}
+            disabled={!this.state.loaded_match || this.state.loaded_match?.complete}
           >Start</button>
         </div>
       );
     } else if (this.state.timerState == 'ended') {
       return (
         <div className="singular">
-          {/* Prestart */}
+          {/* Reload */}
           <button 
             onClick={() => this.handleReloadMatch()}
             className={`hoverButton back-orange`}
@@ -272,8 +272,8 @@ export default class Controls extends Component<IProps, IState> {
     } else {
       return (
         <div className="singular">
-          {/* Prestart */}
-          <button 
+          {/* Abort */}
+          <button
             onClick={() => this.handleAbortMatch()}
             className={`hoverButton ${this.state.loaded_match ? "back-red" : "back-half-transparent"}`}
             disabled={!this.state.loaded_match}
@@ -299,8 +299,8 @@ export default class Controls extends Component<IProps, IState> {
 
           <button 
             onClick={() => this.handleUnloadMatch()}
-            className={`hoverButton ${(this.state.loaded_match) ? "back-orange" : "back-half-transparent"} buttons`}
-            disabled={!this.state.loaded_match}
+            className={`hoverButton ${(this.state.loaded_match && (this.state.timerState == 'default' || this.state.timerState == 'armed' || this.state.timerState == 'ended')) ? "back-orange" : "back-half-transparent"} buttons`}
+            disabled={!this.state.loaded_match && (this.state.timerState != 'default' && this.state.timerState != 'armed' && this.state.timerState != 'ended')}
           >Unload Match</button>
         </div>
       </>

@@ -1,7 +1,7 @@
 import { comm_service } from "@cjms_interfaces/shared";
 import { Component } from "react";
 
-import "../../assets/stylesheets/MatchTable.scss";
+import "../../../assets/stylesheets/MatchTable.scss";
 
 interface IProps {
   external_matchData:any[];

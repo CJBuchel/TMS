@@ -36,11 +36,11 @@ export class Matches {
           res.send({message: "Error while updating team"});
           console.log(err.message);
         } else {
+          res.send({});
           comm_service.senders.sendMatchUpdateEvent('update');
         }
       });
 
-      res.send({});
     });
 
     requestServer.get().post(request_namespaces.request_post_match_update, (req, res) => {
@@ -58,8 +58,6 @@ export class Matches {
           comm_service.senders.sendMatchUpdateEvent('update');
         }
       });
-
-      res.send({});
     });
   }
 }

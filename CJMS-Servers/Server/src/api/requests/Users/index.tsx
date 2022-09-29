@@ -23,6 +23,7 @@ export class Users {
           if (user.length > 0) {
             res.send({token: "connection-" + Math.random().toString()});
           } else {
+            console.log("Incorrect user access");
             res.send({message: "Server: Incorrect Username/Password"});
           }
         }

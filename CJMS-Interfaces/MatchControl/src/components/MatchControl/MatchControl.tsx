@@ -6,6 +6,7 @@ import { Controls } from "./Controls";
 import { MatchTable } from "./Table";
 
 interface IProps {
+  external_eventData:any;
   external_teamData:any[];
   external_matchData:any[];
 }
@@ -37,7 +38,7 @@ export default class MatchControl extends Component<IProps, IState> {
       <div className="match-control">
         <div className="match-control-row">
           <div className="match-control-controls">
-            <Controls external_matchData={this.props.external_matchData} external_teamData={this.props.external_teamData} selected_match={this.state.selected_match}/>
+            <Controls external_eventData={this.props.external_eventData} external_matchData={this.props.external_matchData} external_teamData={this.props.external_teamData} selected_match={this.state.selected_match}/>
           </div>
 
           <div className="match-control-matches">

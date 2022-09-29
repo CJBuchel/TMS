@@ -82,8 +82,10 @@ export default class NavMenu extends Component {
             color = "Red";
         }
         return React.createElement("b", null,
-            this.state.external_eventData?.event_name,
-            " | State: ",
+            React.createElement("span", { id: "nav-state-name" },
+                this.state.external_eventData?.event_name,
+                " | "),
+            "State: ",
             React.createElement("span", { style: { color: `${color}` } }, this.state.eventState));
     }
     getMode() {
@@ -113,9 +115,10 @@ export default class NavMenu extends Component {
                                 process.env.REACT_APP_CJMS_VERSION)),
                         this.getContent())),
                 React.createElement("div", { className: "navbar-right" },
-                    this.getState(),
-                    this.getMode(),
-                    React.createElement("a", { onClick: this.clearSessionStorage }, "Logout"))),
+                    React.createElement("span", { id: "nav-state" }, this.getState()),
+                    React.createElement("span", { id: "nav-mode" }, this.getMode()),
+                    React.createElement("span", { id: "nav-logout" },
+                        React.createElement("a", { onClick: this.clearSessionStorage }, "Logout")))),
             this.getRoutes()));
     }
 }

@@ -8,6 +8,7 @@ import MatchTimer from "./MatchTimer";
 import StatusTimer from "./StatusTimer";
 
 interface IProps {
+  external_eventData:any;
   external_matchData:any[];
   external_teamData:any[];
   selected_match:any;
@@ -246,15 +247,15 @@ export default class Controls extends Component<IProps, IState> {
           {/* Prestart */}
           <button 
             onClick={() => this.handlePreStartMatch()}
-            className={`hoverButton ${this.state.loaded_match && !this.state.loaded_match?.complete ? "back-orange" : "back-half-transparent"} buttons`}
-            disabled={!this.state.loaded_match || this.state.loaded_match?.complete}
+            className={`hoverButton ${(this.state.loaded_match && !this.state.loaded_match?.complete) || !this.props.external_eventData?.match_locked ? "back-orange" : "back-half-transparent"} buttons`}
+            disabled={(!this.state.loaded_match || this.state.loaded_match?.complete) && this.props.external_eventData?.match_locked}
           >Pre Start</button>
 
           {/* Start */}
           <button 
             onClick={() => this.handleStartMatch()}
-            className={`hoverButton ${this.state.loaded_match && !this.state.loaded_match?.complete ? "back-green" : "back-half-transparent"} buttons`}
-            disabled={!this.state.loaded_match || this.state.loaded_match?.complete}
+            className={`hoverButton ${(this.state.loaded_match && !this.state.loaded_match?.complete) || !this.props.external_eventData?.match_locked ? "back-green" : "back-half-transparent"} buttons`}
+            disabled={(!this.state.loaded_match || this.state.loaded_match?.complete) && this.props.external_eventData?.match_locked}
           >Start</button>
         </div>
       );
@@ -265,7 +266,6 @@ export default class Controls extends Component<IProps, IState> {
           <button 
             onClick={() => this.handleReloadMatch()}
             className={`hoverButton back-orange`}
-            // disabled={!this.state.loaded_match && }
           >Reload</button>
         </div>
       );
@@ -275,8 +275,8 @@ export default class Controls extends Component<IProps, IState> {
           {/* Abort */}
           <button
             onClick={() => this.handleAbortMatch()}
-            className={`hoverButton ${this.state.loaded_match ? "back-red" : "back-half-transparent"}`}
-            disabled={!this.state.loaded_match}
+            className={"hoverButton back-red"}
+            // disabled={!this.state.loaded_match}
           >Abort</button>
         </div>
       )

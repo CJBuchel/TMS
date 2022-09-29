@@ -86,7 +86,7 @@ export default class Setup extends Component<IProps, IState> {
       return(
         <div className="Setup">
           <form onSubmit={(e:React.FormEvent<HTMLFormElement>) => this.handleSubmit(e)}>
-            <label>Input Scorer</label>
+            <label>Referee Name</label>
             <input onChange={(e:React.ChangeEvent<HTMLInputElement>) => this.onScorerChange(e)}/>
 
             <label>Select Table</label>

@@ -9,37 +9,43 @@
   background-color: #333;
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 10px;
+  font-size: 2vh;
   @include application.border-struct($colour: green, $type: solid);
 }
 
 .navbar-right {
   float: right;
+  position: relative;
+  white-space: nowrap;
 }
 
 .navbar a {
   float: left;
   // font-size: 16px;
-  font-size: 2vh;
+  // font-size: 2vh;
   color: white;
   text-align: center;
-  padding: 14px 16px;
-  // padding: 1vh;
+  // padding: 14px 16px;
+
+  padding: 1.4vh 1.4vh;
   text-decoration: none;
 }
 
 .navbar b {
   float: left;
-  font-size: 2vh;
+  // font-size: 2vh;
   color: white;
   background-color: #333;
   text-align: center;
-  padding: 14px 16px;
+  // padding: 14px 16px;
+  padding: 1.4vh 1.4vh;
+  // position: relative;
   border-color: orange;
   // text-decoration: none;
 }
 
 .navbar b button {
-  font-size: 2vh;
+  // font-size: 2vh;
 }
 
 .dropdown {
@@ -50,12 +56,12 @@
 }
 
 .dropdown .dropbtn {
-  // font-size: 16px;
   font-size: 2vh;
   border: none;
   outline: none;
   color: white;
-  padding: 14px 16px;
+  // padding: 14px 16px;
+  padding: 1.4vh 1.4vh;
   background-color: inherit;
   font: inherit;
   margin: 0;
@@ -119,10 +125,26 @@
   clear: both;
 }
 
+@media screen and (orientation: portrait) {
+  .navbar #nav-state #nav-state-name {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .navbar-right #nav-state {
+    display: none;
+  }
+}
+
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
   .column {
     width: 100%;
     height: auto;
+  }
+
+  .navbar-right #nav-state, #nav-mode {
+    display: none;
   }
 }

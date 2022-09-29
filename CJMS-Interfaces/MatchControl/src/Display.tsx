@@ -75,7 +75,7 @@ export default class Display extends Component<IProps, IState> {
             {
               name: "Main Control",
               path: "/",
-              linkTo:<MatchControl external_matchData={this.state.external_matchData} external_teamData={this.state.external_teamData}/>
+              linkTo:<MatchControl external_eventData={this.state.external_eventData} external_matchData={this.state.external_matchData} external_teamData={this.state.external_teamData}/>
             }
           ]
         }

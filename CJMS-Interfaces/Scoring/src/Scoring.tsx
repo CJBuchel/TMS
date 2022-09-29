@@ -8,6 +8,8 @@ import { ManualScoring } from './components/ManualScoring';
 import { Challenge } from "./components/Challenges";
 
 import "./assets/ScoringApp.scss";
+import { AllMatches } from "./components/AllMatches";
+import { TableMatches } from "./components/TableMatches";
 
 interface IProps {
   scorer:any;
@@ -187,25 +189,19 @@ export default class Scoring extends Component<IProps,IState> {
           links: [
             {
               name: `Table [${this.props.table}] Matches`,
-              path: "/CurrentTableMatches",
-              linkTo:<ManualScoring 
-                scorer={this.props.scorer} 
-                table={this.props.table} 
-                eventData={this.state.external_eventData} 
-                teamData={this.state.external_teamData}
-                matchData={this.state.external_matchData}
+              path: "/TableMatches",
+              linkTo:<TableMatches 
+                external_teamData={this.state.external_teamData}
+                external_tableMatches={this.state.table_matches}
               />
             },
   
             {
               name: "All Matches",
               path: "/AllMatches",
-              linkTo:<ManualScoring 
-                scorer={this.props.scorer} 
-                table={this.props.table} 
-                eventData={this.state.external_eventData} 
-                teamData={this.state.external_teamData}
-                matchData={this.state.external_matchData}
+              linkTo:<AllMatches 
+                external_teamData={this.state.external_teamData}
+                external_matchData={this.state.external_matchData}
               />
             }
           ]

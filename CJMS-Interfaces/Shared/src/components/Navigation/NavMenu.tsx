@@ -133,7 +133,7 @@ export default class NavMenu extends Component<IProps, IState> {
       color = "Red";
     }
 
-    return <b>{this.state.external_eventData?.event_name} | State: <span style={{color: `${color}`}}>{this.state.eventState}</span></b>
+    return <b><span id="nav-state-name">{this.state.external_eventData?.event_name} | </span>State: <span style={{color: `${color}`}}>{this.state.eventState}</span></b>
   }
 
   getMode() {
@@ -168,11 +168,17 @@ export default class NavMenu extends Component<IProps, IState> {
           </div>
 
 
-          {/* Logout */}
+          {/* Navbar right */}
           <div className="navbar-right">
-            {this.getState()}
-            {this.getMode()}
-            <a onClick={this.clearSessionStorage}>Logout</a>
+            <span id="nav-state">
+              {this.getState()}
+            </span>
+            <span id="nav-mode">
+              {this.getMode()}
+            </span>
+            <span id="nav-logout">
+              <a onClick={this.clearSessionStorage}>Logout</a>
+            </span>
           </div>
         </div>
         {this.getRoutes()}

@@ -52,7 +52,7 @@ export async function CJMS_FETCH_GENERIC_GET(request:any, noAlert:boolean = fals
 
 // Login
 export async function CJMS_REQUEST_LOGIN(credentials:any): Promise<Response> {
-  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_login, credentials);
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_login, credentials);
 }
 
 // Clock/Timer

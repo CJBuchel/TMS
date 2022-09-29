@@ -36,16 +36,6 @@ export default class Setup extends Component<IProps, IState> {
     window.location.reload();
   }
 
-  loadMatchTest() {
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match:"3"});
-    // CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "prestart"});
-  }
-
-  loadMatchStop() {
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match:""});
-    // CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "stop"});
-  }
-
   sendPurge() {
     CJMS_FETCH_GENERIC_GET(request_namespaces.request_post_purge);
   }
@@ -93,7 +83,7 @@ export default class Setup extends Component<IProps, IState> {
             {/* Schedule import */}
             <h3>Schedule</h3>
             <input 
-              type={"file"} 
+              type={"file"}
               id={"scheduleImport"}
               accept={".csv"}
               onChange={(e) => this.onScheduleImport(e)}
@@ -107,8 +97,6 @@ export default class Setup extends Component<IProps, IState> {
             {/* Controls */}
             <button className="hoverButton back-red" onClick={this.onPurge}>Purge Database</button>
             <button className="hoverButton back-green" onClick={this.onSubmit}>Submit</button>
-            <button onClick={this.loadMatchTest}>Load Match Test</button>
-            <button onClick={this.loadMatchStop}>Stop Match Test</button>
           </form>
 
         </div>

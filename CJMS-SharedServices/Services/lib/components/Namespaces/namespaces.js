@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.request_post_match_update = exports.request_post_match_complete = exports.request_post_match_load = exports.request_fetch_matches = exports.request_fetch_event = exports.request_post_team_score = exports.request_fetch_teams = exports.request_post_purge = exports.request_post_setup = exports.request_post_timer = exports.request_post_login = exports.request_api_location_post = exports.request_api_location_fetch = exports.request_api_location = exports.request_api_port = void 0;
+exports.request_post_match_update = exports.request_post_match_complete = exports.request_post_match_load = exports.request_fetch_matches = exports.request_fetch_event = exports.request_post_team_score = exports.request_fetch_teams = exports.request_post_purge = exports.request_post_setup = exports.request_post_timer = exports.request_post_user_update = exports.request_post_user_login = exports.request_api_location_post = exports.request_api_location_fetch = exports.request_api_location = exports.request_api_port = void 0;
 exports.request_api_port = 2121;
 if (typeof window !== 'undefined') {
     exports.request_api_location = `http://${window.location.hostname}:${exports.request_api_port.toString()}/cjms_server`;
@@ -10,8 +10,9 @@ else {
 }
 exports.request_api_location_fetch = `${exports.request_api_location}/fetch`;
 exports.request_api_location_post = `${exports.request_api_location}/post`;
-// Login
-exports.request_post_login = `${exports.request_api_location_post}/login`;
+// Users
+exports.request_post_user_login = `${exports.request_api_location_post}/user/login`;
+exports.request_post_user_update = `${exports.request_api_location_post}/user/update`;
 // Clock/Timer
 exports.request_post_timer = `${exports.request_api_location_post}/timer`;
 // Setup

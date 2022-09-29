@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import "./assets/application.scss";
 import { Setup } from './components/Setup';
+import { Users } from './components/Users';
 
 
 /** Admin Structure,
@@ -23,6 +24,12 @@ var navContent:NavMenuContent = {
           name:"Event Setup", 
           path:"/Setup", 
           linkTo:<Setup/>
+        },
+
+        {
+          name:"Users Setup",
+          path:"/Users",
+          linkTo:<Users/>
         },
       ]
     }

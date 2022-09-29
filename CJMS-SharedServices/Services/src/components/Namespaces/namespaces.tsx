@@ -10,8 +10,9 @@ if (typeof window !== 'undefined') {
 export const request_api_location_fetch = `${request_api_location}/fetch`;
 export const request_api_location_post = `${request_api_location}/post`;
 
-// Login
-export const request_post_login = `${request_api_location_post}/login`;
+// Users
+export const request_post_user_login = `${request_api_location_post}/user/login`;
+export const request_post_user_update = `${request_api_location_post}/user/update`;
 
 // Clock/Timer
 export const request_post_timer = `${request_api_location_post}/timer`;

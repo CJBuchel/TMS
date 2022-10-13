@@ -1,5 +1,5 @@
 // import * as req_namespaces from "./Namespaces";
-import { request_namespaces } from "@cjms_shared/services";
+import { request_namespaces, TeamScoreContainer } from "@cjms_shared/services";
 // const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
 
 export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any, noAlert:boolean = false): Promise<Response> {
@@ -56,6 +56,10 @@ export async function CJMS_REQUEST_LOGIN(credentials:any): Promise<Response> {
 }
 
 // Clock/Timer
-export async function CJMS_REQUEST_TIMER(timerStatus:string): Promise<Response> {
-  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, timerStatus);
+export async function CJMS_POST_TIMER(timerStatus:string): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: timerStatus});
+}
+
+export async function CJMS_POST_SCORE(teamScore:TeamScoreContainer): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, teamScore);
 }

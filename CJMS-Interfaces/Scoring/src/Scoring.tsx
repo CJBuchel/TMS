@@ -5,7 +5,7 @@ import { comm_service, request_namespaces } from "@cjms_shared/services";
 
 import { NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
 import { ManualScoring } from './components/ManualScoring';
-import { Challenge } from "./components/Challenges";
+import { Challenge } from "./components/ChallengeScoring";
 
 import "./assets/ScoringApp.scss";
 import { AllMatches } from "./components/AllMatches";

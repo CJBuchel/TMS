@@ -1,4 +1,4 @@
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { comm_service, request_namespaces, TeamScoreContainer } from "@cjms_shared/services";
 import { TeamModel } from "../../database/models/Team";
 import { RequestServer } from "../RequestServer";
 
@@ -25,19 +25,13 @@ export class Teams {
     });
 
     requestServer.get().post(request_namespaces.request_post_team_score, (req, res) => {
-      const score = req.body;
+      const teamScores:TeamScoreContainer = req.body;
+
       const update = {
-        $push: {scores: {
-          roundIndex: score.round,
-          score: score.score,
-          gp: score.gp,
-          scored_by: score.scored_by,
-          notes: score.notes,
-          no_show: score.no_show
-        }}
+        $push: {scores: teamScores}
       };
 
-      const filter = { team_number: score.team_number };
+      const filter = { team_number: teamScores.scoresheet.team_id };
       TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
         if (err) {
           res.send({message: "Error while updating team"});

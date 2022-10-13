@@ -50,6 +50,9 @@ export async function CJMS_REQUEST_LOGIN(credentials) {
     return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_login, credentials);
 }
 // Clock/Timer
-export async function CJMS_REQUEST_TIMER(timerStatus) {
-    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, timerStatus);
+export async function CJMS_POST_TIMER(timerStatus) {
+    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, { timerState: timerStatus });
+}
+export async function CJMS_POST_SCORE(teamScore) {
+    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, teamScore);
 }

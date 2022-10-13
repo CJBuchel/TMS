@@ -1,5 +1,5 @@
 import { comm_service } from "@cjms_interfaces/shared";
-import { CJMS_FETCH_GENERIC_POST } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { CJMS_FETCH_GENERIC_POST, CJMS_POST_TIMER } from "@cjms_interfaces/shared/lib/components/Requests/Request";
 import { request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
@@ -223,19 +223,19 @@ export default class Controls extends Component<IProps, IState> {
   }
 
   handlePreStartMatch() {
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "prestart"});
+    CJMS_POST_TIMER("prestart");
   }
 
   handleStartMatch() {
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "start"});
+    CJMS_POST_TIMER("start");
   }
 
   handleAbortMatch() {
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "stop"});
+    CJMS_POST_TIMER("stop");
   }
 
   handleReloadMatch() {
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: "reload"});
+    CJMS_POST_TIMER("reload");
     this.setState({timerState: "default"});
     this.setCurrentTime(150);
   }

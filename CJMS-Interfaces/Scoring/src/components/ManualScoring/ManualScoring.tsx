@@ -1,5 +1,5 @@
-import { CJMS_FETCH_GENERIC_GET, CJMS_FETCH_GENERIC_POST } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { CJMS_FETCH_GENERIC_GET, CJMS_FETCH_GENERIC_POST, CJMS_POST_SCORE } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { comm_service, request_namespaces, TeamScoreContainer } from "@cjms_shared/services";
 import React, { Component } from "react";
 import Select, { SingleValue } from "react-select";
 
@@ -21,12 +21,8 @@ interface IProps {
 
 interface IState {
   // Internal Set data
-  form_TeamNumber?:string;
-  form_RoundNumber?:number;
   form_MatchNumber?:string;
-  form_TeamScore?:number;
-  form_TeamGP?:number;
-  form_TeamNotes:any;
+  team_scoresheet:TeamScoreContainer;
 
   options_teams?:SelectOption[];
   options_rounds?:SelectOption[];
@@ -43,10 +39,26 @@ export default class ManualScoring extends Component<IProps, IState> {
   constructor(props:any) {
     super(props);
 
-    this.state = {
-      form_TeamNotes: '',
-    }
 
+    this.state = {
+
+      team_scoresheet: {
+        gp: 0,
+        referee: '',
+        no_show: false,
+        score: 0,
+        valid_scoresheet: false,
+        scoresheet: {
+          team_id: '',
+          tournament_id: '',
+          round: 0,
+          answers: [],
+          private_comment: '',
+          public_comment: ''
+        }
+      },
+
+    }
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -77,11 +89,15 @@ export default class ManualScoring extends Component<IProps, IState> {
   }
 
   onSelectTeam(e:SingleValue<SelectOption>) {
-    this.setState({form_TeamNumber: e?.value});
+    var scoresheet = this.state.team_scoresheet;
+    scoresheet.scoresheet.team_id = e?.value;
+    this.setState({team_scoresheet: scoresheet});
   }
 
   onSelectRound(e:SingleValue<SelectOption>) {
-    this.setState({form_RoundNumber: e?.value});
+    var scoresheet = this.state.team_scoresheet;
+    scoresheet.scoresheet.round = e?.value;
+    this.setState({team_scoresheet: scoresheet});
   }
 
   onSelectMatch(e:SingleValue<SelectOption>) {
@@ -89,15 +105,21 @@ export default class ManualScoring extends Component<IProps, IState> {
   }
 
   onScoreChange(e:React.ChangeEvent<HTMLInputElement>) {
-    this.setState({form_TeamScore: Number(e.target.value)});
+    var scoresheet = this.state.team_scoresheet;
+    scoresheet.score = Number(e.target.value);
+    this.setState({team_scoresheet: scoresheet});
   }
 
   onGPChange(e:SingleValue<SelectOption>) {
-    this.setState({form_TeamGP: e?.value});
+    var scoresheet = this.state.team_scoresheet;
+    scoresheet.gp = e?.value;
+    this.setState({team_scoresheet: scoresheet});
   }
 
   onNotesChange(e:React.ChangeEvent<HTMLInputElement>) {
-    this.setState({form_TeamNotes: e.target.value});
+    var scoresheet = this.state.team_scoresheet;
+    scoresheet.scoresheet.private_comment = e.target.value;
+    this.setState({team_scoresheet: scoresheet});
   }
 
   handleClear() {
@@ -105,36 +127,34 @@ export default class ManualScoring extends Component<IProps, IState> {
   }
 
   handleNoShow() {
-    
+    var scoresheet = this.state.team_scoresheet;
+    scoresheet.no_show = true;
+    this.setState({team_scoresheet: scoresheet});
   }
 
   async handleSubmit() {
     const match = this.props.matchData.find(e => e.match_number == this.state.form_MatchNumber);
     var update = match;
-    if (match.on_table1.team_number == this.state.form_TeamNumber) {
+    if (match.on_table1.team_number == this.state.team_scoresheet.scoresheet.team_id) {
       update.on_table1.score_submitted = true;
-    } else if (match.on_table2.team_number == this.state.form_TeamNumber) {
+    } else if (match.on_table2.team_number == this.state.team_scoresheet.scoresheet.team_id) {
       update.on_table2.score_submitted = true;
     } else {
       window.alert("Team does not exist in this match");
       return;
     }
 
-    const score_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, {
-      team_number: this.state.form_TeamNumber,
-      round: this.state.form_RoundNumber,
-      score: this.state.form_TeamScore,
-      gp: this.state.form_TeamGP,
-      notes: this.state.form_TeamNotes,
-      scored_by: this.props.scorer
-    });
+    var scoresheet = this.state.team_scoresheet;
+    scoresheet.referee = this.props.scorer;
+    this.setState({team_scoresheet: scoresheet});
 
+    const submit_result:any = await CJMS_POST_SCORE(scoresheet);
     const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
       match: this.state.form_MatchNumber,
       update: update
     });
 
-    if (score_result.success && match_result.success) {
+    if (submit_result.success && match_result.success) {
       alert("Successfully updated team");
       window.location.reload();
     }
@@ -171,7 +191,7 @@ export default class ManualScoring extends Component<IProps, IState> {
           
           <div className="buttons">
             {/* No Show */}
-            <button onClick={this.handleNoShow} disabled={(!this.state.form_TeamNumber || !this.state.form_RoundNumber)} className={`hoverButton ${(!this.state.form_TeamNumber || !this.state.form_RoundNumber) ? "" : "back-orange"}`}>No Show</button>
+            <button onClick={this.handleNoShow} disabled={(!this.state.team_scoresheet.scoresheet.team_id || !this.state.team_scoresheet.scoresheet.round)} className={`hoverButton ${(!this.state.team_scoresheet.scoresheet.team_id || !this.state.team_scoresheet.scoresheet.round) ? "" : "back-orange"}`}>No Show</button>
           </div>
 
           <div className="buttons">
@@ -181,7 +201,19 @@ export default class ManualScoring extends Component<IProps, IState> {
 
           <div className="submitButton">
             {/* Submit Button */}
-            <button onClick={this.handleSubmit} disabled={(!this.state.form_TeamNumber || !this.state.form_RoundNumber || !this.state.form_TeamScore || !this.state.form_TeamGP)} className={`hoverButton ${(!this.state.form_TeamNumber || !this.state.form_RoundNumber || !this.state.form_TeamScore || !this.state.form_TeamGP) ? "" : "back-green"}`}>Submit</button>
+            <button onClick={this.handleSubmit} disabled={
+              (
+                !this.state.team_scoresheet.scoresheet.team_id || 
+                !this.state.team_scoresheet.scoresheet.round || 
+                !this.state.team_scoresheet.score || 
+                !this.state.team_scoresheet.gp)
+            } className={
+              `hoverButton ${(
+                !this.state.team_scoresheet.scoresheet.team_id || 
+                !this.state.team_scoresheet.scoresheet.round || 
+                !this.state.team_scoresheet.score || 
+                !this.state.team_scoresheet.gp) ? "" : "back-green"}`
+            }>Submit</button>
           </div>
         </form>
       </div>

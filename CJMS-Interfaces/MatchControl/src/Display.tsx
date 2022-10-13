@@ -1,6 +1,6 @@
 import { comm_service, NavMenu, NavMenuContent } from "@cjms_interfaces/shared";
-import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { request_namespaces } from "@cjms_shared/services";
+import { CJMS_FETCH_GENERIC_GET, CJMS_REQUEST_EVENT, CJMS_REQUEST_MATCHES, CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { IEvent, IMatch, initIEvent, ITeam, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "./assets/stylesheets/loader.scss";
@@ -9,9 +9,9 @@ import { MatchControl } from "./components/MatchControl";
 interface IProps {}
 
 interface IState {
-  external_eventData:any;
-  external_teamData:any[];
-  external_matchData:any[];
+  external_eventData:IEvent;
+  external_teamData:ITeam[];
+  external_matchData:IMatch[];
 }
 
 export default class Display extends Component<IProps, IState> {
@@ -19,15 +19,15 @@ export default class Display extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      external_eventData: undefined,
+      external_eventData: initIEvent(),
       external_matchData: [],
       external_teamData: [],
     }
 
     comm_service.listeners.onEventUpdate(async () => {
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
 
       this.setEventData(eventData);
       this.setTeamData(teamData);
@@ -35,32 +35,33 @@ export default class Display extends Component<IProps, IState> {
     });
 
     comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
       this.setTeamData(teamData);
     });
 
     comm_service.listeners.onMatchUpdate(async () => {
-      const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
       this.setMatchData(matchData);
     });
   }
 
-  setEventData(data:any) {
-    this.setState({external_eventData:data.data});
+  setEventData(data:IEvent) {
+    this.setState({external_eventData:data});
   }
 
-  setTeamData(data:any) {
-    this.setState({external_teamData:data.data});
+  setTeamData(data:ITeam[]) {
+    this.setState({external_teamData:data});
   }
 
-  setMatchData(data:any) {
-    this.setState({external_matchData:data.data});
+  setMatchData(data:IMatch[]) {
+    this.setState({external_matchData:data});
   }
 
   async componentDidMount() {
-    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-    const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-    const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+    const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+    const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+
     this.setEventData(eventData);
     this.setTeamData(teamData);
     this.setMatchData(matchData);

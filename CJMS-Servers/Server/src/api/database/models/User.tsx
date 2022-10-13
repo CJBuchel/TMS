@@ -1,11 +1,12 @@
+import { IUser } from "@cjms_shared/services";
 import mongoose from "mongoose";
 
-export const UserSchema = new mongoose.Schema({
+export const UserSchema = new mongoose.Schema<IUser>({
   username: {type: String},
   password: {type: String}
 });
 
-export const UserModel = mongoose.model('User', UserSchema);
+export const UserModel = mongoose.model<IUser>('User', UserSchema);
 
 export function setupUsers() {
   const query = UserModel.find({username: 'admin'});

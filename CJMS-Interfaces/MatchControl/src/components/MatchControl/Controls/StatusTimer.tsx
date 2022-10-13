@@ -1,11 +1,12 @@
+import { IMatch } from "@cjms_shared/services";
 import { Component, ErrorInfo } from "react";
 
 interface IProps {
-  external_matchData:any[];
+  external_matchData:IMatch[];
 }
 
 interface IState {
-  next_match:any;
+  next_match?:IMatch;
   loop?:any;
   rawTTL:number;
   ttlTime:string;
@@ -40,8 +41,9 @@ export default class StatusTimer extends Component<IProps, IState> {
   }
 
   setNextMatch() {
-    if (this.props.external_matchData) {
-      this.setState({next_match: this.props.external_matchData.find(e => !e.complete)});
+    if (this.props.external_matchData.length > 0) {
+      const next_match = this.props.external_matchData.find(e => !e.complete);
+      this.setState({next_match: next_match});
     }
   }
 

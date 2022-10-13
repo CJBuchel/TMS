@@ -1,7 +1,7 @@
 import { Component } from "react";
 
-import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { CJMS_FETCH_GENERIC_GET, CJMS_REQUEST_EVENT, CJMS_REQUEST_MATCHES, CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { comm_service, IEvent, IMatch, initIEvent, initIMatch, initITeam, ITeam } from "@cjms_shared/services";
 
 import { NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
 import { ManualScoring } from './components/ManualScoring';
@@ -17,15 +17,15 @@ interface IProps {
 }
 
 interface IState {
-  external_eventData:any;
-  external_teamData:any[];
-  external_matchData:any[];
+  external_eventData:IEvent;
+  external_teamData:ITeam[];
+  external_matchData:IMatch[];
 
   match_locked:boolean;
 
-  table_matches:any[]; // list of matches for this table
-  loaded_match:any;
-  loaded_team:any;
+  table_matches:IMatch[]; // list of matches for this table
+  loaded_match:IMatch;
+  loaded_team:ITeam;
 }
 
 export default class Scoring extends Component<IProps,IState> {
@@ -34,21 +34,21 @@ export default class Scoring extends Component<IProps,IState> {
     super(props);
 
     this.state = {
-      external_eventData: undefined,
+      external_eventData: initIEvent(),
       external_teamData: [],
       external_matchData: [],
 
-      match_locked:true,
+      match_locked: true,
 
       table_matches: [],
-      loaded_match: undefined,
-      loaded_team: undefined
+      loaded_match: initIMatch(),
+      loaded_team: initITeam()
     }
 
     comm_service.listeners.onEventUpdate(async () => {
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
 
       this.setEventData(eventData);
       this.setTeamData(teamData);
@@ -57,12 +57,12 @@ export default class Scoring extends Component<IProps,IState> {
     });
 
     comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
       this.setTeamData(teamData);
     });
 
     comm_service.listeners.onMatchUpdate(async () => {
-      const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
       this.setMatchData(matchData);
     });
 
@@ -71,22 +71,22 @@ export default class Scoring extends Component<IProps,IState> {
     });
   }
 
-  setEventData(eventData:any) {
-    this.setState({external_eventData: eventData.data, match_locked: eventData.data?.match_locked});
+  setEventData(eventData:IEvent) {
+    this.setState({external_eventData: eventData, match_locked: eventData.match_locked});
   }
 
-  setTeamData(teamData:any) {
-    this.setState({external_teamData: teamData.data});
+  setTeamData(teamData:ITeam[]) {
+    this.setState({external_teamData: teamData});
   }
 
-  setMatchData(matchData:any) {
-    this.setState({external_matchData: matchData.data});
+  setMatchData(matchData:IMatch[]) {
+    this.setState({external_matchData: matchData});
   }
 
   processData() {
     // if (this.state.external_matchData == null || this.state.external_teamData == null) return;
-    const teamData = this.state.external_teamData;
-    const matchData = this.state.external_matchData;
+    const teamData:ITeam[] = this.state.external_teamData;
+    const matchData:IMatch[] = this.state.external_matchData;
     // Sort data then set the states
 
     if (matchData == null) {
@@ -122,10 +122,6 @@ export default class Scoring extends Component<IProps,IState> {
     const loaded_team_number = match_loaded?.on_table1.table == this.props.table ? match_loaded?.on_table1.team_number : match_loaded?.on_table2.team_number;
     const team_loaded = this.state.external_teamData.find(e => e.team_number == loaded_team_number);
 
-    console.log(match);
-    console.log(this.state.table_matches);
-    console.log(team_loaded);
-
     if (team_loaded != undefined && match_loaded != undefined) {
       this.setState({
         loaded_match: match_loaded,
@@ -135,9 +131,10 @@ export default class Scoring extends Component<IProps,IState> {
   }
 
   async componentDidMount() {
-    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-    const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-    const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+    const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+    const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+
     this.setEventData(eventData);
     this.setTeamData(teamData);
     this.setMatchData(matchData);

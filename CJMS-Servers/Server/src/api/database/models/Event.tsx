@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IEvent } from "@cjms_shared/services";
 
-export const EventSchema = new mongoose.Schema({
+export const EventSchema = new mongoose.Schema<IEvent>({
   event_name: {type: String, required: true},
   event_csv: {type: JSON, required: true},
 
@@ -12,4 +13,4 @@ export const EventSchema = new mongoose.Schema({
   capped: { size: 102400, max: 1, autoIndexId: true } // we only want one event document
 });
 
-export const EventModel = mongoose.model('Event', EventSchema);
+export const EventModel = mongoose.model<IEvent>('Event', EventSchema);

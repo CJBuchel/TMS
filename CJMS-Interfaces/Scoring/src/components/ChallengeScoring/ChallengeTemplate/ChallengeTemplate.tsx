@@ -1,4 +1,5 @@
 import { comm_service } from "@cjms_interfaces/shared";
+import { IEvent, IMatch, initITeam, ITeam } from "@cjms_shared/services";
 import { Component } from "react";
 import Select, { SingleValue } from "react-select";
 
@@ -10,16 +11,16 @@ interface SelectOption {
 }
 
 export interface MatchData {
-  table_matches:any[];
-  loaded_team:any;
-  loaded_match:any;
+  table_matches:IMatch[];
+  loaded_team:ITeam;
+  loaded_match:IMatch;
   match_locked:boolean;
 }
 
 export interface EventData {
-  eventData:any;
-  teamData:any[];
-  matchData:any[];
+  eventData:IEvent;
+  teamData:ITeam[];
+  matchData:IMatch[];
 }
 
 interface IProps {
@@ -93,13 +94,12 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
   }
 
   handleTeamChange(value:any) {
-    const team = this.props.event_data.teamData.find(e => e.team_number == value.value);
-    
+    const team:ITeam = this.props.event_data.teamData.find(e => e.team_number == value.value) || initITeam();
     var round = 0;
+  
     if (team.scores.length > 0) {
       for (const score of team.scores) {
-        console.log(score.roundIndex);
-        round = score.roundIndex >= round ? score.roundIndex + 1 : round;
+        round = score.scoresheet.round >= round ? score.scoresheet.round + 1 : round;
       }
     } else {
       round = 1;
@@ -107,8 +107,6 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
 
     this.handleRoundChange({value: round, label: `Auto Round ${round}`});
     
-    console.log(team);
-    console.log(round);
     this.setState({selected_team: value});
   }
 

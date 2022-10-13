@@ -1,3 +1,4 @@
+import { IEvent, IMatch, initIMatch, ITeam } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "../../assets/stylesheets/MatchControl.scss";
@@ -6,13 +7,13 @@ import { Controls } from "./Controls";
 import { MatchTable } from "./Table";
 
 interface IProps {
-  external_eventData:any;
-  external_teamData:any[];
-  external_matchData:any[];
+  external_eventData:IEvent;
+  external_teamData:ITeam[];
+  external_matchData:IMatch[];
 }
 
 interface IState {
-  selected_match:any;
+  selected_match?:IMatch;
 }
 
 export default class MatchControl extends Component<IProps, IState> {

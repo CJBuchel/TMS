@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-import { TeamScoreContainer } from "@cjms_shared/services";
+import { ITeamScore } from "@cjms_shared/services";
 
 const AnswerSchema = new mongoose.Schema({
   id: {type: String, required: true},
@@ -21,7 +21,7 @@ export const TeamScoresheetSchema = new mongoose.Schema({
 });
 
 // Scored Match Schema, has the main score, gp, notes. plus the scoresheet values
-export const TeamScoreSchema = new mongoose.Schema<TeamScoreContainer>({
+export const TeamScoreSchema = new mongoose.Schema<ITeamScore>({
   gp: {type: Number},
   referee: {type: String},
   no_show: {type: Boolean},

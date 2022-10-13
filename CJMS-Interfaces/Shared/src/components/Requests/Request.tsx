@@ -1,5 +1,8 @@
 // import * as req_namespaces from "./Namespaces";
-import { request_namespaces, TeamScoreContainer } from "@cjms_shared/services";
+import { IEvent } from "@cjms_shared/services";
+import { IJudgingSession } from "@cjms_shared/services";
+import { IMatch } from "@cjms_shared/services";
+import { request_namespaces, ITeamScore, ITeam } from "@cjms_shared/services";
 // const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
 
 export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any, noAlert:boolean = false): Promise<Response> {
@@ -60,6 +63,31 @@ export async function CJMS_POST_TIMER(timerStatus:string): Promise<Response> {
   return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, {timerState: timerStatus});
 }
 
-export async function CJMS_POST_SCORE(teamScore:TeamScoreContainer): Promise<Response> {
+// Post Score
+export async function CJMS_POST_SCORE(teamScore:ITeamScore): Promise<Response> {
   return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, teamScore);
+}
+
+// Get Teams
+export async function CJMS_REQUEST_TEAMS(noAlert:boolean = false): Promise<ITeam[]> {
+  const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, noAlert);
+  return teamData.data;
+}
+
+// Get Matches
+export async function CJMS_REQUEST_MATCHES(noAlert:boolean = false): Promise<IMatch[]> {
+  const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, noAlert);
+  return matchData.data;
+}
+
+// Get Event
+export async function CJMS_REQUEST_EVENT(noAlert:boolean = false): Promise<IEvent> {
+  const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, noAlert);
+  return eventData.data;
+}
+
+// Get Judging Sessions
+export async function CJMS_REQUEST_JUDGING_SESSIONS(noAlert:boolean = false): Promise<IJudgingSession[]> {
+  const judgingSessionData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_judging_sessions, noAlert);
+  return judgingSessionData.data;
 }

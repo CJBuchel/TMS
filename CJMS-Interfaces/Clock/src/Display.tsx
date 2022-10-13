@@ -1,21 +1,22 @@
-import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { CJMS_FETCH_GENERIC_GET, CJMS_REQUEST_EVENT, CJMS_REQUEST_MATCHES, CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { comm_service, IEvent, IMatch, ITeam, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 import "./assets/stylesheets/application.scss";
 import "./assets/stylesheets/loader.scss";
 import "./assets/stylesheets/Display.scss";
 import { Timer } from "./components/Timer";
+import { initIEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
 
 interface IProps {}
 
 interface IState {
-  external_eventData:any;
-  external_teamData:any[];
-  external_matchData:any[];
+  external_eventData:IEvent;
+  external_teamData:ITeam[];
+  external_matchData:IMatch[];
 
-  loaded_match:any;
-  team1:any;
-  team2:any;
+  loaded_match?:IMatch;
+  team1?:ITeam;
+  team2?:ITeam;
 
   blink_toggle:boolean;
   loop?:any;
@@ -27,21 +28,21 @@ export default class Display extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      external_eventData: undefined,
+      external_eventData: initIEvent(),
       external_matchData: [],
       external_teamData: [],
 
       loaded_match: undefined,
-      team1:undefined,
-      team2:undefined,
+      team1: undefined,
+      team2: undefined,
 
       blink_toggle:true
     }
 
     comm_service.listeners.onEventUpdate(async () => {
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
 
       this.setEventData(eventData);
       this.setTeamData(teamData);
@@ -73,16 +74,16 @@ export default class Display extends Component<IProps, IState> {
     }
   }
 
-  setEventData(data:any) {
-    this.setState({external_eventData:data.data});
+  setEventData(data:IEvent) {
+    this.setState({external_eventData:data});
   }
 
-  setTeamData(data:any) {
-    this.setState({external_teamData:data.data});
+  setTeamData(data:ITeam[]) {
+    this.setState({external_teamData:data});
   }
 
-  setMatchData(data:any) {
-    this.setState({external_matchData:data.data});
+  setMatchData(data:IMatch[]) {
+    this.setState({external_matchData:data});
   }
 
   setLoadedMatch(match:string) {
@@ -92,8 +93,8 @@ export default class Display extends Component<IProps, IState> {
       if (match_loaded != undefined && match_loaded != null) {
         this.setState({
           loaded_match: match_loaded,
-          team1: this.state.external_teamData.find((e:any) => e.team_number == match_loaded.on_table1.team_number),
-          team2: this.state.external_teamData.find((e:any) => e.team_number == match_loaded.on_table2.team_number),
+          team1: this.state.external_teamData.find(e => e.team_number == match_loaded.on_table1.team_number),
+          team2: this.state.external_teamData.find(e => e.team_number == match_loaded.on_table2.team_number),
         });
       } else {
         this.setState({
@@ -106,9 +107,10 @@ export default class Display extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-    const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-    const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+    const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+    const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+
     this.setEventData(eventData);
     this.setTeamData(teamData);
     this.setMatchData(matchData);
@@ -126,13 +128,13 @@ export default class Display extends Component<IProps, IState> {
 
   getMode() {
     var mode:any;
-    if (this.state.external_eventData?.match_locked) {
+    if (this.state.external_eventData.match_locked) {
       mode = <span style={{color: "red"}}>Match Locked</span>
     } else {
       mode = <span style={{color: "dodgerblue"}}>Match Free</span>
     }
 
-    return <span>{this.state.external_eventData?.event_name} | Mode: {mode}</span>
+    return <span>{this.state.external_eventData.event_name} | Mode: {mode}</span>
   }
 
   getMatch() {
@@ -148,7 +150,7 @@ export default class Display extends Component<IProps, IState> {
 
   getMatchNumber() {
     if (this.state.loaded_match) {
-      return <span style={{color: "green"}}>#{this.state.loaded_match?.match_number}</span>
+      return <span style={{color: "green"}}>#{this.state.loaded_match.match_number}</span>
     }
   }
 
@@ -169,7 +171,7 @@ export default class Display extends Component<IProps, IState> {
           <div className="column-left-team">
             <h1>
               {/* On Table: <span style={{color: `${this.state.loaded_match?.on_table1?.table}`}}>{this.state.loaded_match?.on_table1?.table}</span> */}
-              On Table: <span>{this.state.loaded_match?.on_table1?.table}</span>
+              On Table: <span>{this.state.loaded_match?.on_table1.table}</span>
             </h1>
             <h1 style={{color: "green"}}>{this.state.team1?.team_number} | {this.state.team1?.team_name}</h1>
           </div>
@@ -184,7 +186,7 @@ export default class Display extends Component<IProps, IState> {
           <div className="column-right-team">
             <h1>
               {/* On Table: <span style={{color: `${this.state.loaded_match?.on_table2?.table}`}}>{this.state.loaded_match?.on_table2?.table}</span> */}
-              On Table: <span>{this.state.loaded_match?.on_table2?.table}</span>
+              On Table: <span>{this.state.loaded_match?.on_table2.table}</span>
             </h1>
             <h1 style={{color: "green"}}>{this.state.team2?.team_number} | {this.state.team2?.team_name}</h1>
           </div>

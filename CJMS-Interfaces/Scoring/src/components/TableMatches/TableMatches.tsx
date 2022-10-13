@@ -1,10 +1,11 @@
+import { IMatch, ITeam } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "../../assets/MatchTable.scss";
 
 interface IProps {
-  external_teamData:any[];
-  external_tableMatches:any[];
+  external_teamData:ITeam[];
+  external_tableMatches:IMatch[];
 }
 
 interface IState {}

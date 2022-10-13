@@ -1,10 +1,11 @@
 import { comm_service } from "@cjms_interfaces/shared";
+import { IMatch } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "../../../assets/stylesheets/MatchTable.scss";
 
 interface IProps {
-  external_matchData:any[];
+  external_matchData:IMatch[];
   setSelectedMatch:Function;
 }
 

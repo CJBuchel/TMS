@@ -1,6 +1,6 @@
 import { comm_service } from "@cjms_interfaces/shared";
 import { CJMS_FETCH_GENERIC_POST, CJMS_POST_TIMER } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { request_namespaces } from "@cjms_shared/services";
+import { IEvent, IMatch, initIEvent, initIMatch, initITeam, ITeam, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "../../../assets/stylesheets/Controls.scss";
@@ -8,14 +8,14 @@ import MatchTimer from "./MatchTimer";
 import StatusTimer from "./StatusTimer";
 
 interface IProps {
-  external_eventData:any;
-  external_matchData:any[];
-  external_teamData:any[];
-  selected_match:any;
+  external_eventData:IEvent;
+  external_matchData:IMatch[];
+  external_teamData:ITeam[];
+  selected_match?:IMatch;
 }
 
 interface IState {
-  loaded_match:any;
+  loaded_match?:IMatch;
   blink_toggle:boolean;
   loop?:any;
 
@@ -131,8 +131,8 @@ export default class Controls extends Component<IProps, IState> {
   }
 
   setLoadedMatch(match:string) {
-    if (this.props.external_matchData) {
-      const match_loaded:any = this.props.external_matchData.find(e => e.match_number == match);
+    if (this.props.external_matchData.length > 0) {
+      const match_loaded = this.props.external_matchData.find(e => e.match_number == match);
       this.setState({loaded_match: match_loaded});
     }
   }
@@ -145,14 +145,14 @@ export default class Controls extends Component<IProps, IState> {
 
   getOnTable1() {
     if (this.props.selected_match && this.props.external_teamData) {
-      const team = this.props.external_teamData.find(e => e.team_number == this.props.selected_match?.on_table1?.team_number);
+      const team:ITeam = this.props.external_teamData.find(e => e.team_number == this.props.selected_match?.on_table1?.team_number) || initITeam();
       return <span>{this.props.selected_match?.on_table1?.table}: <span style={{color: "green"}}>{this.props.selected_match?.on_table1?.team_number} | {team?.team_name}</span></span>
     }
   }
 
   getOnTable2() {
     if (this.props.selected_match && this.props.external_teamData) {
-      const team = this.props.external_teamData.find(e => e.team_number == this.props.selected_match?.on_table2?.team_number);
+      const team:ITeam = this.props.external_teamData.find(e => e.team_number == this.props.selected_match?.on_table2?.team_number) || initITeam();
       return <span>{this.props.selected_match?.on_table2?.table}: <span style={{color: "green"}}>{this.props.selected_match?.on_table2?.team_number} | {team?.team_name}</span></span>
     }
   }
@@ -178,7 +178,7 @@ export default class Controls extends Component<IProps, IState> {
 
   getLoadedTable1() {
     if (this.state?.loaded_match) {
-      const team = this.props.external_teamData.find(e => e.team_number == this.state?.loaded_match?.on_table1?.team_number);
+      const team:ITeam = this.props.external_teamData.find(e => e.team_number == this.state?.loaded_match?.on_table1?.team_number) || initITeam();
       const table = this.state?.loaded_match?.on_table1?.table;
       return (
         <span style={{color: "orange"}}>
@@ -193,7 +193,7 @@ export default class Controls extends Component<IProps, IState> {
 
   getLoadedTable2() {
     if (this.state?.loaded_match) {
-      const team = this.props.external_teamData.find(e => e.team_number == this.state?.loaded_match?.on_table2?.team_number);
+      const team:ITeam = this.props.external_teamData.find(e => e.team_number == this.state?.loaded_match?.on_table2?.team_number) || initITeam();
       const table = this.state?.loaded_match?.on_table2?.table;
       return (
         <span style={{color: "orange"}}>
@@ -207,7 +207,7 @@ export default class Controls extends Component<IProps, IState> {
   }
 
   handleLoadMatch() {
-    if (this.props.selected_match) {
+    if (this.props.selected_match != undefined) {
       CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match: this.props.selected_match?.match_number});
     }
   }
@@ -217,7 +217,7 @@ export default class Controls extends Component<IProps, IState> {
   }
 
   handleSetMatchComplete(complete:boolean) {
-    if (this.state.loaded_match) {
+    if (this.state.loaded_match != undefined) {
       CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_complete, {complete:complete, match:this.state.loaded_match?.match_number});
     }
   }
@@ -294,7 +294,7 @@ export default class Controls extends Component<IProps, IState> {
           <button 
             onClick={() => this.handleLoadMatch()}
             className={`hoverButton ${(!this.state.loaded_match) ? "back-orange" : "back-half-transparent"} buttons`}
-            disabled={this.state.loaded_match}
+            disabled={(this.state.loaded_match != undefined)}
           >Load Match</button>
 
           <button 

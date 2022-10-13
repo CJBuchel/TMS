@@ -1,4 +1,3 @@
-// import * as req_namespaces from "./Namespaces";
 import { request_namespaces } from "@cjms_shared/services";
 // const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
 export async function CJMS_FETCH_GENERIC_POST(request, postData, noAlert = false) {
@@ -53,6 +52,27 @@ export async function CJMS_REQUEST_LOGIN(credentials) {
 export async function CJMS_POST_TIMER(timerStatus) {
     return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, { timerState: timerStatus });
 }
+// Post Score
 export async function CJMS_POST_SCORE(teamScore) {
     return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, teamScore);
+}
+// Get Teams
+export async function CJMS_REQUEST_TEAMS(noAlert = false) {
+    const teamData = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, noAlert);
+    return teamData.data;
+}
+// Get Matches
+export async function CJMS_REQUEST_MATCHES(noAlert = false) {
+    const matchData = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, noAlert);
+    return matchData.data;
+}
+// Get Event
+export async function CJMS_REQUEST_EVENT(noAlert = false) {
+    const eventData = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, noAlert);
+    return eventData.data;
+}
+// Get Judging Sessions
+export async function CJMS_REQUEST_JUDGING_SESSIONS(noAlert = false) {
+    const judgingSessionData = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_judging_sessions, noAlert);
+    return judgingSessionData.data;
 }

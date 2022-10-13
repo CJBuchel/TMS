@@ -3,14 +3,17 @@ import InfiniteTable from "../Containers/InfiniteTable";
 
 import "../../assets/application.scss";
 import "../../assets/loader.scss";
-import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { comm_service, IEvent, ITeam } from "@cjms_shared/services";
+import { CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { CJMS_REQUEST_EVENT } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { ITeamScore } from "@cjms_shared/services";
+import { initIEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
 
 interface IProps {}
 
 interface IState {
-  teamData:any;
-  eventData:any;
+  teamData:ITeam[];
+  eventData:IEvent;
   rounds:any[];
 }
 
@@ -20,28 +23,28 @@ export default class Display extends Component<IProps, IState> {
 
     this.state = {
       teamData: [],
-      eventData: [],
+      eventData: initIEvent(),
       rounds: []
     }
 
     comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
       this.setData(teamData, eventData);
     });
 
     comm_service.listeners.onEventUpdate(async () => {
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
       this.setData(teamData, eventData);
     });
   }
 
-  setData(teamData:any, eventData:any) {
-    this.setState({teamData: teamData.data, eventData: eventData.data});
+  setData(teamData:ITeam[], eventData:IEvent) {
+    this.setState({teamData: teamData, eventData: eventData});
 
     const rounds:any[] = [];
-    for (var i = 0; i < eventData.data.event_rounds; i++) {
+    for (var i = 0; i < eventData.event_rounds; i++) {
       rounds.push(`Round ${i+1}`);
     }
 
@@ -49,8 +52,8 @@ export default class Display extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+    const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
     this.setData(teamData, eventData);
   }
 
@@ -60,31 +63,29 @@ export default class Display extends Component<IProps, IState> {
   }
 
   tableData() {
-    // console.log(this.state.teamData);
-    const teamData = this.state.teamData;
+    const teamData:ITeam[] = this.state.teamData;
     const tableRowArray:any[] = [];
 
-    for (const team of Object.keys(teamData)) {
-      // console.log(teamData[team].team_name);
+    for (const team of teamData) {
       let tableRow:any[] = [];
-      const teamScores:any[] = teamData[team]?.scores;
+      const teamScores:ITeamScore[] = team.scores;
       const roundScores:any[] = [];
-      
-  
+
       for (let i = 0; i < this.state.rounds.length; i++) {
-        let scoreObject:any[] = teamScores.filter(scoreObj => scoreObj?.roundIndex == (i+1));
-        if (scoreObject.length == 1) {
-          roundScores.push(scoreObject[0]?.score || 0);
-        } else if (scoreObject.length > 1) {
+        const teamScore = teamScores.filter(scoreObj => scoreObj.scoresheet.round == (i+1));
+
+        if (teamScore.length == 1) {
+          roundScores.push(teamScore[0].score || 0);
+        } else if (teamScore.length > 1) {
           roundScores.push('Conflict');
-        } else if (scoreObject.length <= 0) {
+        } else if (teamScore.length <= 0) {
           roundScores.push('');
         } else {
           roundScores.push('Unknown');
         }
       }
       
-      tableRow.push(teamData[team].ranking, teamData[team].team_name);
+      tableRow.push(team.ranking, team.team_name);
       tableRow = tableRow.concat(roundScores);
       tableRowArray.push(tableRow);
     }

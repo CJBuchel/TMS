@@ -1,4 +1,4 @@
-import { comm_service, request_namespaces, TeamScoreContainer } from "@cjms_shared/services";
+import { comm_service, request_namespaces, ITeamScore } from "@cjms_shared/services";
 import { TeamModel } from "../../database/models/Team";
 import { RequestServer } from "../RequestServer";
 
@@ -25,7 +25,7 @@ export class Teams {
     });
 
     requestServer.get().post(request_namespaces.request_post_team_score, (req, res) => {
-      const teamScores:TeamScoreContainer = req.body;
+      const teamScores:ITeamScore = req.body;
 
       const update = {
         $push: {scores: teamScores}

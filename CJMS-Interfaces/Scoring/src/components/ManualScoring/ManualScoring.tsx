@@ -1,5 +1,5 @@
 import { CJMS_FETCH_GENERIC_GET, CJMS_FETCH_GENERIC_POST, CJMS_POST_SCORE } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { comm_service, request_namespaces, TeamScoreContainer } from "@cjms_shared/services";
+import { comm_service, request_namespaces, ITeamScore, IEvent, ITeam, IMatch, initIMatch, initITeamScore } from "@cjms_shared/services";
 import React, { Component } from "react";
 import Select, { SingleValue } from "react-select";
 
@@ -14,15 +14,15 @@ interface IProps {
   scorer:any;
   table:any;
 
-  eventData:any;
-  teamData:any[];
-  matchData:any[];
+  eventData:IEvent;
+  teamData:ITeam[];
+  matchData:IMatch[];
 }
 
 interface IState {
   // Internal Set data
   form_MatchNumber?:string;
-  team_scoresheet:TeamScoreContainer;
+  team_scoresheet:ITeamScore;
 
   options_teams?:SelectOption[];
   options_rounds?:SelectOption[];
@@ -41,23 +41,7 @@ export default class ManualScoring extends Component<IProps, IState> {
 
 
     this.state = {
-
-      team_scoresheet: {
-        gp: 0,
-        referee: '',
-        no_show: false,
-        score: 0,
-        valid_scoresheet: false,
-        scoresheet: {
-          team_id: '',
-          tournament_id: '',
-          round: 0,
-          answers: [],
-          private_comment: '',
-          public_comment: ''
-        }
-      },
-
+      team_scoresheet: initITeamScore(),
     }
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -133,7 +117,7 @@ export default class ManualScoring extends Component<IProps, IState> {
   }
 
   async handleSubmit() {
-    const match = this.props.matchData.find(e => e.match_number == this.state.form_MatchNumber);
+    const match = this.props.matchData.find(e => e.match_number == this.state.form_MatchNumber) || initIMatch();
     var update = match;
     if (match.on_table1.team_number == this.state.team_scoresheet.scoresheet.team_id) {
       update.on_table1.score_submitted = true;

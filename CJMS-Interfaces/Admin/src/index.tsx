@@ -1,8 +1,7 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import {Login, CJMS_Application, useToken, comm_service, NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
+import { Login, CJMS_Application, useToken, NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-// import { Setup } from './components/Setup';
 
 import "./assets/application.scss";
 import { Setup } from './components/Setup';

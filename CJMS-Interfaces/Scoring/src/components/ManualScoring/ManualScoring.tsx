@@ -1,4 +1,4 @@
-import { CJMS_FETCH_GENERIC_GET, CJMS_FETCH_GENERIC_POST, CJMS_POST_SCORE } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { comm_service, request_namespaces, ITeamScore, IEvent, ITeam, IMatch, initIMatch, initITeamScore } from "@cjms_shared/services";
 import React, { Component } from "react";
 import Select, { SingleValue } from "react-select";
@@ -132,8 +132,8 @@ export default class ManualScoring extends Component<IProps, IState> {
     scoresheet.referee = this.props.scorer;
     this.setState({team_scoresheet: scoresheet});
 
-    const submit_result:any = await CJMS_POST_SCORE(scoresheet);
-    const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
+    const submit_result:any = await Requests.CJMS_POST_SCORE(scoresheet);
+    const match_result:any = await Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
       match: this.state.form_MatchNumber,
       update: update
     });

@@ -1,4 +1,4 @@
-import { CJMS_FETCH_GENERIC_GET, CJMS_REQUEST_EVENT, CJMS_REQUEST_MATCHES, CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { comm_service, IEvent, IMatch, ITeam, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 import "./assets/stylesheets/application.scss";
@@ -40,9 +40,9 @@ export default class Display extends Component<IProps, IState> {
     }
 
     comm_service.listeners.onEventUpdate(async () => {
-      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
-      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
-      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+      const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
+      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+      const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
 
       this.setEventData(eventData);
       this.setTeamData(teamData);
@@ -50,12 +50,12 @@ export default class Display extends Component<IProps, IState> {
     });
 
     comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
+      const teamData:any = await Requests.CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
       this.setTeamData(teamData);
     });
 
     comm_service.listeners.onMatchUpdate(async () => {
-      const matchData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
+      const matchData:any = await Requests.CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
       this.setMatchData(matchData);
     });
 
@@ -107,9 +107,9 @@ export default class Display extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
-    const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
-    const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+    const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
+    const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+    const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
 
     this.setEventData(eventData);
     this.setTeamData(teamData);

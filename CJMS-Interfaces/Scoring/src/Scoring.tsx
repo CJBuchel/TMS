@@ -5,15 +5,15 @@ import { comm_service, IEvent, IMatch, initIEvent, initIMatch, initITeam, ITeam 
 
 import { NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
 import { ManualScoring } from './components/ManualScoring';
-import { Challenge } from "./components/ChallengeScoring";
+import { ChallengeScoring } from "./components/ChallengeScoring";
 
 import "./assets/ScoringApp.scss";
 import { AllMatches } from "./components/AllMatches";
 import { TableMatches } from "./components/TableMatches";
 
 interface IProps {
-  scorer:any;
-  table:any;
+  scorer:string;
+  table:string;
 }
 
 interface IState {
@@ -150,7 +150,7 @@ export default class Scoring extends Component<IProps,IState> {
             {
               name: "Challenge Scoring",
               path: "/",
-              linkTo:<Challenge 
+              linkTo:<ChallengeScoring 
                 scorer={this.props.scorer} 
                 table={this.props.table}
                 match_data={{

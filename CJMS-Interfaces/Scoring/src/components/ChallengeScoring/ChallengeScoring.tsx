@@ -1,9 +1,9 @@
-import { comm_service } from "@cjms_interfaces/shared";
 import { IEvent, IMatch, initITeam, ITeam } from "@cjms_shared/services";
 import { Component } from "react";
-import Select, { SingleValue } from "react-select";
+import Select from "react-select";
+import { Challenges } from "./Containers";
 
-import "../../../assets/Challenge.scss";
+import "../../assets/Challenge.scss";
 
 interface SelectOption {
   value:any;
@@ -24,8 +24,8 @@ export interface EventData {
 }
 
 interface IProps {
-  scorer:any;
-  table:any;
+  scorer:string;
+  table:string;
 
   match_data:MatchData;
   event_data:EventData;
@@ -41,7 +41,7 @@ interface IState {
   calculated_score:number;
 }
 
-export default class ChallengeTemplate extends Component<IProps,IState> {
+export default class ChallengeScoring extends Component<IProps,IState> {
   constructor(props:any) {
     super(props);
 
@@ -152,7 +152,7 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
     return(
       <div className="challenge-scoring">
         {this.renderScoreBar()}
-        <p>Big REE</p>
+        <Challenges/>
       </div>
     );
   }

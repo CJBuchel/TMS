@@ -4,7 +4,6 @@
   "main": "lib/index.js",
   "license": "MIT",
   "dependencies": {
-    "@ausfll/ausfll-score-calculator": "^22.0.0",
     "@cjms_shared/services": "1.0.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",

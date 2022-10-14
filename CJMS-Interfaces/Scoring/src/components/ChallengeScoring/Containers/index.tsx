@@ -1,1 +1,1 @@
-export { default as ChallengeTemplate } from "./ChallengeTemplate";
+export { default as Challenges } from "./Challenges";

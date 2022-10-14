@@ -8,4 +8,4 @@ declare type BaseProps = {
     errors?: string[];
 };
 export declare const Question: ({ question, value, errors, ...rest }: BaseProps) => JSX.Element;
-export {};
+export default Question;

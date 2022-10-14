@@ -4,8 +4,6 @@ import Login from "./components/Login/Login";
 import { comm_service } from "@cjms_shared/services";
 import * as Requests from "./components/Requests/Request";
 import NavMenu from "./components/Navigation/NavMenu";
-// import { Question } from "./components/Scoring/Question";
+import { Question } from "./components/Scoring/Question";
 export * from "./components/Requests/Request";
-export { CJMS_Application, Login, comm_service, useToken, Requests, NavMenu,
-// Question
- };
+export { CJMS_Application, Login, comm_service, useToken, Requests, NavMenu, Question };

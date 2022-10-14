@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Calculator, {CategoricalScore, NumericScore, Score, ScoreAnswer} from "@ausfll/ausfll-score-calculator";
+import React, { useEffect, useState, Component } from "react";
+// import Calculator, {CategoricalScore, NumericScore, Score, ScoreAnswer} from "ausfll-score-calculator";
+import Calculator from "ausfll-score-calculator";
+import { CategoricalScore, NumericScore, Score, ScoreAnswer } from "ausfll-score-calculator/dist/game-types";
 
 import TextField from "@mui/material/TextField";
 import TableRow from "@mui/material/TableRow";
@@ -7,7 +9,6 @@ import TableCell from "@mui/material/TableCell";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-// import Tooltip from "@mui/material/Tooltip";
 
 type BaseProps = {
   question: Score;
@@ -111,5 +112,6 @@ export const Question = ({question, value, errors, ...rest}: BaseProps) => {
     />
   );
 }
+
 
 export default Question;

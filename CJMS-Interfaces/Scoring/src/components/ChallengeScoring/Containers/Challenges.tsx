@@ -29,7 +29,7 @@ export default class Challenges extends Component<IProps, IState> {
 
     this.state = {
       data:[],
-      game: Calculator.SuperPowered,
+      game: Calculator.RePlay,
       status: {score:0, validationErrors:[
         { message: `${Calculator.SuperPowered.missions.length} unanswered questions!` }
       ]}

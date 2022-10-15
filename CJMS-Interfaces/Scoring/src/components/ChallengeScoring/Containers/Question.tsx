@@ -37,7 +37,7 @@ const NumericQuestion = ({question, value, errors, onChange}: NumericProps) => {
         {onChange ? (
           <TextField
             type="number"
-            value={Number(value) ?? question.defaultValue}
+            value={value ?? question.defaultValue}
             InputProps={{
               inputProps: { max: question.max, min: question.min },
             }}
@@ -99,7 +99,7 @@ export const Question = ({question, value, errors, ...rest}: BaseProps) => {
   return Calculator.GIsCategoricalScore(question) ? (
     <CategoricalQuestion
       question={question}
-      value={value}
+      value={value as string}
       errors={errors?.filter((x,i,a) => a.indexOf(x) === i)}
       {...rest}
     />

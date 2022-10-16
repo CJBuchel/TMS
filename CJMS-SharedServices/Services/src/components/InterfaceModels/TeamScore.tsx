@@ -15,7 +15,7 @@ export interface ITeamScoresheet {
 
 export interface ITeamScore {
   // TMS Specific data
-  gp: number;
+  gp: string;
   referee: string;
   no_show: boolean;
   score: number;
@@ -27,7 +27,7 @@ export interface ITeamScore {
 
 export function initITeamScore(instance?:ITeamScore) {
   const defaults:ITeamScore = {
-    gp: 0,
+    gp: '',
     referee: '',
     no_show: false,
     score: 0,

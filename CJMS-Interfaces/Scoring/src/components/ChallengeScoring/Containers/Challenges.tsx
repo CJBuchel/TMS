@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import "../../../assets/Challenge.scss";
 
@@ -7,6 +7,9 @@ import TableBody from "@mui/material/TableBody";
 import Question from "./Question";
 import Calculator from "ausfll-score-calculator";
 import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game, ScoreAnswer } from "ausfll-score-calculator/dist/game-types";
+import { Button, TableCell, TableRow, TextField } from "@mui/material";
+import { margin } from "@mui/system";
+import { initITeamScore, ITeamScore } from "@cjms_shared/services";
 
 
 type Status = {
@@ -15,12 +18,19 @@ type Status = {
 }
 
 
-interface IProps {}
+interface IProps {
+  handleScoreSubmit:Function;
+  handleScoreChange:Function;
+}
 
 interface IState {
   data:ScoreResult[];
   status:Status;
   game:Game;
+  publicComment:string;
+  privateComment:string;
+
+  team_scoresheet:ITeamScore;
 }
 
 export default class Challenges extends Component<IProps, IState> {
@@ -29,15 +39,51 @@ export default class Challenges extends Component<IProps, IState> {
 
     this.state = {
       data:[],
-      game: Calculator.RePlay,
+      game: Calculator.SuperPowered,
       status: {score:0, validationErrors:[
         { message: `${Calculator.SuperPowered.missions.length} unanswered questions!` }
-      ]}
+      ]},
+
+      publicComment: '',
+      privateComment: '',
+
+      team_scoresheet: initITeamScore()
     }
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.setDefaults = this.setDefaults.bind(this);
+  }
+
+  async handleSubmit() {
+    // Complete validation and score once more before submitting
+    const val = this.state.game.validate(this.state.data);
+    const sc = this.state.game.score(this.state.data);
+
+    if (val.length > 0) {
+      alert("Cannot submit score, invalid scoresheet");
+      return;
+    }
+  
+    var scoresheet:ITeamScore = initITeamScore();
+    scoresheet.score = sc;
+    scoresheet.gp = this.state.data.find((e) => e.id.startsWith("gp"))?.answer || "";
+    scoresheet.scoresheet.public_comment = this.state.publicComment;
+    scoresheet.scoresheet.private_comment = this.state.privateComment;
+    scoresheet.scoresheet.answers = this.state.data.map(({id, answer}) => ({id: id, answer: answer}));
+
+    this.props.handleScoreSubmit(scoresheet);
   }
 
   componentDidMount(): void {
     this.setDefaults();
+  }
+
+  setPublicComment(e:string) {
+    this.setState({publicComment: e});
+  }
+
+  setPrivateComment(e:string) {
+    this.setState({privateComment: e});
   }
 
   setDefaults(e?:React.MouseEvent<HTMLButtonElement>) :ScoreResult[] | undefined {
@@ -64,12 +110,10 @@ export default class Challenges extends Component<IProps, IState> {
     }
 
     this.setState({status: newStatus})
+    this.props.handleScoreChange(newStatus.score);
   }
 
   setResponse(id:Score["id"], answer:ScoreResult["answer"]) {
-    console.log(id);
-    console.log(answer);
-
     const d = this.state.data.map((r) => {
       if (r.id !== id) return r;
       if (Calculator.GIsNumericScore(r)) {
@@ -83,9 +127,11 @@ export default class Challenges extends Component<IProps, IState> {
     this.updateScore(d);
   }
 
-  getQuestions() {
+  getQuestion(prefix:string) {
     return (
-      this.state.game.scores.map((q) => (
+      this.state.game.scores
+      .filter((q) => q.id.startsWith(prefix))
+      .map((q) => (
         <Question
           key={q.id}
           question={q}
@@ -103,19 +149,88 @@ export default class Challenges extends Component<IProps, IState> {
           }
         />
       ))
-    )
+    );
+  }
+
+  getMissions() {
+    return (
+      <>
+        {this.state.game.missions
+          .map(({title, prefix, image}, i) => (
+            <Fragment key={prefix}>
+              <TableRow sx={{background: 'white'}}>
+                <TableCell 
+                  sx={i > 0 ? {borderBottom: 'none', borderTop: '1px solid', borderTopLeftRadius: '20px'} : {borderBottom: 'none', borderTopLeftRadius: '20px'}}
+                  colSpan={2}
+                  component="th"
+                >
+                  <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <img 
+                      src={image ?? "https://www.firstlegoleague.org/sites/default/files/color/fll_theme-474df67b/fll-logo-horizontal.png"}
+                      style={{marginRight: 16, height: 64, width: 'auto'}}
+                    />
+                    <h4>{title}</h4>
+                  </div>
+                </TableCell>
+              </TableRow>
+              {this.getQuestion(prefix)}
+            </Fragment>
+          ))
+        }
+      </>
+    );
+  }
+
+  getComments() {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column', background: 'white', paddingTop: 10}}>
+        <TextField
+          label="Public comment"
+          sx={{marginBottom: 5}}
+          value={this.state.publicComment}
+          onChange={(e) => this.setPublicComment(e.target.value)}
+          placeholder="Enter a comment that the team might see - stay positive and constructive!"
+          maxRows={4}
+          multiline
+        />
+        <TextField
+          label="Private comment"
+          sx={{marginBottom: 5}}
+          value={this.state.privateComment}
+          onChange={(e) => this.setPrivateComment(e.target.value)}
+          placeholder="Enter a comment for other referees/judges - the team cannot see this one."
+          maxRows={4}
+          multiline
+        />
+      </div>
+    );
   }
 
   render() {
-    console.log(this.state.status.score);
-    if (this.state.status.validationErrors.length > 0) {
-      console.log(this.state.status.validationErrors);
-    }
     return(
-      <div>
+      <div className="challenges-container">
         <Table>
           <TableBody>
-            {this.getQuestions()}
+            {this.getMissions()}
+          </TableBody>
+        </Table>
+        {this.getComments()}
+
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <div className="challenge-buttons">
+                  <button onClick={this.handleSubmit} disabled={this.state.status.validationErrors.length > 0} className={`hoverButton ${this.state.status.validationErrors.length > 0 ? "" : "back-green"}`}>Submit</button>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <div className="challenge-buttons">
+                  <button onClick={this.setDefaults} className="hoverButton back-red">Clear</button>
+                </div>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </div>

@@ -22,7 +22,7 @@ export const TeamScoresheetSchema = new mongoose.Schema({
 
 // Scored Match Schema, has the main score, gp, notes. plus the scoresheet values
 export const TeamScoreSchema = new mongoose.Schema<ITeamScore>({
-  gp: {type: Number},
+  gp: {type: String},
   referee: {type: String},
   no_show: {type: Boolean},
   score: {type: Number},

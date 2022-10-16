@@ -9,6 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { border, fontFamily } from "@mui/system";
 
 type BaseProps = {
   question: Score;
@@ -24,16 +25,16 @@ type NumericProps = BaseProps & {
 
 const NumericQuestion = ({question, value, errors, onChange}: NumericProps) => {
   return (
-    <TableRow className="">
-      <TableCell className="">
-        <div className="">
+    <TableRow>
+      <TableCell sx={errors?.length ? {border: 'none', fontWeight: 'bold'} : {border: 'none'}}>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
           <span>{question.label}</span>
           {errors?.map((e, i) => (
-            <span key={i}>{e}</span>
+            <span style={errors?.length ? {border: 'none', fontWeight: 'bold', color: 'red'} : {border: 'none'}} key={i}>{e}</span>
           ))}
         </div>
       </TableCell>
-      <TableCell className="">
+      <TableCell sx={{border: 'none', display: 'flex', flexWrap: 'wrap'}}>
         {onChange ? (
           <TextField
             type="number"
@@ -69,13 +70,16 @@ const CategoricalQuestion = ({question, value, onChange, errors}: CategoricalPro
   }, [value]);
 
   return (
-    <TableRow className="">
-      <TableCell className="">
-        <div className="">
+    <TableRow sx={{background: 'white'}}>
+      <TableCell sx={errors?.length ? {border: 'none', fontWeight: 'bold'} : {border: 'none'}}>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
           <span>{question.label}</span>
+          {errors?.map((e, i) => (
+            <span style={errors?.length ? {border: 'none', fontWeight: 'bold', color: 'red'} : {border: 'none'}} key={i}>{e}</span>
+          ))}
         </div>
       </TableCell>
-      <TableCell className="">
+      <TableCell sx={{border: 'none', display: 'flex', flexWrap: 'wrap'}}>
         <RadioGroup
           row
           value={val ?? null}
@@ -112,6 +116,7 @@ export const Question = ({question, value, errors, ...rest}: BaseProps) => {
     />
   );
 }
+
 
 
 export default Question;

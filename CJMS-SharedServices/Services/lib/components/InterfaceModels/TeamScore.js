@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initITeamScore = void 0;
 function initITeamScore(instance) {
     const defaults = {
-        gp: 0,
+        gp: '',
         referee: '',
         no_show: false,
         score: 0,

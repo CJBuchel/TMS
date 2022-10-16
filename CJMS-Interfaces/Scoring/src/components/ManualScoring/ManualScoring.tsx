@@ -1,4 +1,4 @@
-import { Requests } from "@cjms_interfaces/shared";
+import { CJMS_POST_SCORE, CJMS_FETCH_GENERIC_POST } from "@cjms_interfaces/shared";
 import { comm_service, request_namespaces, ITeamScore, IEvent, ITeam, IMatch, initIMatch, initITeamScore } from "@cjms_shared/services";
 import React, { Component } from "react";
 import Select, { SingleValue } from "react-select";
@@ -30,9 +30,9 @@ interface IState {
 }
 
 const options_gp = [
-  {value: 2, label: "Developing 2"},
-  {value: 3, label: "Accomplished 3"},
-  {value: 4, label: "Exceeds 4"}
+  {value: "2 - Developing", label: "2 - Developing"},
+  {value: "3 - Accomplished", label: "3 - Accomplished"},
+  {value: "4 - Exceeds", label: "4 - Exceeds"}
 ];
 
 export default class ManualScoring extends Component<IProps, IState> {
@@ -132,8 +132,8 @@ export default class ManualScoring extends Component<IProps, IState> {
     scoresheet.referee = this.props.scorer;
     this.setState({team_scoresheet: scoresheet});
 
-    const submit_result:any = await Requests.CJMS_POST_SCORE(scoresheet);
-    const match_result:any = await Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
+    const submit_result:any = await CJMS_POST_SCORE(scoresheet);
+    const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
       match: this.state.form_MatchNumber,
       update: update
     });

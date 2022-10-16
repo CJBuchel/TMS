@@ -1,5 +1,5 @@
 import { comm_service } from "@cjms_interfaces/shared";
-import { CJMS_FETCH_GENERIC_POST, CJMS_POST_TIMER } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { IEvent, IMatch, initIEvent, initIMatch, initITeam, ITeam, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
@@ -208,34 +208,34 @@ export default class Controls extends Component<IProps, IState> {
 
   handleLoadMatch() {
     if (this.props.selected_match != undefined) {
-      CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match: this.props.selected_match?.match_number});
+      Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match: this.props.selected_match?.match_number});
     }
   }
 
   handleUnloadMatch() {
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match:""});
+    Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match:""});
   }
 
   handleSetMatchComplete(complete:boolean) {
     if (this.state.loaded_match != undefined) {
-      CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_complete, {complete:complete, match:this.state.loaded_match?.match_number});
+      Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_complete, {complete:complete, match:this.state.loaded_match?.match_number});
     }
   }
 
   handlePreStartMatch() {
-    CJMS_POST_TIMER("prestart");
+    Requests.CJMS_POST_TIMER("prestart");
   }
 
   handleStartMatch() {
-    CJMS_POST_TIMER("start");
+    Requests.CJMS_POST_TIMER("start");
   }
 
   handleAbortMatch() {
-    CJMS_POST_TIMER("stop");
+    Requests.CJMS_POST_TIMER("stop");
   }
 
   handleReloadMatch() {
-    CJMS_POST_TIMER("reload");
+    Requests.CJMS_POST_TIMER("reload");
     this.setState({timerState: "default"});
     this.setCurrentTime(150);
   }

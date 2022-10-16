@@ -1,19 +1,19 @@
 import { Component } from "react";
 
-import { CJMS_FETCH_GENERIC_GET, CJMS_REQUEST_EVENT, CJMS_REQUEST_MATCHES, CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { comm_service, IEvent, IMatch, initIEvent, initIMatch, initITeam, ITeam } from "@cjms_shared/services";
 
 import { NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
 import { ManualScoring } from './components/ManualScoring';
-import { Challenge } from "./components/ChallengeScoring";
+import { ChallengeScoring } from "./components/ChallengeScoring";
 
 import "./assets/ScoringApp.scss";
 import { AllMatches } from "./components/AllMatches";
 import { TableMatches } from "./components/TableMatches";
 
 interface IProps {
-  scorer:any;
-  table:any;
+  scorer:string;
+  table:string;
 }
 
 interface IState {
@@ -46,9 +46,9 @@ export default class Scoring extends Component<IProps,IState> {
     }
 
     comm_service.listeners.onEventUpdate(async () => {
-      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
-      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
-      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+      const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
+      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+      const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
 
       this.setEventData(eventData);
       this.setTeamData(teamData);
@@ -57,12 +57,12 @@ export default class Scoring extends Component<IProps,IState> {
     });
 
     comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
       this.setTeamData(teamData);
     });
 
     comm_service.listeners.onMatchUpdate(async () => {
-      const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+      const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
       this.setMatchData(matchData);
     });
 
@@ -131,9 +131,9 @@ export default class Scoring extends Component<IProps,IState> {
   }
 
   async componentDidMount() {
-    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
-    const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
-    const matchData:IMatch[] = await CJMS_REQUEST_MATCHES(true);
+    const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
+    const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+    const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
 
     this.setEventData(eventData);
     this.setTeamData(teamData);
@@ -150,7 +150,7 @@ export default class Scoring extends Component<IProps,IState> {
             {
               name: "Challenge Scoring",
               path: "/",
-              linkTo:<Challenge 
+              linkTo:<ChallengeScoring 
                 scorer={this.props.scorer} 
                 table={this.props.table}
                 match_data={{

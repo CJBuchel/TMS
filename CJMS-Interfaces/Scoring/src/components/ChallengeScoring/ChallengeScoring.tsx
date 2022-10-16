@@ -1,9 +1,10 @@
-import { comm_service } from "@cjms_interfaces/shared";
-import { IEvent, IMatch, initITeam, ITeam } from "@cjms_shared/services";
+import { IEvent, IMatch, initITeam, initITeamScore, ITeam, ITeamScore, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
-import Select, { SingleValue } from "react-select";
+import Select from "react-select";
+import { Challenges } from "./Containers";
 
-import "../../../assets/Challenge.scss";
+import "../../assets/Challenge.scss";
+import { CJMS_FETCH_GENERIC_POST, CJMS_POST_SCORE } from "@cjms_interfaces/shared";
 
 interface SelectOption {
   value:any;
@@ -24,8 +25,8 @@ export interface EventData {
 }
 
 interface IProps {
-  scorer:any;
-  table:any;
+  scorer:string;
+  table:string;
 
   match_data:MatchData;
   event_data:EventData;
@@ -41,7 +42,7 @@ interface IState {
   calculated_score:number;
 }
 
-export default class ChallengeTemplate extends Component<IProps,IState> {
+export default class ChallengeScoring extends Component<IProps,IState> {
   constructor(props:any) {
     super(props);
 
@@ -54,6 +55,9 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
       selected_team: {value: '', label: ''},
       selected_match: ''
     }
+
+    this.handleScoreChange = this.handleScoreChange.bind(this);
+    this.handleScoreSubmit = this.handleScoreSubmit.bind(this);
   }
 
   setOptions() {
@@ -89,6 +93,44 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
     this.setOptions();
   }
 
+  async handleScoreSubmit(scoresheet:ITeamScore) {
+    // score reqs
+    scoresheet.referee = this.props.scorer;
+    scoresheet.valid_scoresheet = true;
+
+    // team specifics
+    scoresheet.scoresheet.team_id = this.state.selected_team.value;
+    scoresheet.scoresheet.round = this.state.selected_round.value;
+
+    // Get the current match and update it to complete/submitted for this table
+    const match = this.props.match_data.loaded_match;
+    var match_update = match;
+    if (match.on_table1.team_number == scoresheet.scoresheet.team_id) {
+      match_update.on_table1.score_submitted = true;
+    } else if (match.on_table2.team_number == scoresheet.scoresheet.team_id) {
+      match_update.on_table2.score_submitted = true;
+    } else {
+      window.alert("Team does not exist in this match");
+      return;
+    }
+
+    const submit_result:any = await CJMS_POST_SCORE(scoresheet);
+    const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
+      match: match.match_number,
+      update: match_update
+    });
+
+    // Return check from server
+    if (submit_result.success && match_result.success) {
+      alert("Successfully updated team");
+      window.location.reload();
+    }
+  }
+
+  handleScoreChange(score:number) {
+    this.setState({calculated_score: score});
+  }
+
   handleRoundChange(value:any) {
     this.setState({selected_round: value});
   }
@@ -106,7 +148,6 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
     }
 
     this.handleRoundChange({value: round, label: `Auto Round ${round}`});
-    
     this.setState({selected_team: value});
   }
 
@@ -152,7 +193,7 @@ export default class ChallengeTemplate extends Component<IProps,IState> {
     return(
       <div className="challenge-scoring">
         {this.renderScoreBar()}
-        <p>Big REE</p>
+        <Challenges handleScoreSubmit={this.handleScoreSubmit} handleScoreChange={this.handleScoreChange}/>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import { CJMS_FETCH_GENERIC_POST } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
@@ -45,10 +45,10 @@ export default class Users extends Component<IProps, IState> {
 
   handleSubmit() {
     console.log("Submitted");
-    this.state.admin.length > 0 ? CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "admin", password: this.state.admin}) : '';
-    this.state.scorekeeper.length > 0 ? CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "scorekeeper", password: this.state.scorekeeper}, true) : '';
-    this.state.referee.length > 0 ? CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "referee", password: this.state.referee}, true) : '';
-    this.state.head_referee.length > 0 ? CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "head_referee", password: this.state.head_referee}, true) : '';
+    this.state.admin.length > 0 ? Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "admin", password: this.state.admin}) : '';
+    this.state.scorekeeper.length > 0 ? Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "scorekeeper", password: this.state.scorekeeper}, true) : '';
+    this.state.referee.length > 0 ? Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "referee", password: this.state.referee}, true) : '';
+    this.state.head_referee.length > 0 ? Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_user_update, {user: "head_referee", password: this.state.head_referee}, true) : '';
   }
 
   render() {

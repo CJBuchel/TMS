@@ -10,7 +10,7 @@ export interface ITeamScoresheet {
     public_comment: string;
 }
 export interface ITeamScore {
-    gp: number;
+    gp: string;
     referee: string;
     no_show: boolean;
     score: number;
@@ -18,7 +18,7 @@ export interface ITeamScore {
     scoresheet: ITeamScoresheet;
 }
 export declare function initITeamScore(instance?: ITeamScore): {
-    gp: number;
+    gp: string;
     referee: string;
     no_show: boolean;
     score: number;

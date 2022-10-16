@@ -1,4 +1,4 @@
-import { CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { comm_service, request_namespaces } from "@cjms_shared/services";
 import React, { Component } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -54,11 +54,11 @@ export default class Setup extends Component<IProps, IState> {
 
   async componentDidMount() {
     // sessionStorage.clear();
-    const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+    const data:any = await Requests.CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
     this.setTableOptions(data);
     
     comm_service.listeners.onEventUpdate(async () => {
-      const data:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      const data:any = await Requests.CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
       this.setTableOptions(data);
     });
   }

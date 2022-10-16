@@ -4,8 +4,7 @@ import InfiniteTable from "../Containers/InfiniteTable";
 import "../../assets/application.scss";
 import "../../assets/loader.scss";
 import { comm_service, IEvent, ITeam } from "@cjms_shared/services";
-import { CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared/lib/components/Requests/Request";
-import { CJMS_REQUEST_EVENT } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { ITeamScore } from "@cjms_shared/services";
 import { initIEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
 
@@ -28,14 +27,14 @@ export default class Display extends Component<IProps, IState> {
     }
 
     comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
-      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+      const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
       this.setData(teamData, eventData);
     });
 
     comm_service.listeners.onEventUpdate(async () => {
-      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
-      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+      const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
       this.setData(teamData, eventData);
     });
   }
@@ -52,8 +51,8 @@ export default class Display extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
-    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+    const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+    const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
     this.setData(teamData, eventData);
   }
 

@@ -2,7 +2,7 @@ import React, {ChangeEvent, Component, InputHTMLAttributes, useState} from "reac
 import Papa from "papaparse";
 
 import "../../assets/Setup.scss"
-import { CJMS_FETCH_GENERIC_POST, CJMS_FETCH_GENERIC_GET } from "@cjms_interfaces/shared/lib/components/Requests/Request";
+import { Requests } from "@cjms_interfaces/shared";
 import { request_namespaces } from "@cjms_shared/services";
 
 interface IProps {}
@@ -32,12 +32,12 @@ export default class Setup extends Component<IProps, IState> {
       eventName:this.state.eventName,
     }
 
-    CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_setup, submission);
+    Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_setup, submission);
     window.location.reload();
   }
 
   sendPurge() {
-    CJMS_FETCH_GENERIC_GET(request_namespaces.request_post_purge);
+    Requests.CJMS_FETCH_GENERIC_GET(request_namespaces.request_post_purge);
   }
 
   updateCSV(result:any) {

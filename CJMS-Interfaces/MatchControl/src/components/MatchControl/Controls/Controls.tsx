@@ -1,4 +1,4 @@
-import { comm_service } from "@cjms_interfaces/shared";
+import { CJMS_POST_MATCH_UPDATE, comm_service } from "@cjms_interfaces/shared";
 import { Requests } from "@cjms_interfaces/shared";
 import { IEvent, IMatch, initIEvent, initIMatch, initITeam, ITeam, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
@@ -206,6 +206,16 @@ export default class Controls extends Component<IProps, IState> {
     }
   }
 
+  handleDeferMatch(defer:boolean) {
+    console.log("Defer match");
+    if (this.props.selected_match) {
+      var match_update = this.props.selected_match;
+      match_update.deferred = defer;
+      CJMS_POST_MATCH_UPDATE(match_update.match_number, match_update);
+      comm_service.senders.sendEventUpdateEvent(true);
+    }
+  }
+
   handleLoadMatch() {
     if (this.props.selected_match != undefined) {
       Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:true, match: this.props.selected_match?.match_number});
@@ -303,6 +313,9 @@ export default class Controls extends Component<IProps, IState> {
             disabled={(!this.state.loaded_match || (this.state.timerState != 'default' && this.state.timerState != 'armed' && this.state.timerState != 'ended'))}
           >Unload Match</button>
         </div>
+
+        <div className="buttons">
+        </div>
       </>
     );
   }
@@ -336,6 +349,15 @@ export default class Controls extends Component<IProps, IState> {
               disabled={!this.state.loaded_match}
             >Set Complete</button>
           </div>
+
+          <div className="defer_button">
+            <button 
+              onClick={() => this.handleDeferMatch(!this.props.selected_match?.deferred || false)}
+              className={`hoverButton ${(!this.state.loaded_match && this.props.selected_match != undefined) ? "back-cyan" : "back-half-transparent"} buttons`}
+              disabled={(this.state.loaded_match != undefined)}
+            >{this.props.selected_match?.deferred ? "Schedule" : "Defer"}</button>
+          </div>
+          
         </div>
 
         <div className="timer_controls">

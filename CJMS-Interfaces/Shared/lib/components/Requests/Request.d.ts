@@ -6,8 +6,10 @@ export declare function CJMS_FETCH_GENERIC_POST(request: RequestInfo, postData: 
 export declare function CJMS_FETCH_GENERIC_GET(request: any, noAlert?: boolean): Promise<Response>;
 export declare function CJMS_REQUEST_LOGIN(credentials: any): Promise<Response>;
 export declare function CJMS_POST_TIMER(timerStatus: string): Promise<Response>;
+export declare function CJMS_POST_EVENT(event: IEvent): Promise<Response>;
 export declare function CJMS_POST_SCORE(teamScore: ITeamScore): Promise<Response>;
 export declare function CJMS_REQUEST_TEAMS(noAlert?: boolean): Promise<ITeam[]>;
 export declare function CJMS_REQUEST_MATCHES(noAlert?: boolean): Promise<IMatch[]>;
+export declare function CJMS_POST_MATCH_UPDATE(match_number: string, match_update: IMatch): Promise<Response>;
 export declare function CJMS_REQUEST_EVENT(noAlert?: boolean): Promise<IEvent>;
 export declare function CJMS_REQUEST_JUDGING_SESSIONS(noAlert?: boolean): Promise<IJudgingSession[]>;

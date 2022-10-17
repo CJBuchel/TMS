@@ -15,7 +15,7 @@ export interface IMatch {
   on_table2: OnTable;
 
   complete: boolean;
-  rescheduled: boolean;
+  deferred: boolean;
 }
 
 export function initIMatch(instance?:IMatch) {
@@ -29,7 +29,7 @@ export function initIMatch(instance?:IMatch) {
     on_table2: {table: '', team_number: '', score_submitted: false},
 
     complete: false,
-    rescheduled: false
+    deferred: false
   }
 
   return {

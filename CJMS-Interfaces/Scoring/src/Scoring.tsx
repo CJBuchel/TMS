@@ -72,7 +72,7 @@ export default class Scoring extends Component<IProps,IState> {
   }
 
   setEventData(eventData:IEvent) {
-    this.setState({external_eventData: eventData, match_locked: eventData.match_locked});
+    this.setState({external_eventData: eventData, match_locked: (eventData?.match_locked || false)});
   }
 
   setTeamData(teamData:ITeam[]) {
@@ -98,18 +98,17 @@ export default class Scoring extends Component<IProps,IState> {
     matchData.sort(function(a:any,b:any) { return a.match_number-b.match_number});
 
 
-    const table_matches:any[] = [];
-    for (const match of matchData) {
-      if (match.on_table1.table == this.props.table || match.on_table2.table == this.props.table) {
-        table_matches.push(match);
-      }
-    }
+    const table_matches:IMatch[] = matchData.filter((match) => {return match.on_table1.table == this.props.table || match.on_table2.table == this.props.table});
     
     this.setState({table_matches: table_matches});
     
     // Set the default loaded match to the next one in the (this table) list (test this theory, because it might bug itself every time a score is updated)
     for (const match of table_matches) {
-      if (!match.complete) {
+
+      if (match.on_table1.table === this.props.table && !match.on_table1.score_submitted && !match.deferred) {
+        this.setLoadedMatch(match.match_number);
+        break;
+      } else if (match.on_table2.table === this.props.table && !match.on_table2.score_submitted && !match.deferred) {
         this.setLoadedMatch(match.match_number);
         break;
       }

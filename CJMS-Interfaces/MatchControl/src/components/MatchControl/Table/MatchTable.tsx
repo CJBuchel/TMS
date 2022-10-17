@@ -59,9 +59,10 @@ export default class MatchTable extends Component<IProps, IState> {
           <tr
             id={match.match_number}
             key={match.match_number}
+            className={`${match.deferred ? 'strikeout' : ''}`}
             onClick={() => this.handleSelectedMatch(match.match_number)}
             style={{
-              backgroundColor: `${this.state.loaded_match == match.match_number ? 'orange' : match.complete ? 'green' : ''}`,
+              backgroundColor: `${this.state.loaded_match == match.match_number ? 'orange' : match.complete ? 'green' : match.deferred ? '#01FFCD' : ''}`,
               boxShadow: `${this.state.selected_match == match.match_number ? 'inset 0px 0px 10px blue' : ''}`
             }}
           >

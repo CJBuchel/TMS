@@ -24,6 +24,7 @@
 // }
 
 .mt-table td {
+  position: relative;
   border-right: 1px solid #f8f8f8;
   font-size: 2vw;
 }
@@ -36,7 +37,6 @@
   font-size: 1vw;
 
   top: 0;
-  // z-index: 1;
 }
 
 .mt-table thead th:nth-child(odd) {
@@ -47,4 +47,18 @@
 
 .mt-table tr:nth-child(even) {
   background: #a3a3a3;
+}
+
+.mt-table tr.strikeout td:before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  border-bottom: 3px solid #111;
+  width: 100%;
+}
+
+.mt-table tr.strikeout td:after {
+  content: "\00B7";
+  font-size: 1px;
 }

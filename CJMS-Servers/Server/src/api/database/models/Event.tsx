@@ -8,6 +8,8 @@ export const EventSchema = new mongoose.Schema<IEvent>({
   event_tables: [{type: String}],
   event_rounds: {type: Number, default: 3},
 
+  season: {type: Number, required: true, default: 20212022},
+
   match_locked: {type: Boolean, default: true}
 }, {
   capped: { size: 102400, max: 1, autoIndexId: true } // we only want one event document

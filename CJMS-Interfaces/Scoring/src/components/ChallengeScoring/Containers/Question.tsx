@@ -25,7 +25,7 @@ type NumericProps = BaseProps & {
 
 const NumericQuestion = ({question, value, errors, onChange}: NumericProps) => {
   return (
-    <TableRow>
+    <TableRow sx={{background: 'white'}}>
       <TableCell sx={errors?.length ? {border: 'none', fontWeight: 'bold'} : {border: 'none'}}>
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
           <span>{question.label}</span>

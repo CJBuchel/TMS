@@ -7,9 +7,9 @@ import TableBody from "@mui/material/TableBody";
 import Question from "./Question";
 import Calculator from "ausfll-score-calculator";
 import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game, ScoreAnswer } from "ausfll-score-calculator/dist/game-types";
-import { Button, TableCell, TableRow, TextField } from "@mui/material";
-import { margin } from "@mui/system";
+import { TableCell, TableRow, TextField } from "@mui/material";
 import { initITeamScore, ITeamScore } from "@cjms_shared/services";
+import { IEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
 
 
 type Status = {
@@ -21,6 +21,7 @@ type Status = {
 interface IProps {
   handleScoreSubmit:Function;
   handleScoreChange:Function;
+  event_data:IEvent;
 }
 
 interface IState {
@@ -29,8 +30,6 @@ interface IState {
   game:Game;
   publicComment:string;
   privateComment:string;
-
-  team_scoresheet:ITeamScore;
 }
 
 export default class Challenges extends Component<IProps, IState> {
@@ -39,19 +38,24 @@ export default class Challenges extends Component<IProps, IState> {
 
     this.state = {
       data:[],
-      game: Calculator.SuperPowered,
+      game: Calculator.Games.find((game) => game.season === this.props.event_data.season) || Calculator.Games[0],
       status: {score:0, validationErrors:[
         { message: `${Calculator.SuperPowered.missions.length} unanswered questions!` }
       ]},
 
       publicComment: '',
-      privateComment: '',
-
-      team_scoresheet: initITeamScore()
+      privateComment: ''
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setDefaults = this.setDefaults.bind(this);
+    this.handleNoShow = this.handleNoShow.bind(this);
+  }
+
+  async handleNoShow() {
+    var scoresheet = initITeamScore();
+    scoresheet.no_show = true;
+    this.props.handleScoreSubmit(scoresheet);
   }
 
   async handleSubmit() {
@@ -76,6 +80,7 @@ export default class Challenges extends Component<IProps, IState> {
 
   componentDidMount(): void {
     this.setDefaults();
+    console.log(this.state.game.name);
   }
 
   setPublicComment(e:string) {
@@ -216,23 +221,14 @@ export default class Challenges extends Component<IProps, IState> {
         </Table>
         {this.getComments()}
 
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                <div className="challenge-buttons">
-                  <button onClick={this.handleSubmit} disabled={this.state.status.validationErrors.length > 0} className={`hoverButton ${this.state.status.validationErrors.length > 0 ? "" : "back-green"}`}>Submit</button>
-                </div>
-              </TableCell>
+        <div className="challenge-buttons">
+          <button onClick={this.handleNoShow} className="hoverButton back-orange">No Show</button>
+          <button onClick={this.setDefaults} className="hoverButton back-red">Clear</button>
+        </div>
 
-              <TableCell>
-                <div className="challenge-buttons">
-                  <button onClick={this.setDefaults} className="hoverButton back-red">Clear</button>
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <div className="challenge-buttons">
+          <button onClick={this.handleSubmit} disabled={this.state.status.validationErrors.length > 0} className={`hoverButton ${this.state.status.validationErrors.length > 0 ? "" : "back-green"}`}>Submit</button>
+        </div>
       </div>
     );
   }

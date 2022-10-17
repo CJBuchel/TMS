@@ -39,7 +39,7 @@ export default class Controls extends Component<IProps, IState> {
 
       timerState: "default",
       currentTime: 150,
-      soundsEnabled: false
+      soundsEnabled: true
     }
 
     comm_service.listeners.onMatchLoaded(async (match:string) => {

@@ -22,7 +22,7 @@ export default class Timer extends Component<IProps, IState> {
     this.state = {
       timerState: "default",
       currentTime: 150,
-      soundsEnabled: false
+      soundsEnabled: true
     }
 
     comm_service.listeners.onClockArmEvent(() => {

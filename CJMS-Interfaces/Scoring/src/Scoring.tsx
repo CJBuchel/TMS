@@ -103,15 +103,31 @@ export default class Scoring extends Component<IProps,IState> {
     this.setState({table_matches: table_matches});
     
     // Set the default loaded match to the next one in the (this table) list (test this theory, because it might bug itself every time a score is updated)
+    var loaded_match:string | undefined = undefined;
     for (const match of table_matches) {
-
-      if (match.on_table1.table === this.props.table && !match.on_table1.score_submitted && !match.deferred) {
-        this.setLoadedMatch(match.match_number);
+      if (match.on_table1.table === this.props.table && (!match.on_table1.score_submitted && !match.deferred && match.complete)) {
+        loaded_match = match.match_number;
         break;
-      } else if (match.on_table2.table === this.props.table && !match.on_table2.score_submitted && !match.deferred) {
-        this.setLoadedMatch(match.match_number);
+      } else if (match.on_table2.table === this.props.table && (!match.on_table2.score_submitted && !match.deferred && match.complete)) {
+        loaded_match = match.match_number;
         break;
       }
+    }
+
+    if (loaded_match === undefined) {
+      for (const match of table_matches) {
+        if (match.on_table1.table === this.props.table && (!match.on_table1.score_submitted && !match.deferred)) {
+          loaded_match = match.match_number;
+          break;
+        } else if (match.on_table2.table === this.props.table && (!match.on_table2.score_submitted && !match.deferred)) {
+          loaded_match = match.match_number;
+          break;
+        }
+      }
+    }
+
+    if (loaded_match != undefined) {
+      this.setLoadedMatch(loaded_match);
     }
   }
 

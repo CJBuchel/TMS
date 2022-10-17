@@ -10,7 +10,7 @@ export interface IMatch {
     on_table1: OnTable;
     on_table2: OnTable;
     complete: boolean;
-    rescheduled: boolean;
+    deferred: boolean;
 }
 export declare function initIMatch(instance?: IMatch): {
     match_number: string;
@@ -19,6 +19,6 @@ export declare function initIMatch(instance?: IMatch): {
     on_table1: OnTable;
     on_table2: OnTable;
     complete: boolean;
-    rescheduled: boolean;
+    deferred: boolean;
 };
 export {};

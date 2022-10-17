@@ -52,6 +52,10 @@ export async function CJMS_REQUEST_LOGIN(credentials) {
 export async function CJMS_POST_TIMER(timerStatus) {
     return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_timer, { timerState: timerStatus });
 }
+// Post event data
+export async function CJMS_POST_EVENT(event) {
+    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_setup, event);
+}
 // Post Score
 export async function CJMS_POST_SCORE(teamScore) {
     return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, teamScore);
@@ -65,6 +69,10 @@ export async function CJMS_REQUEST_TEAMS(noAlert = false) {
 export async function CJMS_REQUEST_MATCHES(noAlert = false) {
     const matchData = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, noAlert);
     return matchData.data;
+}
+// Post Match Update
+export async function CJMS_POST_MATCH_UPDATE(match_number, match_update) {
+    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, { match: match_number, update: match_update });
 }
 // Get Event
 export async function CJMS_REQUEST_EVENT(noAlert = false) {

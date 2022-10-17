@@ -9,7 +9,7 @@ function initIMatch(instance) {
         on_table1: { table: '', team_number: '', score_submitted: false },
         on_table2: { table: '', team_number: '', score_submitted: false },
         complete: false,
-        rescheduled: false
+        deferred: false
     };
     return {
         ...defaults,

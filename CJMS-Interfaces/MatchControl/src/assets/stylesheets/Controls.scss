@@ -8,22 +8,25 @@
 }
 
 .controls h1 {
+  margin-top: 0.5vh;
   font-size: 3vh;
 }
 
 .controls .match_info {
-  height: 35vh;
+  height: 30vh;
   padding: 1vh;
   border-color: white;
   border-style: solid;
 }
 
 .controls .match_info h1 {
+  margin-top: 0.5vh;
   font-size: 4vh;
 }
 
 .controls .match_info h2 {
-  font-size: 3vh;
+  font-size: 2vh;
+  margin-top: 0.5vh;
   padding: 0;
 }
 
@@ -64,8 +67,9 @@
   padding: 1vh;
 }
 
-.controls .loaded_info h2 {
+.controls .loaded_info h1 {
   font-size: 4vh;
+  margin-top: 0.5vh;
 }
 
 .controls .loaded_info h3 {
@@ -81,7 +85,8 @@
 
 .buttons button {
   width: 45%;
-  height: fit-content;
+  // height: fit-content;
+  height: 5vh;
   font-size: 3vh;
   font-weight: bold;
   color: black;
@@ -94,7 +99,8 @@
 .defer_button button {
   margin-top: 2vh;
   width: 45%;
-  height: fit-content;
+  height: 5vh;
+  // height: fit-content;
   font-size: 3vh;
   font-weight: bold;
   color: black;

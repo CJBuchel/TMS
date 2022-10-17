@@ -332,7 +332,7 @@ export default class Controls extends Component<IProps, IState> {
         </div>
 
         <div className="loaded_info">
-          <h2>Status: {this.getStatusMatch()}</h2>
+          <h1>Status: {this.getStatusMatch()}</h1>
           <div className="buttons">
 
             {/* Unload Match */}

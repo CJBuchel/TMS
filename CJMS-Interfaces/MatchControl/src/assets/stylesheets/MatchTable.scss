@@ -13,15 +13,21 @@
   color: black;
 }
 
+.mt-table table {
+  // box-sizing: border-box;
+}
+
 .mt-table td, .mt-table th {
   text-align: center;
   padding: 0.5vw;
+  // min-width: 90px;
   // overflow: hidden;
 }
 
-// .mt-table tbody tr {
-//   // background-color: #365778;
-// }
+.mt-table tr {
+  // display: block;
+  -webkit-appearance: none;
+}
 
 .mt-table td {
   position: relative;
@@ -61,4 +67,26 @@
 .mt-table tr.strikeout td:after {
   content: "\00B7";
   font-size: 1px;
+}
+
+.mt-table tr.selected td:first-child {
+  box-shadow: 
+    inset 0px 4px 3px -2px blue,
+    inset 0px -4px 3px -2px blue,
+    inset 4px 0px 3px -2px blue;
+  // -webkit-box-shadow: inset 0px 0px 10px blue;
+  // -moz-box-shadow: inset 0px 0px 10px blue;
+}
+
+.mt-table tr.selected td {
+  box-shadow: 
+    inset 0px 4px 3px -2px blue,
+    inset 0px -4px 3px -2px blue;
+}
+
+.mt-table tr.selected td:last-child {
+  box-shadow: 
+    inset 0px 4px 3px -2px blue,
+    inset 0px -4px 3px -2px blue,
+    inset -4px 0px 3px -2px blue;
 }

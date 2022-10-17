@@ -229,6 +229,9 @@ export default class Controls extends Component<IProps, IState> {
   handleSetMatchComplete(complete:boolean) {
     if (this.state.loaded_match != undefined) {
       Requests.CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_complete, {complete:complete, match:this.state.loaded_match?.match_number});
+      if (complete) {
+        this.handleUnloadMatch();
+      }
     }
   }
 

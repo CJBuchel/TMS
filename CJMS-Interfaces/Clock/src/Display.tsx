@@ -1,4 +1,4 @@
-import { Requests } from "@cjms_interfaces/shared";
+import { CJMS_REQUEST_EVENT, CJMS_REQUEST_MATCHES, CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared";
 import { comm_service, IEvent, IMatch, ITeam, request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 import "./assets/stylesheets/application.scss";
@@ -39,27 +39,34 @@ export default class Display extends Component<IProps, IState> {
       blink_toggle:true
     }
 
-    comm_service.listeners.onEventUpdate(async () => {
-      const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
-      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
-      const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
+    comm_service.listeners.onEventUpdate(() => {
+      CJMS_REQUEST_EVENT(true).then(event => {
+        this.setEventData(event);
+      });
 
-      this.setEventData(eventData);
-      this.setTeamData(teamData);
-      this.setMatchData(matchData);
+
+      CJMS_REQUEST_TEAMS(true).then(teams => {
+        this.setTeamData(teams);
+      });
+
+      CJMS_REQUEST_MATCHES(true).then(matches => {
+        this.setMatchData(matches);
+      });
     });
 
-    comm_service.listeners.onTeamUpdate(async () => {
-      const teamData:any = await Requests.CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, true);
-      this.setTeamData(teamData);
+    comm_service.listeners.onTeamUpdate(() => {
+      CJMS_REQUEST_TEAMS(true).then(teams => {
+        this.setTeamData(teams);
+      });
     });
 
-    comm_service.listeners.onMatchUpdate(async () => {
-      const matchData:any = await Requests.CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_matches, true);
-      this.setMatchData(matchData);
+    comm_service.listeners.onMatchUpdate(() => {
+      CJMS_REQUEST_MATCHES(true).then(matches => {
+        this.setMatchData(matches);
+      });
     });
 
-    comm_service.listeners.onMatchLoaded(async (match:string) => {
+    comm_service.listeners.onMatchLoaded((match:string) => {
       this.setLoadedMatch(match);
     });
 
@@ -87,8 +94,8 @@ export default class Display extends Component<IProps, IState> {
   }
 
   setLoadedMatch(match:string) {
-    if (this.state.external_matchData) {
-      const match_loaded = this.state.external_matchData.find(e => e.match_number == match);
+    if (this.state.external_matchData.length > 0) {
+      const match_loaded = this.state.external_matchData?.find(e => e.match_number == match);
 
       if (match_loaded != undefined && match_loaded != null) {
         this.setState({
@@ -103,13 +110,15 @@ export default class Display extends Component<IProps, IState> {
           team2: undefined
         });
       }
+    } else {
+      console.log("match data empty");
     }
   }
 
   async componentDidMount() {
-    const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
-    const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
-    const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
+    const eventData = await CJMS_REQUEST_EVENT(true);
+    const teamData = await CJMS_REQUEST_TEAMS(true);
+    const matchData = await CJMS_REQUEST_MATCHES(true);
 
     this.setEventData(eventData);
     this.setTeamData(teamData);

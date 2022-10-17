@@ -74,7 +74,7 @@ export default class Display extends Component<IProps, IState> {
         const teamScore = teamScores.filter(scoreObj => scoreObj.scoresheet.round == (i+1));
 
         if (teamScore.length == 1) {
-          roundScores.push(teamScore[0].score || 0);
+          roundScores.push(teamScore[0].no_show ? '-' : teamScore[0].score || 0);
         } else if (teamScore.length > 1) {
           roundScores.push('Conflict');
         } else if (teamScore.length <= 0) {

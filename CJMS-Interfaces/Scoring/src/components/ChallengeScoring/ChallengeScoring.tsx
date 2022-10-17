@@ -176,7 +176,7 @@ export default class ChallengeScoring extends Component<IProps,IState> {
         
         <div className="score-bar-column">
           <div className="score-bar-content">
-            <h2>Match <span style={{color: "green"}}>#{this.state.selected_match}</span></h2>
+            <h2>Next Match: <span style={{color: "green"}}>#{this.state.selected_match}</span></h2>
           </div>
         </div>
 
@@ -193,7 +193,11 @@ export default class ChallengeScoring extends Component<IProps,IState> {
     return(
       <div className="challenge-scoring">
         {this.renderScoreBar()}
-        <Challenges handleScoreSubmit={this.handleScoreSubmit} handleScoreChange={this.handleScoreChange}/>
+        <Challenges 
+          handleScoreSubmit={this.handleScoreSubmit} 
+          handleScoreChange={this.handleScoreChange}
+          event_data={this.props.event_data.eventData}
+        />
       </div>
     );
   }

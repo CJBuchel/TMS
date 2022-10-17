@@ -1,3 +1,4 @@
+import { IEvent } from "@cjms_shared/services";
 import { Component } from "react";
 import "../../assets/stylesheets/NavMenu.scss";
 export interface NavMenuLink {
@@ -16,14 +17,14 @@ interface IProps {
     navContent: NavMenuContent;
 }
 interface IState {
-    external_eventData: any;
+    external_eventData: IEvent;
     eventState: string;
 }
 export default class NavMenu extends Component<IProps, IState> {
     constructor(props: any);
     setEventState(stateData: any): void;
-    setEventData(eventData: any): void;
-    componentDidMount(): Promise<void>;
+    setEventData(eventData: IEvent): void;
+    componentDidMount(): void;
     getRoute(link: NavMenuLink): JSX.Element;
     clearSessionStorage(): void;
     getRoutes(): JSX.Element;

@@ -1,12 +1,12 @@
 // 
 // Generic shared navbar
 // 
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { comm_service, IEvent, request_namespaces } from "@cjms_shared/services";
 import React, { Component } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import "../../assets/stylesheets/NavMenu.scss";
-import { CJMS_FETCH_GENERIC_GET } from "../Requests/Request";
+import { CJMS_FETCH_GENERIC_GET, CJMS_REQUEST_EVENT } from "../Requests/Request";
 
 export interface NavMenuLink {
   name:string;
@@ -28,7 +28,7 @@ interface IProps {
 }
 
 interface IState {
-  external_eventData:any;
+  external_eventData:IEvent;
   eventState:string;
 }
 
@@ -42,7 +42,7 @@ export default class NavMenu extends Component<IProps, IState> {
     }
 
     comm_service.listeners.onEventUpdate(async () => {
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
       this.setEventData(eventData);
     });
 
@@ -55,13 +55,14 @@ export default class NavMenu extends Component<IProps, IState> {
     this.setState({eventState: stateData});
   }
 
-  setEventData(eventData:any) {
-    this.setState({external_eventData: eventData.data});
+  setEventData(eventData:IEvent) {
+    this.setState({external_eventData: eventData});
   }
 
-  async componentDidMount() {
-    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-    this.setEventData(eventData);
+  componentDidMount() {
+    CJMS_REQUEST_EVENT(true).then((data) => {
+      this.setEventData(data);
+    });
   }
 
   getRoute(link:NavMenuLink) {

@@ -76,11 +76,25 @@
 
 .controls .buttons {
   margin-left: 1vw;
+  // margin-bottom: 1vh;
 }
 
 .buttons button {
   width: 45%;
-  height: 5vh;
+  height: fit-content;
+  font-size: 3vh;
+  font-weight: bold;
+  color: black;
+}
+
+.defer_button {
+  margin-left: 15vw;
+}
+
+.defer_button button {
+  margin-top: 2vh;
+  width: 45%;
+  height: fit-content;
   font-size: 3vh;
   font-weight: bold;
   color: black;

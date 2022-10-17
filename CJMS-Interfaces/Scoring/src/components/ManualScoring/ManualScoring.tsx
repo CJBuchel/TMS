@@ -1,4 +1,5 @@
 import { CJMS_POST_SCORE, CJMS_FETCH_GENERIC_POST } from "@cjms_interfaces/shared";
+import { CJMS_POST_MATCH_UPDATE } from "@cjms_interfaces/shared";
 import { comm_service, request_namespaces, ITeamScore, IEvent, ITeam, IMatch, initIMatch, initITeamScore } from "@cjms_shared/services";
 import React, { Component } from "react";
 import Select, { SingleValue } from "react-select";
@@ -44,6 +45,7 @@ export default class ManualScoring extends Component<IProps, IState> {
       team_scoresheet: initITeamScore(),
     }
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNoShow = this.handleNoShow.bind(this);
   }
 
   setInternalData() {
@@ -114,6 +116,7 @@ export default class ManualScoring extends Component<IProps, IState> {
     var scoresheet = this.state.team_scoresheet;
     scoresheet.no_show = true;
     this.setState({team_scoresheet: scoresheet});
+    this.handleSubmit();
   }
 
   async handleSubmit() {
@@ -133,10 +136,7 @@ export default class ManualScoring extends Component<IProps, IState> {
     this.setState({team_scoresheet: scoresheet});
 
     const submit_result:any = await CJMS_POST_SCORE(scoresheet);
-    const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
-      match: this.state.form_MatchNumber,
-      update: update
-    });
+    const match_result:any = await CJMS_POST_MATCH_UPDATE(this.state.form_MatchNumber || "", update);
 
     if (submit_result.success && match_result.success) {
       alert("Successfully updated team");
@@ -170,7 +170,7 @@ export default class ManualScoring extends Component<IProps, IState> {
           <Select onChange={(e) => this.onGPChange(e)} options={options_gp}/>
 
           {/* Notes */}
-          <label>Notes</label>
+          <label>Private Notes</label>
           <input onChange={(e) => this.onNotesChange(e)}/>
           
           <div className="buttons">

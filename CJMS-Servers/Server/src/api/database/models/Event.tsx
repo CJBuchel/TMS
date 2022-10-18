@@ -3,6 +3,7 @@ import { IEvent } from "@cjms_shared/services";
 
 export const EventSchema = new mongoose.Schema<IEvent>({
   event_name: {type: String, required: true},
+  tournament_id: {type: String, default: ''},
   event_csv: {type: JSON, required: true},
 
   event_tables: [{type: String}],

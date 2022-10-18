@@ -1,4 +1,8 @@
 export declare const request_api_port = 2121;
+export declare var cloud_api_location: string;
+export declare const cloud_api_tournaments: string;
+export declare const cloud_api_teams: string;
+export declare const cloud_api_scoresheets: string;
 export declare var request_api_location: string;
 export declare const request_api_location_fetch: string;
 export declare const request_api_location_post: string;

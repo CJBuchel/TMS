@@ -13,12 +13,28 @@ export interface ITeamScoresheet {
   public_comment: string;
 }
 
+export type ITeamScoreGet = {
+  compete_id: string;
+  user_id: string;
+  round: number;
+
+  answers: {
+    id: string;
+    answer: string;
+  }[];
+
+  public_comment: string;
+  private_comment: string;
+  timestamp: Date;
+}
+
 export interface ITeamScore {
   // TMS Specific data
   gp: string;
   referee: string;
   no_show: boolean;
   score: number;
+
 
   // Generalized Scoresheet
   valid_scoresheet: boolean;

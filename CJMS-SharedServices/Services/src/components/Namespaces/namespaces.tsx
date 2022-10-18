@@ -1,5 +1,17 @@
 export const request_api_port = 2121;
 
+// 
+// Cloud api's
+// 
+export var cloud_api_location:string = "https://firstaustralia.systems/api";
+export const cloud_api_tournaments = `${cloud_api_location}/tournaments`;
+export const cloud_api_teams = `${cloud_api_location}/team/tournament`;
+export const cloud_api_scoresheets = `${cloud_api_location}/scoresheets`;
+
+
+// 
+// Request api's
+// 
 export var request_api_location:string;
 if (typeof window !== 'undefined') {
   request_api_location = `http://${window.location.hostname}:${request_api_port.toString()}/cjms_server`;

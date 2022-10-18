@@ -67,6 +67,7 @@
 .mt-table tr.strikeout td:after {
   content: "\00B7";
   font-size: 1px;
+  background-color: cyan;
 }
 
 .mt-table tr.selected td:first-child {

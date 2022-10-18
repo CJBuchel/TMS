@@ -3,7 +3,8 @@ import { IEvent } from "@cjms_shared/services";
 import { IJudgingSession } from "@cjms_shared/services";
 import { IMatch } from "@cjms_shared/services";
 import { request_namespaces, ITeamScore, ITeam } from "@cjms_shared/services";
-// const server_location = `http://${window.location.hostname}:${request_namespaces.request_api_port.toString()}`;
+import { ITeamScoreGet } from "@cjms_shared/services/lib/components/InterfaceModels/TeamScore";
+
 
 export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any, noAlert:boolean = false): Promise<Response> {
   console.log(request_namespaces.request_api_location);
@@ -51,6 +52,35 @@ export async function CJMS_FETCH_GENERIC_GET(request:any, noAlert:boolean = fals
   });
 
   return res;
+}
+
+export async function CLOUD_FETCH_GENERIC_POST(request:RequestInfo, token:string, postData:any): Promise<Response> {
+  console.log(request_namespaces.request_api_location);
+  const res:Promise<Response> = await fetch(request, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Token': token
+    },
+    body: JSON.stringify(postData)
+  }).then((response:any) => {
+    // Return the response in json format
+    return response.json();
+  }).then((data:any) => {
+    // If message from request server
+    return data;
+  }).catch((error:any) => {
+    // Error while trying to post to server
+    console.log("Error While Posting");
+    console.log(error);
+    throw error;
+  });
+
+  return res;
+}
+
+export async function CLOUD_FETCH_GENERIC_GET(request:any): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_GET(request);
 }
 
 // Login
@@ -101,3 +131,29 @@ export async function CJMS_REQUEST_JUDGING_SESSIONS(noAlert:boolean = false): Pr
   const judgingSessionData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_judging_sessions, noAlert);
   return judgingSessionData.data;
 }
+
+// 
+// Cloud Requests
+// 
+
+export async function CLOUD_REQUEST_TOURNAMENTS(): Promise<Response> {
+  const request = `${request_namespaces.cloud_api_tournaments}`;
+  return await CLOUD_FETCH_GENERIC_GET(request);
+}
+
+export async function CLOUD_REQUEST_TEAMS(tournament_id:string): Promise<Response> {
+  const request = `${request_namespaces.cloud_api_teams}/${tournament_id}`;
+  return await CLOUD_FETCH_GENERIC_GET(request);
+}
+
+export async function CLOUD_REQUEST_SCORESHEETS(tournament_id:string): Promise<ITeamScoreGet | undefined> {
+  const request = `${request_namespaces.cloud_api_scoresheets}/${tournament_id}`;
+  CLOUD_FETCH_GENERIC_GET(request).then(res => {
+    console.log(res);
+    return res;
+  });
+
+  return undefined
+}
+
+// export async function CLOUD_POST_SCORESHEET()

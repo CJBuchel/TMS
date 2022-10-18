@@ -4,6 +4,7 @@ exports.initIEvent = void 0;
 function initIEvent(instance) {
     const defaults = {
         event_name: '',
+        tournament_id: '',
         event_csv: JSON,
         event_tables: [],
         event_rounds: 3,

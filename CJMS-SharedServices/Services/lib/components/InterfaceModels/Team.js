@@ -5,6 +5,7 @@ function initITeam(instance) {
     const defaults = {
         team_number: '',
         team_name: '',
+        team_id: '',
         affiliation: '',
         scores: [],
         ranking: 0

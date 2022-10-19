@@ -14,7 +14,6 @@ export class Setup {
 
     requestServer.get().post(request_namespaces.request_post_setup, async (req, res) => {
       const event:IEvent = req.body;
-      const eventName = event.event_name;
       const csv:any = event.event_csv;
 
       const team_block:any[] = [];

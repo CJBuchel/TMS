@@ -36,15 +36,17 @@ export const request_post_purge = `${request_api_location_post}/purge`;
 // Team Database
 export const request_fetch_teams = `${request_api_location_fetch}/teams`;
 export const request_post_team_score = `${request_api_location_post}/teams/score`;
+export const request_post_team_update = `${request_api_location_post}/team/update`;
 
 // Judging Session Database
 export const request_fetch_judging_sessions = `${request_api_location_fetch}/judging_sessions`;
 
 // Event Database
 export const request_fetch_event = `${request_api_location_fetch}/event`;
+export const request_post_event_update = `${request_api_location}/event/update`; // {team: number, update: ITeam}
 
 // Match Database
 export const request_fetch_matches = `${request_api_location_fetch}/matches`;
 export const request_post_match_load = `${request_api_location_post}/match/load`;
 export const request_post_match_complete = `${request_api_location_post}/match/complete`;
-export const request_post_match_update = `${request_api_location_post}/match/update`; // {match: number, update: {data...}}
+export const request_post_match_update = `${request_api_location_post}/match/update`; // {match: number, update: IMatch}

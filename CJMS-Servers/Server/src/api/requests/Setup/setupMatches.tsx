@@ -32,10 +32,4 @@ export async function setupMatches(match_block:any[]) {
   }
 
   comm_service.senders.sendMatchUpdateEvent('setup');
-
-  // Temp
-  // setInterval(() => {
-  //   // comm_service.senders.sendMatchLoadedEvent("16");
-    
-  // }, 1000);
 }

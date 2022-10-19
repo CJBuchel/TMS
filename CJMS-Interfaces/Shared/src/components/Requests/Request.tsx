@@ -94,7 +94,7 @@ export async function CJMS_POST_TIMER(timerStatus:string): Promise<Response> {
 }
 
 // Post event data
-export async function CJMS_POST_EVENT(event:IEvent): Promise<Response> {
+export async function CJMS_POST_SETUP(event:IEvent): Promise<Response> {
   return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_setup, event);
 }
 
@@ -107,6 +107,11 @@ export async function CJMS_POST_SCORE(teamScore:ITeamScore): Promise<Response> {
 export async function CJMS_REQUEST_TEAMS(noAlert:boolean = false): Promise<ITeam[]> {
   const teamData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_teams, noAlert);
   return teamData.data;
+}
+
+// Update Team
+export async function CJMS_POST_TEAM_UPDATE(team_number:string, team_update:ITeam): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_update, {team: team_number, update: team_update});
 }
 
 // Get Matches
@@ -126,9 +131,15 @@ export async function CJMS_REQUEST_EVENT(noAlert:boolean = false): Promise<IEven
   return eventData.data;
 }
 
+// Update Event
+export async function CJMS_POST_EVENT_UPDATE(event:IEvent): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_event_update, event);
+}
+
+
 // Get Judging Sessions
 export async function CJMS_REQUEST_JUDGING_SESSIONS(noAlert:boolean = false): Promise<IJudgingSession[]> {
-  const judgingSessionData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_judging_sessions, noAlert);
+  const judgingSessionData:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_fetch_judging_sessions, noAlert);
   return judgingSessionData.data;
 }
 

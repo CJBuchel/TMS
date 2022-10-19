@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initIJudgingSession = exports.initIUser = exports.initIEvent = exports.initIMatch = exports.initITeam = exports.initITeamScore = exports.comm_service = exports.request_namespaces = void 0;
+exports.initIJudgingSession = exports.initIUser = exports.initIEvent = exports.initIOnlineLink = exports.initIMatch = exports.initITeam = exports.initITeamScore = exports.comm_service = exports.request_namespaces = void 0;
 const request_namespaces = require("./components/Namespaces/namespaces");
 exports.request_namespaces = request_namespaces;
 const comm_service = require("./components/CommService");
@@ -13,6 +13,7 @@ const Match_1 = require("./components/InterfaceModels/Match");
 Object.defineProperty(exports, "initIMatch", { enumerable: true, get: function () { return Match_1.initIMatch; } });
 const Event_1 = require("./components/InterfaceModels/Event");
 Object.defineProperty(exports, "initIEvent", { enumerable: true, get: function () { return Event_1.initIEvent; } });
+Object.defineProperty(exports, "initIOnlineLink", { enumerable: true, get: function () { return Event_1.initIOnlineLink; } });
 const User_1 = require("./components/InterfaceModels/User");
 Object.defineProperty(exports, "initIUser", { enumerable: true, get: function () { return User_1.initIUser; } });
 const JudgingSessions_1 = require("./components/InterfaceModels/JudgingSessions");

@@ -56,7 +56,7 @@ export default class NavMenu extends Component {
             for (const link of cat.links) {
                 links.push(React.createElement("a", { key: link.name, href: link.path }, link.name));
             }
-            categories.push(React.createElement("div", { key: cat.name, className: "column" },
+            categories.push(React.createElement("div", { key: cat.name, className: "navbar-column" },
                 React.createElement("h3", null, cat.name),
                 links));
         }

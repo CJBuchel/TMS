@@ -42,7 +42,7 @@ export default class StatusTimer extends Component<IProps, IState> {
 
   setNextMatch() {
     if (this.props.external_matchData.length > 0) {
-      const next_match = this.props.external_matchData.find(e => !e.complete);
+      const next_match = this.props.external_matchData.find(e => !e.complete && !e.deferred);
       this.setState({next_match: next_match});
     }
   }

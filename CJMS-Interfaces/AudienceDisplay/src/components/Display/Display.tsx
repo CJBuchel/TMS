@@ -5,8 +5,7 @@ import "../../assets/application.scss";
 import "../../assets/loader.scss";
 import { comm_service, IEvent, ITeam } from "@cjms_shared/services";
 import { Requests } from "@cjms_interfaces/shared";
-import { ITeamScore } from "@cjms_shared/services";
-import { initIEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
+import { ITeamScore, initIEvent } from "@cjms_shared/services";
 
 interface IProps {}
 

@@ -2,7 +2,7 @@ import { Requests } from "@cjms_interfaces/shared";
 import { request_namespaces } from "@cjms_shared/services";
 import { Component } from "react";
 
-import "../../assets/Setup.scss"
+import "../../../assets/Setup.scss"
 
 interface IProps {}
 
@@ -13,7 +13,7 @@ interface IState {
   head_referee:string;
 }
 
-export default class Users extends Component<IProps, IState> {
+export default class UsersSetup extends Component<IProps, IState> {
   constructor(props:any) {
     super(props);
 

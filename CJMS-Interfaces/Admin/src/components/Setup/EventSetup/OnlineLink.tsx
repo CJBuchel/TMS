@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 
-import "../../assets/Setup.scss"
 import { CLOUD_REQUEST_TOURNAMENTS, CLOUD_REQUEST_TEAMS, CJMS_REQUEST_TEAMS, CJMS_REQUEST_EVENT, CJMS_POST_EVENT_UPDATE, CJMS_POST_TEAM_UPDATE } from "@cjms_interfaces/shared";
 import {  comm_service, IEvent, ITeam, } from "@cjms_shared/services";
 import Select from "react-select";
 import Games from "ausfll-score-calculator";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import "../../../assets/Setup.scss"
 
 interface SelectOption {
   value:any,

@@ -51,18 +51,22 @@ export default class TeamManagement extends Component<IProps, IState> {
   }
 
   render() {
-    return (
-      <div className="team-management">
-        <div className="tm-row">
-          <div className="tm-team-select">
-            <TeamSelect external_teamData={this.state.teamData} setSelectedTeam={this.setSelectedTeam}/>
-          </div>
-
-          <div className="tm-team-manage">
-            <TeamEdit selected_team={this.state.selected_team}/>
+    if (this.state.teamData) {
+      return (
+        <div className="team-management">
+          <div className="tm-row">
+            <div className="tm-team-select">
+              <TeamSelect external_teamData={this.state.teamData} setSelectedTeam={this.setSelectedTeam}/>
+            </div>
+  
+            <div className="tm-team-manage">
+              <TeamEdit selected_team={this.state.selected_team}/>
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return(<></>);
+    }
   }
 }

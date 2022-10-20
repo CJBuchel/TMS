@@ -25,7 +25,7 @@ export class Matches {
     });
 
     requestServer.get().post(request_namespaces.request_post_match_complete, (req, res) => {
-      console.log(req.body);
+      // console.log(req.body);
       
       const filter = {match_number: req.body.match};
       const update = {complete: req.body.complete};
@@ -43,7 +43,7 @@ export class Matches {
     });
 
     requestServer.get().post(request_namespaces.request_post_match_update, (req, res) => {
-      console.log(req.body);
+      // console.log(req.body);
 
       const filter = {match_number: req.body.match};
       const update = req.body.update;

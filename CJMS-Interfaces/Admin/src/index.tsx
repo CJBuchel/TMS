@@ -4,31 +4,42 @@ import { Login, CJMS_Application, useToken, NavMenu, NavMenuContent } from '@cjm
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import "./assets/application.scss";
-import { Setup } from './components/Setup';
-import { Users } from './components/Users';
+import { EventSetup } from './components/Setup/EventSetup';
+import { UsersSetup } from './components/Setup/UserSetup';
+import { TeamManagement } from './components/TeamManagement/TeamManagement';
 
 
 /** Admin Structure,
  * Main Page (Setup/Main Control)
- * Events Control & Console (Comm server)
- * Team Stats/Scoring Editor
- * Scheduling?
+ * Team Manager/Scoring Editor
+ * Scheduling/MatchControl?
  */
 var navContent:NavMenuContent = {
   navCategories: [
     {
-      name:"Setup",
+      name: "Setup",
       links: [
         {
-          name:"Event Setup", 
-          path:"/Setup", 
-          linkTo:<Setup/>
+          name: "Event Setup", 
+          path: "/", 
+          linkTo:<EventSetup/>
         },
 
         {
-          name:"Users Setup",
-          path:"/Users",
-          linkTo:<Users/>
+          name: "Users Setup",
+          path: "/Users",
+          linkTo:<UsersSetup/>
+        },
+      ]
+    },
+
+    {
+      name: "Team Management",
+      links: [
+        {
+          name: "Team Management",
+          path: "/TeamManagement",
+          linkTo:<TeamManagement/>
         },
       ]
     }

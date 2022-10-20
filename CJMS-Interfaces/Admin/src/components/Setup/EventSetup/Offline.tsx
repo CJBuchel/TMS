@@ -7,7 +7,7 @@ import Select from "react-select";
 import Games from "ausfll-score-calculator";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 
-import "../../assets/Setup.scss";
+import "../../../assets/Setup.scss";
 
 interface SelectOption {
   value:any,

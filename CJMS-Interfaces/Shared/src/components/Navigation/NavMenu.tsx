@@ -103,7 +103,7 @@ export default class NavMenu extends Component<IProps, IState> {
       }
 
       categories.push(
-        <div key={cat.name} className="column">
+        <div key={cat.name} className="navbar-column">
           <h3>{cat.name}</h3>
           {links}
         </div>

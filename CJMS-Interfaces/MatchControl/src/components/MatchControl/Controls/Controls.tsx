@@ -308,13 +308,13 @@ export default class Controls extends Component<IProps, IState> {
             onClick={() => this.handleLoadMatch()}
             className={`hoverButton ${(!this.state.loaded_match) ? "back-orange" : "back-half-transparent"} buttons`}
             disabled={(this.state.loaded_match != undefined)}
-          >Load Match</button>
+          >Load</button>
 
           <button 
             onClick={() => this.handleUnloadMatch()}
             className={`hoverButton ${(this.state.loaded_match && (this.state.timerState == 'default' || this.state.timerState == 'armed' || this.state.timerState == 'ended')) ? "back-orange" : "back-half-transparent"} buttons`}
             disabled={(!this.state.loaded_match || (this.state.timerState != 'default' && this.state.timerState != 'armed' && this.state.timerState != 'ended'))}
-          >Unload Match</button>
+          >Unload</button>
         </div>
 
         <div className="buttons">

@@ -1,19 +1,17 @@
 import React, {ChangeEvent, Component} from "react";
 
-import "../../assets/Setup.scss"
+import "../../../assets/Setup.scss"
 import Offline from "./Offline";
 import OnlineLink from "./OnlineLink";
 
 interface IProps {}
 interface IState {}
 
-export default class Setup extends Component<IProps, IState> {
+export default class EventSetup extends Component<IProps, IState> {
   constructor(props:any) {
     super(props);
     this.state = {}
   }
-
-
 
   render() {
     return(

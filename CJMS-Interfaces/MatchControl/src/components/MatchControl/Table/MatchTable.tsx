@@ -40,7 +40,7 @@ export default class MatchTable extends Component<IProps, IState> {
   getTableHeaders() {
     return (
       <tr>
-        <th>Match Number</th>
+        <th>Match</th>
         <th>Start Time</th>
         <th>On Table</th>
         <th>Team Number</th>
@@ -51,33 +51,28 @@ export default class MatchTable extends Component<IProps, IState> {
   }
 
   getTable() {
-    const content:any[] = [];
-
-    if (this.props.external_matchData.length > 0) {
-      for (const match of this.props.external_matchData) {
-        content.push(
-          <tr
-            id={match.match_number}
-            key={match.match_number}
-            className={`${match.deferred ? 'strikeout' : ''} ${this.state.selected_match == match.match_number ? 'selected' : ''}`}
-            onClick={() => this.handleSelectedMatch(match.match_number)}
-            style={{
-              backgroundColor: `${this.state.loaded_match == match.match_number ? 'orange' : match.deferred ? 'cyan' : match.complete ? 'green' : ''}`,
-            }}
-          >
-            <td>#{match.match_number}</td>
-            <td>{match.start_time}</td>
-            {/* Team 1 */}
-            <td style={{backgroundColor: `${match.complete ? (match.on_table1.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table1.table}</td>
-            <td style={{backgroundColor: `${match.complete ? (match.on_table1.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table1.team_number}</td>
-            {/* Team 2 */}
-            <td style={{backgroundColor: `${match.complete ? (match.on_table2.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table2.table}</td>
-            <td style={{backgroundColor: `${match.complete ? (match.on_table2.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table2.team_number}</td>
-          </tr>
-        );
-      }
-    }
-    return content;
+    return (
+      this.props.external_matchData.map((match) => (
+        <tr
+          id={match.match_number}
+          key={match.match_number}
+          className={`${match.deferred ? 'strikeout' : ''} ${this.state.selected_match == match.match_number ? 'selected' : ''}`}
+          onClick={() => this.handleSelectedMatch(match.match_number)}
+          style={{
+            backgroundColor: `${this.state.loaded_match == match.match_number ? 'orange' : match.deferred ? 'cyan' : match.complete ? 'green' : ''}`,
+          }}
+        >
+          <td>#{match.match_number}</td>
+          <td>{match.start_time}</td>
+          {/* Team 1 */}
+          <td style={{backgroundColor: `${match.complete ? (match.on_table1.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table1.table}</td>
+          <td style={{backgroundColor: `${match.complete ? (match.on_table1.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table1.team_number}</td>
+          {/* Team 2 */}
+          <td style={{backgroundColor: `${match.complete ? (match.on_table2.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table2.table}</td>
+          <td style={{backgroundColor: `${match.complete ? (match.on_table2.score_submitted ? 'green' : 'red') : ''}`}}>{match.on_table2.team_number}</td>
+        </tr>
+      ))
+    );
   }
 
   render() {

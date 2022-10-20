@@ -6,7 +6,7 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import Question from "./Question";
 import Calculator from "ausfll-score-calculator";
-import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game, ScoreAnswer } from "ausfll-score-calculator/dist/game-types";
+import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game } from "ausfll-score-calculator/dist/game-types";
 import { TableCell, TableRow, TextField } from "@mui/material";
 import { initITeamScore, ITeamScore } from "@cjms_shared/services";
 import { IEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";

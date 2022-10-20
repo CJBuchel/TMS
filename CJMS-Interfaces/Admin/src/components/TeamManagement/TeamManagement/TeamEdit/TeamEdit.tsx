@@ -78,8 +78,10 @@ export default class TeamEdit extends Component<IProps, IState> {
 
   async componentDidMount() {
     CJMS_REQUEST_EVENT().then(event => {
-      this.setGame(event);
-      this.setScoreArray();
+      if (event) {
+        this.setGame(event);
+        this.setScoreArray();
+      }
     });
   }
 

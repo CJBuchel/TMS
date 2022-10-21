@@ -98,7 +98,7 @@ export default class ScoresheetModal extends Component<IProps, IState> {
     }
     
 
-    var scoresheet:ITeamScore = initITeamScore();
+    var scoresheet:ITeamScore = this.props.scoresheet;
     scoresheet.score = sc;
     scoresheet.gp = this.state.data.find((e) => e.id.startsWith("gp"))?.answer || "";
     scoresheet.scoresheet.public_comment = this.state.publicComment;
@@ -150,6 +150,8 @@ export default class ScoresheetModal extends Component<IProps, IState> {
         answer: m.type === "numeric" ? `${m.defaultValue}` : m.defaultValue,
       };
     });
+
+    this.setState({publicComment: '', privateComment: ''});
 
     this.setState({data: d});
     this.updateScore(d);

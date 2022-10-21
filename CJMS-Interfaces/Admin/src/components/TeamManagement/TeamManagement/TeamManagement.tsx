@@ -42,7 +42,9 @@ export default class TeamManagement extends Component<IProps, IState> {
 
   setSelectedTeam(team:string) {
     this.setState({selected_team_number: team});
-    this.setState({selected_team: this.state.teamData.find(t => t.team_number === team) || initITeam()});
+    var sel_team:ITeam = this.state.teamData.find(t => t.team_number === team) || initITeam();
+    sel_team.scores.sort(function(a, b){return a.scoresheet.round-b.scoresheet.round});
+    this.setState({selected_team: sel_team});
   }
 
   async componentDidMount() {

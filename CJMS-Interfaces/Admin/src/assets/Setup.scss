@@ -1,0 +1,90 @@
+@use "@cjms_interfaces/shared/lib/assets/stylesheets/application";
+
+.setup-main {
+  width: 90%;
+  background-color: #2c2e42;
+  // @include application.border-struct;
+  margin-top: 1%;
+  // margin-bottom: 2%;
+  color: white;
+  margin-left: 5%;
+  border-radius: 15px;
+  height: 90%;
+  box-sizing: border-box;
+  font-size: small;
+  overflow: hidden;
+}
+
+.setup-main .container {
+  padding: 20px;
+}
+
+.container input {
+  font-size: medium;
+}
+
+.setup-main .setup-row {
+  height: 100%;
+  overflow: hidden;
+}
+
+.setup-main .setup-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.setup-main .setup-column {
+  font-size: medium;
+  float: left;
+  width: 46%;
+  padding-left: 2%;
+  // padding-top: 2%;
+  padding-right: 2%;
+  // margin-top: 2%;
+  // margin-left: 2%;
+  border-radius: 15px;
+  // @include application.border-struct;
+  overflow: auto;
+  height: 100%;
+}
+
+.setup-main .setup-column a {
+  color: dodgerblue;
+}
+
+.setup-main .setup-column .selector {
+  color: black;
+}
+
+.link-errors {
+  background-color: white;
+  height: 25%;
+  overflow: scroll;
+  border-radius: 15px;
+  padding: 5px;
+}
+
+.import-button {
+  font-size: medium;
+}
+
+.online {
+  background-color: #1d1f25;
+}
+
+.setup-column form {
+  height: 95%;
+}
+
+.user-submit-buttons {
+  margin-top: 2%;
+}
+
+form button {
+  margin-top: 5px;
+  padding: 10px;
+  margin-left: 4%;
+  width: 45%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}

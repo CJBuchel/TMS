@@ -1,0 +1,1 @@
+export { default as TableMatches } from "./TableMatches";

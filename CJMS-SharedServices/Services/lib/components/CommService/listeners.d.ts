@@ -1,0 +1,13 @@
+export declare const onClockArmEvent: any;
+export declare const onClockEndEvent: any;
+export declare const onClockStopEvent: any;
+export declare const onClockTimeEvent: any;
+export declare const onClockPrestartEvent: any;
+export declare const onClockStartEvent: any;
+export declare const onClockReloadEvent: any;
+export declare const onClockEndGameEvent: any;
+export declare const onTeamUpdate: any;
+export declare const onMatchUpdate: any;
+export declare const onMatchLoaded: any;
+export declare const onEventUpdate: any;
+export declare const onEventState: any;

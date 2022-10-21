@@ -41,7 +41,6 @@ interface IProps {
 }
 
 interface IState {
-  changed_team:ITeam;
   accordion_expanded:number;
   team_number:string;
   team_name:string;
@@ -60,14 +59,13 @@ export default class TeamEditValues extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      changed_team: this.props.selected_team,
       accordion_expanded: -2,
 
-      team_number: this.props.selected_team.team_number,
-      team_name: this.props.selected_team.team_name,
-      team_id: this.props.selected_team.team_id,
-      team_aff: this.props.selected_team.affiliation,
-      team_ranking: this.props.selected_team.ranking,
+      team_number: '',
+      team_name: '',
+      team_id: '',
+      team_aff: '',
+      team_ranking: 0,
 
       scoresheet_modal: {scoresheet: initITeamScore(), scoring_modal: false, existing_scores: true, scoresheet_index: 0},
       external_eventData:initIEvent(),
@@ -108,7 +106,7 @@ export default class TeamEditValues extends Component<IProps, IState> {
 
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any) {
     if (this.props != prevProps) {
-      this.setState({changed_team: this.props.selected_team});
+      console.log("Changed");
       this.handleTeamNumberChange(this.props.selected_team.team_number);
       this.handleTeamNameChange(this.props.selected_team.team_name);
       this.handleIDChange(this.props.selected_team.team_id);
@@ -121,17 +119,23 @@ export default class TeamEditValues extends Component<IProps, IState> {
     CJMS_REQUEST_EVENT().then((event) => {
       if (event) {
         this.setEventData(event);
+        this.handleTeamNumberChange(this.props.selected_team.team_number);
+        this.handleTeamNameChange(this.props.selected_team.team_name);
+        this.handleIDChange(this.props.selected_team.team_id);
+        this.handleAffiliationChange(this.props.selected_team.affiliation);
+        this.handleRankingChange(this.props.selected_team.ranking);
       }
     });
   }
 
   handleTeamUpdate() {
-    this.state.changed_team.team_number = this.state.team_number;
-    this.state.changed_team.team_name = this.state.team_name;
-    this.state.changed_team.team_id = this.state.team_id;
-    this.state.changed_team.affiliation = this.state.team_aff;
-    this.state.changed_team.ranking = this.state.team_ranking;
-    CJMS_POST_TEAM_UPDATE(this.props.selected_team.team_number, this.state.changed_team);
+    var changed_team:ITeam = Object.create(this.props.selected_team);
+    changed_team.team_number = this.state.team_number;
+    changed_team.team_name = this.state.team_name;
+    changed_team.team_id = this.state.team_id;
+    changed_team.affiliation = this.state.team_aff;
+    changed_team.ranking = this.state.team_ranking;
+    CJMS_POST_TEAM_UPDATE(this.props.selected_team.team_number, changed_team);
   }
 
   toggleModal(scoresheet:ITeamScore, scoresheet_index:number) {
@@ -181,6 +185,7 @@ export default class TeamEditValues extends Component<IProps, IState> {
   }
 
   render() {
+    console.log(this.props.selected_team.team_number);
     return (
       <div className="team-values">
         <Accordion sx={{backgroundColor: '#03061d', color: 'white'}} expanded={this.state.accordion_expanded === -1} onChange={() => this.handleAccordionChange(-1)}>

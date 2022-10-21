@@ -1,28 +1,31 @@
 {
-	"name": "@cj/fss",
-	"version": "1.0.0",
-	"main": "index.js",
-	"license": "MIT",
-	"dependencies": {
-		"concurrently": "^6.4.0",
-		"lerna": "^4.0.0",
-		"react-window-infinite-loader": "^1.0.7"
-	},
-	"private": true,
-	"workspaces": {
-		"packages": [
-			"packages/*"
-		]
-	},
-	"scripts": {
-		"sharedBuild": "npm run build --prefix packages/shared",
-		"serverBuild": "npm run buildComms --prefix server",
-		"preBuild": "concurrently \"yarn run sharedBuild\" \"yarn run serverBuild\"",
-		"build": "yarn run preBuild; lerna run build",
-		"serverStart": "npm run start --prefix server",
-		"start": "concurrently \"yarn run serverStart\" \"lerna run start\""
-	},
-	"devDependencies": {
-		"@types/react-window-infinite-loader": "^1.0.5"
-	}
+  "name": "@cjms/cjms",
+  "version": "2.0.0",
+  "description": "CJ's FLL Management System built for WA's FLL compeitions",
+  "main": "index.js",
+  "repository": "https://github.com/CJBuchel/CJ-MS",
+  "author": "CJBuchel <connorbuchel@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^17.0.21",
+    "copyfiles": "^2.4.1",
+    "cross-env": "^7.0.3",
+    "lerna": "^4.0.0",
+    "node": "^17.5.0",
+    "react-icons": "^4.3.1"
+  },
+  "workspaces": {
+    "packages": [
+      "CJMS-Interfaces/*",
+      "CJMS-Servers/*",
+      "CJMS-SharedServices/*"
+    ]
+  },
+  "scripts": {
+    "copy-env-files": "lerna run copy-env-file",
+    "build": "yarn run copy-env-files && lerna run build --stream",
+    "start": "yarn run copy-env-files && lerna run start --stream",
+    "dev": "lerna run dev --stream"
+  }
 }

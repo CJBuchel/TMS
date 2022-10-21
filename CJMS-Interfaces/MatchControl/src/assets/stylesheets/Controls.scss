@@ -1,0 +1,134 @@
+@import url('../fonts/lcd-bold/index.css');
+@import url('../fonts/radioland/index.css');
+
+.controls {
+  // height: 70%;
+  padding: 1vh;
+  overflow: hidden;
+}
+
+.controls h1 {
+  margin-top: 0.5vh;
+  font-size: 3vh;
+}
+
+.controls .match_info {
+  height: 30vh;
+  padding: 1vh;
+  border-color: white;
+  border-style: solid;
+}
+
+.controls .match_info h1 {
+  margin-top: 0.5vh;
+  font-size: 4vh;
+}
+
+.controls .match_info h2 {
+  font-size: 2vh;
+  margin-top: 0.5vh;
+  padding: 0;
+}
+
+.controls .match_info button {
+  // width: 100%;
+  // height: 5vh;
+  // color: black;
+  // font-size: 3vh;
+  // font-weight: bold;
+}
+
+.controls .status_clock {
+  height: 11vh;
+  // font-size: 6vw;
+
+  padding-top: 1.5vh;
+
+  border-color: white;
+  border-style: solid;
+
+  width: 100%;
+
+  justify-content: center;
+  vertical-align: middle;
+  align-items: center;
+  text-align: center;
+}
+
+.controls .status_clock .clock {
+  font-family: lcdbold, monospace;
+  user-select: none;
+}
+
+.controls .loaded_info {
+  width: 100%;
+  border-color: white;
+  border-style: solid;
+  padding: 1vh;
+}
+
+.controls .loaded_info h1 {
+  font-size: 4vh;
+  margin-top: 0.5vh;
+}
+
+.controls .loaded_info h3 {
+  font-size: 3vh;
+  // margin-left: 4.5vw;
+  text-align: center;
+}
+
+.controls .buttons {
+  margin-left: 1vw;
+  // margin-bottom: 1vh;
+}
+
+.buttons button {
+  width: 45%;
+  // height: fit-content;
+  height: 5vh;
+  font-size: 3vh;
+  font-weight: bold;
+  color: black;
+}
+
+.defer_button {
+  margin-left: 15vw;
+}
+
+.defer_button button {
+  margin-top: 2vh;
+  width: 45%;
+  height: 5vh;
+  // height: fit-content;
+  font-size: 3vh;
+  font-weight: bold;
+  color: black;
+}
+
+.controls .timer_controls {
+  border-color: white;
+  border-style: solid;
+  width: 100%;
+  padding: 1vh;
+}
+
+.controls .timer_controls .singular button {
+  width: 100%;
+  height: 5vh;
+  color: black;
+  font-size: 3vh;
+  font-weight: bold;
+}
+
+@media screen and (orientation:landscape) {
+  .controls .status_clock {
+    font-size: 7vh;
+  }
+}
+
+@media screen and (orientation:portrait) {
+  .controls .status_clock {
+    font-size: 7vw;
+  }
+}

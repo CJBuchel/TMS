@@ -1,8 +1,10 @@
 {
-	"packages": [
-		"packages/*"
-	],
-	"version": "0.0.0",
-	"npmClient": "yarn",
-	"useWorkspaces": true
+  "packages": [
+    "CJMS-Interfaces/*",
+    "CJMS-Servers/*",
+    "CJMS-SharedServices/*"
+  ],
+  "version": "0.0.0",
+  "npmClient": "yarn",
+  "useWorkspaces": true
 }

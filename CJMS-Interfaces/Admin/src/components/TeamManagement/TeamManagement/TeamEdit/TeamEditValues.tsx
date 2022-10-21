@@ -82,7 +82,6 @@ export default class TeamEditValues extends Component<IProps, IState> {
   }
 
   handleRoundSelect(round:number) {
-    console.log(round);
     this.setState({selected_round: round});
   }
 
@@ -106,7 +105,6 @@ export default class TeamEditValues extends Component<IProps, IState> {
 
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any) {
     if (this.props != prevProps) {
-      console.log("Changed");
       this.handleTeamNumberChange(this.props.selected_team.team_number);
       this.handleTeamNameChange(this.props.selected_team.team_name);
       this.handleIDChange(this.props.selected_team.team_id);
@@ -147,7 +145,6 @@ export default class TeamEditValues extends Component<IProps, IState> {
   }
 
   closeCallback() {
-    console.log("close callback");
     var modal = this.state.scoresheet_modal;
     modal.scoring_modal = false;
     this.setState({scoresheet_modal: modal});
@@ -185,7 +182,6 @@ export default class TeamEditValues extends Component<IProps, IState> {
   }
 
   render() {
-    console.log(this.props.selected_team.team_number);
     return (
       <div className="team-values">
         <Accordion sx={{backgroundColor: '#03061d', color: 'white'}} expanded={this.state.accordion_expanded === -1} onChange={() => this.handleAccordionChange(-1)}>

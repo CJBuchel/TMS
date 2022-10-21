@@ -198,6 +198,7 @@ export default class OnlineLink extends Component<IProps, IState> {
           {/* FLL Season */}
           <h3>Tournament</h3>
           <Select
+            className="selector"
             options={this.state.tournament_options}
             placeholder={`${this.state.tournament_options.length > 0 ? 'Select Tournament' : 'Offline'}`}
             onChange={(tourny) => this.setSelectedTournament(String(tourny?.value))}
@@ -206,7 +207,7 @@ export default class OnlineLink extends Component<IProps, IState> {
           <h3>Cross reference schedule using:</h3>
           <RadioGroup onChange={(e) => this.setLinkStyle(Number(e.target.value))} defaultValue={CrossCheckStyle.FormattedTeamNumbers}>
             <FormControlLabel value={CrossCheckStyle.FormattedTeamNumbers} defaultChecked={true} control={<Radio />} label="Team Numbers (Format: AU-000C)"/>
-            <FormControlLabel value={CrossCheckStyle.TeamNumbers} defaultChecked={true} control={<Radio />} label="Team Numbers (Format: 000)"/>
+            <FormControlLabel value={CrossCheckStyle.TeamNumbers} control={<Radio />} label="Team Numbers (Format: 000)"/>
             <FormControlLabel value={CrossCheckStyle.TeamNames} control={<Radio />} label="Team Names"/>
           </RadioGroup>
 

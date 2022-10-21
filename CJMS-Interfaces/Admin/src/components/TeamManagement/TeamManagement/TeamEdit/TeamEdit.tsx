@@ -10,7 +10,7 @@ import "../../../../assets/TeamEdit.scss";
 import TeamEditValues from "./TeamEditValues";
 
 interface IProps {
-  selected_team:ITeam;
+  selected_team?:ITeam;
 }
 
 interface IState {
@@ -100,8 +100,8 @@ export default class TeamEdit extends Component<IProps, IState> {
   getChart() {
     if (this.state.graph_data.length > 0) {
       return (
-        <ResponsiveContainer key={this.props.selected_team.team_number} width='100%' height='40%'>
-          <LineChart key={this.props.selected_team.team_number} data={this.state.graph_data} margin={{top: 30, right: 30, left: 20, bottom: 5}}>
+        <ResponsiveContainer key={this.props.selected_team?.team_number} width='100%' height='40%'>
+          <LineChart key={this.props.selected_team?.team_number} data={this.state.graph_data} margin={{top: 30, right: 30, left: 20, bottom: 5}}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="id" />
             <YAxis color="white" />
@@ -126,11 +126,15 @@ export default class TeamEdit extends Component<IProps, IState> {
   }
 
   render() {
-    return(
-      <div className="team-edit">
-        {this.getChart()}
-        {this.props.selected_team ? <TeamEditValues selected_team={this.props.selected_team}/> : ''}
-      </div>
-    );
+    if (this.props.selected_team) {
+      return(
+        <div className="team-edit">
+          {this.getChart()}
+          <TeamEditValues selected_team={this.props.selected_team}/>
+        </div>
+      );
+    } else {
+      return (<></>)
+    }
   }
 }

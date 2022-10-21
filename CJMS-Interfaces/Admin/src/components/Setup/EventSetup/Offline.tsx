@@ -59,6 +59,15 @@ export default class Offline extends Component<IProps, IState> {
     this.setState({selected_season: value});
   }
 
+  setMatchLock(match_lock:number) {
+    console.log(match_lock);
+    if (match_lock === 0) {
+      this.setState({match_locked: false});
+    } else {
+      this.setState({match_locked: true});
+    }
+  }
+
   onEventNameChange(e:ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     this.setState({eventName:e.target.value});
@@ -137,6 +146,7 @@ export default class Offline extends Component<IProps, IState> {
           {/* FLL Season */}
           <h3>Season (default: latest)</h3>
           <Select
+            className="selector"
             options={this.state.season_options}
             value={this.state.season_options.find((season) => season.value === this.state.selected_season)}
             onChange={(season) => this.setSelectedSeason(Number(season?.value))}
@@ -151,9 +161,9 @@ export default class Offline extends Component<IProps, IState> {
           <input type={"number"} onChange={(e) => this.onRoundsChange(e)} placeholder="rounds..." defaultValue={3}/>
 
           <h3>Match Locked</h3>
-          <RadioGroup row defaultValue={true}>
-            <FormControlLabel value={true} defaultChecked={true} control={<Radio />} label="Match Lock"/>
-            <FormControlLabel value={false} control={<Radio />} label="Match Free"/>
+          <RadioGroup onChange={(e) => this.setMatchLock(Number(e.target.value))} row defaultValue={1}>
+            <FormControlLabel value={1} defaultChecked={true} control={<Radio />} label="Match Lock"/>
+            <FormControlLabel value={0} control={<Radio />} label="Match Free"/>
           </RadioGroup>
 
           {/* Controls */}

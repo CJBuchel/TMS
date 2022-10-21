@@ -310,7 +310,7 @@ export default class TeamEditValues extends Component<IProps, IState> {
             >Add</Button>
           </AccordionDetails>
         </Accordion>
-
+        
         <ScoresheetModal 
           display={this.state.scoresheet_modal.scoring_modal} 
           scoresheet={this.state.scoresheet_modal.scoresheet} 

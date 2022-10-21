@@ -5,7 +5,7 @@ import Calculator from "ausfll-score-calculator";
 import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game } from "ausfll-score-calculator/dist/game-types";
 import { Button, TableCell, TableRow, TextField } from "@mui/material";
 import { comm_service, initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
-import { IEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
+import { IEvent, initIEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
 import { Component, Fragment } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -30,7 +30,7 @@ interface IProps {
 interface IState {
   data:ScoreResult[];
   status:Status;
-  external_eventData?:IEvent;
+  external_eventData:IEvent;
   game:Game;
   publicComment:string;
   privateComment:string;
@@ -45,6 +45,7 @@ export default class ScoresheetModal extends Component<IProps, IState> {
       status: {score:0, validationErrors:[
         { message: `${Calculator.SuperPowered.missions.length} unanswered questions!` }
       ]},
+      external_eventData: initIEvent(),
       game: Calculator.Games[0],
 
       publicComment: '',
@@ -109,8 +110,10 @@ export default class ScoresheetModal extends Component<IProps, IState> {
   }
 
   setEventData(event:IEvent) {
+    if (event.season != undefined && event.season != null) {
     this.setState({external_eventData: event});
-    this.setState({game: Calculator.Games.find((game) => game.season === event.season) || Calculator.Games[0]});
+      this.setState({game: Calculator.Games.find((game) => game.season === event.season) || Calculator.Games[0]});
+    }
   }
 
   componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
@@ -123,15 +126,16 @@ export default class ScoresheetModal extends Component<IProps, IState> {
     }
   }
 
-  componentDidMount(): void {
-    CJMS_REQUEST_EVENT().then((event) => {
+  async componentDidMount() {
+    const event = await CJMS_REQUEST_EVENT();
+    if (event) {
       this.setEventData(event);
       if (this.props.existing_scoresheet) {
         this.initData();
       } else {
         this.setDefaults();
       }
-    });
+    }
   }
 
   setPublicComment(e:string) {

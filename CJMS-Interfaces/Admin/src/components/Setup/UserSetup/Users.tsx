@@ -67,8 +67,10 @@ export default class UsersSetup extends Component<IProps, IState> {
             <h3>Head Referee</h3>
             <input type="password" placeholder="Head Referee Password..." onChange={e => this.onHeadRefereeChange(e.target.value)}/>
 
-            <button className="hoverButton back-red" onClick={() => {window.location.reload()}}>Clear</button>
-            <button className="hoverButton back-green" onClick={this.handleSubmit}>Submit</button>
+            <div className="user-submit-buttons">
+              <button className="hoverButton back-red" onClick={() => {window.location.reload()}}>Clear</button>
+              <button className="hoverButton back-green" onClick={this.handleSubmit}>Submit</button>
+            </div>
           </form>
         </div>
 

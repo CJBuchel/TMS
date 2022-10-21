@@ -15,15 +15,15 @@
 - Main page for admin, and first time setup
 
 ### Clock/Timer/Match Display
-- A single page interface that displays the timer and the controls for timer.
+- A single page interface that displays the timer and current match info.
 
 ### Match Control
 - A multi page interface that provides the full controls for the timer as well as the scoring progress and team score changes
 - Often provided to the head ref which can change the current match as well as reschedule matches and change team scores.
 
 ### Scorer
-- A two page interface which provides either simple controls to add a score to the database.
-- Or provides a more complex page which allows input for each type of score and then calculates final score.
+- Multi page interface holding manual scoring. And calculated scoring
+- The public npm calculator module for the FLL dashboard https://github.com/fwestling/ausfll-score-calculator
 
 ### Audience Display
 - A single page interface with no login. Dynamically changes content based on current events and admin controls

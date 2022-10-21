@@ -1,0 +1,90 @@
+.tm-table {
+  border-radius: 5px;
+  // font-size: 3vw;
+  // font-weight: normal;
+  border: none;
+  border-collapse: collapse;
+  height: 100%;
+  width: 100%;
+  white-space: nowrap;
+  background-color: white;
+  color: black;
+}
+
+.tm-table table {
+  // box-sizing: border-box;
+}
+
+.tm-table td, .tm-table th {
+  text-align: center;
+  // padding: 0.5vw;
+  // min-width: 90px;
+  overflow: hidden;
+}
+
+.tm-table tr {
+  // display: block;
+  -webkit-appearance: none;
+}
+
+.tm-table td {
+  position: relative;
+  border-right: 1px solid #f8f8f8;
+  font-size: 0.9vw;
+}
+
+.tm-table thead tr th {
+  color: #ffffff;
+  background: #008cff;
+  position: sticky;
+
+  font-size: 1vw;
+  z-index: 1;
+
+  top: 0;
+}
+
+.tm-table thead th:nth-child(odd) {
+  color: #ffffff;
+  background: #243240;
+  // overflow: hidden;
+}
+
+.tm-table tr:nth-child(even) {
+  background: #a3a3a3;
+}
+
+.tm-table tr.strikeout td:before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  border-bottom: 3px solid #111;
+  width: 100%;
+}
+
+.tm-table tr.strikeout td:after {
+  content: "\00B7";
+  font-size: 1px;
+  background-color: cyan;
+}
+
+.tm-table tr.selected td:first-child {
+  box-shadow: 
+    inset 0px 4px 3px -2px blue,
+    inset 0px -4px 3px -2px blue,
+    inset 4px 0px 3px -2px blue;
+}
+
+.tm-table tr.selected td {
+  box-shadow: 
+    inset 0px 4px 3px -2px blue,
+    inset 0px -4px 3px -2px blue;
+}
+
+.tm-table tr.selected td:last-child {
+  box-shadow: 
+    inset 0px 4px 3px -2px blue,
+    inset 0px -4px 3px -2px blue,
+    inset -4px 0px 3px -2px blue;
+}

@@ -1,8 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onEvent = void 0;
+const nodeclient_1 = require("mhub/dist/src/nodeclient");
 const browserclient_1 = require("mhub/dist/src/browserclient");
-var client = new browserclient_1.default(typeof window !== 'undefined' ? `ws://${window.location.hostname}:2122` : `ws://localhost:2122`);
+var client;
+if (typeof window !== 'undefined') {
+    client = new browserclient_1.default(`ws://${window.location.hostname}:2122`);
+}
+else {
+    client = new nodeclient_1.default("ws://localhost:2122");
+}
 const RETRY_TIMEOUT = 1000; // 1 second
 var listeners = [];
 let connectPromise = null;

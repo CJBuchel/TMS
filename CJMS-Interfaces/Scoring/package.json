@@ -4,9 +4,13 @@
   "private": true,
   "dependencies": {
     "@cjms_interfaces/shared": "^1.0.0",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.9",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.13",
     "@types/react-select": "^5.0.1",
+    "ausfll-score-calculator": "^22.0.5",
     "bootstrap": "^5.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -18,7 +22,7 @@
   "scripts": {
     "copy-env-file": "copyfiles -u 1 ../../.env ./.env",
     "build": "react-scripts build",
-    "start": "BROWSER=none PORT=2832 react-scripts start",
+    "start": "cross-env BROWSER=none PORT=2832 react-scripts start",
     "eject": "react-scripts eject"
   },
   "browserslist": {

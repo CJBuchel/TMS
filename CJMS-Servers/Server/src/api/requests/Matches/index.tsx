@@ -7,25 +7,6 @@ export class Matches {
   constructor(requestServer:RequestServer) {
     console.log("Match Requests Constructed");
 
-    var existing_loadedMatch:boolean = false;
-    var load_match:boolean = false;
-
-    function sendLoadedMatch(match:string) {
-      if (!existing_loadedMatch) {
-        existing_loadedMatch = true;
-
-        const loopInterval = setInterval(loop, 1000);
-        function loop() {
-          if (load_match) {
-            comm_service.senders.sendMatchLoadedEvent(match);
-          } else {
-            clearInterval(loopInterval);
-            existing_loadedMatch = false;
-          }
-        }
-      }
-    }
-
     requestServer.get().get(request_namespaces.request_fetch_matches, (req, res) => {
       const query = MatchModel.find({});
       query.exec(function(err, response) {
@@ -43,13 +24,39 @@ export class Matches {
       });
     });
 
-    requestServer.get().post(request_namespaces.request_post_match_load, (req, res) => {
-      if (req.body.load) {
-        load_match = true;
-        sendLoadedMatch(req.body.match);
-      } else {
-        load_match = false;
-      }
+    requestServer.get().post(request_namespaces.request_post_match_complete, (req, res) => {
+      // console.log(req.body);
+      
+      const filter = {match_number: req.body.match};
+      const update = {complete: req.body.complete};
+
+      MatchModel.findOneAndUpdate(filter, update, {}, (err) => {
+        if (err) {
+          res.send({message: "Error while updating team"});
+          console.log(err.message);
+        } else {
+          res.send({});
+          comm_service.senders.sendMatchUpdateEvent('update');
+        }
+      });
+
+    });
+
+    requestServer.get().post(request_namespaces.request_post_match_update, (req, res) => {
+      // console.log(req.body);
+
+      const filter = {match_number: req.body.match};
+      const update = req.body.update;
+
+      MatchModel.findOneAndUpdate(filter, update, {}, (err) => {
+        if (err) {
+          res.send({message: "Error while updating team"});
+          console.log(err.message);
+        } else {
+          res.send({success: true});
+          comm_service.senders.sendMatchUpdateEvent('update');
+        }
+      });
     });
   }
 }

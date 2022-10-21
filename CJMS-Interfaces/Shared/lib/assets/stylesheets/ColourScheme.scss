@@ -14,6 +14,14 @@
   background-color: red;
 }
 
+.back-blue {
+  background-color: blue;
+}
+
+.back-cyan {
+  background-color: cyan;
+}
+
 .back-pink {
   background-color: rgb(199, 0, 199);
 }
@@ -24,4 +32,8 @@
 
 .back-transparent {
   background: transparent;
+}
+
+.back-half-transparent {
+  opacity: 0.4;
 }

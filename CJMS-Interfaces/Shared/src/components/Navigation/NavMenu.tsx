@@ -1,12 +1,12 @@
 // 
 // Generic shared navbar
 // 
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { comm_service, IEvent, request_namespaces } from "@cjms_shared/services";
 import React, { Component } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import "../../assets/stylesheets/NavMenu.scss";
-import { CJMS_FETCH_GENERIC_GET } from "../Requests/Request";
+import { CJMS_FETCH_GENERIC_GET, CJMS_REQUEST_EVENT } from "../Requests/Request";
 
 export interface NavMenuLink {
   name:string;
@@ -28,7 +28,8 @@ interface IProps {
 }
 
 interface IState {
-  external_eventData:any;
+  external_eventData:IEvent;
+  eventState:string;
 }
 
 export default class NavMenu extends Component<IProps, IState> {
@@ -36,22 +37,32 @@ export default class NavMenu extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      external_eventData: undefined
+      external_eventData: undefined,
+      eventState: "Awaiting"
     }
 
     comm_service.listeners.onEventUpdate(async () => {
-      const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
       this.setEventData(eventData);
     });
+
+    comm_service.listeners.onEventState(async (e:any) => {
+      this.setEventState(e);
+    });
+  }
+  
+  setEventState(stateData:any) {
+    this.setState({eventState: stateData});
   }
 
-  setEventData(eventData:any) {
-    this.setState({external_eventData: eventData.data});
+  setEventData(eventData:IEvent) {
+    this.setState({external_eventData: eventData});
   }
 
-  async componentDidMount() {
-    const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, true);
-    this.setEventData(eventData);
+  componentDidMount() {
+    CJMS_REQUEST_EVENT(true).then((data) => {
+      this.setEventData(data);
+    });
   }
 
   getRoute(link:NavMenuLink) {
@@ -92,7 +103,7 @@ export default class NavMenu extends Component<IProps, IState> {
       }
 
       categories.push(
-        <div key={cat.name} className="column">
+        <div key={cat.name} className="navbar-column">
           <h3>{cat.name}</h3>
           {links}
         </div>
@@ -107,6 +118,25 @@ export default class NavMenu extends Component<IProps, IState> {
     );
   }
 
+  getState() {
+    var color = 'White';
+    if (this.state.eventState=='Awaiting') {
+      color = "White";
+    } else if (this.state.eventState=='Idle') {
+      color = "White";
+    } else if (this.state.eventState=='Match Loaded') {
+      color = "Orange";
+    } else if (this.state.eventState=='Pre-Running') {
+      color = "Yellow";
+    } else if (this.state.eventState=='Running') {
+      color = "Green";
+    } else if (this.state.eventState=='Aborted') {
+      color = "Red";
+    }
+
+    return <b><span id="nav-state-name">{this.state.external_eventData?.event_name} | </span>State: <span style={{color: `${color}`}}>{this.state.eventState}</span></b>
+  }
+
   getMode() {
     var mode;
     if (this.state.external_eventData?.match_locked) {
@@ -115,7 +145,7 @@ export default class NavMenu extends Component<IProps, IState> {
       mode = <span style={{color: "dodgerblue"}}>Match Free</span>
     }
 
-    return <b>{this.state.external_eventData?.event_name} | Mode: {mode}</b>
+    return <b>Mode: {mode}</b>
   }
 
 
@@ -139,10 +169,17 @@ export default class NavMenu extends Component<IProps, IState> {
           </div>
 
 
-          {/* Logout */}
+          {/* Navbar right */}
           <div className="navbar-right">
-            {this.getMode()}
-            <a onClick={this.clearSessionStorage}>Logout</a>
+            <span id="nav-state">
+              {this.getState()}
+            </span>
+            <span id="nav-mode">
+              {this.getMode()}
+            </span>
+            <span id="nav-logout">
+              <a onClick={this.clearSessionStorage}>Logout</a>
+            </span>
           </div>
         </div>
         {this.getRoutes()}

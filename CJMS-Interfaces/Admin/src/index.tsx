@@ -1,28 +1,45 @@
 import ReactDOM from 'react-dom';
 import React, {useState, useEffect} from 'react';
-import {Login, CJMS_Application, useToken, comm_service, NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
+import { Login, CJMS_Application, useToken, NavMenu, NavMenuContent } from '@cjms_interfaces/shared';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-// import { Setup } from './components/Setup';
 
 import "./assets/application.scss";
-import { Setup } from './components/Setup';
+import { EventSetup } from './components/Setup/EventSetup';
+import { UsersSetup } from './components/Setup/UserSetup';
+import { TeamManagement } from './components/TeamManagement/TeamManagement';
 
 
 /** Admin Structure,
  * Main Page (Setup/Main Control)
- * Events Control & Console (Comm server)
- * Team Stats/Scoring Editor
- * Scheduling?
+ * Team Manager/Scoring Editor
+ * Scheduling/MatchControl?
  */
 var navContent:NavMenuContent = {
   navCategories: [
     {
-      name:"Setup",
+      name: "Setup",
       links: [
         {
-          name:"Event Setup", 
-          path:"/Setup", 
-          linkTo:<Setup/>
+          name: "Event Setup", 
+          path: "/", 
+          linkTo:<EventSetup/>
+        },
+
+        {
+          name: "Users Setup",
+          path: "/Users",
+          linkTo:<UsersSetup/>
+        },
+      ]
+    },
+
+    {
+      name: "Team Management",
+      links: [
+        {
+          name: "Team Management",
+          path: "/TeamManagement",
+          linkTo:<TeamManagement/>
         },
       ]
     }

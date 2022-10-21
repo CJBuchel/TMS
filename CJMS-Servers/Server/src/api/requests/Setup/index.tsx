@@ -1,5 +1,5 @@
 import { RequestServer } from "../RequestServer";
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { comm_service, IEvent, request_namespaces } from "@cjms_shared/services";
 import mongoose from "mongoose";
 import { setupUsers } from "../../database/models/User";
 import { EventModel } from "../../database/models/Event";
@@ -13,8 +13,8 @@ export class Setup {
     console.log("Setup Requests Constructed");
 
     requestServer.get().post(request_namespaces.request_post_setup, async (req, res) => {
-      const eventName = req.body.eventName;
-      const csv = req.body.csv;
+      const event:IEvent = req.body;
+      const csv:any = event.event_csv;
 
       const team_block:any[] = [];
       const match_block:any[] = [];
@@ -50,9 +50,11 @@ export class Setup {
       await setupTeams(team_block);
       await setupMatches(match_block);
       await setupJudgingSessions(judging_block);
+
+      event.event_tables = table_names;
       
       // Setup event model
-      await new EventModel({event_name: eventName, event_csv: csv, event_tables: table_names}).save();
+      await new EventModel(event).save();
       res.send({message: "Successfully Imported Setup"});
 
       comm_service.senders.sendEventUpdateEvent('setup');

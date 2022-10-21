@@ -131,4 +131,4 @@ export default class InfiniteTable extends Component<IProps, IState> {
       </div>
     );
   }
-} 
+}

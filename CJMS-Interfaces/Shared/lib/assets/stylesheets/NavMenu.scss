@@ -3,50 +3,65 @@
 // @import "structures";
 
 .navbar {
+  height: 5%;
   // position: relative;
   overflow: hidden;
   background-color: #333;
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 10px;
+  font-size: 2vh;
   @include application.border-struct($colour: green, $type: solid);
 }
 
 .navbar-right {
   float: right;
+  position: relative;
+  white-space: nowrap;
 }
 
 .navbar a {
   float: left;
-  font-size: 16px;
+  // font-size: 16px;
+  // font-size: 2vh;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  // padding: 14px 16px;
+
+  padding: 1.4vh 1.4vh;
   text-decoration: none;
 }
 
 .navbar b {
   float: left;
-  font-size: 16px;
+  // font-size: 2vh;
   color: white;
   background-color: #333;
   text-align: center;
-  padding: 14px 16px;
+  // padding: 14px 16px;
+  padding: 1.4vh 1.4vh;
+  // position: relative;
   border-color: orange;
   // text-decoration: none;
 }
 
+.navbar b button {
+  // font-size: 2vh;
+}
+
 .dropdown {
+  font-size: 2vh;
   float: left;
   overflow: hidden;
   background-color: inherit;
 }
 
 .dropdown .dropbtn {
-  font-size: 16px;
+  font-size: 2vh;
   border: none;
   outline: none;
   color: white;
-  padding: 14px 16px;
+  // padding: 14px 16px;
+  padding: 1.4vh 1.4vh;
   background-color: inherit;
   font: inherit;
   margin: 0;
@@ -62,8 +77,8 @@
   background-color: #f9f9f9;
   width: 100%;
   left: 0;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  // box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 10;
 }
 
 .dropdown-content .header {
@@ -77,17 +92,17 @@
 }
 
 /* Create three equal columns that floats next to each other */
-.column {
+.navbar-column {
   @include application.column-struct(33.33%, 0px);
   background-color: #ccc;
   height: 25vh;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   color: black;
-  padding: 10px;
+  // padding: 2%;
 }
 
-.column a, b {
+.navbar-column a, b {
   float: none;
   color: black;
   padding: 16px;
@@ -97,6 +112,10 @@
   box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
   background-color: rgba(204, 204, 204, 0.788);
   border-radius: 10px;
+}
+
+.column h3 {
+  padding: 10px;
 }
 
 .column a:hover {
@@ -110,10 +129,26 @@
   clear: both;
 }
 
+@media screen and (orientation: portrait) {
+  .navbar #nav-state #nav-state-name {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .navbar-right #nav-state {
+    display: none;
+  }
+}
+
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
-  .column {
+  .narbar-column {
     width: 100%;
     height: auto;
+  }
+
+  .navbar-right #nav-state, #nav-mode {
+    display: none;
   }
 }

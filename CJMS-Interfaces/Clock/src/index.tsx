@@ -1,6 +1,6 @@
 import { CJMS_Application } from '@cjms_interfaces/shared';
 
-import "./assets/application.scss";
+import "./assets/stylesheets/application.scss";
 import Display from './Display';
 
 function App() {

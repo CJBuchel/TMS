@@ -16,7 +16,7 @@
   "scripts": {
     "copy-env-file": "copyfiles -u 1 ../../.env ./.env",
     "build": "react-scripts build",
-    "start": "BROWSER=none PORT=2829 react-scripts start",
+    "start": "cross-env BROWSER=none PORT=2829 react-scripts start",
     "eject": "react-scripts eject"
   },
   "browserslist": {

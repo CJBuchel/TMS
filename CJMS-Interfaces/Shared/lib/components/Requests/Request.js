@@ -82,8 +82,8 @@ export async function CJMS_POST_SETUP(event) {
     return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_setup, event);
 }
 // Post Score
-export async function CJMS_POST_SCORE(teamScore) {
-    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, teamScore);
+export async function CJMS_POST_SCORE(team_number, teamScore) {
+    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, { team_number: team_number, score: teamScore });
 }
 // Get Teams
 export async function CJMS_REQUEST_TEAMS(noAlert = false) {

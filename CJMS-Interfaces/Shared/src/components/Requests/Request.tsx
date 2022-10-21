@@ -99,8 +99,8 @@ export async function CJMS_POST_SETUP(event:IEvent): Promise<Response> {
 }
 
 // Post Score
-export async function CJMS_POST_SCORE(teamScore:ITeamScore): Promise<Response> {
-  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, teamScore);
+export async function CJMS_POST_SCORE(team_number:string, teamScore:ITeamScore): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_team_score, {team_number: team_number, score: teamScore});
 }
 
 // Get Teams

@@ -99,7 +99,7 @@ export default class ChallengeScoring extends Component<IProps,IState> {
     scoresheet.valid_scoresheet = true;
 
     // team specifics
-    scoresheet.scoresheet.team_id = this.state.selected_team.value;
+    // scoresheet.scoresheet.team_id = this.state.selected_team.value;
     scoresheet.scoresheet.round = this.state.selected_round.value;
 
     // Get the current match and update it to complete/submitted for this table
@@ -107,16 +107,16 @@ export default class ChallengeScoring extends Component<IProps,IState> {
     if (match != undefined) {
      
       var match_update = match;
-      if (match.on_table1.team_number == scoresheet.scoresheet.team_id) {
+      if (match.on_table1.team_number == this.state.selected_team.value) {
         match_update.on_table1.score_submitted = true;
-      } else if (match.on_table2.team_number == scoresheet.scoresheet.team_id) {
+      } else if (match.on_table2.team_number == this.state.selected_team.value) {
         match_update.on_table2.score_submitted = true;
       } else {
         window.alert("Team does not exist in this match");
         return;
       }
   
-      const submit_result:any = await CJMS_POST_SCORE(scoresheet);
+      const submit_result:any = await CJMS_POST_SCORE(this.state.selected_team.value, scoresheet);
       const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
         match: match.match_number,
         update: match_update

@@ -24,6 +24,7 @@ interface IState {
   // Internal Set data
   form_MatchNumber?:string;
   team_scoresheet:ITeamScore;
+  selected_teamNumber:string;
 
   options_teams?:SelectOption[];
   options_rounds?:SelectOption[];
@@ -42,6 +43,7 @@ export default class ManualScoring extends Component<IProps, IState> {
 
 
     this.state = {
+      selected_teamNumber: '',
       team_scoresheet: initITeamScore(),
     }
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -75,9 +77,10 @@ export default class ManualScoring extends Component<IProps, IState> {
   }
 
   onSelectTeam(e:SingleValue<SelectOption>) {
-    var scoresheet = this.state.team_scoresheet;
-    scoresheet.scoresheet.team_id = e?.value;
-    this.setState({team_scoresheet: scoresheet});
+    // var scoresheet = this.state.team_scoresheet;
+    this.setState({selected_teamNumber: e?.value});
+    // scoresheet.scoresheet.team_id = e?.value;
+    // this.setState({team_scoresheet: scoresheet});
   }
 
   onSelectRound(e:SingleValue<SelectOption>) {
@@ -122,9 +125,9 @@ export default class ManualScoring extends Component<IProps, IState> {
   async handleSubmit() {
     const match = this.props.matchData.find(e => e.match_number == this.state.form_MatchNumber) || initIMatch();
     var update = match;
-    if (match.on_table1.team_number == this.state.team_scoresheet.scoresheet.team_id) {
+    if (match.on_table1.team_number == this.state.selected_teamNumber) {
       update.on_table1.score_submitted = true;
-    } else if (match.on_table2.team_number == this.state.team_scoresheet.scoresheet.team_id) {
+    } else if (match.on_table2.team_number == this.state.selected_teamNumber) {
       update.on_table2.score_submitted = true;
     } else {
       window.alert("Team does not exist in this match");
@@ -135,7 +138,7 @@ export default class ManualScoring extends Component<IProps, IState> {
     scoresheet.referee = this.props.scorer;
     this.setState({team_scoresheet: scoresheet});
 
-    const submit_result:any = await CJMS_POST_SCORE(scoresheet);
+    const submit_result:any = await CJMS_POST_SCORE(this.state.selected_teamNumber, scoresheet);
     const match_result:any = await CJMS_POST_MATCH_UPDATE(this.state.form_MatchNumber || "", update);
 
     if (submit_result.success && match_result.success) {
@@ -175,7 +178,7 @@ export default class ManualScoring extends Component<IProps, IState> {
           
           <div className="buttons">
             {/* No Show */}
-            <button onClick={this.handleNoShow} disabled={(!this.state.team_scoresheet.scoresheet.team_id || !this.state.team_scoresheet.scoresheet.round)} className={`hoverButton ${(!this.state.team_scoresheet.scoresheet.team_id || !this.state.team_scoresheet.scoresheet.round) ? "" : "back-orange"}`}>No Show</button>
+            <button onClick={this.handleNoShow} disabled={(this.state.selected_teamNumber.length <=0 || !this.state.team_scoresheet.scoresheet.round)} className={`hoverButton ${(this.state.selected_teamNumber.length <= 0 || !this.state.team_scoresheet.scoresheet.round) ? "" : "back-orange"}`}>No Show</button>
           </div>
 
           <div className="buttons">
@@ -186,14 +189,12 @@ export default class ManualScoring extends Component<IProps, IState> {
           <div className="submitButton">
             {/* Submit Button */}
             <button onClick={this.handleSubmit} disabled={
-              (
-                !this.state.team_scoresheet.scoresheet.team_id || 
+              ( 
                 !this.state.team_scoresheet.scoresheet.round || 
                 !this.state.team_scoresheet.score || 
                 !this.state.team_scoresheet.gp)
             } className={
               `hoverButton ${(
-                !this.state.team_scoresheet.scoresheet.team_id || 
                 !this.state.team_scoresheet.scoresheet.round || 
                 !this.state.team_scoresheet.score || 
                 !this.state.team_scoresheet.gp) ? "" : "back-green"}`

@@ -41,13 +41,14 @@ export class Teams {
     });
 
     requestServer.get().post(request_namespaces.request_post_team_score, (req, res) => {
-      const teamScores:ITeamScore = req.body;
+      const teamScores:ITeamScore = req.body.score;
+      const team_number:string = req.body.team_number;
 
       const update = {
         $push: {scores: teamScores}
       };
 
-      const filter = { team_number: teamScores.scoresheet.team_id };
+      const filter = { team_number: team_number };
       TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
         if (err) {
           res.send({message: "Error while updating team"});

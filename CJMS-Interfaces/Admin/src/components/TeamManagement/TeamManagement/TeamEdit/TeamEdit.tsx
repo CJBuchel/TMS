@@ -7,10 +7,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { CJMS_REQUEST_EVENT } from "@cjms_interfaces/shared";
 
 import "../../../../assets/TeamEdit.scss";
-import TeamValues from "./TeamValues";
+import TeamEditValues from "./TeamEditValues";
 
 interface IProps {
-  selected_team?:ITeam;
+  selected_team:ITeam;
 }
 
 interface IState {
@@ -45,28 +45,25 @@ export default class TeamEdit extends Component<IProps, IState> {
   setScoreArray() {
     this.setState({graph_data: []});
     if (this.props.selected_team) {
-      if (this.props.selected_team.scores.length > 0) {
+      var graph_array:any[] = this.state.game.scores.map(score => score);
 
-        var graph_array:any[] = this.state.game.scores.map(score => score);
+      // console.log(graph_array);
+      for (const round of this.props.selected_team.scores) {
 
-        // console.log(graph_array);
-        for (const round of this.props.selected_team.scores) {
-
-          if (round.scoresheet.answers.length > 0 && round.valid_scoresheet) {
-            for (const score of round.scoresheet.answers) { // answers
-              const single_score_scoresheet:ScoreAnswer[] = [score];
-              Object.assign(graph_array.find(e => e.id == score.id), {
-                round: String(round.scoresheet.round),
-                [round.scoresheet.round]:this.state.game.score(single_score_scoresheet)
-              });
-            }
+        if (round.scoresheet.answers.length > 0 && round.valid_scoresheet) {
+          for (const score of round.scoresheet.answers) { // answers
+            const single_score_scoresheet:ScoreAnswer[] = [score];
+            Object.assign(graph_array.find(e => e.id == score.id), {
+              round: String(round.scoresheet.round),
+              [round.scoresheet.round]:this.state.game.score(single_score_scoresheet)
+            });
           }
         }
-
-
-        // console.log(graph_array);
-        this.setState({graph_data: graph_array});
       }
+
+
+      // console.log(graph_array);
+      this.setState({graph_data: graph_array});
     }
   }
 
@@ -103,8 +100,8 @@ export default class TeamEdit extends Component<IProps, IState> {
   getChart() {
     if (this.state.graph_data.length > 0) {
       return (
-        <ResponsiveContainer width='100%' height='40%'>
-          <LineChart data={this.state.graph_data} margin={{top: 30, right: 30, left: 20, bottom: 5}}>
+        <ResponsiveContainer key={this.props.selected_team.team_number} width='100%' height='40%'>
+          <LineChart key={this.props.selected_team.team_number} data={this.state.graph_data} margin={{top: 30, right: 30, left: 20, bottom: 5}}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="id" />
             <YAxis color="white" />
@@ -132,7 +129,7 @@ export default class TeamEdit extends Component<IProps, IState> {
     return(
       <div className="team-edit">
         {this.getChart()}
-        {this.props.selected_team ? <TeamValues selected_team={this.props.selected_team}/> : ''}
+        {this.props.selected_team ? <TeamEditValues selected_team={this.props.selected_team}/> : ''}
       </div>
     );
   }

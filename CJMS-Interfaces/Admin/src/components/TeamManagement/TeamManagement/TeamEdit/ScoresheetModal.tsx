@@ -1,62 +1,90 @@
-import React, { Component, Fragment } from "react";
-
-import "../../../assets/Challenge.scss";
-
+import { CJMS_POST_SCORE, CJMS_POST_TEAM_UPDATE, CJMS_REQUEST_EVENT, Question } from "@cjms_interfaces/shared";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-// import Question from "./Question";
-import { Question } from "@cjms_interfaces/shared"
 import Calculator from "ausfll-score-calculator";
 import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game } from "ausfll-score-calculator/dist/game-types";
-import { TableCell, TableRow, TextField } from "@mui/material";
-import { initITeamScore, ITeamScore } from "@cjms_shared/services";
+import { Button, TableCell, TableRow, TextField } from "@mui/material";
+import { comm_service, initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
 import { IEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
+import { Component, Fragment } from "react";
 
+import CloseIcon from "@mui/icons-material/Close";
+
+import "../../../../assets/ScoresheetModal.scss";
 
 type Status = {
   score: number;
   validationErrors: ScoreError[];
 }
 
-
 interface IProps {
-  handleScoreSubmit:Function;
-  handleScoreChange:Function;
-  event_data:IEvent;
+  display:boolean;
+  existing_scoresheet:boolean;
+  team:ITeam;
+  scoresheet:ITeamScore;
+  scoresheet_index:number;
+
+  closeCallback:Function;
 }
 
 interface IState {
   data:ScoreResult[];
   status:Status;
+  external_eventData?:IEvent;
   game:Game;
   publicComment:string;
   privateComment:string;
 }
 
-export default class Challenges extends Component<IProps, IState> {
+export default class ScoresheetModal extends Component<IProps, IState> {
   constructor(props:any) {
     super(props);
 
     this.state = {
-      data:[],
-      game: Calculator.Games.find((game) => game.season === this.props.event_data.season) || Calculator.Games[0],
+      data: [],
       status: {score:0, validationErrors:[
         { message: `${Calculator.SuperPowered.missions.length} unanswered questions!` }
       ]},
+      game: Calculator.Games[0],
 
       publicComment: '',
       privateComment: ''
     }
+
+    comm_service.listeners.onEventUpdate(async () => {
+      CJMS_REQUEST_EVENT().then((event) => {
+        this.setEventData(event);
+      });
+    });
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setDefaults = this.setDefaults.bind(this);
     this.handleNoShow = this.handleNoShow.bind(this);
   }
 
+  async handleScoreSubmit(score:ITeamScore) {
+    var team_update = this.props.team;
+
+    if (this.props.existing_scoresheet) {
+      score.referee = 'TM-Admin';
+      score.valid_scoresheet = true;
+      team_update.scores[this.props.scoresheet_index] = score;
+      CJMS_POST_TEAM_UPDATE(this.props.team.team_number, team_update).then(() => {
+        this.props.closeCallback();
+      });
+    } else {
+      score.referee = 'TM-Admin';
+      score.valid_scoresheet = true;
+      CJMS_POST_SCORE(this.props.team.team_number, score).then(() => {
+        this.props.closeCallback();
+      });
+    }
+  }
+
   async handleNoShow() {
-    var scoresheet = initITeamScore();
+    var scoresheet = this.props.scoresheet;
     scoresheet.no_show = true;
-    this.props.handleScoreSubmit(scoresheet);
+    this.handleScoreSubmit(scoresheet);
   }
 
   async handleSubmit() {
@@ -68,7 +96,8 @@ export default class Challenges extends Component<IProps, IState> {
       alert("Cannot submit score, invalid scoresheet");
       return;
     }
-  
+    
+
     var scoresheet:ITeamScore = initITeamScore();
     scoresheet.score = sc;
     scoresheet.gp = this.state.data.find((e) => e.id.startsWith("gp"))?.answer || "";
@@ -76,12 +105,33 @@ export default class Challenges extends Component<IProps, IState> {
     scoresheet.scoresheet.private_comment = this.state.privateComment;
     scoresheet.scoresheet.answers = this.state.data.map(({id, answer}) => ({id: id, answer: answer}));
 
-    this.props.handleScoreSubmit(scoresheet);
+    this.handleScoreSubmit(scoresheet);
+  }
+
+  setEventData(event:IEvent) {
+    this.setState({external_eventData: event});
+    this.setState({game: Calculator.Games.find((game) => game.season === event.season) || Calculator.Games[0]});
+  }
+
+  componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
+    if (this.props != prevProps) {
+      if (this.props.existing_scoresheet) {
+        this.initData();
+      } else {
+        this.setDefaults();
+      }
+    }
   }
 
   componentDidMount(): void {
-    this.setDefaults();
-    console.log(this.state.game.name);
+    CJMS_REQUEST_EVENT().then((event) => {
+      this.setEventData(event);
+      if (this.props.existing_scoresheet) {
+        this.initData();
+      } else {
+        this.setDefaults();
+      }
+    });
   }
 
   setPublicComment(e:string) {
@@ -106,6 +156,23 @@ export default class Challenges extends Component<IProps, IState> {
     return d;
   }
 
+  initData() {
+    const d = this.setDefaults();
+    if (d) {
+      const d2 = d.map((score) => ({
+        ...score,
+        answer: this.props.scoresheet.scoresheet.answers.find((i) => i.id === score.id)?.answer ?? score.answer
+      }));
+
+      this.setState({publicComment: this.props.scoresheet.scoresheet.public_comment});
+      this.setState({privateComment: this.props.scoresheet.scoresheet.private_comment});
+      
+      this.setState({data: d2});
+      this.updateScore(d2);
+    }
+  }
+
+
   updateScore(res:ScoreResult[]) {
     const val = this.state.game.validate(res);
     const sc = this.state.game.score(res);
@@ -116,7 +183,6 @@ export default class Challenges extends Component<IProps, IState> {
     }
 
     this.setState({status: newStatus})
-    this.props.handleScoreChange(newStatus.score);
   }
 
   setResponse(id:Score["id"], answer:ScoreResult["answer"]) {
@@ -213,22 +279,62 @@ export default class Challenges extends Component<IProps, IState> {
   }
 
   render() {
-    return(
-      <div className="challenges-container">
-        <Table>
-          <TableBody>
-            {this.getMissions()}
-          </TableBody>
-        </Table>
-        {this.getComments()}
+    if (!this.props.display) return (<></>);
+    return (
+      <div className="ScoresheetModal">
+        <Button
+          startIcon={<CloseIcon/>}
+          variant="outlined"
+          sx={{
+            width: '90%',
+            marginBottom: '1%',
+            marginTop: '1%',
+            color: 'white',
+            borderColor: 'white'
+          }}
+          onClick={() => {this.props.closeCallback()}}
+        >Close</Button>
 
-        <div className="challenge-buttons">
-          <button onClick={this.handleNoShow} className="hoverButton back-orange">No Show</button>
-          <button onClick={this.setDefaults} className="hoverButton back-red">Clear</button>
+        <div className="scoresheet-mission">
+          <Table>
+            <TableBody>
+              {this.getMissions()}
+            </TableBody>
+          </Table>
+          {this.getComments()}
         </div>
 
         <div className="challenge-buttons">
-          <button onClick={this.handleSubmit} disabled={this.state.status.validationErrors.length > 0} className={`hoverButton ${this.state.status.validationErrors.length > 0 ? "" : "back-green"}`}>Submit</button>
+          <Button
+            variant="outlined"
+            sx={{
+              color: 'orange',
+              borderColor: 'orange'
+            }}
+            onClick={() => {this.handleNoShow()}}
+          >No Show</Button>
+
+          <Button
+            variant="outlined"
+            sx={{
+              color: 'red',
+              borderColor: 'red',
+            }}
+            onClick={() => {this.setDefaults()}}
+          >Clear</Button>
+        </div>
+
+        <div className="challenge-buttons">
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: 'green',
+              color: 'white',
+              borderColor: 'green'
+            }}
+            onClick={() => {this.handleSubmit()}}
+            disabled={this.state.status.validationErrors.length > 0}
+          >Submit</Button>
         </div>
       </div>
     );

@@ -1,5 +1,4 @@
 export interface ITeamScoresheet {
-    team_id: string;
     tournament_id: string;
     round: number;
     answers: {

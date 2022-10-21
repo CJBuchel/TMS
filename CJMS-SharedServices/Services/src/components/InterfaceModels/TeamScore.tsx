@@ -1,6 +1,7 @@
 export interface ITeamScoresheet {
   // Header data
-  team_id: string;
+  // team_id: string;
+  // team_number: string;
   tournament_id: string;
   round: number;
 
@@ -35,7 +36,6 @@ export interface ITeamScore {
   no_show: boolean;
   score: number;
 
-
   // Generalized Scoresheet
   valid_scoresheet: boolean;
   scoresheet: ITeamScoresheet;
@@ -50,7 +50,7 @@ export function initITeamScore(instance?:ITeamScore) {
 
     valid_scoresheet: false,
     scoresheet: {
-      team_id: '',
+      // team_id: '',
       tournament_id: '',
       round: 0,
 

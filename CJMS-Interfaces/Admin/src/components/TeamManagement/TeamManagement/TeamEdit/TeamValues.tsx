@@ -1,6 +1,7 @@
 import { CJMS_POST_TEAM_UPDATE } from "@cjms_interfaces/shared";
-import { ITeam } from "@cjms_shared/services";
+import { initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
 import styled from "@emotion/styled";
+import { Score } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateIcon from "@mui/icons-material/Update";
@@ -8,6 +9,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, OutlinedInput, T
 import { Component } from "react";
 
 import "../../../../assets/TeamEdit.scss";
+import ScoresheetModal from "./ScoresheetModal";
 
 const ValidationTextField = styled(TextField)({
   '& input:valid + fieldset': {
@@ -24,6 +26,13 @@ const ValidationTextField = styled(TextField)({
   },
 });
 
+interface ScoresheetEdit {
+  scoresheet:ITeamScore;
+  scoring_modal:boolean;
+  existing_scores:boolean;
+  scoresheet_index:number;
+}
+
 interface IProps {
   selected_team:ITeam;
 }
@@ -36,6 +45,8 @@ interface IState {
   team_id:string;
   team_aff:string;
   team_ranking:number;
+
+  scoresheet_modal:ScoresheetEdit;
 }
 
 export default class TeamValues extends Component<IProps, IState> {
@@ -44,14 +55,18 @@ export default class TeamValues extends Component<IProps, IState> {
 
     this.state = {
       changed_team: this.props.selected_team,
-      accordion_expanded: 0,
+      accordion_expanded: -1,
 
       team_number: this.props.selected_team.team_number,
       team_name: this.props.selected_team.team_name,
       team_id: this.props.selected_team.team_id,
       team_aff: this.props.selected_team.affiliation,
-      team_ranking: this.props.selected_team.ranking
+      team_ranking: this.props.selected_team.ranking,
+
+      scoresheet_modal: {scoresheet: initITeamScore(), scoring_modal: false, existing_scores: true, scoresheet_index: 0}
     }
+
+    this.closeCallback = this.closeCallback.bind(this);
   }
 
   handleAccordionChange(panel:number) {
@@ -86,6 +101,30 @@ export default class TeamValues extends Component<IProps, IState> {
     this.state.changed_team.affiliation = this.state.team_aff;
     this.state.changed_team.ranking = this.state.team_ranking;
     CJMS_POST_TEAM_UPDATE(this.props.selected_team.team_number, this.state.changed_team);
+  }
+
+  toggleModal(scoresheet:ITeamScore, scoresheet_index:number) {
+    if (this.state.scoresheet_modal.scoring_modal) {
+      this.setState({scoresheet_modal: {scoresheet: scoresheet, scoring_modal: false, existing_scores: true, scoresheet_index: scoresheet_index}});
+    } else {
+      this.setState({scoresheet_modal: {scoresheet: scoresheet, scoring_modal: true, existing_scores: true, scoresheet_index: scoresheet_index}});
+    }
+  }
+
+  closeCallback() {
+    console.log("close callback");
+    var modal = this.state.scoresheet_modal;
+    modal.scoring_modal = false;
+    this.setState({scoresheet_modal: modal});
+  }
+
+  handleDeleteScore(index:number) {
+    var team_update = this.props.selected_team;
+    if (index > -1) {
+      team_update.scores.splice(index, 1);
+    }
+
+    CJMS_POST_TEAM_UPDATE(this.props.selected_team.team_number, team_update);
   }
 
   render() {
@@ -165,15 +204,15 @@ export default class TeamValues extends Component<IProps, IState> {
                     </Typography>
 
                     <div>
-                      <Button startIcon={<EditIcon/>} variant="outlined" sx={{
+                      <Button onClick={() => this.toggleModal(round, i)} startIcon={<EditIcon/>} variant="outlined" sx={{
                         marginTop: '3%',
                         marginRight: '10%',
                         width: '45%'
                       }}>Edit</Button>
 
-                      <Button startIcon={<DeleteIcon />} variant="outlined" sx={{
-                        borderColor: 'red', 
-                        color: 'red', 
+                      <Button onClick={() => this.handleDeleteScore(i)} startIcon={<DeleteIcon />} variant="outlined" sx={{
+                        borderColor: 'red',
+                        color: 'red',
                         marginTop: '3%',
                         width: '45%'
                       }}>Delete</Button>
@@ -185,6 +224,16 @@ export default class TeamValues extends Component<IProps, IState> {
             ))
           }
         </>
+
+        <ScoresheetModal 
+          display={this.state.scoresheet_modal.scoring_modal} 
+          scoresheet={this.state.scoresheet_modal.scoresheet} 
+          existing_scoresheet={this.state.scoresheet_modal.existing_scores}
+          team={this.props.selected_team}
+          scoresheet_index={this.state.scoresheet_modal.scoresheet_index}
+
+          closeCallback={this.closeCallback}
+        />
       </div>
     );
   }

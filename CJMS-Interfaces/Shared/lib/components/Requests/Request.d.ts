@@ -10,7 +10,7 @@ export declare function CLOUD_FETCH_GENERIC_GET(request: any): Promise<Response>
 export declare function CJMS_REQUEST_LOGIN(credentials: any): Promise<Response>;
 export declare function CJMS_POST_TIMER(timerStatus: string): Promise<Response>;
 export declare function CJMS_POST_SETUP(event: IEvent): Promise<Response>;
-export declare function CJMS_POST_SCORE(teamScore: ITeamScore): Promise<Response>;
+export declare function CJMS_POST_SCORE(team_number: string, teamScore: ITeamScore): Promise<Response>;
 export declare function CJMS_REQUEST_TEAMS(noAlert?: boolean): Promise<ITeam[]>;
 export declare function CJMS_POST_TEAM_UPDATE(team_number: string, team_update: ITeam): Promise<Response>;
 export declare function CJMS_REQUEST_MATCHES(noAlert?: boolean): Promise<IMatch[]>;

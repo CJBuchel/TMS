@@ -17,6 +17,7 @@
     "copy-env-file": "copyfiles -u 1 ../../.env ./.env",
     "build": "react-scripts build",
     "start": "cross-env BROWSER=none PORT=2827 react-scripts start",
+    "upgrade": "yarn upgrade --latest",
     "eject": "react-scripts eject"
   },
   "browserslist": {

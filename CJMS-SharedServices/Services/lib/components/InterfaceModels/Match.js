@@ -6,8 +6,8 @@ function initIMatch(instance) {
         match_number: '',
         start_time: '',
         end_time: '',
-        on_table1: { table: '', team_number: '', score_submitted: false },
-        on_table2: { table: '', team_number: '', score_submitted: false },
+        on_table1: { table: '', team_number: '', score_submitted: false, createdAt: null, updatedAt: null },
+        on_table2: { table: '', team_number: '', score_submitted: false, createdAt: null, updatedAt: null },
         complete: false,
         deferred: false
     };

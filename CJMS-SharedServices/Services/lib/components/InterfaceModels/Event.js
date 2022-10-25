@@ -5,7 +5,7 @@ function initIOnlineLink(instance) {
     const defaults = {
         tournament_id: '',
         tournament_token: '',
-        online_linked: false,
+        online_linked: false
     };
     return {
         ...defaults,
@@ -21,7 +21,7 @@ function initIEvent(instance) {
         event_rounds: 3,
         season: 20222023,
         match_locked: false,
-        online_link: initIOnlineLink(),
+        online_link: initIOnlineLink()
     };
     return {
         ...defaults,

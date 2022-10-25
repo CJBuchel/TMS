@@ -24,7 +24,7 @@ export function initIOnlineLink(instance?:IOnlineLink) {
   const defaults:IOnlineLink = {
     tournament_id: '',
     tournament_token: '',
-    online_linked: false,
+    online_linked: false
   }
 
   return {
@@ -44,7 +44,7 @@ export function initIEvent(instance?:IEvent) {
 
     match_locked: false,
 
-    online_link: initIOnlineLink(),
+    online_link: initIOnlineLink()
   }
 
   return {

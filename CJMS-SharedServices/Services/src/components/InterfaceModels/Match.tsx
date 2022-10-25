@@ -1,11 +1,12 @@
+import { ITimestamps } from "./Timestamps";
 
-interface OnTable {
+interface OnTable extends ITimestamps {
   table: string;
   team_number: string;
   score_submitted: boolean;
 }
 
-export interface IMatch {
+export interface IMatch extends ITimestamps {
   match_number: string;
 
   start_time: string;

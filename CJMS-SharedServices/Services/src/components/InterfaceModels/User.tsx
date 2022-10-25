@@ -1,4 +1,6 @@
-export interface IUser {
+import { ITimestamps } from "./Timestamps";
+
+export interface IUser extends ITimestamps {
   username: string;
   password: string;
 }

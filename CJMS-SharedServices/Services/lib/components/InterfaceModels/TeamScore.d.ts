@@ -1,4 +1,5 @@
-export interface ITeamScoresheet {
+import { ITimestamps } from "./Timestamps";
+export interface ITeamScoresheet extends ITimestamps {
     tournament_id: string;
     round: number;
     answers: {
@@ -8,6 +9,9 @@ export interface ITeamScoresheet {
     private_comment: string;
     public_comment: string;
 }
+/**
+ * Cloud scoresheet
+ */
 export declare type ITeamScoreGet = {
     compete_id: string;
     user_id: string;
@@ -20,7 +24,7 @@ export declare type ITeamScoreGet = {
     private_comment: string;
     timestamp: Date;
 };
-export interface ITeamScore {
+export interface ITeamScore extends ITimestamps {
     gp: string;
     referee: string;
     no_show: boolean;
@@ -35,4 +39,6 @@ export declare function initITeamScore(instance?: ITeamScore): {
     score: number;
     valid_scoresheet: boolean;
     scoresheet: ITeamScoresheet;
+    createdAt?: Date;
+    updatedAt?: Date;
 };

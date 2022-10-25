@@ -6,7 +6,7 @@ const OnTableSchema = new mongoose.Schema({
   table: {type: String},
   team_number: {type: String},
   score_submitted: {type: Boolean, default: false}
-});
+}, {timestamps: true});
 
 // Match
 export const MatchSchema = new mongoose.Schema<IMatch>({
@@ -22,6 +22,6 @@ export const MatchSchema = new mongoose.Schema<IMatch>({
 
   complete: {type: Boolean, default: false},
   deferred: {type: Boolean, default: false}
-});
+}, {timestamps: true});
 
 export const MatchModel = mongoose.model<IMatch>('Match', MatchSchema);

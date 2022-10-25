@@ -50,6 +50,8 @@ export default class TeamManagement extends Component<IProps, IState> {
   async componentDidMount() {
     const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
     this.setTeamData(teamData);
+
+    console.log(teamData[0].createdAt);
   }
 
   render() {

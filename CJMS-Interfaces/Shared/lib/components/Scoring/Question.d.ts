@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { Score, ScoreAnswer } from "ausfll-score-calculator/dist/game-types";
 declare type BaseProps = {
     question: Score;

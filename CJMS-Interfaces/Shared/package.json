@@ -32,6 +32,7 @@
     "clean": "rimraf lib/",
     "copy-files": "copyfiles -u 1 src/**/*.scss lib/",
     "build": "yarn run clean && yarn run copy-files && tsc",
+    "upgrade": "yarn upgrade --latest",
     "build-dev": "tsc -w"
   }
 }

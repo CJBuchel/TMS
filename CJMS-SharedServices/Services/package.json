@@ -13,6 +13,7 @@
     "copy-env-file": "copyfiles -u 1 ../../.env ./.env",
     "clean": "rimraf lib/",
     "build": "yarn run clean && tsc",
+    "upgrade": "yarn upgrade --latest",
     "build-dev": "tsc -w"
   }
 }

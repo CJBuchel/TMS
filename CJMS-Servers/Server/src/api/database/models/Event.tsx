@@ -5,7 +5,7 @@ export const OnlineLinkSchema = new mongoose.Schema<IOnlineLink>({
   tournament_id: {type: String},
   tournament_token: {type: String},
   online_linked: {type: Boolean, default: false}
-});
+}, {timestamps: true});
 
 export const EventSchema = new mongoose.Schema<IEvent>({
   event_name: {type: String, required: true},
@@ -19,6 +19,7 @@ export const EventSchema = new mongoose.Schema<IEvent>({
   match_locked: {type: Boolean, default: true},
   online_link: OnlineLinkSchema
 }, {
+  timestamps: true,
   capped: { size: 102400, max: 1, autoIndexId: true } // we only want one event document
 });
 

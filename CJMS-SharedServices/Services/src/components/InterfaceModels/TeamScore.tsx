@@ -1,7 +1,7 @@
-export interface ITeamScoresheet {
+import { ITimestamps } from "./Timestamps";
+
+export interface ITeamScoresheet extends ITimestamps {
   // Header data
-  // team_id: string;
-  // team_number: string;
   tournament_id: string;
   round: number;
 
@@ -14,6 +14,9 @@ export interface ITeamScoresheet {
   public_comment: string;
 }
 
+/**
+ * Cloud scoresheet
+ */
 export type ITeamScoreGet = {
   compete_id: string;
   user_id: string;
@@ -29,7 +32,8 @@ export type ITeamScoreGet = {
   timestamp: Date;
 }
 
-export interface ITeamScore {
+
+export interface ITeamScore extends ITimestamps {
   // TMS Specific data
   gp: string;
   referee: string;

@@ -29,7 +29,6 @@ interface IState {
 }
 
 export default class Scoring extends Component<IProps,IState> {
-
   constructor(props:any) {
     super(props);
 

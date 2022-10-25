@@ -28,9 +28,6 @@ export class Teams {
       const team_number:number = req.body.team;
       const update:ITeam = req.body.update;
 
-      console.log("Origin: " + team_number);
-      console.log("Update: " + update.team_number);
-
       const filter = { team_number: team_number };
       TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
         if (err) {

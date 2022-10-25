@@ -14,6 +14,6 @@ export const JudgingSessionSchema = new mongoose.Schema<IJudgingSession>({
 
   // Team number
   team_number: {type: String}
-});
+}, {timestamps: true});
 
 export const JudgingSessionModel = mongoose.model<IJudgingSession>('JudgingSession', JudgingSessionSchema);

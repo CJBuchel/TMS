@@ -3,7 +3,6 @@
 // 
 import React from "react";
 import ReactDOM from "react-dom";
-import useToken from "../Login/UseToken";
 import { ConnectionCheck } from "./Connection";
 
 // Import scss
@@ -18,7 +17,10 @@ function Application(App:any) {
     </ConnectionCheck>
   );
 }
-// Global app funciton
+
+// 
+// THIS IS A REACT 17 APPLICATION (17.0.2)
+// 
 export function CJMS_Application(App:any) {
   // Global app requirements
   ReactDOM.render(

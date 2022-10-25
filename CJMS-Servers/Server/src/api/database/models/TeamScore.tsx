@@ -5,7 +5,7 @@ import { ITeamScore } from "@cjms_shared/services";
 const AnswerSchema = new mongoose.Schema({
   id: {type: String, required: true},
   answer: {type: String}
-});
+}, {timestamps: true});
 
 // Scoresheet, used as a container for each round score for a team, and is published to FLL System
 export const TeamScoresheetSchema = new mongoose.Schema({
@@ -18,7 +18,7 @@ export const TeamScoresheetSchema = new mongoose.Schema({
   answers: [AnswerSchema],
   private_comment: {type: String},
   public_comment: {type: String}
-});
+}, {timestamps: true});
 
 // Scored Match Schema, has the main score, gp, notes. plus the scoresheet values
 export const TeamScoreSchema = new mongoose.Schema<ITeamScore>({
@@ -29,4 +29,4 @@ export const TeamScoreSchema = new mongoose.Schema<ITeamScore>({
 
   valid_scoresheet: {type: Boolean, required: true},
   scoresheet: TeamScoresheetSchema
-});
+}, {timestamps: true});

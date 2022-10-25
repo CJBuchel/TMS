@@ -1,4 +1,4 @@
-import { CJMS_POST_TEAM_UPDATE, CJMS_REQUEST_EVENT } from "@cjms_interfaces/shared";
+import { CJMS_POST_TEAM_UPDATE, CJMS_REQUEST_EVENT, ScoresheetModal } from "@cjms_interfaces/shared";
 import { comm_service, IEvent, initIEvent, initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
 import styled from "@emotion/styled";
 import { Padding, Score } from "@mui/icons-material";
@@ -11,8 +11,6 @@ import { Accordion, AccordionDetails, AccordionSummary, Button, MenuItem, Outlin
 import { Component } from "react";
 
 import "../../../../assets/TeamEdit.scss";
-import ScoresheetModal from "./ScoresheetModal";
-import { padding } from "@mui/system";
 
 const ValidationTextField = styled(TextField)({
   '& input:valid + fieldset': {

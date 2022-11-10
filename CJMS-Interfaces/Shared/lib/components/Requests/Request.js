@@ -1,6 +1,7 @@
 import { request_namespaces } from "@cjms_shared/services";
 export async function CJMS_FETCH_GENERIC_POST(request, postData, noAlert = false) {
     console.log(request_namespaces.request_api_location);
+    const controller = new AbortController();
     const res = await fetch(request, {
         method: 'POST',
         headers: {
@@ -9,13 +10,13 @@ export async function CJMS_FETCH_GENERIC_POST(request, postData, noAlert = false
         body: JSON.stringify(postData)
     }).then((response) => {
         // Return the response in json format
-        return response.json();
-    }).then((data) => {
-        // If message from request server
-        if (data.message && !noAlert) {
-            alert(data.message);
-        }
-        return data;
+        return response.json().then((data) => {
+            controller.abort();
+            if (data.message && !noAlert) {
+                alert(data.message);
+            }
+            return data;
+        });
     }).catch((error) => {
         // Error while trying to post to server
         console.log("Error While Posting");
@@ -26,15 +27,16 @@ export async function CJMS_FETCH_GENERIC_POST(request, postData, noAlert = false
 }
 // Returns data as json
 export async function CJMS_FETCH_GENERIC_GET(request, noAlert = false) {
+    const controller = new AbortController();
     const res = await fetch(request).then((response) => {
         // Return the response in json format
-        return response.json();
-    }).then((data) => {
-        // If message from request server
-        if (data.message && !noAlert) {
-            alert(data.message);
-        }
-        return data;
+        return response.json().then((data) => {
+            controller.abort();
+            if (data.message && !noAlert) {
+                alert(data.message);
+            }
+            return data;
+        });
     }).catch((error) => {
         // Error while trying to post to server
         console.log("Error While Fetching");

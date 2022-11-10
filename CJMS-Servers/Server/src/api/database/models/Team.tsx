@@ -13,6 +13,6 @@ export const TeamSchema = new mongoose.Schema<ITeam>({
   ],
 
   ranking: {type: Number}
-});
+}, {timestamps: true});
 
 export const TeamModel = mongoose.model<ITeam>('Team', TeamSchema);

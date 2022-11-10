@@ -1,5 +1,6 @@
 import { ITeamScore } from "./TeamScore";
-export interface ITeam {
+import { ITimestamps } from "./Timestamps";
+export interface ITeam extends ITimestamps {
     team_number: string;
     team_name: string;
     team_id: string;
@@ -14,4 +15,6 @@ export declare function initITeam(instance?: ITeam): {
     affiliation: string;
     scores: ITeamScore[];
     ranking: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 };

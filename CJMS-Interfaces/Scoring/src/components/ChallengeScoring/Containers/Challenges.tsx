@@ -59,7 +59,7 @@ export default class Challenges extends Component<IProps, IState> {
     this.props.handleScoreSubmit(scoresheet);
   }
 
-  async handleSubmit() {
+  handleSubmit() {
     // Complete validation and score once more before submitting
     const val = this.state.game.validate(this.state.data);
     const sc = this.state.game.score(this.state.data);
@@ -75,6 +75,8 @@ export default class Challenges extends Component<IProps, IState> {
     scoresheet.scoresheet.public_comment = this.state.publicComment;
     scoresheet.scoresheet.private_comment = this.state.privateComment;
     scoresheet.scoresheet.answers = this.state.data.map(({id, answer}) => ({id: id, answer: answer}));
+
+    console.log('Submit');
 
     this.props.handleScoreSubmit(scoresheet);
   }

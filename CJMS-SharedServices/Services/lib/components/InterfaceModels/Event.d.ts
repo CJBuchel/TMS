@@ -1,9 +1,10 @@
-export interface IOnlineLink {
+import { ITimestamps } from "./Timestamps";
+export interface IOnlineLink extends ITimestamps {
     tournament_id: string;
     tournament_token: string;
     online_linked: boolean;
 }
-export interface IEvent {
+export interface IEvent extends ITimestamps {
     event_name: string;
     event_csv: JSON;
     event_tables: string[];
@@ -16,6 +17,8 @@ export declare function initIOnlineLink(instance?: IOnlineLink): {
     tournament_id: string;
     tournament_token: string;
     online_linked: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
 };
 export declare function initIEvent(instance?: IEvent): {
     event_name: string;
@@ -25,4 +28,6 @@ export declare function initIEvent(instance?: IEvent): {
     season: number;
     match_locked: boolean;
     online_link: IOnlineLink;
+    createdAt?: Date;
+    updatedAt?: Date;
 };

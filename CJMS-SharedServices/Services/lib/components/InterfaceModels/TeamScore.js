@@ -8,6 +8,7 @@ function initITeamScore(instance) {
         no_show: false,
         score: 0,
         valid_scoresheet: false,
+        cloud_published: false,
         scoresheet: {
             // team_id: '',
             tournament_id: '',

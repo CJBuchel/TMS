@@ -30,6 +30,7 @@ export interface ITeamScore extends ITimestamps {
     no_show: boolean;
     score: number;
     valid_scoresheet: boolean;
+    cloud_published: boolean;
     scoresheet: ITeamScoresheet;
 }
 export declare function initITeamScore(instance?: ITeamScore): {
@@ -38,6 +39,7 @@ export declare function initITeamScore(instance?: ITeamScore): {
     no_show: boolean;
     score: number;
     valid_scoresheet: boolean;
+    cloud_published: boolean;
     scoresheet: ITeamScoresheet;
     createdAt?: Date;
     updatedAt?: Date;

@@ -1,7 +1,9 @@
 import { CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared";
 import { comm_service, initITeam, ITeam, ITeamScore } from "@cjms_shared/services";
-import { Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
+import { Button, Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
+import { borderColor, color } from "@mui/system";
 import { Component } from "react";
+import CloudPublish from "./CloudPublish";
 import ScoreContainer from "./ScoreContainer";
 
 interface IScoresheet {
@@ -66,6 +68,7 @@ export default class Scoring extends Component<IProps, IState> {
   render() {
     return(
       <div className="sc-grid-container">
+        <CloudPublish external_teamData={this.state.external_teamData}/>
         <Grid container sx={{backgroundColor: '#18191f', borderRadius: '20px'}}>
           {this.state.scoresheets.map((scoresheet, i) => (
             <ScoreContainer 

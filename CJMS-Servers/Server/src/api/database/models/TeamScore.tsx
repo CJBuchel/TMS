@@ -28,5 +28,6 @@ export const TeamScoreSchema = new mongoose.Schema<ITeamScore>({
   score: {type: Number},
 
   valid_scoresheet: {type: Boolean, required: true},
+  cloud_published: {type: Boolean, required: true, default: false},
   scoresheet: TeamScoresheetSchema
 }, {timestamps: true});

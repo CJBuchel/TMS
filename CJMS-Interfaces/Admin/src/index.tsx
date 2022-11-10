@@ -7,6 +7,7 @@ import "./assets/application.scss";
 import { EventSetup } from './components/Setup/EventSetup';
 import { UsersSetup } from './components/Setup/UserSetup';
 import { TeamManagement } from './components/TeamManagement/TeamManagement';
+import { Scoring } from './components/TeamManagement/Scoring';
 
 
 /** Admin Structure,
@@ -41,6 +42,12 @@ var navContent:NavMenuContent = {
           path: "/TeamManagement",
           linkTo:<TeamManagement/>
         },
+
+        {
+          name: "Scoring",
+          path: "/Scoring",
+          linkTo:<Scoring/>
+        }
       ]
     }
   ]

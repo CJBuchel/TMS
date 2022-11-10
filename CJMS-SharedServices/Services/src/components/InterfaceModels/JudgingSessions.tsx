@@ -1,4 +1,6 @@
-export interface IJudgingSession {
+import { ITimestamps } from "./Timestamps";
+
+export interface IJudgingSession extends ITimestamps {
   session: string;
 
   start_time: string;

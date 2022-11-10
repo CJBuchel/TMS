@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 export const UserSchema = new mongoose.Schema<IUser>({
   username: {type: String},
   password: {type: String}
-});
+}, {timestamps: true});
 
 export const UserModel = mongoose.model<IUser>('User', UserSchema);
 

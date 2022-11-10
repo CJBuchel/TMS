@@ -1,16 +1,17 @@
-import { CJMS_POST_SCORE, CJMS_POST_TEAM_UPDATE, CJMS_REQUEST_EVENT, Question } from "@cjms_interfaces/shared";
+import React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import Calculator from "ausfll-score-calculator";
 import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game } from "ausfll-score-calculator/dist/game-types";
 import { Button, TableCell, TableRow, TextField } from "@mui/material";
-import { comm_service, initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
-import { IEvent, initIEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
+import { comm_service, IEvent, initIEvent, initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
 import { Component, Fragment } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
 
-import "../../../../assets/ScoresheetModal.scss";
+import "../../assets/stylesheets/ScoresheetModal.scss";
+import { CJMS_POST_SCORE, CJMS_POST_TEAM_UPDATE, CJMS_REQUEST_EVENT } from "../Requests/Request";
+import Question from "./Question";
 
 type Status = {
   score: number;

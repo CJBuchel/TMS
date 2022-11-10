@@ -5,7 +5,7 @@ import { comm_service } from "@cjms_shared/services";
 import * as Requests from "./components/Requests/Request";
 import NavMenu, { NavMenuContent } from "./components/Navigation/NavMenu";
 import Question from "./components/Scoring/Question";
-
+import ScoresheetModal from "./components/Scoring/ScoresheetModal";
 
 export * from "./components/Requests/Request";
 
@@ -17,5 +17,6 @@ export {
   useToken,
   Requests,
   NavMenu,
-  Question
+  Question,
+  ScoresheetModal
 };

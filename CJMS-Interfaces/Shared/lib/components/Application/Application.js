@@ -12,7 +12,9 @@ function Application(App) {
     return (React.createElement(ConnectionCheck, null,
         React.createElement(App, null)));
 }
-// Global app funciton
+// 
+// THIS IS A REACT 17 APPLICATION (17.0.2)
+// 
 export function CJMS_Application(App) {
     // Global app requirements
     ReactDOM.render(Application(App), document.getElementById('root'));

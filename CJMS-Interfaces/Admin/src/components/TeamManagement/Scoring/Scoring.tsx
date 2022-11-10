@@ -1,6 +1,6 @@
 import { CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared";
 import { comm_service, initITeam, ITeam, ITeamScore } from "@cjms_shared/services";
-import { Grid, MenuItem, Paper, Select } from "@mui/material";
+import { Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
 import { Component } from "react";
 import ScoreContainer from "./ScoreContainer";
 
@@ -65,7 +65,7 @@ export default class Scoring extends Component<IProps, IState> {
 
   render() {
     return(
-      <div>
+      <div className="sc-grid-container">
         <Grid container sx={{backgroundColor: '#18191f', borderRadius: '20px'}}>
           {this.state.scoresheets.map((scoresheet, i) => (
             <ScoreContainer 

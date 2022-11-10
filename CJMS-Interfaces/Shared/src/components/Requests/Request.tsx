@@ -4,10 +4,13 @@ import { IJudgingSession } from "@cjms_shared/services";
 import { IMatch } from "@cjms_shared/services";
 import { request_namespaces, ITeamScore, ITeam } from "@cjms_shared/services";
 import { ITeamScoreGet } from "@cjms_shared/services/lib/components/InterfaceModels/TeamScore";
+import { useEffect } from "react";
 
 
 export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any, noAlert:boolean = false): Promise<Response> {
   console.log(request_namespaces.request_api_location);
+
+  const controller = new AbortController();
   const res:Promise<Response> = await fetch(request, {
     method: 'POST',
     headers: {
@@ -16,13 +19,14 @@ export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any,
     body: JSON.stringify(postData)
   }).then((response:any) => {
     // Return the response in json format
-    return response.json();
-  }).then((data:any) => {
-    // If message from request server
-    if (data.message && !noAlert) {
-      alert(data.message);
-    }
-    return data;
+    return response.json().then((data) => {
+      controller.abort();
+      if (data.message && !noAlert) {
+        alert(data.message);
+      }
+
+      return data;
+    });
   }).catch((error:any) => {
     // Error while trying to post to server
     console.log("Error While Posting");
@@ -35,15 +39,18 @@ export async function CJMS_FETCH_GENERIC_POST(request:RequestInfo, postData:any,
 
 // Returns data as json
 export async function CJMS_FETCH_GENERIC_GET(request:any, noAlert:boolean = false): Promise<Response> {
+
+  const controller = new AbortController();
   const res:Promise<Response> = await fetch(request).then((response) => {
     // Return the response in json format
-    return response.json();
-  }).then((data:any) => {
-    // If message from request server
-    if (data.message && !noAlert) {
-      alert(data.message);
-    }
-    return data;
+    return response.json().then((data) => {
+      controller.abort();
+      if (data.message && !noAlert) {
+        alert(data.message);
+      }
+
+      return data;
+    });
   }).catch((error:any) => {
     // Error while trying to post to server
     console.log("Error While Fetching");

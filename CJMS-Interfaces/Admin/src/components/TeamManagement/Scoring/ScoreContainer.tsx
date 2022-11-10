@@ -34,7 +34,7 @@ export default class ScoreContainer extends Component<IProps, IState> {
           borderRadius: '20px',
           margin: '1%',
           borderStyle: 'solid',
-          borderColor: 'white'
+          borderColor: `${scoresheet.cloud_published ? 'red' : 'white'}`
         }}
       >
         <Typography>Team: <span>{this.props.team.team_name}</span></Typography>
@@ -46,6 +46,7 @@ export default class ScoreContainer extends Component<IProps, IState> {
         <Typography>
           Scoresheet: {scoresheet.valid_scoresheet ? <span style={{color: 'green'}}>Valid</span> : <span style={{color: 'red', borderStyle: 'solid', borderColor: 'red', padding: '2px'}}>Invalid</span>}
         </Typography>
+        <Typography>{scoresheet.cloud_published ? <span style={{color: 'cyan', borderStyle: 'solid', borderColor: 'red', padding: '2px'}}>Cloud Published</span> : ''}</Typography>
 
         <div>
           <Button onClick={() => {}} startIcon={<EditIcon/>} variant="outlined" sx={{

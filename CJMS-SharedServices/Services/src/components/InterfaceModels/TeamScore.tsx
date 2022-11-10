@@ -42,6 +42,7 @@ export interface ITeamScore extends ITimestamps {
 
   // Generalized Scoresheet
   valid_scoresheet: boolean;
+  cloud_published: boolean;
   scoresheet: ITeamScoresheet;
 }
 
@@ -53,6 +54,7 @@ export function initITeamScore(instance?:ITeamScore) {
     score: 0,
 
     valid_scoresheet: false,
+    cloud_published: false,
     scoresheet: {
       // team_id: '',
       tournament_id: '',

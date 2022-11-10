@@ -1,7 +1,7 @@
 # 
 # Random password generated for application to use
 # 
-VERSION="2022.1.0";
+VERSION="2022.1.1";
 CJMS_VERSION="DOCKER_TAG=$VERSION";
 REACT_APP_CJMS_VERSION="REACT_APP_CJMS_VERSION=$VERSION"
 

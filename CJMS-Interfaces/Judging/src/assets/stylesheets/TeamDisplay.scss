@@ -1,0 +1,22 @@
+body{
+  font-family: Helvetica;
+  -webkit-font-smoothing: antialiased;
+  background-color: rgb(38, 38, 38);
+  overflow: hidden;
+}
+
+.team-display {
+  height: 100%;
+}
+
+.export-buttons {
+  // width: 100%;
+}
+
+.table-wrapper {
+  // padding-top: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
+  height: 100%;
+  overflow: scroll;
+}

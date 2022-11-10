@@ -47,7 +47,7 @@ export default class Display extends Component<IProps, IState> {
   }
 
   setTeamData(data:ITeam[]) {
-    this.setState({external_teamData:data});
+    this.setState({external_teamData:data.sort((a,b) => {return a.ranking-b.ranking})});
   }
 
   setMatchData(data:IMatch[]) {

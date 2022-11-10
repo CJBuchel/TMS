@@ -36,7 +36,7 @@ export default class TeamDisplay extends Component<IProps, IState> {
             variant="contained"
             onClick={() => this.handleExport()}
             sx={{
-              margin: '10px 25px',
+              margin: '0px 25px',
               backgroundColor: 'teal'
             }}
           >Export</Button>
@@ -44,7 +44,7 @@ export default class TeamDisplay extends Component<IProps, IState> {
             variant="contained"
             onClick={() => this.handleExport(true)}
             sx={{
-              margin: '10px 25px',
+              margin: '0px 25px',
               backgroundColor: 'teal'
             }}
           >Export w/Comments</Button>

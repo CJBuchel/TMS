@@ -39,7 +39,7 @@ export default class Display extends Component<IProps, IState> {
   }
 
   setData(teamData:ITeam[], eventData:IEvent) {
-    this.setState({teamData: teamData, eventData: eventData});
+    this.setState({teamData: teamData.sort((a,b) => {return a.ranking-b.ranking}), eventData: eventData});
 
     const rounds:any[] = [];
     for (var i = 0; i < eventData.event_rounds; i++) {

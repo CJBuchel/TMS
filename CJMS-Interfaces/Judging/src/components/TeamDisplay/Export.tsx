@@ -12,15 +12,15 @@ export default class Export {
 
   getFormattedData(comments:boolean) {
     var formatedData:any[] = [];
-    this._teams.sort((a, b) => { return b.ranking - a.ranking}); // make sure it's in the correct order
+    this._teams.sort((a, b) => { return a.ranking - b.ranking}); // make sure it's in the correct order
 
     this._teams.map((team) => {
       var round_values:any = {};
       for (var i = 0; i < this._rounds; i++) {
         const score = team.scores[i]?.score || '';
-        const gp = team.scores[i]?.score || '';
-        const pub = team.scores[i]?.score || '';
-        const priv = team.scores[i]?.score || '';
+        const gp = team.scores[i]?.gp || '';
+        const pub = team.scores[i]?.scoresheet.public_comment || '';
+        const priv = team.scores[i]?.scoresheet.private_comment || '';
 
         if (comments) {
           const obj = {
@@ -47,10 +47,8 @@ export default class Export {
         'Team Name':team.team_name,
         ...round_values
       });
-
     });
 
-    console.log(formatedData);
     return formatedData;
   }
 

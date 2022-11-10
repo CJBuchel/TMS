@@ -26,7 +26,7 @@ export default class ScoreContainer extends Component<IProps, IState> {
   render() {
     var scoresheet = this.props.scoresheet.scoresheet;
     return(
-      <Grid item spacing={4} 
+      <Grid item 
         sx={{
           backgroundColor: '#03061d', 
           color: 'white',
@@ -48,19 +48,19 @@ export default class ScoreContainer extends Component<IProps, IState> {
         </Typography>
 
         <div>
-        <Button onClick={() => {}} startIcon={<EditIcon/>} variant="outlined" sx={{
-          marginTop: '3%',
-          marginRight: '10%',
-          width: '45%'
-        }}>Edit</Button>
+          <Button onClick={() => {}} startIcon={<EditIcon/>} variant="outlined" sx={{
+            marginTop: '3%',
+            marginRight: '10%',
+            width: '45%'
+          }}>Edit</Button>
 
-        <Button onClick={() => {}} startIcon={<DeleteIcon />} variant="outlined" sx={{
-          borderColor: 'red',
-          color: 'red',
-          marginTop: '3%',
-          width: '45%'
-        }}>Delete</Button>
-      </div>
+          <Button onClick={() => {}} startIcon={<DeleteIcon />} variant="outlined" sx={{
+            borderColor: 'red',
+            color: 'red',
+            marginTop: '3%',
+            width: '45%'
+          }}>Delete</Button>
+        </div>
       </Grid>
     );
   }

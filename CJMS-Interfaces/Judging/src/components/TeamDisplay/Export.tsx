@@ -66,8 +66,6 @@ export default class Export {
       useKeysAsHeaders: true,
     })
 
-    // this.getFormattedData(comments);
-
     exporter.generateCsv(this.getFormattedData(comments));
   }
 }

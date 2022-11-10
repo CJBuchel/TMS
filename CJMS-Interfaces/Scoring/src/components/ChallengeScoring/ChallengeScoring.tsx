@@ -93,7 +93,8 @@ export default class ChallengeScoring extends Component<IProps,IState> {
     this.setOptions();
   }
 
-  async handleScoreSubmit(scoresheet:ITeamScore) {
+  handleScoreSubmit(scoresheet:ITeamScore) {
+    console.log('Submit upper level');
     // score reqs
     scoresheet.referee = this.props.scorer;
     scoresheet.valid_scoresheet = true;
@@ -103,35 +104,39 @@ export default class ChallengeScoring extends Component<IProps,IState> {
     scoresheet.scoresheet.round = this.state.selected_round.value;
 
     // Get the current match and update it to complete/submitted for this table
-    const match = (await CJMS_REQUEST_MATCHES(true)).find(e => e.match_number === this.props.match_data.loaded_match.match_number);
-    if (match != undefined) {
-     
-      var match_update = match;
-      if (match.on_table1.team_number == this.state.selected_team.value) {
-        match_update.on_table1.score_submitted = true;
-      } else if (match.on_table2.team_number == this.state.selected_team.value) {
-        match_update.on_table2.score_submitted = true;
+    CJMS_REQUEST_MATCHES(true).then(matches => {
+      const match = matches.find(e => e.match_number === this.props.match_data.loaded_match.match_number);
+      if (match != undefined) {
+       
+        var match_update = match;
+        if (match.on_table1.team_number == this.state.selected_team.value) {
+          match_update.on_table1.score_submitted = true;
+        } else if (match.on_table2.team_number == this.state.selected_team.value) {
+          match_update.on_table2.score_submitted = true;
+        } else {
+          window.alert("Team does not exist in this match");
+          return;
+        }
+    
+        CJMS_POST_SCORE(this.state.selected_team.value, scoresheet).then((submit_result:any) => {
+          CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
+            match: match.match_number,
+            update: match_update
+          }).then((match_result:any) => {
+            if (submit_result.success && match_result.success) {
+              alert("Successfully updated team");
+              window.location.reload();
+            } else {
+              alert("Submit failed");
+            }
+          });
+      
+          // Return check from server
+        });
       } else {
-        window.alert("Team does not exist in this match");
-        return;
+        alert("Match undefined");
       }
-  
-      const submit_result:any = await CJMS_POST_SCORE(this.state.selected_team.value, scoresheet);
-      const match_result:any = await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {
-        match: match.match_number,
-        update: match_update
-      });
-  
-      // Return check from server
-      if (submit_result.success && match_result.success) {
-        alert("Successfully updated team");
-        window.location.reload();
-      } else {
-        alert("Submit failed");
-      }
-    } else {
-      alert("Match undefined");
-    }
+    });
   }
 
   handleScoreChange(score:number) {

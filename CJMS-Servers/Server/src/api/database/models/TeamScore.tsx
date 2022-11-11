@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 
 import { ITeamScore } from "@cjms_shared/services";
+import { ITeamScoresheet } from "@cjms_shared/services/lib/components/InterfaceModels/TeamScore";
 
 const AnswerSchema = new mongoose.Schema({
   id: {type: String, required: true},
@@ -8,7 +9,7 @@ const AnswerSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 // Scoresheet, used as a container for each round score for a team, and is published to FLL System
-export const TeamScoresheetSchema = new mongoose.Schema({
+export const TeamScoresheetSchema = new mongoose.Schema<ITeamScoresheet>({
   // header data
   team_id: {type: String, required: true},
   tournament_id: {type: String, required: true},

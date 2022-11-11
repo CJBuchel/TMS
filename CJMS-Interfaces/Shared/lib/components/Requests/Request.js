@@ -46,7 +46,7 @@ export async function CJMS_FETCH_GENERIC_GET(request, noAlert = false) {
     return res;
 }
 export async function CLOUD_FETCH_GENERIC_POST(request, token, postData) {
-    console.log(request_namespaces.request_api_location);
+    console.log(request);
     const res = await fetch(request, {
         method: 'POST',
         headers: {
@@ -60,6 +60,24 @@ export async function CLOUD_FETCH_GENERIC_POST(request, token, postData) {
     }).then((data) => {
         // If message from request server
         return data;
+    }).catch((error) => {
+        // Error while trying to post to server
+        console.log("Error While Posting");
+        console.log(error);
+        throw error;
+    });
+    return res;
+}
+export async function CLOUD_FETCH_GENERIC_DELETE(request, token) {
+    console.log(request);
+    const res = await fetch(request, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Token': token
+        }
+    }).then((response) => {
+        return response;
     }).catch((error) => {
         // Error while trying to post to server
         console.log("Error While Posting");
@@ -132,10 +150,13 @@ export async function CLOUD_REQUEST_TEAMS(tournament_id) {
 }
 export async function CLOUD_REQUEST_SCORESHEETS(tournament_id) {
     const request = `${request_namespaces.cloud_api_scoresheets}/${tournament_id}`;
-    CLOUD_FETCH_GENERIC_GET(request).then(res => {
-        console.log(res);
-        return res;
-    });
-    return undefined;
+    return await CLOUD_FETCH_GENERIC_GET(request);
 }
-// export async function CLOUD_POST_SCORESHEET()
+export async function CLOUD_POST_SCORESHEET(token, scoresheet) {
+    const request = `${request_namespaces.cloud_api_scoresheets}/${scoresheet.tournament_id}`;
+    return await CLOUD_FETCH_GENERIC_POST(request, token, scoresheet);
+}
+export async function CLOUD_DELETE_SCORESHEET(token, tournament_id, scoresheet_id) {
+    const request = `${request_namespaces.cloud_api_scoresheets}/${tournament_id}/${scoresheet_id}`;
+    return await CLOUD_FETCH_GENERIC_DELETE(request, token);
+}

@@ -12,6 +12,7 @@ interface IScoresheet {
 interface IProps {
   scoresheet:IScoresheet;
   team:ITeam;
+  conflict:boolean;
 }
 
 interface IState {}
@@ -39,12 +40,16 @@ export default class ScoreContainer extends Component<IProps, IState> {
       >
         <Typography>Team: <span>{this.props.team.team_name}</span></Typography>
         <Typography>Number: <span>{this.props.team.team_number}</span></Typography>
+        <Typography>Round: <span>{scoresheet.scoresheet.round}</span></Typography>
         <Typography>GP: <span>{scoresheet.gp}</span></Typography>
         <Typography>Referee: {scoresheet.referee}</Typography>
-        <Typography>Attendance: {scoresheet.no_show ? <span style={{color: 'orange', borderStyle: 'solid', borderColor: 'orange', padding: '2px'}}>No Show</span> : 'Showed'}</Typography>
+        <Typography>Attendance: {scoresheet.no_show ? <span style={{color: 'orange', borderStyle: 'solid', borderColor: 'orange', padding: '2px'}}>NO SHOW</span> : 'Showed'}</Typography>
         <Typography>Score: <span style={{color: 'green'}}>{scoresheet.score}</span></Typography>
         <Typography>
-          Scoresheet: {scoresheet.valid_scoresheet ? <span style={{color: 'green'}}>Valid</span> : <span style={{color: 'red', borderStyle: 'solid', borderColor: 'red', padding: '2px'}}>Invalid</span>}
+          Scoresheet: {scoresheet.valid_scoresheet ? <span style={{color: 'green'}}>Valid</span> : <span style={{color: 'red', borderStyle: 'solid', borderColor: 'red', padding: '2px'}}>INVALID</span>}
+        </Typography>
+        <Typography>
+          {this.props.conflict ? <span style={{color: 'orange', borderStyle: 'solid', borderColor: 'orange', padding: '2px'}}>CONFLICT</span> : ''}
         </Typography>
         <Typography>{scoresheet.cloud_published ? <span style={{color: 'cyan', borderStyle: 'solid', borderColor: 'red', padding: '2px'}}>Cloud Published</span> : ''}</Typography>
 

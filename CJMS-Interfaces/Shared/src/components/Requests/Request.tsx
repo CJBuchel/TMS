@@ -3,7 +3,7 @@ import { IEvent } from "@cjms_shared/services";
 import { IJudgingSession } from "@cjms_shared/services";
 import { IMatch } from "@cjms_shared/services";
 import { request_namespaces, ITeamScore, ITeam } from "@cjms_shared/services";
-import { ITeamScoreGet } from "@cjms_shared/services/lib/components/InterfaceModels/TeamScore";
+import { ITeamScoresheet } from "@cjms_shared/services/lib/components/InterfaceModels/TeamScore";
 import { useEffect } from "react";
 
 
@@ -62,7 +62,7 @@ export async function CJMS_FETCH_GENERIC_GET(request:any, noAlert:boolean = fals
 }
 
 export async function CLOUD_FETCH_GENERIC_POST(request:RequestInfo, token:string, postData:any): Promise<Response> {
-  console.log(request_namespaces.request_api_location);
+  console.log(request);
   const res:Promise<Response> = await fetch(request, {
     method: 'POST',
     headers: {
@@ -76,6 +76,26 @@ export async function CLOUD_FETCH_GENERIC_POST(request:RequestInfo, token:string
   }).then((data:any) => {
     // If message from request server
     return data;
+  }).catch((error:any) => {
+    // Error while trying to post to server
+    console.log("Error While Posting");
+    console.log(error);
+    throw error;
+  });
+
+  return res;
+}
+
+export async function CLOUD_FETCH_GENERIC_DELETE(request:RequestInfo, token:string): Promise<Response> {
+  console.log(request);
+  const res:Promise<Response> = await fetch(request, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Token': token
+    }
+  }).then((response:any) => {
+    return response;
   }).catch((error:any) => {
     // Error while trying to post to server
     console.log("Error While Posting");
@@ -164,14 +184,17 @@ export async function CLOUD_REQUEST_TEAMS(tournament_id:string): Promise<Respons
   return await CLOUD_FETCH_GENERIC_GET(request);
 }
 
-export async function CLOUD_REQUEST_SCORESHEETS(tournament_id:string): Promise<ITeamScoreGet | undefined> {
+export async function CLOUD_REQUEST_SCORESHEETS(tournament_id:string): Promise<Response> {
   const request = `${request_namespaces.cloud_api_scoresheets}/${tournament_id}`;
-  CLOUD_FETCH_GENERIC_GET(request).then(res => {
-    console.log(res);
-    return res;
-  });
-
-  return undefined
+  return await CLOUD_FETCH_GENERIC_GET(request);
 }
 
-// export async function CLOUD_POST_SCORESHEET()
+export async function CLOUD_POST_SCORESHEET(token:string, scoresheet:ITeamScoresheet): Promise<Response> {
+  const request = `${request_namespaces.cloud_api_scoresheets}/${scoresheet.tournament_id}`;
+  return await CLOUD_FETCH_GENERIC_POST(request, token, scoresheet);
+}
+
+export async function CLOUD_DELETE_SCORESHEET(token:string, tournament_id:string, scoresheet_id:string): Promise<Response> {
+  const request = `${request_namespaces.cloud_api_scoresheets}/${tournament_id}/${scoresheet_id}`;
+  return await CLOUD_FETCH_GENERIC_DELETE(request, token);
+}

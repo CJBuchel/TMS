@@ -10,7 +10,7 @@ function initITeamScore(instance) {
         valid_scoresheet: false,
         cloud_published: false,
         scoresheet: {
-            // team_id: '',
+            team_id: '',
             tournament_id: '',
             round: 0,
             answers: [],

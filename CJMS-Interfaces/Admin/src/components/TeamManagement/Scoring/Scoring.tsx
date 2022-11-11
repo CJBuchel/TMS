@@ -1,10 +1,12 @@
-import { CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared";
-import { comm_service, initITeam, ITeam, ITeamScore } from "@cjms_shared/services";
+import { CJMS_REQUEST_EVENT, CJMS_REQUEST_TEAMS } from "@cjms_interfaces/shared";
+import { comm_service, IEvent, initIEvent, initITeam, ITeam, ITeamScore } from "@cjms_shared/services";
 import { Button, Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
 import { borderColor, color } from "@mui/system";
-import { Component } from "react";
+import React, { Component } from "react";
 import CloudPublish from "./CloudPublish";
 import ScoreContainer from "./ScoreContainer";
+
+import "../../../assets/ScoreContainer.scss";
 
 interface IScoresheet {
   scoresheet:ITeamScore;
@@ -15,6 +17,7 @@ interface IProps {}
 
 interface IState {
   external_teamData:ITeam[];
+  external_eventData:IEvent;
   scoresheets:IScoresheet[];
 }
 
@@ -23,6 +26,7 @@ export default class Scoring extends Component<IProps, IState> {
     super(props)
 
     this.state = {
+      external_eventData: initIEvent(),
       external_teamData: [],
       scoresheets: []
     }
@@ -33,7 +37,22 @@ export default class Scoring extends Component<IProps, IState> {
         this.setTeamData(teamData);
       }
     });
+
+    comm_service.listeners.onEventUpdate(async () => {
+      const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+      if (eventData != undefined) {
+        this.setEventData(eventData);
+      }
+      const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
+      if (teamData != undefined) {
+        this.setTeamData(teamData);
+      }
+    });
   }
+
+  setEventData(event:IEvent) {
+    this.setState({external_eventData:event});
+  } 
 
   setTeamData(teams:ITeam[]) {
     this.setState({external_teamData: teams});
@@ -53,6 +72,10 @@ export default class Scoring extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
+    const eventData:IEvent = await CJMS_REQUEST_EVENT(true);
+    if (eventData != undefined) {
+      this.setEventData(eventData);
+    }
     const teamData:ITeam[] = await CJMS_REQUEST_TEAMS(true);
     if (teamData != undefined) {
       this.setTeamData(teamData);
@@ -65,20 +88,28 @@ export default class Scoring extends Component<IProps, IState> {
     )
   }
 
+  testConflict(scoresheet:IScoresheet) {
+    console.log(scoresheet); // this is the issue
+  }
+
   render() {
+    {this.state.scoresheets.map((scoresheet) => {this.testConflict(scoresheet)})}
     return(
-      <div className="sc-grid-container">
-        <CloudPublish external_teamData={this.state.external_teamData}/>
-        <Grid container sx={{backgroundColor: '#18191f', borderRadius: '20px'}}>
-          {this.state.scoresheets.map((scoresheet, i) => (
-            <ScoreContainer 
-              key={i}
-              scoresheet={scoresheet}
-              team={this.state.external_teamData.find((team) => team.team_number === scoresheet.team_number) || initITeam()}
-            />
-          ))}
-        </Grid>
-      </div>
+      <React.Fragment>
+        <div className="sc-grid-container">
+          <CloudPublish external_eventData={this.state.external_eventData} external_teamData={this.state.external_teamData}/>
+          <Grid container sx={{backgroundColor: '#18191f', borderRadius: '20px'}}>
+            {this.state.scoresheets.map((scoresheet, i) => (
+              <ScoreContainer 
+                key={i}
+                scoresheet={scoresheet}
+                conflict={false}
+                team={this.state.external_teamData.find((team) => team.team_number === scoresheet.team_number) || initITeam()}
+              />
+            ))}
+          </Grid>
+        </div>
+      </React.Fragment>
     );
   }
 }

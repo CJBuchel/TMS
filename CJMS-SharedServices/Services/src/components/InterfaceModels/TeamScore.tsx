@@ -2,6 +2,7 @@ import { ITimestamps } from "./Timestamps";
 
 export interface ITeamScoresheet extends ITimestamps {
   // Header data
+  team_id: string;
   tournament_id: string;
   round: number;
 
@@ -12,24 +13,6 @@ export interface ITeamScoresheet extends ITimestamps {
   }[];
   private_comment: string;
   public_comment: string;
-}
-
-/**
- * Cloud scoresheet
- */
-export type ITeamScoreGet = {
-  compete_id: string;
-  user_id: string;
-  round: number;
-
-  answers: {
-    id: string;
-    answer: string;
-  }[];
-
-  public_comment: string;
-  private_comment: string;
-  timestamp: Date;
 }
 
 
@@ -56,7 +39,7 @@ export function initITeamScore(instance?:ITeamScore) {
     valid_scoresheet: false,
     cloud_published: false,
     scoresheet: {
-      // team_id: '',
+      team_id: '',
       tournament_id: '',
       round: 0,
 

@@ -58,7 +58,6 @@ export class Teams {
     requestServer.get().post(request_namespaces.request_post_team_update, (req, res) => {
       const team_number:number = req.body.team;
       const update:ITeam = req.body.update;
-  
 
       const filter = { team_number: team_number };
       TeamModel.findOneAndUpdate(filter, update, {}, (err) => {

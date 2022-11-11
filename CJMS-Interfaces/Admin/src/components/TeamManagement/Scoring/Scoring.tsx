@@ -89,7 +89,12 @@ export default class Scoring extends Component<IProps, IState> {
   }
 
   testConflict(scoresheet:IScoresheet) {
-    console.log(scoresheet); // this is the issue
+    const team = this.state.external_teamData.find((team) => team.team_number === scoresheet.team_number);
+    if (team != undefined) {
+      return team.scores.filter((sc) => sc.scoresheet.round === scoresheet.scoresheet.scoresheet.round).length > 1 ? true : false;
+    } else {
+      return false;
+    }
   }
 
   render() {
@@ -103,7 +108,7 @@ export default class Scoring extends Component<IProps, IState> {
               <ScoreContainer 
                 key={i}
                 scoresheet={scoresheet}
-                conflict={false}
+                conflict={this.testConflict(scoresheet)}
                 team={this.state.external_teamData.find((team) => team.team_number === scoresheet.team_number) || initITeam()}
               />
             ))}

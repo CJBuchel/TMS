@@ -26,7 +26,7 @@ interface IState {
 
 const startAudio = new window.Audio("./sounds/start.mp3");
 const stopAudio = new window.Audio("./sounds/stop.mp3");
-const endGameAudio = new window.Audio("./sounds/end-game.mp3");
+const endGameAudio = new window.Audio("./sounds/end-game.mp3"); // @intercom sound down
 const endAudio = new window.Audio("./sounds/end.mp3");
 
 export default class Controls extends Component<IProps, IState> {
@@ -61,6 +61,7 @@ export default class Controls extends Component<IProps, IState> {
 
     comm_service.listeners.onClockEndGameEvent(() => {
       this.setTimerState('endgame');
+      endGameAudio.volume = 0.5;
       this.playSoundIfEnabled(endGameAudio);
     });
 

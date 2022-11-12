@@ -31,7 +31,7 @@ export default class ScoreContainer extends Component<IProps, IState> {
         sx={{
           backgroundColor: '#03061d', 
           color: 'white',
-          padding: '2% 4% 2% 4%',
+          padding: '2% 5.5% 2% 5.5%',
           borderRadius: '20px',
           margin: '1%',
           borderStyle: 'solid',

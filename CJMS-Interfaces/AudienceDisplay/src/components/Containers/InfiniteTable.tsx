@@ -69,16 +69,33 @@ export default class InfiniteTable extends Component<IProps, IState> {
 
   getFormattedData(data:any[]) {
     const content:any[] = [];
+    var numCols = 0;
     // console.log(data);
     for (const row of data) {
       const columns:any[] = [];
+      numCols = 0;
       for (const column of Object.keys(row)) {
         columns.push(<td key={column}>{row[column]}</td>);
+        numCols++;
       }
 
       content.push(
         <tr key={row[1]}>
           {columns}
+        </tr>
+      );
+    }
+
+    if (content.length % 2!=0) {
+      console.log('uneven, adding placeholder');
+      const blank_row:any[] = []
+      for (var i = 0; i < numCols; i++) {
+        blank_row.push(<td>&nbsp;</td>)
+      }
+
+      content.push(
+        <tr key={"blank_placeholder"}>
+          {blank_row}
         </tr>
       );
     }

@@ -26,7 +26,7 @@ export default class CloudPublish extends Component<IProps, IState> {
       if (team.team_id.length > 0 && onlineLink.tournament_id.length > 0 && onlineLink.tournament_token.length > 0 && onlineLink.online_linked) {
         for (const score of team.scores) {
           if (team.scores.filter((sc) => sc.scoresheet.round === score.scoresheet.round).length === 1) {
-            if (score.valid_scoresheet && !score.cloud_published) {
+            if (score.valid_scoresheet && !score.cloud_published && !score.no_show) {
               score.scoresheet.team_id = team.team_id;
               score.scoresheet.tournament_id = onlineLink.tournament_id;
               CLOUD_POST_SCORESHEET(onlineLink.tournament_token, score.scoresheet).then(() => {

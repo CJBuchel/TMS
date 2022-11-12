@@ -19,13 +19,26 @@ export default class Export {
       for (var i = 0; i < this._rounds; i++) {
         const score = team.scores[i]?.score || '';
         const gp = team.scores[i]?.gp || '';
+        var gp_fix = '';
+
+        // Gp quick fix
+        if (gp === '2 - Developing') {
+          gp_fix = '2';
+        } else if (gp === '3 - Accomplished') {
+          gp_fix = '3';
+        } else if (gp === '4 - Exceeds') {
+          gp_fix = '4';
+        } else {
+          gp_fix = gp;
+        }
+
         const pub = team.scores[i]?.scoresheet.public_comment || '';
         const priv = team.scores[i]?.scoresheet.private_comment || '';
 
         if (comments) {
           const obj = {
             [`R${i+1} Score`]:score,
-            [`R${i+1} GP`]:gp,
+            [`R${i+1} GP`]:gp_fix,
             [`R${i+1} Pub Comment`]:pub,
             [`R${i+1} Priv Comment`]:priv,
           }
@@ -34,7 +47,7 @@ export default class Export {
         } else {
           const obj = {
             [`R${i+1} Score`]:score,
-            [`R${i+1} GP`]:gp
+            [`R${i+1} GP`]:gp_fix
           }
   
           round_values = {...round_values, ...obj};
@@ -44,7 +57,7 @@ export default class Export {
       formatedData.push({
         'Ranking':team.ranking,
         'Team Number':team.team_number,
-        'Team Name':team.team_name,
+        // 'Team Name':team.team_name,
         ...round_values
       });
     });

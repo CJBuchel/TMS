@@ -9,8 +9,7 @@ import "../../assets/stylesheets/application.scss";
 import "../../assets/stylesheets/Buttons.scss";
 import "../../assets/stylesheets/ColourScheme.scss";
 function Application(App) {
-    return (React.createElement(ConnectionCheck, null,
-        React.createElement(App, null)));
+    return (React.createElement(ConnectionCheck, { app: React.createElement(App, null) }));
 }
 // 
 // THIS IS A REACT 17 APPLICATION (17.0.2)

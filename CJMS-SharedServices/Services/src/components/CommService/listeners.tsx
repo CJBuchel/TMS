@@ -19,4 +19,7 @@ export const onMatchLoaded = onEvent.bind(null, 'match', 'loaded');
 
 // Event Update
 export const onEventUpdate = onEvent.bind(null, 'event', 'update');
-export const onEventState = onEvent.bind(null, 'event', 'state');
+export const onEventState = onEvent.bind(null, 'event', 'state'); 
+
+// System update
+export const onSystemRefresh = onEvent.bind(null, 'system', 'refresh');

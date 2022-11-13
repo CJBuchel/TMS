@@ -61,8 +61,9 @@ export class Setup {
     });
 
     requestServer.get().use(request_namespaces.request_post_purge, (req, res) => {
-      mongoose.connection.db.dropDatabase();
-      setupUsers();
+      mongoose.connection.db.dropDatabase().then(() => {
+        setupUsers(); // check that this works
+      });
       res.send({message: "Successfully Purged Database"});
       comm_service.senders.sendEventUpdateEvent('purge');
     });

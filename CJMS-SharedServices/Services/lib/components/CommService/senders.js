@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEventStateEvent = exports.sendEventUpdateEvent = exports.sendMatchLoadedEvent = exports.sendMatchUpdateEvent = exports.sendTeamUpdateEvent = exports.sendClockEndGameEvent = exports.sendClockReloadEvent = exports.sendClockStartEvent = exports.sendClockPrestartEvent = exports.sendClockTimeEvent = exports.sendClockStopEvent = exports.sendClockEndEvent = exports.sendClockArmEvent = void 0;
+exports.sendSystemRefresh = exports.sendEventStateEvent = exports.sendEventUpdateEvent = exports.sendMatchLoadedEvent = exports.sendMatchUpdateEvent = exports.sendTeamUpdateEvent = exports.sendClockEndGameEvent = exports.sendClockReloadEvent = exports.sendClockStartEvent = exports.sendClockPrestartEvent = exports.sendClockTimeEvent = exports.sendClockStopEvent = exports.sendClockEndEvent = exports.sendClockArmEvent = void 0;
 const publish_1 = require("./binding/publish");
 // Clock Events
 function sendClockArmEvent(e) { (0, publish_1.sendEvent)('clock', 'arm', e); }
@@ -32,3 +32,6 @@ function sendEventUpdateEvent(e) { (0, publish_1.sendEvent)('event', 'update', e
 exports.sendEventUpdateEvent = sendEventUpdateEvent;
 function sendEventStateEvent(e) { (0, publish_1.sendEvent)('event', 'state', e); }
 exports.sendEventStateEvent = sendEventStateEvent;
+// System
+function sendSystemRefresh(e) { (0, publish_1.sendEvent)('system', 'refresh', e); }
+exports.sendSystemRefresh = sendSystemRefresh;

@@ -1,5 +1,6 @@
 import { comm_service, request_namespaces, ITeamScore, ITeam } from "@cjms_shared/services";
 import { TeamModel } from "../../database/models/Team";
+import { MatchModel } from "../../database/models/Match";
 import { RequestServer } from "../RequestServer";
 // var sends = 0;
 // var gets = 0;
@@ -56,20 +57,34 @@ export class Teams {
     });
 
     requestServer.get().post(request_namespaces.request_post_team_update, (req, res) => {
-      const team_number:number = req.body.team;
+      const team_number:string = req.body.team;
       const update:ITeam = req.body.update;
 
-      const filter = { team_number: team_number };
-      TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
-        if (err) {
-          res.send({message: "Error while updating team"});
-          console.log(err.message);
-        } else {
-          res.send({success: true});
-          // comm_service.senders.sendTeamUpdateEvent('update');
-          updateRankings();
-        }
+      console.log(team_number);
+      console.log(update.team_number);
+      
+      // Update team in match model first (primarily for team numbers)
+      MatchModel.updateMany({'on_table1.team_number':team_number}, {$set: {'on_table1.team_number': update.team_number}}).then((res1) => {
+        MatchModel.updateMany({'on_table2.team_number':team_number}, {$set: {'on_table2.team_number': update.team_number}}).then((res2) => {
+          if (res1.modifiedCount > 0 || res2.matchedCount > 0) {
+            comm_service.senders.sendMatchUpdateEvent('update');
+            // Update team in team model
+            const filter = { team_number: team_number };
+            TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
+              if (err) {
+                res.send({message: "Error while updating team"});
+                console.log(err.message);
+              } else {
+                res.send({success: true});
+                updateRankings();
+              }
+            });
+          } else {
+            res.send({message: "Error while trying to find matching team in schedule"});
+          }
+        });
       });
+
     });
 
     requestServer.get().post(request_namespaces.request_post_team_score, (req, res) => {

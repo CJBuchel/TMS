@@ -67,6 +67,7 @@ interface IState {
 }
 
 export class ConnectionCheck extends Component<IProps, IState> {
+  private count = 0;
   constructor(props:any) {
     super(props);
 
@@ -93,11 +94,12 @@ export class ConnectionCheck extends Component<IProps, IState> {
   connectionCheck() {
     fetch("http://"+window.location.host).then(res => {
       this.setState({isOnline:true});
+      this.count = 0;
       this.setState({retryCount:0});
     }).catch((error) => {
       this.setState({isOnline:false});
-      var count = this.state.retryCount;
-      this.setState({retryCount: count++});
+      this.count++;
+      this.setState({retryCount: this.count});
     });
   }
 
@@ -111,11 +113,6 @@ export class ConnectionCheck extends Component<IProps, IState> {
       return (this.props.app);
     } else {
 
-      var retryString = this.state.retryCount.toString();
-      if (this.state.retryCount === 69) {
-        retryString = retryString + " Nice";
-      }
-
       return (
         <div className="ConnectionWrapper">
           <div className="ConnectionModalApp">{this.props.app}</div>
@@ -123,7 +120,7 @@ export class ConnectionCheck extends Component<IProps, IState> {
           <div className="ConnectionModal animated fadeIn">
             <h1>NO CONNECTION</h1>
             <h4>Server Fault: Cannot Ping CJMS</h4>
-            <h5>Retry Count: {retryString}</h5>
+            <h5>Retry Count: {this.state.retryCount === 69 ? `${this.state.retryCount} Nice` : this.state.retryCount}</h5>
           </div>
         </div>
       )

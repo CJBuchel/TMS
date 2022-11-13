@@ -9,6 +9,7 @@ interface IState {
     loop?: any;
 }
 export declare class ConnectionCheck extends Component<IProps, IState> {
+    private count;
     constructor(props: any);
     componentDidMount(): Promise<void>;
     componentWillUnmount(): void;

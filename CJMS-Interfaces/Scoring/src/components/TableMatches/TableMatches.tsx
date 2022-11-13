@@ -47,10 +47,10 @@ export default class TableMatches extends Component<IProps, IState> {
             <td>{match.start_time}</td>
             {/* Team 1 */}
             <td style={{backgroundColor: `${match.complete ? (match.on_table1.score_submitted ? '' : 'red') : ''}`}}>{match.on_table1.table}</td>
-            <td style={{backgroundColor: `${match.complete ? (match.on_table1.score_submitted ? '' : 'red') : ''}`}}>{match.on_table1.team_number}</td>
+            <td style={{backgroundColor: `${match.complete ? (match.on_table1.score_submitted ? '' : 'red') : ''}`}}>{this.props.external_teamData.find((team) => team.team_number === match.on_table1.team_number)?.team_name}</td>
             {/* Team 2 */}
             <td style={{backgroundColor: `${match.complete ? (match.on_table2.score_submitted ? '' : 'red') : ''}`}}>{match.on_table2.table}</td>
-            <td style={{backgroundColor: `${match.complete ? (match.on_table2.score_submitted ? '' : 'red') : ''}`}}>{match.on_table2.team_number}</td>
+            <td style={{backgroundColor: `${match.complete ? (match.on_table2.score_submitted ? '' : 'red') : ''}`}}>{this.props.external_teamData.find((team) => team.team_number === match.on_table2.team_number)?.team_name}</td>
           </tr>
         );
       }

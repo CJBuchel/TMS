@@ -2,7 +2,7 @@ import { Component, ChangeEvent } from "react";
 import Papa from "papaparse";
 
 import { CJMS_POST_SETUP, Requests } from "@cjms_interfaces/shared";
-import { IEvent, initIEvent, request_namespaces } from "@cjms_shared/services";
+import { comm_service, IEvent, initIEvent, request_namespaces } from "@cjms_shared/services";
 import Select from "react-select";
 import Games from "ausfll-score-calculator";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
@@ -43,6 +43,7 @@ export default class Offline extends Component<IProps, IState> {
     this.onEventNameChange = this.onEventNameChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onPurge = this.onPurge.bind(this);
+    this.onSystemRefresh = this.onSystemRefresh.bind(this);
   }
 
   componentDidMount(): void {
@@ -120,6 +121,12 @@ export default class Offline extends Component<IProps, IState> {
     }
   }
 
+  onSystemRefresh() {
+    if (confirm('Forcefully refresh every interface?')) {
+      comm_service.senders.sendSystemRefresh(true);
+    }
+  }
+
   render() {
     return (
       <div className="setup-column">
@@ -169,6 +176,8 @@ export default class Offline extends Component<IProps, IState> {
           {/* Controls */}
           <button className="hoverButton back-red" onClick={this.onPurge}>Purge Database</button>
           <button className="hoverButton back-green" onClick={this.onSubmit}>Submit</button>
+
+          <button className="hoverButton back-orange" onClick={this.onSystemRefresh}>Refresh All Displays</button>
         </form>
       </div>
     );

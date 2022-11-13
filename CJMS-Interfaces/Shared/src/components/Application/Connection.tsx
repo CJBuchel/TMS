@@ -1,6 +1,7 @@
 // 
 // Connection to the server (monitor modal)
 // 
+import { comm_service } from "@cjms_shared/services";
 import React, { useEffect, useState }  from "react";
 import "../../assets/stylesheets/ConnectionModal.scss";
 
@@ -9,6 +10,10 @@ export const ConnectionCheck = (props:any) => {
   const [isOnline, setOnline] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
   useEffect(() => {
+    comm_service.listeners.onSystemRefresh(() => {
+      console.log('refreshing');
+      window.location.reload();
+    });
     setInterval(() => {
       fetch("http://"+window.location.host)
       .then(res => {

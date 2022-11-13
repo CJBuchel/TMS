@@ -9,6 +9,7 @@ import { ConnectionCheck } from "./Connection";
 import "../../assets/stylesheets/application.scss";
 import "../../assets/stylesheets/Buttons.scss";
 import "../../assets/stylesheets/ColourScheme.scss";
+import { comm_service } from "@cjms_shared/services";
 
 function Application(App:any) {
   return (

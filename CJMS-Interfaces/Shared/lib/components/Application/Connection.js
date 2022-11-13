@@ -5,6 +5,7 @@ import { comm_service } from "@cjms_shared/services";
 import React, { Component } from "react";
 import "../../assets/stylesheets/ConnectionModal.scss";
 export class ConnectionCheck extends Component {
+    count = 0;
     constructor(props) {
         super(props);
         this.state = {
@@ -25,11 +26,12 @@ export class ConnectionCheck extends Component {
     connectionCheck() {
         fetch("http://" + window.location.host).then(res => {
             this.setState({ isOnline: true });
+            this.count = 0;
             this.setState({ retryCount: 0 });
         }).catch((error) => {
             this.setState({ isOnline: false });
-            var count = this.state.retryCount;
-            this.setState({ retryCount: count++ });
+            this.count++;
+            this.setState({ retryCount: this.count });
         });
     }
     startLoop() {
@@ -41,10 +43,6 @@ export class ConnectionCheck extends Component {
             return (this.props.app);
         }
         else {
-            var retryString = this.state.retryCount.toString();
-            if (this.state.retryCount === 69) {
-                retryString = retryString + " Nice";
-            }
             return (React.createElement("div", { className: "ConnectionWrapper" },
                 React.createElement("div", { className: "ConnectionModalApp" }, this.props.app),
                 React.createElement("div", { className: "ConnectionModalBackdrop" }),
@@ -53,7 +51,7 @@ export class ConnectionCheck extends Component {
                     React.createElement("h4", null, "Server Fault: Cannot Ping CJMS"),
                     React.createElement("h5", null,
                         "Retry Count: ",
-                        retryString))));
+                        this.state.retryCount === 69 ? `${this.state.retryCount} Nice` : this.state.retryCount))));
         }
     }
 }

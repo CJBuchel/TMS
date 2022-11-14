@@ -138,6 +138,8 @@ export default class Offline extends Component<IProps, IState> {
             <li>Enter Event Name</li>
             <li>Set round numbers</li>
             <li>Set default match lock state</li>
+            <li>Submit</li>
+            <li>Refresh All Displays</li>
           </ol>
           {/* Schedule import */}
           <h3>Schedule</h3>
@@ -177,7 +179,7 @@ export default class Offline extends Component<IProps, IState> {
           <button className="hoverButton back-red" onClick={this.onPurge}>Purge Database</button>
           <button className="hoverButton back-green" onClick={this.onSubmit}>Submit</button>
 
-          <button className="hoverButton back-orange" onClick={this.onSystemRefresh}>Refresh All Displays</button>
+          <button className="refresh hoverButton back-orange" onClick={this.onSystemRefresh}>Refresh All Displays</button>
         </form>
       </div>
     );

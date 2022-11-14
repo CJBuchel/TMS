@@ -152,6 +152,16 @@ export async function CJMS_POST_MATCH_UPDATE(match_number:string, match_update:I
   return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_update, {match: match_number, update: match_update});
 }
 
+// Post match create
+export async function CJMS_POST_MATCH_CREATE(match:IMatch): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_create, {match: match});
+}
+
+// Post match delete
+export async function CJMS_POST_MATCH_DELETE(match_number:string): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_delete, {match: match_number});
+}
+
 // Get Event
 export async function CJMS_REQUEST_EVENT(noAlert:boolean = false): Promise<IEvent> {
   const eventData:any = await CJMS_FETCH_GENERIC_GET(request_namespaces.request_fetch_event, noAlert);

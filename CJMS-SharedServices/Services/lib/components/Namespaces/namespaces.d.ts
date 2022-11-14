@@ -21,3 +21,5 @@ export declare const request_fetch_matches: string;
 export declare const request_post_match_load: string;
 export declare const request_post_match_complete: string;
 export declare const request_post_match_update: string;
+export declare const request_post_match_create: string;
+export declare const request_post_match_delete: string;

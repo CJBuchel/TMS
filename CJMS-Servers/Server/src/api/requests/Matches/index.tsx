@@ -58,5 +58,13 @@ export class Matches {
         }
       });
     });
+
+    requestServer.get().post(request_namespaces.request_post_match_create, (req, res) => {
+      // new MatchModel({})
+    });
+
+    requestServer.get().post(request_namespaces.request_post_match_delete, (req, res) => {
+      // MatchModel.findOneAndDelete()
+    });
   }
 }

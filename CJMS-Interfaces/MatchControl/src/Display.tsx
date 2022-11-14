@@ -5,6 +5,7 @@ import { Component } from "react";
 
 import "./assets/stylesheets/loader.scss";
 import { MatchControl } from "./components/MatchControl";
+import { MatchEdit } from "./components/MatchEdit";
 
 interface IProps {}
 
@@ -77,6 +78,11 @@ export default class Display extends Component<IProps, IState> {
               name: "Main Control",
               path: "/",
               linkTo:<MatchControl external_eventData={this.state.external_eventData} external_matchData={this.state.external_matchData} external_teamData={this.state.external_teamData}/>
+            },
+            {
+              name: "Match Edit",
+              path: "/MatchEdit",
+              linkTo:<MatchEdit external_eventData={this.state.external_eventData} external_teamData={this.state.external_teamData} external_matchData={this.state.external_matchData}/>
             }
           ]
         }

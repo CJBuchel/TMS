@@ -128,8 +128,8 @@ export async function CJMS_POST_MATCH_CREATE(match) {
     return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_create, { match: match });
 }
 // Post match delete
-export async function CJMS_POST_MATCH_DELETE(match) {
-    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_delete, { match: match });
+export async function CJMS_POST_MATCH_DELETE(match_number) {
+    return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_delete, { match: match_number });
 }
 // Get Event
 export async function CJMS_REQUEST_EVENT(noAlert = false) {

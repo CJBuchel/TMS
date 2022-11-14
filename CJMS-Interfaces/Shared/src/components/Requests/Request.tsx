@@ -158,8 +158,8 @@ export async function CJMS_POST_MATCH_CREATE(match:IMatch): Promise<Response> {
 }
 
 // Post match delete
-export async function CJMS_POST_MATCH_DELETE(match:IMatch): Promise<Response> {
-  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_delete, {match: match});
+export async function CJMS_POST_MATCH_DELETE(match_number:string): Promise<Response> {
+  return await CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_delete, {match: match_number});
 }
 
 // Get Event

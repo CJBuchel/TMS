@@ -16,6 +16,8 @@ export declare function CJMS_REQUEST_TEAMS(noAlert?: boolean): Promise<ITeam[]>;
 export declare function CJMS_POST_TEAM_UPDATE(team_number: string, team_update: ITeam): Promise<Response>;
 export declare function CJMS_REQUEST_MATCHES(noAlert?: boolean): Promise<IMatch[]>;
 export declare function CJMS_POST_MATCH_UPDATE(match_number: string, match_update: IMatch): Promise<Response>;
+export declare function CJMS_POST_MATCH_CREATE(match: IMatch): Promise<Response>;
+export declare function CJMS_POST_MATCH_DELETE(match: IMatch): Promise<Response>;
 export declare function CJMS_REQUEST_EVENT(noAlert?: boolean): Promise<IEvent>;
 export declare function CJMS_POST_EVENT_UPDATE(event: IEvent): Promise<Response>;
 export declare function CJMS_REQUEST_JUDGING_SESSIONS(noAlert?: boolean): Promise<IJudgingSession[]>;

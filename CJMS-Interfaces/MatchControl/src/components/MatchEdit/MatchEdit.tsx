@@ -1,11 +1,12 @@
 import { IEvent, IMatch, initIMatch, initITeam, ITeam } from "@cjms_shared/services";
+import { CJMS_POST_MATCH_UPDATE } from "@cjms_interfaces/shared";
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { Component } from "react";
 import UpdateIcon from "@mui/icons-material/Update";
 import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Select, { SingleValue } from "react-select";
+import Select from "react-select";
 
 import "../../assets/stylesheets/MatchEdit.scss";
 
@@ -36,7 +37,7 @@ export default class MatchEdit extends Component<IProps, IState> {
       selected_match: initIMatch(),
 
       selected_on_table1: {value: '', label: ''},
-      selected_on_table2: {value: '', label: ''}
+      selected_on_table2: {value: '', label: ''},
     }
 
     this.setSelectedMatch = this.setSelectedMatch.bind(this);
@@ -68,6 +69,24 @@ export default class MatchEdit extends Component<IProps, IState> {
     this.setInternalData();
   }
 
+  submitUpdateMatch() {
+    const match = this.state.selected_match;
+    match.on_table1.team_number = this.state.selected_on_table1.value;
+    match.on_table2.team_number = this.state.selected_on_table2.value;
+    console.log(match);
+    CJMS_POST_MATCH_UPDATE(match.match_number, match);
+  }
+
+  submitCreateMatch() {
+    
+  }
+
+  submitDeleteMatch() {
+
+  }
+
+
+
   setSelectedMatch(selected_match:ISelectOption) {
     console.log(selected_match);
 
@@ -78,7 +97,7 @@ export default class MatchEdit extends Component<IProps, IState> {
     this.setState({
       selected_match: match,
       selected_on_table1: {value: team1.team_number, label: `${team1.team_number} | ${team1.team_name}`},
-      selected_on_table2: {value: team2.team_number, label: `${team2.team_number} | ${team2.team_name}`},
+      selected_on_table2: {value: team2.team_number, label: `${team2.team_number} | ${team2.team_name}`}
     });
   }
 
@@ -90,12 +109,25 @@ export default class MatchEdit extends Component<IProps, IState> {
     this.setState({selected_on_table2: team});
   }
 
+  setTeam1Submitted(submitted:boolean) {
+    const match = this.state.selected_match;
+    match.on_table1.score_submitted = submitted;
+    this.setState({selected_match: match});
+  }
+
+  setTeam2Submitted(submitted:boolean) {
+    const match = this.state.selected_match;
+    match.on_table2.score_submitted = submitted;
+    this.setState({selected_match: match});
+  }
+
   updateMatchButton() {
     return (
       <Button
         variant="contained"
         color="primary"
         endIcon={<UpdateIcon/>}
+        onClick={() => this.submitUpdateMatch()}
       >Update Match</Button>
     )
   }
@@ -116,7 +148,8 @@ export default class MatchEdit extends Component<IProps, IState> {
         variant="contained"
         color="warning"
         endIcon={<ClearIcon/>}
-      >Clear</Button>
+        onClick={() => window.location.reload()}
+      >Reset</Button>
     )
   }
 
@@ -144,21 +177,26 @@ export default class MatchEdit extends Component<IProps, IState> {
               <Select 
                 onChange={(e:any) => this.setSelectedTeam1(e)} 
                 value={this.state.selected_on_table1} 
-                options={this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`}))}/>
+                options={this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`}))}
+              />
             </div>
             
             <div className="column-editor">
               <Select 
                 onChange={(e:any) => this.setSelectedTeam2(e)} 
                 value={this.state.selected_on_table2} 
-                options={this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`}))}/>
+                options={this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`}))}
+              />
             </div>
 
             {/* team 1 */}
             <div className="column-editor toggles">
               <FormControl sx={{color: 'white'}}>
                 <FormLabel sx={{color: 'white'}}>Submitted</FormLabel>
-                <RadioGroup>
+                <RadioGroup
+                  value={this.state.selected_match.on_table1.score_submitted}
+                  onChange={(e) => this.setTeam1Submitted(e.target.value === 'true' ? true : false)}
+                >
                   <FormControlLabel value={true} control={<Radio color='success' sx={{color: 'white'}}/>} label="true" />
                   <FormControlLabel value={false} control={<Radio color='error' sx={{color: 'white'}}/>} label="false" />
                 </RadioGroup>
@@ -169,7 +207,10 @@ export default class MatchEdit extends Component<IProps, IState> {
             <div className="column-editor toggles">
               <FormControl sx={{color: 'white'}}>
                 <FormLabel sx={{color: 'white'}}>Submitted</FormLabel>
-                <RadioGroup>
+                <RadioGroup
+                  value={this.state.selected_match.on_table2.score_submitted}
+                  onChange={(e) => this.setTeam2Submitted(e.target.value === 'true' ? true : false)}
+                >
                   <FormControlLabel value={true} control={<Radio color='success' sx={{color: 'white'}}/>} label="true" />
                   <FormControlLabel value={false} control={<Radio color='error' sx={{color: 'white'}}/>} label="false" />
                 </RadioGroup>

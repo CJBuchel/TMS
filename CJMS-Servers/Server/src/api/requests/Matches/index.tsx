@@ -60,11 +60,17 @@ export class Matches {
     });
 
     requestServer.get().post(request_namespaces.request_post_match_create, (req, res) => {
-      // new MatchModel({})
+      new MatchModel(req.body.match).save().then(() => {
+        comm_service.senders.sendMatchUpdateEvent('update');
+        res.send({success:true})
+      });
     });
 
     requestServer.get().post(request_namespaces.request_post_match_delete, (req, res) => {
-      // MatchModel.findOneAndDelete()
+      MatchModel.findOneAndDelete({match_number: req.body.match}).then(() => {
+        comm_service.senders.sendMatchUpdateEvent('update');
+        res.send({success:true});
+      });
     });
   }
 }

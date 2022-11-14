@@ -1,5 +1,5 @@
 import { IEvent, IMatch, initIMatch, initITeam, ITeam } from "@cjms_shared/services";
-import { CJMS_POST_MATCH_UPDATE } from "@cjms_interfaces/shared";
+import { CJMS_POST_MATCH_CREATE, CJMS_POST_MATCH_DELETE, CJMS_POST_MATCH_UPDATE } from "@cjms_interfaces/shared";
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { Component } from "react";
 import UpdateIcon from "@mui/icons-material/Update";
@@ -70,21 +70,31 @@ export default class MatchEdit extends Component<IProps, IState> {
   }
 
   submitUpdateMatch() {
-    const match = this.state.selected_match;
-    match.on_table1.team_number = this.state.selected_on_table1.value;
-    match.on_table2.team_number = this.state.selected_on_table2.value;
-    console.log(match);
-    CJMS_POST_MATCH_UPDATE(match.match_number, match);
+    if (confirm("Update match?")) {
+      const match = this.state.selected_match;
+      match.on_table1.team_number = this.state.selected_on_table1.value;
+      match.on_table2.team_number = this.state.selected_on_table2.value;
+      console.log(match);
+      CJMS_POST_MATCH_UPDATE(match.match_number, match);
+    }
   }
 
   submitCreateMatch() {
-    
+    if (confirm("Create match?")) {
+      const match = initIMatch();
+      match.match_number = `REF_${this.props.external_matchData.length+1}`;
+      match.on_table1.team_number = this.state.selected_on_table1.value;
+      match.on_table2.team_number = this.state.selected_on_table2.value;
+      console.log(match);
+      CJMS_POST_MATCH_CREATE(match);
+    }
   }
 
   submitDeleteMatch() {
-
+    if (confirm(`Delete match ${this.state.selected_match.match_number}?`)) {
+      CJMS_POST_MATCH_DELETE(this.state.selected_match.match_number);
+    }
   }
-
 
 
   setSelectedMatch(selected_match:ISelectOption) {
@@ -138,6 +148,7 @@ export default class MatchEdit extends Component<IProps, IState> {
         variant="contained"
         color="success"
         endIcon={<AddIcon/>}
+        onClick={() => this.submitCreateMatch()}
       >Create Match</Button>
     )
   }
@@ -159,6 +170,7 @@ export default class MatchEdit extends Component<IProps, IState> {
         variant="contained"
         color="error"
         endIcon={<DeleteIcon/>}
+        onClick={() => this.submitDeleteMatch()}
       >Delete Match</Button>
     )
   }
@@ -223,11 +235,11 @@ export default class MatchEdit extends Component<IProps, IState> {
         <div className="match-modify submit">
           <div className="row-editor">
             <div className="column-editor">
-              {this.state.selected_match.match_number.length > 0 ? this.updateMatchButton() : this.createMatchButton()}
+              {this.state.selected_match.match_number.length > 0 ? this.updateMatchButton() : ''}
             </div>
 
             <div className="column-editor">
-              {this.state.selected_match.match_number.length > 0 ? this.deleteMatchButton() : this.clearButton()}
+              {this.state.selected_match.match_number.length > 0 ? this.clearButton() : ''}
             </div>
           </div>
         </div>

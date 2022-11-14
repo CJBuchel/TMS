@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@cjms_interfaces/shared": "^1.0.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.13",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "bootstrap": "^5.2.0",

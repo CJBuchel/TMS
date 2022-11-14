@@ -9,7 +9,7 @@ export class ConnectionCheck extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOnline: false,
+            isOnline: true,
             retryCount: 0
         };
         comm_service.listeners.onSystemRefresh(() => {

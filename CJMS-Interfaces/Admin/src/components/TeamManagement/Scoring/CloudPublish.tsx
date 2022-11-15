@@ -29,9 +29,11 @@ export default class CloudPublish extends Component<IProps, IState> {
             if (score.valid_scoresheet && !score.cloud_published && !score.no_show) {
               score.scoresheet.team_id = team.team_id;
               score.scoresheet.tournament_id = onlineLink.tournament_id;
-              CLOUD_POST_SCORESHEET(onlineLink.tournament_token, score.scoresheet).then(() => {
-                score.cloud_published = true;
-                CJMS_POST_TEAM_UPDATE(team.team_number, team);
+              CLOUD_POST_SCORESHEET(onlineLink.tournament_token, score.scoresheet).then((response:any) => {
+                if (response.compete_id) {
+                  score.cloud_published = true;
+                  CJMS_POST_TEAM_UPDATE(team.team_number, team);
+                }
               }).catch((err) => {
                 alert(`Error posting team: ${team.team_number}`);
                 console.log(err);
@@ -47,28 +49,31 @@ export default class CloudPublish extends Component<IProps, IState> {
 
   deleteScoresheets() {
     // the api returns a non standard scoresheet when gettings all scores from tournament
-    CLOUD_REQUEST_SCORESHEETS(this.props.external_eventData.online_link.tournament_id).then((response:any) => {
+    var status_ok = true;
+    CLOUD_REQUEST_SCORESHEETS(this.props.external_eventData.online_link.tournament_id).then(async (response:any) => {
       // var response_success:boolean = false;
       for (const scoresheet of response) {
-        CLOUD_DELETE_SCORESHEET(
+        await CLOUD_DELETE_SCORESHEET(
           this.props.external_eventData.online_link.tournament_token, 
           this.props.external_eventData.online_link.tournament_id, 
           scoresheet._id
         ).then((response) => {
-          if (!response.ok) {
-            // update team
+          if (response.status !== 200 || !response.ok) {
+            status_ok = false;
             alert(`Error score: ${scoresheet._id}`);
           }
         });
       }
 
-    }).then((response) => {
-      for (const team of this.props.external_teamData) {
-        for (const score of team.scores) {
-          score.cloud_published = false;
+    }).finally(() => {
+      if (status_ok) {
+        for (const team of this.props.external_teamData) {
+          for (const score of team.scores) {
+            score.cloud_published = false;
+          }
+  
+          CJMS_POST_TEAM_UPDATE(team.team_number, team);
         }
-
-        CJMS_POST_TEAM_UPDATE(team.team_number, team);
       }
     });
   }

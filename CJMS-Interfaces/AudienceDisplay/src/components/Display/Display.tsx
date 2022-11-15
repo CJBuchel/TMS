@@ -1,18 +1,21 @@
 import React, { Component } from "react";
 import InfiniteTable from "../Containers/InfiniteTable";
 
-import "../../assets/application.scss";
-import "../../assets/loader.scss";
-import { comm_service, IEvent, ITeam } from "@cjms_shared/services";
+import "../../assets/stylesheets/application.scss";
+import "../../assets/stylesheets/loader.scss";
+import { comm_service, IEvent, IMatch, initIMatch, ITeam } from "@cjms_shared/services";
 import { Requests } from "@cjms_interfaces/shared";
 import { ITeamScore, initIEvent } from "@cjms_shared/services";
+import InfoFooter from "../Containers/InfoFooter";
 
 interface IProps {}
 
 interface IState {
-  teamData:ITeam[];
   eventData:IEvent;
+  teamData:ITeam[];
+  matchData:IMatch[];
   rounds:any[];
+  loaded_match:IMatch;
 }
 
 export default class Display extends Component<IProps, IState> {
@@ -20,39 +23,64 @@ export default class Display extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      teamData: [],
       eventData: initIEvent(),
-      rounds: []
+      teamData: [],
+      matchData: [],
+      rounds: [],
+      loaded_match: initIMatch()
     }
+
+    comm_service.listeners.onMatchLoaded(async (match_number:string) => {
+      if (this.state.matchData.length > 0) {
+        this.setState({loaded_match: this.state.matchData.find((match) => match.match_number === match_number) || initIMatch()});
+      }
+    })
 
     comm_service.listeners.onTeamUpdate(async () => {
       const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
-      const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
-      this.setData(teamData, eventData);
+      this.setTeamData(teamData);
+    });
+
+    comm_service.listeners.onMatchUpdate(async () => {
+      const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
+      this.setMatchData(matchData);
     });
 
     comm_service.listeners.onEventUpdate(async () => {
-      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
       const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
-      this.setData(teamData, eventData);
+      const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+      const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
+      this.setData(eventData, teamData, matchData);
     });
   }
 
-  setData(teamData:ITeam[], eventData:IEvent) {
-    this.setState({teamData: teamData.sort((a,b) => {return a.ranking-b.ranking}), eventData: eventData});
+  setTeamData(teamData:ITeam[]) {
+    this.setState({teamData: teamData.sort((a,b) => {return a.ranking-b.ranking})});
+  }
 
-    const rounds:any[] = [];
-    for (var i = 0; i < eventData.event_rounds; i++) {
-      rounds.push(`Round ${i+1}`);
+  setMatchData(matchData:IMatch[]) {
+    this.setState({matchData: matchData});
+  }
+
+  setData(eventData:IEvent, teamData:ITeam[], matchData:IMatch[]) {
+    if (eventData && teamData.length > 0 && matchData.length > 0) {
+      this.setState({teamData: teamData.sort((a,b) => {return a.ranking-b.ranking}), eventData: eventData});
+      this.setState({matchData: matchData});
+  
+      const rounds:any[] = [];
+      for (var i = 0; i < eventData.event_rounds; i++) {
+        rounds.push(`Round ${i+1}`);
+      }
+  
+      this.setState({rounds: rounds});
     }
-
-    this.setState({rounds: rounds});
   }
 
   async componentDidMount() {
-    const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
     const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
-    this.setData(teamData, eventData);
+    const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
+    const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
+    this.setData(eventData, teamData, matchData);
   }
 
   tableHeaders() {
@@ -91,11 +119,18 @@ export default class Display extends Component<IProps, IState> {
     return tableRowArray;
   }
 
+  matchInfo() {
+    if (this.state.loaded_match.match_number.length > 0) {
+      return <InfoFooter eventData={this.state.eventData} teamData={this.state.teamData} matchData={this.state.matchData} loaded_match={this.state.loaded_match}/>
+    }
+  }
+
   render() {
-    if (this.state.teamData && this.state.eventData) {
+    if (this.state.eventData) {
       return (
         <div id='audience-display-app' className='audience-display-app'>
           <InfiniteTable headers={this.tableHeaders()} data={this.tableData()}/>
+          {this.matchInfo()}
         </div>
       );
     } else {

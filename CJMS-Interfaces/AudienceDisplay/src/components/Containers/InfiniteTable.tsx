@@ -1,6 +1,6 @@
 import React, { Component, useRef } from 'react'
-import "../../assets/application.scss";
-import "../../assets/InfiniteTable.scss";
+import "../../assets/stylesheets/application.scss";
+import "../../assets/stylesheets/InfiniteTable.scss";
 
 const DEFAULT_SPEED = 1;
 const DEFAULT_DELAY = 1000;
@@ -59,7 +59,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
     if (!this.isScrolling()) {
       return 0;
     } else if (oldScroll >= height/3) {
-      console.log("Resetting");
+      // console.log("Resetting");
       return (oldScroll - height/3);
     } else {
       // console.log("scrolling");
@@ -87,10 +87,10 @@ export default class InfiniteTable extends Component<IProps, IState> {
     }
 
     if (content.length % 2!=0) {
-      console.log('uneven, adding placeholder');
-      const blank_row:any[] = []
+      // console.log('uneven, adding placeholder');
+      const blank_row:any[] = [];
       for (var i = 0; i < numCols; i++) {
-        blank_row.push(<td>&nbsp;</td>)
+        blank_row.push(<td key={`blank_col_${i}`}>&nbsp;</td>)
       }
 
       content.push(
@@ -115,6 +115,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
   }
 
   renderTable() {
+    // console.log('rendering table');
     const firstTable = this.getFormattedData(this.props.data);
     const secondTable = this.getFormattedData(this.props.data);
 

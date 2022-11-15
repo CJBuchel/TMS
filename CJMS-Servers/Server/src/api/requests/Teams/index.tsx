@@ -60,9 +60,6 @@ export class Teams {
       const team_number:string = req.body.team;
       const update:ITeam = req.body.update;
 
-      console.log(team_number);
-      console.log(update.team_number);
-      
       // Update team in match model first (primarily for team numbers)
       MatchModel.updateMany({'on_table1.team_number':team_number}, {$set: {'on_table1.team_number': update.team_number}}).then((res1) => {
         MatchModel.updateMany({'on_table2.team_number':team_number}, {$set: {'on_table2.team_number': update.team_number}}).then((res2) => {

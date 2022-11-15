@@ -61,6 +61,7 @@ export default class Scoring extends Component<IProps,IState> {
     });
 
     comm_service.listeners.onMatchUpdate(async () => {
+      console.log('match update');
       const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
       this.setMatchData(matchData);
     });
@@ -72,14 +73,17 @@ export default class Scoring extends Component<IProps,IState> {
 
   setEventData(eventData:IEvent) {
     this.setState({external_eventData: eventData, match_locked: (eventData?.match_locked || false)});
+    this.processData();
   }
 
   setTeamData(teamData:ITeam[]) {
     this.setState({external_teamData: teamData});
+    this.processData();
   }
 
   setMatchData(matchData:IMatch[]) {
     this.setState({external_matchData: matchData});
+    this.processData();
   }
 
   processData() {

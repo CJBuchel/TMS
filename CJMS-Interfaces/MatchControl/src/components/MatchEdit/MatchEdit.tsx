@@ -27,6 +27,9 @@ interface IState {
 
   selected_on_table1:ISelectOption;
   selected_on_table2:ISelectOption;
+
+  selected_table_on_table1:ISelectOption;
+  selected_table_on_table2:ISelectOption;
 }
 
 export default class MatchEdit extends Component<IProps, IState> {
@@ -38,6 +41,9 @@ export default class MatchEdit extends Component<IProps, IState> {
 
       selected_on_table1: {value: '', label: ''},
       selected_on_table2: {value: '', label: ''},
+
+      selected_table_on_table1: {value: '', label: ''},
+      selected_table_on_table2: {value: '', label: ''},
     }
 
     this.setSelectedMatch = this.setSelectedMatch.bind(this);
@@ -49,9 +55,11 @@ export default class MatchEdit extends Component<IProps, IState> {
       this.props.external_matchData.map((match) => {
         const team1 = this.props.external_teamData.find((team) => team.team_number === match.on_table1.team_number);
         const team2 = this.props.external_teamData.find((team) => team.team_number === match.on_table2.team_number);
+        var team1String = team1 ? `${team1?.team_number} | ${team1?.team_name}` : '';
+        var team2String = team2 ? `${team2?.team_number} | ${team2?.team_name}` : '';
         matchOptions.push({
           value: match.match_number, 
-          label: `#${match.match_number} => {${team1?.team_number} | ${team1?.team_name}}, {${team2?.team_number} | ${team2?.team_name}}`
+          label: `#${match.match_number} => {${team1String}}, {${team2String}}`
         });
       });
 
@@ -73,9 +81,13 @@ export default class MatchEdit extends Component<IProps, IState> {
     if (confirm("Update match?")) {
       const match = this.state.selected_match;
       match.on_table1.team_number = this.state.selected_on_table1.value;
+      match.on_table1.table = this.state.selected_table_on_table1.value;
       match.on_table2.team_number = this.state.selected_on_table2.value;
+      match.on_table2.table = this.state.selected_table_on_table2.value;
       console.log(match);
-      CJMS_POST_MATCH_UPDATE(match.match_number, match);
+      CJMS_POST_MATCH_UPDATE(match.match_number, match).then(() => {
+        window.location.reload();
+      });
     }
   }
 
@@ -86,37 +98,62 @@ export default class MatchEdit extends Component<IProps, IState> {
       match.on_table1.team_number = this.state.selected_on_table1.value;
       match.on_table2.team_number = this.state.selected_on_table2.value;
       console.log(match);
-      CJMS_POST_MATCH_CREATE(match);
+      CJMS_POST_MATCH_CREATE(match).then(() => {
+        window.location.reload();
+      });
     }
   }
 
   submitDeleteMatch() {
     if (confirm(`Delete match ${this.state.selected_match.match_number}?`)) {
-      CJMS_POST_MATCH_DELETE(this.state.selected_match.match_number);
+      CJMS_POST_MATCH_DELETE(this.state.selected_match.match_number).then(() => {
+        window.location.reload();
+      });
     }
   }
 
 
   setSelectedMatch(selected_match:ISelectOption) {
-    console.log(selected_match);
+    // console.log(selected_match);
 
     const match = this.props.external_matchData.find((match) => selected_match.value === match.match_number) || initIMatch();
     const team1 = this.props.external_teamData.find((team) => match.on_table1.team_number === team.team_number) || initITeam();
     const team2 = this.props.external_teamData.find((team) => match.on_table2.team_number === team.team_number) || initITeam();
 
+    var team1String = team1.team_number.length > 0 ? `${team1?.team_number} | ${team1?.team_name}` : '';
+    var team2String = team2.team_number.length > 0 ? `${team2?.team_number} | ${team2?.team_name}` : '';
+
+    console.log(match);
+
     this.setState({
       selected_match: match,
-      selected_on_table1: {value: team1.team_number, label: `${team1.team_number} | ${team1.team_name}`},
-      selected_on_table2: {value: team2.team_number, label: `${team2.team_number} | ${team2.team_name}`}
+      selected_on_table1: {value: team1.team_number, label: `${team1String}`},
+      selected_on_table2: {value: team2.team_number, label: `${team2String}`},
+      selected_table_on_table1: {value: match.on_table1.table, label: match.on_table1.table},
+      selected_table_on_table2: {value: match.on_table2.table, label: match.on_table2.table}
     });
   }
 
   setSelectedTeam1(team:ISelectOption) {
     this.setState({selected_on_table1: team});
+    if (team.value === '') {
+      this.setState({selected_table_on_table1: {value: '', label: 'NO TABLE'}});
+    }
+  }
+
+  setSelectedTableTeam1(table:ISelectOption) {
+    this.setState({selected_table_on_table1: table});
   }
 
   setSelectedTeam2(team:ISelectOption) {
     this.setState({selected_on_table2: team});
+    if (team.value === '') {
+      this.setState({selected_table_on_table2: {value: '', label: 'NO TABLE'}});
+    }
+  }
+
+  setSelectedTableTeam2(table:ISelectOption) {
+    this.setState({selected_table_on_table2: table});
   }
 
   setTeam1Submitted(submitted:boolean) {
@@ -138,6 +175,11 @@ export default class MatchEdit extends Component<IProps, IState> {
         color="primary"
         endIcon={<UpdateIcon/>}
         onClick={() => this.submitUpdateMatch()}
+        sx={{
+          width: '100%',
+          height: '100%',
+          fontSize: '3vh'
+        }}
       >Update Match</Button>
     )
   }
@@ -149,6 +191,11 @@ export default class MatchEdit extends Component<IProps, IState> {
         color="success"
         endIcon={<AddIcon/>}
         onClick={() => this.submitCreateMatch()}
+        sx={{
+          width: '100%',
+          height: '100%',
+          fontSize: '3vh'
+        }}
       >Create Match</Button>
     )
   }
@@ -160,6 +207,11 @@ export default class MatchEdit extends Component<IProps, IState> {
         color="warning"
         endIcon={<ClearIcon/>}
         onClick={() => window.location.reload()}
+        sx={{
+          width: '100%',
+          height: '100%',
+          fontSize: '3vh'
+        }}
       >Reset</Button>
     )
   }
@@ -171,11 +223,18 @@ export default class MatchEdit extends Component<IProps, IState> {
         color="error"
         endIcon={<DeleteIcon/>}
         onClick={() => this.submitDeleteMatch()}
+        sx={{
+          width: '100%',
+          height: '100%',
+          fontSize: '3vh'
+        }}
       >Delete Match</Button>
     )
   }
   
   render() {
+    const table_options:ISelectOption[] = [{value: '', label: 'NO TABLE'}];
+    const team_options:ISelectOption[] = [{value: '', label: 'NO TEAM'}];
     return (
       <>
         <div className="match-modify">
@@ -189,7 +248,15 @@ export default class MatchEdit extends Component<IProps, IState> {
               <Select 
                 onChange={(e:any) => this.setSelectedTeam1(e)} 
                 value={this.state.selected_on_table1} 
-                options={this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`}))}
+                options={team_options.concat(this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`})))}
+              />
+            </div>
+
+            <div className="column-editor">
+              <Select 
+                onChange={(e:any) => this.setSelectedTableTeam1(e)} 
+                value={this.state.selected_table_on_table1} 
+                options={table_options.concat(this.props.external_eventData.event_tables.map((table) => ({value: table, label: table})))}
               />
             </div>
             
@@ -197,7 +264,15 @@ export default class MatchEdit extends Component<IProps, IState> {
               <Select 
                 onChange={(e:any) => this.setSelectedTeam2(e)} 
                 value={this.state.selected_on_table2} 
-                options={this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`}))}
+                options={team_options.concat(this.props.external_teamData.map((team) => ({value: team.team_number, label: `${team.team_number} | ${team.team_name}`})))}
+              />
+            </div>
+
+            <div className="column-editor">
+              <Select 
+                onChange={(e:any) => this.setSelectedTableTeam2(e)} 
+                value={this.state.selected_table_on_table2} 
+                options={table_options.concat(this.props.external_eventData.event_tables.map((table) => ({value: table, label: table})))}
               />
             </div>
 
@@ -231,14 +306,14 @@ export default class MatchEdit extends Component<IProps, IState> {
           </div>
         </div>
 
-        {/* Changed data */}
+        {/* Buttons */}
         <div className="match-modify submit">
           <div className="row-editor">
-            <div className="column-editor">
+            <div className="submit-buttons">
               {this.state.selected_match.match_number.length > 0 ? this.updateMatchButton() : ''}
             </div>
 
-            <div className="column-editor">
+            <div className="submit-buttons">
               {this.state.selected_match.match_number.length > 0 ? this.clearButton() : ''}
             </div>
           </div>

@@ -111,7 +111,7 @@ export default class OnlineLink extends Component<IProps, IState> {
   }
 
   onLink() {
-    if (this.state.eventData && this.state.selected_tournament.length > 0) {
+    if (this.state.eventData && this.state.selected_tournament.length > 0 && this.state.tournament_token.length > 0) {
       CLOUD_REQUEST_TEAMS(this.state.selected_tournament).then((cloud_teams:any) => {
         CJMS_REQUEST_TEAMS().then((teams) => {
           if (teams.length != cloud_teams.length) {

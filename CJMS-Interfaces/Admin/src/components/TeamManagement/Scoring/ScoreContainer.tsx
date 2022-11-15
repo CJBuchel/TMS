@@ -45,12 +45,14 @@ export default class ScoreContainer extends Component<IProps, IState> {
   }
 
   handleDelete() {
-    const index = this.props.team.scores.indexOf(this.props.scoresheet.scoresheet);
-    
-    if (index != -1) {
-      var team_update = this.props.team;
-      team_update.scores.splice(index, 1);
-      CJMS_POST_TEAM_UPDATE(this.props.team.team_number, team_update);
+    if (confirm('Delete score?')) {
+      const index = this.props.team.scores.indexOf(this.props.scoresheet.scoresheet);
+      
+      if (index != -1) {
+        var team_update = this.props.team;
+        team_update.scores.splice(index, 1);
+        CJMS_POST_TEAM_UPDATE(this.props.team.team_number, team_update);
+      }
     }
   }
 

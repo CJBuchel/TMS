@@ -14,6 +14,9 @@ export async function setupMatches(match_block:any[]) {
       }
     }
 
+    console.log(table_names);
+    console.log(teams_on_table_index);
+
     await new MatchModel({
       match_number: match[0],
       start_time: match[1],

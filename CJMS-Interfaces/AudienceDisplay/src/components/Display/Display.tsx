@@ -11,7 +11,7 @@ import InfoFooter from "../Containers/InfoFooter";
 interface IProps {}
 
 interface IState {
-  eventData:IEvent;
+  eventData?:IEvent;
   teamData:ITeam[];
   matchData:IMatch[];
   rounds:any[];
@@ -23,7 +23,6 @@ export default class Display extends Component<IProps, IState> {
     super(props);
 
     this.state = {
-      eventData: initIEvent(),
       teamData: [],
       matchData: [],
       rounds: [],
@@ -50,12 +49,28 @@ export default class Display extends Component<IProps, IState> {
       const eventData:IEvent = await Requests.CJMS_REQUEST_EVENT(true);
       const teamData:ITeam[] = await Requests.CJMS_REQUEST_TEAMS(true);
       const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
-      this.setData(eventData, teamData, matchData);
+      this.setEventData(eventData);
+      this.setTeamData(teamData);
+      this.setMatchData(matchData);
     });
   }
 
+  setEventData(eventData:IEvent) {
+    this.setState({eventData: eventData});
+    if (eventData) {  
+      const rounds:any[] = [];
+      for (var i = 0; i < eventData.event_rounds; i++) {
+        rounds.push(`Round ${i+1}`);
+      }
+  
+      this.setState({rounds: rounds});
+    }
+  }
+
   setTeamData(teamData:ITeam[]) {
-    this.setState({teamData: teamData.sort((a,b) => {return a.ranking-b.ranking})});
+    if (teamData) {
+      this.setState({teamData: teamData.sort((a,b) => {return a.ranking-b.ranking})});
+    }
   }
 
   setMatchData(matchData:IMatch[]) {
@@ -120,13 +135,13 @@ export default class Display extends Component<IProps, IState> {
   }
 
   matchInfo() {
-    if (this.state.loaded_match.match_number.length > 0) {
+    if (this.state.loaded_match.match_number.length > 0 && this.state.eventData) {
       return <InfoFooter eventData={this.state.eventData} teamData={this.state.teamData} matchData={this.state.matchData} loaded_match={this.state.loaded_match}/>
     }
   }
 
   render() {
-    if (this.state.eventData) {
+    if (this.state.eventData && this.state.teamData.length > 0 && this.state.matchData.length > 0) {
       return (
         <div id='audience-display-app' className='audience-display-app'>
           <InfiniteTable headers={this.tableHeaders()} data={this.tableData()}/>

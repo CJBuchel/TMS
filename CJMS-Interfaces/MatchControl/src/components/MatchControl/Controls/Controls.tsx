@@ -61,7 +61,6 @@ export default class Controls extends Component<IProps, IState> {
 
     comm_service.listeners.onClockEndGameEvent(() => {
       this.setTimerState('endgame');
-      endGameAudio.volume = 0.5;
       this.playSoundIfEnabled(endGameAudio);
     });
 
@@ -81,6 +80,7 @@ export default class Controls extends Component<IProps, IState> {
     });
 
     comm_service.listeners.onClockTimeEvent((time:number) => {
+      this.setTimerState('running');
       this.setCurrentTime(time);
     });
 

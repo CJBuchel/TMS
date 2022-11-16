@@ -8,12 +8,14 @@ body{
 /* Table Styles */
 .table-wrapper{
   height: 100%;
-  margin: 10px 4% 4%;
+  // margin: 10px 4% 4%;
+  margin-left: 4%;
+  margin-right: 4%;
   box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
 }
 
 .fl-table {
-  border-radius: 5px;
+  // border-radius: 5px;
   font-size: 3vw;
   font-weight: normal;
   border: none;
@@ -36,7 +38,7 @@ body{
 }
 
 .fl-table td {
-  border-right: 1px solid #f8f8f8;
+  // border-right: 1px solid #f8f8f8;
   font-size: 2vw;
   overflow: hidden;
 }
@@ -44,9 +46,10 @@ body{
 .fl-table thead tr th {
   color: #ffffff;
   background: #4FC3A1;
+  position: -webkit-sticky;
   position: sticky;
 
-  top: 0%;
+  top: 0px;
   z-index: 1;
   overflow: hidden;
 }

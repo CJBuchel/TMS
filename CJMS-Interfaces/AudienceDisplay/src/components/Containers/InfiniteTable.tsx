@@ -4,7 +4,6 @@ import "../../assets/stylesheets/InfiniteTable.scss";
 
 const DEFAULT_SPEED = 1;
 const DEFAULT_DELAY = 1000;
-
 interface IProps {
   headers:any;
   data:any;
@@ -33,6 +32,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
     if (!this.unmountScroll) {
       this.setState({scrollTop: this.newScroll(this.state.scrollTop)});
       window.requestAnimationFrame(() => this.scrollCallback());
+      // setTimeout(() => window.requestAnimationFrame(() => this.scrollCallback()), ANIMATION_DELAY);
     }
   }
 
@@ -63,7 +63,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
       return (oldScroll - height/3);
     } else {
       // console.log("scrolling");
-      return oldScroll + (DEFAULT_SPEED/2);
+      return oldScroll + Math.ceil(DEFAULT_SPEED/3);
     }
   }
 
@@ -140,7 +140,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
   render() {
     return (
       <div id='table-wrapper' className='table-wrapper' style={{direction: 'ltr', marginTop: -this.state.scrollTop}}>
-        <table id='table-parent' className='fl-table ui scrollable single line very basic compact table'>
+        <table id='table-parent' className='fl-table'>
           <thead id='table-head'>
             { this.getFormatedHeaders(this.props.headers) }
           </thead>

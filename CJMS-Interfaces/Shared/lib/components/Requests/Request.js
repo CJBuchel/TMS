@@ -162,7 +162,6 @@ export async function CLOUD_REQUEST_SCORESHEETS(tournament_id) {
 }
 export async function CLOUD_POST_SCORESHEET(token, scoresheet) {
     const request = `${request_namespaces.cloud_api_scoresheets}/${scoresheet.tournament_id}`;
-    console.log(request);
     return await CLOUD_FETCH_GENERIC_POST(request, token, scoresheet);
 }
 export async function CLOUD_DELETE_SCORESHEET(token, tournament_id, scoresheet_id) {

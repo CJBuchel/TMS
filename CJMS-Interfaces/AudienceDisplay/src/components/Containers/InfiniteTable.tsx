@@ -2,8 +2,9 @@ import React, { Component, useRef } from 'react'
 import "../../assets/stylesheets/application.scss";
 import "../../assets/stylesheets/InfiniteTable.scss";
 
-const DEFAULT_SPEED = 1;
+const DEFAULT_SPEED = 0.5;
 const DEFAULT_DELAY = 1000;
+const LOOP_FREQUENCY = 200;
 interface IProps {
   headers:any;
   data:any;
@@ -27,18 +28,40 @@ export default class InfiniteTable extends Component<IProps, IState> {
   }
   
   unmountScroll = false;
+  frameCount = 0;
+  fps = LOOP_FREQUENCY;
+  fpsInterval = 0;
+  startTime = 0;
+  now = 0;
+  then = 0;
+  elapsed = 0;
 
   scrollCallback() {
-    if (!this.unmountScroll) {
-      this.setState({scrollTop: this.newScroll(this.state.scrollTop)});
-      window.requestAnimationFrame(() => this.scrollCallback());
-      // setTimeout(() => window.requestAnimationFrame(() => this.scrollCallback()), ANIMATION_DELAY);
+    if (this.unmountScroll) {
+      return;
     }
+
+    window.requestAnimationFrame(this.scrollCallback);
+
+    this.now = Date.now();
+    this.elapsed = this.now - this.then;
+    if (this.elapsed > this.fpsInterval) {
+      this.then = this.now - (this.elapsed % this.fpsInterval);
+      this.setState({scrollTop: this.newScroll(this.state.scrollTop)});
+    }
+  }
+
+  startAnimation() {
+    this.fpsInterval = 1000/this.fps;
+    this.then = Date.now();
+    this.startTime = this.then;
+    // console.log(this.startTime);
+    this.scrollCallback();
   }
 
   componentDidMount() {
     this.unmountScroll = false;
-    setTimeout(() => window.requestAnimationFrame(() => this.scrollCallback()), DEFAULT_DELAY);
+    setTimeout(() => this.startAnimation(), DEFAULT_DELAY);
   }
 
   componentWillUnmount() {
@@ -63,7 +86,7 @@ export default class InfiniteTable extends Component<IProps, IState> {
       return (oldScroll - height/3);
     } else {
       // console.log("scrolling");
-      return oldScroll + Math.ceil(DEFAULT_SPEED/3);
+      return oldScroll + DEFAULT_SPEED; //Math.ceil(DEFAULT_SPEED/3)
     }
   }
 

@@ -123,7 +123,12 @@ export default class ManualScoring extends Component<IProps, IState> {
   }
 
   async handleSubmit() {
-    const match = this.props.matchData.find(e => e.match_number == this.state.form_MatchNumber) || initIMatch();
+    const match = this.props.matchData.find(e => e.match_number == this.state.form_MatchNumber);
+    if (match == undefined) {
+      window.alert("Match undefined in db");
+      return;
+    }
+
     var update = match;
     if (match.on_table1.team_number == this.state.selected_teamNumber) {
       update.on_table1.score_submitted = true;

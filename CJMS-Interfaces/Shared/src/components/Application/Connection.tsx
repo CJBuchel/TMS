@@ -32,7 +32,7 @@ export class ConnectionCheck extends Component<IProps, IState> {
     this.connectionCheck = this.connectionCheck.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.startLoop();
   }
   

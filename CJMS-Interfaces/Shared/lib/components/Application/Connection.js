@@ -17,7 +17,7 @@ export class ConnectionCheck extends Component {
         });
         this.connectionCheck = this.connectionCheck.bind(this);
     }
-    async componentDidMount() {
+    componentDidMount() {
         this.startLoop();
     }
     componentWillUnmount() {

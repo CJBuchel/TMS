@@ -3,7 +3,7 @@ import { Score, ScoreError, ScoreResult, Game } from "ausfll-score-calculator/di
 import { IEvent, ITeam, ITeamScore } from "@cjms_shared/services";
 import { Component } from "react";
 import "../../assets/stylesheets/ScoresheetModal.scss";
-declare type Status = {
+type Status = {
     score: number;
     validationErrors: ScoreError[];
 };

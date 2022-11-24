@@ -34,6 +34,14 @@ export default class TeamManagement extends Component<IProps, IState> {
   }
 
   setTeamData(teams:ITeam[]) {
+
+    // Sort teams by number instead of rank (better for admin)
+    teams.sort(function(a,b){
+      return a.team_number.localeCompare(b.team_number, undefined, {
+        numeric: true,
+        sensitivity: 'base'
+      });
+    });
     this.setState({teamData: teams});
     if (this.state.selected_team_number.length > 0) {
       this.setSelectedTeam(this.state.selected_team_number);

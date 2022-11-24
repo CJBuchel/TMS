@@ -1,4 +1,4 @@
 [submodule "CJMS-SharedServices/ausfll-score-calculator"]
   path = CJMS-SharedServices/ausfll-score-calculator
   url = https://github.com/CJBuchel/ausfll-score-calculator.git
-  branch = master
+  branch = main

@@ -16,6 +16,10 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
+  # Init
+  - script: git submodule update --init
+  - script: git submodule update --remote -f
+
   # Build Node App
   - task: NodeTool@0
     inputs:

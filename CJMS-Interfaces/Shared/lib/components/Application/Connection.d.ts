@@ -11,7 +11,7 @@ interface IState {
 export declare class ConnectionCheck extends Component<IProps, IState> {
     private count;
     constructor(props: any);
-    componentDidMount(): Promise<void>;
+    componentDidMount(): void;
     componentWillUnmount(): void;
     connectionCheck(): void;
     startLoop(): void;

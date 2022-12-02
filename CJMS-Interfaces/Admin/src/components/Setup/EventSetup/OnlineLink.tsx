@@ -31,6 +31,7 @@ interface IState {
   tournament_token:string;
   link_style:CrossCheckStyle;
   link_errors:string[];
+  matching_teams:TeamLink[];
   tournaments:any[];
   eventData?:IEvent;
 }
@@ -45,6 +46,7 @@ export default class OnlineLink extends Component<IProps, IState> {
       tournament_token: "",
       link_style: CrossCheckStyle.FormattedTeamNumbers,
       link_errors: [],
+      matching_teams: [],
       tournaments: [],
       eventData: undefined
     }
@@ -117,24 +119,26 @@ export default class OnlineLink extends Component<IProps, IState> {
           if (teams.length != cloud_teams.length) {
             alert("Invalid cross reference. Number of teams differ");
           }
-          const matching_teams:TeamLink[] = [];
           const unmatched_teams:string[] = [];
+          const matching_teams:TeamLink[] = [];
+
           for (const team of cloud_teams) {
             const cloud_t_number = `AU-${team.team_number}C`;
             const t = 
-              this.state.link_style === CrossCheckStyle.FormattedTeamNumbers ? teams.find(e => e.team_number == cloud_t_number) : 
-              this.state.link_style === CrossCheckStyle.TeamNumbers ? teams.find(e => e.team_number == team.team_number) :
-              teams.find(e => e.team_name == team.team_name);
+              this.state.link_style === CrossCheckStyle.FormattedTeamNumbers ? teams.find(e => e.team_number === cloud_t_number) : 
+              this.state.link_style === CrossCheckStyle.TeamNumbers ? teams.find(e => e.team_number === team.team_number) :
+              teams.find(e => e.team_name.replaceAll(' ', '') === team.team_name.replaceAll(' ', ''));
+
             if (t != undefined) {
               matching_teams.push({team_number: t.team_number, cloud_team_id: team._id});
             } else {
               unmatched_teams.push(`[Matching Error: ${team.team_number} | ${team.team_name}],`);
             }
           }
-          
-          if (matching_teams.length != teams.length) {
+
+          this.setState({matching_teams: matching_teams});
+          if ((matching_teams.length != teams.length) || teams.length != cloud_teams.length) {
             alert("Some teams failed to match");
-            // filter teams that weren't matched and display them;
             this.setState({link_errors: unmatched_teams});
           } else {
             this.setState({link_errors: []});
@@ -154,6 +158,8 @@ export default class OnlineLink extends Component<IProps, IState> {
           {this.state.link_errors.map((i) => (
             <p key={i}><span style={{color: 'red'}}>{i}</span></p>
           ))}
+
+          <button className="hoverButton back-red" onClick={() => this.sendEventUpdate(this.state.matching_teams)}>Override and Link</button>
         </div>
       );
     }

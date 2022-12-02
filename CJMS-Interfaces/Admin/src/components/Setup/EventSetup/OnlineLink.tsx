@@ -127,7 +127,7 @@ export default class OnlineLink extends Component<IProps, IState> {
             const t = 
               this.state.link_style === CrossCheckStyle.FormattedTeamNumbers ? teams.find(e => e.team_number === cloud_t_number) : 
               this.state.link_style === CrossCheckStyle.TeamNumbers ? teams.find(e => e.team_number === team.team_number) :
-              teams.find(e => e.team_name.replaceAll(' ', '') === team.team_name.replaceAll(' ', ''));
+              teams.find(e => e.team_name.replaceAll(' ', '').toLowerCase() === team.team_name.replaceAll(' ', '').toLowerCase());
 
             if (t != undefined) {
               matching_teams.push({team_number: t.team_number, cloud_team_id: team._id});

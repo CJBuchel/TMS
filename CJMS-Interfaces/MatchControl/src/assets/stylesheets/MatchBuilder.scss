@@ -1,4 +1,4 @@
-.match-modify {
+.match-builder {
   margin: auto;
   margin-top: 10px;
   width: 90%;
@@ -9,34 +9,26 @@
   box-sizing: border-box;
 }
 
-.match-modify .selector {
+.match-builder .selector {
   color: black;
   box-sizing: border-box;
 }
 
-.match-modify .column-editor {
+.match-builder .column-editor {
   color: black;
-  margin-top: 8%;
+  margin-top: 1%;
   float: left;
   width: 25%;
 }
 
-.match-modify .submit-buttons {
+.match-builder .submit-buttons {
   color: black;
   margin-top: 2%;
   float: left;
   width: 50%;
 }
 
-.match-modify .delete-button {
-  color: black;
-  margin-top: 2%;
-  margin-left: 25%;
-  float: left;
-  width: 50%;
-}
-
-.match-modify .toggles {
+.match-builder .toggles {
   color: white;
   margin-top: 5px;
   float: left;
@@ -44,7 +36,11 @@
   background-color: #03061d;
 }
 
-.match-modify .row-editor:after {
+.match-builder .row-editor {
+  margin-top: 8%;
+}
+
+.match-builder .row-editor:after {
   content: '';
   display: table;
   clear: both;

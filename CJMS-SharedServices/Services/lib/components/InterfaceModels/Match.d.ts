@@ -12,6 +12,7 @@ export interface IMatch extends ITimestamps {
     on_table2: OnTable;
     complete: boolean;
     deferred: boolean;
+    custom_match: boolean;
 }
 export declare function initIMatch(instance?: IMatch): {
     match_number: string;
@@ -21,6 +22,7 @@ export declare function initIMatch(instance?: IMatch): {
     on_table2: OnTable;
     complete: boolean;
     deferred: boolean;
+    custom_match: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 };

@@ -17,6 +17,7 @@ export interface IMatch extends ITimestamps {
 
   complete: boolean;
   deferred: boolean;
+  custom_match: boolean;
 }
 
 export function initIMatch(instance?:IMatch) {
@@ -30,7 +31,8 @@ export function initIMatch(instance?:IMatch) {
     on_table2: {table: '', team_number: '', score_submitted: false, createdAt: null, updatedAt: null},
 
     complete: false,
-    deferred: false
+    deferred: false,
+    custom_match: false
   }
 
   return {

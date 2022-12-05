@@ -203,7 +203,7 @@ export default class ChallengeScoring extends Component<IProps,IState> {
 
   render() {
     return(
-      <div className="challenge-scoring">
+      <div className="challenge-scoring" id="challenge-scoring">
         {this.renderScoreBar()}
         <Challenges 
           handleScoreSubmit={this.handleScoreSubmit} 

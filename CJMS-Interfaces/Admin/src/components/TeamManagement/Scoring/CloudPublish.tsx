@@ -20,16 +20,27 @@ export default class CloudPublish extends Component<IProps, IState> {
     this.handleCloudDelete = this.handleCloudDelete.bind(this);
   }
 
+
+
   publishScoresheets() {
-    this.props.external_teamData.forEach((team) => {
-      const onlineLink = this.props.external_eventData.online_link;
-      if (team.team_id.length > 0 && onlineLink.tournament_id.length > 0 && onlineLink.tournament_token.length > 0 && onlineLink.online_linked) {
+
+    const onlineLink = this.props.external_eventData.online_link;
+
+    if (onlineLink.tournament_id.length <= 0 || !onlineLink.online_linked) {
+      alert("Refused to publish, can't determine online link");
+      return;
+    }
+
+
+    this.props.external_teamData.forEach(async (team) => {
+      if (team.team_id.length > 0 && onlineLink.tournament_id.length > 0 && onlineLink.online_linked) {
         for (const score of team.scores) {
+          // check for conflicts and fill out valid scoresheet before upload
           if (team.scores.filter((sc) => sc.scoresheet.round === score.scoresheet.round).length === 1) {
             if (score.valid_scoresheet && !score.cloud_published && !score.no_show) {
               score.scoresheet.team_id = team.team_id;
               score.scoresheet.tournament_id = onlineLink.tournament_id;
-              CLOUD_POST_SCORESHEET(onlineLink.tournament_token, score.scoresheet).then((response:any) => {
+              await CLOUD_POST_SCORESHEET(onlineLink.tournament_token, score.scoresheet).then((response:any) => {
                 if (response.compete_id) {
                   score.cloud_published = true;
                   CJMS_POST_TEAM_UPDATE(team.team_number, team);
@@ -40,15 +51,17 @@ export default class CloudPublish extends Component<IProps, IState> {
               });
             }
           } else {
-            console.log(`Conflict with: ${team.team_name}`);
+            alert(`Score conflict with: ${team.team_number}. Will not submit`);
           }
         }
+      } else {
+        alert(`Refused to publish ${team.team_number}, can't determine online link`);
       }
-    });
+    })
   }
 
   deleteScoresheets() {
-    // the api returns a non standard scoresheet when gettings all scores from tournament
+    // the api returns a non standard scoresheet when getting all scores from tournament
     var status_ok = true;
     CLOUD_REQUEST_SCORESHEETS(this.props.external_eventData.online_link.tournament_id).then(async (response:any) => {
       // var response_success:boolean = false;

@@ -1,5 +1,5 @@
-import { CJMS_POST_TEAM_UPDATE, CJMS_REQUEST_EVENT, ScoresheetModal } from "@cjms_interfaces/shared";
-import { comm_service, IEvent, initIEvent, initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
+import { CJMS_POST_MATCH_DELETE, CJMS_POST_MATCH_UPDATE, CJMS_POST_SCORE, CJMS_POST_TEAM_UPDATE, CJMS_REQUEST_EVENT, CJMS_REQUEST_MATCHES, ScoresheetModal } from "@cjms_interfaces/shared";
+import { comm_service, IEvent, IMatch, initIEvent, initITeam, initITeamScore, ITeam, ITeamScore } from "@cjms_shared/services";
 import styled from "@emotion/styled";
 import { Padding, Score } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -48,6 +48,7 @@ interface IState {
 
   scoresheet_modal:ScoresheetEdit;
   external_eventData:IEvent;
+  external_matchData:IMatch[];
 
   selected_round:number;
 }
@@ -67,12 +68,19 @@ export default class TeamEditValues extends Component<IProps, IState> {
 
       scoresheet_modal: {scoresheet: initITeamScore(), scoring_modal: false, existing_scores: true, scoresheet_index: 0},
       external_eventData:initIEvent(),
+      external_matchData: [],
       selected_round: 1
     }
 
     comm_service.listeners.onEventUpdate(() => {
       CJMS_REQUEST_EVENT().then((event) => {
         this.setEventData(event);
+      });
+    });
+
+    comm_service.listeners.onMatchUpdate(() => {
+      CJMS_REQUEST_MATCHES().then((matches) => {
+        this.setMatchData(matches);
       });
     });
 
@@ -93,6 +101,10 @@ export default class TeamEditValues extends Component<IProps, IState> {
 
   setEventData(event:IEvent) {
     this.setState({external_eventData: event});
+  }
+
+  setMatchData(matches:IMatch[]) {
+    this.setState({external_matchData: matches});
   }
 
   handleTeamNumberChange(team_number:string) { this.setState({team_number:team_number}); }
@@ -122,6 +134,12 @@ export default class TeamEditValues extends Component<IProps, IState> {
         this.handleRankingChange(this.props.selected_team.ranking);
       }
     });
+
+    CJMS_REQUEST_MATCHES().then((matches) => {
+      if (matches.length > 0) {
+        this.setMatchData(matches);
+      }
+    });
   }
 
   handleTeamUpdate() {
@@ -132,6 +150,37 @@ export default class TeamEditValues extends Component<IProps, IState> {
     changed_team.affiliation = this.state.team_aff;
     changed_team.ranking = this.state.team_ranking;
     CJMS_POST_TEAM_UPDATE(this.props.selected_team.team_number, changed_team);
+  }
+
+  handleGlobalNoShow() {
+    const matches = this.state.external_matchData.filter((match) => match.on_table1.team_number === this.props.selected_team.team_number || match.on_table2.team_number === this.props.selected_team.team_number);
+    for (const match of matches) {
+      const on_table = match.on_table1.team_number === this.props.selected_team.team_number ? match.on_table1 : match.on_table2.team_number === this.props.selected_team.team_number ? match.on_table2 : undefined;
+      if (on_table != undefined) {
+        on_table.table = '';
+        on_table.team_number = '';
+        on_table.score_submitted = false;
+        CJMS_POST_MATCH_UPDATE(match.match_number, match);
+      }
+    }
+
+    var team = initITeam();
+    team.team_id = this.props.selected_team.team_id;
+    team.team_name = this.props.selected_team.team_name;
+    team.team_number = this.props.selected_team.team_number;
+    team.affiliation = this.props.selected_team.affiliation;
+
+    for (var i = 0; i < this.state.external_eventData.event_rounds; i++) {
+      var scoresheet = initITeamScore();
+      scoresheet.no_show = true;
+      scoresheet.referee = 'TM-Admin';
+      scoresheet.scoresheet.round = i+1;
+      scoresheet.score = 0;
+      team.scores.push(scoresheet);
+    }
+
+    CJMS_POST_TEAM_UPDATE(this.props.selected_team.team_number, team);
+    comm_service.senders.sendMatchUpdateEvent('update');
   }
 
   toggleModal(scoresheet:ITeamScore, scoresheet_index:number) {
@@ -232,7 +281,14 @@ export default class TeamEditValues extends Component<IProps, IState> {
                 maxRows={4}
               />
 
-              <Button onClick={() => this.handleTeamUpdate()} startIcon={<UpdateIcon/>} variant="outlined" sx={{borderColor: 'green', color: 'green'}}>Update</Button>
+                <Button onClick={() => {confirm("Set team to no show?") ? this.handleGlobalNoShow() : null}} startIcon={<DeleteIcon />} variant="outlined" sx={{
+                  borderColor: 'orange',
+                  color: 'orange',
+                  marginBottom: '3%',
+                  width: '100%%'
+                }}>SET GLOBAL NO SHOW</Button>
+
+              <Button onClick={() => {confirm("Update team?") ? this.handleTeamUpdate() : null}} startIcon={<UpdateIcon/>} variant="outlined" sx={{borderColor: 'green', color: 'green'}}>Update</Button>
             </div>
           </AccordionDetails>
         </Accordion>

@@ -1,4 +1,4 @@
-import { comm_service, request_namespaces } from "@cjms_shared/services";
+import { comm_service, IMatch, request_namespaces } from "@cjms_shared/services";
 import { MatchModel } from "../../database/models/Match";
 import { RequestServer } from "../RequestServer";
 
@@ -9,13 +9,19 @@ export class Matches {
 
     requestServer.get().get(request_namespaces.request_fetch_matches, (req, res) => {
       const query = MatchModel.find({});
-      query.exec(function(err, response) {
+      query.exec(function(err, response:IMatch[]) {
         if (err) {
           console.log(err);
           res.send({message: err});
           throw err;
         } else {
           if (response.length > 0) {
+            response.sort(function(a,b) {
+              return a.start_time.localeCompare(b.start_time, undefined, {
+                numeric: true,
+                sensitivity: 'base'
+              })
+            });
             res.send({data: response});
           } else {
             res.send({message: "Server: no data"});
@@ -39,7 +45,6 @@ export class Matches {
           comm_service.senders.sendMatchUpdateEvent('update');
         }
       });
-
     });
 
     requestServer.get().post(request_namespaces.request_post_match_update, (req, res) => {

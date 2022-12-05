@@ -42,6 +42,7 @@ export default class TeamManagement extends Component<IProps, IState> {
         sensitivity: 'base'
       });
     });
+
     this.setState({teamData: teams});
     if (this.state.selected_team_number.length > 0) {
       this.setSelectedTeam(this.state.selected_team_number);

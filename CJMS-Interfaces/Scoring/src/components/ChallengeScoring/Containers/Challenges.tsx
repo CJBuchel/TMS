@@ -8,7 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import { Question } from "@cjms_interfaces/shared"
 import Calculator from "ausfll-score-calculator";
 import { CategoricalScoreResult, NumericScoreResult, Score, ScoreError, ScoreResult, Game } from "ausfll-score-calculator/dist/game-types";
-import { TableCell, TableRow, TextField } from "@mui/material";
+import { Button, TableCell, TableRow, TextField } from "@mui/material";
 import { initITeamScore, ITeamScore } from "@cjms_shared/services";
 import { IEvent } from "@cjms_shared/services/lib/components/InterfaceModels/Event";
 
@@ -79,6 +79,11 @@ export default class Challenges extends Component<IProps, IState> {
     console.log('Submit');
 
     this.props.handleScoreSubmit(scoresheet);
+  }
+
+  handleClear() {
+    this.setDefaults();
+    window.document.getElementById('challenge-scoring')?.scrollTo({top: 0, behavior: 'smooth'});
   }
 
   componentDidMount(): void {
@@ -225,12 +230,39 @@ export default class Challenges extends Component<IProps, IState> {
         {this.getComments()}
 
         <div className="challenge-buttons">
-          <button onClick={this.handleNoShow} className="hoverButton back-orange">No Show</button>
-          <button onClick={this.setDefaults} className="hoverButton back-red">Clear</button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: 'orange',
+              color: 'white',
+              borderColor: 'orange'
+            }}
+            onClick={() => {this.handleNoShow()}}
+          >No Show</Button>
+
+          <Button
+            variant="contained"
+            sx={{
+              '&:hover':{backgroundColor: 'red'},
+              backgroundColor: 'red',
+              color: 'white',
+              borderColor: 'red',
+            }}
+            onClick={() => { this.handleClear() }}
+          >Clear</Button>
         </div>
 
         <div className="challenge-buttons">
-          <button onClick={this.handleSubmit} disabled={this.state.status.validationErrors.length > 0} className={`hoverButton ${this.state.status.validationErrors.length > 0 ? "" : "back-green"}`}>Submit</button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: 'green',
+              color: 'white',
+              borderColor: 'green'
+            }}
+            onClick={() => {this.handleSubmit()}}
+            disabled={this.state.status.validationErrors.length > 0}
+          >Submit</Button>
         </div>
       </div>
     );

@@ -4,7 +4,7 @@ import "../../assets/stylesheets/InfiniteTable.scss";
 
 const DEFAULT_SPEED = 1;
 const DEFAULT_DELAY = 1000;
-const LOOP_FREQUENCY = 100;
+const LOOP_FREQUENCY = 60;
 interface IProps {
   headers:any;
   data:any;

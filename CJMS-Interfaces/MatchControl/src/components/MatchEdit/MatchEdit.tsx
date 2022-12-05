@@ -90,6 +90,11 @@ export default class MatchEdit extends Component<IProps, IState> {
       match.on_table1.table = this.state.selected_table_on_table1.value;
       match.on_table2.team_number = this.state.selected_on_table2.value;
       match.on_table2.table = this.state.selected_table_on_table2.value;
+      if (Number(this.state.selected_start_time.slice(0,2)) >= 12) {
+        match.start_time = `${this.state.selected_start_time}:00 PM`;
+      } else {
+        match.start_time = `${this.state.selected_start_time}:00 AM`;
+      }
       // console.log(match);
       CJMS_POST_MATCH_UPDATE(match.match_number, match).then(() => {
         window.location.reload();

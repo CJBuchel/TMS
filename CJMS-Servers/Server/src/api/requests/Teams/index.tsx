@@ -60,27 +60,27 @@ export class Teams {
       const team_number:string = req.body.team;
       const update:ITeam = req.body.update;
 
-      // Update team in match model first (primarily for team numbers)
+      // Update team in match model first (primarily for team number updates)
       MatchModel.updateMany({'on_table1.team_number':team_number}, {$set: {'on_table1.team_number': update.team_number}}).then((res1) => {
         MatchModel.updateMany({'on_table2.team_number':team_number}, {$set: {'on_table2.team_number': update.team_number}}).then((res2) => {
           if (res1.modifiedCount > 0 || res2.matchedCount > 0) {
             comm_service.senders.sendMatchUpdateEvent('update');
-            // Update team in team model
-            const filter = { team_number: team_number };
-            TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
-              if (err) {
-                res.send({message: "Error while updating team"});
-                console.log(err.message);
-              } else {
-                res.send({success: true});
-                updateRankings();
-              }
-            });
+          }
+        });
+      }).finally(() => {
+        const filter = { team_number: team_number };
+        TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
+          if (err) {
+            res.send({message: "Error while updating team"});
+            console.log(err.message);
           } else {
-            res.send({message: "Error while trying to find matching team in schedule"});
+            res.send({success: true});
+            updateRankings();
           }
         });
       });
+
+
 
     });
 

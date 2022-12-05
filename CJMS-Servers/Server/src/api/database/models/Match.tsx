@@ -21,7 +21,8 @@ export const MatchSchema = new mongoose.Schema<IMatch>({
   on_table2: OnTableSchema,
 
   complete: {type: Boolean, default: false},
-  deferred: {type: Boolean, default: false}
+  deferred: {type: Boolean, default: false},
+  custom_match: {type: Boolean, default: false}
 }, {timestamps: true});
 
 export const MatchModel = mongoose.model<IMatch>('Match', MatchSchema);

@@ -1,9 +1,10 @@
 import { comm_service, NavMenu, NavMenuContent, Requests } from "@cjms_interfaces/shared";
 
-import { IEvent, IMatch, initIEvent, ITeam, request_namespaces } from "@cjms_shared/services";
+import { IEvent, IMatch, initIEvent, ITeam } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "./assets/stylesheets/loader.scss";
+import { MatchBuilder } from "./components/MatchBuilder";
 import { MatchControl } from "./components/MatchControl";
 import { MatchEdit } from "./components/MatchEdit";
 
@@ -55,6 +56,12 @@ export default class Display extends Component<IProps, IState> {
   }
 
   setMatchData(data:IMatch[]) {
+    data.sort(function(a,b) {
+      return a.start_time.localeCompare(b.start_time, undefined, {
+        numeric: true,
+        sensitivity: 'base'
+      })
+    });
     this.setState({external_matchData:data});
   }
 

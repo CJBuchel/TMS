@@ -66,11 +66,11 @@ export default class MatchTable extends Component<IProps, IState> {
           <td>{match.start_time}</td>
 
           {/* Team 1 */}
-          <td style={{backgroundColor: `${match.on_table1.score_submitted ? 'green' : match.complete ? 'red' : ''}`}}>{match.on_table1.table}</td>
-          <td style={{backgroundColor: `${match.on_table1.score_submitted ? 'green' : match.complete ? 'red' : ''}`}}>{match.on_table1.team_number}</td>
+          <td style={{backgroundColor: `${match.on_table1.score_submitted ? 'green' : match.complete && match.on_table1.team_number.length > 0 ? 'red' : ''}`}}>{match.on_table1.table}</td>
+          <td style={{backgroundColor: `${match.on_table1.score_submitted ? 'green' : match.complete && match.on_table1.team_number.length > 0 ? 'red' : ''}`}}>{match.on_table1.team_number}</td>
           {/* Team 2 */}
-          <td style={{backgroundColor: `${match.on_table2.score_submitted ? 'green' : match.complete ? 'red' : ''}`}}>{match.on_table2.table}</td>
-          <td style={{backgroundColor: `${match.on_table2.score_submitted ? 'green' : match.complete ? 'red' : ''}`}}>{match.on_table2.team_number}</td>
+          <td style={{backgroundColor: `${match.on_table2.score_submitted ? 'green' : match.complete && match.on_table2.team_number.length > 0 ? 'red' : ''}`}}>{match.on_table2.table}</td>
+          <td style={{backgroundColor: `${match.on_table2.score_submitted ? 'green' : match.complete && match.on_table2.team_number.length > 0 ? 'red' : ''}`}}>{match.on_table2.team_number}</td>
         </tr>
       ))
     );

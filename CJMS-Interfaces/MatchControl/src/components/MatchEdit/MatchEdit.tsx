@@ -24,12 +24,15 @@ interface IProps {
 interface IState {
   options_matches:ISelectOption[];
   selected_match:IMatch;
+  selected_match_number:string;
 
   selected_on_table1:ISelectOption;
   selected_on_table2:ISelectOption;
 
   selected_table_on_table1:ISelectOption;
   selected_table_on_table2:ISelectOption;
+
+  selected_start_time:string;
 }
 
 export default class MatchEdit extends Component<IProps, IState> {
@@ -38,12 +41,15 @@ export default class MatchEdit extends Component<IProps, IState> {
     this.state = {
       options_matches: [],
       selected_match: initIMatch(),
+      selected_match_number: '',
 
       selected_on_table1: {value: '', label: ''},
       selected_on_table2: {value: '', label: ''},
 
       selected_table_on_table1: {value: '', label: ''},
       selected_table_on_table2: {value: '', label: ''},
+
+      selected_start_time: '00:00',
     }
 
     this.setSelectedMatch = this.setSelectedMatch.bind(this);
@@ -84,7 +90,12 @@ export default class MatchEdit extends Component<IProps, IState> {
       match.on_table1.table = this.state.selected_table_on_table1.value;
       match.on_table2.team_number = this.state.selected_on_table2.value;
       match.on_table2.table = this.state.selected_table_on_table2.value;
-      console.log(match);
+      if (Number(this.state.selected_start_time.slice(0,2)) >= 12) {
+        match.start_time = `${this.state.selected_start_time}:00 PM`;
+      } else {
+        match.start_time = `${this.state.selected_start_time}:00 AM`;
+      }
+      // console.log(match);
       CJMS_POST_MATCH_UPDATE(match.match_number, match).then(() => {
         window.location.reload();
       });
@@ -94,10 +105,18 @@ export default class MatchEdit extends Component<IProps, IState> {
   submitCreateMatch() {
     if (confirm("Create match?")) {
       const match = initIMatch();
-      match.match_number = `REF_${this.props.external_matchData.length+1}`;
+      match.match_number = `${this.state.selected_match_number}`;
       match.on_table1.team_number = this.state.selected_on_table1.value;
+      match.on_table1.table = this.state.selected_table_on_table1.value;
       match.on_table2.team_number = this.state.selected_on_table2.value;
-      console.log(match);
+      match.on_table2.table = this.state.selected_table_on_table2.value;
+
+      if (Number(this.state.selected_start_time.slice(0,2)) >= 12) {
+        match.start_time = `${this.state.selected_start_time}:00 PM`;
+      } else {
+        match.start_time = `${this.state.selected_start_time}:00 AM`;
+      }
+
       CJMS_POST_MATCH_CREATE(match).then(() => {
         window.location.reload();
       });
@@ -130,7 +149,8 @@ export default class MatchEdit extends Component<IProps, IState> {
       selected_on_table1: {value: team1.team_number, label: `${team1String}`},
       selected_on_table2: {value: team2.team_number, label: `${team2String}`},
       selected_table_on_table1: {value: match.on_table1.table, label: match.on_table1.table},
-      selected_table_on_table2: {value: match.on_table2.table, label: match.on_table2.table}
+      selected_table_on_table2: {value: match.on_table2.table, label: match.on_table2.table},
+      selected_start_time: match.start_time.slice(0,5)
     });
   }
 
@@ -231,6 +251,17 @@ export default class MatchEdit extends Component<IProps, IState> {
       >Delete Match</Button>
     )
   }
+
+  getMatchNumberInput() {
+    if (this.state.selected_match.match_number.length <= 0) {
+      return (
+        <div className="column-editor toggles">
+          <h3 style={{color: 'white'}}>Match Number e.g 21-1</h3>
+          <input name="match_number" onChange={(e) => this.setState({selected_match_number:e.target.value})}/>
+        </div>
+      )
+    }
+  }
   
   render() {
     const table_options:ISelectOption[] = [{value: '', label: 'NO TABLE'}];
@@ -303,6 +334,13 @@ export default class MatchEdit extends Component<IProps, IState> {
                 </RadioGroup>
               </FormControl>
             </div>
+
+            <div className="column-editor toggles">
+              <h3 style={{color: 'white'}}>Start Time</h3>
+              <input type='time' name="time" value={this.state.selected_start_time} onChange={(e) => this.setState({selected_start_time:e.target.value})}/>
+            </div>
+
+            {this.getMatchNumberInput()}
           </div>
         </div>
 
@@ -310,11 +348,15 @@ export default class MatchEdit extends Component<IProps, IState> {
         <div className="match-modify submit">
           <div className="row-editor">
             <div className="submit-buttons">
-              {this.state.selected_match.match_number.length > 0 ? this.updateMatchButton() : ''}
+              {this.state.selected_match.match_number.length > 0 ? this.updateMatchButton() : this.createMatchButton()}
             </div>
 
             <div className="submit-buttons">
-              {this.state.selected_match.match_number.length > 0 ? this.clearButton() : ''}
+              {this.state.selected_match.match_number.length > 0 ? this.clearButton() : this.clearButton()}
+            </div>
+
+            <div className="delete-button">
+              {this.state.selected_match.match_number.length > 0 ? this.deleteMatchButton() : ''}
             </div>
           </div>
         </div>

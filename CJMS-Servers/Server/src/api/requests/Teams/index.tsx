@@ -9,6 +9,26 @@ export class Teams {
   constructor(requestServer:RequestServer) {
     console.log("Team Requests Constructed");
 
+    // returns 0 for first array, 1 for second. -1 for complete tie
+    function getNextHighest(arr1:number[], arr2:number[]): number {
+      var highest = -1;
+      const length = arr1.length;
+      for (var i = 0; i < length; i++) {
+        if (Math.max(...arr1) > Math.max(...arr2)) {
+          highest = 0;
+          break;
+        } else if (Math.max(...arr1) < Math.max(...arr2)) {
+          highest = 1;
+          break;
+        } else {
+          arr1.splice(arr1.indexOf(Math.max(...arr1)), 1);
+          arr2.splice(arr2.indexOf(Math.max(...arr2)), 1);
+        }
+      }
+
+      return highest;
+    }
+
     function updateRankings() {
       const query = TeamModel.find({});
       query.exec(function(err, result) {
@@ -19,8 +39,15 @@ export class Teams {
           for (var i = 0; i < teams.length; i++) {
             var ranking = 1;
             for (var j = 0; j < teams.length; j++) {
-              if ( Math.max(...teams[j].scores.map((score:ITeamScore) => score.score)) > Math.max(...teams[i].scores.map((score:ITeamScore) => score.score))) {
+              const teamJScores = teams[j].scores.filter((score) => !score.no_show);
+              const teamIScores = teams[i].scores.filter((score) => !score.no_show);
+
+              if (Math.max(...teamJScores.map((score:ITeamScore) => score.score)) > Math.max(...teamIScores.map((score:ITeamScore) => score.score))) {
                 ranking++;
+              } else if (Math.max(...teamJScores.map((score:ITeamScore) => score.score)) === Math.max(...teamIScores.map((score:ITeamScore) => score.score))) {
+                if (getNextHighest(teamJScores.map((score:ITeamScore) => score.score), teamIScores.map((score:ITeamScore) => score.score)) === 0) {
+                  ranking++;
+                }
               }
             }
     
@@ -47,8 +74,6 @@ export class Teams {
         } else {
           if (response.length > 0) {
             res.send({data: response.sort((a,b) => {return a.ranking - b.ranking})});
-            // gets++;
-            // console.log(`Get ${gets} from ${req.socket.remoteAddress}`);
           } else {
             res.send({message: "Server: no data"});
           }
@@ -60,27 +85,27 @@ export class Teams {
       const team_number:string = req.body.team;
       const update:ITeam = req.body.update;
 
-      // Update team in match model first (primarily for team numbers)
+      // Update team in match model first (primarily for team number updates)
       MatchModel.updateMany({'on_table1.team_number':team_number}, {$set: {'on_table1.team_number': update.team_number}}).then((res1) => {
         MatchModel.updateMany({'on_table2.team_number':team_number}, {$set: {'on_table2.team_number': update.team_number}}).then((res2) => {
           if (res1.modifiedCount > 0 || res2.matchedCount > 0) {
             comm_service.senders.sendMatchUpdateEvent('update');
-            // Update team in team model
-            const filter = { team_number: team_number };
-            TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
-              if (err) {
-                res.send({message: "Error while updating team"});
-                console.log(err.message);
-              } else {
-                res.send({success: true});
-                updateRankings();
-              }
-            });
+          }
+        });
+      }).finally(() => {
+        const filter = { team_number: team_number };
+        TeamModel.findOneAndUpdate(filter, update, {}, (err) => {
+          if (err) {
+            res.send({message: "Error while updating team"});
+            console.log(err.message);
           } else {
-            res.send({message: "Error while trying to find matching team in schedule"});
+            res.send({success: true});
+            updateRankings();
           }
         });
       });
+
+
 
     });
 

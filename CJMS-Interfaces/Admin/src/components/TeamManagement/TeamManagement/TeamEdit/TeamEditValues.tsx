@@ -175,7 +175,7 @@ export default class TeamEditValues extends Component<IProps, IState> {
       scoresheet.no_show = true;
       scoresheet.referee = 'TM-Admin';
       scoresheet.scoresheet.round = i+1;
-      scoresheet.score = -1;
+      scoresheet.score = 0;
       team.scores.push(scoresheet);
     }
 

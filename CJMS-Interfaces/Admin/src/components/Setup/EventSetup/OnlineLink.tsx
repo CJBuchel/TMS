@@ -125,10 +125,11 @@ export default class OnlineLink extends Component<IProps, IState> {
           for (const team of cloud_teams) {
             const cloud_t_number = `AU-${team.team_number}C`;
             const t = 
-              this.state.link_style === CrossCheckStyle.FormattedTeamNumbers ? teams.find(e => e.team_number === cloud_t_number) : 
-              this.state.link_style === CrossCheckStyle.TeamNumbers ? teams.find(e => e.team_number === team.team_number) :
-              teams.find(e => e.team_name.replaceAll(' ', '').toLowerCase() === team.team_name.replaceAll(' ', '').toLowerCase());
+              this.state.link_style === CrossCheckStyle.FormattedTeamNumbers ? teams.find(e => String(e.team_number).replaceAll(' ', '').toLowerCase() === String(cloud_t_number).replaceAll(' ', '').toLowerCase()) : 
+              this.state.link_style === CrossCheckStyle.TeamNumbers ? teams.find(e => String(e.team_number).replaceAll(' ', '').toLowerCase() === String(team.team_number).replaceAll(' ', '').toLowerCase()) :
+              teams.find(e => String(e.team_name).replaceAll(' ', '').toLowerCase() === String(team.team_name).replaceAll(' ', '').toLowerCase());
 
+            // console.log(t);
             if (t != undefined) {
               matching_teams.push({team_number: t.team_number, cloud_team_id: team._id});
             } else {

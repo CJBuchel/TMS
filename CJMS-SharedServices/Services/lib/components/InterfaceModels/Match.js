@@ -9,7 +9,8 @@ function initIMatch(instance) {
         on_table1: { table: '', team_number: '', score_submitted: false, createdAt: null, updatedAt: null },
         on_table2: { table: '', team_number: '', score_submitted: false, createdAt: null, updatedAt: null },
         complete: false,
-        deferred: false
+        deferred: false,
+        custom_match: false
     };
     return {
         ...defaults,

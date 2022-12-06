@@ -53,8 +53,10 @@ export class ConnectionCheck extends Component<IProps, IState> {
   }
 
   startLoop() {
-    this.connectionCheck();
-    this.setState({loop: setInterval(this.connectionCheck, 2000)});
+    // this.connectionCheck();
+    setTimeout(() => {
+      this.setState({loop: setInterval(this.connectionCheck, 2000)});
+    }, 2000);
   }
 
   render() {

@@ -35,8 +35,10 @@ export class ConnectionCheck extends Component {
         });
     }
     startLoop() {
-        this.connectionCheck();
-        this.setState({ loop: setInterval(this.connectionCheck, 2000) });
+        // this.connectionCheck();
+        setTimeout(() => {
+            this.setState({ loop: setInterval(this.connectionCheck, 2000) });
+        }, 2000);
     }
     render() {
         if (this.state.isOnline) {

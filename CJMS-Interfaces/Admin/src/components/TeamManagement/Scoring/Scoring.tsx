@@ -65,7 +65,7 @@ export default class Scoring extends Component<IProps, IState> {
     }
 
     scores.sort((a:IScoresheet, b:IScoresheet) => {
-      return new Date(b.scoresheet.updatedAt||0).getTime() - new Date(a.scoresheet.updatedAt||0).getTime();
+      return new Date(b.scoresheet.createdAt||0).getTime() - new Date(a.scoresheet.createdAt||0).getTime();
     });
 
     this.setState({scoresheets: scores});

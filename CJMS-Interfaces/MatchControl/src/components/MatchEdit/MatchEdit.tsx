@@ -1,5 +1,5 @@
-import { IEvent, IMatch, initIMatch, initITeam, ITeam } from "@cjms_shared/services";
-import { CJMS_POST_MATCH_CREATE, CJMS_POST_MATCH_DELETE, CJMS_POST_MATCH_UPDATE } from "@cjms_interfaces/shared";
+import { comm_service, IEvent, IMatch, initIMatch, initITeam, ITeam, request_namespaces } from "@cjms_shared/services";
+import { CJMS_FETCH_GENERIC_GET, CJMS_FETCH_GENERIC_POST, CJMS_POST_MATCH_CREATE, CJMS_POST_MATCH_DELETE, CJMS_POST_MATCH_UPDATE } from "@cjms_interfaces/shared";
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { Component } from "react";
 import UpdateIcon from "@mui/icons-material/Update";
@@ -33,6 +33,8 @@ interface IState {
   selected_table_on_table2:ISelectOption;
 
   selected_start_time:string;
+
+  loaded_match:string;
 }
 
 export default class MatchEdit extends Component<IProps, IState> {
@@ -50,7 +52,13 @@ export default class MatchEdit extends Component<IProps, IState> {
       selected_table_on_table2: {value: '', label: ''},
 
       selected_start_time: '00:00',
+
+      loaded_match: ''
     }
+
+    comm_service.listeners.onMatchLoaded((match:string) => {
+      this.setState({loaded_match:match});
+    });
 
     this.setSelectedMatch = this.setSelectedMatch.bind(this);
   }
@@ -125,9 +133,14 @@ export default class MatchEdit extends Component<IProps, IState> {
 
   submitDeleteMatch() {
     if (confirm(`Delete match ${this.state.selected_match.match_number}?`)) {
-      CJMS_POST_MATCH_DELETE(this.state.selected_match.match_number).then(() => {
-        window.location.reload();
-      });
+      console.log(`${this.state.selected_match.match_number} ${this.state.loaded_match}`);
+      if (this.state.selected_match.match_number === this.state.loaded_match) {
+        CJMS_FETCH_GENERIC_POST(request_namespaces.request_post_match_load, {load:false, match: ''}).then(() => {
+          CJMS_POST_MATCH_DELETE(this.state.selected_match.match_number).then(() => {
+            window.location.reload();
+          });
+        })
+      }
     }
   }
 

@@ -61,7 +61,6 @@ export default class Scoring extends Component<IProps,IState> {
     });
 
     comm_service.listeners.onMatchUpdate(async () => {
-      console.log('match update');
       const matchData:IMatch[] = await Requests.CJMS_REQUEST_MATCHES(true);
       this.setMatchData(matchData);
     });
@@ -86,22 +85,30 @@ export default class Scoring extends Component<IProps,IState> {
     this.processData();
   }
 
-  processData() {
+  getNextMatch() {
     // if (this.state.external_matchData == null || this.state.external_teamData == null) return;
     const teamData:ITeam[] = this.state.external_teamData;
     const matchData:IMatch[] = this.state.external_matchData;
     // Sort data then set the states
 
-    if (matchData == null) {
+    if (matchData === null || matchData === undefined) {
       console.log("Data null, returning");
       return;
     }
 
-    teamData.sort(function(a:any,b:any) { return a.team_number-b.team_number});
-    matchData.sort(function(a:any,b:any) { return a.match_number-b.match_number});
+    teamData.sort(function(a,b) { return a.team_number.localeCompare(b.team_number, undefined, {
+      numeric: true,
+      sensitivity: 'base'
+    })});
 
 
-    const table_matches:IMatch[] = matchData.filter((match) => {return match.on_table1.table == this.props.table || match.on_table2.table == this.props.table});
+    matchData.sort(function(a,b) { return a.match_number.localeCompare(b.match_number, undefined, {
+      numeric: true,
+      sensitivity: 'base'
+    })});
+
+
+    const table_matches:IMatch[] = matchData.filter((match) => {return match.on_table1.table === this.props.table || match.on_table2.table === this.props.table});
     
     this.setState({table_matches: table_matches});
     
@@ -129,6 +136,13 @@ export default class Scoring extends Component<IProps,IState> {
       }
     }
 
+    console.log(loaded_match);
+
+    return loaded_match;
+  }
+
+  processData() {
+    var loaded_match = this.getNextMatch();
     if (loaded_match != undefined) {
       this.setLoadedMatch(loaded_match);
     }
@@ -136,15 +150,30 @@ export default class Scoring extends Component<IProps,IState> {
 
   // Set loaded match based string (match num)
   setLoadedMatch(match:string) {
-    const match_loaded = this.state.table_matches.find(e => e.match_number == match);
-    const loaded_team_number = match_loaded?.on_table1.table == this.props.table ? match_loaded?.on_table1.team_number : match_loaded?.on_table2.team_number;
-    const team_loaded = this.state.external_teamData.find(e => e.team_number == loaded_team_number);
+    const match_loaded = this.state.table_matches.find(e => e.match_number === match);
+    const on_table = match_loaded?.on_table1.table === this.props.table ? match_loaded.on_table1 : match_loaded?.on_table2.table === this.props.table ? match_loaded.on_table2 : undefined;
+    const team_loaded = this.state.external_teamData.find(e => e.team_number === on_table?.team_number);
 
-    if (team_loaded != undefined && match_loaded != undefined) {
+    if (team_loaded != undefined && match_loaded != undefined && on_table?.score_submitted != true) {
       this.setState({
         loaded_match: match_loaded,
         loaded_team: team_loaded
       });
+    } else {
+      var next_match = this.getNextMatch();
+      if (next_match != undefined && next_match != null) {
+        var next_loaded_match = this.state.table_matches.find(e => e.match_number === next_match);
+        var next_on_table = next_loaded_match?.on_table1.table === this.props.table ? next_loaded_match.on_table1 : next_loaded_match?.on_table2.table === this.props.table ? next_loaded_match.on_table2 : undefined;
+        if (next_loaded_match != undefined && next_on_table != undefined) {
+          var next_team_loaded = this.state.external_teamData.find(e => e.team_number === next_on_table?.team_number);
+          if (next_team_loaded != undefined) {
+            this.setState({
+              loaded_match: next_loaded_match,
+              loaded_team: next_team_loaded
+            })
+          }
+        }
+      }
     }
   }
 

@@ -140,6 +140,10 @@ export default class MatchEdit extends Component<IProps, IState> {
             window.location.reload();
           });
         })
+      } else {
+        CJMS_POST_MATCH_DELETE(this.state.selected_match.match_number).then(() => {
+          window.location.reload();
+        });
       }
     }
   }

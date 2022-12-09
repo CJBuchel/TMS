@@ -4,7 +4,6 @@ import { IEvent, IMatch, initIEvent, ITeam } from "@cjms_shared/services";
 import { Component } from "react";
 
 import "./assets/stylesheets/loader.scss";
-import { MatchBuilder } from "./components/MatchBuilder";
 import { MatchControl } from "./components/MatchControl";
 import { MatchEdit } from "./components/MatchEdit";
 

@@ -8,7 +8,7 @@
 PRODUCT_NAME = tms
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = a.loose.screw.tms
+PRODUCT_BUNDLE_IDENTIFIER = com.example.tms
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 a.loose.screw. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.

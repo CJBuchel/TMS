@@ -1,0 +1,15 @@
+name: server
+description: An empty conduit application.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=2.19.2 <4.0.0"
+
+dependencies:
+  conduit: ^4.3.7
+  conduit_core: ^4.3.6
+
+dev_dependencies:
+  test: ^1.21.6
+  conduit_test: ^4.3.6

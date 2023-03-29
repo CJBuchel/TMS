@@ -1,1 +1,0 @@
-sudo docker run -d -it -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=cjms -e MONGO_INITDB_ROOT_PASSWORD=cjms -e MONGO_INITDB_DATABASE=cjms_database --name cjms_db -d mongo

@@ -1,4 +1,4 @@
-mod Network;
+mod network;
 
 use actix_web::{
   get,
@@ -9,6 +9,8 @@ use actix_web::{
   HttpServer,
   Responder
 };
+
+use tokio::try_join;
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -25,9 +27,8 @@ async fn manual_hello() -> impl Responder {
   HttpResponse::Ok().body("Hey there!")
 }
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-  println!("Program starting");
+async fn actix() -> std::io::Result<()> {
+  println!("Starting Request Server");
   HttpServer::new(|| {
     App::new()
     .service(hello)
@@ -37,4 +38,17 @@ async fn main() -> std::io::Result<()> {
   .bind(("0.0.0.0", 2121))?
   .run()
   .await
+}
+
+
+#[tokio::main]
+async fn main() {
+  println!("Program starting");
+  
+  // let actix_server = actix();
+  // let network_server = network::network::start();
+
+  // try_join!(async{ actix().await }, async { network::network::start().await });
+  // actix().await.err();
+  network::network::start().await;
 }

@@ -1,54 +1,40 @@
-mod network;
+// mod network;
 
-use actix_web::{
-  get,
-  post,
-  web,
-  App,
-  HttpResponse,
-  HttpServer,
-  Responder
-};
+// #[tokio::main]
+// async fn main() {
+//   println!("Program starting");
+//   network::network::start().await;
+// }
 
-use tokio::try_join;
+extern crate openssl;
 
-#[get("/")]
-async fn hello() -> impl Responder {
-  println!("My my, a connection so sweet");
-  HttpResponse::Ok().body("Hello world!")
-}
+use openssl::rsa::{Rsa};
+use openssl::symm::Cipher;
+use openssl::*;
+use warp::{Filter};
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-  HttpResponse::Ok().body(req_body)
-}
-
-async fn manual_hello() -> impl Responder {
-  HttpResponse::Ok().body("Hey there!")
-}
-
-async fn actix() -> std::io::Result<()> {
-  println!("Starting Request Server");
-  HttpServer::new(|| {
-    App::new()
-    .service(hello)
-    .service(echo)
-    .route("/hey", web::get().to(manual_hello))
-  })
-  .bind(("0.0.0.0", 2121))?
-  .run()
-  .await
-}
-
+// https://blog.devgenius.io/building-a-secure-websocket-server-with-rust-warp-in-docker-20e842d143af
 
 #[tokio::main]
 async fn main() {
-  println!("Program starting");
-  
-  // let actix_server = actix();
-  // let network_server = network::network::start();
+  let passphrase = "this_manages_stuff";
 
-  // try_join!(async{ actix().await }, async { network::network::start().await });
-  // actix().await.err();
-  network::network::start().await;
+  let rsa = Rsa::generate(2048).unwrap();
+  let private_key: Vec<u8> = rsa.private_key_to_pem().unwrap();
+  let public_key: Vec<u8> = rsa.public_key_to_pem().unwrap();
+
+  println!("Private key\n {}", String::from_utf8(private_key.clone()).unwrap());
+  println!("Public key\n {}", String::from_utf8(public_key.clone()).unwrap());
+
+  let current_dir = std::env::current_dir().expect("failed to read current directory").display().to_string();
+  let routes = warp::get().and(warp::fs::dir(current_dir));
+
+  warp::serve(routes)
+    .tls()
+    .cert(public_key)
+    .key(private_key)
+    // .cert_path("cert.pem")
+    // .key_path("key.rsa")
+    .run(([0,0,0,0], 9231))
+    .await;
 }

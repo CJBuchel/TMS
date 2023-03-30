@@ -5,8 +5,8 @@ use std::convert::Infallible;
 use std::{sync::Arc, collections::HashMap};
 
 use tokio::sync::RwLock;
-use tokio::{self, sync::{mpsc, Mutex}};
-use warp::{ws::Message, Rejection, Filter};
+use tokio::{self};
+use warp::{Filter};
 
 fn with_clients(clients: Clients) -> impl Filter<Extract = (Clients,), Error = Infallible> + Clone {
   warp::any().map(move || clients.clone())

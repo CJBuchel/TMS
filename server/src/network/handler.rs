@@ -1,10 +1,8 @@
-use actix_web::http::StatusCode;
 use uuid::Uuid;
-use warp::{Reply, reply::json, ws::Message};
+use warp::{Reply, reply::json, ws::Message, http::StatusCode};
 
 use super::packets::*;
 use super::ws;
-use super::ws::*;
 
 pub async fn publish_handler(body: Event, clients: Clients) -> Result<impl Reply> {
   clients
@@ -41,8 +39,7 @@ pub async fn register_handler(body: RegisterRequest, clients: Clients) -> Result
   let uuid = Uuid::new_v4().simple().to_string();
 
   register_client(uuid.clone(), user_id, clients).await;
-  let res = RegisterResponse { url: format!("ws://127.0.0.1:2122/ws/{}", uuid) };
-  
+
   Ok(json(&RegisterResponse {
     url: format!("ws://127.0.0.1:2122/ws/{}", uuid)
   }))

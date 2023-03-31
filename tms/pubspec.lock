@@ -288,6 +288,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  grapheme_splitter:
+    dependency: transitive
+    description:
+      name: grapheme_splitter
+      sha256: "5a1e352826609e0526f82c3bde82f502d210170f0a035ffa1c3ee74d9dee46bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   graphs:
     dependency: transitive
     description:
@@ -336,6 +344,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.0"
+  json_ast:
+    dependency: transitive
+    description:
+      name: json_ast
+      sha256: "063d54da7b2b0145163e4b0b033f57f02bac7d3cef734ed5afa11ff5bc6cc3d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
+  json_to_dart:
+    dependency: "direct main"
+    description:
+      name: json_to_dart
+      sha256: "5b37aca7be4aab692a673eaa44b0c58a1ae9717cd9a5c2cf8ff7f6d904b6693d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   lints:
     dependency: transitive
     description:

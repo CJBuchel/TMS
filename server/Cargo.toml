@@ -1,7 +1,8 @@
 [package]
-name = "server"
-version = "0.1.0"
+name = "tms_server"
+version = "2023.0.0"
 edition = "2021"
+authors = ["Connor J Buchel <connorbuchel@gmail.com>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -17,3 +17,4 @@ uuid = { version = "^1.3", features = ["serde", "v4"] }
 openssl-sys = "^0.9"
 openssl = { version = "^0.10", features = ["vendored"] }
 pretty_env_logger = "^0.4.0"
+schemars = "^0.8"

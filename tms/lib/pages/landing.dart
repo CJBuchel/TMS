@@ -5,6 +5,8 @@ import 'package:network_info_plus/network_info_plus.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import 'package:tms/schema/tms-schema.dart';
+
 class Landing extends StatefulWidget {
   Landing({super.key});
 
@@ -18,6 +20,8 @@ class _LandingState extends State<Landing> {
     // TODO: implement initState
     super.initState();
     final channel = WebSocketChannel.connect(Uri.parse("wss://localhost:2121/echo"));
+
+    final check = TmsSchema(myInt: 0);
 
     channel.stream.listen((data) {
       print(data);

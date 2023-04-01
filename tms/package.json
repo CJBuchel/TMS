@@ -1,0 +1,18 @@
+{
+  "name": "tms",
+  "version": "1.0.0",
+  "description": "A new Flutter project.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "prepare": "quicktype --just-types -l dart -s schema ../schema/tms-schema.json -o lib/schema/tms-schema.dart"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "quicktype": "^23.0.19"
+  }
+}

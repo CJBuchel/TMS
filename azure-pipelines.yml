@@ -19,8 +19,10 @@ jobs:
       inputs:
         mode: 'auto'
         channel: 'stable'
-        version: 'latest'
+        version: 'custom'
+        customVersion: '3.7'
+
     - task: FlutterBuild@0
       inputs:
-        target: 'all'
+        target: 'web'
         projectDirectory: './tms'

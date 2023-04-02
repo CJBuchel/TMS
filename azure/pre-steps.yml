@@ -32,3 +32,8 @@ steps:
       mode: 'auto'
       channel: 'stable'
       version: 'latest'
+
+  - task: FlutterCommand@0
+    inputs:
+      projectDirectory: './tms'
+      arguments: 'doctor'

@@ -15,7 +15,7 @@ jobs:
   steps:
     # - template: './azure/pre-steps.yml'
     - script: |
-        apt-get update && apt-get install -qq -y 
+        sudo apt-get update && sudo apt-get install -qq -y 
         musl-tools musl-dev
     - task: Cargo@1
       inputs:

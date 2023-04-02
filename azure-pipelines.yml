@@ -9,8 +9,8 @@ resources:
 - repo: self
 
 jobs:
-- job: AIO-Docker
-  displayName: Build And Publish the docker image
+- job: AIO_Docker
+  displayName: Build and Publish an all in one package for TMS
   pool:
     vmImage: ubuntu-latest
   steps:

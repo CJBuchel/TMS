@@ -1,0 +1,22 @@
+services:
+  tms-latest:
+    container_name: tms
+    image: 'cjbuchel/tms:latest'
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+      - '2121:2121'
+
+  # tms-version:
+  #   container_name: tms-v
+  #   image: 'cjbuchel/tms:${DOCKER_TAG}'
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '8080:8080'
+  #     - '2121:2121'

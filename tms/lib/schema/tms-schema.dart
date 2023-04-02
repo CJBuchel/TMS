@@ -3,5 +3,13 @@ class TmsSchema {
         required this.myInt,
     });
 
-    int myInt;
+    Test myInt;
+}
+
+class Test {
+    Test({
+        required this.testInt,
+    });
+
+    int testInt;
 }

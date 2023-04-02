@@ -1,5 +1,7 @@
 extern crate openssl;
 
+use std::process::Command;
+
 use futures::StreamExt;
 use futures::FutureExt;
 use openssl::asn1::Asn1Time;
@@ -13,6 +15,7 @@ use warp::Filter;
 #[tokio::main]
 async fn main() {
   pretty_env_logger::init();
+  println!("Starting main server...");
 
   // Generate RSA Key
   let rsa = Rsa::generate(2048).unwrap();
@@ -46,19 +49,19 @@ async fn main() {
   let private_key = rsa.private_key_to_pem().unwrap();
   let public_key = x509_cert.to_pem().unwrap();
 
-  // let routes = warp::path("echo")
-  // .and(warp::ws())
-  // .map(|ws: warp::ws::Ws| {
-  //   ws.on_upgrade(|websocket| {
-  //     // Just echo all messages back...
-  //     let (tx, rx) = websocket.split();
-  //     rx.forward(tx).map(|result| {
-  //         if let Err(e) = result {
-  //           eprintln!("websocket error: {:?}", e);
-  //         }
-  //       })
-  //     })
-  //   });
+  let routes = warp::path("echo")
+  .and(warp::ws())
+  .map(|ws: warp::ws::Ws| {
+    ws.on_upgrade(|websocket| {
+      // Just echo all messages back...
+      let (tx, rx) = websocket.split();
+      rx.forward(tx).map(|result| {
+          if let Err(e) = result {
+            eprintln!("websocket error: {:?}", e);
+          }
+        })
+      })
+    });
     
   println!("Private key\n {}", String::from_utf8(private_key.clone()).unwrap());
   println!("Public key\n {}", String::from_utf8(public_key.clone()).unwrap());
@@ -77,13 +80,13 @@ async fn main() {
   let _ = rsa.private_decrypt(&data, &mut buf, Padding::PKCS1).unwrap();
   println!("Decrypted: {}", String::from_utf8(buf).unwrap());
 
-  // // println!("Starting socket server");
-  // warp::serve(routes)
-  //   // .tls()
-  //   // .cert(public_key)
-  //   // .key(private_key)
-  //   // .cert_path("cert.pem")
-  //   // .key_path("key.rsa")
-  //   .run(([0,0,0,0], 2121))
-  //   .await;
+  // println!("Starting socket server");
+  warp::serve(routes)
+    // .tls()
+    // .cert(public_key)
+    // .key(private_key)
+    // .cert_path("cert.pem")
+    // .key_path("key.rsa")
+    .run(([0,0,0,0], 2121))
+    .await;
 }

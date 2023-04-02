@@ -8,6 +8,7 @@ trigger:
 resources: 
 - repo: self
 
+
 strategy: 
   matrix: 
 
@@ -33,13 +34,19 @@ strategy:
       imageName: 'ubuntu-20.04'
       rustup_toolchain: stable
 
+    docker-AIO:
+      imageName: 'ubuntu-20.04'
+      rustup_toolchain: stable
+      steps:
+        - script: echo hello
+
 pool:
   vmImage: $(imageName)
 
-steps:
-  - template: azure-steps.yml
-  - script: cargo build --all
-    workingDirectory: './server'
+  steps:
+    - template: azure-steps.yml
+    - script: cargo build --all
+      workingDirectory: './server'
 
 
 # jobs:

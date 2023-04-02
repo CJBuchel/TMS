@@ -1,6 +1,5 @@
 steps:
   # Init
-  - displayName: Git Initializing
   - script: git submodule update --init --recursive
   - script: git submodule update --remote --recursive -f
 

@@ -19,8 +19,7 @@ jobs:
       inputs:
         mode: 'auto'
         channel: 'stable'
-        version: 'custom'
-        customVersion: '3.7'
+        version: 'latest'
 
     - task: FlutterBuild@0
       inputs:

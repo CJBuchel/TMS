@@ -1,4 +1,9 @@
 steps:
+  # Init
+  - displayName: Git Initializing
+  - script: git submodule update --init --recursive
+  - script: git submodule update --remote --recursive -f
+
   # Rust install
   - task: Rustup@1
     inputs:
@@ -7,7 +12,7 @@ steps:
 
   - task: Cargo@1
     inputs:
-      cargoCommand: 'build --release --target x86_64-unknown-linux-musl'
+      cargoCommand: 'build'
       cargoWorkingDir: './server'
       verbose: false
 

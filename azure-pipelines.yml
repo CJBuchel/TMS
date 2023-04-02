@@ -13,8 +13,10 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-    - template: './azure/pre-steps.yml'
-    - script: sudo apt update && apt install -y musl-tools musl-dev
+    # - template: './azure/pre-steps.yml'
+    - script: |
+        sudo apt-get install -qq -y 
+        musl-tools musl-dev
     - task: Cargo@1
       inputs:
         cargoCommand: 'build --release --target x86_64-unknown-linux-musl'
@@ -48,7 +50,9 @@ jobs:
     vmImage: $(imageName)
   steps:
     - template: './azure/pre-steps.yml'
-    - script: sudo apt install clang ninja-build libgtk-3-dev
+    - script: |
+        sudo apt-get install -qq -y 
+        clang ninja-build libgtk-3-dev
       condition: eq( variables['Agent.OS'], 'Linux' )
     - task: FlutterBuild@0
       inputs:

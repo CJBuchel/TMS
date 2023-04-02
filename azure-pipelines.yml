@@ -1,4 +1,5 @@
 # Azure test/publish
+# https://levelup.gitconnected.com/integrate-your-flutter-application-with-azure-devops-and-app-center-6e5e5ee4a53
 
 trigger:
 - master 
@@ -7,6 +8,7 @@ trigger:
 
 resources: 
 - repo: self
+
 
 jobs:
 - job: AIO_Docker
@@ -56,3 +58,4 @@ jobs:
       inputs:
         target: $(flutter-target)
         projectDirectory: './tms'
+        iosCodesign: false

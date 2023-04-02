@@ -1,22 +1,23 @@
+parameters:
+  rustup_toolchain: ''
+
 steps:
+  # Rust install
+  - task: Rustup@1
+    inputs:
+      rustupCommand: 'target install x86_64-unknown-linux-musl'
+      verbose: false
 
-# Install rust
-- script: |
-    curl -sSf -o rustup-init.exe https://win.rustup.rs
-    rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
-    echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
-  displayName: Windows install rust
-  condition: eq( variables['Agent.OS'], 'Windows_NT' )
-- script: |
-    curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
-    echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
-  displayName: Install rust
-  condition: ne( variables['Agent.OS'], 'Windows_NT' )
+  - task: Cargo@1
+    inputs:
+      cargoCommand: 'build --release --target x86_64-unknown-linux-musl'
+      cargoWorkingDir: './server'
+      verbose: false
 
-# Install flutter
-- task: FlutterInstall@0
-  inputs:
-    mode: 'auto'
-    channel: 'stable'
-    version: 'custom'
-    customVersion: '2.19.5'
+  # Install flutter
+  # - task: FlutterInstall@0
+  #   inputs:
+  #     mode: 'auto'
+  #     channel: 'stable'
+  #     version: 'custom'
+  #     customVersion: '2.19.5'

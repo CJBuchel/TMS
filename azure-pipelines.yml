@@ -11,42 +11,23 @@ resources:
 
 strategy: 
   matrix: 
-
-    # Latest variants
-    windows-latest:
-      imageName: 'windows-latest'
-      rustup_toolchain: stable
-    mac-latest:
-      imageName: 'macOS-latest'
-      rustup_toolchain: stable
-    linux-latest:
+    musl:
+      target: 'x86_64-unknown-linux-musl'
       imageName: 'ubuntu-latest'
-      rustup_toolchain: stable
-
-    # Stable variants
-    windows-stable:
-      imageName: 'windows-2019'
-      rustup_toolchain: stable
-    mac-stable:
-      imageName: 'macOs-11'
-      rustup_toolchain: stable
-    linux-stable:
-      imageName: 'ubuntu-20.04'
-      rustup_toolchain: stable
-
-    docker-AIO:
-      imageName: 'ubuntu-20.04'
-      rustup_toolchain: stable
-      steps:
-        - script: echo hello
+    gnu:
+      target: 'x86_64-unknown-linux-gnu'
+      imageName: 'ubuntu-latest'
+    mac:
+      target: 'x86_64-apple-darwin'
+      imageName: 'macOs-latest'
 
 pool:
   vmImage: $(imageName)
 
-  steps:
-    - template: azure-steps.yml
-    - script: cargo build --all
-      workingDirectory: './server'
+steps:
+  - template: azure-steps.yml
+  # - script: cargo build --all
+    # workingDirectory: './server'
 
 
 # jobs:

@@ -10,18 +10,33 @@ resources:
 
 jobs:
 - job: AIO_Docker
-  displayName: Build and Publish an all in one package for TMS
   pool:
     vmImage: ubuntu-latest
   steps:
-    # - template: azure-steps.yml
-    - task: FlutterInstall@0
-      inputs:
-        mode: 'auto'
-        channel: 'stable'
-        version: 'latest'
-
+    - template: './azure/pre-steps.yml'
+    # @TODO, install muls for server docker deploy
     - task: FlutterBuild@0
       inputs:
         target: 'web'
+        projectDirectory: './tms'
+
+- job: CrossCI
+  strategy: 
+    matrix: 
+      windows-latest:
+        imageName: 'windows-latest'
+        flutter-target: 'windows'
+      macOs-latest:
+        imageName: 'macOs-latest'
+        flutter-target: 'macOs'
+      linux-latest:
+        imageName: 'ubuntu-latest'
+        flutter-target: 'linux'
+  pool:
+    vmImage: $(imageName)
+  steps:
+    - template: './azure/pre-steps.yml'
+    - task: FlutterBuild@0
+      inputs:
+        target: 'linux'
         projectDirectory: './tms'

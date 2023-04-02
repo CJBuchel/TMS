@@ -15,10 +15,20 @@ steps:
       cargoWorkingDir: './server'
       verbose: false
 
+  - task: Npm@1
+    inputs:
+      command: 'install'
+      workingDir: './tms'
+
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      workingDir: './tms'
+      customCommand: 'run prepare'
+
   # Install flutter
-  # - task: FlutterInstall@0
-  #   inputs:
-  #     mode: 'auto'
-  #     channel: 'stable'
-  #     version: 'custom'
-  #     customVersion: '2.19.5'
+  - task: FlutterInstall@0
+    inputs:
+      mode: 'auto'
+      channel: 'stable'
+      version: 'latest'

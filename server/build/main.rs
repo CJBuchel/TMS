@@ -1,8 +1,11 @@
 use std::{env, fs};
 
 mod schema_generator;
+mod env_generator;
 
 use crate::schema_generator::generate_schema;
+use crate::env_generator::generate_env;
+
 use std::ffi::OsString;
 use std::fs::read_dir;
 use std::path::{PathBuf, Path};
@@ -34,17 +37,18 @@ macro_rules! p {
 }
 
 fn main() -> anyhow::Result<()> {
-  p!("Generating Schemas...");
 
-  let outdir = get_project_root().unwrap();
-  // p!("Path {}", outdir);
-  // for (key, value) in env::vars_os() {
-  //   p!("{key:?}: {value:?}");
-  // }
+  // Generate dotenv files
+  let env_rust_dir = get_project_root().unwrap();
+  generate_env(&env_rust_dir.clone().into_os_string()); // generate rust env
+  generate_env(&env_rust_dir.clone().join("../").into_os_string()); // generate root env
+  generate_env(&env_rust_dir.clone().join("../tms").into_os_string()); // generate flutter env
 
-  let outdir = outdir.join("../schema");
-  fs::create_dir_all(outdir.clone()).unwrap();
-  generate_schema(&outdir.into_os_string());
+  // Generate Schema file
+  let schema_dir = get_project_root().unwrap();
+  let schema_dir = schema_dir.join("../schema");
+  fs::create_dir_all(schema_dir.clone()).unwrap();
+  generate_schema(&schema_dir.into_os_string());
 
   Ok(())
 }

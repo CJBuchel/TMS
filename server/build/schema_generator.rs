@@ -1,7 +1,7 @@
 
-use std::ffi::{OsString};
+use std::ffi::OsString;
 use std::fs;
-use std::path::{Path};
+use std::path::Path;
 
 include!("../src/schemas/schema.rs");
 

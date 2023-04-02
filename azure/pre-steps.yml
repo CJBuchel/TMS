@@ -36,4 +36,4 @@ steps:
   - task: FlutterCommand@0
     inputs:
       projectDirectory: './tms'
-      arguments: 'doctor'
+      arguments: 'doctor -v'

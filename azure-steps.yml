@@ -1,6 +1,3 @@
-parameters:
-  rustup_toolchain: ''
-
 steps:
   # Rust install
   - task: Rustup@1

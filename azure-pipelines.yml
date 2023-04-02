@@ -8,41 +8,14 @@ trigger:
 resources: 
 - repo: self
 
-
-strategy: 
-  matrix: 
-    musl:
-      target: 'x86_64-unknown-linux-musl'
-      imageName: 'ubuntu-latest'
-    gnu:
-      target: 'x86_64-unknown-linux-gnu'
-      imageName: 'ubuntu-latest'
-    mac:
-      target: 'x86_64-apple-darwin'
-      imageName: 'macOs-latest'
-
-pool:
-  vmImage: $(imageName)
-
-steps:
-  - template: azure-steps.yml
-  # - script: cargo build --all
-    # workingDirectory: './server'
-
-
-# jobs:
-# - job: AIO-Docker
-#   displayName: Build & Publish the docker image
-#   pool:
-#     vmImage: ubuntu-latest
-#   steps:
-
-#   # Init
-#   - displayName: Git Initializing
-#   - script: git submodule update --init --recursive
-#   - script: git submodule update --remote --recursive -f
-
-#   # Install requirements for rust
-#   - displayName: Rust Install
-#   - script: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-#   - script: 
+jobs:
+- job: AIO-Docker
+  displayName: Build & Publish the docker image
+  pool:
+    vmImage: ubuntu-latest
+  steps:
+    - template: azure-steps.yml
+    - task: FlutterBuild@0
+      inputs:
+        target: 'all'
+        projectDirectory: './tms'

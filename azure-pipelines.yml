@@ -10,7 +10,7 @@ resources:
 
 jobs:
 - job: AIO-Docker
-  displayName: Build & Publish the docker image
+  displayName: Build And Publish the docker image
   pool:
     vmImage: ubuntu-latest
   steps:

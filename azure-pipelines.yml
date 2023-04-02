@@ -15,6 +15,7 @@ jobs:
   steps:
     - template: './azure/pre-steps.yml'
     # @TODO, install muls for server docker deploy
+    - script: apt update && apt install -y musl-tools musl-dev
     - task: FlutterBuild@0
       inputs:
         target: 'web'
@@ -23,6 +24,8 @@ jobs:
 - job: CrossCI
   strategy: 
     matrix: 
+
+      # Desktops
       windows-latest:
         imageName: 'windows-latest'
         flutter-target: 'windows'
@@ -32,11 +35,16 @@ jobs:
       linux-latest:
         imageName: 'ubuntu-latest'
         flutter-target: 'linux'
+
+      # Mobiles
+      ios-latest:
+        imageName: 'macOs-latest'
+        flutter-target: 'mobile'
   pool:
     vmImage: $(imageName)
   steps:
     - template: './azure/pre-steps.yml'
     - task: FlutterBuild@0
       inputs:
-        target: 'linux'
+        target: $(flutter-target)
         projectDirectory: './tms'

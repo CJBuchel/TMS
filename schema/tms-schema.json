@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TmsSchema",
+  "type": "object",
+  "required": [
+    "my_int"
+  ],
+  "properties": {
+    "my_int": {
+      "$ref": "#/definitions/Test"
+    }
+  },
+  "definitions": {
+    "Test": {
+      "type": "object",
+      "required": [
+        "test_int"
+      ],
+      "properties": {
+        "test_int": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

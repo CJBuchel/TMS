@@ -16,6 +16,6 @@ steps:
       isDraft: true # might change this
       isPreRelease: false
       changeLogCompareToRelease: 'lastFullRelease'
-      changeLogType: 'commitBased'
+      changeLogType: 'issueBased'
       assets: '$(Build.ArtifactStagingDirectory)/*'
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

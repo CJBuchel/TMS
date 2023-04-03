@@ -21,29 +21,29 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-    # - template: './azure/pre-steps.yml'
-    # - script: |
-    #     sudo apt-get update && sudo apt-get install -qq -y musl-tools musl-dev
-    # - task: Cargo@1
-    #   inputs:
-    #     cargoCommand: 'build --release --target x86_64-unknown-linux-musl'
-    #     cargoWorkingDir: './server'
-    #     verbose: false
-    # - task: FlutterBuild@0
-    #   inputs:
-    #     target: 'web'
-    #     projectDirectory: './tms'
+    - template: './azure/pre-steps.yml'
+    - script: |
+        sudo apt-get update && sudo apt-get install -qq -y musl-tools musl-dev
+    - task: Cargo@1
+      inputs:
+        cargoCommand: 'build --release --target x86_64-unknown-linux-musl'
+        cargoWorkingDir: './server'
+        verbose: false
+    - task: FlutterBuild@0
+      inputs:
+        target: 'web'
+        projectDirectory: './tms'
 
-    # # Build docker image
-    # - task: CmdLine@2
-    #   inputs:
-    #     script: 'docker-compose build --pull'
+    # Build docker image
+    - task: CmdLine@2
+      inputs:
+        script: 'docker-compose build --pull'
 
-    # # Publish docker image
-    # - task: CmdLine@2
-    #   condition: and(succeeded(), eq(variables.isPublishable, 'true'))
-    #   inputs:
-    #     script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
+    # Publish docker image
+    - task: CmdLine@2
+      condition: and(succeeded(), eq(variables.isPublishable, 'true'))
+      inputs:
+        script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
     # Publish github release
     - template: './azure/github-release.yml'

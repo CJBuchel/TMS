@@ -55,20 +55,24 @@ jobs:
     matrix: 
 
       # Desktops
-      windows-stable:
+      windows:
         imageName: 'windows-2019'
-        flutter-stable: 'windows'
-      macOs-stable:
+        flutter-target: 'windows'
+        mobile: false
+      macos:
         imageName: 'macOs-12'
-        flutter-stable: 'macOs'
-      linux-stable:
+        flutter-target: 'macos'
+        mobile: false
+      linux:
         imageName: 'ubuntu-22.04'
-        flutter-stable: 'linux'
+        flutter-target: 'linux'
+        mobile: false
 
       # Mobiles
-      mobile-stable:
+      mobile:
         imageName: 'macOs-12'
         flutter-target: 'mobile'
+        mobile: true
   pool:
     vmImage: $(imageName)
   steps:
@@ -81,3 +85,8 @@ jobs:
         target: $(flutter-target)
         projectDirectory: './tms'
         iosCodesign: false
+    
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)/tms/build/$(flutter-target)/x64/releases/bundle'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'

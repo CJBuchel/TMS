@@ -21,5 +21,5 @@ steps:
       isPreRelease: false
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
-      assets: '$(System.ArtifactsDirectory)/**/*.zip'
+      assets: '$(System.ArtifactsDirectory)/*.zip'
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

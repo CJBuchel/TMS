@@ -1,0 +1,16 @@
+steps:
+  - task: GitHubRelease@1
+    inputs:
+      gitHubConnection: 'github.com_CJBuchel'
+      repositoryName: '$(Build.Repository.Name)'
+      action: 'create'
+      target: '$(Build.SourceVersion)'
+      tagSource: 'userSpecifiedTag'
+      tag: '$(variables.version)'
+      title: '$(variables.version) TMS Release'
+      isDraft: true # might change this
+      isPreRelease: false
+      changeLogCompareToRelease: 'lastFullRelease'
+      changeLogType: 'commitBased'
+      assets: '$(Build.ArtifactStagingDirectory)/*'
+      condition: and(succeeded(), eq(variables.isPublishable, 'true'))

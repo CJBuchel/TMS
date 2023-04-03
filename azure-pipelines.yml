@@ -12,7 +12,7 @@ resources:
 
 
 variables: 
-  - template: 'env.yaml'
+  - template: './azure/env.yaml'
   - name: isPublishable
     value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
 
@@ -45,6 +45,9 @@ jobs:
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))
       inputs:
         script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
+
+    # Publish github release
+    - template: './azure/github-release.yml'
 
 - job: CrossCI
   strategy: 

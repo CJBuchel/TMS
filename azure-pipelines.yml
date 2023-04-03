@@ -18,4 +18,4 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - template: './azure/build-stage'
+  - template: './azure/build-stage.yml'

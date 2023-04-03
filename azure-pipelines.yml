@@ -27,6 +27,6 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-      - template: github-release.yml
+      - template: './azure/github-release.yml'
         parameters:
           version: ${{variables.version}}

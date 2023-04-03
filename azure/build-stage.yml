@@ -32,7 +32,7 @@ jobs:
   pool:
     vmImage: ubuntu-22.04
   steps:
-    - template: build-client
+    - template: build-client.yml
       parameters:
         target: linux
 

@@ -86,9 +86,10 @@ jobs:
         projectDirectory: './tms'
         iosCodesign: false
     
+    - script: ls ./tms; ls ./tms/build; ls ./tms/build/linux; ls ./tms/build/linux/x64; ls ./tms/build/linux/x64/release
     - task: CopyFiles@2
       inputs:
-        sourceFolder: './tms/build/$(flutter-target)/x64/releases/bundle'
+        sourceFolder: './tms/build/$(flutter-target)/x64/release/bundle'
         targetFolder: '$(Build.ArtifactStagingDirectory)'
     
     - task: PublishBuildArtifacts@1

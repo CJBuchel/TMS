@@ -23,7 +23,7 @@ jobs:
 
     # Publish docker image
     - task: CmdLine@2
-      condition: and(succeeded(), eq(variables.isPublishable, 'true'))
+      condition: and(succeeded(), eq($(variables.isPublishable), 'true'))
       inputs:
         script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
@@ -80,18 +80,10 @@ jobs:
     # Copy client files
     - task: CopyFiles@2
       inputs:
-        sourceFolder: './tms/build/$(flutter-target)/**'
+        sourceFolder: './tms/build/$(flutter-target)'
         targetFolder: '$(Build.ArtifactStagingDirectory)/client'
-        condition: eq($(mobile), 'false')
-
-    # Copy server files
-    - task: CopyFiles@2
-      inputs:
-        sourceFolder: './server/target/release'
         contents: |
-          tms_server
-          tms_server.exe
-        targetFolder: '$(Build.ArtifactStagingDirectory)/server'
+          '**/*'
         condition: eq($(mobile), 'false')
 
     # Copy mobile
@@ -104,13 +96,30 @@ jobs:
           '**/*.ipa'
         condition: eq($(mobile), 'true')
 
+    # Copy server files
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: './server/target/release'
+        contents: |
+          tms_server
+          tms_server.exe
+        targetFolder: '$(Build.ArtifactStagingDirectory)/server'
+        condition: eq($(mobile), 'false')
+
     - task: PublishBuildArtifacts@1
       inputs:
         pathToPublish: '$(Build.ArtifactStagingDirectory)/client'
         artifactName: $(flutter-target)-client
+        condition: eq($(mobile), 'false')
     
     - task: PublishBuildArtifacts@1
       inputs:
         pathToPublish: '$(Build.ArtifactStagingDirectory)/server'
         artifactName: $(flutter-target)-server
-        condition: eq(mobile, 'false')
+        condition: eq($(mobile), 'false')
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)/mobile'
+        artifactName: $(flutter-target)-mobile
+        condition: eq($(mobile), 'true')

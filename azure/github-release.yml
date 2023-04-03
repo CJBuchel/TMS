@@ -17,5 +17,8 @@ steps:
       isPreRelease: false
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
-      assets: '$(Build.ArtifactStagingDirectory)/**'
+      assets: |
+        '$(Build.ArtifactStagingDirectory)/server/*.zip'
+        '$(Build.ArtifactStagingDirectory)/client/*.zip'
+        '$(Build.ArtifactStagingDirectory)/mobile/*.zip'
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

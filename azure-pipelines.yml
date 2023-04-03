@@ -10,7 +10,7 @@ resources:
 - repo: self
 
 variables: 
-- template: './azure/env.yaml'
+- template: './azure/env.yml'
 - name: isPublishable
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
 - name: version_dif

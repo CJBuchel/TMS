@@ -14,9 +14,9 @@ steps:
     inputs:
       rootFolderOrFile: './tms/build/${{parameters.target}}'
       archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/client/tms-${{parameters.target}}-client.zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)/client
-      artifactName: '${{parameters.target}}-client'
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: 'client-${{parameters.target}}'

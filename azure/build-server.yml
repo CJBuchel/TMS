@@ -14,9 +14,9 @@ steps:
     inputs:
       rootFolderOrFile: './server/target/release'
       archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/server/tms-${{parameters.target}}-server.zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)/server
-      artifactName: '${{parameters.target}}-server'
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: 'server-${{parameters.target}}'

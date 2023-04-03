@@ -4,12 +4,10 @@ parameters:
 
 steps:
   - template: pre-steps.yml
-  - script: 'ls ./server/target; ls ./server/target/release'
+  - script: 'ls ./server/target/release'
   - task: CopyFiles@2
     inputs:
-      contents: |
-        ./server/target/release/tms_server
-        ./server/target/release/tms_server.exe
+      contents: './server/target/release/tms_server'
       targetFolder: '$(Build.ArtifactStagingDirectory)/server'
 
   - task: PublishBuildArtifacts@1

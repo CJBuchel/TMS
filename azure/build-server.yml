@@ -4,11 +4,19 @@ parameters:
 
 steps:
   - template: pre-steps.yml
+
+  # Build the rust app
+  - task: Cargo@1
+    inputs:
+      cargoCommand: 'build --release'
+      cargoWorkingDir: './server'
+      verbose: false
+
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: './server/target/release'
       archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/server/${{parameters.target}}-server.zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/server/tms-${{parameters.target}}-server.zip'
 
   - task: PublishBuildArtifacts@1
     inputs:

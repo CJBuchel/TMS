@@ -30,18 +30,18 @@ jobs:
 
 - job: linux
   pool:
-    vmImage: ubuntu-22.04
+    vmImage: 'macOs-12'
   steps:
     - template: build-server.yml
       parameters:
-        target: linux
-    # - template: build-client.yml
-    #   parameters:
-    #     target: linux
+        target: macos
+    - template: build-client.yml
+      parameters:
+        target: macos
 
 
 
-    
+
 # - job: CrossCI
 #   strategy: 
 #     matrix: 

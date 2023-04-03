@@ -43,7 +43,7 @@ pub fn generate_env_yaml(outdir: &OsString) {
   // Yaml Env
   let mut yaml:YamlVariables = YamlVariables { variables: Vec::new() };
   yaml.variables.push(YamlEnv { name: "version".to_string(), value: VERSION.to_string() });
-  let env_path = Path::new(outdir).join("env.yml");
+  let env_path = Path::new(outdir).join("vars.yml");
   let f = File::create(env_path).expect("Could not write to file");
   serde_yaml::to_writer(f, &yaml).unwrap();
 }

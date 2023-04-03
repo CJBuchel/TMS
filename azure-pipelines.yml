@@ -10,7 +10,7 @@ resources:
 - repo: self
 
 variables: 
-- template: './azure/env.yml'
+- template: './azure/vars.yml'
 - name: isPublishable
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
 - name: version_dif
@@ -46,7 +46,7 @@ jobs:
     #     script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
     # Publish github release
-    - script: echo ${{variables.version_dif}}
+    - script: echo $(variables.version_dif)
     - template: './azure/github-release.yml'
 
 - job: CrossCI

@@ -3,8 +3,6 @@ parameters:
   type: string
 
 steps:
-  - template: pre-steps.yml
-
   # Build the rust app
   - task: Cargo@1
     inputs:

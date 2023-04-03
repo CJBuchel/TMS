@@ -20,7 +20,7 @@ steps:
       sourceFolder: './tms/build/${{parameters.target}}'
       targetFolder: $(Build.ArtifactStagingDirectory)
 
-  - task: PublishPipelineArtifacts@1
+  - task: PublishPipelineArtifact@1
     inputs:
       targetPath: $(Build.ArtifactStagingDirectory)
-      artifactName: ${{parameters.target}}-client
+      artifact: ${{parameters.target}}-client

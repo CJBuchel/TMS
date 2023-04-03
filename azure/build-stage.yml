@@ -4,6 +4,8 @@ jobs:
     vmImage: ubuntu-latest
   steps:
     - template: pre-steps.yml
+    - script: |
+        sudo apt-get update && sudo apt-get install -qq -y musl-tools musl-dev
     - task: Cargo@1
       inputs:
         cargoCommand: 'build --release --target x86_64-unknown-linux-musl'
@@ -61,6 +63,23 @@ jobs:
     - template: build-client.yml
       parameters:
         target: linux
+
+- job: android
+  pool:
+    vmImage: 'ubuntu-22.04'
+  steps:
+    - template: pre-steps.yml
+    - template: build-client.yml
+      parameters:
+        target: apk
+- job: ios
+  pool:
+    vmImage: 'ubuntu-22.04'
+  steps:
+    - template: pre-steps.yml
+    - template: build-client.yml
+      parameters:
+        target: ios
 
 # - job: CrossCI
 #   strategy: 

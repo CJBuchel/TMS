@@ -3,8 +3,6 @@ parameters:
   type: string
 
 steps:
-  - template: pre-steps.yml
-    
   # Build the flutter app
   - task: FlutterBuild@0
     inputs:

@@ -27,99 +27,108 @@ jobs:
       inputs:
         script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
-- job: CrossCI
-  strategy: 
-    matrix: 
-      # Desktops
-      windows:
-        imageName: 'windows-2019'
-        flutter-target: 'windows'
-        mobile: false
-      macos:
-        imageName: 'macOs-12'
-        flutter-target: 'macos'
-        mobile: false
-      linux:
-        imageName: 'ubuntu-22.04'
-        flutter-target: 'linux'
-        mobile: false
 
-      # Mobiles
-      ios:
-        imageName: 'macOs-12'
-        flutter-target: 'ios'
-        mobile: true
-      android:
-        imageName: 'ubuntu-22.04'
-        flutter-target: 'apk'
-        mobile: true
-
+- job: linux
   pool:
-    vmImage: $(imageName)
+    vmImage: ubuntu-22.04
   steps:
-    - template: pre-steps.yml
-    - script: |
-        sudo apt-get install -qq -y clang ninja-build libgtk-3-dev
-      condition: eq( variables['Agent.OS'], 'Linux' )
+    - template: build-client
+      parameters:
+        target: linux
 
-    # Build client
-    - task: FlutterBuild@0
-      inputs:
-        target: $(flutter-target)
-        projectDirectory: './tms'
-        iosCodeSign: false
-        extraArgs: '--release'
+# - job: CrossCI
+#   strategy: 
+#     matrix: 
+#       # Desktops
+#       windows:
+#         imageName: 'windows-2019'
+#         flutter-target: 'windows'
+#         mobile: false
+#       macos:
+#         imageName: 'macOs-12'
+#         flutter-target: 'macos'
+#         mobile: false
+#       linux:
+#         imageName: 'ubuntu-22.04'
+#         flutter-target: 'linux'
+#         mobile: false
 
-    # Build server
-    - task: Cargo@1
-      inputs:
-        cargoCommand: 'build --release'
-        cargoWorkingDir: './server'
-        verbose: false
+#       # Mobiles
+#       ios:
+#         imageName: 'macOs-12'
+#         flutter-target: 'ios'
+#         mobile: true
+#       android:
+#         imageName: 'ubuntu-22.04'
+#         flutter-target: 'apk'
+#         mobile: true
+
+#   pool:
+#     vmImage: $(imageName)
+#   steps:
+#     - template: pre-steps.yml
+#     - script: |
+#         sudo apt-get install -qq -y clang ninja-build libgtk-3-dev
+#       condition: eq( variables['Agent.OS'], 'Linux' )
+
+    # # Build client
+    # - task: FlutterBuild@0
+    #   inputs:
+    #     target: $(flutter-target)
+    #     projectDirectory: './tms'
+    #     iosCodeSign: false
+    #     extraArgs: '--release'
+
+    # # Build server
+    # - task: Cargo@1
+    #   inputs:
+    #     cargoCommand: 'build --release'
+    #     cargoWorkingDir: './server'
+    #     verbose: false
     
-    # Copy client files
-    - task: CopyFiles@2
-      inputs:
-        sourceFolder: './tms/build/$(flutter-target)'
-        targetFolder: '$(Build.ArtifactStagingDirectory)/client'
-        contents: |
-          '**/*'
-        condition: eq($(mobile), 'false')
+    # # Copy client files
+    # - task: CopyFiles@2
+    #   inputs:
+    #     sourceFolder: './tms/build/$(flutter-target)'
+    #     targetFolder: '$(Build.ArtifactStagingDirectory)/client'
+    #     contents: |
+    #       '**/*'
+    #     condition: eq(mobile, 'false')
 
-    # Copy mobile
-    - task: CopyFiles@2
-      inputs:
-        sourceFolder: './tms/build'
-        targetFolder: '$(Build.ArtifactStagingDirectory)/mobile'
-        contents: |
-          '**/*.apk'
-          '**/*.ipa'
-        condition: eq($(mobile), 'true')
+    # # Copy mobile
+    # - task: CopyFiles@2
+    #   inputs:
+    #     sourceFolder: './tms/build'
+    #     targetFolder: '$(Build.ArtifactStagingDirectory)/mobile'
+    #     contents: |
+    #       '**/*.apk'
+    #       '**/*.ipa'
+    #     condition: eq($(mobile), 'true')
 
-    # Copy server files
-    - task: CopyFiles@2
-      inputs:
-        sourceFolder: './server/target/release'
-        contents: |
-          tms_server
-          tms_server.exe
-        targetFolder: '$(Build.ArtifactStagingDirectory)/server'
-        condition: eq($(mobile), 'false')
+    # # Copy server files
+    # - task: CopyFiles@2
+    #   inputs:
+    #     sourceFolder: './server/target/release'
+    #     contents: |
+    #       tms_server
+    #       tms_server.exe
+    #     targetFolder: '$(Build.ArtifactStagingDirectory)/server'
+    #     condition: eq($(mobile), 'false')
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: '$(Build.ArtifactStagingDirectory)/client'
-        artifactName: $(flutter-target)-client
-        condition: eq($(mobile), 'false')
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     pathToPublish: '$(Build.ArtifactStagingDirectory)/client'
+    #     artifactName: $(flutter-target)-client
+    #     condition: eq($(mobile), 'false')
     
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: '$(Build.ArtifactStagingDirectory)/server'
-        artifactName: $(flutter-target)-server
-        condition: eq($(mobile), 'false')
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     pathToPublish: '$(Build.ArtifactStagingDirectory)/server'
+    #     artifactName: $(flutter-target)-server
+    #     condition: eq($(mobile), 'false')
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: '$(Build.ArtifactStagingDirectory)/mobile'
-        artifactName: $(flutter-target)-mobile
-        condition: eq($(mobile), 'true')
+    # - task: PublishBuildArtifacts@1
+    #   inputs:
+    #     pathToPublish: '$(Build.ArtifactStagingDirectory)/mobile'
+    #     artifactName: $(flutter-target)-mobile
+    #     condition: eq($(mobile), 'true')

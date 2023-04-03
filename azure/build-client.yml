@@ -1,0 +1,28 @@
+parameters:
+- name: target
+  type: string
+
+steps:
+  - template: pre-steps.yml
+  - script: |
+        sudo apt-get install -qq -y clang ninja-build libgtk-3-dev
+    condition: eq( variables['Agent.OS'], 'Linux' )
+
+  # Build the flutter app
+  - task: FlutterBuild@0
+    inputs:
+      target: ${{parameters.target}}
+      projectDirectory: './tms'
+      extraArgs: '--release'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: './tms/build/${{parameters.target}}'
+      targetFolder: '$(Build.ArtifactStagingDirectory)/client'
+      contents: |
+        '**/*'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)/client'
+      artifactName: ${{parameters.target}}-client

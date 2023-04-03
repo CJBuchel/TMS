@@ -26,6 +26,11 @@ steps:
   - task: CmdLine@2
     inputs:
       script: while IFS= read -r line; do export $line; done < ./.env
+  
+  # check environment variables
+  - task: CmdLine@2
+    inputs:
+      script: echo $TMS_TAG
 
   - task: Npm@1
     inputs:

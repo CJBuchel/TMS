@@ -4,11 +4,11 @@ parameters:
 
 steps:
   # Build the rust app
-  - task: Cargo@1
-    inputs:
-      cargoCommand: 'build --release'
-      cargoWorkingDir: './server'
-      verbose: false
+  # - task: Cargo@1
+  #   inputs:
+  #     cargoCommand: 'build --release'
+  #     cargoWorkingDir: './server'
+  #     verbose: false
 
   - task: ArchiveFiles@2
     inputs:

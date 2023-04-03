@@ -45,7 +45,7 @@ jobs:
 
       # Mobiles
       mobile-stable:
-        imageName: 'macOs-11'
+        imageName: 'macOs-12'
         flutter-target: 'mobile'
   pool:
     vmImage: $(imageName)

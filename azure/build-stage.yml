@@ -23,7 +23,7 @@ jobs:
 
     # Publish docker image
     - task: CmdLine@2
-      condition: and(succeeded(), eq($(variables.isPublishable), 'true'))
+      condition: and(succeeded(), eq(variables.isPublishable, 'true'))
       inputs:
         script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 

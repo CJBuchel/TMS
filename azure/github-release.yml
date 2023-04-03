@@ -3,7 +3,11 @@ parameters:
   type: string
 
 steps:
-  - script: echo ${{parameters.version}}
+  # Download all the artifacts before
+  # - task: DownloadBuildArtifacts@1
+  #   inputs:
+  #     downloadPath: '$(System.ArtifactsDirectory)'
+
   - task: GitHubRelease@1
     inputs:
       gitHubConnection: 'github.com_CJBuchel'
@@ -18,7 +22,5 @@ steps:
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
       assets: |
-        '$(Build.ArtifactStagingDirectory)/server/*.zip'
-        '$(Build.ArtifactStagingDirectory)/client/*.zip'
-        '$(Build.ArtifactStagingDirectory)/mobile/*.zip'
+        '$(System.ArtifactsDirectory)'
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

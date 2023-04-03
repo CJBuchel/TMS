@@ -74,12 +74,12 @@ jobs:
         target: apk
 - job: ios
   pool:
-    vmImage: 'ubuntu-22.04'
+    vmImage: 'macOs-12'
   steps:
     - template: pre-steps.yml
     - template: build-client.yml
       parameters:
-        target: ios
+        target: ipa
 
 # - job: CrossCI
 #   strategy: 

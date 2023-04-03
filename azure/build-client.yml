@@ -19,13 +19,7 @@ steps:
     inputs:
       rootFolderOrFile: './tms/build/${{parameters.target}}'
       archiveType: 'zip'
-
-  - task: CopyFiles@2
-    inputs:
-      sourceFolder: './tms/build/${{parameters.target}}'
-      targetFolder: $(Build.ArtifactStagingDirectory)
-      contents: |
-        '${{parameters.target}}.zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/${{parameters.target}}.zip'
 
   - task: PublishBuildArtifacts@1
     inputs:

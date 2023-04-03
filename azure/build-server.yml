@@ -4,12 +4,11 @@ parameters:
 
 steps:
   - template: pre-steps.yml
-  - script: 'ls ./server/target/release'
-  - task: CopyFiles@2
+  - task: ArchiveFiles@2
     inputs:
-      contents: |
-        './server/target/release/*?(tms_server|tms_server.exe)'
-      targetFolder: '$(Build.ArtifactStagingDirectory)/server'
+      rootFolderOrFile: './server/target/release/*'
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/server/${{parameters.target}}-server.zip'
 
   - task: PublishBuildArtifacts@1
     inputs:

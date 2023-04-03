@@ -21,5 +21,9 @@ steps:
       isPreRelease: false
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
-      assets: '$(System.ArtifactsDirectory)/*.zip'
+      assets: |
+        '$(System.ArtifactsDirectory)/*.zip'
+        '$(System.ArtifactsDirectory)/*.apk'
+        '$(System.ArtifactsDirectory)/*.ipa'
+
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

@@ -1,0 +1,23 @@
+parameters:
+- name: target
+  type: string
+
+steps:
+  # Build the flutter app
+  - task: FlutterBuild@0
+    inputs:
+      target: ${{parameters.target}}
+      projectDirectory: './tms'
+      extraArgs: '--release'
+
+  - task: CopyFiles@2
+    inputs:
+      contents: |
+        ./tms/build/**.ipa
+        ./tms/build/**.apk
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: 'client-${{parameters.target}}'

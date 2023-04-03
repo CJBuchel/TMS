@@ -17,5 +17,5 @@ steps:
       isPreRelease: false
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
-      assets: '$(Build.ArtifactStagingDirectory)/*'
+      assets: '$(Build.ArtifactStagingDirectory)/**'
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

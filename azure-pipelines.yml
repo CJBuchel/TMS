@@ -4,10 +4,14 @@
 trigger:
 - master 
 - docker-publish
-- docker-publish-dev
+- publish
 
 resources: 
 - repo: self
+
+variables: 
+  isPublishable: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
+  tag: '$(Build.BuildId)'
 
 
 jobs:
@@ -27,6 +31,17 @@ jobs:
       inputs:
         target: 'web'
         projectDirectory: './tms'
+
+    # Build docker image
+    - task: CmdLine@2
+      inputs:
+        script: 'docker-compose build --pull'
+
+    # Publish docker image
+    - task: CmdLine@2
+      condition: and(succeeded(), eq(variables.isPublishable, 'true'))
+      inputs:
+        script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
 - job: CrossCI
   strategy: 

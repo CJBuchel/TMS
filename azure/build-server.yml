@@ -6,7 +6,7 @@ steps:
   - template: pre-steps.yml
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: './server/target/release/*'
+      rootFolderOrFile: './server/target/release'
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/server/${{parameters.target}}-server.zip'
 

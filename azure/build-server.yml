@@ -3,6 +3,7 @@ parameters:
   type: string
 
 steps:
+  - template: pre-steps.yml
   - task: CopyFiles@2
     inputs:
       contents: |

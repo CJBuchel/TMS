@@ -1,6 +1,4 @@
 steps:
-  - script: echo $(variables.version)
-  - script: echo $(variables.isPublishable)
   # Init
   - script: git submodule update --init --recursive
   - script: git submodule update --remote --recursive -f

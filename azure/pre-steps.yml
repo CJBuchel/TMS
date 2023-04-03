@@ -3,6 +3,13 @@ steps:
   - script: git submodule update --init --recursive
   - script: git submodule update --remote --recursive -f
 
+  # Install java
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '17'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
   # Rust install
   - task: Rustup@1
     inputs:

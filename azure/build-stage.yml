@@ -35,7 +35,9 @@ jobs:
     - template: build-client.yml
       parameters:
         target: linux
-
+    - template: build-server.yml
+      parameters:
+        target: linux
 # - job: CrossCI
 #   strategy: 
 #     matrix: 

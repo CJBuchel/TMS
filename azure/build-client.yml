@@ -4,9 +4,6 @@ parameters:
 
 steps:
   - template: pre-steps.yml
-  - script: |
-        sudo apt-get install -qq -y clang ninja-build libgtk-3-dev
-    condition: eq( variables['Agent.OS'], 'Linux' )
     
   # Build the flutter app
   - task: FlutterBuild@0
@@ -19,9 +16,9 @@ steps:
     inputs:
       rootFolderOrFile: './tms/build/${{parameters.target}}'
       archiveType: 'zip'
-      archiveFile: '$(Build.ArtifactStagingDirectory)/${{parameters.target}}.zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/client/${{parameters.target}}-client.zip'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)
+      pathToPublish: $(Build.ArtifactStagingDirectory)/client
       artifactName: '${{parameters.target}}-client'

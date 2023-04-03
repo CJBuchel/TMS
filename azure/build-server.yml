@@ -1,0 +1,22 @@
+parameters:
+- name: target
+  type: string
+
+steps:
+  - task: Cargo@1
+    inputs:
+      cargoCommand: 'build --release'
+      cargoWorkingDir: './server'
+      verbose: false
+
+  - task: CopyFiles@2
+    inputs:
+      contents: |
+        './server/target/release/tms_server'
+        './server/target/release/tms_server.exe'
+      targetFolder: '$(Build.ArtifactStagingDirectory)/server'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)/server
+      artifactName: '${{parameters.target}}-server'

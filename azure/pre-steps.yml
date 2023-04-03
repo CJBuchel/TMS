@@ -1,4 +1,5 @@
 steps:
+  - script: echo $(variables.version)
   # Init
   - script: git submodule update --init --recursive
   - script: git submodule update --remote --recursive -f

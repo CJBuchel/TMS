@@ -1,4 +1,5 @@
 steps:
+  - script: echo ${{variables.version}}
   - task: GitHubRelease@1
     inputs:
       gitHubConnection: 'github.com_CJBuchel'

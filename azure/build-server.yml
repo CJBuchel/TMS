@@ -7,7 +7,8 @@ steps:
   - script: 'ls ./server/target/release'
   - task: CopyFiles@2
     inputs:
-      contents: './server/target/release/tms_server'
+      contents: |
+        './server/target/release/*?(tms_server|tms_server.exe)'
       targetFolder: '$(Build.ArtifactStagingDirectory)/server'
 
   - task: PublishBuildArtifacts@1

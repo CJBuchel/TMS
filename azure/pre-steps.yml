@@ -22,6 +22,11 @@ steps:
       cargoWorkingDir: './server'
       verbose: false
 
+  # Setup environment variables
+  - task: CmdLine@2
+    inputs:
+      script: while IFS= read -r line; do export $line; done < ./.env
+
   - task: Npm@1
     inputs:
       command: 'install'

@@ -21,7 +21,8 @@ stages:
   - template: './azure/build-stage.yml'
 
 - stage: Release
-  condition: eq(variables.isPublishable, 'true')
+  dependsOn: Build
+  condition: and(succeeded('Build'), eq(variables.isPublishable, 'true'))
   jobs:
   - job: GithubRelease
     pool:

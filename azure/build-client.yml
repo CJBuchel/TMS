@@ -18,11 +18,11 @@ steps:
   - task: CopyFiles@2
     inputs:
       sourceFolder: './tms/build/${{parameters.target}}'
-      targetFolder: '$(Build.ArtifactStagingDirectory)/client'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
       contents: |
         '**/*'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: '$(Build.ArtifactStagingDirectory)/client'
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: ${{parameters.target}}-client

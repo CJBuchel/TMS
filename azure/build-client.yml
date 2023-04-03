@@ -7,7 +7,7 @@ steps:
   - script: |
         sudo apt-get install -qq -y clang ninja-build libgtk-3-dev
     condition: eq( variables['Agent.OS'], 'Linux' )
-
+    
   # Build the flutter app
   - task: FlutterBuild@0
     inputs:
@@ -15,12 +15,19 @@ steps:
       projectDirectory: './tms'
       extraArgs: '--release'
 
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: './tms/build/${{parameters.target}}'
+      archiveType: 'zip'
+
   - task: CopyFiles@2
     inputs:
       sourceFolder: './tms/build/${{parameters.target}}'
       targetFolder: $(Build.ArtifactStagingDirectory)
+      contents: |
+        '${{parameters.target}}.zip'
 
-  - task: PublishPipelineArtifact@1
+  - task: PublishBuildArtifacts@1
     inputs:
-      targetPath: $(Build.ArtifactStagingDirectory)
-      artifact: ${{parameters.target}}-client
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: '${{parameters.target}}-client'

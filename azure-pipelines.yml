@@ -9,7 +9,10 @@ trigger:
 resources: 
 - repo: self
 
+
+
 variables: 
+- template: 'env.yaml'
   isPublishable: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
   tag: '$(Build.BuildId)'
 

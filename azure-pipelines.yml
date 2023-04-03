@@ -9,13 +9,10 @@ trigger:
 resources: 
 - repo: self
 
-
-
 variables: 
   - template: './azure/env.yaml'
   - name: isPublishable
     value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
-
 
 jobs:
 - job: AIO_Docker

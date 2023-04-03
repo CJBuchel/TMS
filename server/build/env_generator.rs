@@ -5,14 +5,20 @@ use std::path::Path;
 
 use serde::Serialize;
 
+// variables:
+//   - name: version
+//     value: '2023.0.0'
+
+
 #[derive(Debug, Serialize)]
 struct YamlEnv {
-  version: String
+  name: String,
+  value: String
 }
 
 #[derive(Debug, Serialize)]
 struct YamlVariables {
-  variables: YamlEnv
+  variables: Vec<YamlEnv>
 }
 
 const VERSION: &str = "2023.0.0";
@@ -28,7 +34,6 @@ pub fn generate_env(outdir: &OsString) {
   let f = File::create(env_path).expect("Unable to create file");
   let mut f = BufWriter::new(f);
 
-
   for line in &env {
     f.write_all(line.as_bytes()).expect("Could not write to file");
   }
@@ -36,7 +41,8 @@ pub fn generate_env(outdir: &OsString) {
 
 pub fn generate_env_yaml(outdir: &OsString) {
   // Yaml Env
-  let yaml:YamlVariables = YamlVariables { variables: YamlEnv { version: VERSION.to_string() } };
+  let mut yaml:YamlVariables = YamlVariables { variables: Vec::new() };
+  yaml.variables.push(YamlEnv { name: "version".to_string(), value: VERSION.to_string() });
   let env_path = Path::new(outdir).join("env.yaml");
   let f = File::create(env_path).expect("Could not write to file");
   serde_yaml::to_writer(f, &yaml).unwrap();

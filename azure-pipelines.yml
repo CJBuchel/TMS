@@ -33,19 +33,19 @@ jobs:
     matrix: 
 
       # Desktops
-      windows-latest:
-        imageName: 'windows-latest'
-        flutter-target: 'windows'
-      macOs-latest:
-        imageName: 'macOs-latest'
-        flutter-target: 'macOs'
-      linux-latest:
-        imageName: 'ubuntu-latest'
-        flutter-target: 'linux'
+      windows-stable:
+        imageName: 'windows-2019'
+        flutter-stable: 'windows'
+      macOs-stable:
+        imageName: 'macOs-12'
+        flutter-stable: 'macOs'
+      linux-stable:
+        imageName: 'ubuntu-22.04'
+        flutter-stable: 'linux'
 
       # Mobiles
-      mobile-latest:
-        imageName: 'macOs-latest'
+      mobile-stable:
+        imageName: 'macOs-11'
         flutter-target: 'mobile'
   pool:
     vmImage: $(imageName)

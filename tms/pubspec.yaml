@@ -16,7 +16,6 @@ dependencies:
   web_socket_channel: ^2.3.0
   build_runner: ^2.3.3
   build_web_compilers: ^3.2.7
-  json_to_dart: ^1.0.5
 
 dev_dependencies:
   flutter_test:

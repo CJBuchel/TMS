@@ -4,9 +4,9 @@ parameters:
 
 steps:
   # Download all the artifacts before
-  # - task: DownloadBuildArtifacts@1
-  #   inputs:
-  #     downloadPath: '$(System.ArtifactsDirectory)'
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      downloadPath: '$(System.ArtifactsDirectory)'
 
   - task: GitHubRelease@1
     inputs:
@@ -21,6 +21,5 @@ steps:
       isPreRelease: false
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
-      assets: |
-        '$(System.ArtifactsDirectory)'
+      assets: '$(System.ArtifactsDirectory)/**'
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

@@ -88,5 +88,10 @@ jobs:
     
     - task: CopyFiles@2
       inputs:
-        sourceFolder: '$(Build.SourcesDirectory)/tms/build/$(flutter-target)/x64/releases/bundle'
+        sourceFolder: './tms/build/$(flutter-target)/x64/releases/bundle'
         targetFolder: '$(Build.ArtifactStagingDirectory)'
+    
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: $(flutter-target)-client

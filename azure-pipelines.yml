@@ -12,9 +12,9 @@ resources:
 
 
 variables: 
-- template: 'env.yaml'
-  isPublishable: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
-  tag: '$(Build.BuildId)'
+  - template: 'env.yaml'
+  - name: isPublishable
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
 
 
 jobs:

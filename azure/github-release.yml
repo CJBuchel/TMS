@@ -1,5 +1,9 @@
+parameters:
+- name: version
+  type: string
+
 steps:
-  - script: echo $(variables.version)
+  - script: echo ${{parameters.version}}
   - task: GitHubRelease@1
     inputs:
       gitHubConnection: 'github.com_CJBuchel'
@@ -7,8 +11,8 @@ steps:
       action: 'create'
       target: '$(Build.SourceVersion)'
       tagSource: 'userSpecifiedTag'
-      tag: "${{variables.version}}"
-      title: ${{variables.version}} TMS Release
+      tag: "${{parameters.version}}"
+      title: ${{parameters.version}} TMS Release
       isDraft: true # might change this
       isPreRelease: false
       changeLogCompareToRelease: 'lastFullRelease'

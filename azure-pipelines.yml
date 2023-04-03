@@ -46,9 +46,9 @@ jobs:
     #     script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
     # Publish github release
-    - script: echo ${{variables.version_dif}}
-    - script: echo ${{variables.version}}
     - template: './azure/github-release.yml'
+      parameters:
+        version: ${{variables.version}}
 
 - job: CrossCI
   strategy: 

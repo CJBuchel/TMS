@@ -39,7 +39,7 @@ steps:
       mode: 'auto'
       channel: 'stable'
       version: 'custom'
-      customVersion: '3.7.8'
+      customVersion: '3.7.9'
 
   - task: FlutterCommand@0
     inputs:

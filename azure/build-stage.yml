@@ -27,11 +27,6 @@ jobs:
       inputs:
         script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
-    # Publish github release
-    # - template: github-release.yml
-    #   parameters:
-    #     version: ${{variables.version}}
-
 - job: CrossCI
   strategy: 
     matrix: 
@@ -73,6 +68,7 @@ jobs:
         target: $(flutter-target)
         projectDirectory: './tms'
         iosCodeSign: false
+        extraArgs: '--release'
 
     # Build server
     - task: Cargo@1
@@ -84,9 +80,9 @@ jobs:
     # Copy client files
     - task: CopyFiles@2
       inputs:
-        sourceFolder: './tms/build/$(flutter-target)/x64/release/bundle'
+        sourceFolder: './tms/build/$(flutter-target)/**'
         targetFolder: '$(Build.ArtifactStagingDirectory)/client'
-        condition: eq(mobile, 'false')
+        condition: eq($(mobile), 'false')
 
     # Copy server files
     - task: CopyFiles@2
@@ -96,7 +92,7 @@ jobs:
           tms_server
           tms_server.exe
         targetFolder: '$(Build.ArtifactStagingDirectory)/server'
-        condition: eq(mobile, 'false')
+        condition: eq($(mobile), 'false')
 
     # Copy mobile
     - task: CopyFiles@2
@@ -106,7 +102,7 @@ jobs:
         contents: |
           '**/*.apk'
           '**/*.ipa'
-        condition: eq(mobile, 'true')
+        condition: eq($(mobile), 'true')
 
     - task: PublishBuildArtifacts@1
       inputs:

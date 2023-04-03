@@ -4,6 +4,7 @@ parameters:
 
 steps:
   - template: pre-steps.yml
+  - script: 'ls ./server/target; ls ./server/target/release'
   - task: CopyFiles@2
     inputs:
       contents: |

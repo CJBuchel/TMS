@@ -10,6 +10,7 @@ resources:
 - repo: self
 
 variables: 
+- group: apple-variables
 - template: './azure/vars.yml'
 - name: isPublishable
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]

@@ -39,7 +39,7 @@ steps:
       packageApp: true
       archivePath: "tms/ios/Runner.xcarchive"
       exportPath: 'tms/ios/build'
-      signingOption: "manual"
+      signingOption: 'default'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
       args: '-verbose'

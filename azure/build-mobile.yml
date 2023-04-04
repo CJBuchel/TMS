@@ -35,9 +35,12 @@ steps:
       sdk: "iphoneos"
       configuration: "release"
       packageApp: true
+      archivePath: "**/Runner.xarchive"
+      exportPath: './tms/ios/build'
       signingOption: "manual"
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
+      args: '-verbose'
 
 
   # - task: CopyFiles@2

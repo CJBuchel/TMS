@@ -79,4 +79,4 @@ jobs:
     - template: pre-steps.yml
     - template: build-mobile.yml
       parameters:
-        target: ipa
+        target: ios

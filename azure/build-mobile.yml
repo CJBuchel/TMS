@@ -11,6 +11,8 @@ steps:
       iosCodesign: false
       extraArgs: '--release'
 
+  - script: 'ls ./tms/build; ls ./tms/build/ios; ls ./tms/build/ios/ipa'
+
   - task: CopyFiles@2
     inputs:
       contents: '**/flutter-apk/**/*.apk'

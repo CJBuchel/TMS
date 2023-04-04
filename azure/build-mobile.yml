@@ -3,13 +3,6 @@ parameters:
   type: string
 
 steps:
-  # Build the flutter app
-  - task: FlutterBuild@0
-    inputs:
-      target: '${{parameters.target}}'
-      projectDirectory: './tms'
-      extraArgs: '--release'
-
   - task: InstallAppleCertificate@2
     inputs:
       certSecureFile: '$(p12_alias)'
@@ -22,6 +15,13 @@ steps:
       provisioningProfileLocation: 'secureFiles'
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
+
+  # Build the flutter app
+  - task: FlutterBuild@0
+    inputs:
+      target: '${{parameters.target}}'
+      projectDirectory: './tms'
+      extraArgs: '--release'
 
   - task: Xcode@5
     displayName: "Code sign ipa for Distribution"

@@ -8,8 +8,8 @@ steps:
     inputs:
       target: ${{parameters.target}}
       projectDirectory: './tms'
+      iosCodesign: false
       extraArgs: '--release'
-      iosCodeSign: false
 
   - task: CopyFiles@2
     inputs:

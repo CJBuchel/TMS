@@ -64,15 +64,15 @@ jobs:
 #       parameters:
 #         target: linux
 
-- job: android
-  pool:
-    vmImage: 'ubuntu-22.04'
-  steps:
-    - template: pre-steps.yml
-    - template: build-mobile.yml
-      parameters:
-        target: apk
-- job: ios
+# - job: android
+#   pool:
+#     vmImage: 'ubuntu-22.04'
+#   steps:
+#     - template: pre-steps.yml
+#     - template: build-mobile.yml
+#       parameters:
+#         target: apk
+- job: mobile
   pool:
     vmImage: 'macOs-12'
   steps:

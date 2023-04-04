@@ -6,7 +6,21 @@ steps:
   # Build the flutter app
   - task: FlutterBuild@0
     inputs:
-      target: '${{parameters.target}}'
+      target: 'apk'
+      projectDirectory: './tms'
+      iosCodesign: false
+      extraArgs: '--release'
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'ios'
+      projectDirectory: './tms'
+      iosCodesign: false
+      extraArgs: '--release'
+
+  - task: FlutterBuild@0
+    inputs:
+      target: 'ipa'
       projectDirectory: './tms'
       iosCodesign: false
       extraArgs: '--release'

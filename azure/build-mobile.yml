@@ -14,9 +14,7 @@ steps:
   - script: 'ls; ls ./tms; ls ./tms/build'
   - task: CopyFiles@2
     inputs:
-      contents: |
-        '**/*.apk'
-        '**/*.ipa'
+      contents: '**/*.apk'
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1

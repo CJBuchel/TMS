@@ -13,12 +13,12 @@ steps:
 
   - task: CopyFiles@2
     inputs:
-      contents: './tms/build/app/outputs/flutter-apk/**/*.apk'
+      contents: '**/flutter-apk/**/*.apk'
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: CopyFiles@2
     inputs:
-      contents: './tms/build/**/*.ipa'
+      contents: '**/*.ipa'
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1

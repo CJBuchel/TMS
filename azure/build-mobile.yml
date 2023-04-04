@@ -21,21 +21,21 @@ steps:
     inputs:
       target: '${{parameters.target}}'
       projectDirectory: './tms'
-      # debugMode: false
-      # profileMode: false
+      debugMode: false
+      profileMode: false
       iosCodesign: false
-      # extraArgs: '--release'
+      extraArgs: '--release'
 
   - task: Xcode@5
     displayName: "Code sign ipa for Distribution"
     inputs:
-      actions: "archive" # build
+      actions: "build" # build
       workingDirectory: 'tms/ios'
       xcWorkspacePath: "tms/ios/Runner.xcworkspace"
-      # xcodeVersion: '13'
+      xcodeVersion: '13'
       scheme: "Runner"
       sdk: "iphoneos"
-      configuration: "release"
+      configuration: "Release UAT"
       packageApp: true
       archivePath: "tms/ios/Runner.xcarchive"
       exportPath: 'tms/ios/build'

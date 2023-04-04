@@ -6,7 +6,7 @@ steps:
   - task: InstallAppleCertificate@2
     inputs:
       certSecureFile: '$(p12_alias)'
-      # certPwd: '$(cert_pass)'
+      certPwd: '$(cert_pass)'
       keychain: 'temp'
       deleteCert: true
 
@@ -15,6 +15,16 @@ steps:
       provisioningProfileLocation: 'secureFiles'
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
+
+  # Build the flutter app
+  - task: FlutterBuild@0
+    inputs:
+      target: '${{parameters.target}}'
+      projectDirectory: './tms'
+      debugMode: false
+      profileMode: false
+      iosCodesign: false
+      extraArgs: '--release'
 
   - task: Xcode@5
     displayName: "Code sign ipa for Distribution"
@@ -29,14 +39,6 @@ steps:
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
 
-  # Build the flutter app
-  - task: FlutterBuild@0
-    inputs:
-      target: '${{parameters.target}}'
-      projectDirectory: './tms'
-      debugMode: false
-      profileMode: false
-      extraArgs: '--release'
 
   # - task: CopyFiles@2
   #   inputs:

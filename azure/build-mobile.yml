@@ -13,7 +13,7 @@ steps:
 
   - task: InstallAppleCertificate@2
     inputs:
-      certSecureFile: '$(p12_alias)'
+      certSecureFile: 'ios_distribution.p12'
       certPwd: $(library.cert_pass)
       keychain: 'temp'
       deleteCert: true

@@ -32,6 +32,7 @@ steps:
       actions: "archive"
       workingDirectory: 'tms/ios'
       xcWorkspacePath: "tms/ios/Runner.xcworkspace"
+      xcodeVersion: '13'
       scheme: "Runner"
       sdk: "iphoneos"
       configuration: "release"

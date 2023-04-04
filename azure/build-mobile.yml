@@ -4,9 +4,10 @@ parameters:
 
 steps:
   # Build the flutter app
+  - script: 'ls; ls ./tms; ls ./tms/build'
   - task: FlutterBuild@0
     inputs:
-      target: ${{parameters.target}}
+      target: '${{parameters.target}}'
       projectDirectory: './tms'
       iosCodesign: false
       extraArgs: '--release'

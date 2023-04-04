@@ -12,15 +12,15 @@ steps:
 
   - task: InstallAppleCertificate@2
     inputs:
-      certSecureFile: '${{p12_alias}}'
-      certPwd: '${{cert_pass}}'
+      certSecureFile: '$(p12_alias)'
+      certPwd: '$(cert_pass)'
       keychain: 'temp'
       deleteCert: true
 
   - task: InstallAppleProvisioningProfile@1
     inputs:
       provisioningProfileLocation: 'secureFiles'
-      provProfileSecureFile: '${{pp_alias}}'
+      provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
 
   - task: Xcode@5

@@ -4,7 +4,6 @@ parameters:
 
 steps:
   # Build the flutter app
-  - script: 'ls; ls ./tms; ls ./tms/build'
   - task: FlutterBuild@0
     inputs:
       target: '${{parameters.target}}'
@@ -12,6 +11,7 @@ steps:
       iosCodesign: false
       extraArgs: '--release'
 
+  - script: 'ls; ls ./tms; ls ./tms/build'
   - task: CopyFiles@2
     inputs:
       contents: |

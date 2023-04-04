@@ -30,13 +30,14 @@ steps:
     displayName: "Code sign ipa for Distribution"
     inputs:
       actions: "archive"
-      xcWorkspacePath: "**/Runner.xcworkspace"
+      workingDirectory: 'tms/ios'
+      xcWorkspacePath: "tms/ios/Runner.xcworkspace"
       scheme: "Runner"
       sdk: "iphoneos"
       configuration: "release"
       packageApp: true
-      archivePath: "**/Runner.xcarchive"
-      exportPath: './tms/ios/build'
+      archivePath: "tms/ios/Runner.xcarchive"
+      exportPath: 'tms/ios/build'
       signingOption: "manual"
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'

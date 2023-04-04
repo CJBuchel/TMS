@@ -40,7 +40,7 @@ steps:
       archivePath: "tms/ios/Runner.xcarchive"
       exportPath: 'tms/ios/build'
       signingOption: 'default'
-      teamId: 'a.loose.screw.fll'
+      teamId: 'B2B876ZH94'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
       args: '-verbose'

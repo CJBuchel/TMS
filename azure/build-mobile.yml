@@ -34,6 +34,8 @@ steps:
     inputs:
       target: '${{parameters.target}}'
       projectDirectory: './tms'
+      debugMode: false
+      profileMode: false
       extraArgs: '--release'
 
   # - task: CopyFiles@2

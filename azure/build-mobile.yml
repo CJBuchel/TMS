@@ -11,10 +11,14 @@ steps:
       iosCodesign: false
       extraArgs: '--release'
 
-  - script: 'ls; ls ./tms; ls ./tms/build'
   - task: CopyFiles@2
     inputs:
-      contents: '**/*.apk'
+      contents: './tms/build/app/outputs/flutter-apk/**/*.apk'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: CopyFiles@2
+    inputs:
+      contents: './tms/build/**/*.ipa'
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1

@@ -72,11 +72,11 @@ jobs:
 #     - template: build-mobile.yml
 #       parameters:
 #         target: apk
-- job: mobile
+- job: ios
   pool:
     vmImage: 'macOs-12'
   steps:
     - template: pre-steps.yml
     - template: build-mobile.yml
       parameters:
-        target: ios
+        target: ipa

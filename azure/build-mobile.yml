@@ -3,34 +3,44 @@ parameters:
   type: string
 
 steps:
+
   # Build the flutter app
   - task: FlutterBuild@0
     inputs:
-      target: 'apk'
+      target: '${{parameters.target}}'
       projectDirectory: './tms'
-      iosCodesign: false
       extraArgs: '--release'
 
-  - task: FlutterBuild@0
+  - task: InstallAppleCertificate@2
     inputs:
-      target: 'ios'
-      projectDirectory: './tms'
-      iosCodesign: false
-      extraArgs: '--release'
+      certSecureFile: $(library.p12_alias)
+      certPwd: $(library.cert_pass)
+      keychain: 'temp'
+      deleteCert: true
 
-  - task: FlutterBuild@0
+  - task: InstallAppleProvisioningProfile@1
     inputs:
-      target: 'ipa'
-      projectDirectory: './tms'
-      iosCodesign: false
-      extraArgs: '--release'
+      provisioningProfileLocation: 'secureFiles'
+      provProfileSecureFile: $(library.pp_alias)
+      removeProfile: true
 
-  - script: 'ls ./tms/build; ls ./tms/build/ios; ls ./tms/build/ios/ipa'
-
-  - task: CopyFiles@2
+  - task: Xcode@5
+    displayName: "Code sign ipa for Distribution"
     inputs:
-      contents: '**/flutter-apk/**/*.apk'
-      targetFolder: $(Build.ArtifactStagingDirectory)
+      actions: "build"
+      xcWorkspacePath: "**/Runner.xcworkspace"
+      scheme: "Runner"
+      sdk: "iphoneos"
+      configuration: "release"
+      packageApp: true
+      signingOption: "manual"
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
+
+  # - task: CopyFiles@2
+  #   inputs:
+  #     contents: '**/flutter-apk/**/*.apk'
+  #     targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: CopyFiles@2
     inputs:

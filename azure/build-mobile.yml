@@ -13,8 +13,8 @@ steps:
   - task: CopyFiles@2
     inputs:
       contents: |
-        ./tms/build/**.ipa
-        ./tms/build/**.apk
+        ./tms/build/**/*.ipa
+        ./tms/build/**/*.apk
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: PublishBuildArtifacts@1

@@ -2,8 +2,10 @@ parameters:
 - name: target
   type: string
 
-steps:
+variables:
+  - group: apple-variables
 
+steps:
   # Build the flutter app
   - task: FlutterBuild@0
     inputs:

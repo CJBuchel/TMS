@@ -8,6 +8,14 @@ steps:
     inputs:
       downloadPath: '$(System.ArtifactsDirectory)'
 
+
+  - task: AppStoreRelease@1
+    inputs:
+      serviceEndpoint: 'App Store Connect'
+      releaseTrack: 'TestFlight'
+      appType: 'iOS'
+      ipaPath: '$(System.ArtifactsDirectory)/**/*.ipa'
+
   - task: GitHubRelease@1
     inputs:
       gitHubConnection: 'github.com_CJBuchel'
@@ -22,8 +30,8 @@ steps:
       changeLogCompareToRelease: 'lastFullRelease'
       changeLogType: 'issueBased'
       assets: |
-        '$(System.ArtifactsDirectory)/*.zip'
-        '$(System.ArtifactsDirectory)/*.apk'
-        '$(System.ArtifactsDirectory)/*.ipa'
+        '$(System.ArtifactsDirectory)/**/*.zip'
+        '$(System.ArtifactsDirectory)/**/*.apk'
+        '$(System.ArtifactsDirectory)/**/*.ipa'
 
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

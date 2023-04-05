@@ -49,10 +49,10 @@ steps:
       args: '-verbose'
 
 
-  # - task: CopyFiles@2
-  #   inputs:
-  #     contents: '**/flutter-apk/**/*.apk'
-  #     targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/flutter-apk/**/*.apk'
+      targetFolder: $(Build.ArtifactStagingDirectory)
 
   - task: CopyFiles@2
     inputs:

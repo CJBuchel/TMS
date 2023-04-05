@@ -36,8 +36,6 @@ steps:
       configuration: 'Release'
       xcodeVersion: 'default'
       packageApp: true
-      # exportOptions: 'plist'
-      # exportOptionsPlist: './tms/ios/Runner/info.plist'
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'

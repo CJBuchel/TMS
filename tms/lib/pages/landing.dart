@@ -19,15 +19,15 @@ class _LandingState extends State<Landing> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final channel = WebSocketChannel.connect(Uri.parse("wss://localhost:2121/echo"));
+    // final channel = WebSocketChannel.connect(Uri.parse("wss://localhost:2121/echo"));
 
-    final check = TmsSchema(myInt: Test(testInt: 0));
+    // final check = TmsSchema(myInt: Test(testInt: 0));
 
-    channel.stream.listen((data) {
-      print(data);
-    }, onError: (error) {
-      print(error);
-    });
+    // channel.stream.listen((data) {
+    //   print(data);
+    // }, onError: (error) {
+    //   print(error);
+    // });
   }
 
   // final info = NetworkInfo();

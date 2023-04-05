@@ -6,8 +6,10 @@ steps:
   # Download all the artifacts before
   - task: DownloadBuildArtifacts@1
     inputs:
-      downloadPath: '$(System.ArtifactsDirectory)/**/*'
-
+      downloadPath: '$(System.ArtifactsDirectory)'
+      buildType: 'current'
+      downloadType: 'all'
+      
 
   - task: AppStoreRelease@1
     inputs:

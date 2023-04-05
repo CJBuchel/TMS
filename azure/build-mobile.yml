@@ -34,7 +34,7 @@ steps:
       scheme: 'Runner'
       sdk: 'iphoneos'
       configuration: 'Release'
-      xcodeVersion: '11'
+      # xcodeVersion: '14'
       packageApp: true
       exportOptions: 'plist'
       exportOptionsPlist: './tms/ios/Runner/info.plist'

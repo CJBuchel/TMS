@@ -4,6 +4,7 @@ parameters:
 
 steps:
   - task: InstallAppleCertificate@2
+    condition: eq( variables['Agent.OS'], 'MacOs' )
     inputs:
       certSecureFile: '$(p12_alias)'
       certPwd: '$(cert_pass)'
@@ -11,6 +12,7 @@ steps:
       deleteCert: true
 
   - task: InstallAppleProvisioningProfile@1
+    condition: eq( variables['Agent.OS'], 'MacOs' )
     inputs:
       provisioningProfileLocation: 'secureFiles'
       provProfileSecureFile: '$(pp_alias)'
@@ -28,6 +30,7 @@ steps:
 
   - task: Xcode@5
     displayName: "Code sign ipa for Distribution"
+    condition: eq( variables['Agent.OS'], 'MacOs' )
     inputs:
       actions: 'archive' # build
       xcWorkspacePath: "./tms/ios/Runner.xcworkspace"

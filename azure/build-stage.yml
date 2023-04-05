@@ -74,7 +74,7 @@ jobs:
 #         target: apk
 - job: ios
   pool:
-    vmImage: 'macOs-12'
+    vmImage: 'macOs-latest'
   steps:
     - template: pre-steps.yml
     - template: build-mobile.yml

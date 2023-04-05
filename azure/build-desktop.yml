@@ -16,7 +16,13 @@ steps:
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: './server/target/release'
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
+
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: 'client-${{parameters.target}}'
+      artifactName: 'tms-${{parameters.target}}'

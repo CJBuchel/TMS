@@ -33,10 +33,7 @@ jobs:
     vmImage: 'windows-2022'
   steps:
     - template: pre-steps.yml
-    - template: build-server.yml
-      parameters:
-        target: windows
-    - template: build-client.yml
+    - template: build-desktop.yml
       parameters:
         target: windows
 
@@ -45,10 +42,7 @@ jobs:
     vmImage: 'macOs-12'
   steps:
     - template: pre-steps.yml
-    - template: build-server.yml
-      parameters:
-        target: macos
-    - template: build-client.yml
+    - template: build-desktop.yml
       parameters:
         target: macos
 
@@ -57,10 +51,7 @@ jobs:
     vmImage: 'ubuntu-22.04'
   steps:
     - template: pre-steps.yml
-    - template: build-server.yml
-      parameters:
-        target: linux
-    - template: build-client.yml
+    - template: build-desktop.yml
       parameters:
         target: linux
 

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:network_info_plus/network_info_plus.dart';
+// import 'package:network_info_plus/network_info_plus.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -30,7 +30,7 @@ class _LandingState extends State<Landing> {
     });
   }
 
-  final info = NetworkInfo();
+  // final info = NetworkInfo();
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

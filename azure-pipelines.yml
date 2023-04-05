@@ -25,9 +25,9 @@ stages:
   dependsOn: Build
   condition: and(succeeded('Build'), eq(variables.isPublishable, 'true'))
   jobs:
-  - job: GithubRelease
+  - job: PublishReleases
     pool:
-      vmImage: ubuntu-latest
+      vmImage: 'macOs-latest'
     steps:
       - template: './azure/github-release.yml'
         parameters:

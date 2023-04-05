@@ -26,16 +26,16 @@ steps:
   #     cargoWorkingDir: './server'
   #     verbose: false
 
-  - task: Npm@1
-    inputs:
-      command: 'install'
-      workingDir: './tms'
+  # - task: Npm@1
+  #   inputs:
+  #     command: 'install'
+  #     workingDir: './tms'
 
-  - task: Npm@1
-    inputs:
-      command: 'custom'
-      workingDir: './tms'
-      customCommand: 'run prepare'
+  # - task: Npm@1
+  #   inputs:
+  #     command: 'custom'
+  #     workingDir: './tms'
+  #     customCommand: 'run prepare'
 
   # Install flutter
   - task: FlutterInstall@0
@@ -45,7 +45,7 @@ steps:
       version: 'custom'
       customVersion: '3.7.9'
 
-  - task: FlutterCommand@0
-    inputs:
-      projectDirectory: './tms'
-      arguments: 'doctor -v'
+  # - task: FlutterCommand@0
+  #   inputs:
+  #     projectDirectory: './tms'
+  #     arguments: 'doctor -v'

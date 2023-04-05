@@ -33,7 +33,7 @@ steps:
       workingDirectory: 'tms/ios'
       xcWorkspacePath: "tms/ios/Runner.xcworkspace"
       xcodeVersion: '13'
-      # scheme: "Runner"
+      scheme: "Flutter"
       sdk: "iphoneos"
       configuration: "Release UAT"
       packageApp: true

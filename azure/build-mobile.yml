@@ -29,12 +29,12 @@ steps:
   - task: Xcode@5
     displayName: "Code sign ipa for Distribution"
     inputs:
-      actions: 'build' # build
+      actions: 'archive' # build
       xcWorkspacePath: "./tms/ios/Runner.xcworkspace"
       scheme: 'Runner'
       sdk: 'iphoneos'
       configuration: 'Release'
-      xcodeVersion: '13'
+      xcodeVersion: '12'
       packageApp: true
       exportOptions: 'plist'
       exportOptionsPlist: './tms/ios/Runner/info.plist'

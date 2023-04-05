@@ -34,13 +34,14 @@ steps:
       scheme: 'Runner'
       sdk: 'iphoneos'
       configuration: 'Release'
-      # xcodeVersion: '14'
+      xcodeVersion: '13'
       packageApp: true
       exportOptions: 'plist'
       exportOptionsPlist: './tms/ios/Runner/info.plist'
-      signingOption: 'default'
+      signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
+      workingDirectory: './tms/ios'
 
       # archivePath: "tms/ios/Runner.xcarchive"
       # exportPath: 'tms/ios/build'

@@ -9,7 +9,6 @@ steps:
       downloadPath: '$(System.ArtifactsDirectory)'
       buildType: 'current'
       downloadType: 'all'
-      
 
   - task: AppStoreRelease@1
     inputs:

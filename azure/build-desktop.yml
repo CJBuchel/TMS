@@ -10,15 +10,24 @@ steps:
       projectDirectory: './tms'
       extraArgs: '--release'
 
-  - task: ArchiveFiles@2
+  - task: FlutterCommand@0
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
-      rootFolderOrFile: './tms/build/${{parameters.target}}'
+      projectDirectory: './tms'
+      arguments: 'pub run msix:create'
+
+  # Linux archive
+  - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    inputs:
+      rootFolderOrFile: './tms/build/${{parameters.target}}/x64/release/bundle'
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
   - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Linux' )
     inputs:
-      rootFolderOrFile: './server/target/release'
+      rootFolderOrFile: './server/target/release/tms_server'
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
 

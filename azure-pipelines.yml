@@ -29,6 +29,6 @@ stages:
     pool:
       vmImage: 'macOs-latest'
     steps:
-      - template: './azure/github-release.yml'
+      - template: './azure/release.yml'
         parameters:
           version: ${{variables.version}}

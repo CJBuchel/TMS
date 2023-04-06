@@ -49,7 +49,6 @@ steps:
       teamId: 'B2B876ZH94'
       args: '-verbose'
 
-
   - task: CopyFiles@2
     inputs:
       contents: '**/flutter-apk/**/*.apk'

@@ -43,7 +43,7 @@ steps:
   # Archive server, same for all platforms.
   - task: CopyFiles@2
     inputs:
-      Contents: './server/target/release/?(tms_server|tms_server.exe)'
+      Contents: './server/target/release/**/@(tms_server|tms_server.exe)'
       TargetFolder: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}'
 
   - task: PublishBuildArtifacts@1

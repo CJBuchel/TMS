@@ -10,12 +10,12 @@ steps:
       buildType: 'current'
       downloadType: 'all'
 
-  - task: AppStoreRelease@1
-    inputs:
-      serviceEndpoint: 'App Store Connect'
-      releaseTrack: 'TestFlight'
-      appType: 'iOS'
-      ipaPath: '$(System.ArtifactsDirectory)/**/*.ipa'
+  # - task: AppStoreRelease@1
+  #   inputs:
+  #     serviceEndpoint: 'App Store Connect'
+  #     releaseTrack: 'TestFlight'
+  #     appType: 'iOS'
+  #     ipaPath: '$(System.ArtifactsDirectory)/**/*.ipa'
 
   - task: GitHubRelease@1
     inputs:

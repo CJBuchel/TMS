@@ -16,6 +16,7 @@ steps:
     inputs:
       rootFolderOrFile: './tms/build/${{parameters.target}}/runner/Release'
       archiveType: 'zip'
+      includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
   # Linux archive
@@ -24,6 +25,7 @@ steps:
     inputs:
       rootFolderOrFile: './tms/build/${{parameters.target}}/x64/release/bundle'
       archiveType: 'zip'
+      includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
   # Macos archive
@@ -32,6 +34,7 @@ steps:
     inputs:
       rootFolderOrFile: './tms/build/${{parameters.target}}/Build/Products/Release'
       archiveType: 'zip'
+      includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
   # Archive server not windows
@@ -40,6 +43,7 @@ steps:
     inputs:
       rootFolderOrFile: './server/target/release/tms_server'
       archiveType: 'zip'
+      includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
 
   # Archive server windows
@@ -48,6 +52,7 @@ steps:
     inputs:
       rootFolderOrFile: './server/target/release/tms_server.exe'
       archiveType: 'zip'
+      includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
 
   # Publish all the artifacts

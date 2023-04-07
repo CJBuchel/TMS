@@ -32,7 +32,7 @@ steps:
     displayName: "Code sign ipa for Distribution"
     condition: eq( variables['Agent.OS'], 'Darwin' )
     inputs:
-      actions: 'archive' # build
+      actions: 'build' # build
       xcWorkspacePath: "./tms/ios/Runner.xcworkspace"
       scheme: 'Runner'
       sdk: 'iphoneos'

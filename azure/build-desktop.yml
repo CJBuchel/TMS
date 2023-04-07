@@ -32,6 +32,14 @@ steps:
       archiveType: 'zip'
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
+  # Macos archive
+  - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+    inputs:
+      rootFolderOrFile: './tms/build/${{parameters.target}}/Build/Products/Release'
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
+
 
   # Archive server, same for all platforms.
   - task: ArchiveFiles@2

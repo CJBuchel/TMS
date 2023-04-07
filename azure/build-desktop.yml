@@ -1,0 +1,62 @@
+parameters:
+- name: target
+  type: string
+
+steps:
+  # Build the flutter app
+  - task: FlutterBuild@0
+    inputs:
+      target: ${{parameters.target}}
+      projectDirectory: './tms'
+      extraArgs: '--release'
+
+  # Archive windows
+  - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      rootFolderOrFile: './tms/build/${{parameters.target}}/runner/Release'
+      archiveType: 'zip'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
+
+  # Linux archive
+  - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    inputs:
+      rootFolderOrFile: './tms/build/${{parameters.target}}/x64/release/bundle'
+      archiveType: 'zip'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
+
+  # Macos archive
+  - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+    inputs:
+      rootFolderOrFile: './tms/build/${{parameters.target}}/Build/Products/Release'
+      archiveType: 'zip'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
+
+  # Archive server not windows
+  - task: ArchiveFiles@2
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      rootFolderOrFile: './server/target/release/tms_server'
+      archiveType: 'zip'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
+
+  # Archive server windows
+  - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      rootFolderOrFile: './server/target/release/tms_server.exe'
+      archiveType: 'zip'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
+
+  # Publish all the artifacts
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: 'tms-${{parameters.target}}'

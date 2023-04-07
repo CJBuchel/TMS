@@ -21,15 +21,21 @@ bool FlutterWindow::OnCreate() {
   flutter_controller_ = std::make_unique<flutter::FlutterViewController>(
       frame.right - frame.left, frame.bottom - frame.top, project_);
   // Ensure that basic setup of the controller was successful.
+
+  
   if (!flutter_controller_->engine() || !flutter_controller_->view()) {
     return false;
   }
+
+  
   RegisterPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
-  flutter_controller_->engine()->SetNextFrameCallback([&]() {
-    this->Show();
-  });
+  // This line is manually commented out, it causes some weird issues on windows 11. Timing callbacks props
+  // flutter_controller_->engine()->SetNextFrameCallback([&]() {
+  //   this->Show();
+  // });
+  this->Show();
 
   return true;
 }

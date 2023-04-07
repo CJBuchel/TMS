@@ -1,0 +1,51 @@
+steps:
+  # Init
+  - script: git submodule update --init --recursive
+  - script: git submodule update --remote --recursive -f
+
+  - script: |
+        sudo apt-get install -qq -y clang ninja-build libgtk-3-dev
+    condition: eq( variables['Agent.OS'], 'Linux' )
+
+  # Install java
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '17'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
+  # Rust install
+  - task: Rustup@1
+    inputs:
+      rustupCommand: 'target install x86_64-unknown-linux-musl'
+      verbose: false
+
+  - task: Cargo@1
+    inputs:
+      cargoCommand: 'build --release'
+      cargoWorkingDir: './server'
+      verbose: false
+
+  - task: Npm@1
+    inputs:
+      command: 'install'
+      workingDir: './tms'
+
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      workingDir: './tms'
+      customCommand: 'run prepare'
+
+  # Install flutter
+  - task: FlutterInstall@0
+    inputs:
+      mode: 'auto'
+      channel: 'stable'
+      version: 'custom'
+      customVersion: '3.7.9'
+
+  - task: FlutterCommand@0
+    inputs:
+      projectDirectory: './tms'
+      arguments: 'doctor -v'

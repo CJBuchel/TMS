@@ -34,5 +34,6 @@ steps:
         $(System.ArtifactsDirectory)/**/*.zip
         $(System.ArtifactsDirectory)/**/*.apk
         $(System.ArtifactsDirectory)/**/*.ipa
+        $(System.ArtifactsDirectory)/**/*(tms_server|tms_server.exe)
 
       condition: and(succeeded(), eq(variables.isPublishable, 'true'))

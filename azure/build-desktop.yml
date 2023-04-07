@@ -44,7 +44,7 @@ steps:
 
   # Archive server windows
   - task: ArchiveFiles@2
-    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
       rootFolderOrFile: './server/target/release/tms_server.exe'
       archiveType: 'zip'

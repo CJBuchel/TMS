@@ -37,38 +37,38 @@ jobs:
       parameters:
         target: windows
 
-# - job: macos
-#   pool:
-#     vmImage: 'macOs-12'
-#   steps:
-#     - template: pre-steps.yml
-#     - template: build-desktop.yml
-#       parameters:
-#         target: macos
+- job: macos
+  pool:
+    vmImage: 'macOs-12'
+  steps:
+    - template: pre-steps.yml
+    - template: build-desktop.yml
+      parameters:
+        target: macos
 
-# - job: linux
-#   pool:
-#     vmImage: 'ubuntu-22.04'
-#   steps:
-#     - template: pre-steps.yml
-#     - template: build-desktop.yml
-#       parameters:
-#         target: linux
+- job: linux
+  pool:
+    vmImage: 'ubuntu-22.04'
+  steps:
+    - template: pre-steps.yml
+    - template: build-desktop.yml
+      parameters:
+        target: linux
 
-# - job: android
-#   pool:
-#     vmImage: 'ubuntu-22.04'
-#   steps:
-#     - template: pre-steps.yml
-#     - template: build-mobile.yml
-#       parameters:
-#         target: apk
+- job: android
+  pool:
+    vmImage: 'ubuntu-22.04'
+  steps:
+    - template: pre-steps.yml
+    - template: build-mobile.yml
+      parameters:
+        target: apk
 
-# - job: ios
-#   pool:
-#     vmImage: 'macOs-12'
-#   steps:
-#     - template: pre-steps.yml
-#     - template: build-mobile.yml
-#       parameters:
-#         target: ios
+- job: ios
+  pool:
+    vmImage: 'macOs-12'
+  steps:
+    - template: pre-steps.yml
+    - template: build-mobile.yml
+      parameters:
+        target: ios

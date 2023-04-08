@@ -57,23 +57,23 @@ steps:
       includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
 
-  # # Archive server not windows
-  # - task: ArchiveFiles@2
-  #   condition: ne( variables['Agent.OS'], 'Windows_NT' )
-  #   inputs:
-  #     rootFolderOrFile: './server/target/release/tms_server'
-  #     archiveType: 'zip'
-  #     includeRootFolder: false
-  #     archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
+  # Archive server not windows
+  - task: ArchiveFiles@2
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      rootFolderOrFile: './server/target/release/tms_server'
+      archiveType: 'zip'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
 
-  # # Archive server windows
-  # - task: ArchiveFiles@2
-  #   condition: eq( variables['Agent.OS'], 'Windows_NT' )
-  #   inputs:
-  #     rootFolderOrFile: './server/target/release/tms_server.exe'
-  #     archiveType: 'zip'
-  #     includeRootFolder: false
-  #     archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
+  # Archive server windows
+  - task: ArchiveFiles@2
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      rootFolderOrFile: './server/target/release/tms_server.exe'
+      archiveType: 'zip'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms-server-${{parameters.target}}.zip'
 
   # Publish all the artifacts
   - task: PublishBuildArtifacts@1

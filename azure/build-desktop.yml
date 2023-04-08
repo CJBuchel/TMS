@@ -14,7 +14,7 @@ steps:
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
       projectDirectory: './tms'
-      arguments: 'pub run msix:create'
+      arguments: 'pub run msix:create --build-windows false'
 
   # Archive windows
   - task: ArchiveFiles@2

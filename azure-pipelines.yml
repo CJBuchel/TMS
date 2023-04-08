@@ -23,7 +23,7 @@ stages:
 
 - stage: Release
   dependsOn: Build
-  condition: and(succeeded('Build'), eq(variables.isPublishable, 'true'))
+  # condition: and(succeeded('Build'), eq(variables.isPublishable, 'true'))
   jobs:
   - job: PublishReleases
     pool:

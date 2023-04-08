@@ -21,7 +21,7 @@ steps:
     inputs:
       serviceEndpoint: 'TMS Client Windows'
       nameType: 'TMS Client'
-      appName: 'tms-client-app'
+      appName: '89deabfd-3b85-4fe9-82b0-ba041554c842'
       packagePath: '$(System.ArtifactsDirectory)/**/*.msix'
       force: true
       skipPolling: false

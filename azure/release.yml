@@ -20,7 +20,7 @@ steps:
   - task: store-publish@0
     inputs:
       serviceEndpoint: 'TMS Client Windows'
-      nameType: 'AppName'
+      nameType: 'TMS Client'
       appName: 'tms-client-app'
       packagePath: '$(System.ArtifactsDirectory)/**/*.msix'
       force: true

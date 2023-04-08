@@ -1,13 +1,17 @@
-
 use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
 
-#[derive(JsonSchema)]
-pub struct Test {
-  pub test_int: i32,
-}
+include!("./event.rs");
+include!("./user.rs");
+include!("./judging_session.rs");
+include!("./match.rs");
+include!("./team_game_score.rs");
 
-#[derive(JsonSchema)]
+// Generates json structure called TmsSchema, includes all data structures for comms and database
+#[derive(JsonSchema, Clone)]
 pub struct TmsSchema {
-  pub my_int: Test,
+  pub event: Event,
+  pub user: User,
+  pub judging_session: JudgingSession,
+  pub game_match: Match,
+  pub team_game_score: TeamGameScore
 }

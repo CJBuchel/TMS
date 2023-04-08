@@ -1,33 +1,16 @@
-use serde::{Deserialize, Serialize};
-use sled_extensions::{bincode::Tree, DbExt};
-use warp::reply::Json;
 
-extern crate sled;
+// Main steps for server client connection
+// Broadcast a udp packet on port 2122 with the server ip and status (tells client where server is)
+// Client will then connect to port 2121 on websocket.
+// Server will accept the connection and store the UUID in a tabled map
+// Client will request public key
+// Client will send it's own public key to server (encrypted)
+// Server store this public key along with the UUID of the client
 
-// https://mbuffett.com/posts/rocket-sled-tutorial/
+// <-> Two way communication pub sub messaging
 
-#[derive(Deserialize, Serialize, Clone)]
-struct User {
-  username: String,
-  favorite_food: String,
-}
-
-struct Database {
-  users: Tree<User>
-}
-
-fn put_person(db: Database, user: User) {
-  db.users.insert(user.username.as_bytes(), user.clone());
-}
-
+// mod schemas;
 #[tokio::main]
 async fn main() {
-  let db = sled_extensions::Config::default()
-    .path("tms.kvdb")
-    .open()
-    .expect("Failed to open the Database");
 
-  let mut tms_db:Database = Database { users: db.open_bincode_tree("users").expect("Failed to open user tree") };
-
-  // Ok(())
 }

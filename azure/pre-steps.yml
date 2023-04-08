@@ -14,28 +14,28 @@ steps:
       jdkArchitectureOption: 'x64'
       jdkSourceOption: 'PreInstalled'
 
-  # Rust install
-  - task: Rustup@1
-    inputs:
-      rustupCommand: 'target install x86_64-unknown-linux-musl'
-      verbose: false
+  # # Rust install
+  # - task: Rustup@1
+  #   inputs:
+  #     rustupCommand: 'target install x86_64-unknown-linux-musl'
+  #     verbose: false
 
-  - task: Cargo@1
-    inputs:
-      cargoCommand: 'build --release'
-      cargoWorkingDir: './server'
-      verbose: false
+  # - task: Cargo@1
+  #   inputs:
+  #     cargoCommand: 'build --release'
+  #     cargoWorkingDir: './server'
+  #     verbose: false
 
-  - task: Npm@1
-    inputs:
-      command: 'install'
-      workingDir: './tms'
+  # - task: Npm@1
+  #   inputs:
+  #     command: 'install'
+  #     workingDir: './tms'
 
-  - task: Npm@1
-    inputs:
-      command: 'custom'
-      workingDir: './tms'
-      customCommand: 'run prepare'
+  # - task: Npm@1
+  #   inputs:
+  #     command: 'custom'
+  #     workingDir: './tms'
+  #     customCommand: 'run prepare'
 
   # Install flutter
   - task: FlutterInstall@0

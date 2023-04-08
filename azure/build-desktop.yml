@@ -26,6 +26,7 @@ steps:
 
   # Copy msix windows
   - task: CopyFiles@2
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
       contents: '**/*.msix'
       targetFolder: $(Build.ArtifactStagingDirectory)

@@ -22,7 +22,7 @@ steps:
       serviceEndpoint: 'TMS Client Windows'
       appId: '89deabfd-3b85-4fe9-82b0-ba041554c842'
       packagePath: '$(System.ArtifactsDirectory)/**/*.msix'
-      force: true
+      force: false
       skipPolling: false
 
   - task: GitHubRelease@1

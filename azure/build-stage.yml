@@ -28,14 +28,14 @@ jobs:
 #         script: 'docker login -u cjbuchel -p $(TMS-TOKEN); docker-compose push; docker logout'
 
 
-# - job: windows
-#   pool:
-#     vmImage: 'windows-2022'
-#   steps:
-#     - template: pre-steps.yml
-#     - template: build-desktop.yml
-#       parameters:
-#         target: windows
+- job: windows
+  pool:
+    vmImage: 'windows-2022'
+  steps:
+    - template: pre-steps.yml
+    - template: build-desktop.yml
+      parameters:
+        target: windows
 
 # - job: macos
 #   pool:
@@ -63,11 +63,12 @@ jobs:
 #     - template: build-mobile.yml
 #       parameters:
 #         target: apk
-- job: ios
-  pool:
-    vmImage: 'macOs-12'
-  steps:
-    - template: pre-steps.yml
-    - template: build-mobile.yml
-      parameters:
-        target: ios
+
+# - job: ios
+#   pool:
+#     vmImage: 'macOs-12'
+#   steps:
+#     - template: pre-steps.yml
+#     - template: build-mobile.yml
+#       parameters:
+#         target: ios

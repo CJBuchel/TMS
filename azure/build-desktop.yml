@@ -10,10 +10,9 @@ steps:
       projectDirectory: './tms'
       extraArgs: '--release'
 
-  - task: FlutterCommand@0
+  - task: CmdLine@2
     inputs:
-      projectDirectory: './tms'
-      customCommand: 'run pub run msix:create'
+      script: 'flutter pub run msix:create'
 
   # Archive windows
   - task: ArchiveFiles@2

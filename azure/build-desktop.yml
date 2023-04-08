@@ -10,6 +10,11 @@ steps:
       projectDirectory: './tms'
       extraArgs: '--release'
 
+  - task: FlutterCommand@0
+    inputs:
+      projectDirectory: './tms'
+      customCommand: 'run pub run msix:create'
+
   # Archive windows
   - task: ArchiveFiles@2
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
@@ -18,6 +23,13 @@ steps:
       archiveType: 'zip'
       includeRootFolder: false
       archiveFile: '$(Build.ArtifactStagingDirectory)/tms-client-${{parameters.target}}.zip'
+
+  # Copy msix windows
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/*.msix'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: true
 
   # Linux archive
   - task: ArchiveFiles@2

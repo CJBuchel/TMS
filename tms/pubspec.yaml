@@ -4,6 +4,14 @@ description: Team Management System for FLL
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+3
 
+msix_config:
+  display_name: TMS Client
+  publisher_display_name: A Loose Screw
+  identity_name: 20448ALooseScrew.TMSClient
+  publisher: CN=E961EDDD-C8AE-489C-8DEE-15C89A72602A
+  msix_version: 1.0.0.0
+  store: true
+
 environment:
   sdk: '>=2.19.5 <3.0.0'
 
@@ -20,6 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  msix: ^3.9.2
 
 flutter:
   uses-material-design: true

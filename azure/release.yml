@@ -20,8 +20,7 @@ steps:
   - task: store-publish@0
     inputs:
       serviceEndpoint: 'TMS Client Windows'
-      nameType: 'TMS Client'
-      appName: '89deabfd-3b85-4fe9-82b0-ba041554c842'
+      appId: '89deabfd-3b85-4fe9-82b0-ba041554c842'
       packagePath: '$(System.ArtifactsDirectory)/**/*.msix'
       force: true
       skipPolling: false

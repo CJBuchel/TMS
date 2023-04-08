@@ -11,9 +11,16 @@ steps:
       extraArgs: '--release'
 
   - task: FlutterCommand@0
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
       projectDirectory: './tms'
-      customCommand: 'run pub run msix:create'
+      arguments: 'pub add --dev msix'
+
+  - task: FlutterCommand@0
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      projectDirectory: './tms'
+      arguments: 'pub run msix:create --build-windows false'
 
   # Archive windows
   - task: ArchiveFiles@2
@@ -26,6 +33,7 @@ steps:
 
   # Copy msix windows
   - task: CopyFiles@2
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
       contents: '**/*.msix'
       targetFolder: $(Build.ArtifactStagingDirectory)

@@ -10,20 +10,19 @@ steps:
       buildType: 'current'
       downloadType: 'all'
 
-  # - task: AppStoreRelease@1
-  #   inputs:
-  #     serviceEndpoint: 'App Store Connect'
-  #     releaseTrack: 'TestFlight'
-  #     appType: 'iOS'
-  #     ipaPath: '$(System.ArtifactsDirectory)/**/*.ipa'
+  - task: AppStoreRelease@1
+    inputs:
+      serviceEndpoint: 'App Store Connect'
+      releaseTrack: 'TestFlight'
+      appType: 'iOS'
+      ipaPath: '$(System.ArtifactsDirectory)/**/*.ipa'
 
   - task: store-publish@0
     inputs:
       serviceEndpoint: 'TMS Client Windows'
-      nameType: 'TMS Client'
-      appName: 'tms-client-app'
+      appId: '9NK7M3N9S5X7'
       packagePath: '$(System.ArtifactsDirectory)/**/*.msix'
-      force: true
+      force: false
       skipPolling: false
 
   - task: GitHubRelease@1

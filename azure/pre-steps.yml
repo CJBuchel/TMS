@@ -49,3 +49,8 @@ steps:
     inputs:
       projectDirectory: './tms'
       arguments: 'doctor -v'
+
+  - task: FlutterCommand@0
+    inputs:
+      projectDirectory: './tms'
+      arguments: 'pub get'

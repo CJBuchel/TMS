@@ -1,4 +1,7 @@
-#[derive(JsonSchema, Clone)]
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct JudgingSession {
   session: String,
   start_time: String,

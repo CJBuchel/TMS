@@ -1,5 +1,7 @@
-#[derive(JsonSchema, Clone)]
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct User {
-  username: String,
-  password: String
+  pub username: String,
+  pub password: String
 }

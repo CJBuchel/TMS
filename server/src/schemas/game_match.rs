@@ -1,12 +1,15 @@
-#[derive(JsonSchema, Clone)]
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct OnTable {
   table: String,
   team_number: String,
   score_submitted: bool
 }
 
-#[derive(JsonSchema, Clone)]
-pub struct Match {
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
+pub struct GameMatch {
   match_number: String,
   start_time: String,
   end_time: String,

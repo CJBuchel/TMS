@@ -9,8 +9,12 @@
 
 // <-> Two way communication pub sub messaging
 
-// mod schemas;
+use tms_server::db::db::TmsDB;
+
+
 #[tokio::main]
 async fn main() {
+  println!("Test from bin");
 
+  let mut tms_database = TmsDB::start();
 }

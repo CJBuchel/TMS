@@ -1,14 +1,14 @@
-// use schemars::JsonSchema;
-// use serde::{Deserialize, Serialize};
+use schemars::JsonSchema;
+use serde::{Serialize, Deserialize};
 
-#[derive(JsonSchema, Clone)]
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct OnlineLink {
   tournament_id: String,
   tournament_token: String,
   linked: bool
 }
 
-#[derive(JsonSchema, Clone)]
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct Event {
   name: String,
   tables: Vec<String>,

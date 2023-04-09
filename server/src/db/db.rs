@@ -1,3 +1,5 @@
+use std::borrow::Borrow;
+
 use sled_extensions::{bincode::Tree, DbExt, Db};
 
 use crate::schemas::*;
@@ -17,7 +19,7 @@ pub struct TmsDB {
 }
 
 impl TmsDB {
-
+  // Start the db and return the object
   pub fn start() -> Self {
     // Create db
     let db = sled_extensions::Config::default()
@@ -35,5 +37,15 @@ impl TmsDB {
     };
 
     Self { db: db, tms_data: tms_data }
+  }
+
+  // Get the raw sled database
+  pub async fn get_db(&self) -> &Db {
+    return &self.db.borrow();
+  }
+
+  // Get the tms database
+  pub async fn get_tms_data(&self) -> &Database {
+    return &self.tms_data.borrow();
   }
 }

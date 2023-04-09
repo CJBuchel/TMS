@@ -9,12 +9,24 @@
 
 // <-> Two way communication pub sub messaging
 
-use tms_server::db::db::TmsDB;
+use tms_server::{db::db::TmsDB, network::network::Network};
 
 
 #[tokio::main]
 async fn main() {
-  println!("Test from bin");
+  pretty_env_logger::init();
+  println!("Starting TMS Server");
 
   let mut tms_database = TmsDB::start();
+
+  let mut tms_network = Network::start();
+  
+  let data = "A quick brown fox and all";
+  let encrypted_data: Vec<u8> = tms_network.encrypt(data.to_string());
+
+  println!("Encrypted data: {:?}", encrypted_data);
+
+  let decrypted_data = tms_network.decrypt(encrypted_data);
+  println!("Decrypted data: {}", decrypted_data);
+
 }

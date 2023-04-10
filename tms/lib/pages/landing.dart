@@ -1,16 +1,14 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-// import 'package:network_info_plus/network_info_plus.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'package:tms/schema/tms-schema.dart' as schema;
-
 import 'package:http/http.dart' as http;
+
+import 'package:multicast_dns/multicast_dns.dart';
+import 'package:flutter/foundation.dart';
 
 class Landing extends StatefulWidget {
   Landing({super.key});
@@ -41,8 +39,23 @@ class _LandingState extends State<Landing> {
     }
   }
 
-  void connect() {
-    // final channel = WebSocketChannel.connect()
+  void findServer() async {
+    if (!kIsWeb) {
+      // final channel = WebSocketChannel.connect()
+      const String name = '_mdns-tms-server._udp.local';
+      final MDnsClient client = MDnsClient();
+      await client.start();
+
+      await for (final PtrResourceRecord ptr in client.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(name))) {
+        await for (final SrvResourceRecord srv in client.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
+          final String bundleId = ptr.domainName;
+          print('Dart observatory found instance found at ${srv.target}:${srv.port} for "$bundleId"');
+        }
+      }
+
+      client.stop();
+    }
+    print('Done');
   }
 
   @override
@@ -51,6 +64,7 @@ class _LandingState extends State<Landing> {
     super.initState();
     register().then((value) => {channel = WebSocketChannel.connect(Uri.parse(value.url))});
 
+    findServer();
     // final check = TmsSchema(myInt: Test(testInt: 0));
 
     // channel.stream.listen((data) {

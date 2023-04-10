@@ -9,27 +9,27 @@ TmsSchema tmsSchemaFromJson(String str) => TmsSchema.fromJson(json.decode(str));
 String tmsSchemaToJson(TmsSchema data) => json.encode(data.toJson());
 
 class TmsSchema {
-    TmsSchema({
-        required this.event,
-        required this.gameMatch,
-        required this.judgingSession,
-        required this.registerRequest,
-        required this.registerResponse,
-        required this.socketEvent,
-        required this.team,
-        required this.users,
-    });
+  TmsSchema({
+    required this.event,
+    required this.gameMatch,
+    required this.judgingSession,
+    required this.registerRequest,
+    required this.registerResponse,
+    required this.socketEvent,
+    required this.team,
+    required this.users,
+  });
 
-    Event event;
-    GameMatch gameMatch;
-    JudgingSession judgingSession;
-    RegisterRequest registerRequest;
-    RegisterResponse registerResponse;
-    SocketEvent socketEvent;
-    Team team;
-    User users;
+  Event event;
+  GameMatch gameMatch;
+  JudgingSession judgingSession;
+  RegisterRequest registerRequest;
+  RegisterResponse registerResponse;
+  SocketEvent socketEvent;
+  Team team;
+  User users;
 
-    factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
+  factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
         event: Event.fromJson(json["event"]),
         gameMatch: GameMatch.fromJson(json["game_match"]),
         judgingSession: JudgingSession.fromJson(json["judging_session"]),
@@ -38,9 +38,9 @@ class TmsSchema {
         socketEvent: SocketEvent.fromJson(json["socket_event"]),
         team: Team.fromJson(json["team"]),
         users: User.fromJson(json["users"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "event": event.toJson(),
         "game_match": gameMatch.toJson(),
         "judging_session": judgingSession.toJson(),
@@ -49,91 +49,91 @@ class TmsSchema {
         "socket_event": socketEvent.toJson(),
         "team": team.toJson(),
         "users": users.toJson(),
-    };
+      };
 }
 
 class Event {
-    Event({
-        required this.eventRounds,
-        required this.name,
-        required this.onlineLink,
-        required this.pods,
-        required this.season,
-        required this.tables,
-    });
+  Event({
+    required this.eventRounds,
+    required this.name,
+    required this.onlineLink,
+    required this.pods,
+    required this.season,
+    required this.tables,
+  });
 
-    int eventRounds;
-    String name;
-    OnlineLink onlineLink;
-    List<String> pods;
-    String season;
-    List<String> tables;
+  int eventRounds;
+  String name;
+  OnlineLink onlineLink;
+  List<String> pods;
+  String season;
+  List<String> tables;
 
-    factory Event.fromJson(Map<String, dynamic> json) => Event(
+  factory Event.fromJson(Map<String, dynamic> json) => Event(
         eventRounds: json["event_rounds"],
         name: json["name"],
         onlineLink: OnlineLink.fromJson(json["online_link"]),
         pods: List<String>.from(json["pods"].map((x) => x)),
         season: json["season"],
         tables: List<String>.from(json["tables"].map((x) => x)),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "event_rounds": eventRounds,
         "name": name,
         "online_link": onlineLink.toJson(),
         "pods": List<dynamic>.from(pods.map((x) => x)),
         "season": season,
         "tables": List<dynamic>.from(tables.map((x) => x)),
-    };
+      };
 }
 
 class OnlineLink {
-    OnlineLink({
-        required this.linked,
-        required this.tournamentId,
-        required this.tournamentToken,
-    });
+  OnlineLink({
+    required this.linked,
+    required this.tournamentId,
+    required this.tournamentToken,
+  });
 
-    bool linked;
-    String tournamentId;
-    String tournamentToken;
+  bool linked;
+  String tournamentId;
+  String tournamentToken;
 
-    factory OnlineLink.fromJson(Map<String, dynamic> json) => OnlineLink(
+  factory OnlineLink.fromJson(Map<String, dynamic> json) => OnlineLink(
         linked: json["linked"],
         tournamentId: json["tournament_id"],
         tournamentToken: json["tournament_token"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "linked": linked,
         "tournament_id": tournamentId,
         "tournament_token": tournamentToken,
-    };
+      };
 }
 
 class GameMatch {
-    GameMatch({
-        required this.complete,
-        required this.customMatch,
-        required this.gameMatchDeferred,
-        required this.endTime,
-        required this.matchNumber,
-        required this.onTableFirst,
-        required this.onTableSecond,
-        required this.startTime,
-    });
+  GameMatch({
+    required this.complete,
+    required this.customMatch,
+    required this.gameMatchDeferred,
+    required this.endTime,
+    required this.matchNumber,
+    required this.onTableFirst,
+    required this.onTableSecond,
+    required this.startTime,
+  });
 
-    bool complete;
-    bool customMatch;
-    bool gameMatchDeferred;
-    String endTime;
-    String matchNumber;
-    OnTable onTableFirst;
-    OnTable onTableSecond;
-    String startTime;
+  bool complete;
+  bool customMatch;
+  bool gameMatchDeferred;
+  String endTime;
+  String matchNumber;
+  OnTable onTableFirst;
+  OnTable onTableSecond;
+  String startTime;
 
-    factory GameMatch.fromJson(Map<String, dynamic> json) => GameMatch(
+  factory GameMatch.fromJson(Map<String, dynamic> json) => GameMatch(
         complete: json["complete"],
         customMatch: json["custom_match"],
         gameMatchDeferred: json["deferred"],
@@ -142,9 +142,9 @@ class GameMatch {
         onTableFirst: OnTable.fromJson(json["on_table_first"]),
         onTableSecond: OnTable.fromJson(json["on_table_second"]),
         startTime: json["start_time"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "complete": complete,
         "custom_match": customMatch,
         "deferred": gameMatchDeferred,
@@ -153,55 +153,55 @@ class GameMatch {
         "on_table_first": onTableFirst.toJson(),
         "on_table_second": onTableSecond.toJson(),
         "start_time": startTime,
-    };
+      };
 }
 
 class OnTable {
-    OnTable({
-        required this.scoreSubmitted,
-        required this.table,
-        required this.teamNumber,
-    });
+  OnTable({
+    required this.scoreSubmitted,
+    required this.table,
+    required this.teamNumber,
+  });
 
-    bool scoreSubmitted;
-    String table;
-    String teamNumber;
+  bool scoreSubmitted;
+  String table;
+  String teamNumber;
 
-    factory OnTable.fromJson(Map<String, dynamic> json) => OnTable(
+  factory OnTable.fromJson(Map<String, dynamic> json) => OnTable(
         scoreSubmitted: json["score_submitted"],
         table: json["table"],
         teamNumber: json["team_number"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "score_submitted": scoreSubmitted,
         "table": table,
         "team_number": teamNumber,
-    };
+      };
 }
 
 class JudgingSession {
-    JudgingSession({
-        required this.complete,
-        required this.customSession,
-        required this.judgingSessionDeferred,
-        required this.endTime,
-        required this.room,
-        required this.session,
-        required this.startTime,
-        required this.teamNumber,
-    });
+  JudgingSession({
+    required this.complete,
+    required this.customSession,
+    required this.judgingSessionDeferred,
+    required this.endTime,
+    required this.room,
+    required this.session,
+    required this.startTime,
+    required this.teamNumber,
+  });
 
-    bool complete;
-    bool customSession;
-    bool judgingSessionDeferred;
-    String endTime;
-    String room;
-    String session;
-    String startTime;
-    String teamNumber;
+  bool complete;
+  bool customSession;
+  bool judgingSessionDeferred;
+  String endTime;
+  String room;
+  String session;
+  String startTime;
+  String teamNumber;
 
-    factory JudgingSession.fromJson(Map<String, dynamic> json) => JudgingSession(
+  factory JudgingSession.fromJson(Map<String, dynamic> json) => JudgingSession(
         complete: json["complete"],
         customSession: json["custom_session"],
         judgingSessionDeferred: json["deferred"],
@@ -210,9 +210,9 @@ class JudgingSession {
         session: json["session"],
         startTime: json["start_time"],
         teamNumber: json["team_number"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "complete": complete,
         "custom_session": customSession,
         "deferred": judgingSessionDeferred,
@@ -221,89 +221,89 @@ class JudgingSession {
         "session": session,
         "start_time": startTime,
         "team_number": teamNumber,
-    };
+      };
 }
 
 class RegisterRequest {
-    RegisterRequest({
-        required this.userId,
-    });
+  RegisterRequest({
+    required this.userId,
+  });
 
-    String userId;
+  String userId;
 
-    factory RegisterRequest.fromJson(Map<String, dynamic> json) => RegisterRequest(
+  factory RegisterRequest.fromJson(Map<String, dynamic> json) => RegisterRequest(
         userId: json["user_id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "user_id": userId,
-    };
+      };
 }
 
 class RegisterResponse {
-    RegisterResponse({
-        required this.url,
-    });
+  RegisterResponse({
+    required this.url,
+  });
 
-    String url;
+  String url;
 
-    factory RegisterResponse.fromJson(Map<String, dynamic> json) => RegisterResponse(
+  factory RegisterResponse.fromJson(Map<String, dynamic> json) => RegisterResponse(
         url: json["url"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "url": url,
-    };
+      };
 }
 
 class SocketEvent {
-    SocketEvent({
-        required this.message,
-        required this.topic,
-        this.userId,
-    });
+  SocketEvent({
+    required this.message,
+    required this.topic,
+    this.userId,
+  });
 
-    String message;
-    String topic;
-    String? userId;
+  String message;
+  String topic;
+  String? userId;
 
-    factory SocketEvent.fromJson(Map<String, dynamic> json) => SocketEvent(
+  factory SocketEvent.fromJson(Map<String, dynamic> json) => SocketEvent(
         message: json["message"],
         topic: json["topic"],
         userId: json["user_id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "message": message,
         "topic": topic,
         "user_id": userId,
-    };
+      };
 }
 
 class Team {
-    Team({
-        required this.coreValuesScores,
-        required this.gameScores,
-        required this.innovationProjectScores,
-        required this.ranking,
-        required this.robotDesignScores,
-        required this.teamAffiliation,
-        required this.teamId,
-        required this.teamName,
-        required this.teamNumber,
-    });
+  Team({
+    required this.coreValuesScores,
+    required this.gameScores,
+    required this.innovationProjectScores,
+    required this.ranking,
+    required this.robotDesignScores,
+    required this.teamAffiliation,
+    required this.teamId,
+    required this.teamName,
+    required this.teamNumber,
+  });
 
-    List<JudgingScoresheet> coreValuesScores;
-    List<GameScoresheet> gameScores;
-    List<JudgingScoresheet> innovationProjectScores;
-    int ranking;
-    List<JudgingScoresheet> robotDesignScores;
-    String teamAffiliation;
-    String teamId;
-    String teamName;
-    String teamNumber;
+  List<JudgingScoresheet> coreValuesScores;
+  List<GameScoresheet> gameScores;
+  List<JudgingScoresheet> innovationProjectScores;
+  int ranking;
+  List<JudgingScoresheet> robotDesignScores;
+  String teamAffiliation;
+  String teamId;
+  String teamName;
+  String teamNumber;
 
-    factory Team.fromJson(Map<String, dynamic> json) => Team(
+  factory Team.fromJson(Map<String, dynamic> json) => Team(
         coreValuesScores: List<JudgingScoresheet>.from(json["core_values_scores"].map((x) => JudgingScoresheet.fromJson(x))),
         gameScores: List<GameScoresheet>.from(json["game_scores"].map((x) => GameScoresheet.fromJson(x))),
         innovationProjectScores: List<JudgingScoresheet>.from(json["innovation_project_scores"].map((x) => JudgingScoresheet.fromJson(x))),
@@ -313,9 +313,9 @@ class Team {
         teamId: json["team_id"],
         teamName: json["team_name"],
         teamNumber: json["team_number"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "core_values_scores": List<dynamic>.from(coreValuesScores.map((x) => x.toJson())),
         "game_scores": List<dynamic>.from(gameScores.map((x) => x.toJson())),
         "innovation_project_scores": List<dynamic>.from(innovationProjectScores.map((x) => x.toJson())),
@@ -325,113 +325,113 @@ class Team {
         "team_id": teamId,
         "team_name": teamName,
         "team_number": teamNumber,
-    };
+      };
 }
 
 class JudgingScoresheet {
-    JudgingScoresheet({
-        required this.answers,
-        required this.feedbackCrit,
-        required this.feedbackPros,
-        required this.teamId,
-        required this.tournamentId,
-    });
+  JudgingScoresheet({
+    required this.answers,
+    required this.feedbackCrit,
+    required this.feedbackPros,
+    required this.teamId,
+    required this.tournamentId,
+  });
 
-    List<Answer> answers;
-    String feedbackCrit;
-    String feedbackPros;
-    String teamId;
-    String tournamentId;
+  List<Answer> answers;
+  String feedbackCrit;
+  String feedbackPros;
+  String teamId;
+  String tournamentId;
 
-    factory JudgingScoresheet.fromJson(Map<String, dynamic> json) => JudgingScoresheet(
+  factory JudgingScoresheet.fromJson(Map<String, dynamic> json) => JudgingScoresheet(
         answers: List<Answer>.from(json["answers"].map((x) => Answer.fromJson(x))),
         feedbackCrit: json["feedback_crit"],
         feedbackPros: json["feedback_pros"],
         teamId: json["team_id"],
         tournamentId: json["tournament_id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "answers": List<dynamic>.from(answers.map((x) => x.toJson())),
         "feedback_crit": feedbackCrit,
         "feedback_pros": feedbackPros,
         "team_id": teamId,
         "tournament_id": tournamentId,
-    };
+      };
 }
 
 class Answer {
-    Answer({
-        required this.answer,
-        required this.id,
-    });
+  Answer({
+    required this.answer,
+    required this.id,
+  });
 
-    String answer;
-    String id;
+  String answer;
+  String id;
 
-    factory Answer.fromJson(Map<String, dynamic> json) => Answer(
+  factory Answer.fromJson(Map<String, dynamic> json) => Answer(
         answer: json["answer"],
         id: json["id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "answer": answer,
         "id": id,
-    };
+      };
 }
 
 class GameScoresheet {
-    GameScoresheet({
-        required this.answers,
-        required this.privateComment,
-        required this.publicComment,
-        required this.round,
-        required this.teamId,
-        required this.tournamentId,
-    });
+  GameScoresheet({
+    required this.answers,
+    required this.privateComment,
+    required this.publicComment,
+    required this.round,
+    required this.teamId,
+    required this.tournamentId,
+  });
 
-    List<Answer> answers;
-    String privateComment;
-    String publicComment;
-    int round;
-    String teamId;
-    String tournamentId;
+  List<Answer> answers;
+  String privateComment;
+  String publicComment;
+  int round;
+  String teamId;
+  String tournamentId;
 
-    factory GameScoresheet.fromJson(Map<String, dynamic> json) => GameScoresheet(
+  factory GameScoresheet.fromJson(Map<String, dynamic> json) => GameScoresheet(
         answers: List<Answer>.from(json["answers"].map((x) => Answer.fromJson(x))),
         privateComment: json["private_comment"],
         publicComment: json["public_comment"],
         round: json["round"],
         teamId: json["team_id"],
         tournamentId: json["tournament_id"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "answers": List<dynamic>.from(answers.map((x) => x.toJson())),
         "private_comment": privateComment,
         "public_comment": publicComment,
         "round": round,
         "team_id": teamId,
         "tournament_id": tournamentId,
-    };
+      };
 }
 
 class User {
-    User({
-        required this.password,
-        required this.username,
-    });
+  User({
+    required this.password,
+    required this.username,
+  });
 
-    String password;
-    String username;
+  String password;
+  String username;
 
-    factory User.fromJson(Map<String, dynamic> json) => User(
+  factory User.fromJson(Map<String, dynamic> json) => User(
         password: json["password"],
         username: json["username"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "password": password,
         "username": username,
-    };
+      };
 }

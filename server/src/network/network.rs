@@ -8,8 +8,9 @@ use warp::{ws::Message, Rejection, Filter, hyper::Method};
 pub type Result<T> = std::result::Result<T, Rejection>;
 pub type Clients = Arc<RwLock<HashMap<String, Client>>>;
 
-use super::ws;
+use super::{ws, mdns_broadcaster::start_broadcast};
 use super::handler;
+use super::mdns_broadcaster;
 
 #[derive(Debug, Clone)]
 pub struct Client {
@@ -58,6 +59,8 @@ impl Network {
     x509_builder.set_not_after(&not_after).unwrap();
     x509_builder.sign(&raw_private_key, MessageDigest::sha256()).unwrap();
     let x509_cert = x509_builder.build();
+    
+    // Create the mdns service to broadcast server
 
     Self { 
       private_key: rsa.private_key_to_pem().unwrap(),
@@ -107,6 +110,8 @@ impl Network {
         .with(cors);
   
     
+    // Start mDNS server
+    start_broadcast("_mdns-tms-server".to_string());
     warp::serve(routes).run(([0, 0, 0, 0], 2121)).await;
   }
 

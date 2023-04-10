@@ -26,6 +26,7 @@ dependencies:
   build_web_compilers: ^3.2.7
   http: ^0.13.5
   uuid: ^3.0.7
+  multicast_dns: ^0.3.2+3
 
 dev_dependencies:
   flutter_test:

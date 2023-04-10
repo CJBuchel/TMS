@@ -3,7 +3,7 @@ use std::{sync::{Arc, RwLock}, collections::HashMap, convert::Infallible};
 // extern crate openssl;
 use openssl::{rsa::{Rsa, Padding}, asn1::Asn1Time, x509::X509Builder, hash::MessageDigest, pkey::Private};
 use tokio::sync::mpsc;
-use warp::{ws::Message, Rejection, Filter};
+use warp::{ws::Message, Rejection, Filter, hyper::Method};
 
 pub type Result<T> = std::result::Result<T, Rejection>;
 pub type Clients = Arc<RwLock<HashMap<String, Client>>>;
@@ -13,7 +13,7 @@ use super::handler;
 
 #[derive(Debug, Clone)]
 pub struct Client {
-  pub user_id: usize,
+  pub user_id: String,
   pub topics: Vec<String>,
   pub sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>>
 }
@@ -68,6 +68,10 @@ impl Network {
   }
 
   pub async fn start(&self) {
+    let cors = warp::cors().allow_any_origin()
+        .allow_headers(vec!["Access-Control-Allow-Headers", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type"])
+        .allow_methods(&[Method::GET, Method::POST, Method::PUT, Method::PATCH, Method::DELETE, Method::OPTIONS, Method::HEAD]);
+
     let clients: Clients = Arc::new(RwLock::new(HashMap::new()));
     let health_route = warp::path!("health").and_then(handler::health_handler);
 
@@ -95,12 +99,14 @@ impl Network {
         .and(with_clients(clients.clone()))
         .and_then(handler::ws_handler);
 
-    let routes = health_route
+    let routes =
+        health_route
         .or(register_routes)
         .or(ws_route)
         .or(publish)
-        .with(warp::cors().allow_any_origin());
-
+        .with(cors);
+  
+    
     warp::serve(routes).run(([0, 0, 0, 0], 2121)).await;
   }
 

@@ -24,6 +24,8 @@ dependencies:
   web_socket_channel: ^2.3.0
   build_runner: ^2.3.3
   build_web_compilers: ^3.2.7
+  http: ^0.13.5
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

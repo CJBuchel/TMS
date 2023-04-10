@@ -6,6 +6,9 @@
     "event",
     "game_match",
     "judging_session",
+    "register_request",
+    "register_response",
+    "socket_event",
     "team",
     "users"
   ],
@@ -18,6 +21,15 @@
     },
     "judging_session": {
       "$ref": "#/definitions/JudgingSession"
+    },
+    "register_request": {
+      "$ref": "#/definitions/RegisterRequest"
+    },
+    "register_response": {
+      "$ref": "#/definitions/RegisterResponse"
+    },
+    "socket_event": {
+      "$ref": "#/definitions/SocketEvent"
     },
     "team": {
       "$ref": "#/definitions/Team"
@@ -260,6 +272,49 @@
         },
         "tournament_token": {
           "type": "string"
+        }
+      }
+    },
+    "RegisterRequest": {
+      "type": "object",
+      "required": [
+        "user_id"
+      ],
+      "properties": {
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "RegisterResponse": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "SocketEvent": {
+      "type": "object",
+      "required": [
+        "message",
+        "topic"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "topic": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },

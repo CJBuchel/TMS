@@ -23,11 +23,11 @@ class _LandingState extends State<Landing> {
     if (Responsive.isTablet(context)) {
       imageSize = [150, 300];
       textSize = 15;
-      buttonWidth = 150;
+      buttonWidth = 200;
     } else if (Responsive.isMobile(context)) {
       imageSize = [100, 250];
-      textSize = 12;
-      buttonWidth = 120;
+      textSize = 11;
+      buttonWidth = 150;
       buttonHeight = 40;
     }
     return Scaffold(
@@ -65,28 +65,30 @@ class _LandingState extends State<Landing> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
+              SizedBox(
                 height: buttonHeight,
                 width: buttonWidth,
                 // padding: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-                child: TextButton(
+                // decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(20)),
+                child: ElevatedButton.icon(
                   onPressed: () {},
-                  child: Text(
+                  icon: const Icon(Icons.search),
+                  label: Text(
                     'Scan for Server',
                     style: TextStyle(color: Colors.white, fontSize: textSize),
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: buttonHeight,
                 width: buttonWidth,
                 // padding: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(color: Colors.green[700], borderRadius: BorderRadius.circular(20)),
-                child: TextButton(
+                // decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(20)),
+                child: ElevatedButton.icon(
                   onPressed: () {},
-                  child: Text(
-                    'Submit',
+                  icon: const Icon(Icons.link),
+                  label: Text(
+                    'Connect',
                     style: TextStyle(color: Colors.white, fontSize: textSize),
                   ),
                 ),

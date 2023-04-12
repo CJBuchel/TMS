@@ -22,12 +22,12 @@ dependencies:
 
   cupertino_icons: ^1.0.3
 
-  # web_socket_channel: ^2.3.0
-  # build_runner: ^2.3.3
-  # build_web_compilers: ^3.2.7
-  # http: ^0.13.5
-  # uuid: ^3.0.7
-  # multicast_dns: ^0.3.2+3
+  web_socket_channel: ^2.3.0
+  build_runner: ^2.3.3
+  build_web_compilers: ^3.2.7
+  http: ^0.13.5
+  uuid: ^3.0.7
+  multicast_dns: ^0.3.2+3
   google_fonts: ^4.0.3
   flutter_svg: ^2.0.5
   fl_chart: ^0.61.0

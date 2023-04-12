@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./tms/assets/logos/TMS_LOGO.svg"/>
+  <img src="./tms/assets/logos/TMS_LOGO.png"/>
 </p>
 
 

@@ -1,5 +1,6 @@
 import 'package:tms/constants.dart';
 import 'package:tms/controllers/MenuAppController.dart';
+import 'package:tms/screens/login/login.dart';
 import 'package:tms/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,8 @@ class TMSApp extends StatelessWidget {
             create: (context) => MenuAppController(),
           ),
         ],
-        child: MainScreen(),
+        // child: MainScreen(),
+        child: Login(),
       ),
     );
   }

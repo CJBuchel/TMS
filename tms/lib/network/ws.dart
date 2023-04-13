@@ -42,7 +42,8 @@ class NetworkWebSocket {
 
   static Future<bool> checkConnection() async {
     // print(_keyPair.publicKey);
-    SocketMessage message = SocketMessage(message: "The Data is real extreme", topic: "Event");
+    SocketMessage message =
+        SocketMessage(message: "AAAAAA123asdklja;sdfj;alsdfj;alsdjkf;asldkfja;sldfjk;asldkjfa;sldkfj;asldfjka;sdlkfjsdf", topic: "Event");
     var result = await RSA.encryptPKCS1v15(jsonEncode(message.toJson()), _serverKey);
     _channel.sink.add(result);
     return true;

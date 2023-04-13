@@ -29,7 +29,7 @@
       "$ref": "#/definitions/RegisterResponse"
     },
     "socket_event": {
-      "$ref": "#/definitions/SocketEvent"
+      "$ref": "#/definitions/SocketMessage"
     },
     "team": {
       "$ref": "#/definitions/Team"
@@ -278,9 +278,13 @@
     "RegisterRequest": {
       "type": "object",
       "required": [
+        "key",
         "user_id"
       ],
       "properties": {
+        "key": {
+          "type": "string"
+        },
         "user_id": {
           "type": "string"
         }
@@ -289,32 +293,36 @@
     "RegisterResponse": {
       "type": "object",
       "required": [
+        "key",
         "url"
       ],
       "properties": {
+        "key": {
+          "type": "string"
+        },
         "url": {
           "type": "string"
         }
       }
     },
-    "SocketEvent": {
+    "SocketMessage": {
       "type": "object",
       "required": [
         "message",
         "topic"
       ],
       "properties": {
+        "from_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "message": {
           "type": "string"
         },
         "topic": {
           "type": "string"
-        },
-        "user_id": {
-          "type": [
-            "string",
-            "null"
-          ]
         }
       }
     },

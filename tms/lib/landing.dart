@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:multicast_dns/multicast_dns.dart';
+import 'package:tms/network/network.dart';
 import 'package:tms/responsive.dart';
 
 class Landing extends StatefulWidget {
@@ -11,40 +10,32 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  String serverIP = '';
-  Widget searchState = const Text("");
-  void findServer() async {
-    bool serverFound = false;
-    if (!kIsWeb) {
-      setState(() {
-        searchState = const Text("Searching For Server...", style: TextStyle(color: Colors.white));
-      });
-      // final channel = WebSocketChannel.connect()
-      const String name = '_mdns-tms-server._udp.local';
-      final MDnsClient client = MDnsClient();
-      await client.start();
+  String _serverIP = '';
+  Widget _searchState = const Text("");
+  TextEditingController _controller = new TextEditingController();
 
-      await for (final PtrResourceRecord ptr in client.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(name))) {
-        await for (final SrvResourceRecord srv in client.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
-          final String bundleId = ptr.domainName;
-          await for (final IPAddressResourceRecord ip in client.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(srv.target))) {
-            serverFound = true;
-            setState(() {
-              serverIP = ip.address.address;
-              searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
-            });
-            print('Dart observatory found instance found at ${ip.address.address}:${srv.port} for "$bundleId"');
-          }
-        }
-      }
-      if (!serverFound) {
-        setState(() {
-          searchState = const Text("Could Not Find Server", style: TextStyle(color: Colors.red));
-        });
-      }
-      print("Done");
-      client.stop();
+  void findServer() async {
+    setState(() {
+      _searchState = const Text("Searching For Server...", style: TextStyle(color: Colors.white));
+    });
+
+    var state = await Network.findServer();
+    if (state == NetworkConnectionState.connected) {
+      setState(() {
+        _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
+      });
+    } else if (state == NetworkConnectionState.connectedNoPulse) {
+      setState(() {
+        _searchState = const Text("Connected With No Pulse", style: TextStyle(color: Colors.amber));
+      });
+    } else {
+      setState(() {
+        _searchState = const Text("Could Not Find Server", style: TextStyle(color: Colors.red));
+      });
     }
+
+    _serverIP = await Network.getServerIP();
+    _controller.text = _serverIP;
   }
 
   @override
@@ -81,13 +72,14 @@ class _LandingState extends State<Landing> {
           ),
           // Address input
           Row(
-            children: const <Widget>[
+            children: <Widget>[
               Flexible(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 25),
+                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
                   child: TextField(
-                    decoration:
-                        InputDecoration(border: OutlineInputBorder(), labelText: 'Server Address', hintText: 'Enter the address of the server'),
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Server Address', hintText: 'Enter the address of the server, e.g: `10.53.33.2`'),
                   ),
                 ),
               )
@@ -96,7 +88,7 @@ class _LandingState extends State<Landing> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [searchState],
+            children: [_searchState],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -105,8 +97,6 @@ class _LandingState extends State<Landing> {
               SizedBox(
                 height: buttonHeight,
                 width: buttonWidth,
-                // padding: const EdgeInsets.only(top: 10),
-                // decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(20)),
                 child: ElevatedButton.icon(
                   onPressed: () {
                     findServer();
@@ -121,10 +111,10 @@ class _LandingState extends State<Landing> {
               SizedBox(
                 height: buttonHeight,
                 width: buttonWidth,
-                // padding: const EdgeInsets.only(top: 10),
-                // decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(20)),
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Network.test();
+                  },
                   icon: const Icon(Icons.link),
                   label: Text(
                     'Connect',

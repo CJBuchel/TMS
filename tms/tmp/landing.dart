@@ -35,7 +35,7 @@
 //       return schema.RegisterResponse.fromJson(jsonDecode(response.body));
 //     } else {
 //       await http.delete(Uri.parse('http://localhost:2121/register/$uuid'));
-//       throw Exception("Failed to load register respones");
+//       throw Exception("Failed to load register responses");
 //     }
 //   }
 

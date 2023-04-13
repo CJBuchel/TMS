@@ -2,46 +2,39 @@
 use std::{result, borrow::Borrow};
 
 use futures::{FutureExt, StreamExt};
-use serde::Deserialize;
 use serde_json::from_str;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::ws::{Message, WebSocket};
 
-use crate::network::handler::unregister_handler;
 
-use super::network::{Client, Clients};
-#[derive(Deserialize, Debug)]
-pub struct TopicRequest {
-  topics: Vec<String>
-}
+use crate::{schemas::{SocketMessage}, network::{handler::{unregister_handler, publish_handler}, security::{decrypt, encrypt}}};
 
-async fn client_msg(id: &str, msg: Message, clients: &Clients) {
-  println!("received message from {}: {:?}", id, msg);
+use super::{network::{Client, Clients}, security::Security};
+
+async fn client_msg(id: &str, msg: Message, clients: &Clients, security: Security) {
+  // println!("received message from {}: {:?}", id, msg);
+  // @todo decrypt message
+
   let message = match msg.to_str() {
     Ok(v) => v,
     Err(_) => return
   };
+  let new_message = decrypt(security.clone(), message.to_string()).await;
+  println!("Decrypted message: {}", new_message);
+  // println!("Server Public Key: {:?}", String::from_utf8(security.public_key));
 
-  if message == "ping" || message == "ping\n" {
-    return;
-  }
+  // if message == "ping" || message == "ping\n" {
+  //   return;
+  // }
 
-  let topics_req: TopicRequest = match from_str(&message) {
-    Ok(v) => v,
-    Err(e) => {
-      eprintln!("error while parsing message to topcs request: {}", e);
-      return;
-    }
-  };
+  // let socket_message: SocketMessage = serde_json::from_str(&message).unwrap();
+  // println!("Topic: {}", socket_message.topic);
 
-  let mut locked = clients.write().unwrap();
-  if let Some(v) = locked.get_mut(id) {
-    v.topics = topics_req.topics;
-  }
+  // publish_handler(socket_message, clients.clone()).await.unwrap();
 }
 
-pub async fn client_connection(ws: WebSocket, id: String, clients: Clients, mut client: Client) {
+pub async fn client_connection(ws: WebSocket, id: String, clients: Clients, mut client: Client, security: Security) {
   let (client_ws_sender, mut client_ws_rcv) = ws.split();
   let (client_sender, client_recv) = mpsc::unbounded_channel();
 
@@ -66,7 +59,7 @@ pub async fn client_connection(ws: WebSocket, id: String, clients: Clients, mut 
       }
     };
 
-    client_msg(&id, msg, &clients).await;
+    client_msg(&id, msg, &clients, security.clone()).await;
   }
 
   // clients.write().unwrap().remove(&id);

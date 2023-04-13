@@ -18,17 +18,16 @@ async fn main() {
   println!("Starting TMS Server");
 
   let mut tms_database = TmsDB::start();
-
   let mut tms_network = Network::new();
 
   
-  let data = "A quick brown fox and all";
-  let encrypted_data: Vec<u8> = tms_network.encrypt(data.to_string()).await;
+  // let data = "A quick brown fox and all";
+  // let encrypted_data: Vec<u8> = tms_network.encrypt(data.to_string()).await;
   
-  println!("Encrypted data: {:?}", encrypted_data);
+  // println!("Encrypted data: {:?}", encrypted_data);
   
-  let decrypted_data = tms_network.decrypt(encrypted_data).await;
-  println!("Decrypted data: {}", decrypted_data);
+  // let decrypted_data = tms_network.decrypt(encrypted_data).await;
+  // println!("Decrypted data: {}", decrypted_data);
   
   tms_network.start().await;
 }

@@ -4,29 +4,22 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::ws::{Message, WebSocket};
 
 
-use crate::{schemas::{SocketMessage}, network::{handler::{unregister_handler, publish_handler}, security::{decrypt, encrypt}}};
+use crate::{schemas::{SocketMessage}, network::{handler::{unregister_handler, publish_handler}, security::{decrypt, encrypt, decrypt_local}}};
 
 use super::{network::{Client, Clients}, security::Security};
 
 async fn client_msg(id: &str, msg: Message, clients: &Clients, security: Security) {
-  // println!("received message from {}: {:?}", id, msg);
-  // @todo decrypt message
-
   let message = match msg.to_str() {
     Ok(v) => v,
     Err(_) => return
   };
-  let new_message = decrypt(security.clone(), message.to_string()).await;
-  // let _ = encrypt(security, new_message);
-  // // println!("Server Public Key: {:?}", String::from_utf8(security.public_key));
+  let decrypted_message = decrypt_local(security.clone(), message.to_string());
 
-  // if message == "ping" || message == "ping\n" {
-  //   return;
-  // }
+  if message == "ping" || message == "ping\n" {
+    return;
+  }
 
-  let socket_message: SocketMessage = serde_json::from_str(new_message.as_str()).unwrap();
-  println!("Topic: {}", socket_message.topic);
-
+  let socket_message: SocketMessage = serde_json::from_str(decrypted_message.as_str()).unwrap();
   publish_handler(socket_message, clients.clone()).await.unwrap();
 }
 

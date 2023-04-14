@@ -1,10 +1,12 @@
+use std::borrow::Borrow;
+
 use local_ip_address::local_ip;
 use uuid::Uuid;
 use warp::{http::StatusCode, reply::json, ws::Message, Reply};
 
 use crate::schemas::*;
 
-use super::{network::{Clients, Result, Client}, ws::client_connection, security::Security};
+use super::{network::{Clients, Result, Client}, ws::client_connection, security::{Security, encrypt}};
 
 pub async fn publish_handler(body: SocketMessage, clients: Clients) -> Result<impl Reply> {
   clients
@@ -12,24 +14,26 @@ pub async fn publish_handler(body: SocketMessage, clients: Clients) -> Result<im
     .unwrap()
     .iter()
     .filter(|(_, client)| match body.from_id.clone() {
-      Some(v) => client.user_id == v,
+      Some(v) => client.user_id != v, // stops server from sending message to the client that sent the origin message
       None => true
     })
     .for_each(|(_, client)| {
       if let Some(sender) = &client.sender {
         let j = serde_json::to_string(&body).unwrap();
-        let _ = sender.send(Ok(Message::text(j)));
+        let encrypted_j:String = encrypt(client.key.to_owned(), j);
+        let _ = sender.send(Ok(Message::text(encrypted_j.clone())));
       }
     });
 
   Ok(StatusCode::OK)
 }
 
-pub async fn register_client(id: String, user_id: String, clients: Clients) {
+pub async fn register_client(id: String, user_id: String, key: String, clients: Clients) {
   clients.write().unwrap().insert(
     id.clone(),
     Client {
       user_id: user_id,
+      key,
       sender: None
     },
   );
@@ -39,7 +43,7 @@ pub async fn register_handler(body: RegisterRequest, clients: Clients, public_ke
   let user_id = body.user_id.clone();
   let uuid = Uuid::new_v4().as_simple().to_string();
 
-  register_client(uuid.clone(), user_id.clone(), clients).await;
+  register_client(uuid.clone(), user_id.clone(), body.key.clone(), clients).await;
 
   println!("Registered Client {}", user_id);
   println!("Public Key {}", body.key);

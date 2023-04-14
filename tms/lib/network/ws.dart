@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
@@ -8,23 +9,26 @@ import 'package:fast_rsa/fast_rsa.dart';
 enum NetworkWebSocketState {
   disconnected,
   connectingEncryption,
-  connectingCheck,
   connected,
 }
 
 class NetworkWebSocket {
-  static NetworkWebSocketState _connectionState = NetworkWebSocketState.disconnected;
-  static final _uuid = const Uuid().v4();
-  static late WebSocketChannel _channel;
-  static late KeyPair _keyPair;
-  static late String _serverKey;
+  NetworkWebSocketState _connectionState = NetworkWebSocketState.disconnected;
+  final _uuid = const Uuid().v4();
+  late WebSocketChannel _channel;
+  late KeyPair _keyPair;
+  late String _serverKey;
 
-  static Future<KeyPair> generateKeyPair() async {
-    _connectionState = NetworkWebSocketState.connectingEncryption;
-    return await RSA.generate(512);
+  NetworkWebSocketState getState() {
+    return _connectionState;
   }
 
-  static Future<RegisterResponse> register(String addr) async {
+  Future<KeyPair> generateKeyPair() async {
+    _connectionState = NetworkWebSocketState.connectingEncryption;
+    return await RSA.generate(2048);
+  }
+
+  Future<RegisterResponse> register(String addr) async {
     _keyPair = await generateKeyPair();
     final request = RegisterRequest(key: _keyPair.publicKey, userId: _uuid);
     final response = await http.post(Uri.parse('http://$addr:2121/register'),
@@ -40,34 +44,33 @@ class NetworkWebSocket {
     }
   }
 
-  static Future<bool> checkConnection() async {
-    // print(_keyPair.publicKey);
-    SocketMessage message = SocketMessage(message: "This is a message", topic: "Event");
-    var result = await RSA.encryptPKCS1v15(jsonEncode(message.toJson()), _serverKey);
-    _channel.sink.add(result);
+  // static Future<bool> checkConnection() async {
+  //   // print(_keyPair.publicKey);
+  //   SocketMessage message = SocketMessage(fromId: _uuid, message: "Ping", topic: "Ping");
+  //   var result = await RSA.encryptPKCS1v15(jsonEncode(message.toJson()), _serverKey);
+  //   _channel.sink.add(result);
+  //   print(_keyPair.publicKey);
+  //   _channel.stream.listen((event) async {
+  //     var decrypted_message = await RSA.decryptPKCS1v15(event, _keyPair.privateKey);
+  //     SocketMessage message_from_server = SocketMessage.fromJson(jsonDecode(decrypted_message));
+  //     print(message_from_server.message);
+  //     return;
+  //   });
+  //   return true;
+  // }
 
-    _channel.stream.listen((event) {
-      SocketMessage message_from_server = SocketMessage.fromJson(jsonDecode(event));
-      print(message_from_server.message);
-    });
-    return true;
-  }
-
-  static void send(SocketMessage message) {
+  void send(SocketMessage message) {
     _channel.sink.add(jsonEncode(message.toJson()));
   }
 
-  static Future<bool> connect(String addr) async {
+  Future<void> connect(String addr) async {
     var response = await register(addr);
     _serverKey = response.key;
     _channel = WebSocketChannel.connect(Uri.parse(response.url));
-    await checkConnection();
-    // SocketMessage message = SocketMessage(fromId: _uuid, message: "Hello from client", topic: "hello");
-    // send(message);
-    return true;
+    _connectionState = NetworkWebSocketState.connected;
   }
 
-  static void disconnect() async {
+  void disconnect() async {
     _channel.sink.close();
   }
 }

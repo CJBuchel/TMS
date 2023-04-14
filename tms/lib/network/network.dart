@@ -13,13 +13,14 @@ enum NetworkConnectionState { disconnected, connectedNoPulse, connected }
 class Network {
   static NetworkConnectionState _connectionState = NetworkConnectionState.disconnected;
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  static NetworkWebSocket _websocket = NetworkWebSocket();
 
-  static void connect() async {
-    NetworkWebSocket.connect(await getServerIP());
+  static Future<void> connect() async {
+    await _websocket.connect(await getServerIP());
   }
 
-  static test() {
-    connect();
+  static NetworkWebSocketState getWebsocketState() {
+    return _websocket.getState();
   }
 
   static void setServerIP(String ip) {

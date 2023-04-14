@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/network/network.dart';
+import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
 
 class Landing extends StatefulWidget {
@@ -12,6 +13,7 @@ class Landing extends StatefulWidget {
 class _LandingState extends State<Landing> {
   String _serverIP = '';
   Widget _searchState = const Text("");
+  Widget _connectState = const Text("");
   TextEditingController _controller = new TextEditingController();
 
   void findServer() async {
@@ -36,6 +38,25 @@ class _LandingState extends State<Landing> {
 
     _serverIP = await Network.getServerIP();
     _controller.text = _serverIP;
+  }
+
+  void connectToServer() async {
+    setState(() {
+      _connectState = const Text(" - Generating Encryption Keys", style: TextStyle(color: Colors.amber));
+    });
+
+    Network.connect().then((v) {
+      print("Completed action");
+      if (Network.getWebsocketState() == NetworkWebSocketState.connected) {
+        setState(() {
+          _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
+        });
+      } else {
+        setState(() {
+          _connectState = const Text(" - Websocket Failed To Connect", style: TextStyle(color: Colors.red));
+        });
+      }
+    });
   }
 
   @override
@@ -86,9 +107,9 @@ class _LandingState extends State<Landing> {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_searchState],
+            children: [_searchState, _connectState],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -113,7 +134,7 @@ class _LandingState extends State<Landing> {
                 width: buttonWidth,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Network.test();
+                    connectToServer();
                   },
                   icon: const Icon(Icons.link),
                   label: Text(

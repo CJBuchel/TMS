@@ -1,15 +1,9 @@
 use std::{sync::{Arc, RwLock}, collections::HashMap, convert::Infallible};
-
-use futures::TryFutureExt;
-// extern crate openssl;
-use openssl::{rsa::{Rsa, Padding}, asn1::Asn1Time, x509::X509Builder, hash::MessageDigest, pkey::Private};
 use tokio::sync::mpsc;
 use warp::{ws::Message, Rejection, Filter, hyper::Method};
 
 pub type Result<T> = std::result::Result<T, Rejection>;
 pub type Clients = Arc<RwLock<HashMap<String, Client>>>;
-
-use crate::schemas::RegisterRequest;
 
 use super::{mdns_broadcaster::start_broadcast, security::Security};
 use super::handler;
@@ -17,6 +11,7 @@ use super::handler;
 #[derive(Debug, Clone)]
 pub struct Client {
   pub user_id: String,
+  pub key: String,
   pub sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>>
 }
 

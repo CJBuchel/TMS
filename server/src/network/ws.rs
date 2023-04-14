@@ -1,8 +1,4 @@
-
-use std::{result, borrow::Borrow};
-
 use futures::{FutureExt, StreamExt};
-use serde_json::from_str;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::ws::{Message, WebSocket};
@@ -21,17 +17,17 @@ async fn client_msg(id: &str, msg: Message, clients: &Clients, security: Securit
     Err(_) => return
   };
   let new_message = decrypt(security.clone(), message.to_string()).await;
-  println!("Decrypted message: {}", new_message);
-  // println!("Server Public Key: {:?}", String::from_utf8(security.public_key));
+  // let _ = encrypt(security, new_message);
+  // // println!("Server Public Key: {:?}", String::from_utf8(security.public_key));
 
   // if message == "ping" || message == "ping\n" {
   //   return;
   // }
 
-  // let socket_message: SocketMessage = serde_json::from_str(&message).unwrap();
-  // println!("Topic: {}", socket_message.topic);
+  let socket_message: SocketMessage = serde_json::from_str(new_message.as_str()).unwrap();
+  println!("Topic: {}", socket_message.topic);
 
-  // publish_handler(socket_message, clients.clone()).await.unwrap();
+  publish_handler(socket_message, clients.clone()).await.unwrap();
 }
 
 pub async fn client_connection(ws: WebSocket, id: String, clients: Clients, mut client: Client, security: Security) {

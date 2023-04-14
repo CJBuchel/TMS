@@ -21,7 +21,7 @@ class NetworkWebSocket {
 
   static Future<KeyPair> generateKeyPair() async {
     _connectionState = NetworkWebSocketState.connectingEncryption;
-    return await RSA.generate(1024);
+    return await RSA.generate(512);
   }
 
   static Future<RegisterResponse> register(String addr) async {
@@ -42,10 +42,14 @@ class NetworkWebSocket {
 
   static Future<bool> checkConnection() async {
     // print(_keyPair.publicKey);
-    SocketMessage message =
-        SocketMessage(message: "AAAAAA123asdklja;sdfj;alsdfj;alsdjkf;asldkfja;sldfjk;asldkjfa;sldkfj;asldfjka;sdlkfjsdf", topic: "Event");
+    SocketMessage message = SocketMessage(message: "This is a message", topic: "Event");
     var result = await RSA.encryptPKCS1v15(jsonEncode(message.toJson()), _serverKey);
     _channel.sink.add(result);
+
+    _channel.stream.listen((event) {
+      SocketMessage message_from_server = SocketMessage.fromJson(jsonDecode(event));
+      print(message_from_server.message);
+    });
     return true;
   }
 

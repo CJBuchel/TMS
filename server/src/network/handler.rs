@@ -12,12 +12,13 @@ pub async fn publish_handler(body: SocketMessage, clients: Clients) -> Result<im
     .unwrap()
     .iter()
     .filter(|(_, client)| match body.from_id.clone() {
-      Some(v) => client.user_id != v,
+      Some(v) => client.user_id == v,
       None => true
     })
     .for_each(|(_, client)| {
       if let Some(sender) = &client.sender {
-        let _ = sender.send(Ok(Message::text(body.message.clone())));
+        let j = serde_json::to_string(&body).unwrap();
+        let _ = sender.send(Ok(Message::text(j)));
       }
     });
 

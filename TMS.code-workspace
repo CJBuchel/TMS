@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "schema"
+		},
+		{
+			"path": "server"
+		},
+		{
+			"path": "tms"
+		}
+	],
+  "settings": {
+    "rust-analyzer.showUnlinkedFileNotification": false
+  }
+}

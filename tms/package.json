@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "prepare": "quicktype --just-types -l dart -s schema ../schema/tms-schema.json -o lib/schema/tms-schema.dart"
+    "prepare": "quicktype -l dart -s schema ../schema/tms-schema.json -o lib/schema/tms-schema.dart"
   },
   "keywords": [],
   "author": "",

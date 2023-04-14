@@ -1,30 +1,51 @@
-import 'dart:io';
-
+import 'package:tms/constants.dart';
+import 'package:tms/controllers/MenuAppController.dart';
+import 'package:tms/landing.dart';
+import 'package:tms/responsive.dart';
+import 'package:tms/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:tms/pages/landing.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-// import 'package:path/path.dart' show dirname, join, normalize;
+class TMSApp extends StatefulWidget {
+  TMSApp({super.key});
 
-// String _scriptPath() {
-//   var script = Platform.script.toString();
-//   if (script.startsWith("file://")) {
-//     script = script.substring(7);
-//   } else {
-//     final idx = script.indexOf("file:/");
-//     script = script.substring(idx + 5);
-//   }
+  @override
+  _TMSAppState createState() => _TMSAppState();
+}
 
-//   return script;
-// }
+class _TMSAppState extends State<TMSApp> {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: true,
+      title: 'TMS Client',
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: bgColor,
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(bodyColor: Colors.white),
+        canvasColor: secondaryColor,
+      ),
 
-class TmsHttpOverrides extends HttpOverrides {
-  // @override
-  // HttpClient createHttpClient(SecurityContext? context) {
-  //   return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-  // }
+      // Home screen (starter)
+      // home: MultiProvider(
+      //   providers: [
+      //     ChangeNotifierProvider(
+      //       create: (context) => MenuAppController(),
+      //     ),
+      //   ],
+      //   child: MainScreen(),
+      // ),
+
+      // Main Router
+      routes: {
+        '/': (context) => Landing(),
+        // '/dashboard': (context) => MultiProvider(providers: [ChangeNotifierProvider(create: (context) => Men)])
+      },
+    );
+  }
 }
 
 void main() {
-  // HttpOverrides.global = TmsHttpOverrides();
-  runApp(MaterialApp(home: Landing()));
+  runApp(TMSApp());
 }

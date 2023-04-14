@@ -9,11 +9,17 @@ include!("../src/schemas/mod.rs");
 
 #[derive(JsonSchema, Clone)]
 pub struct TmsSchema {
+  // Storage Structures
   team: Team,
   game_match: GameMatch,
   judging_session: JudgingSession,
   users: User,
-  event: Event
+  event: Event,
+
+  // Network structures
+  register_request: RegisterRequest,
+  register_response: RegisterResponse,
+  socket_event: SocketMessage
 }
 
 pub fn generate_schema(outdir: &OsString) {

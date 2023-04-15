@@ -1,25 +1,31 @@
-use std::borrow::Borrow;
-
 use local_ip_address::local_ip;
 use uuid::Uuid;
-use warp::{http::StatusCode, reply::json, ws::Message, Reply};
+use warp::{http::StatusCode, reply::json, ws::Message, Reply, hyper::body::Bytes};
 
-use crate::schemas::*;
+use crate::{schemas::*, db::db::TmsDB};
 
-use super::{network::{Clients, Result, Client}, ws::client_connection, security::{Security, encrypt}};
+use super::{ws_router::{Clients, Result, Client}, ws::client_connection, security::{Security, encrypt, decrypt_local}};
 
-pub async fn publish_handler(body: SocketMessage, clients: Clients) -> Result<impl Reply> {
+pub async fn publish_handler(msg: Bytes, clients: Clients, security: Security) -> Result<impl Reply> {
+  let message = match String::from_utf8(msg.to_vec()) {
+    Ok(v) => v,
+    Err(_) => return Ok(StatusCode::BAD_REQUEST)
+  };
+
+  let decrypted_message = decrypt_local(security.clone(), message.to_string());
+  let socket_message: SocketMessage = serde_json::from_str(decrypted_message.as_str()).unwrap();
+
   clients
     .read()
     .unwrap()
     .iter()
-    .filter(|(_, client)| match body.from_id.clone() {
+    .filter(|(_, client)| match socket_message.from_id.clone() {
       Some(v) => client.user_id != v, // stops server from sending message to the client that sent the origin message
       None => true
     })
     .for_each(|(_, client)| {
       if let Some(sender) = &client.sender {
-        let j = serde_json::to_string(&body).unwrap();
+        let j = serde_json::to_string(&socket_message).unwrap();
         let encrypted_j:String = encrypt(client.key.to_owned(), j);
         let _ = sender.send(Ok(Message::text(encrypted_j.clone())));
       }
@@ -60,10 +66,10 @@ pub async fn unregister_handler(id: String, clients: Clients) -> Result<impl Rep
   Ok(StatusCode::OK)
 }
 
-pub async fn ws_handler(ws: warp::ws::Ws, id: String, clients: Clients, security: Security) -> Result<impl Reply> {
+pub async fn ws_handler(ws: warp::ws::Ws, id: String, clients: Clients, security: Security, db: TmsDB) -> Result<impl Reply> {
   let client = clients.read().unwrap().get(&id).cloned();
   match client {
-    Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, id, clients, c, security))),
+    Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, id, clients, c, security, db.to_owned()))),
     None => Err(warp::reject::not_found()),
   }
 }

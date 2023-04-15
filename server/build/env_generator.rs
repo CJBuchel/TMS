@@ -1,14 +1,9 @@
 use std::ffi::OsString;
-use std::fs::{self, File};
+use std::fs::{File};
 use std::io::{BufWriter, Write};
 use std::path::Path;
 
 use serde::Serialize;
-
-// variables:
-//   - name: version
-//     value: '2023.0.0'
-
 
 #[derive(Debug, Serialize)]
 struct YamlEnv {

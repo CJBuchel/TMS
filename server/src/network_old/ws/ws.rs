@@ -4,26 +4,30 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::ws::{Message, WebSocket};
 
 
-use crate::{schemas::{SocketMessage}, network::{handler::{unregister_handler, publish_handler}, security::{decrypt, encrypt, decrypt_local}}};
+use crate::{schemas::{SocketMessage}, network::{handler::{unregister_handler, publish_handler}, security::{decrypt_local}}, db::db::TmsDB, requests::{request_controller}};
 
-use super::{network::{Client, Clients}, security::Security};
+use super::{ws_router::{Client, Clients}, security::Security};
 
-async fn client_msg(id: &str, msg: Message, clients: &Clients, security: Security) {
+async fn client_msg(id: &str, msg: Message, clients: &Clients, security: Security, db: TmsDB) {
   let message = match msg.to_str() {
     Ok(v) => v,
     Err(_) => return
   };
   let decrypted_message = decrypt_local(security.clone(), message.to_string());
 
+  // Return if it's just a ping
   if message == "ping" || message == "ping\n" {
     return;
   }
 
+  // Convert the message
   let socket_message: SocketMessage = serde_json::from_str(decrypted_message.as_str()).unwrap();
-  publish_handler(socket_message, clients.clone()).await.unwrap();
+
+  // Publish the message to other clients
+  // publish_handler(msg, clients.to_owned(), security.to_owned()).await.unwrap();
 }
 
-pub async fn client_connection(ws: WebSocket, id: String, clients: Clients, mut client: Client, security: Security) {
+pub async fn client_connection(ws: WebSocket, id: String, clients: Clients, mut client: Client, security: Security, db: TmsDB) {
   let (client_ws_sender, mut client_ws_rcv) = ws.split();
   let (client_sender, client_recv) = mpsc::unbounded_channel();
 
@@ -48,7 +52,7 @@ pub async fn client_connection(ws: WebSocket, id: String, clients: Clients, mut 
       }
     };
 
-    client_msg(&id, msg, &clients, security.clone()).await;
+    client_msg(&id, msg, &clients, security.clone(), db.to_owned()).await;
   }
 
   // clients.write().unwrap().remove(&id);

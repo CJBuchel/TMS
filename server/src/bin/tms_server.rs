@@ -9,7 +9,7 @@
 
 // <-> Two way communication pub sub messaging
 
-use tms_server::{db::db::TmsDB, network::network::Network};
+use tms_server::{db::db::TmsDB};
 
 
 #[tokio::main]
@@ -17,17 +17,12 @@ async fn main() {
   pretty_env_logger::init();
   println!("Starting TMS Server");
 
-  let mut tms_database = TmsDB::start();
-  let mut tms_network = Network::new();
+  let tms_database = TmsDB::start();
 
+  // @todo start up http routes
+  // @todo start up ws routes
+
+  // let tms_routes = Router::new(tms_database);
   
-  // let data = "A quick brown fox and all";
-  // let encrypted_data: Vec<u8> = tms_network.encrypt(data.to_string()).await;
-  
-  // println!("Encrypted data: {:?}", encrypted_data);
-  
-  // let decrypted_data = tms_network.decrypt(encrypted_data).await;
-  // println!("Decrypted data: {}", decrypted_data);
-  
-  tms_network.start().await;
+  // tms_routes.start().await;
 }

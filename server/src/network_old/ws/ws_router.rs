@@ -5,6 +5,8 @@ use warp::{ws::Message, Rejection, Filter, hyper::Method};
 pub type Result<T> = std::result::Result<T, Rejection>;
 pub type Clients = Arc<RwLock<HashMap<String, Client>>>;
 
+use crate::db::db::{TmsDB};
+
 use super::{mdns_broadcaster::start_broadcast, security::Security};
 use super::handler;
 
@@ -27,13 +29,21 @@ fn with_security(security: Security) -> impl Filter<Extract = (Security,), Error
   warp::any().map(move || security.clone())
 }
 
-pub struct Network {
-  security: Security
+fn with_database(database: TmsDB) -> impl Filter<Extract = (TmsDB,), Error = Infallible> + Clone {
+  warp::any().map(move || database.to_owned())
 }
 
-impl Network {
-  pub fn new() -> Self {
-    Self { security: Security::new() }
+pub struct Router {
+  security: Security,
+  database: TmsDB
+}
+
+impl Router {
+  pub fn new(db: TmsDB) -> Self {
+    Self { 
+      security: Security::new(),
+      database: db
+    }
   }
 
   pub async fn start(&self) {
@@ -51,7 +61,6 @@ impl Network {
       .and(with_clients(clients.clone()))
       .and(with_bytes(self.security.public_key.clone()))
       .and_then(handler::register_handler)
-      // .and_then(handler::register_handler)
       .or(register
         .and(warp::delete())
         .and(warp::path::param())
@@ -60,8 +69,9 @@ impl Network {
       );
 
     let publish = warp::path!("publish")
-      .and(warp::body::json())
+      .and(warp::body::bytes())
       .and(with_clients(clients.clone()))
+      .and(with_security(self.security.clone()))
       .and_then(handler::publish_handler);
 
     let ws_route = warp::path("ws")
@@ -69,6 +79,7 @@ impl Network {
         .and(warp::path::param())
         .and(with_clients(clients.clone()))
         .and(with_security(self.security.clone()))
+        .and(with_database(self.database.to_owned()))
         .and_then(handler::ws_handler);
 
     let routes =
@@ -78,7 +89,6 @@ impl Network {
         .or(publish)
         .with(cors);
   
-    println!("Public key: {:?}", String::from_utf8(self.security.public_key.clone()));
     // Start mDNS server
     start_broadcast("_mdns-tms-server".to_string());
     warp::serve(routes).run(([0, 0, 0, 0], 2121)).await;

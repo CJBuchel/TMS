@@ -16,6 +16,6 @@ pub struct RegisterResponse {
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct SocketMessage {
   pub from_id: Option<String>,
-  pub topic: String,
+  pub topic: String, // Timer, Teams, Event, JudgingSessions
   pub message: String
 }

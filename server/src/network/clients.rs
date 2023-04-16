@@ -10,7 +10,7 @@ pub struct Client {
   pub ws_sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>> // socket sender used for dispatching messages
 }
 
-pub type Result<T> = std::result::Result<T, Rejection>;
+pub type ClientResult<T> = std::result::Result<T, Rejection>;
 pub type Clients = Arc<RwLock<HashMap<String, Client>>>;
 
 pub fn new_clients_map() -> Clients {

@@ -1,3 +1,4 @@
+use log::info;
 use openssl::{rsa::{Rsa, Padding}, pkey::Private};
 use base64::{Engine, engine::general_purpose};
 
@@ -14,9 +15,8 @@ pub struct Security {
 
 impl Security {
   pub fn new() -> Self {
-    println!("Size in bytes: {}, {}", SIZE, u32::try_from(SIZE).unwrap());
-
-    println!("Generating Encryption Keys");
+    info!("Encryption Size in bits: {}, {}", SIZE, u32::try_from(SIZE).unwrap());
+    info!("Generating Encryption Keys");
     let raw_rsa = Rsa::generate(u32::try_from(SIZE).unwrap()).unwrap();
     let raw_private_key = raw_rsa.private_key_to_pem().unwrap();
     let raw_public_key = raw_rsa.public_key_to_pem().unwrap();

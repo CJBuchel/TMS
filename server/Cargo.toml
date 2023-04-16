@@ -21,12 +21,12 @@ pretty_env_logger = "^0.4.0"
 sled = "0.34.7"
 sled-extensions = { version = "0.2.0", features = ["bincode"] }
 thiserror = "1.0.40"
-log = "0.4.17"
 schemars = "^0.8"
 local-ip-address = "0.5.1"
 mdns-sd = "0.7.2"
 base64 = "0.21.0"
 rocket = { version = "=0.5.0-rc.3", features = ["json"] } # use command: rustup default nightly
+log = "0.4.17"
 
 
 # [dependencies.rocket_contrib]

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:tms/constants.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
@@ -14,7 +15,7 @@ enum NetworkWebSocketState {
 
 class NetworkWebSocket {
   NetworkWebSocketState _connectionState = NetworkWebSocketState.disconnected;
-  final _uuid = const Uuid().v4();
+  final _userID = const Uuid().v4();
   late WebSocketChannel _channel;
   late KeyPair _keyPair;
   late String _serverKey;
@@ -30,23 +31,21 @@ class NetworkWebSocket {
 
   Future<RegisterResponse> register(String addr) async {
     _keyPair = await generateKeyPair();
-    final request = RegisterRequest(key: _keyPair.publicKey, userId: _uuid);
-    final response = await http.post(Uri.parse('http://$addr:2121/register'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(request.toJson()));
-    if (response.statusCode == 200) {
-      return RegisterResponse.fromJson(jsonDecode(response.body));
+    final request = RegisterRequest(key: _keyPair.publicKey, userId: _userID);
+    final response = await http.post(Uri.parse('http://$addr:$requestPort/requests/register'), body: jsonEncode(request.toJson()));
+
+    final register_response = RegisterResponse.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return register_response;
     } else {
-      await http.delete(Uri.parse('http://localhost:2121/register/$_uuid'));
+      await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/${register_response.uuid}'));
       throw Exception("Failed to load register response");
     }
   }
 
   // static Future<bool> checkConnection() async {
   //   // print(_keyPair.publicKey);
-  //   SocketMessage message = SocketMessage(fromId: _uuid, message: "Ping", topic: "Ping");
+  //   SocketMessage message = SocketMessage(fromId: _userID, message: "Ping", topic: "Ping");
   //   var result = await RSA.encryptPKCS1v15(jsonEncode(message.toJson()), _serverKey);
   //   _channel.sink.add(result);
   //   print(_keyPair.publicKey);
@@ -64,10 +63,24 @@ class NetworkWebSocket {
   }
 
   Future<void> connect(String addr) async {
-    var response = await register(addr);
-    _serverKey = response.key;
-    _channel = WebSocketChannel.connect(Uri.parse(response.url));
-    _connectionState = NetworkWebSocketState.connected;
+    late RegisterResponse response;
+    try {
+      response = await register(addr);
+      _serverKey = response.key;
+    } catch (e) {
+      print("Register Error");
+      _connectionState = NetworkWebSocketState.disconnected;
+      return;
+    }
+
+    try {
+      _channel = WebSocketChannel.connect(Uri.parse('ws://$addr:$wsPort/ws/${response.uuid}'));
+      _connectionState = NetworkWebSocketState.connected;
+    } catch (e) {
+      print("Websocket Error detected");
+      _connectionState = NetworkWebSocketState.disconnected;
+      return;
+    }
   }
 
   void disconnect() async {

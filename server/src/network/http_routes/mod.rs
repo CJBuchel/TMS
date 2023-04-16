@@ -3,7 +3,7 @@ use std::net::IpAddr;
 
 use super::{security::{Security}, clients::{Clients}};
 use ::log::info;
-use rocket::{*, http::Status};
+use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}};
 
 mod register_routes;
 use register_routes::*;
@@ -11,9 +11,28 @@ use register_routes::*;
 mod publish_routes;
 use publish_routes::*;
 
+pub struct CORS;
+
+#[rocket::async_trait]
+impl Fairing for CORS {
+  fn info(&self) -> Info {
+    Info {
+      name: "Add CORS headers to responses",
+      kind: Kind::Response
+    }
+  }
+
+  async fn on_response<'r>(&self, _request: &'r Request<'_>, response: &mut Response<'r>) {
+    response.set_header(Header::new("Access-Control-Allow-Origin", "*"));
+    response.set_header(Header::new("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"));
+    response.set_header(Header::new("Access-Control-Allow-Headers", "*"));
+    response.set_header(Header::new("Access-Control-Allow-Credentials", "true"));
+  }
+}
+
 #[get("/pulse")]
 fn pulse_route() -> Result<Status, ()> {
-  Ok(Status::Accepted)
+  Ok(Status::Ok)
 }
 
 pub struct TmsHttpServer {
@@ -42,6 +61,6 @@ impl TmsHttpServer {
         register_route,
         unregister_route,
         publish_route
-      ])
+      ]).attach(CORS)
   }
 }

@@ -15,11 +15,14 @@ pub struct Security {
 
 impl Security {
   pub fn new() -> Self {
-    info!("Encryption Size in bits: {}, {}", SIZE, u32::try_from(SIZE).unwrap());
+    info!("Encryption Size in bits: {}", SIZE);
     info!("Generating Encryption Keys");
     let raw_rsa = Rsa::generate(u32::try_from(SIZE).unwrap()).unwrap();
     let raw_private_key = raw_rsa.private_key_to_pem().unwrap();
     let raw_public_key = raw_rsa.public_key_to_pem().unwrap();
+
+    info!("Public Key: \n{}\n", String::from_utf8(raw_public_key.clone()).unwrap());
+    info!("Private Key: \n{}\n", String::from_utf8(raw_private_key.clone()).unwrap());
 
     Self {
       public_key: raw_public_key,

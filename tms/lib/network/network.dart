@@ -49,7 +49,8 @@ class Network {
   static Future<NetworkConnectionState> getPulse() async {
     try {
       var serverIP = await getServerIP();
-      final response = await http.get(Uri.parse("http://$serverIP:$commsPort/pulse"));
+      final response = await http.get(Uri.parse("http://$serverIP:$requestPort/requests/pulse"));
+      print("Response code: ${response.statusCode}");
       if (response.statusCode == 200) {
         _connectionState = NetworkConnectionState.connected;
       } else {

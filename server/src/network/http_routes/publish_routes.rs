@@ -24,5 +24,5 @@ pub fn publish_route(security: &State<Security>, clients: &State<Clients>, messa
         let _ = sender.send(Ok(Message::text(encrypted_j.clone())));
       }
     });
-  Ok(Status::Accepted)
+  Ok(Status::Ok)
 }

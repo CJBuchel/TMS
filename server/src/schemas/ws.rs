@@ -9,7 +9,8 @@ pub struct RegisterRequest {
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct RegisterResponse {
-  pub key: String
+  pub key: String,
+  pub uuid: String
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]

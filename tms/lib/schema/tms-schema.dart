@@ -247,20 +247,20 @@ class RegisterRequest {
 class RegisterResponse {
     RegisterResponse({
         required this.key,
-        required this.url,
+        required this.uuid,
     });
 
     String key;
-    String url;
+    String uuid;
 
     factory RegisterResponse.fromJson(Map<String, dynamic> json) => RegisterResponse(
         key: json["key"],
-        url: json["url"],
+        uuid: json["uuid"],
     );
 
     Map<String, dynamic> toJson() => {
         "key": key,
-        "url": url,
+        "uuid": uuid,
     };
 }
 

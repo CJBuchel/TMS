@@ -7,6 +7,12 @@ import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:fast_rsa/fast_rsa.dart';
 
+enum RegisterState {
+  unregistered,
+  registered,
+  alreadyRegistered,
+}
+
 enum NetworkWebSocketState {
   disconnected,
   connectingEncryption,
@@ -15,8 +21,10 @@ enum NetworkWebSocketState {
 
 class NetworkWebSocket {
   NetworkWebSocketState _connectionState = NetworkWebSocketState.disconnected;
+  // RegisterState _registerState = RegisterState.unregistered;
   final _userID = const Uuid().v4();
   late WebSocketChannel _channel;
+  late RegisterResponse _registerResponse;
   late KeyPair _keyPair;
   late String _serverKey;
 
@@ -29,16 +37,19 @@ class NetworkWebSocket {
     return await RSA.generate(2048);
   }
 
-  Future<RegisterResponse> register(String addr) async {
+  Future<RegisterState> register(String addr) async {
     _keyPair = await generateKeyPair();
     final request = RegisterRequest(key: _keyPair.publicKey, userId: _userID);
     final response = await http.post(Uri.parse('http://$addr:$requestPort/requests/register'), body: jsonEncode(request.toJson()));
 
-    final register_response = RegisterResponse.fromJson(jsonDecode(response.body));
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return register_response;
+      _registerResponse = RegisterResponse.fromJson(jsonDecode(response.body));
+      return RegisterState.registered;
+    } else if (response.statusCode == 208) {
+      print("Already Registered");
+      return RegisterState.alreadyRegistered;
     } else {
-      await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/${register_response.uuid}'));
+      await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$_userID'));
       throw Exception("Failed to load register response");
     }
   }
@@ -63,10 +74,10 @@ class NetworkWebSocket {
   }
 
   Future<void> connect(String addr) async {
-    late RegisterResponse response;
+    RegisterState state = RegisterState.unregistered;
     try {
-      response = await register(addr);
-      _serverKey = response.key;
+      state = await register(addr);
+      _serverKey = _registerResponse.key;
     } catch (e) {
       print("Register Error");
       _connectionState = NetworkWebSocketState.disconnected;
@@ -74,12 +85,19 @@ class NetworkWebSocket {
     }
 
     try {
-      _channel = WebSocketChannel.connect(Uri.parse('ws://$addr:$wsPort/ws/${response.uuid}'));
-      _connectionState = NetworkWebSocketState.connected;
+      if (state == RegisterState.registered) {
+        _channel = WebSocketChannel.connect(Uri.parse(_registerResponse.url));
+      }
+      await _channel.ready.then((v) {
+        print("Socket Ready");
+        _connectionState = NetworkWebSocketState.connected;
+      }).onError((error, stackTrace) {
+        print("Websocket Connection Error");
+        _connectionState = NetworkWebSocketState.disconnected;
+      });
     } catch (e) {
       print("Websocket Error detected");
       _connectionState = NetworkWebSocketState.disconnected;
-      return;
     }
   }
 

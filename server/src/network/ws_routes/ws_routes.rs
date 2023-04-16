@@ -8,7 +8,7 @@ use crate::schemas::*;
 
 use crate::network::{security::{Security, decrypt_local}, clients::{Clients, Client}};
 
-async fn client_msg(private_id: String, msg: Message, clients: Clients, security: Security) {
+async fn client_msg(user_id: String, msg: Message, clients: Clients, security: Security) {
   let message = match msg.to_str() {
     Ok(v) => v,
     Err(_) => return
@@ -24,7 +24,7 @@ async fn client_msg(private_id: String, msg: Message, clients: Clients, security
   // @todo use socket message for something. (Off change that the client sends a socket message instead of the server)
 }
 
-async fn client_connection(ws: WebSocket, private_id: String, clients: Clients, mut client: Client, security: Security) {
+async fn client_connection(ws: WebSocket, user_id: String, clients: Clients, mut client: Client, security: Security) {
   let (client_ws_sender, mut client_ws_rcv) = ws.split();
   let (client_sender, client_recv) = mpsc::unbounded_channel();
 
@@ -36,29 +36,30 @@ async fn client_connection(ws: WebSocket, private_id: String, clients: Clients, 
   }));
 
   client.ws_sender = Some(client_sender);
-  clients.write().unwrap().insert(private_id.clone(), client);
+  clients.write().unwrap().insert(user_id.clone(), client);
 
-  info!("{} connected", private_id);
+  info!("{} connected", user_id);
 
   while let Some(result) = client_ws_rcv.next().await {
     let msg = match result {
       Ok(msg) => msg,
       Err(e) => {
-        error!("error receiving message for private id: {}: {}", private_id.clone(), e);
+        error!("error receiving message for private id: {}: {}", user_id.clone(), e);
         break;
       }
     };
-    client_msg(private_id.clone(), msg, clients.to_owned(), security.clone()).await;
+    client_msg(user_id.clone(), msg, clients.to_owned(), security.clone()).await;
   }
 
-  clients.write().unwrap().remove(&private_id);
-  warn!("{} disconnected", private_id.to_owned());
+  clients.write().unwrap().remove(&user_id);
+  warn!("{} disconnected", user_id.to_owned());
 }
 
-pub async fn ws_handler(ws: warp::ws::Ws, private_id: String, clients: Clients, security: Security) -> ClientResult<impl Reply> {
-  let client = clients.read().unwrap().get(&private_id).cloned();
+pub async fn ws_handler(ws: warp::ws::Ws, user_id: String, clients: Clients, security: Security) -> ClientResult<impl Reply> {
+  let client = clients.read().unwrap().get(&user_id).cloned();
+  
   match client {
-    Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, private_id, clients.to_owned(), c, security))),
+    Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, user_id, clients.to_owned(), c, security))),
     None => Err(warp::reject::not_found()),
   }
 }

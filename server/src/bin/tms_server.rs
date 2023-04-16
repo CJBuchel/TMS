@@ -13,7 +13,7 @@
 // The server decides whether to send a copy of this message through websocket (2122) to all subscribed clients (except the origin sender, filter through uuid)
 // The server will constantly be sending Time events through ws (2122) as the timer counts down, will send to all subscribed clients.
 
-use std::env;
+use std::{env, borrow::Borrow};
 
 use log::info;
 use tms_server::{db::db::TmsDB, network::{security::Security, clients::{Clients, new_clients_map}, mdns_broadcaster::MDNSBroadcaster, ws_routes::TmsWebsocket, http_routes::TmsHttpServer}};
@@ -26,45 +26,51 @@ pub struct ServerConfig {
 }
 
 pub struct TmsServer {
-  tms_database: TmsDB,
-  mDNS: MDNSBroadcaster,
-  tmsWS: TmsWebsocket,
-  tmsHttp: TmsHttpServer,
+  config: ServerConfig,
 }
 
 impl TmsServer {
   pub fn new(config: ServerConfig) -> Self {
-
-    let rsa = Security::new();
-    let clients = new_clients_map();
-
     Self { 
-      tms_database: TmsDB::start(),
-      mDNS: MDNSBroadcaster::new(config.mdns_port, config.mdns_name),
-      tmsWS: TmsWebsocket::new(rsa.clone(), clients.clone(), config.ws_port),
-      tmsHttp: TmsHttpServer::new(rsa.clone(), clients.clone(), config.http_port)
+      config
     }
   }
 
   pub async fn start(&self) {
     info!("Starting TMS");
-    let _ = self.mDNS.start();
-    let _ = self.tmsWS.start();
-    let _ = self.tmsHttp.start().await.launch().await;
+
+
+    let rsa = Security::new();
+    let clients = new_clients_map();
+    
+    // Services
+    let m_dns = MDNSBroadcaster::new(self.config.mdns_port, self.config.mdns_name.clone());
+    let tms_ws = TmsWebsocket::new(rsa.clone(), clients.to_owned(), self.config.ws_port);
+    let tms_http = TmsHttpServer::new(rsa.clone(), clients.to_owned(), self.config.http_port, self.config.ws_port);
+
+    tokio::spawn(async move {
+      m_dns.start().await;
+    });
+
+    tokio::spawn(async move {
+      tms_ws.start().await
+    });
+
+    let _ = tms_http.start().await.launch().await;
   }
 }
 
 
 #[tokio::main]
 async fn main() {
-  env::set_var("RUST_LOG", "debug"); // temporary while the server is being built
+  env::set_var("RUST_LOG", "info"); // temporary while the server is being built
   pretty_env_logger::init();
   
   let main_server = TmsServer::new(ServerConfig { 
     http_port: 2121,
     ws_port: 2122,
     mdns_port: 2123,
-    mdns_name: "tms_mdns_broadcast_".to_string()
+    mdns_name: "_mdns-tms-server".to_string()
   });
 
   main_server.start().await;

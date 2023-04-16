@@ -294,13 +294,13 @@
       "type": "object",
       "required": [
         "key",
-        "uuid"
+        "url"
       ],
       "properties": {
         "key": {
           "type": "string"
         },
-        "uuid": {
+        "url": {
           "type": "string"
         }
       }

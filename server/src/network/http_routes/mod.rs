@@ -39,11 +39,12 @@ pub struct TmsHttpServer {
   security: Security,
   clients: Clients,
   port: u16,
+  ws_port: u16,
 }
 
 impl TmsHttpServer {
-  pub fn new(security: Security, clients: Clients, port: u16) -> Self {
-    Self { security, clients, port }
+  pub fn new(security: Security, clients: Clients, port: u16, ws_port: u16) -> Self {
+    Self { security, clients, port, ws_port }
   }
 
   pub async fn start(&self) -> Rocket<Build> {
@@ -56,6 +57,7 @@ impl TmsHttpServer {
       .manage(self.clients.clone())
       .manage(self.security.clone())
       .manage(self.security.public_key.clone())
+      .manage(self.ws_port.clone())
       .mount("/requests", routes![
         pulse_route,
         register_route,

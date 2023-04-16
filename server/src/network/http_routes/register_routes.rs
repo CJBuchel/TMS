@@ -1,16 +1,16 @@
 use local_ip_address::linux::local_ip;
+use ::log::{warn, info};
 use rocket::*;
 use rocket::State;
 use rocket::http::Status;
 use rocket::serde::json::{Json};
-use uuid::Uuid;
 
 use crate::network::clients::{Clients, Client};
 use crate::schemas::*;
 
-fn register_client(private_id: String, user_id: String, key: String, clients: Clients) {
+fn register_client(user_id: String, key: String, clients: Clients) {
   clients.write().unwrap().insert(
-    private_id.clone(),
+    user_id.clone(),
     Client {
       user_id,
       key,
@@ -19,25 +19,34 @@ fn register_client(private_id: String, user_id: String, key: String, clients: Cl
   );
 }
 
+fn unregister_client(user_id: String, clients: Clients) {
+  clients.write().unwrap().remove(&user_id);
+  warn!("Unregistered Client {}", user_id);
+}
+
 #[post("/register", data = "<register_request>")]
-pub fn register_route(clients: &State<Clients>, s_public_key: &State<Vec<u8>>, register_request: Json<RegisterRequest>) -> Result<Json<RegisterResponse>, ()> {
+pub fn register_route(clients: &State<Clients>, s_public_key: &State<Vec<u8>>, ws_port: &State<u16>, register_request: Json<RegisterRequest>) -> Result<Json<RegisterResponse>, ()> {
   let user_id = register_request.user_id.clone();
-  let private_id = Uuid::new_v4().as_simple().to_string();
+  let server_ip = local_ip().unwrap();
 
-  register_client(private_id.to_owned(), user_id.to_owned(), register_request.key.to_owned(), clients.inner().clone());
+  if clients.read().unwrap().contains_key(&user_id) {
+    return Ok(Json(RegisterResponse {
+      key: String::from_utf8(s_public_key.to_vec()).unwrap(),
+      url: format!("ws://{:?}:{}/ws/{}", server_ip, ws_port, user_id)
+    }));
+  }
 
-  info!("Registered Client: {}", user_id);
-  // info!("Client Public Key: {}", register_request.key);
+  register_client(user_id.to_owned(), register_request.key.to_owned(), clients.inner().clone());
 
+  info!("Registered New Client: {}", user_id);
   Ok(Json(RegisterResponse {
     key: String::from_utf8(s_public_key.to_vec()).unwrap(),
-    uuid: private_id
+    url: format!("ws://{:?}:{}/ws/{}", server_ip, ws_port, user_id)
   }))
 }
 
-#[delete("/register/<private_id>")]
-pub fn unregister_route(clients: &State<Clients>, private_id: String) -> Result<Status, ()> {
-  clients.write().unwrap().remove(&private_id);
-  warn!("Unregistered Client {}", private_id);
+#[delete("/register/<user_id>")]
+pub fn unregister_route(clients: &State<Clients>, user_id: String) -> Result<Status, Status> {
+  unregister_client(user_id, clients.inner().clone());
   Ok(Status::Ok)
 }

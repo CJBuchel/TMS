@@ -1,4 +1,5 @@
 use local_ip_address::linux::local_ip;
+use log::info;
 use mdns_sd::{ServiceDaemon, ServiceInfo};
 use std::{collections::HashMap, fmt::format};
 
@@ -13,6 +14,7 @@ impl MDNSBroadcaster {
   }
 
   pub async fn start(&self) {
+    info!("mDNS Service Starting");
     let mdns = ServiceDaemon::new().expect("Failed to create mDNS daemon");
 
     let service_name: String = format!("{}._udp.local.", self.name);

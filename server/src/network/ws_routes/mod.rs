@@ -36,20 +36,22 @@ impl TmsWebsocket {
   }
 
   pub async fn start(&self) {
+    info!("Warp starting");
     let cors = warp::cors().allow_any_origin()
     .allow_headers(vec!["Access-Control-Allow-Headers", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Accept", "X-Requested-With", "Content-Type"])
     .allow_methods(&[Method::GET, Method::POST, Method::PUT, Method::PATCH, Method::DELETE, Method::OPTIONS, Method::HEAD]);
   
-  // websocket route
-  let ws_route = warp::path!("ws")
-  .and(warp::ws())
-  .and(warp::path::param())
-  .and(with_clients(self.clients.to_owned()))
-  .and(with_security(self.security.clone()))
-  .and_then(ws_handler);
+    // websocket route
+    let ws_path = warp::path("ws");
+    let ws_route = ws_path
+    .and(warp::ws())
+    .and(warp::path::param())
+    .and(with_clients(self.clients.to_owned()))
+    .and(with_security(self.security.clone()))
+    .and_then(ws_handler);
 
     info!("Starting websocket server");
     let routes = ws_route.with(cors);
-    warp::serve(routes).run(([0,0,0,0], self.port)).await;
+    warp::serve(routes).run(([0,0,0,0], 2122)).await;
   }
 }

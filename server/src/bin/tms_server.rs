@@ -69,7 +69,7 @@ async fn main() {
   let main_server = TmsServer::new(ServerConfig { 
     http_port: 2121,
     ws_port: 2122,
-    mdns_port: 2123,
+    mdns_port: 5353,
     mdns_name: "_mdns-tms-server".to_string()
   });
 

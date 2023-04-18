@@ -16,6 +16,18 @@ class TMSApp extends StatefulWidget {
 
 class _TMSAppState extends State<TMSApp> {
   // This widget is the root of your application.
+
+  Widget menuApp() {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => MenuAppController(),
+        ),
+      ],
+      child: MainScreen(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,10 +50,7 @@ class _TMSAppState extends State<TMSApp> {
       // ),
 
       // Main Router
-      routes: {
-        '/': (context) => Landing(),
-        // '/dashboard': (context) => MultiProvider(providers: [ChangeNotifierProvider(create: (context) => Men)])
-      },
+      routes: {'/': (context) => Landing(), '/dashboard': (context) => menuApp()},
     );
   }
 }

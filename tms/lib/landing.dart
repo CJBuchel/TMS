@@ -50,6 +50,7 @@ class _LandingState extends State<Landing> {
       if (Network.getWebsocketState() == NetworkWebSocketState.connected) {
         setState(() {
           _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
+          Navigator.pushNamed(context, "/dashboard");
         });
       } else {
         setState(() {

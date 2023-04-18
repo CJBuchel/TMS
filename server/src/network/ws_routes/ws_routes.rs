@@ -44,7 +44,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: Clients, mut
     let msg = match result {
       Ok(msg) => msg,
       Err(e) => {
-        error!("error receiving message for private id: {}: {}", user_id.clone(), e);
+        error!("error receiving message for user id: {}: {}", user_id.clone(), e);
         break;
       }
     };

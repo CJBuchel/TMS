@@ -13,4 +13,6 @@ const requestPort = 2121;
 const wsPort = 2122;
 
 // Storage constants
-const serverIP = "ServerIP";
+const store_serverIP = "ServerIP";
+const store_connection = "ServerConnection";
+const store_ws_connection = "ServerWSConnection";

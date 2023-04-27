@@ -1,11 +1,10 @@
 import 'package:tms/constants.dart';
-import 'package:tms/controllers/MenuAppController.dart';
-import 'package:tms/landing.dart';
+import 'package:tms/screens/shared/connection.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:tms/screens/screen_selector/screen_selector.dart';
 
 class TMSApp extends StatefulWidget {
   TMSApp({super.key});
@@ -16,17 +15,6 @@ class TMSApp extends StatefulWidget {
 
 class _TMSAppState extends State<TMSApp> {
   // This widget is the root of your application.
-
-  Widget menuApp() {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => MenuAppController(),
-        ),
-      ],
-      child: MainScreen(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +27,11 @@ class _TMSAppState extends State<TMSApp> {
         canvasColor: secondaryColor,
       ),
 
-      // Home screen (starter)
-      // home: MultiProvider(
-      //   providers: [
-      //     ChangeNotifierProvider(
-      //       create: (context) => MenuAppController(),
-      //     ),
-      //   ],
-      //   child: MainScreen(),
-      // ),
-
       // Main Router
-      routes: {'/': (context) => Landing(), '/dashboard': (context) => menuApp()},
+      routes: {
+        '/': (context) => ScreenSelector(),
+        '/server_connection': (context) => Connection(),
+      },
     );
   }
 }

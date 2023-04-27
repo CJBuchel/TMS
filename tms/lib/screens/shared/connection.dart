@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/screens/shared/app_bar.dart';
 
-class Landing extends StatefulWidget {
-  Landing({super.key});
+class Connection extends StatefulWidget {
+  Connection({super.key});
 
   @override
-  _LandingState createState() => _LandingState();
+  _ConnectionState createState() => _ConnectionState();
 }
 
-class _LandingState extends State<Landing> {
+class _ConnectionState extends State<Connection> {
   String _serverIP = '';
   Widget _searchState = const Text("");
   Widget _connectState = const Text("");
-  TextEditingController _controller = new TextEditingController();
+  final TextEditingController _controller = TextEditingController();
 
   void findServer() async {
     setState(() {
@@ -22,6 +23,7 @@ class _LandingState extends State<Landing> {
     });
 
     var state = await Network.findServer();
+    print(state);
     if (state == NetworkConnectionState.connected) {
       setState(() {
         _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
@@ -37,6 +39,7 @@ class _LandingState extends State<Landing> {
     }
 
     _serverIP = await Network.getServerIP();
+    // print("Finished findServer in screen");
     _controller.text = _serverIP;
   }
 
@@ -46,17 +49,22 @@ class _LandingState extends State<Landing> {
     });
 
     Network.connect().then((v) {
-      print("Completed action");
-      if (Network.getWebsocketState() == NetworkWebSocketState.connected) {
-        setState(() {
-          _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
-          Navigator.pushNamed(context, "/dashboard");
-        });
-      } else {
-        setState(() {
-          _connectState = const Text(" - Websocket Failed To Connect", style: TextStyle(color: Colors.red));
-        });
-      }
+      NetworkWebSocket.getState().then((state) => {
+            if (state == NetworkWebSocketState.connected)
+              {
+                setState(() {
+                  _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
+                  // Navigator.pushNamed(context, "/");
+                  Navigator.pop(context, _connectState);
+                })
+              }
+            else
+              {
+                setState(() {
+                  _connectState = const Text(" - Websocket Failed To Connect", style: TextStyle(color: Colors.red));
+                })
+              }
+          });
     });
   }
 
@@ -77,6 +85,7 @@ class _LandingState extends State<Landing> {
       buttonHeight = 40;
     }
     return Scaffold(
+      appBar: TmsToolBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // y axis
         children: <Widget>[

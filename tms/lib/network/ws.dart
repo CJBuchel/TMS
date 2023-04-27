@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:http/http.dart' as http;
@@ -20,24 +22,38 @@ enum NetworkWebSocketState {
 }
 
 class NetworkWebSocket {
-  NetworkWebSocketState _connectionState = NetworkWebSocketState.disconnected;
-  // RegisterState _registerState = RegisterState.unregistered;
-  final _userID = const Uuid().v4();
-  late WebSocketChannel _channel;
-  late RegisterResponse _registerResponse;
-  late KeyPair _keyPair;
-  late String _serverKey;
+  // static NetworkWebSocketState _connectionState = NetworkWebSocketState.disconnected;
+  static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  static final _userID = const Uuid().v4();
+  static late WebSocketChannel _channel;
+  static late RegisterResponse _registerResponse;
+  static late KeyPair _keyPair;
+  static late String _serverKey;
 
-  NetworkWebSocketState getState() {
-    return _connectionState;
+  static void setState(NetworkWebSocketState state) async {
+    await _localStorage.then((value) => value.setString(store_ws_connection, EnumToString.convertToString(state)));
   }
 
-  Future<KeyPair> generateKeyPair() async {
-    _connectionState = NetworkWebSocketState.connectingEncryption;
+  static Future<NetworkWebSocketState> getState() async {
+    try {
+      var stateString = await _localStorage.then((value) => value.getString(store_ws_connection));
+      var state = EnumToString.fromString(NetworkWebSocketState.values, stateString!);
+      if (state != null) {
+        return state;
+      } else {
+        return NetworkWebSocketState.disconnected;
+      }
+    } catch (e) {
+      return NetworkWebSocketState.disconnected;
+    }
+  }
+
+  static Future<KeyPair> generateKeyPair() async {
+    setState(NetworkWebSocketState.connectingEncryption);
     return await RSA.generate(2048);
   }
 
-  Future<RegisterState> register(String addr) async {
+  static Future<RegisterState> register(String addr) async {
     _keyPair = await generateKeyPair();
     final request = RegisterRequest(key: _keyPair.publicKey, userId: _userID);
     final response = await http.post(Uri.parse('http://$addr:$requestPort/requests/register'), body: jsonEncode(request.toJson()));
@@ -46,7 +62,6 @@ class NetworkWebSocket {
       _registerResponse = RegisterResponse.fromJson(jsonDecode(response.body));
       return RegisterState.registered;
     } else if (response.statusCode == 208) {
-      print("Already Registered");
       return RegisterState.alreadyRegistered;
     } else {
       await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$_userID'));
@@ -54,33 +69,14 @@ class NetworkWebSocket {
     }
   }
 
-  // static Future<bool> checkConnection() async {
-  //   // print(_keyPair.publicKey);
-  //   SocketMessage message = SocketMessage(fromId: _userID, message: "Ping", topic: "Ping");
-  //   var result = await RSA.encryptPKCS1v15(jsonEncode(message.toJson()), _serverKey);
-  //   _channel.sink.add(result);
-  //   print(_keyPair.publicKey);
-  //   _channel.stream.listen((event) async {
-  //     var decrypted_message = await RSA.decryptPKCS1v15(event, _keyPair.privateKey);
-  //     SocketMessage message_from_server = SocketMessage.fromJson(jsonDecode(decrypted_message));
-  //     print(message_from_server.message);
-  //     return;
-  //   });
-  //   return true;
-  // }
-
-  void send(SocketMessage message) {
-    _channel.sink.add(jsonEncode(message.toJson()));
-  }
-
-  Future<void> connect(String addr) async {
+  static Future<void> connect(String addr) async {
     RegisterState state = RegisterState.unregistered;
     try {
       state = await register(addr);
       _serverKey = _registerResponse.key;
     } catch (e) {
       print("Register Error");
-      _connectionState = NetworkWebSocketState.disconnected;
+      setState(NetworkWebSocketState.disconnected);
       return;
     }
 
@@ -90,18 +86,18 @@ class NetworkWebSocket {
       }
       await _channel.ready.then((v) {
         print("Socket Ready");
-        _connectionState = NetworkWebSocketState.connected;
+        setState(NetworkWebSocketState.connected);
       }).onError((error, stackTrace) {
         print("Websocket Connection Error");
-        _connectionState = NetworkWebSocketState.disconnected;
+        setState(NetworkWebSocketState.disconnected);
       });
     } catch (e) {
       print("Websocket Error detected");
-      _connectionState = NetworkWebSocketState.disconnected;
+      setState(NetworkWebSocketState.disconnected);
     }
   }
 
-  void disconnect() async {
+  static void disconnect() async {
     _channel.sink.close();
   }
 }

@@ -16,9 +16,7 @@ class Network {
 
   static Future<void> setState(NetworkConnectionState state) async {
     await _localStorage.then((value) async {
-      // print(EnumToString.convertToString(state));
       await value.setString(store_connection, EnumToString.convertToString(state));
-      // print("Complete");
     });
   }
 
@@ -59,21 +57,23 @@ class Network {
     await NetworkWebSocket.connect(await getServerIP());
   }
 
-  // Get the pulse of the server, returns true if status is ok
+  // Get the pulse of the server, returns the status of the connection
   static Future<NetworkConnectionState> getPulse() async {
     try {
       var serverIP = await getServerIP();
-      final response = await http.get(Uri.parse("http://$serverIP:$requestPort/requests/pulse"));
-      if (response.statusCode == 200) {
-        await setState(NetworkConnectionState.connected);
+      if (serverIP.isEmpty || await getState() == NetworkConnectionState.disconnected) {
+        await setState(NetworkConnectionState.disconnected);
       } else {
-        await setState(NetworkConnectionState.connectedNoPulse);
+        final response = await http.get(Uri.parse("http://$serverIP:$requestPort/requests/pulse"));
+        if (response.statusCode == 200) {
+          await setState(NetworkConnectionState.connected);
+        } else {
+          await setState(NetworkConnectionState.connectedNoPulse);
+        }
       }
     } catch (e) {
       await setState(NetworkConnectionState.connectedNoPulse);
     }
-
-    print(await getState());
 
     return await getState();
   }

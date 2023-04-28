@@ -35,6 +35,8 @@ class _TMSAppState extends State<TMSApp> {
     if (_connectionTimer.isActive) {
       _connectionTimer.cancel();
     }
+
+    NetworkWebSocket.disconnect();
   }
 
   Future<void> checkConnection() async {

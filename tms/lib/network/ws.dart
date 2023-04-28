@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -69,6 +70,16 @@ class NetworkWebSocket {
     }
   }
 
+  static void listen() async {
+    _channel.stream.listen((event) {}, onDone: () {
+      setState(NetworkWebSocketState.disconnected);
+      print("Closed");
+    }, onError: (e) {
+      print("Error");
+      setState(NetworkWebSocketState.disconnected);
+    });
+  }
+
   static Future<void> connect(String addr) async {
     RegisterState state = RegisterState.unregistered;
     try {
@@ -87,6 +98,7 @@ class NetworkWebSocket {
       await _channel.ready.then((v) {
         print("Socket Ready");
         setState(NetworkWebSocketState.connected);
+        listen();
       }).onError((error, stackTrace) {
         print("Websocket Connection Error");
         setState(NetworkWebSocketState.disconnected);

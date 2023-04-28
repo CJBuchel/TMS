@@ -11,6 +11,7 @@ const defaultPadding = 16.0;
 const mdnsName = '_mdns-tms-server._udp.local';
 const requestPort = 2121;
 const wsPort = 2122;
+const watchDogTime = Duration(seconds: 5);
 
 // Storage constants
 const store_serverIP = "ServerIP";

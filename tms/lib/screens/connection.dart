@@ -5,7 +5,8 @@ import 'package:tms/responsive.dart';
 import 'package:tms/screens/shared/app_bar.dart';
 
 class Connection extends StatefulWidget {
-  Connection({super.key});
+  TmsToolBar toolBar;
+  Connection({super.key, required this.toolBar});
 
   @override
   _ConnectionState createState() => _ConnectionState();
@@ -85,7 +86,7 @@ class _ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: widget.toolBar,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // y axis
         children: <Widget>[

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tms/screens/shared/app_bar.dart';
 
 class ScreenSelector extends StatefulWidget {
-  ScreenSelector({super.key});
+  TmsToolBar toolBar;
+  ScreenSelector({super.key, required this.toolBar});
 
   @override
   _ScreenSelectorState createState() => _ScreenSelectorState();
@@ -16,9 +17,8 @@ class _ScreenSelectorState extends State<ScreenSelector> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return (Scaffold(
-      appBar: TmsToolBar(),
+      appBar: widget.toolBar,
     ));
   }
 }

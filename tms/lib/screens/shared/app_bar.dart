@@ -9,7 +9,10 @@ import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
 
 class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
-  TmsToolBar({super.key});
+  NetworkConnectionState ntState;
+  NetworkWebSocketState wsState;
+
+  TmsToolBar({super.key, required this.ntState, required this.wsState});
 
   @override
   _TmsToolBarState createState() => _TmsToolBarState();
@@ -30,41 +33,40 @@ class _TmsToolBarState extends State<TmsToolBar> {
     style: TextStyle(color: Colors.red),
   );
 
-  static Timer _timer = Timer.periodic(const Duration(seconds: 5), (timer) {});
-
   @override
   void initState() {
     super.initState();
     checkConnection();
-
-    _timer.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      checkConnection();
-    });
   }
 
   // check the nt status
   void checkNT(NetworkConnectionState state) async {
     switch (state) {
       case NetworkConnectionState.disconnected:
-        ntStatusText = const Text(
-          "NO NT",
-          style: TextStyle(color: Colors.red),
-        );
+        setState(() {
+          ntStatusText = const Text(
+            "NO NT",
+            style: TextStyle(color: Colors.red),
+          );
+        });
         break;
 
       case NetworkConnectionState.connectedNoPulse:
-        ntStatusText = const Text(
-          "NO PULSE",
-          style: TextStyle(color: Colors.orange),
-        );
+        setState(() {
+          ntStatusText = const Text(
+            "NO PULSE",
+            style: TextStyle(color: Colors.orange),
+          );
+        });
         break;
 
       case NetworkConnectionState.connected:
-        ntStatusText = const Text(
-          "OK",
-          style: TextStyle(color: Colors.green),
-        );
+        setState(() {
+          ntStatusText = const Text(
+            "OK",
+            style: TextStyle(color: Colors.green),
+          );
+        });
         break;
       default:
         setState(() {
@@ -79,24 +81,30 @@ class _TmsToolBarState extends State<TmsToolBar> {
   void checkWS(NetworkWebSocketState state) async {
     switch (state) {
       case NetworkWebSocketState.disconnected:
-        wsStatusText = const Text(
-          "NO WS",
-          style: TextStyle(color: Colors.red),
-        );
+        setState(() {
+          wsStatusText = const Text(
+            "NO WS",
+            style: TextStyle(color: Colors.red),
+          );
+        });
         break;
 
       case NetworkWebSocketState.connectingEncryption:
-        wsStatusText = const Text(
-          "ENC",
-          style: TextStyle(color: Colors.orange),
-        );
+        setState(() {
+          wsStatusText = const Text(
+            "ENC",
+            style: TextStyle(color: Colors.orange),
+          );
+        });
         break;
 
       case NetworkWebSocketState.connected:
-        wsStatusText = const Text(
-          "OK",
-          style: TextStyle(color: Colors.green),
-        );
+        setState(() {
+          wsStatusText = const Text(
+            "OK",
+            style: TextStyle(color: Colors.green),
+          );
+        });
         break;
       default:
         setState(() {
@@ -126,16 +134,15 @@ class _TmsToolBarState extends State<TmsToolBar> {
   }
 
   void checkConnection() async {
-    var ntState = await Network.getPulse();
-    var wsState = await NetworkWebSocket.getState();
-    checkNetwork(ntState, wsState);
-    checkNT(ntState);
-    checkWS(wsState);
+    checkNetwork(widget.ntState, widget.wsState);
+    checkNT(widget.ntState);
+    checkWS(widget.wsState);
   }
 
-  Future<void> actionGoTo(String link) async {
-    _timer.cancel();
-    return Navigator.pushNamed(context, link).then((value) => {checkConnection()});
+  @override
+  void didUpdateWidget(covariant TmsToolBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    checkConnection();
   }
 
   @override
@@ -154,8 +161,9 @@ class _TmsToolBarState extends State<TmsToolBar> {
       actions: [
         IconButton(
           onPressed: () {
-            _timer.cancel();
-            actionGoTo("/server_connection");
+            // _timer.cancel();
+            // actionGoTo("/server_connection");
+            Navigator.pushNamed(context, "/server_connection");
           },
           icon: connectionIcon,
         ),

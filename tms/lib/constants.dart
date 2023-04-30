@@ -9,7 +9,15 @@ const defaultPadding = 16.0;
 
 // Variable constants
 const mdnsName = '_mdns-tms-server._udp.local';
-const commsPort = 2121;
+const requestPort = 2121;
+const wsPort = 2122;
+const watchDogTime = Duration(seconds: 5);
 
-// Storage constants
-const serverIP = "ServerIP";
+// Local Storage Constants
+const store_serverIP = "ServerIP";
+const store_connection_state = "ServerConnectionState";
+const store_ws_connection_state = "ServerWSConnectionState";
+// const store_nt_uuid = "ntUuid";
+// const store_nt_publicKey = "ntPuplicKey";
+// const store_nt_privateKey = "ntPrivateKey";
+// const store_nt_serverKey = "ntServerKey";

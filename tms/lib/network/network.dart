@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/foundation.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:http/http.dart' as http;
@@ -11,68 +12,82 @@ enum NetworkConnectionState { disconnected, connectedNoPulse, connected }
 
 // Pure static network class
 class Network {
-  static NetworkConnectionState _connectionState = NetworkConnectionState.disconnected;
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
-  static NetworkWebSocket _websocket = NetworkWebSocket();
 
-  static Future<void> connect() async {
-    await _websocket.connect(await getServerIP());
+  static Future<void> setState(NetworkConnectionState state) async {
+    await _localStorage.then((value) async {
+      await value.setString(store_connection_state, EnumToString.convertToString(state));
+    });
   }
 
-  static NetworkWebSocketState getWebsocketState() {
-    return _websocket.getState();
-  }
-
-  static void setServerIP(String ip) {
+  static Future<NetworkConnectionState> getState() async {
     try {
-      _localStorage.then((value) => value.setString(serverIP, ip));
+      var stateString = await _localStorage.then((value) => value.getString(store_connection_state));
+      if (stateString != null) {
+        var state = EnumToString.fromString(NetworkConnectionState.values, stateString);
+        if (state != null) {
+          return state;
+        }
+      }
     } catch (e) {
-      print(e);
+      return NetworkConnectionState.disconnected;
+    }
+
+    return NetworkConnectionState.disconnected;
+  }
+
+  static Future<void> setServerIP(String ip) async {
+    try {
+      await _localStorage.then((value) async => await value.setString(store_serverIP, ip));
+    } catch (e) {
+      throw Exception("Failed to set server ip");
     }
   }
 
   static Future<String> getServerIP() async {
     try {
       var storage = await _localStorage;
-      return storage.getString(serverIP).toString();
+      return storage.getString(store_serverIP).toString();
     } catch (e) {
-      print(e);
-      return '';
+      throw Exception("Failed to get server ip from storage");
     }
   }
 
-  static NetworkConnectionState getConnectionState() {
-    return _connectionState;
+  static Future<void> connect() async {
+    await NetworkWebSocket.connect(await getServerIP());
   }
 
-  // Get the pulse of the server, returns true if status is ok
+  // Get the pulse of the server, returns the status of the connection
   static Future<NetworkConnectionState> getPulse() async {
     try {
       var serverIP = await getServerIP();
-      final response = await http.get(Uri.parse("http://$serverIP:$commsPort/pulse"));
-      if (response.statusCode == 200) {
-        _connectionState = NetworkConnectionState.connected;
+      if (serverIP.isEmpty || await getState() == NetworkConnectionState.disconnected) {
+        await setState(NetworkConnectionState.disconnected);
       } else {
-        _connectionState = NetworkConnectionState.connectedNoPulse;
+        final response = await http.get(Uri.parse("http://$serverIP:$requestPort/requests/pulse"));
+        if (response.statusCode == 200) {
+          await setState(NetworkConnectionState.connected);
+        } else {
+          await setState(NetworkConnectionState.connectedNoPulse);
+        }
       }
     } catch (e) {
-      print(e);
-      _connectionState = NetworkConnectionState.connectedNoPulse;
+      await setState(NetworkConnectionState.connectedNoPulse);
     }
 
-    return _connectionState;
+    return await getState();
   }
 
   // Find Server
   static Future<NetworkConnectionState> findServer() async {
-    String ip = '';
+    String ip = await getServerIP(); // set to the existing ip (local storage)
     if (kIsWeb) {
       var host = Uri.base.origin;
-      print(host);
+
       if (host.isNotEmpty) {
         var addr = host.split('http://')[1];
         ip = addr.split(':')[0].isNotEmpty ? addr.split(':')[0] : '';
-        _connectionState = ip.isNotEmpty ? NetworkConnectionState.connectedNoPulse : NetworkConnectionState.disconnected;
+        await setState(ip.isNotEmpty ? NetworkConnectionState.connectedNoPulse : NetworkConnectionState.disconnected);
       }
     } else {
       const String name = mdnsName;
@@ -83,17 +98,13 @@ class Network {
           final String bundleId = ptr.domainName;
           await for (final IPAddressResourceRecord addr in client.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(srv.target))) {
             ip = addr.address.address.isNotEmpty ? addr.address.address : '';
-            _connectionState = ip.isNotEmpty ? NetworkConnectionState.connectedNoPulse : NetworkConnectionState.disconnected;
+            await setState(ip.isNotEmpty ? NetworkConnectionState.connectedNoPulse : NetworkConnectionState.disconnected);
           }
         }
       }
     }
 
-    _localStorage.then((value) => value.setString(serverIP, ip));
-    if (_connectionState != NetworkConnectionState.disconnected) {
-      return await getPulse();
-    } else {
-      return _connectionState;
-    }
+    await setServerIP(ip);
+    return await getPulse();
   }
 }

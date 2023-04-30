@@ -1,4 +1,4 @@
-use schemars::{JsonSchema, JsonSchema_repr};
+use schemars::{JsonSchema};
 use serde::{Deserialize, Serialize};
 
 use super::{GameScoresheet, JudgingScoresheet};

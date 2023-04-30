@@ -10,10 +10,10 @@ pub struct OnlineLink {
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct Event {
-  name: String,
-  tables: Vec<String>,
-  pods: Vec<String>,
-  event_rounds: u8,
-  season: String,
-  online_link: OnlineLink
+  pub name: String,
+  pub tables: Vec<String>,
+  pub pods: Vec<String>,
+  pub event_rounds: u8,
+  pub season: String,
+  pub online_link: OnlineLink
 }

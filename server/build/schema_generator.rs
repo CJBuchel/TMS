@@ -19,7 +19,8 @@ pub struct TmsSchema {
   // Network structures
   register_request: RegisterRequest,
   register_response: RegisterResponse,
-  socket_event: SocketMessage
+  socket_event: SocketMessage,
+  integrity_message: IntegrityMessage
 }
 
 pub fn generate_schema(outdir: &OsString) {

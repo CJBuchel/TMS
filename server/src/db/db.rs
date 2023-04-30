@@ -6,13 +6,22 @@ use crate::schemas::*;
 
 #[derive(Clone)]
 pub struct Database {
-  teams: Tree<Team>,
-  matches: Tree<GameMatch>,
-  judging_sessions: Tree<JudgingSession>,
-  users: Tree<User>,
-  event: Tree<Event>
+  pub teams: Tree<Team>,
+  pub matches: Tree<GameMatch>,
+  pub judging_sessions: Tree<JudgingSession>,
+  pub users: Tree<User>,
+  pub event: Tree<Event>
 }
 
+pub trait AccessDatabase {
+  type Data: Clone;
+  type Error;
+  fn db_get(&self, key: String) -> Result<Self::Data, Self::Error>;
+  fn db_set(&self, key: String, data: Self::Data) -> Result<Self::Data, Self::Error>;
+  fn db_add(&self, data: Self::Data) -> Result<Self::Data, Self::Error>;
+}
+
+#[derive(Clone)]
 pub struct TmsDB {
   pub db: Db,
   pub tms_data: Database

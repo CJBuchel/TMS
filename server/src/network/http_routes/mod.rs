@@ -34,7 +34,7 @@ fn pulse_route() -> TmsRouteResponse<(),()> {
   TmsRespond!();
 }
 
-#[get("/pulse_integrity", data = "<message>")]
+#[post("/pulse_integrity", data = "<message>")]
 fn pulse_integrity_route(security: &State<Security>, _clients: &State<TmsClients>, message: String) -> TmsRouteResponse<IntegrityMessage, ()> {
   TmsRespond!(Status::Ok, TmsRequest!(message, security));
 }

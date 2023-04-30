@@ -1,17 +1,14 @@
 pub mod ws_routes;
 
-use std::{convert::Infallible};
+use std::convert::Infallible;
 
 use log::info;
+use tms_utils::{security::Security, TmsClients};
 use warp::{hyper::Method, Filter};
-
-use crate::network::security::Security;
 
 use self::ws_routes::ws_handler;
 
-use super::clients::Clients;
-
-fn with_clients(clients: Clients) -> impl Filter<Extract = (Clients,), Error = Infallible> + Clone {
+fn with_clients(clients: TmsClients) -> impl Filter<Extract = (TmsClients,), Error = Infallible> + Clone {
   warp::any().map(move || clients.clone())
 }
 
@@ -22,12 +19,12 @@ fn with_security(security: Security) -> impl Filter<Extract = (Security,), Error
 
 pub struct TmsWebsocket {
   security: Security,
-  clients: Clients,
+  clients: TmsClients,
   port: u16,
 }
 
 impl TmsWebsocket {
-  pub fn new(security: Security, clients: Clients, port: u16) -> Self {
+  pub fn new(security: Security, clients: TmsClients, port: u16) -> Self {
     Self {
       security,
       clients,
@@ -52,6 +49,6 @@ impl TmsWebsocket {
 
     info!("Starting websocket server");
     let routes = ws_route.with(cors);
-    warp::serve(routes).run(([0,0,0,0], 2122)).await;
+    warp::serve(routes).run(([0,0,0,0], self.port)).await;
   }
 }

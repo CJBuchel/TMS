@@ -1,6 +1,6 @@
 use sled_extensions::bincode::Tree;
 
-use crate::{db::db::{AccessDatabase, TmsDB}, schemas::{Team, SocketMessage}};
+use crate::{db::db::{AccessDatabase}, schemas::{Team}};
 
 impl AccessDatabase for Tree<Team> {
   type Data = Team;

@@ -5,6 +5,7 @@
   "required": [
     "event",
     "game_match",
+    "integrity_message",
     "judging_session",
     "register_request",
     "register_response",
@@ -18,6 +19,9 @@
     },
     "game_match": {
       "$ref": "#/definitions/GameMatch"
+    },
+    "integrity_message": {
+      "$ref": "#/definitions/IntegrityMessage"
     },
     "judging_session": {
       "$ref": "#/definitions/JudgingSession"
@@ -164,6 +168,17 @@
           "type": "string"
         },
         "tournament_id": {
+          "type": "string"
+        }
+      }
+    },
+    "IntegrityMessage": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
           "type": "string"
         }
       }

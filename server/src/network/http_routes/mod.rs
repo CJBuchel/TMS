@@ -1,13 +1,14 @@
-use super::{security::Security, clients::Clients};
 use ::log::info;
 use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}, serde::json::Json};
+
+use crate::schemas::*;
 
 mod register_routes;
 use register_routes::*;
 
 mod publish_routes;
 use publish_routes::*;
-use tms_utils::{RouteResponse, Respond};
+use tms_utils::{security::Security, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest};
 
 pub struct CORS;
 
@@ -29,23 +30,25 @@ impl Fairing for CORS {
 }
 
 #[get("/pulse")]
-fn pulse_route() -> RouteResponse<(),()> {
-  Respond!();
+fn pulse_route() -> TmsRouteResponse<(),()> {
+  TmsRespond!();
 }
 
-// #[get("/client_evaluate")]
-// fn client_evaluate_route() 
+#[get("/pulse_integrity", data = "<message>")]
+fn pulse_integrity_route(security: &State<Security>, _clients: &State<TmsClients>, message: String) -> TmsRouteResponse<IntegrityMessage, ()> {
+  TmsRespond!(Status::Ok, TmsRequest!(message, security));
+}
 
 
 pub struct TmsHttpServer {
   security: Security,
-  clients: Clients,
+  clients: TmsClients,
   port: u16,
   ws_port: u16,
 }
 
 impl TmsHttpServer {
-  pub fn new(security: Security, clients: Clients, port: u16, ws_port: u16) -> Self {
+  pub fn new(security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
     Self { security, clients, port, ws_port }
   }
 
@@ -62,6 +65,7 @@ impl TmsHttpServer {
       .manage(self.ws_port.clone())
       .mount("/requests", routes![
         pulse_route,
+        pulse_integrity_route,
         register_route,
         unregister_route,
         publish_route

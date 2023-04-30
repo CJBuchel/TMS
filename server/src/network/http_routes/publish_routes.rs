@@ -1,29 +1,12 @@
 use rocket::{*, http::Status, serde::json::Json};
-use tms_utils::{Respond, RouteResponse};
-use warp::ws::Message;
+use tms_utils::{security::Security, TmsClients, TmsRouteResponse, TmsRespond, TmsRequest, tms_client_send_response};
 
-use crate::{network::{security::{Security, decrypt_local, encrypt}, clients::Clients}};
+
 use crate::schemas::*;
 
 #[post("/publish", data = "<message>")]
-pub fn publish_route(security: &State<Security>, clients: &State<Clients>, message: String) -> RouteResponse<(), ()> {
-  let decrypted_message = decrypt_local(security.inner().clone(), message);
-  let socket_message: SocketMessage = serde_json::from_str(decrypted_message.as_str()).unwrap();
-
-  clients
-    .read()
-    .unwrap()
-    .iter()
-    .filter(|(_, client)| match socket_message.from_id.clone() {
-      Some(v) => client.user_id != v,
-      None => true
-    })
-    .for_each(|(_, client)| {
-      if let Some(sender) = &client.ws_sender {
-        let j = serde_json::to_string(&socket_message).unwrap();
-        let encrypted_j = encrypt(client.key.to_owned(), j);
-        let _ = sender.send(Ok(Message::text(encrypted_j.clone())));
-      }
-    });
-  Respond!();
+pub fn publish_route(security: &State<Security>, clients: &State<TmsClients>, message: String) -> TmsRouteResponse<(), ()> {
+  let socket_message: SocketMessage = TmsRequest!(message, security);
+  tms_client_send_response(socket_message.to_owned(), clients.inner().to_owned(), security.inner().to_owned(), socket_message.from_id);
+  TmsRespond!();
 }

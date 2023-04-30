@@ -4,9 +4,9 @@ use tms_utils::{security::Security, TmsClients, TmsRouteResponse, TmsRespond, Tm
 
 use crate::schemas::*;
 
-#[post("/publish", data = "<message>")]
-pub fn publish_route(security: &State<Security>, clients: &State<TmsClients>, message: String) -> TmsRouteResponse<(), ()> {
+#[post("/publish/<uuid>", data = "<message>")]
+pub fn publish_route(security: &State<Security>, clients: &State<TmsClients>, uuid: String, message: String) -> TmsRouteResponse<(), ()> {
   let socket_message: SocketMessage = TmsRequest!(message, security);
-  tms_client_send_response(socket_message.to_owned(), clients.inner().to_owned(), security.inner().to_owned(), socket_message.from_id);
+  tms_client_send_response(socket_message.to_owned(), clients.inner().to_owned(), Some(uuid));
   TmsRespond!();
 }

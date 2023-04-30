@@ -10,11 +10,11 @@ import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:fast_rsa/fast_rsa.dart';
 
-enum RegisterState {
-  unregistered,
-  registered,
-  alreadyRegistered,
-}
+// enum RegisterState {
+//   unregistered,
+//   registered,
+//   alreadyRegistered,
+// }
 
 enum NetworkWebSocketState {
   disconnected,
@@ -24,12 +24,12 @@ enum NetworkWebSocketState {
 
 class NetworkWebSocket {
   // static NetworkWebSocketState _connectionState = NetworkWebSocketState.disconnected;
-  static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
-  static final _userID = const Uuid().v4();
-  static late WebSocketChannel _channel;
-  static late RegisterResponse _registerResponse;
-  static late KeyPair _keyPair;
-  static late String _serverKey;
+  final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  final _userID = const Uuid().v4();
+  late WebSocketChannel _channel;
+  late RegisterResponse _registerResponse;
+  late KeyPair _keyPair;
+  late String _serverKey;
 
   static void setState(NetworkWebSocketState state) async {
     await _localStorage.then((value) => value.setString(store_ws_connection_state, EnumToString.convertToString(state)));

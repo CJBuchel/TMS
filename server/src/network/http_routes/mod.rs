@@ -1,3 +1,5 @@
+use std::fs::read;
+
 use ::log::info;
 use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}, serde::json::Json};
 
@@ -8,7 +10,7 @@ use register_routes::*;
 
 mod publish_routes;
 use publish_routes::*;
-use tms_utils::{security::Security, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest};
+use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, TmsEncryptedRouteResponse};
 
 pub struct CORS;
 
@@ -34,12 +36,21 @@ fn pulse_route() -> TmsRouteResponse<(),()> {
   TmsRespond!();
 }
 
-#[post("/pulse_integrity", data = "<message>")]
-fn pulse_integrity_route(security: &State<Security>, _clients: &State<TmsClients>, message: String) -> TmsRouteResponse<IntegrityMessage, ()> {
-  TmsRespond!(Status::Ok, TmsRequest!(message, security));
+#[post("/pulse_integrity/<uuid>", data = "<message>")]
+fn pulse_integrity_route(security: &State<Security>, _clients: &State<TmsClients>, uuid: String, message: String) -> TmsEncryptedRouteResponse<()> {
+  let message: IntegrityMessage = TmsRequest!(message, security);
+  
+  TmsRespond!(Status::Ok, message, _clients.inner(), uuid);
+  // if _clients.read().unwrap().contains_key(&uuid) {
+  //   warn!("Integrity Check on client: {}", uuid);
+
+  //   let client_key = _clients.read().unwrap().get(&uuid).unwrap().key.to_owned();
+  //   TmsRespond!(Status::Ok, message, client_key);
+  // }
+
+
+  // TmsRespond!(Status::BadRequest, message, "".to_string());
 }
-
-
 pub struct TmsHttpServer {
   security: Security,
   clients: TmsClients,

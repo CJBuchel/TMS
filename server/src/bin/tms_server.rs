@@ -63,7 +63,7 @@ impl TmsServer {
 
 #[tokio::main]
 async fn main() {
-  env::set_var("RUST_LOG", "info"); // temporary while the server is being built
+  env::set_var("RUST_LOG", "warn"); // temporary while the server is being built
   pretty_env_logger::init();
   
   let main_server = TmsServer::new(ServerConfig { 

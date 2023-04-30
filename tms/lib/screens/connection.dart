@@ -18,6 +18,17 @@ class _ConnectionState extends State<Connection> {
   Widget _connectState = const Text("");
   final TextEditingController _controller = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    Network.getServerIP().then((value) {
+      setState(() {
+        _serverIP = value;
+        _controller.text = value;
+      });
+    });
+  }
+
   void findServer() async {
     setState(() {
       _searchState = const Text("Searching For Server...", style: TextStyle(color: Colors.white));
@@ -40,7 +51,6 @@ class _ConnectionState extends State<Connection> {
     }
 
     _serverIP = await Network.getServerIP();
-    // print("Finished findServer in screen");
     _controller.text = _serverIP;
   }
 

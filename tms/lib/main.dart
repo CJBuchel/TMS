@@ -22,6 +22,7 @@ class _TMSAppState extends State<TMSApp> {
 
   Future<void> startConnection() async {
     print("Network Started");
+
     checkConnection();
     setState(() {
       _connectionTimer = Timer.periodic(watchDogTime, (timer) async {

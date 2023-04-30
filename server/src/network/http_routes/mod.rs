@@ -1,15 +1,13 @@
-
-use std::net::IpAddr;
-
-use super::{security::{Security}, clients::{Clients}};
+use super::{security::Security, clients::Clients};
 use ::log::info;
-use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}};
+use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}, serde::json::Json};
 
 mod register_routes;
 use register_routes::*;
 
 mod publish_routes;
 use publish_routes::*;
+use tms_utils::{RouteResponse, Respond};
 
 pub struct CORS;
 
@@ -31,9 +29,13 @@ impl Fairing for CORS {
 }
 
 #[get("/pulse")]
-fn pulse_route() -> Result<Status, ()> {
-  Ok(Status::Ok)
+fn pulse_route() -> RouteResponse<(),()> {
+  Respond!();
 }
+
+// #[get("/client_evaluate")]
+// fn client_evaluate_route() 
+
 
 pub struct TmsHttpServer {
   security: Security,

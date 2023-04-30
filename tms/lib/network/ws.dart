@@ -32,12 +32,12 @@ class NetworkWebSocket {
   static late String _serverKey;
 
   static void setState(NetworkWebSocketState state) async {
-    await _localStorage.then((value) => value.setString(store_ws_connection, EnumToString.convertToString(state)));
+    await _localStorage.then((value) => value.setString(store_ws_connection_state, EnumToString.convertToString(state)));
   }
 
   static Future<NetworkWebSocketState> getState() async {
     try {
-      var stateString = await _localStorage.then((value) => value.getString(store_ws_connection));
+      var stateString = await _localStorage.then((value) => value.getString(store_ws_connection_state));
       var state = EnumToString.fromString(NetworkWebSocketState.values, stateString!);
       if (state != null) {
         return state;
@@ -59,10 +59,12 @@ class NetworkWebSocket {
     final request = RegisterRequest(key: _keyPair.publicKey, userId: _userID);
     final response = await http.post(Uri.parse('http://$addr:$requestPort/requests/register'), body: jsonEncode(request.toJson()));
 
+    print("Status code: ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       _registerResponse = RegisterResponse.fromJson(jsonDecode(response.body));
       return RegisterState.registered;
     } else if (response.statusCode == 208) {
+      print("Already registered");
       return RegisterState.alreadyRegistered;
     } else {
       await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$_userID'));

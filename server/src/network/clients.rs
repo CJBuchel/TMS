@@ -1,4 +1,4 @@
-use std::{sync::{RwLock, Arc}, collections::HashMap, hash::Hash};
+use std::{sync::{RwLock, Arc}, collections::HashMap};
 
 use tokio::sync::mpsc;
 use warp::{ws::Message, Rejection};
@@ -12,7 +12,6 @@ pub struct Client {
 
 pub type ClientResult<T> = std::result::Result<T, Rejection>;
 pub type Clients = Arc<RwLock<HashMap<String, Client>>>;
-
 pub fn new_clients_map() -> Clients {
   return Arc::new(RwLock::new(HashMap::new()));
 }

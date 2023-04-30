@@ -13,7 +13,11 @@ const requestPort = 2121;
 const wsPort = 2122;
 const watchDogTime = Duration(seconds: 5);
 
-// Storage constants
+// Local Storage Constants
 const store_serverIP = "ServerIP";
-const store_connection = "ServerConnection";
-const store_ws_connection = "ServerWSConnection";
+const store_connection_state = "ServerConnectionState";
+const store_ws_connection_state = "ServerWSConnectionState";
+// const store_nt_uuid = "ntUuid";
+// const store_nt_publicKey = "ntPuplicKey";
+// const store_nt_privateKey = "ntPrivateKey";
+// const store_nt_serverKey = "ntServerKey";

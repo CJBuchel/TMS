@@ -1,11 +1,12 @@
-use rocket::{*, http::Status};
+use rocket::{*, http::Status, serde::json::Json};
+use tms_utils::{Respond, RouteResponse};
 use warp::ws::Message;
 
-use crate::network::{security::{Security, decrypt_local, encrypt}, clients::Clients};
+use crate::{network::{security::{Security, decrypt_local, encrypt}, clients::Clients}};
 use crate::schemas::*;
 
 #[post("/publish", data = "<message>")]
-pub fn publish_route(security: &State<Security>, clients: &State<Clients>, message: String) -> Result<Status, ()> {
+pub fn publish_route(security: &State<Security>, clients: &State<Clients>, message: String) -> RouteResponse<(), ()> {
   let decrypted_message = decrypt_local(security.inner().clone(), message);
   let socket_message: SocketMessage = serde_json::from_str(decrypted_message.as_str()).unwrap();
 
@@ -24,5 +25,5 @@ pub fn publish_route(security: &State<Security>, clients: &State<Clients>, messa
         let _ = sender.send(Ok(Message::text(encrypted_j.clone())));
       }
     });
-  Ok(Status::Ok)
+  Respond!();
 }

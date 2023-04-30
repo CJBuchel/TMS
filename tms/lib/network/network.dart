@@ -16,13 +16,13 @@ class Network {
 
   static Future<void> setState(NetworkConnectionState state) async {
     await _localStorage.then((value) async {
-      await value.setString(store_connection, EnumToString.convertToString(state));
+      await value.setString(store_connection_state, EnumToString.convertToString(state));
     });
   }
 
   static Future<NetworkConnectionState> getState() async {
     try {
-      var stateString = await _localStorage.then((value) => value.getString(store_connection));
+      var stateString = await _localStorage.then((value) => value.getString(store_connection_state));
       if (stateString != null) {
         var state = EnumToString.fromString(NetworkConnectionState.values, stateString);
         if (state != null) {
@@ -80,7 +80,7 @@ class Network {
 
   // Find Server
   static Future<NetworkConnectionState> findServer() async {
-    String ip = '';
+    String ip = await getServerIP(); // set to the existing ip (local storage)
     if (kIsWeb) {
       var host = Uri.base.origin;
 

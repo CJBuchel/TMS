@@ -1,5 +1,5 @@
 use ::log::info;
-use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}, serde::json::Json};
+use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}};
 
 use crate::schemas::*;
 

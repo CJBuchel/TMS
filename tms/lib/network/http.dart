@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:fast_rsa/fast_rsa.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/network/network.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:uuid/uuid.dart';
@@ -85,7 +83,6 @@ class NetworkHttp {
             // Pulse is bad, delete the existing uuid and start again
             await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$uuid'));
             return register(addr); // return with a new registration
-
           default:
             throw Exception("Failed to determine pulse integrity");
         }
@@ -119,6 +116,8 @@ class NetworkHttp {
   }
 
   // Checks integrity of pulse using encryption back response
+  // It's considered a pulse but in reality it checks the integrity of the connection, not the availability of the connection
+  // So it returns a true or false statement instead of stateful suggestion of the current connection "setState()"
   Future<bool> getPulseIntegrity(String addr) async {
     try {
       if (await getPulse(addr) == NetworkHttpConnectionState.connected) {

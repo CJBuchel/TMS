@@ -41,7 +41,7 @@ class NetworkWebSocket {
     _subscribers[topic]?.add(onEvent);
   }
 
-  Future<void> send(SocketMessage message) async {
+  Future<void> publish(SocketMessage message) async {
     if (await getState() == NetworkWebSocketState.connected) {
       try {
         _channel.ready.then((v) {

@@ -22,9 +22,10 @@ pub fn new_clients_map() -> TmsClients {
 }
 
 // Route response for clients
-pub type TmsEncryptedRouteResponse<E> = Result<(Status, String), E>; // always responds with a string.
-pub type TmsRouteResponse<T,E> = Result<(Status, Json<T>), E>;
+pub type TmsRouteResponse<E> = Result<(Status, String), E>; // always responds with a string.
+pub type TmsRouteResponseNoEncryption<T,E> = Result<(Status, Json<T>), E>; // responds with a status, and an encrypted message
 
+/// Sends a message to every client, optionally with an origin id (stops a message to the original client)
 pub fn tms_client_send_response<T: Serialize>(message: T, clients: TmsClients, origin_id: Option<String>) {
   clients
     .read()
@@ -76,17 +77,17 @@ macro_rules! TmsRespond {
 
   // Respond with default ok
   () => {
-    return Ok((Status::Ok, Json({})))
+    return Ok((Status::Ok, String::from("")))
   };
 
   // Respond with a custom status
   ($status:expr) => {
-    return Ok(($status, Json({})))
+    return Ok(($status, String::from("")))
   };
 
   // Respond with both custom status and data
   ($status:expr, $data:expr) => {
-    return Ok(($status, Json($data)))
+    return Ok(($status, $data))
   };
 
   // Respond with custom status and data encrypted with key

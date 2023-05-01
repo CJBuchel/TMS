@@ -1,21 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:fast_rsa/fast_rsa.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';
+import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
 enum NetworkHttpConnectionState { disconnected, connectedNoPulse, connected }
-
-enum HttpRegisterState {
-  unregistered,
-  registered,
-  alreadyRegistered,
-}
 
 class NetworkHttp {
   final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
@@ -54,49 +50,9 @@ class NetworkHttp {
     }
   }
 
-  Future<void> setKeys(KeyPair keys) async {
-    await _localStorage.then((value) => value.setString(store_nt_publicKey, keys.publicKey));
-    await _localStorage.then((value) => value.setString(store_nt_privateKey, keys.privateKey));
-  }
-
-  Future<KeyPair> getKeys() async {
-    try {
-      var pubKey = await _localStorage.then((value) => value.getString(store_nt_publicKey));
-      var privKey = await _localStorage.then((value) => value.getString(store_nt_privateKey));
-      if (pubKey != null && privKey != null) {
-        return KeyPair(pubKey, privKey);
-      } else {
-        return KeyPair("", "");
-      }
-    } catch (e) {
-      return KeyPair("", "");
-    }
-  }
-
-  Future<void> setServerKey(String key) async {
-    await _localStorage.then((value) => value.setString(store_nt_serverKey, key));
-  }
-
-  Future<String> getServerKey() async {
-    try {
-      var key = await _localStorage.then((value) => value.getString(store_nt_serverKey));
-      if (key != null) {
-        return key;
-      } else {
-        return "";
-      }
-    } catch (e) {
-      return "";
-    }
-  }
-
-  Future<KeyPair> generateKeyPair() async {
-    return await RSA.generate(rsa_bit_size);
-  }
-
   // Register with the server, provides uuid and key. Server returns the url and it's own key
   Future<RegisterResponse> register(String addr) async {
-    var keyPair = await generateKeyPair();
+    var keyPair = await NetworkSecurity.generateKeyPair();
     var uuid = await getUuid();
     if (uuid.isEmpty) {
       await setUuid(const Uuid().v4()).then((v) async {
@@ -114,12 +70,25 @@ class NetworkHttp {
     );
 
     switch (response.statusCode) {
-      case 200: // Status OK
-        return RegisterResponse.fromJson(jsonDecode(response.body));
+      case HttpStatus.ok: // Status OK
+        NetworkSecurity.setKeys(keyPair);
+        return RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
 
-      // case 208: // Status Already Reported/ID Already Registered
-      //   // @TODO, try existing connection with integrity
-      //   break;
+      case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
+        var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+        // Check the network integrity
+        switch (await getPulseIntegrity(addr)) {
+          case true:
+            // Pulse is good, integrity is good. Use existing settings (don't set keys)
+            return message;
+          case false:
+            // Pulse is bad, delete the existing uuid and start again
+            await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$uuid'));
+            return register(addr); // return with a new registration
+
+          default:
+            throw Exception("Failed to determine pulse integrity");
+        }
       default:
         await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$uuid'));
         throw Exception("Failed to load register response");
@@ -149,15 +118,33 @@ class NetworkHttp {
     return await getState();
   }
 
-  // Checks integrity of pulse using encryption back
-  Future<void> getPulseIntegrity(String addr) async {
+  // Checks integrity of pulse using encryption back response
+  Future<bool> getPulseIntegrity(String addr) async {
     try {
       if (await getPulse(addr) == NetworkHttpConnectionState.connected) {
-        // Check message integrity
+        // generate random uuid to send to the server and check against
         var random_uuid = const Uuid().v4();
         var message = IntegrityMessage(message: random_uuid);
-        final response = await http.post(Uri.parse('http://$addr:$requestPort/requests/pulse_integrity'));
+
+        // Encrypt and send
+        var encrypted_m = await NetworkSecurity.encryptMessage(message.toJson());
+        final response = await http.post(
+          Uri.parse('http://$addr:$requestPort/requests/pulse_integrity'),
+          body: encrypted_m,
+        );
+
+        // If the response is good (200) then decrypt the message and check if it's the same as the one sent before
+        if (response.statusCode == HttpStatus.ok) {
+          var decrypted_m = IntegrityMessage.fromJson(await NetworkSecurity.decryptMessage(response.body));
+          if (decrypted_m.message == random_uuid) {
+            return true;
+          }
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      return false;
+    }
+
+    return false; // if it falls through returns false
   }
 }

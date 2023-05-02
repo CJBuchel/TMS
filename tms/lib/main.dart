@@ -20,9 +20,9 @@ class _TMSAppState extends State<TMSApp> {
   TmsToolBar tmsToolBar = TmsToolBar();
 
   Future<void> startConnection() async {
+    Network.disconnect(); // clears any residual values
+    Network.connect();
     print("Network Started");
-
-    checkConnection();
     setState(() {
       _connectionTimer = Timer.periodic(watchDogTime, (timer) async {
         await checkConnection();
@@ -40,15 +40,10 @@ class _TMSAppState extends State<TMSApp> {
   }
 
   Future<void> checkConnection() async {
-    Network.checkConnection().then((ok) {
-      if (!ok) {
-        Network.findServer().then((found) {
-          if (found) {
-            Network.connect();
-          }
-        });
-      }
-    });
+    bool ok = await Network.checkConnection();
+    if (!ok) {
+      await Network.findServer();
+    }
   }
 
   @override

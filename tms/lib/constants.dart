@@ -14,7 +14,7 @@ const wsPort = 2122;
 const watchDogTime = Duration(seconds: 5);
 const connectionRetries = 5;
 
-const rsa_bit_size = 2048;
+const rsa_bit_size = 2048; // 2048
 
 // Local Storage Constants
 const store_http_connection_state = "ServerHttpConnectionState";

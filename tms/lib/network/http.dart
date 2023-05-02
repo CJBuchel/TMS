@@ -122,34 +122,40 @@ class NetworkHttp {
     // Create the request
     final request = RegisterRequest(key: keyPair.publicKey, userId: uuid);
 
-    // Get the response
-    final response = await http.post(
-      Uri.parse('http://$addr:$requestPort/requests/register'),
-      body: jsonEncode(request.toJson()),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('http://$addr:$requestPort/requests/register'),
+        body: jsonEncode(request.toJson()),
+      );
 
-    switch (response.statusCode) {
-      case HttpStatus.ok: // Status OK
-        NetworkSecurity.setKeys(keyPair);
-        return RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+      switch (response.statusCode) {
+        case HttpStatus.ok: // Status OK
+          NetworkSecurity.setKeys(keyPair);
+          setState(NetworkHttpConnectionState.connected);
+          return RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
 
-      case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
-        var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
-        // Check the network integrity
-        switch (await getPulseIntegrity(addr)) {
-          case true:
-            // Pulse is good, integrity is good. Use existing settings (don't set keys)
-            return message;
-          case false:
-            // Pulse is bad, delete the existing uuid and start again
-            await unregister(addr);
-            return register(addr); // return with a new registration
-          default:
-            throw Exception("Failed to determine pulse integrity");
-        }
-      default:
-        await unregister(addr);
-        throw Exception("Failed to load register response");
+        case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
+          var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+          // Check the network integrity
+          switch (await getPulseIntegrity(addr)) {
+            case true:
+              // Pulse is good, integrity is good. Use existing settings (don't set keys)
+              setState(NetworkHttpConnectionState.connected);
+              return message;
+            case false:
+              // Pulse is bad, delete the existing uuid and start again
+              await unregister(addr);
+              return register(addr); // return with a new registration
+            default:
+              throw Exception("Failed to determine pulse integrity");
+          }
+        default:
+          await unregister(addr);
+          throw Exception("Failed to load register response");
+      }
+    } catch (e) {
+      setState(NetworkHttpConnectionState.disconnected);
+      return RegisterResponse(key: "", url: "");
     }
   }
 

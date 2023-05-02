@@ -48,7 +48,6 @@ class NetworkWebSocket {
         });
       } catch (e) {
         _setState(NetworkWebSocketState.disconnected);
-        throw Exception("Failed to send socket message");
       }
     }
   }
@@ -89,12 +88,21 @@ class NetworkWebSocket {
   }
 
   Future<void> connect(String url) async {
-    if (await getState() != NetworkWebSocketState.connected) {
+    if (await getState() != NetworkWebSocketState.connected && url.isNotEmpty) {
       try {
         _channel = WebSocketChannel.connect(Uri.parse(url));
+
         _channel.ready.then((v) {
-          _setState(NetworkWebSocketState.connected).then((v) => _listen());
+          _setState(NetworkWebSocketState.connected);
+          print("Connecting using url $url");
+          _listen();
         });
+      } catch (e) {
+        _setState(NetworkWebSocketState.disconnected);
+      }
+    } else {
+      try {
+        publish(SocketMessage(message: "ping", topic: "none"));
       } catch (e) {
         _setState(NetworkWebSocketState.disconnected);
       }

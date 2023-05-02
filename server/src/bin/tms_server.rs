@@ -41,7 +41,7 @@ impl TmsServer {
     info!("Starting TMS");
 
 
-    let rsa = Security::new();
+    let rsa = Security::new(4096);
     let clients = new_clients_map();
     
     // Services

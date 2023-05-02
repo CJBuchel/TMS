@@ -107,25 +107,22 @@ class Network {
   // Check the connection, reconnect on fail (returns false for bad check)
   static Future<bool> checkConnection() async {
     // Check the pulse of the server
-    await _http.getPulse(await getServerIP()).then((httpState) async {
-      // After the pulse has completed check the websocket state
-      await _ws.getState().then((wsState) async {
-        if (httpState != NetworkHttpConnectionState.connected || wsState != NetworkWebSocketState.connected) {
-          // If either of the protocols cannot connect, reconnect.
-          await connect();
+    var httpState = await _http.getPulse(await getServerIP());
+    // After the pulse has completed check the websocket state
+    var wsState = await _ws.getState();
+    if (httpState != NetworkHttpConnectionState.connected || wsState != NetworkWebSocketState.connected) {
+      // If either of the protocols cannot connect, reconnect.
+      await connect();
 
-          // Determine the states and check again
-          var states = await getState();
-          if (states.item1 == NetworkHttpConnectionState.connected && states.item2 == NetworkWebSocketState.connected) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return true;
-        }
-      });
-    });
-    return false; // if it falls through
+      // Determine the states and check again
+      var states = await getState();
+      if (states.item1 == NetworkHttpConnectionState.connected && states.item2 == NetworkWebSocketState.connected) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
   }
 }

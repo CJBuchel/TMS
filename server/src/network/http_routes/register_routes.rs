@@ -5,7 +5,6 @@ use rocket::State;
 use rocket::http::Status;
 use rocket::serde::json::Json;
 use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt};
-// use rocket::serde::json::{Json};
 
 use crate::schemas::*;
 
@@ -45,7 +44,7 @@ pub fn register_route(clients: &State<TmsClients>, s_public_key: &State<Vec<u8>>
 
   register_client(user_id.to_owned(), register_request.key.to_owned(), clients.inner().clone());
   warn!("Registered New Client: {}", user_id);
-
+  
   TmsRespond!(
     Status::Ok,
     RegisterResponse {

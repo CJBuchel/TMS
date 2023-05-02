@@ -51,6 +51,12 @@ class Network {
     await _ws.disconnect().then((v) async => {await _http.unregister(await getServerIP())});
   }
 
+  static Future<void> reset() async {
+    await _http.setState(NetworkHttpConnectionState.disconnected);
+    await _ws.setState(NetworkWebSocketState.disconnected);
+    disconnect();
+  }
+
   // Find the server using web address. (The web does not support mDNS)
   static Future<String> _findServerWeb(String ip) async {
     var host = Uri.base.origin;

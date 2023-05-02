@@ -20,7 +20,7 @@ class _TMSAppState extends State<TMSApp> {
   TmsToolBar tmsToolBar = TmsToolBar();
 
   Future<void> startConnection() async {
-    Network.disconnect(); // clears any residual values
+    await Network.reset();
     Network.connect();
     print("Network Started");
     setState(() {

@@ -12,7 +12,7 @@ class NetworkWebSocket {
   late WebSocketChannel _channel;
   final Map<String, List<void Function(SocketMessage message)>> _subscribers = Map(); // Topic and function/s
 
-  Future<void> _setState(NetworkWebSocketState state) async {
+  Future<void> setState(NetworkWebSocketState state) async {
     await _localStorage.then((value) => value.setString(store_ws_connection_state, EnumToString.convertToString(state)));
   }
 
@@ -47,7 +47,7 @@ class NetworkWebSocket {
           });
         });
       } catch (e) {
-        _setState(NetworkWebSocketState.disconnected);
+        setState(NetworkWebSocketState.disconnected);
       }
     }
   }
@@ -73,38 +73,38 @@ class NetworkWebSocket {
             });
           });
         }, onDone: () {
-          _setState(NetworkWebSocketState.disconnected);
+          setState(NetworkWebSocketState.disconnected);
         }, onError: (e) {
           disconnect().then((v) {
-            _setState(NetworkWebSocketState.disconnected);
+            setState(NetworkWebSocketState.disconnected);
           });
         });
       } catch (e) {
         disconnect().then((v) {
-          _setState(NetworkWebSocketState.disconnected);
+          setState(NetworkWebSocketState.disconnected);
         });
       }
     }
   }
 
   Future<void> connect(String url) async {
-    if (await getState() != NetworkWebSocketState.connected && url.isNotEmpty) {
+    if (await getState() != NetworkWebSocketState.connected) {
       try {
         _channel = WebSocketChannel.connect(Uri.parse(url));
 
         _channel.ready.then((v) {
-          _setState(NetworkWebSocketState.connected);
+          setState(NetworkWebSocketState.connected);
           print("Connecting using url $url");
           _listen();
         });
       } catch (e) {
-        _setState(NetworkWebSocketState.disconnected);
+        setState(NetworkWebSocketState.disconnected);
       }
     } else {
       try {
         publish(SocketMessage(message: "ping", topic: "none"));
       } catch (e) {
-        _setState(NetworkWebSocketState.disconnected);
+        setState(NetworkWebSocketState.disconnected);
       }
     }
   }
@@ -112,7 +112,7 @@ class NetworkWebSocket {
   Future<void> disconnect() async {
     if (await getState() == NetworkWebSocketState.connected) {
       _channel.sink.close().then((v) {
-        _setState(NetworkWebSocketState.disconnected);
+        setState(NetworkWebSocketState.disconnected);
       });
     }
   }

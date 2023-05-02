@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/network/ws.dart';
-import 'package:tms/screens/shared/app_bar.dart';
 import 'package:tms/screens/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tms/screens/screen_selector.dart';
+import 'package:tms/screens/shared/tool_bar.dart';
 
 class TMSApp extends StatefulWidget {
   TMSApp({super.key});
@@ -18,7 +17,7 @@ class TMSApp extends StatefulWidget {
 
 class _TMSAppState extends State<TMSApp> {
   Timer _connectionTimer = Timer(const Duration(), () {});
-  TmsToolBar _tmsToolBar = TmsToolBar(ntState: NetworkConnectionState.disconnected, wsState: NetworkWebSocketState.disconnected);
+  TmsToolBar tmsToolBar = TmsToolBar();
 
   Future<void> startConnection() async {
     print("Network Started");
@@ -37,15 +36,18 @@ class _TMSAppState extends State<TMSApp> {
       _connectionTimer.cancel();
     }
 
-    NetworkWebSocket.disconnect();
+    Network.disconnect();
   }
 
   Future<void> checkConnection() async {
-    // @TODO, reconnect on fail
-    var ntState = await Network.getPulse();
-    var wsState = await NetworkWebSocket.getState();
-    setState(() {
-      _tmsToolBar = TmsToolBar(ntState: ntState, wsState: wsState);
+    Network.checkConnection().then((ok) {
+      if (!ok) {
+        Network.findServer().then((found) {
+          if (found) {
+            Network.connect();
+          }
+        });
+      }
     });
   }
 
@@ -75,8 +77,8 @@ class _TMSAppState extends State<TMSApp> {
 
       // Main Router
       routes: {
-        '/': (context) => ScreenSelector(toolBar: _tmsToolBar),
-        '/server_connection': (context) => Connection(toolBar: _tmsToolBar),
+        '/': (context) => ScreenSelector(),
+        '/server_connection': (context) => Connection(),
       },
     );
   }

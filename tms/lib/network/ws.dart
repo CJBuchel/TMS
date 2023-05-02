@@ -5,17 +5,14 @@ import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-enum NetworkWebSocketState {
-  disconnected,
-  connected,
-}
+enum NetworkWebSocketState { disconnected, connected }
 
 class NetworkWebSocket {
   final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
   late WebSocketChannel _channel;
   final Map<String, List<void Function(SocketMessage message)>> _subscribers = Map(); // Topic and function/s
 
-  Future<void> setState(NetworkWebSocketState state) async {
+  Future<void> _setState(NetworkWebSocketState state) async {
     await _localStorage.then((value) => value.setString(store_ws_connection_state, EnumToString.convertToString(state)));
   }
 
@@ -50,13 +47,14 @@ class NetworkWebSocket {
           });
         });
       } catch (e) {
-        setState(NetworkWebSocketState.disconnected);
+        _setState(NetworkWebSocketState.disconnected);
         throw Exception("Failed to send socket message");
       }
     }
   }
 
-  Future<void> listen() async {
+  // This can't return a future
+  void _listen() async {
     if (await getState() == NetworkWebSocketState.connected) {
       try {
         // Listen to the socket
@@ -65,7 +63,6 @@ class NetworkWebSocket {
           NetworkSecurity.decryptMessage(event).then((value) {
             // Convert the message to a socket message type
             SocketMessage m = SocketMessage.fromJson(value);
-
             // Iterate through the subscribers and check if the topic matches
             _subscribers.forEach((topic, functionList) {
               if (topic == m.topic) {
@@ -77,33 +74,37 @@ class NetworkWebSocket {
             });
           });
         }, onDone: () {
-          setState(NetworkWebSocketState.disconnected);
+          _setState(NetworkWebSocketState.disconnected);
         }, onError: (e) {
-          disconnect();
-          setState(NetworkWebSocketState.disconnected);
+          disconnect().then((v) {
+            _setState(NetworkWebSocketState.disconnected);
+          });
         });
       } catch (e) {
-        disconnect();
-        setState(NetworkWebSocketState.disconnected);
+        disconnect().then((v) {
+          _setState(NetworkWebSocketState.disconnected);
+        });
       }
     }
   }
 
   Future<void> connect(String url) async {
-    try {
-      _channel = WebSocketChannel.connect(Uri.parse(url));
-      _channel.ready.then((v) {
-        setState(NetworkWebSocketState.connected).then((v) => listen());
-      });
-    } catch (e) {
-      setState(NetworkWebSocketState.disconnected);
+    if (await getState() != NetworkWebSocketState.connected) {
+      try {
+        _channel = WebSocketChannel.connect(Uri.parse(url));
+        _channel.ready.then((v) {
+          _setState(NetworkWebSocketState.connected).then((v) => _listen());
+        });
+      } catch (e) {
+        _setState(NetworkWebSocketState.disconnected);
+      }
     }
   }
 
   Future<void> disconnect() async {
     if (await getState() == NetworkWebSocketState.connected) {
       _channel.sink.close().then((v) {
-        setState(NetworkWebSocketState.disconnected);
+        _setState(NetworkWebSocketState.disconnected);
       });
     }
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/screens/shared/app_bar.dart';
+import 'package:tms/screens/shared/tool_bar.dart';
 
 class Connection extends StatefulWidget {
-  TmsToolBar toolBar;
-  Connection({super.key, required this.toolBar});
+  Connection({super.key});
 
   @override
   _ConnectionState createState() => _ConnectionState();
@@ -16,6 +16,7 @@ class _ConnectionState extends State<Connection> {
   String _serverIP = '';
   Widget _searchState = const Text("");
   Widget _connectState = const Text("");
+  TmsToolBar toolbar = TmsToolBar();
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -34,48 +35,43 @@ class _ConnectionState extends State<Connection> {
       _searchState = const Text("Searching For Server...", style: TextStyle(color: Colors.white));
     });
 
-    var state = await Network.findServer();
-    print(state);
-    if (state == NetworkConnectionState.connected) {
-      setState(() {
+    Network.findServer().then((found) {
+      if (found) {
         _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
-      });
-    } else if (state == NetworkConnectionState.connectedNoPulse) {
-      setState(() {
-        _searchState = const Text("Connected With No Pulse", style: TextStyle(color: Colors.amber));
-      });
-    } else {
-      setState(() {
-        _searchState = const Text("Could Not Find Server", style: TextStyle(color: Colors.red));
-      });
-    }
+      } else {
+        Network.getState().then((state) {
+          switch (state.item1) {
+            case NetworkHttpConnectionState.connected:
+              _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
+              break;
+            case NetworkHttpConnectionState.connectedNoPulse:
+              _searchState = const Text("Connected With No Pulse", style: TextStyle(color: Colors.amber));
+              break;
+            default:
+              _searchState = const Text("Could Not Find Server", style: TextStyle(color: Colors.red));
+          }
+        });
+      }
+    });
 
     _serverIP = await Network.getServerIP();
     _controller.text = _serverIP;
   }
 
   void connectToServer() async {
-    setState(() {
-      _connectState = const Text(" - Generating Encryption Keys", style: TextStyle(color: Colors.amber));
-    });
+    _connectState = const Text(" - Generating Encryption Keys", style: TextStyle(color: Colors.amber));
 
     Network.connect().then((v) {
-      NetworkWebSocket.getState().then((state) => {
-            if (state == NetworkWebSocketState.connected)
-              {
-                setState(() {
-                  _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
-                  // Navigator.pushNamed(context, "/");
-                  Navigator.pop(context, _connectState);
-                })
-              }
-            else
-              {
-                setState(() {
-                  _connectState = const Text(" - Websocket Failed To Connect", style: TextStyle(color: Colors.red));
-                })
-              }
-          });
+      Network.getState().then((state) {
+        switch (state.item2) {
+          case NetworkWebSocketState.connected:
+            _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
+            Navigator.pop(context, _connectState);
+            break;
+          default:
+            _connectState = const Text(" - Websocket Failed To Connect", style: TextStyle(color: Colors.red));
+        }
+      });
     });
   }
 
@@ -96,7 +92,7 @@ class _ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-      appBar: widget.toolBar,
+      appBar: toolbar,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // y axis
         children: <Widget>[

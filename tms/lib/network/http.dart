@@ -48,50 +48,6 @@ class NetworkHttp {
     }
   }
 
-  // Register with the server, provides uuid and key. Server returns the url and it's own key
-  Future<RegisterResponse> register(String addr) async {
-    var keyPair = await NetworkSecurity.generateKeyPair();
-    var uuid = await getUuid();
-    if (uuid.isEmpty) {
-      await setUuid(const Uuid().v4()).then((v) async {
-        uuid = await getUuid();
-      });
-    }
-
-    // Create the request
-    final request = RegisterRequest(key: keyPair.publicKey, userId: uuid);
-
-    // Get the response
-    final response = await http.post(
-      Uri.parse('http://$addr:$requestPort/requests/register'),
-      body: jsonEncode(request.toJson()),
-    );
-
-    switch (response.statusCode) {
-      case HttpStatus.ok: // Status OK
-        NetworkSecurity.setKeys(keyPair);
-        return RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
-
-      case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
-        var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
-        // Check the network integrity
-        switch (await getPulseIntegrity(addr)) {
-          case true:
-            // Pulse is good, integrity is good. Use existing settings (don't set keys)
-            return message;
-          case false:
-            // Pulse is bad, delete the existing uuid and start again
-            await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$uuid'));
-            return register(addr); // return with a new registration
-          default:
-            throw Exception("Failed to determine pulse integrity");
-        }
-      default:
-        await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$uuid'));
-        throw Exception("Failed to load register response");
-    }
-  }
-
   // Checks pulse of server. (Generic ping with status back)
   Future<NetworkHttpConnectionState> getPulse(String addr) async {
     try {
@@ -99,7 +55,7 @@ class NetworkHttp {
         await setState(NetworkHttpConnectionState.disconnected);
       } else {
         // check pulse
-        final response = await http.get(Uri.parse("http://$addr:$requestPort/requests/pulse"));
+        final response = await getRawPulse(addr);
         switch (response.statusCode) {
           case 200:
             await setState(NetworkHttpConnectionState.connected);
@@ -145,5 +101,64 @@ class NetworkHttp {
     }
 
     return false; // if it falls through returns false
+  }
+
+  // Unregister from the server (given that the uuid is correct)
+  Future<http.Response> unregister(String addr) async {
+    var uuid = await getUuid();
+    return await http.delete(Uri.parse('http://$addr:$requestPort/requests/register/$uuid'));
+  }
+
+  // Register with the server, provides uuid and key. Server returns the url and it's own key
+  Future<RegisterResponse> register(String addr) async {
+    var keyPair = await NetworkSecurity.generateKeyPair();
+    var uuid = await getUuid();
+    if (uuid.isEmpty) {
+      await setUuid(const Uuid().v4()).then((v) async {
+        uuid = await getUuid();
+      });
+    }
+
+    // Create the request
+    final request = RegisterRequest(key: keyPair.publicKey, userId: uuid);
+
+    // Get the response
+    final response = await http.post(
+      Uri.parse('http://$addr:$requestPort/requests/register'),
+      body: jsonEncode(request.toJson()),
+    );
+
+    switch (response.statusCode) {
+      case HttpStatus.ok: // Status OK
+        NetworkSecurity.setKeys(keyPair);
+        return RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+
+      case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
+        var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+        // Check the network integrity
+        switch (await getPulseIntegrity(addr)) {
+          case true:
+            // Pulse is good, integrity is good. Use existing settings (don't set keys)
+            return message;
+          case false:
+            // Pulse is bad, delete the existing uuid and start again
+            await unregister(addr);
+            return register(addr); // return with a new registration
+          default:
+            throw Exception("Failed to determine pulse integrity");
+        }
+      default:
+        await unregister(addr);
+        throw Exception("Failed to load register response");
+    }
+  }
+
+  Future<http.Response> getRawPulse(String addr) async {
+    try {
+      final response = await http.get(Uri.parse("http://$addr:$requestPort/requests/pulse"));
+      return response;
+    } catch (e) {
+      throw Exception("Could not determine raw pulse response");
+    }
   }
 }

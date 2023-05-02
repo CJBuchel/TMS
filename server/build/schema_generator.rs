@@ -7,6 +7,7 @@ use schemars::JsonSchema;
 
 include!("../src/schemas/mod.rs");
 
+#[allow(dead_code)]
 #[derive(JsonSchema, Clone)]
 pub struct TmsSchema {
   // Storage Structures

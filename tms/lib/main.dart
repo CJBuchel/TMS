@@ -16,33 +16,44 @@ class TMSApp extends StatefulWidget {
 }
 
 class _TMSAppState extends State<TMSApp> {
-  Timer _connectionTimer = Timer(const Duration(), () {});
+  Timer _watchdogTimer = Timer(const Duration(), () {});
   TmsToolBar tmsToolBar = TmsToolBar();
 
-  Future<void> startConnection() async {
-    await Network.reset();
-    Network.connect();
-    print("Network Started");
+  void startWatchdog() {
+    if (_watchdogTimer.isActive) {
+      _watchdogTimer.cancel();
+    }
     setState(() {
-      _connectionTimer = Timer.periodic(watchDogTime, (timer) async {
-        await checkConnection();
+      _watchdogTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+        await checkConnection().then((ok) {});
       });
     });
   }
 
+  Future<void> startConnection() async {
+    await Network.reset();
+    Network.findServer().then((found) {
+      if (found) {
+        Network.connect();
+      }
+    });
+    print("Network Started");
+    startWatchdog();
+  }
+
   Future<void> stopConnection() async {
     print("Network Stopped");
-    if (_connectionTimer.isActive) {
-      _connectionTimer.cancel();
-    }
-
+    _watchdogTimer.isActive ? _watchdogTimer.cancel() : '';
     Network.disconnect();
   }
 
-  Future<void> checkConnection() async {
+  Future<bool> checkConnection() async {
     bool ok = await Network.checkConnection();
     if (!ok) {
       await Network.findServer();
+      return false;
+    } else {
+      return true;
     }
   }
 

@@ -41,7 +41,7 @@ class Network {
   // Try to connect to server and test endpoint
   static Future<void> connect() async {
     // Must register first before connecting to websocket
-    _http.register(await getServerIP()).then((registerResponse) async {
+    await _http.register(await getServerIP()).then((registerResponse) async {
       await _ws.connect(registerResponse.url);
     });
   }
@@ -54,7 +54,9 @@ class Network {
   static Future<void> reset() async {
     await _http.setState(NetworkHttpConnectionState.disconnected);
     await _ws.setState(NetworkWebSocketState.disconnected);
-    disconnect();
+    if (!kIsWeb) {
+      disconnect();
+    }
   }
 
   // Find the server using web address. (The web does not support mDNS)

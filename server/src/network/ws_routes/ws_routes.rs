@@ -40,7 +40,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
   client.ws_sender = Some(client_sender);
   clients.write().unwrap().insert(user_id.clone(), client);
 
-  warn!("{} connected through ws", user_id);
+  warn!("{} connected", user_id);
 
   while let Some(result) = client_ws_rcv.next().await {
     let msg = match result {

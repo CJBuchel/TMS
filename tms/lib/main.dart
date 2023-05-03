@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:tms/constants.dart';
+import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
+import 'package:tms/network/ws.dart';
 import 'package:tms/screens/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +19,6 @@ class TMSApp extends StatefulWidget {
 
 class _TMSAppState extends State<TMSApp> {
   Timer _watchdogTimer = Timer(const Duration(), () {});
-  TmsToolBar tmsToolBar = TmsToolBar();
 
   void startWatchdog() {
     if (_watchdogTimer.isActive) {
@@ -25,18 +26,17 @@ class _TMSAppState extends State<TMSApp> {
     }
     setState(() {
       _watchdogTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-        await checkConnection().then((ok) {});
+        await checkConnection();
       });
     });
   }
 
   Future<void> startConnection() async {
     await Network.reset();
-    Network.findServer().then((found) {
-      if (found) {
-        Network.connect();
-      }
-    });
+    bool found = await Network.findServer();
+    if (found) {
+      await Network.connect();
+    }
     print("Network Started");
     startWatchdog();
   }

@@ -1,24 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
-import 'dart:ui' as ui;
 
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
+import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
-import 'package:tuple/tuple.dart';
 
 class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
-  Tuple2<NetworkHttpConnectionState, NetworkWebSocketState> networkState = const Tuple2(
-    NetworkHttpConnectionState.disconnected,
-    NetworkWebSocketState.disconnected,
-  );
-
-  TmsToolBar({super.key}) {
-    Network.getState().then((state) => networkState = state);
-  }
+  TmsToolBar({super.key});
 
   @override
   _TmsToolBarState createState() => _TmsToolBarState();
@@ -29,6 +17,7 @@ class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
 
 class _TmsToolBarState extends State<TmsToolBar> {
   Icon connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
+
   Text ntStatusText = const Text(
     "NO NT",
     style: TextStyle(color: Colors.red),
@@ -39,14 +28,15 @@ class _TmsToolBarState extends State<TmsToolBar> {
     style: TextStyle(color: Colors.red),
   );
 
-  @override
-  void initState() {
-    super.initState();
-    checkConnection();
-  }
+  Text secStateText = const Text(
+    "NO SEC",
+    style: TextStyle(color: Colors.red),
+  );
+
+  List<Widget> titleBar = const [];
 
   // check the nt status
-  void checkHTTP(NetworkHttpConnectionState state) async {
+  Future<void> checkHTTP(NetworkHttpConnectionState state) async {
     switch (state) {
       case NetworkHttpConnectionState.disconnected:
         setState(() {
@@ -84,7 +74,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
     }
   }
 
-  void checkWS(NetworkWebSocketState state) async {
+  Future<void> checkWS(NetworkWebSocketState state) async {
     switch (state) {
       case NetworkWebSocketState.disconnected:
         setState(() {
@@ -113,57 +103,114 @@ class _TmsToolBarState extends State<TmsToolBar> {
     }
   }
 
+  Future<void> checkSec(SecurityState state) async {
+    switch (state) {
+      case SecurityState.noSecurity:
+        setState(() {
+          secStateText = const Text(
+            "NO SEC",
+            style: TextStyle(color: Colors.red),
+          );
+        });
+        break;
+      case SecurityState.encrypting:
+        setState(() {
+          secStateText = const Text(
+            "ENC",
+            style: TextStyle(color: Colors.orange),
+          );
+        });
+        break;
+      case SecurityState.secure:
+        setState(() {
+          secStateText = const Text(
+            "SECURE",
+            style: TextStyle(color: Colors.green),
+          );
+        });
+        break;
+      default:
+        setState(() {
+          secStateText = const Text(
+            "NO SEC",
+            style: TextStyle(color: Colors.red),
+          );
+        });
+    }
+  }
+
   // Quickly check the network connection and provide a color code to the network icon
-  void checkNetwork(Tuple2<NetworkHttpConnectionState, NetworkWebSocketState> ntStates) async {
-    if (ntStates.item1 == NetworkHttpConnectionState.connected && ntStates.item2 == NetworkWebSocketState.connected) {
+  Future<void> checkNetwork(NetworkHttpConnectionState httpState, NetworkWebSocketState wsState, SecurityState secState) async {
+    var row = [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [const Text("["), ntStatusText, const Text("/"), secStateText, const Text("/"), wsStatusText, const Text("]")],
+      )
+    ];
+
+    if (httpState == NetworkHttpConnectionState.connected && wsState == NetworkWebSocketState.connected && secState == SecurityState.secure) {
       setState(() {
         connectionIcon = const Icon(Icons.wifi, color: Colors.green);
+        titleBar = [const Text("TITLE")];
       });
-    } else if (ntStates.item1 == NetworkHttpConnectionState.disconnected && ntStates.item2 == NetworkWebSocketState.disconnected) {
+    } else if (httpState == NetworkHttpConnectionState.disconnected &&
+        wsState == NetworkWebSocketState.disconnected &&
+        secState == SecurityState.noSecurity) {
       setState(() {
         connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
+        titleBar = row;
       });
     } else {
       setState(() {
         connectionIcon = const Icon(Icons.signal_wifi_statusbar_connected_no_internet_4_outlined, color: Colors.orange);
+        titleBar = row;
       });
     }
   }
 
   void checkConnection() async {
-    checkNetwork(widget.networkState);
-    checkHTTP(widget.networkState.item1);
-    checkWS(widget.networkState.item2);
+    var states = await Network.getStates();
+    await checkHTTP(states.item1);
+    await checkWS(states.item2);
+    await checkSec(states.item3);
+    await checkNetwork(states.item1, states.item2, states.item3);
   }
 
   @override
-  void didUpdateWidget(covariant TmsToolBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  void initState() {
+    super.initState();
     checkConnection();
+
+    NetworkHttp.httpState.addListener(() {
+      checkConnection();
+    });
+
+    NetworkWebSocket.wsState.addListener(() {
+      checkConnection();
+    });
+
+    NetworkSecurity.securityState.addListener(() {
+      checkConnection();
+    });
   }
 
-  List<Widget> appTitle() {
-    if (widget.networkState.item1 == NetworkHttpConnectionState.connected && widget.networkState.item2 == NetworkHttpConnectionState.connected) {
-      return [const Text("TITLE")];
-    } else {
-      return [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [const Text("["), ntStatusText, const Text("/"), wsStatusText, const Text("]")],
-        )
-      ];
-    }
+  @override
+  void didUpdateWidget(TmsToolBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: appTitle()),
+      title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
       actions: [
         IconButton(
           onPressed: () {
-            // _timer.cancel();
-            // actionGoTo("/server_connection");
             Navigator.pushNamed(context, "/server_connection");
           },
           icon: connectionIcon,

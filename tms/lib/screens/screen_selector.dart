@@ -9,7 +9,6 @@ class ScreenSelector extends StatefulWidget {
 }
 
 class _ScreenSelectorState extends State<ScreenSelector> {
-  TmsToolBar toolBar = TmsToolBar();
   @override
   void initState() {
     super.initState();
@@ -18,7 +17,7 @@ class _ScreenSelectorState extends State<ScreenSelector> {
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
-      appBar: toolBar,
+      appBar: TmsToolBar(),
     ));
   }
 }

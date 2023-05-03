@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/security.dart';
@@ -13,7 +14,9 @@ enum NetworkHttpConnectionState { disconnected, connectedNoPulse, connected }
 
 class NetworkHttp {
   final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  static ValueNotifier<NetworkHttpConnectionState> httpState = ValueNotifier<NetworkHttpConnectionState>(NetworkHttpConnectionState.disconnected);
   Future<void> setState(NetworkHttpConnectionState state) async {
+    httpState.value = state;
     await _localStorage.then((value) => value.setString(store_http_connection_state, EnumToString.convertToString(state)));
   }
 
@@ -22,11 +25,14 @@ class NetworkHttp {
       var stateString = await _localStorage.then((value) => value.getString(store_http_connection_state));
       var state = EnumToString.fromString(NetworkHttpConnectionState.values, stateString!);
       if (state != null) {
+        httpState.value = state;
         return state;
       } else {
+        httpState.value = NetworkHttpConnectionState.disconnected;
         return NetworkHttpConnectionState.disconnected;
       }
     } catch (e) {
+      httpState.value = NetworkHttpConnectionState.disconnected;
       return NetworkHttpConnectionState.disconnected;
     }
   }
@@ -65,7 +71,7 @@ class NetworkHttp {
         }
       }
     } catch (e) {
-      await setState(NetworkHttpConnectionState.disconnected);
+      await setState(NetworkHttpConnectionState.connectedNoPulse);
     }
 
     return await getState();

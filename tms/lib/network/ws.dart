@@ -1,4 +1,5 @@
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/security.dart';
@@ -9,10 +10,12 @@ enum NetworkWebSocketState { disconnected, connected }
 
 class NetworkWebSocket {
   final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  static ValueNotifier<NetworkWebSocketState> wsState = ValueNotifier<NetworkWebSocketState>(NetworkWebSocketState.disconnected);
   late WebSocketChannel _channel;
   final Map<String, List<void Function(SocketMessage message)>> _subscribers = Map(); // Topic and function/s
 
   Future<void> setState(NetworkWebSocketState state) async {
+    wsState.value = state;
     await _localStorage.then((value) => value.setString(store_ws_connection_state, EnumToString.convertToString(state)));
   }
 
@@ -21,11 +24,14 @@ class NetworkWebSocket {
       var stateString = await _localStorage.then((value) => value.getString(store_ws_connection_state));
       var state = EnumToString.fromString(NetworkWebSocketState.values, stateString!);
       if (state != null) {
+        wsState.value = state;
         return state;
       } else {
+        wsState.value = NetworkWebSocketState.disconnected;
         return NetworkWebSocketState.disconnected;
       }
     } catch (e) {
+      wsState.value = NetworkWebSocketState.disconnected;
       return NetworkWebSocketState.disconnected;
     }
   }

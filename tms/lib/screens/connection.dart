@@ -16,7 +16,6 @@ class _ConnectionState extends State<Connection> {
   String _serverIP = '';
   Widget _searchState = const Text("");
   Widget _connectState = const Text("");
-  TmsToolBar toolbar = TmsToolBar();
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -39,7 +38,7 @@ class _ConnectionState extends State<Connection> {
       if (found) {
         _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
       } else {
-        Network.getState().then((state) {
+        Network.getStates().then((state) {
           switch (state.item1) {
             case NetworkHttpConnectionState.connected:
               _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
@@ -62,7 +61,7 @@ class _ConnectionState extends State<Connection> {
     _connectState = const Text(" - Generating Encryption Keys", style: TextStyle(color: Colors.amber));
 
     Network.connect().then((v) {
-      Network.getState().then((state) {
+      Network.getStates().then((state) {
         switch (state.item2) {
           case NetworkWebSocketState.connected:
             _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
@@ -92,7 +91,7 @@ class _ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-      appBar: toolbar,
+      appBar: TmsToolBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // y axis
         children: <Widget>[

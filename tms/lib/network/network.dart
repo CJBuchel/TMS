@@ -7,6 +7,7 @@ import 'package:multicast_dns/multicast_dns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/http.dart';
+import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tuple/tuple.dart';
 
@@ -34,8 +35,8 @@ class Network {
   }
 
   // Get the overall state of the network, combined tuple containing both the protocol states
-  static Future<Tuple2<NetworkHttpConnectionState, NetworkWebSocketState>> getState() async {
-    return Tuple2(await _http.getState(), await _ws.getState());
+  static Future<Tuple3<NetworkHttpConnectionState, NetworkWebSocketState, SecurityState>> getStates() async {
+    return Tuple3(await _http.getState(), await _ws.getState(), await NetworkSecurity.getState());
   }
 
   // Try to connect to server and test endpoint
@@ -123,8 +124,10 @@ class Network {
       await connect();
 
       // Determine the states and check again
-      var states = await getState();
-      if (states.item1 == NetworkHttpConnectionState.connected && states.item2 == NetworkWebSocketState.connected) {
+      var states = await getStates();
+      if (states.item1 == NetworkHttpConnectionState.connected &&
+          states.item2 == NetworkWebSocketState.connected &&
+          states.item3 == SecurityState.secure) {
         return true;
       } else {
         return false;

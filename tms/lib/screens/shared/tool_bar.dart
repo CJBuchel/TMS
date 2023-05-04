@@ -4,6 +4,7 @@ import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
+import 'package:tms/responsive.dart';
 
 class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
   TmsToolBar({super.key});
@@ -151,7 +152,11 @@ class _TmsToolBarState extends State<TmsToolBar> {
     if (httpState == NetworkHttpConnectionState.connected && wsState == NetworkWebSocketState.connected && secState == SecurityState.secure) {
       setState(() {
         connectionIcon = const Icon(Icons.wifi, color: Colors.green);
-        titleBar = [const Text("TITLE")];
+        titleBar = [
+          const Text(
+            "THIS IS A LONG TITLE",
+          )
+        ];
       });
     } else if (httpState == NetworkHttpConnectionState.disconnected &&
         wsState == NetworkWebSocketState.disconnected &&
@@ -181,17 +186,9 @@ class _TmsToolBarState extends State<TmsToolBar> {
     super.initState();
     checkConnection();
 
-    NetworkHttp.httpState.addListener(() {
-      checkConnection();
-    });
-
-    NetworkWebSocket.wsState.addListener(() {
-      checkConnection();
-    });
-
-    NetworkSecurity.securityState.addListener(() {
-      checkConnection();
-    });
+    NetworkHttp.httpState.addListener(checkConnection);
+    NetworkWebSocket.wsState.addListener(checkConnection);
+    NetworkSecurity.securityState.addListener(checkConnection);
   }
 
   @override
@@ -202,16 +199,37 @@ class _TmsToolBarState extends State<TmsToolBar> {
   @override
   void dispose() {
     super.dispose();
+
+    NetworkHttp.httpState.removeListener(checkConnection);
+    NetworkWebSocket.wsState.removeListener(checkConnection);
+    NetworkSecurity.securityState.removeListener(checkConnection);
+  }
+
+  void pushTo(BuildContext context, String named) {
+    if (ModalRoute.of(context)?.settings.name != named) {
+      Navigator.pushNamed(context, named);
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    double fontSize = 25;
+    if (Responsive.isTablet(context)) {
+      fontSize = 24;
+    } else if (Responsive.isMobile(context)) {
+      fontSize = 18;
+    }
+
     return AppBar(
+      titleTextStyle: TextStyle(fontSize: fontSize),
+      iconTheme: IconThemeData(size: fontSize),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
       actions: [
         IconButton(
           onPressed: () {
-            Navigator.pushNamed(context, "/server_connection");
+            pushTo(context, "/server_connection");
           },
           icon: connectionIcon,
         ),

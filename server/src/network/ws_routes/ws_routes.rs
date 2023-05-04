@@ -30,23 +30,25 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
   let (client_ws_sender, mut client_ws_rcv) = ws.split();
   let (client_sender, client_recv) = mpsc::unbounded_channel();
 
+  let user_id_copy = user_id.clone();
   let client_recv = UnboundedReceiverStream::new(client_recv);
-  tokio::task::spawn(client_recv.forward(client_ws_sender).map(|result| {
+  tokio::task::spawn(client_recv.forward(client_ws_sender).map(move |result| {
     if let Err(e) = result {
-      error!("error sending websocket msg: {}", e);
+      error!("error sending websocket msg: {}: {}", user_id_copy, e);
     }
   }));
 
   client.ws_sender = Some(client_sender);
   clients.write().unwrap().insert(user_id.clone(), client);
 
-  warn!("{} connected", user_id);
+  warn!("{} connected", user_id.clone());
 
   while let Some(result) = client_ws_rcv.next().await {
     let msg = match result {
       Ok(msg) => msg,
       Err(e) => {
         error!("error receiving message for user id: {}: {}", user_id.clone(), e);
+        clients.write().unwrap().remove(&user_id);
         break;
       }
     };

@@ -17,6 +17,23 @@ class Network {
   static final NetworkHttp _http = NetworkHttp();
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
 
+  static Future<void> setAutoConfig(bool auto) async {
+    await _localStorage.then((value) => value.setBool(store_nt_auto_configure, auto));
+  }
+
+  static Future<bool> getAutoConfig() async {
+    try {
+      var auto = await _localStorage.then((value) => value.getBool(store_nt_auto_configure));
+      if (auto != null) {
+        return auto;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      return true;
+    }
+  }
+
   static Future<void> setServerIP(String ip) async {
     await _localStorage.then((value) => value.setString(store_nt_serverIP, ip));
   }
@@ -85,28 +102,33 @@ class Network {
       }
     }
 
+    client.stop();
+
     return ip;
   }
 
   // Find the server and test the address
   static Future<bool> findServer() async {
-    String ip = await getServerIP();
-    if (kIsWeb) {
-      ip = await _findServerWeb(ip);
-    } else {
-      ip = await _findServerMDNS(ip);
-    }
+    var states = await getStates();
+    if (states.item1 != NetworkHttpConnectionState.connected && states.item2 != NetworkWebSocketState.connected) {
+      String ip = await getServerIP();
+      if (kIsWeb) {
+        ip = await _findServerWeb(ip);
+      } else {
+        ip = await _findServerMDNS(ip);
+      }
 
-    // Test the ip with it's own raw sub pulse
-    if (ip.isNotEmpty) {
-      try {
-        var res = await _http.getRawPulse(ip);
-        if (res.statusCode == HttpStatus.ok) {
-          await setServerIP(ip);
-          return true;
+      // Test the ip with it's own raw sub pulse
+      if (ip.isNotEmpty) {
+        try {
+          var res = await _http.getRawPulse(ip);
+          if (res.statusCode == HttpStatus.ok) {
+            await setServerIP(ip);
+            return true;
+          }
+        } catch (e) {
+          return false;
         }
-      } catch (e) {
-        return false;
       }
     }
 

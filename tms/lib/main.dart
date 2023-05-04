@@ -4,6 +4,7 @@ import 'package:tms/constants.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/screens/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,6 +20,7 @@ class TMSApp extends StatefulWidget {
 
 class _TMSAppState extends State<TMSApp> {
   Timer _watchdogTimer = Timer(const Duration(), () {});
+  bool _checkerRunning = false;
 
   void startWatchdog() {
     if (_watchdogTimer.isActive) {
@@ -26,16 +28,32 @@ class _TMSAppState extends State<TMSApp> {
     }
     setState(() {
       _watchdogTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-        await checkConnection();
+        if (!_checkerRunning) {
+          _checkerRunning = true;
+          await checkConnection();
+          _checkerRunning = false;
+        } else {
+          print("Watchdog check already running");
+        }
       });
     });
   }
 
   Future<void> startConnection() async {
     await Network.reset();
-    bool found = await Network.findServer();
-    if (found) {
-      await Network.connect();
+    if (await Network.getAutoConfig()) {
+      bool found = await Network.findServer();
+      if (found) {
+        await Network.connect().timeout(const Duration(seconds: 3));
+      }
+    } else {
+      if ((await Network.getServerIP()).isNotEmpty) {
+        try {
+          await Network.connect().timeout(const Duration(seconds: 3));
+        } catch (e) {
+          print("Connection Timeout");
+        }
+      }
     }
     print("Network Started");
     startWatchdog();
@@ -48,9 +66,18 @@ class _TMSAppState extends State<TMSApp> {
   }
 
   Future<bool> checkConnection() async {
-    bool ok = await Network.checkConnection();
+    bool ok = false;
+    try {
+      ok = await Network.checkConnection().timeout(const Duration(seconds: 3));
+    } catch (e) {
+      print("Connection Timeout");
+    }
+
     if (!ok) {
-      await Network.findServer();
+      if (await Network.getAutoConfig()) {
+        print("Auto config reconnect");
+        await Network.findServer();
+      }
       return false;
     } else {
       return true;

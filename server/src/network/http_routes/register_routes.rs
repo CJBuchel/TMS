@@ -7,7 +7,6 @@ use rocket::serde::json::Json;
 use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt};
 
 use crate::schemas::*;
-
 fn register_client(user_id: String, key: String, clients: TmsClients) {
   clients.write().unwrap().insert(
     user_id.clone(),

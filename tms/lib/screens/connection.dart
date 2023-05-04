@@ -13,63 +13,44 @@ class Connection extends StatefulWidget {
 }
 
 class _ConnectionState extends State<Connection> {
-  String _serverIP = '';
-  Widget _searchState = const Text("");
-  Widget _connectState = const Text("");
   final TextEditingController _controller = TextEditingController();
+  bool _autoConfigureNetwork = true;
 
   @override
   void initState() {
     super.initState();
     Network.getServerIP().then((value) {
       setState(() {
-        _serverIP = value;
         _controller.text = value;
+      });
+    });
+
+    Network.getAutoConfig().then((value) {
+      setState(() {
+        _autoConfigureNetwork = value;
       });
     });
   }
 
   void findServer() async {
-    setState(() {
-      _searchState = const Text("Searching For Server...", style: TextStyle(color: Colors.white));
-    });
-
-    Network.findServer().then((found) {
-      if (found) {
-        _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
-      } else {
-        Network.getStates().then((state) {
-          switch (state.item1) {
-            case NetworkHttpConnectionState.connected:
-              _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
-              break;
-            case NetworkHttpConnectionState.connectedNoPulse:
-              _searchState = const Text("Connected With No Pulse", style: TextStyle(color: Colors.amber));
-              break;
-            default:
-              _searchState = const Text("Could Not Find Server", style: TextStyle(color: Colors.red));
-          }
+    var found = await Network.findServer();
+    if (found) {
+      print("found");
+      Network.getServerIP().then((value) {
+        setState(() {
+          _controller.text = value;
         });
-      }
-    });
-
-    _serverIP = await Network.getServerIP();
-    _controller.text = _serverIP;
+      });
+    } else {
+      print("Couldn't find server");
+    }
   }
 
   void connectToServer() async {
-    _connectState = const Text(" - Generating Encryption Keys", style: TextStyle(color: Colors.amber));
-
-    Network.connect().then((v) {
-      Network.getStates().then((state) {
-        switch (state.item2) {
-          case NetworkWebSocketState.connected:
-            _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
-            Navigator.pop(context, _connectState);
-            break;
-          default:
-            _connectState = const Text(" - Websocket Failed To Connect", style: TextStyle(color: Colors.red));
-        }
+    Network.reset().then((v) {
+      Network.setServerIP(_controller.text).then((v) async {
+        print(await Network.getServerIP());
+        await Network.connect();
       });
     });
   }
@@ -77,7 +58,7 @@ class _ConnectionState extends State<Connection> {
   @override
   Widget build(BuildContext context) {
     var imageSize = <double>[300, 500];
-    double textSize = 25;
+    double textSize = 20;
     double buttonWidth = 250;
     double buttonHeight = 50;
     if (Responsive.isTablet(context)) {
@@ -109,6 +90,54 @@ class _ConnectionState extends State<Connection> {
           ),
           // Address input
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Auto configure
+              SizedBox(
+                width: buttonWidth,
+                child: ListTile(
+                  title: Text(
+                    "Auto Configure",
+                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                  ),
+                  leading: Radio<bool>(
+                      value: true,
+                      groupValue: _autoConfigureNetwork,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _autoConfigureNetwork = value;
+                            Network.setAutoConfig(value);
+                          });
+                        }
+                      }),
+                ),
+              ),
+
+              // Manual configure
+              SizedBox(
+                width: buttonWidth,
+                child: ListTile(
+                  title: Text(
+                    "Manual Config",
+                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                  ),
+                  leading: Radio<bool>(
+                      value: false,
+                      groupValue: _autoConfigureNetwork,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _autoConfigureNetwork = value;
+                            Network.setAutoConfig(value);
+                          });
+                        }
+                      }),
+                ),
+              )
+            ],
+          ),
+          Row(
             children: <Widget>[
               Flexible(
                 child: Padding(
@@ -123,11 +152,6 @@ class _ConnectionState extends State<Connection> {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_searchState, _connectState],
-          ),
-          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -136,6 +160,7 @@ class _ConnectionState extends State<Connection> {
                 width: buttonWidth,
                 child: ElevatedButton.icon(
                   onPressed: () {
+                    print("Finding server");
                     findServer();
                   },
                   icon: const Icon(Icons.search),

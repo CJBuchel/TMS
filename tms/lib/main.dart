@@ -1,15 +1,11 @@
 import 'dart:async';
 
 import 'package:tms/constants.dart';
-import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/network/ws.dart';
-import 'package:tms/responsive.dart';
 import 'package:tms/screens/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tms/screens/screen_selector.dart';
-import 'package:tms/screens/shared/tool_bar.dart';
 
 class TMSApp extends StatefulWidget {
   TMSApp({super.key});

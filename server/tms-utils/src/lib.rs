@@ -26,7 +26,7 @@ pub type TmsRouteResponse<E> = Result<(Status, String), E>; // always responds w
 pub type TmsRouteResponseNoEncryption<T,E> = Result<(Status, Json<T>), E>; // responds with a status, and an encrypted message
 
 /// Sends a message to every client, optionally with an origin id (stops a message to the original client)
-pub fn tms_client_send_response<T: Serialize>(message: T, clients: TmsClients, origin_id: Option<String>) {
+pub fn tms_clients_ws_send<T: Serialize>(message: T, clients: TmsClients, origin_id: Option<String>) {
   clients
     .read()
     .unwrap()

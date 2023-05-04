@@ -97,7 +97,7 @@ class _ConnectionState extends State<Connection> {
                 width: buttonWidth,
                 child: ListTile(
                   title: Text(
-                    "Auto Configure",
+                    "Auto",
                     style: TextStyle(color: Colors.white, fontSize: textSize),
                   ),
                   leading: Radio<bool>(
@@ -119,7 +119,7 @@ class _ConnectionState extends State<Connection> {
                 width: buttonWidth,
                 child: ListTile(
                   title: Text(
-                    "Manual Config",
+                    "Manual",
                     style: TextStyle(color: Colors.white, fontSize: textSize),
                   ),
                   leading: Radio<bool>(

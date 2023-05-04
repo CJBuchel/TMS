@@ -1,6 +1,6 @@
 use futures::{FutureExt, StreamExt};
 use log::{error, warn};
-use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult};
+use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::{ws::Message, Reply, ws::WebSocket};
 use tokio::sync::mpsc;
@@ -32,23 +32,32 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
 
   let user_id_copy = user_id.clone();
   let client_recv = UnboundedReceiverStream::new(client_recv);
+
+  let shared_clients = clients.clone();
+  client.ws_sender = Some(client_sender);
+  clients.write().unwrap().insert(user_id.clone(), client);
+  warn!("{} connected", user_id.clone());
+
+  let client_list_update = SocketMessage {
+    from_id: Some(String::from("")),
+    topic: String::from("clients"),
+    message: String::from("update")
+  };
+
+  tms_clients_ws_send(client_list_update.clone(), shared_clients.clone(), Some(String::from("")));
+
   tokio::task::spawn(client_recv.forward(client_ws_sender).map(move |result| {
     if let Err(e) = result {
       error!("error sending websocket msg: {}: {}", user_id_copy, e);
+      shared_clients.write().unwrap().remove(&user_id_copy);
     }
   }));
-
-  client.ws_sender = Some(client_sender);
-  clients.write().unwrap().insert(user_id.clone(), client);
-
-  warn!("{} connected", user_id.clone());
 
   while let Some(result) = client_ws_rcv.next().await {
     let msg = match result {
       Ok(msg) => msg,
       Err(e) => {
         error!("error receiving message for user id: {}: {}", user_id.clone(), e);
-        clients.write().unwrap().remove(&user_id);
         break;
       }
     };
@@ -57,6 +66,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
 
   clients.write().unwrap().remove(&user_id);
   warn!("{} disconnected", user_id.to_owned());
+  tms_clients_ws_send(client_list_update.clone(), clients.clone(), Some(String::from("")));
 }
 
 pub async fn ws_handler(ws: warp::ws::Ws, user_id: String, clients: TmsClients, security: Security) -> TmsClientResult<impl Reply> {

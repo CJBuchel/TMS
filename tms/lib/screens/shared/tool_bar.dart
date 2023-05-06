@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/constants.dart';
 
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
@@ -223,7 +224,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
     }
 
     return AppBar(
-      titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white),
+      titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
       iconTheme: IconThemeData(size: fontSize),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
       actions: [

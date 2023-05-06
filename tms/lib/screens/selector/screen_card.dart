@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:tms/constants.dart';
 
-class ScreenCard extends StatelessWidget {
-  const ScreenCard({
+class ScreenCard extends StatefulWidget {
+  ScreenCard({
     super.key,
-    required this.level,
+    required this.type,
     required this.title,
     required this.duration,
     required this.color,
     required this.image,
     required this.textColor,
+    required this.onPress,
   });
-
-  final String level;
+  final String type;
   final String title;
   final String duration;
   final Color color;
   final Image image;
   final Color textColor;
+  void Function() onPress;
+
+  @override
+  _ScreenCardState createState() => _ScreenCardState();
+}
+
+class _ScreenCardState extends State<ScreenCard> {
+  Color _color = Colors.black;
+
+  @override
+  void initState() {
+    super.initState();
+    _color = widget.color;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,57 +40,49 @@ class ScreenCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Card(
-            color: color,
+            color: _color,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    height: 115,
-                    child: image,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 93, 0, 0),
-                  child: Text(
-                    level,
-                    style: TextStyle(fontSize: 14, color: textColor, fontFamily: 'MontserratBold'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 110, 0, 0),
-                  child: Text(
-                    title,
-                    style: TextStyle(fontSize: 28, color: textColor, fontFamily: 'MontserratLight'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 210, 0, 0),
-                  child: Text(
-                    duration,
-                    style: TextStyle(fontSize: 12, color: textColor, fontFamily: 'MontserratSemiBold'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(95, 195, 0, 0),
-                  child: ElevatedButton(
-                    onPressed: () => {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xffEBEAEC),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
+            child: InkWell(
+              onTap: widget.onPress,
+              onHover: (value) {
+                if (value) {
+                  setState(() {
+                    _color = widget.color.withOpacity(0.8);
+                  });
+                } else {
+                  setState(() {
+                    _color = widget.color;
+                  });
+                }
+              },
+              splashColor: widget.color.withOpacity(0.8),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: SizedBox(
+                      height: 115,
+                      child: widget.image,
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 110, 0, 0),
                     child: Text(
-                      "Start",
-                      style: TextStyle(color: textColor),
+                      widget.type,
+                      style: TextStyle(fontSize: 14, color: widget.textColor, fontFamily: defaultFontFamilyBold),
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 130, 0, 0),
+                    child: Text(
+                      widget.title,
+                      style: TextStyle(fontSize: 28, color: widget.textColor, fontFamily: defaultFontFamily),
+                    ),
+                  ),
+                ],
+              ),
             )),
       ),
     );

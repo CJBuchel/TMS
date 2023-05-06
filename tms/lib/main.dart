@@ -5,10 +5,10 @@ import 'package:tms/network/network.dart';
 import 'package:tms/screens/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tms/screens/screen_selector.dart';
+import 'package:tms/screens/selector/screen_selector.dart';
 
 class TMSApp extends StatefulWidget {
-  TMSApp({super.key});
+  const TMSApp({super.key});
 
   @override
   _TMSAppState createState() => _TMSAppState();

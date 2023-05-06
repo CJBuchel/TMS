@@ -1,10 +1,9 @@
 use futures::{FutureExt, StreamExt};
 use log::{error, warn};
-use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send};
+use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send, schemas::SocketMessage};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::{ws::Message, Reply, ws::WebSocket};
 use tokio::sync::mpsc;
-use crate::schemas::*;
 
 async fn client_msg(_user_id: String, msg: Message, _clients: TmsClients, security: Security) {
   let message = match msg.to_str() {

@@ -43,6 +43,21 @@
     }
   },
   "definitions": {
+    "Access": {
+      "type": "object",
+      "required": [
+        "access_name",
+        "authorized"
+      ],
+      "properties": {
+        "access_name": {
+          "type": "string"
+        },
+        "authorized": {
+          "type": "boolean"
+        }
+      }
+    },
     "Answer": {
       "type": "object",
       "required": [
@@ -401,10 +416,21 @@
     "User": {
       "type": "object",
       "required": [
+        "access",
+        "admin",
         "password",
         "username"
       ],
       "properties": {
+        "access": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Access"
+          }
+        },
+        "admin": {
+          "type": "boolean"
+        },
         "password": {
           "type": "string"
         },

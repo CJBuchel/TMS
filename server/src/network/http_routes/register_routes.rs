@@ -4,15 +4,15 @@ use rocket::*;
 use rocket::State;
 use rocket::http::Status;
 use rocket::serde::json::Json;
-use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt};
+use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt, schemas::{RegisterResponse, RegisterRequest}};
 
-use crate::schemas::*;
 fn register_client(user_id: String, key: String, clients: TmsClients) {
   clients.write().unwrap().insert(
     user_id.clone(),
     TmsClient {
       user_id,
       key,
+      client_type: String::from(""),
       ws_sender: None
     },
   );

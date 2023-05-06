@@ -1,14 +1,14 @@
 use ::log::info;
 use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}};
 
-use crate::schemas::*;
-
 mod register_routes;
 use register_routes::*;
 
 mod publish_routes;
 use publish_routes::*;
-use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest};
+use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, schemas::IntegrityMessage};
+
+use crate::db::db::TmsDB;
 
 pub struct CORS;
 
@@ -41,6 +41,7 @@ fn pulse_integrity_route(security: &State<Security>, _clients: &State<TmsClients
 }
 
 pub struct TmsHttpServer {
+  tms_db: TmsDB,
   security: Security,
   clients: TmsClients,
   port: u16,
@@ -48,8 +49,8 @@ pub struct TmsHttpServer {
 }
 
 impl TmsHttpServer {
-  pub fn new(security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
-    Self { security, clients, port, ws_port }
+  pub fn new(tms_db: TmsDB, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
+    Self { tms_db, security, clients, port, ws_port }
   }
 
   pub async fn start(&self) -> Rocket<Build> {
@@ -59,6 +60,7 @@ impl TmsHttpServer {
       .merge(("address", "0.0.0.0"));
 
     rocket::custom(figment)
+      .manage(self.tms_db.clone())
       .manage(self.clients.clone())
       .manage(self.security.clone())
       .manage(self.security.public_key.clone())

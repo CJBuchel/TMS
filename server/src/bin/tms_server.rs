@@ -16,7 +16,7 @@
 use std::env;
 
 use log::info;
-use tms_server::network::{mdns_broadcaster::MDNSBroadcaster, ws_routes::TmsWebsocket, http_routes::TmsHttpServer};
+use tms_server::{network::{mdns_broadcaster::MDNSBroadcaster, ws_routes::TmsWebsocket, http_routes::TmsHttpServer}, db::db::TmsDB};
 use tms_utils::{new_clients_map, security::Security};
 
 pub struct ServerConfig {
@@ -45,9 +45,10 @@ impl TmsServer {
     let clients = new_clients_map();
     
     // Services
+    let tms_db = TmsDB::start(String::from("tms.kvdb"));
     let m_dns = MDNSBroadcaster::new(self.config.mdns_port, self.config.mdns_name.clone());
     let tms_ws = TmsWebsocket::new(rsa.clone(), clients.to_owned(), self.config.ws_port);
-    let tms_http = TmsHttpServer::new(rsa.clone(), clients.to_owned(), self.config.http_port, self.config.ws_port);
+    let tms_http = TmsHttpServer::new(tms_db, rsa.clone(), clients.to_owned(), self.config.http_port, self.config.ws_port);
 
     tokio::spawn(async move {
       m_dns.start().await;

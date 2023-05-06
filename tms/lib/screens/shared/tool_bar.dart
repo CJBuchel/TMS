@@ -223,7 +223,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
     }
 
     return AppBar(
-      titleTextStyle: TextStyle(fontSize: fontSize),
+      titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white),
       iconTheme: IconThemeData(size: fontSize),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
       actions: [

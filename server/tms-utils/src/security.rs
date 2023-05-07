@@ -2,15 +2,13 @@ use log::info;
 use openssl::{rsa::{Rsa, Padding}};
 use base64::{Engine, engine::general_purpose};
 
-const BYTE_SIZE: usize = 8;
-const SIZE: usize = 4096;
-const PKCS1_PADDING_SIZE: usize = 11;
+const PKCS1_PADDING_SIZE: usize = 11; // 11
 
 // Encrypt using a public key, returns a string in base64 bytes
 pub fn encrypt(key: String, data: String) -> String {
   let rsa = Rsa::public_key_from_pem_pkcs1(key.as_bytes()).unwrap();
 
-  let channels = data.as_bytes().chunks((SIZE/BYTE_SIZE)-PKCS1_PADDING_SIZE);
+  let channels = data.as_bytes().chunks(rsa.size() as usize - PKCS1_PADDING_SIZE);
   let mut encrypted_data: Vec<u8> = vec![];
   
   for channel_chunk in channels {
@@ -26,7 +24,7 @@ pub fn decrypt(key: String, buf: String) -> String {
   let rsa = Rsa::private_key_from_pem(key.as_bytes()).unwrap();
 
   let decoded_buff = general_purpose::STANDARD.decode(buf).unwrap();
-  let channels = decoded_buff.chunks(SIZE/8);
+  let channels = decoded_buff.chunks(rsa.size() as usize);
   let mut decrypted_data:String = "".to_string();
 
   for channel_chunk in channels {
@@ -43,14 +41,13 @@ pub fn decrypt(key: String, buf: String) -> String {
 pub struct Security {
   pub public_key: Vec<u8>,
   pub private_key: Vec<u8>,
-  // rsa: Rsa<Private>
 }
 
 impl Security {
-  pub fn new() -> Self {
-    info!("Encryption Size in bits: {}", SIZE);
+  pub fn new(bits: usize) -> Self {
+    info!("Encryption Size in bits: {}", bits);
     info!("Generating Encryption Keys");
-    let raw_rsa = Rsa::generate(u32::try_from(SIZE).unwrap()).unwrap();
+    let raw_rsa = Rsa::generate(u32::try_from(bits).unwrap()).unwrap();
     let raw_private_key = raw_rsa.private_key_to_pem().unwrap();
     let raw_public_key = raw_rsa.public_key_to_pem().unwrap();
 
@@ -60,7 +57,6 @@ impl Security {
     Self {
       public_key: raw_public_key,
       private_key: raw_private_key,
-      // rsa: raw_rsa
     }
   }
 

@@ -2,7 +2,7 @@ name: tms
 description: Team Management System for FLL
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+3
+version: 1.0.0+4
 
 # First submission required before we can begin publishing to the windows store
 msix_config:
@@ -37,6 +37,7 @@ dependencies:
   shared_preferences: ^2.1.0
   fast_rsa: ^3.5.6
   enum_to_string: ^2.0.1
+  wakelock: ^0.6.2
 
 dev_dependencies:
   flutter_test:

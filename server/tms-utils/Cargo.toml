@@ -16,3 +16,4 @@ log = "0.4.17"
 base64 = "0.21.0"
 openssl = { version = "^0.10", features = ["vendored"] }
 openssl-sys = "^0.9"
+schemars = "^0.8"

@@ -12,6 +12,7 @@ class TmsSchema {
     TmsSchema({
         required this.event,
         required this.gameMatch,
+        required this.integrityMessage,
         required this.judgingSession,
         required this.registerRequest,
         required this.registerResponse,
@@ -22,6 +23,7 @@ class TmsSchema {
 
     Event event;
     GameMatch gameMatch;
+    IntegrityMessage integrityMessage;
     JudgingSession judgingSession;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
@@ -32,6 +34,7 @@ class TmsSchema {
     factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
         event: Event.fromJson(json["event"]),
         gameMatch: GameMatch.fromJson(json["game_match"]),
+        integrityMessage: IntegrityMessage.fromJson(json["integrity_message"]),
         judgingSession: JudgingSession.fromJson(json["judging_session"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
         registerResponse: RegisterResponse.fromJson(json["register_response"]),
@@ -43,6 +46,7 @@ class TmsSchema {
     Map<String, dynamic> toJson() => {
         "event": event.toJson(),
         "game_match": gameMatch.toJson(),
+        "integrity_message": integrityMessage.toJson(),
         "judging_session": judgingSession.toJson(),
         "register_request": registerRequest.toJson(),
         "register_response": registerResponse.toJson(),
@@ -177,6 +181,22 @@ class OnTable {
         "score_submitted": scoreSubmitted,
         "table": table,
         "team_number": teamNumber,
+    };
+}
+
+class IntegrityMessage {
+    IntegrityMessage({
+        required this.message,
+    });
+
+    String message;
+
+    factory IntegrityMessage.fromJson(Map<String, dynamic> json) => IntegrityMessage(
+        message: json["message"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "message": message,
     };
 }
 

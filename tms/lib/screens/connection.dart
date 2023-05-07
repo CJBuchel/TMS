@@ -1,88 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/screens/shared/app_bar.dart';
+import 'package:tms/screens/shared/tool_bar.dart';
 
 class Connection extends StatefulWidget {
-  TmsToolBar toolBar;
-  Connection({super.key, required this.toolBar});
+  Connection({super.key});
 
   @override
   _ConnectionState createState() => _ConnectionState();
 }
 
 class _ConnectionState extends State<Connection> {
-  String _serverIP = '';
-  Widget _searchState = const Text("");
-  Widget _connectState = const Text("");
   final TextEditingController _controller = TextEditingController();
+  bool _autoConfigureNetwork = true;
 
   @override
   void initState() {
     super.initState();
     Network.getServerIP().then((value) {
       setState(() {
-        _serverIP = value;
         _controller.text = value;
+      });
+    });
+
+    Network.getAutoConfig().then((value) {
+      setState(() {
+        _autoConfigureNetwork = value;
       });
     });
   }
 
   void findServer() async {
-    setState(() {
-      _searchState = const Text("Searching For Server...", style: TextStyle(color: Colors.white));
-    });
-
-    var state = await Network.findServer();
-    print(state);
-    if (state == NetworkConnectionState.connected) {
-      setState(() {
-        _searchState = const Text("Found Server", style: TextStyle(color: Colors.green));
-      });
-    } else if (state == NetworkConnectionState.connectedNoPulse) {
-      setState(() {
-        _searchState = const Text("Connected With No Pulse", style: TextStyle(color: Colors.amber));
+    var found = await Network.findServer();
+    if (found) {
+      print("found");
+      Network.getServerIP().then((value) {
+        setState(() {
+          _controller.text = value;
+        });
       });
     } else {
-      setState(() {
-        _searchState = const Text("Could Not Find Server", style: TextStyle(color: Colors.red));
-      });
+      print("Couldn't find server");
     }
-
-    _serverIP = await Network.getServerIP();
-    _controller.text = _serverIP;
   }
 
   void connectToServer() async {
-    setState(() {
-      _connectState = const Text(" - Generating Encryption Keys", style: TextStyle(color: Colors.amber));
-    });
-
-    Network.connect().then((v) {
-      NetworkWebSocket.getState().then((state) => {
-            if (state == NetworkWebSocketState.connected)
-              {
-                setState(() {
-                  _connectState = const Text("- Connected", style: TextStyle(color: Colors.green));
-                  // Navigator.pushNamed(context, "/");
-                  Navigator.pop(context, _connectState);
-                })
-              }
-            else
-              {
-                setState(() {
-                  _connectState = const Text(" - Websocket Failed To Connect", style: TextStyle(color: Colors.red));
-                })
-              }
-          });
+    Network.reset().then((v) {
+      Network.setServerIP(_controller.text).then((v) async {
+        print(await Network.getServerIP());
+        await Network.connect();
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     var imageSize = <double>[300, 500];
-    double textSize = 25;
+    double textSize = 20;
     double buttonWidth = 250;
     double buttonHeight = 50;
     if (Responsive.isTablet(context)) {
@@ -96,7 +72,7 @@ class _ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-      appBar: widget.toolBar,
+      appBar: TmsToolBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // y axis
         children: <Widget>[
@@ -114,6 +90,54 @@ class _ConnectionState extends State<Connection> {
           ),
           // Address input
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Auto configure
+              SizedBox(
+                width: buttonWidth,
+                child: ListTile(
+                  title: Text(
+                    "Auto",
+                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                  ),
+                  leading: Radio<bool>(
+                      value: true,
+                      groupValue: _autoConfigureNetwork,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _autoConfigureNetwork = value;
+                            Network.setAutoConfig(value);
+                          });
+                        }
+                      }),
+                ),
+              ),
+
+              // Manual configure
+              SizedBox(
+                width: buttonWidth,
+                child: ListTile(
+                  title: Text(
+                    "Manual",
+                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                  ),
+                  leading: Radio<bool>(
+                      value: false,
+                      groupValue: _autoConfigureNetwork,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _autoConfigureNetwork = value;
+                            Network.setAutoConfig(value);
+                          });
+                        }
+                      }),
+                ),
+              )
+            ],
+          ),
+          Row(
             children: <Widget>[
               Flexible(
                 child: Padding(
@@ -128,11 +152,6 @@ class _ConnectionState extends State<Connection> {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [_searchState, _connectState],
-          ),
-          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -141,6 +160,7 @@ class _ConnectionState extends State<Connection> {
                 width: buttonWidth,
                 child: ElevatedButton.icon(
                   onPressed: () {
+                    print("Finding server");
                     findServer();
                   },
                   icon: const Icon(Icons.search),

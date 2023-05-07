@@ -1,12 +1,9 @@
-use rocket::{*, http::Status, serde::json::Json};
-use tms_utils::{security::Security, TmsClients, TmsRouteResponse, TmsRespond, TmsRequest, tms_client_send_response};
+use rocket::{*, http::Status};
+use tms_utils::{security::Security, TmsClients, TmsRouteResponse, TmsRespond, TmsRequest, tms_clients_ws_send, schemas::SocketMessage};
 
-
-use crate::schemas::*;
-
-#[post("/publish", data = "<message>")]
-pub fn publish_route(security: &State<Security>, clients: &State<TmsClients>, message: String) -> TmsRouteResponse<(), ()> {
+#[post("/publish/<uuid>", data = "<message>")]
+pub fn publish_route(security: &State<Security>, clients: &State<TmsClients>, uuid: String, message: String) -> TmsRouteResponse<()> {
   let socket_message: SocketMessage = TmsRequest!(message, security);
-  tms_client_send_response(socket_message.to_owned(), clients.inner().to_owned(), security.inner().to_owned(), socket_message.from_id);
+  tms_clients_ws_send(socket_message.to_owned(), clients.inner().to_owned(), Some(uuid));
   TmsRespond!();
 }

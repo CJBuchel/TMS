@@ -5,8 +5,9 @@ use std::path::Path;
 
 use schemars::JsonSchema;
 
-include!("../src/schemas/mod.rs");
+include!("../tms-utils/src/schemas/mod.rs");
 
+#[allow(dead_code)]
 #[derive(JsonSchema, Clone)]
 pub struct TmsSchema {
   // Storage Structures

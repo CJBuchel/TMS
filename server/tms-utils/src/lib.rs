@@ -1,7 +1,8 @@
 pub mod security;
+pub mod schemas;
 
 use rocket::{http::Status, serde::json::Json};
-use security::Security;
+use security::encrypt;
 use serde::{Serialize};
 use std::{sync::{RwLock, Arc}, collections::HashMap};
 use tokio::sync::mpsc;
@@ -12,6 +13,8 @@ use warp::{ws::Message, Rejection};
 pub struct TmsClient {
   pub user_id: String, // the uuid for the client (client generated)
   pub key: String, // public key for this client
+  pub active: bool, // boolean to display if the client registered but is not accessible
+  pub client_type: String, // referee, JA, Head ref etc...
   pub ws_sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>> // socket sender used for dispatching messages
 }
 
@@ -22,10 +25,11 @@ pub fn new_clients_map() -> TmsClients {
 }
 
 // Route response for clients
-pub type TmsRouteResponse<T,E> = Result<(Status, Json<T>), E>;
+pub type TmsRouteResponse<E> = Result<(Status, String), E>; // always responds with a string.
+pub type TmsRouteResponseNoEncryption<T,E> = Result<(Status, Json<T>), E>; // responds with a status, and an encrypted message
 
-pub fn tms_client_send_response<T: Serialize>(message: T, clients: TmsClients, security: Security, origin_id: Option<String>) {
-  // let mut clients_collection = clients.read().unwrap().iter();
+/// Sends a message to every client, optionally with an origin id (stops a message to the original client)
+pub fn tms_clients_ws_send<T: Serialize>(message: T, clients: TmsClients, origin_id: Option<String>) {
   clients
     .read()
     .unwrap()
@@ -36,9 +40,9 @@ pub fn tms_client_send_response<T: Serialize>(message: T, clients: TmsClients, s
     })
     .for_each(|(_, client)| {
       if let Some(sender) = &client.ws_sender {
-        let j = serde_json::to_string(&message).unwrap();
-        let encrypted_j = security.encrypt(j);
-        let _ = sender.send(Ok(Message::text(encrypted_j.clone())));
+        let m = serde_json::to_string(&message).unwrap();
+        let encrypted_m = encrypt(client.key.clone(), m);
+        let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
       }
     });
 }
@@ -60,17 +64,51 @@ macro_rules! TmsRequest {
   };
 }
 
+
+/// Provides returner for OK, either in json format or in string for encrypted
+/// # Example
+/// ```edition2021
+/// let security: Security = sec; // uses TMS Security
+/// let message: IntegrityMessage = TmsRequest!(message, security);
+/// TmsRespond(); // respond with defaults, returns Ok(Status::Ok)
+/// TmsRespond(Status::Ok); responds with Ok(custom status)
+/// TmsRespond(Status::Ok, my_json_message); // responds with json message
+/// TmsRespond(Status::Ok, my_json_message, key); // responds with an encrypted version of the json
+/// TmsRespond(Status::Ok, my_json_message, clients, uuid); // responds with the encrypted message using clients and uuid to find the key
 #[macro_export]
 macro_rules! TmsRespond {
+
+  // Respond with default ok
   () => {
-    return Ok((Status::Ok, Json({})))
+    return Ok((Status::Ok, String::from("")))
   };
 
+  // Respond with a custom status
   ($status:expr) => {
-    return Ok(($status, Json({})))
+    return Ok(($status, String::from("")))
   };
 
+  // Respond with both custom status and data
   ($status:expr, $data:expr) => {
-    return Ok(($status, Json($data)))
-  }
+    return Ok(($status, $data))
+  };
+
+  // Respond with custom status and data encrypted with key
+  ($status:expr, $data:expr, $key:expr) => {
+    let m: String = serde_json::to_string(&$data).unwrap();
+    let enc_m: String = encrypt($key, m);
+    return Ok(($status, enc_m))
+  };
+
+  // Respond with custom status and data encrypted using clients and client uuid
+  ($status:expr, $data:expr, $clients:expr, $uuid:expr) => {
+    if $clients.read().unwrap().contains_key(&$uuid) {
+      warn!("Integrity Check on Client: {}", $uuid);
+      let client_key: String = $clients.read().unwrap().get(&$uuid).unwrap().key.to_owned();
+      TmsRespond!($status, $data, client_key);
+    } else {
+      // Err()
+      TmsRespond!(Status::BadRequest, $data, "".to_string());
+    }
+  };
 }

@@ -1,8 +1,10 @@
 use std::borrow::Borrow;
 
-use sled_extensions::{bincode::Tree, DbExt, Db};
+use log::warn;
 
-use crate::schemas::*;
+use serde::{Serialize, de::DeserializeOwned};
+use sled_extensions::{bincode::Tree, DbExt, Db};
+use tms_utils::schemas::{Team, GameMatch, JudgingSession, User, Event};
 
 #[derive(Clone)]
 pub struct Database {
@@ -13,12 +15,9 @@ pub struct Database {
   pub event: Tree<Event>
 }
 
-pub trait AccessDatabase {
-  type Data: Clone;
+pub trait RequestDatabase {
+  type Data: Clone + Serialize + DeserializeOwned;
   type Error;
-  fn db_get(&self, key: String) -> Result<Self::Data, Self::Error>;
-  fn db_set(&self, key: String, data: Self::Data) -> Result<Self::Data, Self::Error>;
-  fn db_add(&self, data: Self::Data) -> Result<Self::Data, Self::Error>;
 }
 
 #[derive(Clone)]
@@ -29,10 +28,10 @@ pub struct TmsDB {
 
 impl TmsDB {
   // Start the db and return the object
-  pub fn start() -> Self {
+  pub fn start(db_path: String) -> Self {
     // Create db
     let db = sled_extensions::Config::default()
-      .path("tms.kvdb")
+      .path(db_path)
       .open()
       .expect("Failed to open TSM Database");
 
@@ -45,7 +44,23 @@ impl TmsDB {
       event: db.open_bincode_tree("events").expect("Failed to open event tree")
     };
 
-    Self { db: db, tms_data: tms_data }
+    let new_admin = User {
+      username: String::from("admin"),
+      password: String::from("password"),
+      admin: true,
+      access: [].to_vec()
+    };
+
+    // Check if admin is present, if not add one
+    match tms_data.users.get(String::from("admin")).unwrap() {
+      Some(user) => warn!("Admin Exists: [{}, {}, {}]", user.username, user.password, user.admin),
+      None => {
+        warn!("No Admin, generating...");
+        let _ = tms_data.users.insert(new_admin.username.as_bytes(), new_admin.clone());
+      }
+    }
+
+    Self { db, tms_data}
   }
 
   // Get the raw sled database

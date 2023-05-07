@@ -50,8 +50,8 @@ class _ScreenSelectorState extends State<ScreenSelector> {
                   type: "BASIC",
                   title: "Scoreboard",
                   duration: "7-30 Days",
-                  color: Color(0xff8E97FD),
-                  textColor: Color(0xff3F414E),
+                  color: const Color(0xff8E97FD),
+                  textColor: const Color(0xff3F414E),
                   image: const Image(
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
@@ -67,8 +67,8 @@ class _ScreenSelectorState extends State<ScreenSelector> {
                   type: "BASIC",
                   title: "Timer",
                   duration: "12-35 Days",
-                  color: Color(0xffFFC97E),
-                  textColor: Color(0xff3F414E),
+                  color: const Color(0xffFFC97E),
+                  textColor: const Color(0xff3F414E),
                   image: const Image(
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),

@@ -1,7 +1,6 @@
 // Static network class for the main application
 import 'dart:io';
 
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/foundation.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:shared_preferences/shared_preferences.dart';

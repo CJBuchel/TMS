@@ -40,50 +40,51 @@ class _ScreenCardState extends State<ScreenCard> {
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Card(
-            color: _color,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+          color: _color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: InkWell(
+            onTap: widget.onPress,
+            onHover: (value) {
+              if (value) {
+                setState(() {
+                  _color = widget.color.withOpacity(0.8);
+                });
+              } else {
+                setState(() {
+                  _color = widget.color;
+                });
+              }
+            },
+            splashColor: widget.color.withOpacity(0.8),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    height: 115,
+                    child: widget.image,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 110, 0, 0),
+                  child: Text(
+                    widget.type,
+                    style: TextStyle(fontSize: 14, color: widget.textColor, fontFamily: defaultFontFamilyBold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 130, 0, 0),
+                  child: Text(
+                    widget.title,
+                    style: TextStyle(fontSize: 28, color: widget.textColor, fontFamily: defaultFontFamily),
+                  ),
+                ),
+              ],
             ),
-            child: InkWell(
-              onTap: widget.onPress,
-              onHover: (value) {
-                if (value) {
-                  setState(() {
-                    _color = widget.color.withOpacity(0.8);
-                  });
-                } else {
-                  setState(() {
-                    _color = widget.color;
-                  });
-                }
-              },
-              splashColor: widget.color.withOpacity(0.8),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: SizedBox(
-                      height: 115,
-                      child: widget.image,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 110, 0, 0),
-                    child: Text(
-                      widget.type,
-                      style: TextStyle(fontSize: 14, color: widget.textColor, fontFamily: defaultFontFamilyBold),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 130, 0, 0),
-                    child: Text(
-                      widget.title,
-                      style: TextStyle(fontSize: 28, color: widget.textColor, fontFamily: defaultFontFamily),
-                    ),
-                  ),
-                ],
-              ),
-            )),
+          ),
+        ),
       ),
     );
   }

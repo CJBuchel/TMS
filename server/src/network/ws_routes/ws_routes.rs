@@ -33,6 +33,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
   let client_recv = UnboundedReceiverStream::new(client_recv);
 
   let shared_clients = clients.clone();
+  let mut shared_client = client.clone();
   client.ws_sender = Some(client_sender);
   clients.write().unwrap().insert(user_id.clone(), client);
   warn!("{} connected", user_id.clone());
@@ -48,7 +49,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
   tokio::task::spawn(client_recv.forward(client_ws_sender).map(move |result| {
     if let Err(e) = result {
       error!("error sending websocket msg: {}: {}", user_id_copy, e);
-      shared_clients.write().unwrap().remove(&user_id_copy);
+      shared_client.active = false;
     }
   }));
 

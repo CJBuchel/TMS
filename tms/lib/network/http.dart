@@ -15,6 +15,7 @@ enum NetworkHttpConnectionState { disconnected, connectedNoPulse, connected }
 class NetworkHttp {
   final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
   static ValueNotifier<NetworkHttpConnectionState> httpState = ValueNotifier<NetworkHttpConnectionState>(NetworkHttpConnectionState.disconnected);
+
   Future<void> setState(NetworkHttpConnectionState state) async {
     httpState.value = state;
     await _localStorage.then((value) => value.setString(store_http_connection_state, EnumToString.convertToString(state)));
@@ -34,6 +35,23 @@ class NetworkHttp {
     } catch (e) {
       httpState.value = NetworkHttpConnectionState.disconnected;
       return NetworkHttpConnectionState.disconnected;
+    }
+  }
+
+  Future<void> setConnectUrl(String url) async {
+    await _localStorage.then((value) => value.setString(store_ws_connect_url, url));
+  }
+
+  Future<String> getConnectUrl() async {
+    try {
+      var url = await _localStorage.then((value) => value.getString(store_ws_connect_url));
+      if (url != null) {
+        return url;
+      } else {
+        return "";
+      }
+    } catch (e) {
+      return "";
     }
   }
 
@@ -136,9 +154,11 @@ class NetworkHttp {
 
       switch (response.statusCode) {
         case HttpStatus.ok: // Status OK
+          var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
           NetworkSecurity.setKeys(keyPair);
           setState(NetworkHttpConnectionState.connected);
-          return RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+          setConnectUrl(message.url);
+          return message;
 
         case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
           var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
@@ -147,9 +167,12 @@ class NetworkHttp {
             case true:
               // Pulse is good, integrity is good. Use existing settings (don't set keys)
               setState(NetworkHttpConnectionState.connected);
+              setConnectUrl(message.url);
+              print("Already Registered, keeping settings");
               return message;
             case false:
               // Pulse is bad, delete the existing uuid and start again
+              print("Bad existing register, re-registering");
               await unregister(addr);
               return register(addr); // return with a new registration
             default:

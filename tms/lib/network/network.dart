@@ -52,7 +52,7 @@ class Network {
 
   // Get the overall state of the network, combined tuple containing both the protocol states
   static Future<Tuple3<NetworkHttpConnectionState, NetworkWebSocketState, SecurityState>> getStates() async {
-    return Tuple3(await _http.getState(), await _ws.getState(), await NetworkSecurity.getState());
+    return Tuple3(await _http.getState(), _ws.getState(), await NetworkSecurity.getState());
   }
 
   // Try to connect to server and test endpoint
@@ -63,14 +63,15 @@ class Network {
     });
   }
 
-  // The opposite process of the connection, disconnect the ws and remove the registered uuid
+  // The opposite process of the connection
   static Future<void> disconnect() async {
-    await _ws.disconnect().then((v) async => {await _http.unregister(await getServerIP())});
+    await _ws.disconnect();
+    // await _ws.disconnect().then((v) async => {await _http.unregister(await getServerIP())});
   }
 
   static Future<void> reset() async {
     await _http.setState(NetworkHttpConnectionState.disconnected);
-    await _ws.setState(NetworkWebSocketState.disconnected);
+    _ws.setState(NetworkWebSocketState.disconnected);
     if (!kIsWeb) {
       disconnect();
     }
@@ -138,11 +139,27 @@ class Network {
   static Future<bool> checkConnection() async {
     // Check the pulse of the server
     var httpState = await _http.getPulse(await getServerIP());
+    var wsState = _ws.getState();
     // After the pulse has completed check the websocket state
-    var wsState = await _ws.getState();
     if (httpState != NetworkHttpConnectionState.connected || wsState != NetworkWebSocketState.connected) {
+      print("Trying reconnect");
       // If either of the protocols cannot connect, reconnect.
-      await connect();
+      if (wsState != NetworkWebSocketState.connected && httpState == NetworkHttpConnectionState.connected) {
+        print("http fine, trying ws");
+        // If the websocket is only disconnected (timeout issues or closing the app) then do an integrity check and reconnect ws
+        var goodIntegrity = await _http.getPulseIntegrity(await getServerIP());
+        if (goodIntegrity) {
+          print("ws good, connecting");
+          _ws.connect(await _http.getConnectUrl());
+        } else {
+          print("ws bad reconnected");
+          await connect();
+        }
+      } else {
+        // Fully reconnect
+        print("full reconnect");
+        await connect();
+      }
 
       // Determine the states and check again
       var states = await getStates();

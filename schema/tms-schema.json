@@ -46,15 +46,15 @@
     "Access": {
       "type": "object",
       "required": [
-        "access_name",
-        "authorized"
+        "authorized",
+        "category_type_access"
       ],
       "properties": {
-        "access_name": {
-          "type": "string"
-        },
         "authorized": {
           "type": "boolean"
+        },
+        "category_type_access": {
+          "type": "string"
         }
       }
     },

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/screens/shared/color_utils.dart';
 
-class ScreenCard extends StatefulWidget {
-  ScreenCard({
+class ScreenCard extends StatelessWidget {
+  const ScreenCard({
     super.key,
     required this.type,
     required this.title,
@@ -18,74 +19,54 @@ class ScreenCard extends StatefulWidget {
   final Color color;
   final Image image;
   final Color textColor;
-  void Function() onPress;
-
-  @override
-  _ScreenCardState createState() => _ScreenCardState();
-}
-
-class _ScreenCardState extends State<ScreenCard> {
-  Color _color = Colors.black;
-
-  @override
-  void initState() {
-    super.initState();
-    _color = widget.color;
-  }
+  final void Function() onPress;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 280,
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Card(
-          color: _color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: InkWell(
-            onTap: widget.onPress,
-            onHover: (value) {
-              if (value) {
-                setState(() {
-                  _color = widget.color.withOpacity(0.8);
-                });
-              } else {
-                setState(() {
-                  _color = widget.color;
-                });
-              }
-            },
-            splashColor: widget.color.withOpacity(0.8),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    height: 115,
-                    child: widget.image,
-                  ),
+        height: 280,
+        child: InkWell(
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: Card(
+              color: color,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: InkWell(
+                splashColor: darken(color),
+                hoverColor: lighten(color),
+                borderRadius: BorderRadius.circular(10),
+                onTap: () => {},
+                onHover: (value) {},
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: SizedBox(
+                        height: 115,
+                        child: image,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(18, 110, 0, 0),
+                      child: Text(
+                        type,
+                        style: TextStyle(fontSize: 14, color: textColor, fontFamily: defaultFontFamilyBold),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 130, 0, 0),
+                      child: Text(
+                        title,
+                        style: TextStyle(fontSize: 28, color: textColor, fontFamily: defaultFontFamily),
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 110, 0, 0),
-                  child: Text(
-                    widget.type,
-                    style: TextStyle(fontSize: 14, color: widget.textColor, fontFamily: defaultFontFamilyBold),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 130, 0, 0),
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(fontSize: 28, color: widget.textColor, fontFamily: defaultFontFamily),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

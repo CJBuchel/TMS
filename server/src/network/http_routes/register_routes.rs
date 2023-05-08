@@ -13,7 +13,7 @@ fn register_client(user_id: String, key: String, clients: TmsClients) {
       user_id,
       key,
       active: true,
-      client_type: String::from(""),
+      category_type: String::from(""),
       ws_sender: None
     },
   );

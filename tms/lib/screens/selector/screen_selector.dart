@@ -3,18 +3,8 @@ import 'package:tms/constants.dart';
 import 'package:tms/screens/selector/screen_card.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
-class ScreenSelector extends StatefulWidget {
-  ScreenSelector({super.key});
-
-  @override
-  _ScreenSelectorState createState() => _ScreenSelectorState();
-}
-
-class _ScreenSelectorState extends State<ScreenSelector> {
-  @override
-  void initState() {
-    super.initState();
-  }
+class ScreenSelector extends StatelessWidget {
+  const ScreenSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +31,10 @@ class _ScreenSelectorState extends State<ScreenSelector> {
             ),
           ),
 
-          // First Card
+          // First Set of cards
           IntrinsicHeight(
             child: Row(children: [
+              // Scoreboard card
               Flexible(
                 flex: 1,
                 child: ScreenCard(
@@ -56,10 +47,12 @@ class _ScreenSelectorState extends State<ScreenSelector> {
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
                   onPress: () {
-                    print("Scoreboard pressed");
+                    // print("Scoreboard pressed");
                   },
                 ),
               ),
+
+              // Timer card
               Flexible(
                 flex: 1,
                 fit: FlexFit.loose,
@@ -73,7 +66,7 @@ class _ScreenSelectorState extends State<ScreenSelector> {
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
                   onPress: () {
-                    print("Timer Pressed");
+                    // print("Timer Pressed");
                   },
                 ),
               ),

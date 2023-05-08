@@ -6,7 +6,7 @@ import 'package:tms/responsive.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
 class Connection extends StatefulWidget {
-  Connection({super.key});
+  const Connection({super.key});
 
   @override
   _ConnectionState createState() => _ConnectionState();

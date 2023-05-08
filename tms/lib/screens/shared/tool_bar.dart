@@ -229,13 +229,11 @@ class _TmsToolBarState extends State<TmsToolBar> {
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
       actions: [
         IconButton(
-          onPressed: () {
-            pushTo(context, "/server_connection");
-          },
+          onPressed: () => pushTo(context, "/server_connection"),
           icon: connectionIcon,
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () => pushTo(context, "/login"),
           icon: const Icon(
             Icons.logout_outlined,
           ),

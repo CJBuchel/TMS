@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/screens/connection.dart';
+import 'package:tms/screens/login/login.dart';
 import 'package:tms/screens/selector/screen_selector.dart';
 
 class TMSApp extends StatelessWidget {
@@ -21,8 +22,8 @@ class TMSApp extends StatelessWidget {
       // Main Router
       routes: {
         '/': (context) => ScreenSelector(),
-        '/server_connection': (context) => Connection(),
-        '/login': (context) => Connection(),
+        '/server_connection': (context) => const Connection(),
+        '/login': (context) => const Login(),
       },
     );
   }

@@ -26,7 +26,9 @@ Future<bool> checkConnection() async {
 }
 
 bool watchdogFeeding = false;
+bool active = true;
 void watchDog() async {
+  if (!active) return;
   if (!watchdogFeeding) {
     watchdogFeeding = true;
     bool ok = await checkConnection();
@@ -58,7 +60,11 @@ class NetworkObserver extends WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
+      active = false;
       Network.disconnect();
+    } else if (state == AppLifecycleState.resumed) {
+      active = true;
+      watchDog();
     }
   }
 }

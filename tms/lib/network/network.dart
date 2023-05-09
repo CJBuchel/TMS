@@ -9,6 +9,7 @@ import 'package:tms/constants.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
+import 'package:tms/schema/tms-schema.dart';
 import 'package:tuple/tuple.dart';
 
 // Static implementation and combined classes of both network protocols
@@ -139,10 +140,11 @@ class Network {
   // Check the connection, reconnect on fail (returns false for bad check)
   static Future<bool> checkConnection() async {
     // Check the pulse of the server
-    var httpState = await _http.getPulse(await getServerIP());
+    bool integrity = await _http.getPulseIntegrity(await getServerIP());
+    var httpState = await _http.getState();
     var wsState = _ws.getState();
     // After the pulse has completed check the websocket state
-    if (httpState != NetworkHttpConnectionState.connected || wsState != NetworkWebSocketState.connected) {
+    if (httpState != NetworkHttpConnectionState.connected || wsState != NetworkWebSocketState.connected || !integrity) {
       print("Trying reconnect");
       // If either of the protocols cannot connect, reconnect.
       if (wsState != NetworkWebSocketState.connected && httpState == NetworkHttpConnectionState.connected) {
@@ -200,15 +202,22 @@ class Network {
     Tuple3<bool, int, String> response = const Tuple3(false, 0, "");
     var st = await getStates();
     if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
+      print("Inside serverPost");
       final serverIp = await getServerIP();
       final uuid = await _http.getUuid();
       try {
+        print("Encrypting");
         var encryptedM = await NetworkSecurity.encryptMessage(json);
+        print("Encrypted");
+        print("Post Url http://$serverIp:$requestPort/requests/$route/$uuid");
         final serverRes = await http.post(
           Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'),
           body: encryptedM,
         );
+        print("Posted");
+        print("Res body: ${serverRes.body}");
         var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+        print("Decrypted m");
         response = Tuple3(true, serverRes.statusCode, decryptedM);
       } catch (e) {
         _http.setState(NetworkHttpConnectionState.disconnected);

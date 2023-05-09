@@ -29,12 +29,18 @@ fn login_user(user: User, uuid: String, clients: TmsClients, message: LoginReque
 
 #[post("/login/<uuid>", data = "<message>")]
 pub fn login_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<TmsDB>, uuid: String, message: String) -> TmsRouteResponse<()> {
-  let message: LoginRequest = TmsRequest!(message, security);
-  match db.tms_data.users.get(message.username.as_bytes()).unwrap() {
+  println!("Login route");
+  println!("Message string: {}", security.decrypt(message.clone()).as_str());
+  let message: LoginRequest = TmsRequest!(message.clone(), security);
+  println!("Message: {}, {}", message.username, message.password);
+
+  match db.tms_data.users.get(message.username.clone()).unwrap() {
     Some(user) => {
+      println!("User found, logging in");
       return login_user(user, uuid, clients.inner().clone(), message);
     },
     None => {
+      println!("No user matching, returning bad request");
       TmsRespond!(Status::BadRequest)
     }
   }

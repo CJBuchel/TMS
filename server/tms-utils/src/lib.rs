@@ -104,7 +104,6 @@ macro_rules! TmsRespond {
   // Respond with custom status and data encrypted using clients and client uuid
   ($status:expr, $data:expr, $clients:expr, $uuid:expr) => {
     if $clients.read().unwrap().contains_key(&$uuid) {
-      warn!("Integrity Check on Client: {}", $uuid);
       let client_key: String = $clients.read().unwrap().get(&$uuid).unwrap().key.to_owned();
       TmsRespond!($status, $data, client_key);
     } else {

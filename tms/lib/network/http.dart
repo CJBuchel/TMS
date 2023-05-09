@@ -103,12 +103,13 @@ class NetworkHttp {
       if (await getPulse(addr) == NetworkHttpConnectionState.connected) {
         // generate random uuid to send to the server and check against
         var random_uuid = const Uuid().v4();
+        var uuid = await getUuid();
         var message = IntegrityMessage(message: random_uuid);
 
         // Encrypt and send
         var encrypted_m = await NetworkSecurity.encryptMessage(message.toJson());
         final response = await http.post(
-          Uri.parse('http://$addr:$requestPort/requests/pulse_integrity'),
+          Uri.parse('http://$addr:$requestPort/requests/pulse_integrity/$uuid'),
           body: encrypted_m,
         );
 
@@ -121,9 +122,11 @@ class NetworkHttp {
         }
       }
     } catch (e) {
+      print("Pulse error");
       return false;
     }
 
+    print("Pulse Integrity Error");
     return false; // if it falls through returns false
   }
 
@@ -156,6 +159,7 @@ class NetworkHttp {
         case HttpStatus.ok: // Status OK
           var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
           NetworkSecurity.setKeys(keyPair);
+          NetworkSecurity.setServerKey(message.key);
           setState(NetworkHttpConnectionState.connected);
           setConnectUrl(message.url);
           return message;

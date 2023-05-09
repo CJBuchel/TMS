@@ -13,21 +13,22 @@ class Login extends StatelessWidget {
   final TextEditingController _passwordController = TextEditingController();
 
   void loginTest(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => const AlertDialog(
-        title: Text("Login Error"),
-        content: SingleChildScrollView(
-          child: Text("Status Code 0"),
-        ),
-      ),
-    );
-    // login(_usernameController.text, _passwordController.text).then((res) {
-    //   if (res.item1 == HttpStatus.ok) {
-    //     print("Success");
-    //   } else {
-    //   }
-    // });
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) => const AlertDialog(
+    //     title: Text("Login Error"),
+    //     content: SingleChildScrollView(
+    //       child: Text("Status Code 0"),
+    //     ),
+    //   ),
+    // );
+    print("Username: ${_usernameController.text}");
+    print("Password: ${_passwordController.text}");
+    login(_usernameController.text, _passwordController.text).then((res) {
+      if (res.item1 == HttpStatus.ok) {
+        print("Success, Auth: ${res.item2}");
+      } else {}
+    });
   }
 
   @override

@@ -24,3 +24,14 @@ pub struct SocketMessage {
   pub topic: String, // Timer, Teams, Event, JudgingSessions
   pub message: String
 }
+
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
+pub struct LoginRequest {
+  pub username: String,
+  pub password: String
+}
+
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
+pub struct LoginResponse {
+  pub auth_token: String,
+}

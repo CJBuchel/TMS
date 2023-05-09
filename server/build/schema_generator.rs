@@ -21,7 +21,9 @@ pub struct TmsSchema {
   register_request: RegisterRequest,
   register_response: RegisterResponse,
   socket_event: SocketMessage,
-  integrity_message: IntegrityMessage
+  integrity_message: IntegrityMessage,
+  login_request: LoginRequest,
+  login_response: LoginResponse,
 }
 
 pub fn generate_schema(outdir: &OsString) {

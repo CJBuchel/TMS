@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
@@ -173,5 +174,70 @@ class Network {
     } else {
       return true;
     }
+  }
+
+  // Tuple3 (good access, res status code, res message)
+  static Future<Tuple3<bool, int, dynamic>> serverGet(String route) async {
+    Tuple3<bool, int, String> response = const Tuple3(false, 0, "");
+    var st = await getStates();
+    if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
+      final serverIp = await getServerIP();
+      final uuid = await _http.getUuid();
+      try {
+        final serverRes = await http.get(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'));
+        var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+        response = Tuple3(true, serverRes.statusCode, decryptedM);
+      } catch (e) {
+        _http.setState(NetworkHttpConnectionState.disconnected);
+      }
+    }
+
+    return response;
+  }
+
+  // Tuple3 (good access, res status code, res message)
+  static Future<Tuple3<bool, int, dynamic>> serverPost(String route, dynamic json) async {
+    Tuple3<bool, int, String> response = const Tuple3(false, 0, "");
+    var st = await getStates();
+    if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
+      final serverIp = await getServerIP();
+      final uuid = await _http.getUuid();
+      try {
+        var encryptedM = await NetworkSecurity.encryptMessage(json);
+        final serverRes = await http.post(
+          Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'),
+          body: encryptedM,
+        );
+        var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+        response = Tuple3(true, serverRes.statusCode, decryptedM);
+      } catch (e) {
+        _http.setState(NetworkHttpConnectionState.disconnected);
+      }
+    }
+
+    return response;
+  }
+
+  // Tuple3 (good access, res status code, res message)
+  static Future<Tuple3<bool, int, dynamic>> serverDelete(String route, dynamic json) async {
+    Tuple3<bool, int, String> response = const Tuple3(false, 0, "");
+    var st = await getStates();
+    if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
+      final serverIp = await getServerIP();
+      final uuid = await _http.getUuid();
+      try {
+        var encryptedM = await NetworkSecurity.encryptMessage(json);
+        final serverRes = await http.delete(
+          Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'),
+          body: encryptedM,
+        );
+        var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+        response = Tuple3(true, serverRes.statusCode, decryptedM);
+      } catch (e) {
+        _http.setState(NetworkHttpConnectionState.disconnected);
+      }
+    }
+
+    return response;
   }
 }

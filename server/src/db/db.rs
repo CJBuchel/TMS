@@ -1,10 +1,8 @@
-use std::borrow::Borrow;
-
 use log::warn;
 
 use serde::{Serialize, de::DeserializeOwned};
 use sled_extensions::{bincode::Tree, DbExt, Db};
-use tms_utils::schemas::{Team, GameMatch, JudgingSession, User, Event};
+use tms_utils::schemas::{Team, GameMatch, JudgingSession, User, Event, create_user};
 
 #[derive(Clone)]
 pub struct Database {
@@ -44,10 +42,10 @@ impl TmsDB {
       event: db.open_bincode_tree("events").expect("Failed to open event tree")
     };
 
-    let new_admin = User {
-      username: String::from("admin"),
-      password: String::from("password")
-    };
+    let mut new_admin = create_user();
+    new_admin.username = String::from("admin");
+    new_admin.password = String::from("password");
+    new_admin.admin = true;
 
     // Check if admin is present, if not add one
     match tms_data.users.get(String::from("admin")).unwrap() {
@@ -59,15 +57,5 @@ impl TmsDB {
     }
 
     Self { db, tms_data}
-  }
-
-  // Get the raw sled database
-  pub async fn get_db(&self) -> &Db {
-    return &self.db.borrow();
-  }
-
-  // Get the tms database
-  pub async fn get_tms_data(&self) -> &Database {
-    return &self.tms_data.borrow();
-  }
+  } 
 }

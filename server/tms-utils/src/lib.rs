@@ -2,6 +2,7 @@ pub mod security;
 pub mod schemas;
 
 use rocket::{http::Status, serde::json::Json};
+use schemas::Permissions;
 use security::encrypt;
 use serde::{Serialize};
 use std::{sync::{RwLock, Arc}, collections::HashMap};
@@ -13,7 +14,8 @@ use warp::{ws::Message, Rejection};
 pub struct TmsClient {
   pub user_id: String, // the uuid for the client (client generated)
   pub key: String, // public key for this client
-  pub authorized: bool, // is this client authorized with a user
+  pub auth_token: String, // is this client authorized with a user
+  pub permissions: Permissions, // set of permissions for this client
   pub ws_sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>> // socket sender used for dispatching messages
 }
 

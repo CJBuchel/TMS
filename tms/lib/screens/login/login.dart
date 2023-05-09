@@ -1,14 +1,128 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:tms/requests/login.dart';
+import 'package:tms/responsive.dart';
+import 'package:tms/screens/shared/alerts.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
+  Login({super.key});
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void loginTest(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => const AlertDialog(
+        title: Text("Login Error"),
+        content: SingleChildScrollView(
+          child: Text("Status Code 0"),
+        ),
+      ),
+    );
+    // login(_usernameController.text, _passwordController.text).then((res) {
+    //   if (res.item1 == HttpStatus.ok) {
+    //     print("Success");
+    //   } else {
+    //   }
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
+    var imageSize = <double>[300, 500];
+    double textSize = 20;
+    double buttonWidth = 250;
+    double buttonHeight = 50;
+    if (Responsive.isTablet(context)) {
+      imageSize = [150, 300];
+      textSize = 15;
+      buttonWidth = 200;
+    } else if (Responsive.isMobile(context)) {
+      imageSize = [100, 250];
+      textSize = 11;
+      buttonWidth = 150;
+      buttonHeight = 40;
+    }
+
     return Scaffold(
       appBar: TmsToolBar(displayActions: false),
-      body: Column(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // Logo
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'assets/logos/TMS_LOGO.png',
+                height: imageSize[0],
+                width: imageSize[1],
+              )
+            ],
+          ),
+
+          // Username
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
+                  child: TextField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Username',
+                      hintText: 'Enter username, e.g `admin`',
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+
+          // Password
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
+                  child: TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                      hintText: 'Enter password, e.g `password1!`',
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+
+          // Submit button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: buttonWidth,
+                height: buttonHeight,
+                child: ElevatedButton.icon(
+                  onPressed: () => loginTest(context),
+                  icon: const Icon(Icons.send_sharp),
+                  label: const Text("Submit"),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }

@@ -7,6 +7,9 @@ use register_routes::*;
 mod publish_routes;
 use publish_routes::*;
 
+mod user_routes;
+use user_routes::*;
+
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, schemas::IntegrityMessage};
 
 use crate::db::db::TmsDB;
@@ -36,9 +39,9 @@ fn pulse_route() -> TmsRouteResponse<()> {
 }
 
 #[post("/pulse_integrity/<uuid>", data = "<message>")]
-fn pulse_integrity_route(security: &State<Security>, _clients: &State<TmsClients>, uuid: String, message: String) -> TmsRouteResponse<()> {
+fn pulse_integrity_route(security: &State<Security>, clients: &State<TmsClients>, uuid: String, message: String) -> TmsRouteResponse<()> {
   let message: IntegrityMessage = TmsRequest!(message, security);
-  TmsRespond!(Status::Ok, message, _clients.inner(), uuid);
+  TmsRespond!(Status::Ok, message, clients.inner(), uuid);
 }
 
 pub struct TmsHttpServer {
@@ -71,7 +74,8 @@ impl TmsHttpServer {
         pulse_integrity_route,
         register_route,
         unregister_route,
-        publish_route
+        publish_route,
+        login_route
       ]).attach(CORS)
   }
 }

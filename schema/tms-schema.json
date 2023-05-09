@@ -7,6 +7,8 @@
     "game_match",
     "integrity_message",
     "judging_session",
+    "login_request",
+    "login_response",
     "register_request",
     "register_response",
     "socket_event",
@@ -25,6 +27,12 @@
     },
     "judging_session": {
       "$ref": "#/definitions/JudgingSession"
+    },
+    "login_request": {
+      "$ref": "#/definitions/LoginRequest"
+    },
+    "login_response": {
+      "$ref": "#/definitions/LoginResponse"
     },
     "register_request": {
       "$ref": "#/definitions/RegisterRequest"
@@ -252,6 +260,32 @@
         }
       }
     },
+    "LoginRequest": {
+      "type": "object",
+      "required": [
+        "password",
+        "username"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
     "OnTable": {
       "type": "object",
       "required": [
@@ -287,6 +321,29 @@
         },
         "tournament_token": {
           "type": "string"
+        }
+      }
+    },
+    "Permissions": {
+      "type": "object",
+      "required": [
+        "head_referee",
+        "judge",
+        "judge_advisor",
+        "referee"
+      ],
+      "properties": {
+        "head_referee": {
+          "type": "boolean"
+        },
+        "judge": {
+          "type": "boolean"
+        },
+        "judge_advisor": {
+          "type": "boolean"
+        },
+        "referee": {
+          "type": "boolean"
         }
       }
     },
@@ -401,12 +458,20 @@
     "User": {
       "type": "object",
       "required": [
+        "admin",
         "password",
+        "permissions",
         "username"
       ],
       "properties": {
+        "admin": {
+          "type": "boolean"
+        },
         "password": {
           "type": "string"
+        },
+        "permissions": {
+          "$ref": "#/definitions/Permissions"
         },
         "username": {
           "type": "string"

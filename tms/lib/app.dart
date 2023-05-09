@@ -24,7 +24,7 @@ class TMSApp extends StatelessWidget {
       routes: {
         "/": (context) => ScreenSelector(),
         '/server_connection': (context) => const Connection(),
-        '/login': (context) => const Login(),
+        '/login': (context) => Login(),
       },
     );
   }

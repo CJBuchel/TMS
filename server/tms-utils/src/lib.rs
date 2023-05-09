@@ -13,8 +13,7 @@ use warp::{ws::Message, Rejection};
 pub struct TmsClient {
   pub user_id: String, // the uuid for the client (client generated)
   pub key: String, // public key for this client
-  pub active: bool, // boolean to display if the client registered but is not accessible
-  pub category_type: String, // Current type: BASIC, REFEREE, JA, H-REFEREE etc...
+  pub authorized: bool, // is this client authorized with a user
   pub ws_sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>> // socket sender used for dispatching messages
 }
 

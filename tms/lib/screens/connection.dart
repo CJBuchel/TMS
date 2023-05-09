@@ -72,7 +72,7 @@ class _ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-        appBar: TmsToolBar(),
+        appBar: TmsToolBar(displayActions: false),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // y axis

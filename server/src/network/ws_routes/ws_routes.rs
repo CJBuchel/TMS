@@ -49,7 +49,6 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
   tokio::task::spawn(client_recv.forward(client_ws_sender).map(move |result| {
     if let Err(e) = result {
       error!("error sending websocket msg: {}: {}", user_id_copy, e);
-      shared_client.active = false;
     }
   }));
 

@@ -46,14 +46,12 @@ impl TmsDB {
 
     let new_admin = User {
       username: String::from("admin"),
-      password: String::from("password"),
-      admin: true,
-      access: [].to_vec()
+      password: String::from("password")
     };
 
     // Check if admin is present, if not add one
     match tms_data.users.get(String::from("admin")).unwrap() {
-      Some(user) => warn!("Admin Exists: [{}, {}, {}]", user.username, user.password, user.admin),
+      Some(user) => warn!("Admin Exists: [{}, {}]", user.username, user.password),
       None => {
         warn!("No Admin, generating...");
         let _ = tms_data.users.insert(new_admin.username.as_bytes(), new_admin.clone());

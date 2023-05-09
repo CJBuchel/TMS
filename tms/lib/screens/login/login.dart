@@ -7,7 +7,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: TmsToolBar(displayActions: false),
       body: Column(),
     );
   }

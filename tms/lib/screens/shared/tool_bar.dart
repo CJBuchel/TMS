@@ -8,7 +8,9 @@ import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
 
 class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
-  TmsToolBar({super.key});
+  TmsToolBar({super.key, this.displayActions = true});
+
+  final bool displayActions;
 
   @override
   _TmsToolBarState createState() => _TmsToolBarState();
@@ -214,6 +216,25 @@ class _TmsToolBarState extends State<TmsToolBar> {
     }
   }
 
+  List<Widget> getActions() {
+    if (widget.displayActions) {
+      return [
+        IconButton(
+          onPressed: () => pushTo(context, "/server_connection"),
+          icon: connectionIcon,
+        ),
+        IconButton(
+          onPressed: () => pushTo(context, "/login"),
+          icon: const Icon(
+            Icons.logout_outlined,
+          ),
+        ),
+      ];
+    } else {
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double fontSize = 25;
@@ -227,18 +248,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
       titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
       iconTheme: IconThemeData(size: fontSize),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
-      actions: [
-        IconButton(
-          onPressed: () => pushTo(context, "/server_connection"),
-          icon: connectionIcon,
-        ),
-        IconButton(
-          onPressed: () => pushTo(context, "/login"),
-          icon: const Icon(
-            Icons.logout_outlined,
-          ),
-        ),
-      ],
+      actions: getActions(),
     );
   }
 }

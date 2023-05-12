@@ -23,16 +23,22 @@
 - (The web client cannot scan, but will instead either use the host ip as the server IP, or will require the direct ip)
 - Once the IP has been found/entered a handshake connection will begin.
 - The client will connect to port 2121 on the server via http REST to register itself to the server.
-  - The client will generate it's own set of RSA asymmetric keys (2048 bit) and will also generate a v4 uuid.
+  - The client will generate it's own set of RSA asymmetric keys (2048 bit or 1024 on web) and will also generate a v4 uuid.
   - The client will send this data to the server as it's "registration" to the service
 - The server will process this information and send back it's acceptance
   - The server will take the public key and the clients uuid and store it in a keyed map, using the uuid as the key.
   - It will then send a response message to the client with the servers public key along with a url with the current server ip and client uuid for web socket communication
 - Once the client receives the response it stores the servers public key locally along with the url and will attempt a websocket connection
-- Once the websocket is connected all communication to and from will be encrypted and decrypted using the set of RSA keys.
-- The websocket will also only be used for small messages for pub sub communication and event updates. Data transmission will be held via http requests, but will also be end-to-end encrypted. The exception being the registration and unregistration urls.
+- Once the websocket is connected all communication to and from the server will be encrypted and decrypted using the set of RSA keys.
+- The websocket will also only be used for small messages for pub sub communication and event updates. Data transmission will be held via http requests, but will also be end-to-end encrypted. The exception being the registration and un-registration urls.
 
 # Network communication, pub sub
+- Pub sub communication will mostly be a one way system in terms of websockets. 
+- The server will be the only device able to publish to all the clients as a "broker". 
+- If clients wish to publish a message they will need to send a request to the request service `http://`, should be a `/publish` api request
+- This message will then be sent to every other client in the network.
+- For all other requests, the main http request service should be used. Again, the websockets should be used for small update messages. And as an observer, to determine how many clients are connected
+
 ## Timer event example (starting timer)
 - The client will send a request message to the server via encrypted http REST on port 2121.
 - The server will process this request and start the server side timer.
@@ -40,3 +46,11 @@
 - The message may be a small event trigger like `{topic: "timer", message: SocketMessage { time: "150" }}`
 - All clients subscribed to the timer topic, (dashboard and timer screens) will be updated with this message
 - The server may repeatedly send this topic message until the timer has been completed
+
+# Security
+- Other than encryption users have also been slightly redesigned from the last iteration
+- Previously there were a static set of users which could access certain pages. As for api requests technically anyone even non logged in users could access it. This was a security concern but a mild one due to the nature of the event and the small enclosed circle of volunteers who used the service.
+- However to future proof myself, a proper security login is much more beneficial.
+- While it's impossible to stop a user gaining access to a page through the web by simply changing around the js logic. It is possible to stop them from doing damage to the server itself by publishing or getting data while being unauthorized.
+- While it goes away from the simplicity of a drop down for users, a real set of users created and deleted could prove move configurable for larger events. With configurable permissions
+  - Creating a structure of users with a `username` `password` a boolean for `admin` and a structure inside with a set of static booleans which specify access to categories. `referee`, `judge`, `head_referee` etc...

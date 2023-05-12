@@ -14,6 +14,8 @@ class TmsSchema {
         required this.gameMatch,
         required this.integrityMessage,
         required this.judgingSession,
+        required this.loginRequest,
+        required this.loginResponse,
         required this.registerRequest,
         required this.registerResponse,
         required this.socketEvent,
@@ -25,6 +27,8 @@ class TmsSchema {
     GameMatch gameMatch;
     IntegrityMessage integrityMessage;
     JudgingSession judgingSession;
+    LoginRequest loginRequest;
+    LoginResponse loginResponse;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
     SocketMessage socketEvent;
@@ -36,6 +40,8 @@ class TmsSchema {
         gameMatch: GameMatch.fromJson(json["game_match"]),
         integrityMessage: IntegrityMessage.fromJson(json["integrity_message"]),
         judgingSession: JudgingSession.fromJson(json["judging_session"]),
+        loginRequest: LoginRequest.fromJson(json["login_request"]),
+        loginResponse: LoginResponse.fromJson(json["login_response"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
         registerResponse: RegisterResponse.fromJson(json["register_response"]),
         socketEvent: SocketMessage.fromJson(json["socket_event"]),
@@ -48,6 +54,8 @@ class TmsSchema {
         "game_match": gameMatch.toJson(),
         "integrity_message": integrityMessage.toJson(),
         "judging_session": judgingSession.toJson(),
+        "login_request": loginRequest.toJson(),
+        "login_response": loginResponse.toJson(),
         "register_request": registerRequest.toJson(),
         "register_response": registerResponse.toJson(),
         "socket_event": socketEvent.toJson(),
@@ -241,6 +249,78 @@ class JudgingSession {
         "session": session,
         "start_time": startTime,
         "team_number": teamNumber,
+    };
+}
+
+class LoginRequest {
+    LoginRequest({
+        required this.password,
+        required this.username,
+    });
+
+    String password;
+    String username;
+
+    factory LoginRequest.fromJson(Map<String, dynamic> json) => LoginRequest(
+        password: json["password"],
+        username: json["username"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "password": password,
+        "username": username,
+    };
+}
+
+class LoginResponse {
+    LoginResponse({
+        required this.authToken,
+        required this.permissions,
+    });
+
+    String authToken;
+    Permissions permissions;
+
+    factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
+        authToken: json["auth_token"],
+        permissions: Permissions.fromJson(json["permissions"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "permissions": permissions.toJson(),
+    };
+}
+
+class Permissions {
+    Permissions({
+        required this.admin,
+        this.headReferee,
+        this.judge,
+        this.judgeAdvisor,
+        this.referee,
+    });
+
+    bool admin;
+    bool? headReferee;
+    bool? judge;
+    bool? judgeAdvisor;
+    bool? referee;
+
+    factory Permissions.fromJson(Map<String, dynamic> json) => Permissions(
+        admin: json["admin"],
+        headReferee: json["head_referee"],
+        judge: json["judge"],
+        judgeAdvisor: json["judge_advisor"],
+        referee: json["referee"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "admin": admin,
+        "head_referee": headReferee,
+        "judge": judge,
+        "judge_advisor": judgeAdvisor,
+        "referee": referee,
     };
 }
 
@@ -447,19 +527,23 @@ class GameScoresheet {
 class User {
     User({
         required this.password,
+        required this.permissions,
         required this.username,
     });
 
     String password;
+    Permissions permissions;
     String username;
 
     factory User.fromJson(Map<String, dynamic> json) => User(
         password: json["password"],
+        permissions: Permissions.fromJson(json["permissions"]),
         username: json["username"],
     );
 
     Map<String, dynamic> toJson() => {
         "password": password,
+        "permissions": permissions.toJson(),
         "username": username,
     };
 }

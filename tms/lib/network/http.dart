@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/network/auth.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:uuid/uuid.dart';
@@ -15,6 +17,7 @@ enum NetworkHttpConnectionState { disconnected, connectedNoPulse, connected }
 class NetworkHttp {
   final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
   static ValueNotifier<NetworkHttpConnectionState> httpState = ValueNotifier<NetworkHttpConnectionState>(NetworkHttpConnectionState.disconnected);
+
   Future<void> setState(NetworkHttpConnectionState state) async {
     httpState.value = state;
     await _localStorage.then((value) => value.setString(store_http_connection_state, EnumToString.convertToString(state)));
@@ -34,6 +37,23 @@ class NetworkHttp {
     } catch (e) {
       httpState.value = NetworkHttpConnectionState.disconnected;
       return NetworkHttpConnectionState.disconnected;
+    }
+  }
+
+  Future<void> setConnectUrl(String url) async {
+    await _localStorage.then((value) => value.setString(store_ws_connect_url, url));
+  }
+
+  Future<String> getConnectUrl() async {
+    try {
+      var url = await _localStorage.then((value) => value.getString(store_ws_connect_url));
+      if (url != null) {
+        return url;
+      } else {
+        return "";
+      }
+    } catch (e) {
+      return "";
     }
   }
 
@@ -85,12 +105,13 @@ class NetworkHttp {
       if (await getPulse(addr) == NetworkHttpConnectionState.connected) {
         // generate random uuid to send to the server and check against
         var random_uuid = const Uuid().v4();
+        var uuid = await getUuid();
         var message = IntegrityMessage(message: random_uuid);
 
         // Encrypt and send
         var encrypted_m = await NetworkSecurity.encryptMessage(message.toJson());
         final response = await http.post(
-          Uri.parse('http://$addr:$requestPort/requests/pulse_integrity'),
+          Uri.parse('http://$addr:$requestPort/requests/pulse_integrity/$uuid'),
           body: encrypted_m,
         );
 
@@ -103,9 +124,11 @@ class NetworkHttp {
         }
       }
     } catch (e) {
+      Logger().w("Pulse Error");
       return false;
     }
 
+    Logger().w("Pulse Integrity Error");
     return false; // if it falls through returns false
   }
 
@@ -136,9 +159,13 @@ class NetworkHttp {
 
       switch (response.statusCode) {
         case HttpStatus.ok: // Status OK
+          var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
           NetworkSecurity.setKeys(keyPair);
+          NetworkSecurity.setServerKey(message.key);
           setState(NetworkHttpConnectionState.connected);
-          return RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+          setConnectUrl(message.url);
+          NetworkAuth.login(addr, uuid);
+          return message;
 
         case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
           var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
@@ -147,17 +174,23 @@ class NetworkHttp {
             case true:
               // Pulse is good, integrity is good. Use existing settings (don't set keys)
               setState(NetworkHttpConnectionState.connected);
+              setConnectUrl(message.url);
+              NetworkAuth.login(addr, uuid);
+              Logger().i("Already Registered, Keeping Settings");
               return message;
             case false:
               // Pulse is bad, delete the existing uuid and start again
+              Logger().w("Existing Register Unstable, Re-Registering...");
               await unregister(addr);
               return register(addr); // return with a new registration
             default:
+              Logger().e("Failed to Determine Pulse Integrity");
               throw Exception("Failed to determine pulse integrity");
           }
         default:
+          Logger().e("Failed to Load Register Response");
           await unregister(addr);
-          throw Exception("Failed to load register response");
+          throw Exception("Failed to Load Register Response");
       }
     } catch (e) {
       setState(NetworkHttpConnectionState.disconnected);

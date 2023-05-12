@@ -7,6 +7,8 @@
     "game_match",
     "integrity_message",
     "judging_session",
+    "login_request",
+    "login_response",
     "register_request",
     "register_response",
     "socket_event",
@@ -26,6 +28,12 @@
     "judging_session": {
       "$ref": "#/definitions/JudgingSession"
     },
+    "login_request": {
+      "$ref": "#/definitions/LoginRequest"
+    },
+    "login_response": {
+      "$ref": "#/definitions/LoginResponse"
+    },
     "register_request": {
       "$ref": "#/definitions/RegisterRequest"
     },
@@ -43,21 +51,6 @@
     }
   },
   "definitions": {
-    "Access": {
-      "type": "object",
-      "required": [
-        "access_name",
-        "authorized"
-      ],
-      "properties": {
-        "access_name": {
-          "type": "string"
-        },
-        "authorized": {
-          "type": "boolean"
-        }
-      }
-    },
     "Answer": {
       "type": "object",
       "required": [
@@ -267,6 +260,36 @@
         }
       }
     },
+    "LoginRequest": {
+      "type": "object",
+      "required": [
+        "password",
+        "username"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "permissions"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "permissions": {
+          "$ref": "#/definitions/Permissions"
+        }
+      }
+    },
     "OnTable": {
       "type": "object",
       "required": [
@@ -302,6 +325,41 @@
         },
         "tournament_token": {
           "type": "string"
+        }
+      }
+    },
+    "Permissions": {
+      "type": "object",
+      "required": [
+        "admin"
+      ],
+      "properties": {
+        "admin": {
+          "type": "boolean"
+        },
+        "head_referee": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "judge": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "judge_advisor": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "referee": {
+          "type": [
+            "boolean",
+            "null"
+          ]
         }
       }
     },
@@ -416,23 +474,16 @@
     "User": {
       "type": "object",
       "required": [
-        "access",
-        "admin",
         "password",
+        "permissions",
         "username"
       ],
       "properties": {
-        "access": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Access"
-          }
-        },
-        "admin": {
-          "type": "boolean"
-        },
         "password": {
           "type": "string"
+        },
+        "permissions": {
+          "$ref": "#/definitions/Permissions"
         },
         "username": {
           "type": "string"

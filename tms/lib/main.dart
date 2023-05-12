@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/app.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';
@@ -25,54 +26,53 @@ Future<bool> checkConnection() async {
 }
 
 bool watchdogFeeding = false;
+bool active = true;
 void watchDog() async {
+  if (!active) return;
   if (!watchdogFeeding) {
     watchdogFeeding = true;
-    checkConnection();
+    bool ok = await checkConnection();
+    if (!ok && await Network.getAutoConfig()) {
+      await Network.findServer();
+    }
     watchdogFeeding = false;
   }
 }
 
 void networkStartup() async {
-  Network.reset().then((v) {
-    Network.getAutoConfig().then((autoConfig) {
-      if (autoConfig) {
-        Network.findServer().then((found) {
-          if (found) {
-            try {
-              Network.connect();
-            } catch (e) {
-              rethrow;
-            }
-          }
-        }).then((v) {
-          // Start watchdog
-          Timer.periodic(watchDogTime, (timer) => watchDog());
-        });
-      } else {
-        Network.getServerIP().then((ip) {
-          if (ip.isNotEmpty) {
-            try {
-              Network.connect();
-            } catch (e) {
-              rethrow;
-            }
-          }
-        }).then((v) {
-          // Start watchdog
-          Timer.periodic(watchDogTime, (timer) => watchDog());
-        });
-      }
-    });
+  Network.getAutoConfig().then((autoConfig) {
+    if (autoConfig) {
+      Network.findServer().then((found) {
+        // Start watchdog
+        watchDog();
+        Timer.periodic(watchDogTime, (timer) => watchDog());
+      });
+    } else {
+      // Start watchdog
+      watchDog();
+      Timer.periodic(watchDogTime, (timer) => watchDog());
+    }
   });
 }
 
-Future<void> stopNetwork() async {
-  await Network.disconnect();
+class NetworkObserver extends WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      active = false;
+      Network.disconnect();
+    } else if (state == AppLifecycleState.resumed) {
+      active = true;
+      watchDog();
+    }
+  }
 }
 
-void main() async {
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  final networkObserver = NetworkObserver();
+  WidgetsBinding.instance.addObserver(networkObserver);
   networkStartup();
   runApp(const TMSApp());
-  await stopNetwork();
 }

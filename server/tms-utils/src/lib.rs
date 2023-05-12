@@ -2,6 +2,7 @@ pub mod security;
 pub mod schemas;
 
 use rocket::{http::Status, serde::json::Json};
+use schemas::Permissions;
 use security::encrypt;
 use serde::{Serialize};
 use std::{sync::{RwLock, Arc}, collections::HashMap};
@@ -13,8 +14,8 @@ use warp::{ws::Message, Rejection};
 pub struct TmsClient {
   pub user_id: String, // the uuid for the client (client generated)
   pub key: String, // public key for this client
-  pub active: bool, // boolean to display if the client registered but is not accessible
-  pub client_type: String, // referee, JA, Head ref etc...
+  pub auth_token: String, // is this client authorized with a user
+  pub permissions: Permissions, // set of permissions for this client
   pub ws_sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>> // socket sender used for dispatching messages
 }
 
@@ -103,7 +104,6 @@ macro_rules! TmsRespond {
   // Respond with custom status and data encrypted using clients and client uuid
   ($status:expr, $data:expr, $clients:expr, $uuid:expr) => {
     if $clients.read().unwrap().contains_key(&$uuid) {
-      warn!("Integrity Check on Client: {}", $uuid);
       let client_key: String = $clients.read().unwrap().get(&$uuid).unwrap().key.to_owned();
       TmsRespond!($status, $data, client_key);
     } else {

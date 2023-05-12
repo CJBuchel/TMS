@@ -2,9 +2,12 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/network/auth.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
@@ -52,7 +55,7 @@ class Network {
 
   // Get the overall state of the network, combined tuple containing both the protocol states
   static Future<Tuple3<NetworkHttpConnectionState, NetworkWebSocketState, SecurityState>> getStates() async {
-    return Tuple3(await _http.getState(), await _ws.getState(), await NetworkSecurity.getState());
+    return Tuple3(await _http.getState(), _ws.getState(), await NetworkSecurity.getState());
   }
 
   // Try to connect to server and test endpoint
@@ -63,14 +66,15 @@ class Network {
     });
   }
 
-  // The opposite process of the connection, disconnect the ws and remove the registered uuid
+  // The opposite process of the connection
   static Future<void> disconnect() async {
-    await _ws.disconnect().then((v) async => {await _http.unregister(await getServerIP())});
+    await _ws.disconnect();
+    // await _ws.disconnect().then((v) async => {await _http.unregister(await getServerIP())});
   }
 
   static Future<void> reset() async {
     await _http.setState(NetworkHttpConnectionState.disconnected);
-    await _ws.setState(NetworkWebSocketState.disconnected);
+    _ws.setState(NetworkWebSocketState.disconnected);
     if (!kIsWeb) {
       disconnect();
     }
@@ -137,12 +141,28 @@ class Network {
   // Check the connection, reconnect on fail (returns false for bad check)
   static Future<bool> checkConnection() async {
     // Check the pulse of the server
-    var httpState = await _http.getPulse(await getServerIP());
+    var httpState = await _http.getState();
+    var wsState = _ws.getState();
     // After the pulse has completed check the websocket state
-    var wsState = await _ws.getState();
     if (httpState != NetworkHttpConnectionState.connected || wsState != NetworkWebSocketState.connected) {
+      Logger().w("No Server Connection");
       // If either of the protocols cannot connect, reconnect.
-      await connect();
+      if (wsState != NetworkWebSocketState.connected && httpState == NetworkHttpConnectionState.connected) {
+        Logger().i("HTTP Connected , Testing Integrity");
+        // If the websocket is only disconnected (timeout issues or closing the app) then do an integrity check and reconnect ws
+        var goodIntegrity = await _http.getPulseIntegrity(await getServerIP());
+        if (goodIntegrity) {
+          Logger().i("Server Integrity Holding, Connecting WS...");
+          _ws.connect(await _http.getConnectUrl());
+        } else {
+          Logger().w("Websocket Could Not Reconnect");
+          await connect();
+        }
+      } else {
+        // Fully reconnect
+        Logger().i("Starting Full Reconnect");
+        await connect();
+      }
 
       // Determine the states and check again
       var states = await getStates();
@@ -156,5 +176,85 @@ class Network {
     } else {
       return true;
     }
+  }
+
+  // Tuple3 (good access, res status code, res message)
+  static Future<Tuple3<bool, int, Map<String, dynamic>>> serverGet(String route) async {
+    Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
+    var st = await getStates();
+    if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
+      final serverIp = await getServerIP();
+      final uuid = await _http.getUuid();
+      try {
+        final serverRes = await http.get(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'));
+        if (serverRes.body.isNotEmpty) {
+          var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+          response = Tuple3(true, serverRes.statusCode, decryptedM);
+        } else {
+          response = Tuple3(true, serverRes.statusCode, {});
+        }
+      } catch (e) {
+        Logger().e("Server Response Error $e");
+        _http.setState(NetworkHttpConnectionState.disconnected);
+      }
+    }
+
+    return response;
+  }
+
+  // Tuple3 (good access, res status code, res message in json)
+  static Future<Tuple3<bool, int, Map<String, dynamic>>> serverPost(String route, dynamic json) async {
+    Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
+    var st = await getStates();
+    if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
+      final serverIp = await getServerIP();
+      final uuid = await _http.getUuid();
+      try {
+        var encryptedM = await NetworkSecurity.encryptMessage(json);
+        final serverRes = await http.post(
+          Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'),
+          body: encryptedM,
+        );
+        if (serverRes.body.isNotEmpty) {
+          var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+          response = Tuple3(true, serverRes.statusCode, decryptedM);
+        } else {
+          response = Tuple3(true, serverRes.statusCode, {});
+        }
+      } catch (e) {
+        Logger().e("Server Response Error $e");
+        _http.setState(NetworkHttpConnectionState.disconnected);
+      }
+    }
+
+    return response;
+  }
+
+  // Tuple3 (good access, res status code, res message)
+  static Future<Tuple3<bool, int, Map<String, dynamic>>> serverDelete(String route, dynamic json) async {
+    Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
+    var st = await getStates();
+    if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
+      final serverIp = await getServerIP();
+      final uuid = await _http.getUuid();
+      try {
+        var encryptedM = await NetworkSecurity.encryptMessage(json);
+        final serverRes = await http.delete(
+          Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'),
+          body: encryptedM,
+        );
+        if (serverRes.body.isNotEmpty) {
+          var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+          response = Tuple3(true, serverRes.statusCode, decryptedM);
+        } else {
+          response = Tuple3(true, serverRes.statusCode, {});
+        }
+      } catch (e) {
+        Logger().e("Server Response Error $e");
+        _http.setState(NetworkHttpConnectionState.disconnected);
+      }
+    }
+
+    return response;
   }
 }

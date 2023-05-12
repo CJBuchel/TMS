@@ -22,6 +22,7 @@ const rsa_bit_size_web = 1024; // 1024, the web is slower, lets be a tad lenient
 // Local Storage Constants
 const store_http_connection_state = "ServerHttpConnectionState";
 const store_ws_connection_state = "ServerWSConnectionState";
+const store_ws_connect_url = "ServerWSConnectUrl";
 const store_sec_state = "NetworkSecurityState";
 const store_nt_connection_state = "ServerNetworkConnectionState";
 const store_nt_serverIP = "ntServerIP";
@@ -30,3 +31,4 @@ const store_nt_publicKey = "ntPublicKey";
 const store_nt_privateKey = "ntPrivateKey";
 const store_nt_serverKey = "ntServerKey";
 const store_nt_auto_configure = "ntAutoConf";
+const store_nt_authUser = "ntAuthUser";

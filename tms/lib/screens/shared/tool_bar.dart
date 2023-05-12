@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/network/auth.dart';
 
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
@@ -21,6 +22,7 @@ class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
 
 class _TmsToolBarState extends State<TmsToolBar> {
   Icon connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
+  Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
 
   Text ntStatusText = const Text(
     "NO NT",
@@ -38,6 +40,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
   );
 
   List<Widget> titleBar = const [];
+  String loginScreen = "/login";
 
   // check the nt status
   Future<void> checkHTTP(NetworkHttpConnectionState state) async {
@@ -184,6 +187,21 @@ class _TmsToolBarState extends State<TmsToolBar> {
     await checkNetwork(states.item1, states.item2, states.item3);
   }
 
+  void checkLogin() async {
+    bool loginState = await NetworkAuth.getLoginState();
+    if (loginState) {
+      setState(() {
+        loginIcon = const Icon(Icons.person);
+        loginScreen = "/logout";
+      });
+    } else {
+      setState(() {
+        loginIcon = const Icon(Icons.person);
+        loginScreen = "/login";
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -192,6 +210,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
     NetworkHttp.httpState.addListener(checkConnection);
     NetworkWebSocket.wsState.addListener(checkConnection);
     NetworkSecurity.securityState.addListener(checkConnection);
+    NetworkAuth.loginState.addListener(checkLogin);
   }
 
   @override
@@ -206,6 +225,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
     NetworkHttp.httpState.removeListener(checkConnection);
     NetworkWebSocket.wsState.removeListener(checkConnection);
     NetworkSecurity.securityState.removeListener(checkConnection);
+    NetworkAuth.loginState.removeListener(checkLogin);
   }
 
   void pushTo(BuildContext context, String named) {
@@ -224,10 +244,8 @@ class _TmsToolBarState extends State<TmsToolBar> {
           icon: connectionIcon,
         ),
         IconButton(
-          onPressed: () => pushTo(context, "/login"),
-          icon: const Icon(
-            Icons.logout_outlined,
-          ),
+          onPressed: () => pushTo(context, loginScreen),
+          icon: loginIcon,
         ),
       ];
     } else {

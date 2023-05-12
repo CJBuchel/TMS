@@ -46,9 +46,7 @@ class ScreenSelector extends StatelessWidget {
                   image: const Image(
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
-                  onPress: () {
-                    // print("Scoreboard pressed");
-                  },
+                  onPress: () {},
                 ),
               ),
 
@@ -65,9 +63,7 @@ class ScreenSelector extends StatelessWidget {
                   image: const Image(
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
-                  onPress: () {
-                    // print("Timer Pressed");
-                  },
+                  onPress: () {},
                 ),
               ),
             ]),

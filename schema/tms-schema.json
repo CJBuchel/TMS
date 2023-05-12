@@ -278,11 +278,15 @@
     "LoginResponse": {
       "type": "object",
       "required": [
-        "auth_token"
+        "auth_token",
+        "permissions"
       ],
       "properties": {
         "auth_token": {
           "type": "string"
+        },
+        "permissions": {
+          "$ref": "#/definitions/Permissions"
         }
       }
     },
@@ -327,23 +331,35 @@
     "Permissions": {
       "type": "object",
       "required": [
-        "head_referee",
-        "judge",
-        "judge_advisor",
-        "referee"
+        "admin"
       ],
       "properties": {
-        "head_referee": {
+        "admin": {
           "type": "boolean"
+        },
+        "head_referee": {
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "judge": {
-          "type": "boolean"
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "judge_advisor": {
-          "type": "boolean"
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "referee": {
-          "type": "boolean"
+          "type": [
+            "boolean",
+            "null"
+          ]
         }
       }
     },
@@ -458,15 +474,11 @@
     "User": {
       "type": "object",
       "required": [
-        "admin",
         "password",
         "permissions",
         "username"
       ],
       "properties": {
-        "admin": {
-          "type": "boolean"
-        },
         "password": {
           "type": "string"
         },

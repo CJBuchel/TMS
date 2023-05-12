@@ -6,6 +6,10 @@ const PKCS1_PADDING_SIZE: usize = 11; // 11
 
 // Encrypt using a public key, returns a string in base64 bytes
 pub fn encrypt(key: String, data: String) -> String {
+  if data.is_empty() || key.is_empty() {
+    return data;
+  }
+
   let rsa = Rsa::public_key_from_pem_pkcs1(key.as_bytes()).unwrap();
 
   let channels = data.as_bytes().chunks(rsa.size() as usize - PKCS1_PADDING_SIZE);
@@ -21,6 +25,10 @@ pub fn encrypt(key: String, data: String) -> String {
 
 // Decrypt using private key, returns string
 pub fn decrypt(key: String, buf: String) -> String {
+  if buf.is_empty() || key.is_empty() {
+    return buf;
+  }
+
   let rsa = Rsa::private_key_from_pem(key.as_bytes()).unwrap();
 
   let decoded_buff = general_purpose::STANDARD.decode(buf).unwrap();

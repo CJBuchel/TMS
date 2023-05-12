@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/network/auth.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:uuid/uuid.dart';
@@ -122,11 +124,11 @@ class NetworkHttp {
         }
       }
     } catch (e) {
-      print("Pulse error");
+      Logger().w("Pulse Error");
       return false;
     }
 
-    print("Pulse Integrity Error");
+    Logger().w("Pulse Integrity Error");
     return false; // if it falls through returns false
   }
 
@@ -162,6 +164,7 @@ class NetworkHttp {
           NetworkSecurity.setServerKey(message.key);
           setState(NetworkHttpConnectionState.connected);
           setConnectUrl(message.url);
+          NetworkAuth.login(addr, uuid);
           return message;
 
         case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
@@ -172,19 +175,22 @@ class NetworkHttp {
               // Pulse is good, integrity is good. Use existing settings (don't set keys)
               setState(NetworkHttpConnectionState.connected);
               setConnectUrl(message.url);
-              print("Already Registered, keeping settings");
+              NetworkAuth.login(addr, uuid);
+              Logger().i("Already Registered, Keeping Settings");
               return message;
             case false:
               // Pulse is bad, delete the existing uuid and start again
-              print("Bad existing register, re-registering");
+              Logger().w("Existing Register Unstable, Re-Registering...");
               await unregister(addr);
               return register(addr); // return with a new registration
             default:
+              Logger().e("Failed to Determine Pulse Integrity");
               throw Exception("Failed to determine pulse integrity");
           }
         default:
+          Logger().e("Failed to Load Register Response");
           await unregister(addr);
-          throw Exception("Failed to load register response");
+          throw Exception("Failed to Load Register Response");
       }
     } catch (e) {
       setState(NetworkHttpConnectionState.disconnected);

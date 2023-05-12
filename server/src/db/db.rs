@@ -45,7 +45,7 @@ impl TmsDB {
     let mut new_admin = create_user();
     new_admin.username = String::from("admin");
     new_admin.password = String::from("password");
-    new_admin.admin = true;
+    new_admin.permissions.admin = true;
 
     // Check if admin is present, if not add one
     match tms_data.users.get(String::from("admin")).unwrap() {

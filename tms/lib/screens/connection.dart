@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
@@ -35,21 +36,21 @@ class _ConnectionState extends State<Connection> {
   void findServer() async {
     var found = await Network.findServer();
     if (found) {
-      print("found");
+      Logger().i("found");
       Network.getServerIP().then((value) {
         setState(() {
           _controller.text = value;
         });
       });
     } else {
-      print("Couldn't find server");
+      Logger().w("Couldn't find server");
     }
   }
 
   void connectToServer() async {
     Network.reset().then((v) {
       Network.setServerIP(_controller.text).then((v) async {
-        print(await Network.getServerIP());
+        Logger().i(await Network.getServerIP());
         await Network.connect();
       });
     });
@@ -166,7 +167,7 @@ class _ConnectionState extends State<Connection> {
                         width: buttonWidth,
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            print("Finding server");
+                            Logger().i("Finding server");
                             findServer();
                           },
                           icon: const Icon(Icons.search),

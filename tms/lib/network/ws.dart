@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms-schema.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -78,7 +79,7 @@ class NetworkWebSocket {
 
         _channel.ready.then((v) {
           setState(NetworkWebSocketState.connected);
-          print("Connecting using url $url");
+          Logger().i("Connecting using url $url");
           _listen();
         });
       } catch (e) {

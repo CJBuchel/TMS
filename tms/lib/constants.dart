@@ -31,3 +31,4 @@ const store_nt_publicKey = "ntPublicKey";
 const store_nt_privateKey = "ntPrivateKey";
 const store_nt_serverKey = "ntServerKey";
 const store_nt_auto_configure = "ntAutoConf";
+const store_nt_authUser = "ntAuthUser";

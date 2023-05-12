@@ -1,6 +1,8 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
+use super::Permissions;
+
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct RegisterRequest {
   pub user_id: String,
@@ -34,4 +36,5 @@ pub struct LoginRequest {
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct LoginResponse {
   pub auth_token: String,
+  pub permissions: Permissions
 }

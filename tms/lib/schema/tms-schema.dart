@@ -275,16 +275,52 @@ class LoginRequest {
 class LoginResponse {
     LoginResponse({
         required this.authToken,
+        required this.permissions,
     });
 
     String authToken;
+    Permissions permissions;
 
     factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
         authToken: json["auth_token"],
+        permissions: Permissions.fromJson(json["permissions"]),
     );
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+        "permissions": permissions.toJson(),
+    };
+}
+
+class Permissions {
+    Permissions({
+        required this.admin,
+        this.headReferee,
+        this.judge,
+        this.judgeAdvisor,
+        this.referee,
+    });
+
+    bool admin;
+    bool? headReferee;
+    bool? judge;
+    bool? judgeAdvisor;
+    bool? referee;
+
+    factory Permissions.fromJson(Map<String, dynamic> json) => Permissions(
+        admin: json["admin"],
+        headReferee: json["head_referee"],
+        judge: json["judge"],
+        judgeAdvisor: json["judge_advisor"],
+        referee: json["referee"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "admin": admin,
+        "head_referee": headReferee,
+        "judge": judge,
+        "judge_advisor": judgeAdvisor,
+        "referee": referee,
     };
 }
 
@@ -490,56 +526,24 @@ class GameScoresheet {
 
 class User {
     User({
-        required this.admin,
         required this.password,
         required this.permissions,
         required this.username,
     });
 
-    bool admin;
     String password;
     Permissions permissions;
     String username;
 
     factory User.fromJson(Map<String, dynamic> json) => User(
-        admin: json["admin"],
         password: json["password"],
         permissions: Permissions.fromJson(json["permissions"]),
         username: json["username"],
     );
 
     Map<String, dynamic> toJson() => {
-        "admin": admin,
         "password": password,
         "permissions": permissions.toJson(),
         "username": username,
-    };
-}
-
-class Permissions {
-    Permissions({
-        required this.headReferee,
-        required this.judge,
-        required this.judgeAdvisor,
-        required this.referee,
-    });
-
-    bool headReferee;
-    bool judge;
-    bool judgeAdvisor;
-    bool referee;
-
-    factory Permissions.fromJson(Map<String, dynamic> json) => Permissions(
-        headReferee: json["head_referee"],
-        judge: json["judge"],
-        judgeAdvisor: json["judge_advisor"],
-        referee: json["referee"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "head_referee": headReferee,
-        "judge": judge,
-        "judge_advisor": judgeAdvisor,
-        "referee": referee,
     };
 }

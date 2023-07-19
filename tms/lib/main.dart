@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/app.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';

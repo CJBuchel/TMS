@@ -10,11 +10,7 @@ use crate::db::db::TmsDB;
 
 #[post("/login/<uuid>", data = "<message>")]
 pub fn login_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<TmsDB>, uuid: String, message: String) -> TmsRouteResponse<()> {
-  println!("Login route");
-  println!("Message string: {}", security.decrypt(message.clone()).as_str());
   let message: LoginRequest = TmsRequest!(message.clone(), security);
-  println!("Message: {}, {}", message.username, message.password);
-
   let user = match db.tms_data.users.get(message.username.clone()).unwrap() {
     Some(user) => user,
     None => {

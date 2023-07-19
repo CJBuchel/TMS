@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/schema/tms-schema.dart';
+import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
 class Logout extends StatefulWidget {
   const Logout({super.key});
 
   @override
-  _LogoutState createState() => _LogoutState();
+  LogoutState createState() => LogoutState();
 }
 
-class _LogoutState extends State<Logout> {
+class LogoutState extends State<Logout> {
   void logoutController(BuildContext context) async {
     NetworkAuth.setUser(User(password: "", username: "", permissions: Permissions(admin: false)));
     NetworkAuth.setToken("");

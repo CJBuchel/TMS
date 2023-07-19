@@ -7,7 +7,6 @@ import 'package:logger/logger.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/network/auth.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
@@ -20,12 +19,12 @@ class Network {
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
 
   static Future<void> setAutoConfig(bool auto) async {
-    await _localStorage.then((value) => value.setBool(store_nt_auto_configure, auto));
+    await _localStorage.then((value) => value.setBool(storeNtAutoConfigure, auto));
   }
 
   static Future<bool> getAutoConfig() async {
     try {
-      var auto = await _localStorage.then((value) => value.getBool(store_nt_auto_configure));
+      var auto = await _localStorage.then((value) => value.getBool(storeNtAutoConfigure));
       if (auto != null) {
         return auto;
       } else {
@@ -37,12 +36,12 @@ class Network {
   }
 
   static Future<void> setServerIP(String ip) async {
-    await _localStorage.then((value) => value.setString(store_nt_serverIP, ip));
+    await _localStorage.then((value) => value.setString(storeNtServerIP, ip));
   }
 
   static Future<String> getServerIP() async {
     try {
-      var ip = await _localStorage.then((value) => value.getString(store_nt_serverIP));
+      var ip = await _localStorage.then((value) => value.getString(storeNtServerIP));
       if (ip != null) {
         return ip;
       } else {
@@ -98,7 +97,6 @@ class Network {
     await client.start();
     await for (final PtrResourceRecord ptr in client.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(name))) {
       await for (final SrvResourceRecord srv in client.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
-        final String bundleId = ptr.domainName;
         await for (final IPAddressResourceRecord addr in client.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(srv.target))) {
           ip = addr.address.address.isNotEmpty ? addr.address.address : '';
         }

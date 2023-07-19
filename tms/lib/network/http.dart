@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/network/security.dart';
-import 'package:tms/schema/tms-schema.dart';
+import 'package:tms/schema/tms_schema.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,12 +20,12 @@ class NetworkHttp {
 
   Future<void> setState(NetworkHttpConnectionState state) async {
     httpState.value = state;
-    await _localStorage.then((value) => value.setString(store_http_connection_state, EnumToString.convertToString(state)));
+    await _localStorage.then((value) => value.setString(storeHttpConnectionState, EnumToString.convertToString(state)));
   }
 
   Future<NetworkHttpConnectionState> getState() async {
     try {
-      var stateString = await _localStorage.then((value) => value.getString(store_http_connection_state));
+      var stateString = await _localStorage.then((value) => value.getString(storeHttpConnectionState));
       var state = EnumToString.fromString(NetworkHttpConnectionState.values, stateString!);
       if (state != null) {
         httpState.value = state;
@@ -41,12 +41,12 @@ class NetworkHttp {
   }
 
   Future<void> setConnectUrl(String url) async {
-    await _localStorage.then((value) => value.setString(store_ws_connect_url, url));
+    await _localStorage.then((value) => value.setString(storeWsConnectUrl, url));
   }
 
   Future<String> getConnectUrl() async {
     try {
-      var url = await _localStorage.then((value) => value.getString(store_ws_connect_url));
+      var url = await _localStorage.then((value) => value.getString(storeWsConnectUrl));
       if (url != null) {
         return url;
       } else {
@@ -58,12 +58,12 @@ class NetworkHttp {
   }
 
   Future<void> setUuid(String uuid) async {
-    await _localStorage.then((value) => value.setString(store_nt_uuid, uuid));
+    await _localStorage.then((value) => value.setString(storeNtUuid, uuid));
   }
 
   Future<String> getUuid() async {
     try {
-      var uuid = await _localStorage.then((value) => value.getString(store_nt_uuid));
+      var uuid = await _localStorage.then((value) => value.getString(storeNtUuid));
       if (uuid != null) {
         return uuid;
       } else {
@@ -104,21 +104,21 @@ class NetworkHttp {
     try {
       if (await getPulse(addr) == NetworkHttpConnectionState.connected) {
         // generate random uuid to send to the server and check against
-        var random_uuid = const Uuid().v4();
+        var randomUuid = const Uuid().v4();
         var uuid = await getUuid();
-        var message = IntegrityMessage(message: random_uuid);
+        var message = IntegrityMessage(message: randomUuid);
 
         // Encrypt and send
-        var encrypted_m = await NetworkSecurity.encryptMessage(message.toJson());
+        var encryptedM = await NetworkSecurity.encryptMessage(message.toJson());
         final response = await http.post(
           Uri.parse('http://$addr:$requestPort/requests/pulse_integrity/$uuid'),
-          body: encrypted_m,
+          body: encryptedM,
         );
 
         // If the response is good (200) then decrypt the message and check if it's the same as the one sent before
         if (response.statusCode == HttpStatus.ok) {
-          var decrypted_m = IntegrityMessage.fromJson(await NetworkSecurity.decryptMessage(response.body));
-          if (decrypted_m.message == random_uuid) {
+          var decryptedM = IntegrityMessage.fromJson(await NetworkSecurity.decryptMessage(response.body));
+          if (decryptedM.message == randomUuid) {
             return true;
           }
         }

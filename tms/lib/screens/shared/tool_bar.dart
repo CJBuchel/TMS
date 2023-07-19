@@ -14,13 +14,13 @@ class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
   final bool displayActions;
 
   @override
-  _TmsToolBarState createState() => _TmsToolBarState();
+  TmsToolBarState createState() => TmsToolBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class _TmsToolBarState extends State<TmsToolBar> {
+class TmsToolBarState extends State<TmsToolBar> {
   Icon connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
   Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
 
@@ -196,7 +196,7 @@ class _TmsToolBarState extends State<TmsToolBar> {
       });
     } else {
       setState(() {
-        loginIcon = const Icon(Icons.person);
+        loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
         loginScreen = "/login";
       });
     }

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/schema/tms-schema.dart';
+import 'package:tms/schema/tms_schema.dart';
 
 // Returns status code
 Future<int> loginRequest(String username, String password) async {

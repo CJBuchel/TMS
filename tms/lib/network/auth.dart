@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/security.dart';
-import 'package:tms/schema/tms-schema.dart';
+import 'package:tms/schema/tms_schema.dart';
 import 'package:http/http.dart' as http;
 
 // Controls the login and permissions for the application
@@ -33,12 +33,12 @@ class NetworkAuth {
 
   static Future<void> setUser(User user) async {
     var userJson = jsonEncode(user.toJson());
-    await _localStorage.then((value) => value.setString(store_nt_authUser, userJson));
+    await _localStorage.then((value) => value.setString(storeNtAuthUser, userJson));
   }
 
   static Future<User> getUser() async {
     try {
-      var userString = await _localStorage.then((value) => value.getString(store_nt_authUser));
+      var userString = await _localStorage.then((value) => value.getString(storeNtAuthUser));
       if (userString != null) {
         var user = User.fromJson(jsonDecode(userString));
         return user;

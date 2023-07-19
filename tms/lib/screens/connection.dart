@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
@@ -10,10 +8,10 @@ class Connection extends StatefulWidget {
   const Connection({super.key});
 
   @override
-  _ConnectionState createState() => _ConnectionState();
+  ConnectionState createState() => ConnectionState();
 }
 
-class _ConnectionState extends State<Connection> {
+class ConnectionState extends State<Connection> {
   final TextEditingController _controller = TextEditingController();
   bool _autoConfigureNetwork = true;
 

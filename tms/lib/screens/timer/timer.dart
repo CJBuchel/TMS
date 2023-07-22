@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:tms/requests/timer_requests.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 import 'package:tms/screens/timer/clock.dart';
 import 'package:tms/responsive.dart';
@@ -6,7 +10,23 @@ import 'package:tms/responsive.dart';
 class Timer extends StatelessWidget {
   const Timer({super.key});
 
-  void testTimerController(BuildContext context) async {}
+  void testTimerController(BuildContext context) async {
+    Logger().i("testTimerController");
+    timerStartRequest().then((res) {
+      if (res == HttpStatus.ok) {
+      } else if (res == HttpStatus.unauthorized) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text("Unauthorized"),
+            content: SingleChildScrollView(
+              child: Text(res == HttpStatus.unauthorized ? "Invalid User Permissions" : "Server Error"),
+            ),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +63,7 @@ class Timer extends StatelessWidget {
                   width: buttonWidth,
                   height: buttonHeight,
                   child: ElevatedButton.icon(
-                    onPressed: () => {},
+                    onPressed: () => testTimerController(context),
                     icon: const Icon(Icons.login),
                     label: const Text("Start"),
                   ),

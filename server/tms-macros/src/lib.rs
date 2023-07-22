@@ -11,7 +11,7 @@ pub fn tms_private_route(_attr: TokenStream, item: TokenStream) -> TokenStream {
   // Add parameters to function
   function.sig.inputs.push(syn::parse_quote!(security: &State<Security>));
   function.sig.inputs.push(syn::parse_quote!(clients: &State<TmsClients>));
-  function.sig.inputs.push(syn::parse_quote!(db: &State<TmsDB>));
+  function.sig.inputs.push(syn::parse_quote!(db: &State<std::sync::Arc<TmsDB>>));
   function.sig.inputs.push(syn::parse_quote!(uuid: String));
 
 

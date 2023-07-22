@@ -19,6 +19,7 @@ class TmsSchema {
         required this.registerRequest,
         required this.registerResponse,
         required this.socketEvent,
+        required this.startTimerRequest,
         required this.team,
         required this.users,
     });
@@ -32,6 +33,7 @@ class TmsSchema {
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
     SocketMessage socketEvent;
+    StartTimerRequest startTimerRequest;
     Team team;
     User users;
 
@@ -45,6 +47,7 @@ class TmsSchema {
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
         registerResponse: RegisterResponse.fromJson(json["register_response"]),
         socketEvent: SocketMessage.fromJson(json["socket_event"]),
+        startTimerRequest: StartTimerRequest.fromJson(json["start_timer_request"]),
         team: Team.fromJson(json["team"]),
         users: User.fromJson(json["users"]),
     );
@@ -59,6 +62,7 @@ class TmsSchema {
         "register_request": registerRequest.toJson(),
         "register_response": registerResponse.toJson(),
         "socket_event": socketEvent.toJson(),
+        "start_timer_request": startTimerRequest.toJson(),
         "team": team.toJson(),
         "users": users.toJson(),
     };
@@ -385,6 +389,22 @@ class SocketMessage {
         "from_id": fromId,
         "message": message,
         "topic": topic,
+    };
+}
+
+class StartTimerRequest {
+    StartTimerRequest({
+        required this.authToken,
+    });
+
+    String authToken;
+
+    factory StartTimerRequest.fromJson(Map<String, dynamic> json) => StartTimerRequest(
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
     };
 }
 

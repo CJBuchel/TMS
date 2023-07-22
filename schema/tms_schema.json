@@ -12,6 +12,7 @@
     "register_request",
     "register_response",
     "socket_event",
+    "start_timer_request",
     "team",
     "users"
   ],
@@ -42,6 +43,9 @@
     },
     "socket_event": {
       "$ref": "#/definitions/SocketMessage"
+    },
+    "start_timer_request": {
+      "$ref": "#/definitions/StartTimerRequest"
     },
     "team": {
       "$ref": "#/definitions/Team"
@@ -410,6 +414,17 @@
           "type": "string"
         },
         "topic": {
+          "type": "string"
+        }
+      }
+    },
+    "StartTimerRequest": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
           "type": "string"
         }
       }

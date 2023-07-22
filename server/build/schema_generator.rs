@@ -30,6 +30,7 @@ pub struct TmsSchema {
   integrity_message: IntegrityMessage,
   login_request: LoginRequest,
   login_response: LoginResponse,
+  start_timer_request: StartTimerRequest,
 }
 
 pub fn generate_schema(outdir: &OsString) {

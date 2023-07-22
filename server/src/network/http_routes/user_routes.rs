@@ -9,7 +9,7 @@ use uuid::Uuid;
 use crate::db::db::TmsDB;
 
 #[post("/login/<uuid>", data = "<message>")]
-pub fn login_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<TmsDB>, uuid: String, message: String) -> TmsRouteResponse<()> {
+pub fn login_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String, message: String) -> TmsRouteResponse<()> {
   let message: LoginRequest = TmsRequest!(message.clone(), security);
   let user = match db.tms_data.users.get(message.username.clone()).unwrap() {
     Some(user) => user,

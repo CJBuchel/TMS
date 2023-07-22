@@ -15,7 +15,7 @@ use timer_routes::*;
 
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage};
 
-use crate::db::db::TmsDB;
+use crate::{db::db::TmsDB, event_service::{match_control::MatchControl, TmsEventService}};
 
 pub struct CORS;
 
@@ -48,7 +48,8 @@ fn pulse_integrity_route(security: &State<Security>, clients: &State<TmsClients>
 }
 
 pub struct TmsHttpServer {
-  tms_db: TmsDB,
+  tms_event_service: TmsEventService,
+  tms_db: std::sync::Arc<TmsDB>,
   security: Security,
   clients: TmsClients,
   port: u16,
@@ -56,8 +57,8 @@ pub struct TmsHttpServer {
 }
 
 impl TmsHttpServer {
-  pub fn new(tms_db: TmsDB, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
-    Self { tms_db, security, clients, port, ws_port }
+  pub fn new(tms_event_service: TmsEventService, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
+    Self { tms_event_service, tms_db, security, clients, port, ws_port }
   }
 
   pub async fn start(&self) -> Rocket<Build> {
@@ -67,6 +68,7 @@ impl TmsHttpServer {
       .merge(("address", "0.0.0.0"));
 
     rocket::custom(figment)
+      .manage(self.tms_event_service.clone())
       .manage(self.tms_db.clone())
       .manage(self.clients.clone())
       .manage(self.security.clone())
@@ -78,7 +80,8 @@ impl TmsHttpServer {
         register_route,
         unregister_route,
         publish_route,
-        login_route
+        login_route,
+        start_timer_route,
       ]).attach(CORS)
   }
 }

@@ -48,6 +48,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  fonts:
+    - family: Radioland
+      fonts:
+        - asset: assets/fonts/RADIOLAND.TTF
+        - asset: assets/fonts/RADIOLANDSLIM.ttf
+
   assets:
     - assets/images/
     - assets/icons/

@@ -1,7 +1,8 @@
 pub mod security;
 pub mod schemas;
+pub mod network_schemas;
 
-use rocket::{http::Status, serde::json::Json};
+use rocket::{http::Status, serde::json::Json, State};
 use schemas::Permissions;
 use security::encrypt;
 use serde::{Serialize};
@@ -46,6 +47,37 @@ pub fn tms_clients_ws_send<T: Serialize>(message: T, clients: TmsClients, origin
         let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
       }
     });
+}
+
+pub fn check_auth(clients: &State<TmsClients>, uuid: String, auth_token: String) -> (bool, Option<TmsClient>) {
+  if clients.read().unwrap().contains_key(&uuid) {
+    let client = clients.read().unwrap().get(&uuid).unwrap().clone();
+    if client.auth_token == auth_token {
+      return (true, Some(client));
+    }
+  }
+  return (false, None);
+}
+
+pub fn check_permissions(clients: &State<TmsClients>, uuid: String, auth_token: String, permissions: Permissions) -> bool {
+  let auth = check_auth(clients, uuid, auth_token);
+
+  if auth.0 {
+    let client = auth.1.unwrap();
+    if client.permissions.admin {
+      return true;
+    } else if client.permissions.head_referee.unwrap_or(false) && permissions.head_referee.unwrap_or(false) {
+      return true;
+    } else if client.permissions.referee.unwrap_or(false) && permissions.referee.unwrap_or(false) {
+      return true;
+    } else if client.permissions.judge_advisor.unwrap_or(false) && permissions.judge_advisor.unwrap_or(false) {
+      return true;
+    } else if client.permissions.judge.unwrap_or(false) && permissions.judge.unwrap_or(false) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /// Converts the request message to a json format (uses serde)

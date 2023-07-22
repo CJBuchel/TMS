@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/screens/shared/color_utils.dart';
 
@@ -7,7 +8,6 @@ class ScreenCard extends StatelessWidget {
     super.key,
     required this.type,
     required this.title,
-    required this.duration,
     required this.color,
     required this.image,
     required this.textColor,
@@ -15,7 +15,6 @@ class ScreenCard extends StatelessWidget {
   });
   final String type;
   final String title;
-  final String duration;
   final Color color;
   final Image image;
   final Color textColor;
@@ -37,7 +36,7 @@ class ScreenCard extends StatelessWidget {
                 splashColor: darken(color),
                 hoverColor: lighten(color),
                 borderRadius: BorderRadius.circular(10),
-                onTap: () => {},
+                onTap: onPress,
                 onHover: (value) {},
                 child: Stack(
                   children: [

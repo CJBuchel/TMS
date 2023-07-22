@@ -4,13 +4,19 @@ use std::fs;
 use std::path::Path;
 
 use schemars::JsonSchema;
+use tms_utils::{
 
-include!("../tms-utils/src/schemas/mod.rs");
+  // Storage structure imports
+  schemas::*,
+  
+  // Network structure imports
+  network_schemas::*
+};
 
 #[allow(dead_code)]
 #[derive(JsonSchema, Clone)]
 pub struct TmsSchema {
-  // Storage Structures
+  // Storage structures
   team: Team,
   game_match: GameMatch,
   judging_session: JudgingSession,

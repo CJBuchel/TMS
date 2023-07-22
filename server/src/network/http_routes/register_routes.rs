@@ -4,7 +4,7 @@ use rocket::*;
 use rocket::State;
 use rocket::http::Status;
 use rocket::serde::json::Json;
-use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt, schemas::{RegisterResponse, RegisterRequest, create_permissions}};
+use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt, schemas::create_permissions, network_schemas::{RegisterResponse, RegisterRequest}};
 
 fn register_client(user_id: String, key: String, clients: TmsClients) {
   clients.write().unwrap().insert(

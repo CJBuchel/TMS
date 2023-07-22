@@ -10,7 +10,10 @@ use publish_routes::*;
 mod user_routes;
 use user_routes::*;
 
-use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, schemas::IntegrityMessage};
+mod timer_routes;
+use timer_routes::*;
+
+use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage};
 
 use crate::db::db::TmsDB;
 

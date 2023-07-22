@@ -2,8 +2,8 @@
 use rocket::{*, http::Status};
 use rocket::State;
 use tms_utils::TmsRouteResponse;
-use tms_utils::schemas::{LoginResponse};
-use tms_utils::{TmsClients, schemas::LoginRequest, TmsRequest, security::Security, TmsRespond, security::encrypt};
+use tms_utils::network_schemas::{LoginResponse, LoginRequest};
+use tms_utils::{TmsClients, TmsRequest, security::Security, TmsRespond, security::encrypt};
 use uuid::Uuid;
 
 use crate::db::db::TmsDB;
@@ -28,10 +28,11 @@ pub fn login_route(security: &State<Security>, clients: &State<TmsClients>, db: 
       clients.write().unwrap().get_mut(&uuid).unwrap().permissions = user.permissions.clone();
       
       // Respond to the client with the auth token
-      let res = LoginResponse { 
+      let res = LoginResponse {
         auth_token: auth_token.to_string(),
         permissions: user.permissions,
       };
+
       TmsRespond!(
         Status::Ok,
         res,

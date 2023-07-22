@@ -21,6 +21,3 @@ pub use team::*;
 
 mod user;
 pub use user::*;
-
-mod nt;
-pub use nt::*;

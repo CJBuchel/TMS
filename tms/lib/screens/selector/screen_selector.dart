@@ -40,7 +40,6 @@ class ScreenSelector extends StatelessWidget {
                 child: ScreenCard(
                   type: "BASIC",
                   title: "Scoreboard",
-                  duration: "7-30 Days",
                   color: const Color(0xff8E97FD),
                   textColor: const Color(0xff3F414E),
                   image: const Image(
@@ -57,13 +56,14 @@ class ScreenSelector extends StatelessWidget {
                 child: ScreenCard(
                   type: "BASIC",
                   title: "Timer",
-                  duration: "12-35 Days",
                   color: const Color(0xffFFC97E),
                   textColor: const Color(0xff3F414E),
                   image: const Image(
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.pushNamed(context, '/timer');
+                  },
                 ),
               ),
             ]),

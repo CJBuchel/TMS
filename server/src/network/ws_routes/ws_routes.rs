@@ -1,6 +1,6 @@
 use futures::{FutureExt, StreamExt};
 use log::{error, warn};
-use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send, schemas::SocketMessage};
+use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send, network_schemas::SocketMessage};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::{ws::Message, Reply, ws::WebSocket};
 use tokio::sync::mpsc;

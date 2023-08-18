@@ -78,7 +78,8 @@
         "online_link",
         "pods",
         "season",
-        "tables"
+        "tables",
+        "timer_length"
       ],
       "properties": {
         "event_rounds": {
@@ -106,6 +107,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "timer_length": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
         }
       }
     },

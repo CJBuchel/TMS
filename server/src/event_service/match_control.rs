@@ -7,6 +7,8 @@ pub struct MatchControl {
 
 impl MatchControl {
   pub fn new(tms_db: std::sync::Arc<TmsDB>) -> Self {
+    // @TODO, access event db and get timer length
+    // let timer.
     Self {
       tms_db
     }

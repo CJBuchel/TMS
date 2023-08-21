@@ -110,7 +110,7 @@
         },
         "timer_length": {
           "type": "integer",
-          "format": "uint8",
+          "format": "uint32",
           "minimum": 0.0
         }
       }

@@ -15,7 +15,7 @@ use timer_routes::*;
 
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage};
 
-use crate::{db::db::TmsDB, event_service::{match_control::MatchControl, TmsEventService}};
+use crate::{db::db::TmsDB, event_service::{TmsEventService}};
 
 pub struct CORS;
 

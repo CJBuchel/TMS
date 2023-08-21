@@ -11,7 +11,7 @@ pub struct OnlineLink {
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct Event {
   pub name: String,
-  pub timer_length: u8, // time in seconds the match takes i.e 150 is default
+  pub timer_length: u32, // time in seconds the match takes i.e 150 is default
   pub tables: Vec<String>,
   pub pods: Vec<String>,
   pub event_rounds: u8,

@@ -24,9 +24,10 @@ where
   }
 
   pub fn get(&self) -> SledResult<Option<T>> {
-    match self.db.get(&self.key)? {
-      Some(serialized) => Ok(Some(bincode::BincodeEncoding::decode(&serialized).expect("Failed to deserialize"))),
-      None => Ok(None),
+    match self.db.get(&self.key) {
+      Ok(Some(serialized)) => Ok(Some(bincode::BincodeEncoding::decode(&serialized).expect("Failed to deserialize"))),
+      Ok(None) => Ok(None),
+      Err(e) => Err(sled_extensions::Error::Sled(e)),
     }
   }
 

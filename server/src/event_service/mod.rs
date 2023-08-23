@@ -1,3 +1,5 @@
+use tms_utils::TmsClients;
+
 use crate::db::db::TmsDB;
 
 pub mod match_control;
@@ -8,9 +10,9 @@ pub struct TmsEventService {
 }
 
 impl TmsEventService {
-  pub fn new(tms_db: std::sync::Arc<TmsDB>) -> Self {
+  pub fn new(tms_db: std::sync::Arc<TmsDB>, tms_clients: TmsClients) -> Self {
     Self {
-      match_control: match_control::MatchControl::new(tms_db)
+      match_control: match_control::MatchControl::new(tms_db, tms_clients)
     }
   }
 }

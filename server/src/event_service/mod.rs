@@ -2,7 +2,7 @@ use crate::db::db::TmsDB;
 
 pub mod match_control;
 
-#[derive(Clone)]
+// #[derive(Clone)]
 pub struct TmsEventService {
   pub match_control: match_control::MatchControl,
 }

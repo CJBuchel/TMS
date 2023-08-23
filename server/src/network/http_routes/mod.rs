@@ -48,7 +48,7 @@ fn pulse_integrity_route(security: &State<Security>, clients: &State<TmsClients>
 }
 
 pub struct TmsHttpServer {
-  tms_event_service: TmsEventService,
+  tms_event_service: std::sync::Arc<std::sync::Mutex<TmsEventService>>,
   tms_db: std::sync::Arc<TmsDB>,
   security: Security,
   clients: TmsClients,
@@ -57,7 +57,7 @@ pub struct TmsHttpServer {
 }
 
 impl TmsHttpServer {
-  pub fn new(tms_event_service: TmsEventService, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
+  pub fn new(tms_event_service: std::sync::Arc<std::sync::Mutex<TmsEventService>>, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
     Self { tms_event_service, tms_db, security, clients, port, ws_port }
   }
 

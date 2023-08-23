@@ -5,8 +5,8 @@ use crate::db::db::TmsDB;
 // #[derive(Clone)]
 pub struct MatchControl {
   tms_db: std::sync::Arc<TmsDB>,
-  time: std::sync::atomic::AtomicU32,
-  timer_running: std::sync::atomic::AtomicBool
+  time: u32,
+  timer_running: std::sync::Arc<std::sync::atomic::AtomicBool>
 }
 
 impl MatchControl {
@@ -22,26 +22,27 @@ impl MatchControl {
 
     Self {
       tms_db,
-      time: std::sync::atomic::AtomicU32::new(time),
-      timer_running: std::sync::atomic::AtomicBool::new(false)
+      time,
+      timer_running: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false))
     }
   }
 
-  async fn timer(&mut self) {
+  async fn timer(time: u32, timer_running: std::sync::Arc<std::sync::atomic::AtomicBool>) {
     // countdown from set time (150) to 0
     warn!("Timer running...");
-    for i in (0..*self.time.get_mut() as i32).rev() {
+    for i in (0..time as i32).rev() {
       warn!("Time: {}", i);
       tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
+    timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
     println!("Time's up!");
   }
 
   pub fn start_timer(&mut self) {
     // get time from db
-    if self.timer_running.load(std::sync::atomic::Ordering::Relaxed) == false {
+    if !self.timer_running.load(std::sync::atomic::Ordering::Relaxed) {
       warn!("Starting timer...");
-      self.timer_running.get_mut() = true;
+      self.timer_running.store(true, std::sync::atomic::Ordering::Relaxed);
       let time = match self.tms_db.tms_data.event.get() {
         Ok(Some(event)) => event.timer_length,
         Ok(None) => 150,
@@ -52,11 +53,9 @@ impl MatchControl {
       };
 
       self.time = time;
-
-      // launch timer in it's own thread
-      tokio::spawn(async move {
-        self.timer().await;
-        // self.timer_running = false;
+      let timer_flag = self.timer_running.clone();
+      tokio::task::spawn(async move {
+        MatchControl::timer(time, timer_flag).await;
       });
     } else {
       warn!("Timer already running!");

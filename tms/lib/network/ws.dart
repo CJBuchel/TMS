@@ -15,12 +15,20 @@ class NetworkWebSocket {
   void setState(NetworkWebSocketState state) => wsState.value = state;
   NetworkWebSocketState getState() => wsState.value;
 
-  void subscribe(String topic, void Function(SocketMessage message) onEvent) {
+  Function(SocketMessage) subscribe(String topic, void Function(SocketMessage message) onEvent) {
     if (!_subscribers.containsKey(topic)) {
-      _subscribers[topic];
+      _subscribers[topic] = [];
     }
 
     _subscribers[topic]?.add(onEvent);
+    return onEvent;
+  }
+
+  void unsubscribe(String topic, Function(SocketMessage) onEvent) {
+    if (_subscribers.containsKey(topic)) {
+      Logger().w("Unsubscribing from $topic");
+      _subscribers[topic]?.remove(onEvent);
+    }
   }
 
   Future<void> publish(SocketMessage message) async {

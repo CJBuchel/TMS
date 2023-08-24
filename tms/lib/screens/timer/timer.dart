@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:tms/network/network.dart';
 import 'package:tms/requests/timer_requests.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 import 'package:tms/screens/timer/clock.dart';

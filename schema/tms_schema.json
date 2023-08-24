@@ -406,7 +406,6 @@
     "SocketMessage": {
       "type": "object",
       "required": [
-        "message",
         "topic"
       ],
       "properties": {
@@ -417,7 +416,16 @@
           ]
         },
         "message": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sub_topic": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "topic": {
           "type": "string"

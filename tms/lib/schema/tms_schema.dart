@@ -76,6 +76,7 @@ class Event {
         required this.pods,
         required this.season,
         required this.tables,
+        required this.timerLength,
     });
 
     int eventRounds;
@@ -84,6 +85,7 @@ class Event {
     List<String> pods;
     String season;
     List<String> tables;
+    int timerLength;
 
     factory Event.fromJson(Map<String, dynamic> json) => Event(
         eventRounds: json["event_rounds"],
@@ -92,6 +94,7 @@ class Event {
         pods: List<String>.from(json["pods"].map((x) => x)),
         season: json["season"],
         tables: List<String>.from(json["tables"].map((x) => x)),
+        timerLength: json["timer_length"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -101,6 +104,7 @@ class Event {
         "pods": List<dynamic>.from(pods.map((x) => x)),
         "season": season,
         "tables": List<dynamic>.from(tables.map((x) => x)),
+        "timer_length": timerLength,
     };
 }
 
@@ -371,23 +375,27 @@ class RegisterResponse {
 class SocketMessage {
     SocketMessage({
         this.fromId,
-        required this.message,
+        this.message,
+        this.subTopic,
         required this.topic,
     });
 
     String? fromId;
-    String message;
+    String? message;
+    String? subTopic;
     String topic;
 
     factory SocketMessage.fromJson(Map<String, dynamic> json) => SocketMessage(
         fromId: json["from_id"],
         message: json["message"],
+        subTopic: json["sub_topic"],
         topic: json["topic"],
     );
 
     Map<String, dynamic> toJson() => {
         "from_id": fromId,
         "message": message,
+        "sub_topic": subTopic,
         "topic": topic,
     };
 }

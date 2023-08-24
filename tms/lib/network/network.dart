@@ -2,15 +2,18 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tuple/tuple.dart';
+import 'package:uuid/uuid.dart';
 
 // Static implementation and combined classes of both network protocols
 class Network {
@@ -254,5 +257,48 @@ class Network {
     }
 
     return response;
+  }
+
+  // publish a message to the pub sub network
+  static Future<void> publish(SocketMessage message) async {
+    await _ws.publish(message);
+  }
+
+  // Subscribe to a topic and run the onEvent function when the topic is received.
+  // Be careful using this method as it does not unsubscribe when the widget is disposed.
+  // This can be problematic when dealing with topics that share the same name, keeping track of which function
+  // to unsubscribe to is left to the user
+  // Suggest using the auto subscribe mixin for stateful widgets
+  static Function(SocketMessage) subscribe(String topic, Function(SocketMessage) onEvent) {
+    return _ws.subscribe(topic, onEvent);
+  }
+
+  // unsubscribe the function using the topic and the reference to the onEvent function returned from the subscribe method
+  static void unsubscribe(String topic, Function(SocketMessage) onEvent) {
+    _ws.unsubscribe(topic, onEvent);
+  }
+}
+
+mixin AutoUnsubScribeMixin<T extends StatefulWidget> on State<T> {
+  List<Tuple2<String, Function(SocketMessage)>> _subscriptions = [];
+
+  void autoSubscribe(String channel, Function(SocketMessage) callback) {
+    Network.subscribe(channel, callback);
+    _subscriptions.add(Tuple2(channel, callback));
+  }
+
+  void autoUnsubscribe() {
+    for (var sub in _subscriptions) {
+      Network.unsubscribe(
+        sub.item1,
+        sub.item2,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    autoUnsubscribe();
+    super.dispose();
   }
 }

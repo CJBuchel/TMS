@@ -1,0 +1,64 @@
+name: tms
+description: Team Management System for FLL
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+4
+
+# First submission required before we can begin publishing to the windows store
+msix_config:
+  display_name: TMS Client
+  publisher_display_name: A Loose Screw
+  identity_name: 20448ALooseScrew.TMSClient
+  publisher: CN=E961EDDD-C8AE-489C-8DEE-15C89A72602A
+  msix_version: 1.0.0.0
+  store: true
+
+environment:
+  sdk: '>=2.19.5 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.3
+
+  web_socket_channel: ^2.3.0
+  build_runner: ^2.3.3
+  build_web_compilers: ^3.2.7
+  http: ^0.13.5
+  uuid: ^3.0.7
+  multicast_dns: ^0.3.2+3
+  google_fonts: ^4.0.3
+  flutter_svg: ^2.0.5
+  fl_chart: ^0.61.0
+  provider: ^6.0.5
+  data_table_2: ^2.4.2
+  tuple: ^2.0.1
+  shared_preferences: ^2.1.0
+  fast_rsa: ^3.5.6
+  enum_to_string: ^2.0.1
+  wakelock: ^0.6.2
+  logger: ^1.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Radioland
+      fonts:
+        - asset: assets/fonts/RADIOLAND.TTF
+        - asset: assets/fonts/RADIOLANDSLIM.ttf
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/logos/
+
+    - packages/fast_rsa/web/assets/worker.js
+    - packages/fast_rsa/web/assets/wasm_exec.js
+    - packages/fast_rsa/web/assets/rsa.wasm

@@ -1,0 +1,523 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TmsSchema",
+  "type": "object",
+  "required": [
+    "event",
+    "game_match",
+    "integrity_message",
+    "judging_session",
+    "login_request",
+    "login_response",
+    "register_request",
+    "register_response",
+    "socket_event",
+    "start_timer_request",
+    "team",
+    "users"
+  ],
+  "properties": {
+    "event": {
+      "$ref": "#/definitions/Event"
+    },
+    "game_match": {
+      "$ref": "#/definitions/GameMatch"
+    },
+    "integrity_message": {
+      "$ref": "#/definitions/IntegrityMessage"
+    },
+    "judging_session": {
+      "$ref": "#/definitions/JudgingSession"
+    },
+    "login_request": {
+      "$ref": "#/definitions/LoginRequest"
+    },
+    "login_response": {
+      "$ref": "#/definitions/LoginResponse"
+    },
+    "register_request": {
+      "$ref": "#/definitions/RegisterRequest"
+    },
+    "register_response": {
+      "$ref": "#/definitions/RegisterResponse"
+    },
+    "socket_event": {
+      "$ref": "#/definitions/SocketMessage"
+    },
+    "start_timer_request": {
+      "$ref": "#/definitions/StartTimerRequest"
+    },
+    "team": {
+      "$ref": "#/definitions/Team"
+    },
+    "users": {
+      "$ref": "#/definitions/User"
+    }
+  },
+  "definitions": {
+    "Answer": {
+      "type": "object",
+      "required": [
+        "answer",
+        "id"
+      ],
+      "properties": {
+        "answer": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "required": [
+        "event_rounds",
+        "name",
+        "online_link",
+        "pods",
+        "season",
+        "tables",
+        "timer_length"
+      ],
+      "properties": {
+        "event_rounds": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "name": {
+          "type": "string"
+        },
+        "online_link": {
+          "$ref": "#/definitions/OnlineLink"
+        },
+        "pods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "season": {
+          "type": "string"
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "timer_length": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "GameMatch": {
+      "type": "object",
+      "required": [
+        "complete",
+        "custom_match",
+        "deferred",
+        "end_time",
+        "match_number",
+        "on_table_first",
+        "on_table_second",
+        "start_time"
+      ],
+      "properties": {
+        "complete": {
+          "type": "boolean"
+        },
+        "custom_match": {
+          "type": "boolean"
+        },
+        "deferred": {
+          "type": "boolean"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "match_number": {
+          "type": "string"
+        },
+        "on_table_first": {
+          "$ref": "#/definitions/OnTable"
+        },
+        "on_table_second": {
+          "$ref": "#/definitions/OnTable"
+        },
+        "start_time": {
+          "type": "string"
+        }
+      }
+    },
+    "GameScoresheet": {
+      "type": "object",
+      "required": [
+        "answers",
+        "private_comment",
+        "public_comment",
+        "round",
+        "team_id",
+        "tournament_id"
+      ],
+      "properties": {
+        "answers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Answer"
+          }
+        },
+        "private_comment": {
+          "type": "string"
+        },
+        "public_comment": {
+          "type": "string"
+        },
+        "round": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "team_id": {
+          "type": "string"
+        },
+        "tournament_id": {
+          "type": "string"
+        }
+      }
+    },
+    "IntegrityMessage": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "JudgingScoresheet": {
+      "type": "object",
+      "required": [
+        "answers",
+        "feedback_crit",
+        "feedback_pros",
+        "team_id",
+        "tournament_id"
+      ],
+      "properties": {
+        "answers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Answer"
+          }
+        },
+        "feedback_crit": {
+          "type": "string"
+        },
+        "feedback_pros": {
+          "type": "string"
+        },
+        "team_id": {
+          "type": "string"
+        },
+        "tournament_id": {
+          "type": "string"
+        }
+      }
+    },
+    "JudgingSession": {
+      "type": "object",
+      "required": [
+        "complete",
+        "custom_session",
+        "deferred",
+        "end_time",
+        "room",
+        "session",
+        "start_time",
+        "team_number"
+      ],
+      "properties": {
+        "complete": {
+          "type": "boolean"
+        },
+        "custom_session": {
+          "type": "boolean"
+        },
+        "deferred": {
+          "type": "boolean"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "room": {
+          "type": "string"
+        },
+        "session": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "required": [
+        "password",
+        "username"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "permissions"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "permissions": {
+          "$ref": "#/definitions/Permissions"
+        }
+      }
+    },
+    "OnTable": {
+      "type": "object",
+      "required": [
+        "score_submitted",
+        "table",
+        "team_number"
+      ],
+      "properties": {
+        "score_submitted": {
+          "type": "boolean"
+        },
+        "table": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
+    "OnlineLink": {
+      "type": "object",
+      "required": [
+        "linked",
+        "tournament_id",
+        "tournament_token"
+      ],
+      "properties": {
+        "linked": {
+          "type": "boolean"
+        },
+        "tournament_id": {
+          "type": "string"
+        },
+        "tournament_token": {
+          "type": "string"
+        }
+      }
+    },
+    "Permissions": {
+      "type": "object",
+      "required": [
+        "admin"
+      ],
+      "properties": {
+        "admin": {
+          "type": "boolean"
+        },
+        "head_referee": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "judge": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "judge_advisor": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "referee": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "RegisterRequest": {
+      "type": "object",
+      "required": [
+        "key",
+        "user_id"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        }
+      }
+    },
+    "RegisterResponse": {
+      "type": "object",
+      "required": [
+        "key",
+        "url"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "SocketMessage": {
+      "type": "object",
+      "required": [
+        "topic"
+      ],
+      "properties": {
+        "from_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sub_topic": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "topic": {
+          "type": "string"
+        }
+      }
+    },
+    "StartTimerRequest": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
+    "Team": {
+      "type": "object",
+      "required": [
+        "core_values_scores",
+        "game_scores",
+        "innovation_project_scores",
+        "ranking",
+        "robot_design_scores",
+        "team_affiliation",
+        "team_id",
+        "team_name",
+        "team_number"
+      ],
+      "properties": {
+        "core_values_scores": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgingScoresheet"
+          }
+        },
+        "game_scores": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GameScoresheet"
+          }
+        },
+        "innovation_project_scores": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgingScoresheet"
+          }
+        },
+        "ranking": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "robot_design_scores": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgingScoresheet"
+          }
+        },
+        "team_affiliation": {
+          "type": "string"
+        },
+        "team_id": {
+          "type": "string"
+        },
+        "team_name": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "password",
+        "permissions",
+        "username"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "permissions": {
+          "$ref": "#/definitions/Permissions"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

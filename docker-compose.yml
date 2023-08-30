@@ -1,22 +1,22 @@
 services:
-  cjms-latest:
-    container_name: cjms
-    image: 'cjbuchel/cjms:latest'
+  tms-latest:
+    container_name: tms
+    image: 'cjbuchel/tms:latest'
     restart: always
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '2000-3000:2000-3000'
-      - '37017:27017'
+      - '8080:8080'
+      - '2121:2121'
 
-  cjms-version:
-    container_name: cjms-v
-    image: 'cjbuchel/cjms:${DOCKER_TAG}'
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - '2000-3000:2000-3000'
-      - '37017:27017'
+  # tms-version:
+  #   container_name: tms-v
+  #   image: 'cjbuchel/tms:${DOCKER_TAG}'
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '8080:8080'
+  #     - '2121:2121'

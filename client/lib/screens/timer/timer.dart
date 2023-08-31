@@ -44,34 +44,35 @@ class Timer extends StatelessWidget {
     }
 
     return Scaffold(
-        appBar: TmsToolBar(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Clock
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                Clock(),
-              ],
-            ),
+      appBar: TmsToolBar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // Clock
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const <Widget>[
+              Clock(),
+            ],
+          ),
 
-            // Start button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  width: buttonWidth,
-                  height: buttonHeight,
-                  child: ElevatedButton.icon(
-                    onPressed: () => testTimerController(context),
-                    icon: const Icon(Icons.login),
-                    label: const Text("Start"),
-                  ),
-                )
-              ],
-            )
-          ],
-        ));
+          // Start button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: buttonWidth,
+                height: buttonHeight,
+                child: ElevatedButton.icon(
+                  onPressed: () => testTimerController(context),
+                  icon: const Icon(Icons.login),
+                  label: const Text("Start"),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

@@ -20,9 +20,11 @@ class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class TmsToolBarState extends State<TmsToolBar> {
+class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMixin {
   Icon connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
   Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
+
+  late AnimationController _animationController;
 
   Text ntStatusText = const Text(
     "NO NT",
@@ -208,6 +210,9 @@ class TmsToolBarState extends State<TmsToolBar> {
     checkConnection();
     checkLogin();
 
+    // animation controller
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500))..repeat();
+
     NetworkHttp.httpState.addListener(checkConnection);
     NetworkWebSocket.wsState.addListener(checkConnection);
     NetworkSecurity.securityState.addListener(checkConnection);
@@ -221,6 +226,7 @@ class TmsToolBarState extends State<TmsToolBar> {
 
   @override
   void dispose() {
+    _animationController.dispose();
     super.dispose();
 
     NetworkHttp.httpState.removeListener(checkConnection);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/network/network.dart';
+import 'package:tms/responsive.dart';
 
 class Clock extends StatefulWidget {
   const Clock({Key? key}) : super(key: key);
@@ -39,13 +40,33 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      parseTime(_time.toDouble()),
-      style: const TextStyle(
-        fontSize: 300,
-        color: Colors.white,
-        fontFamily: "Radioland",
-      ),
-    );
+    if (Responsive.isDesktop(context)) {
+      return Text(
+        parseTime(_time.toDouble()),
+        style: const TextStyle(
+          fontSize: 300,
+          color: Colors.white,
+          fontFamily: "Radioland",
+        ),
+      );
+    } else if (Responsive.isTablet(context)) {
+      return Text(
+        parseTime(_time.toDouble()),
+        style: const TextStyle(
+          fontSize: 200,
+          color: Colors.white,
+          fontFamily: "Radioland",
+        ),
+      );
+    } else {
+      return Text(
+        parseTime(_time.toDouble()),
+        style: const TextStyle(
+          fontSize: 80,
+          color: Colors.white,
+          fontFamily: "Radioland",
+        ),
+      );
+    }
   }
 }

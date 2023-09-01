@@ -50,9 +50,9 @@ impl TmsServer {
     let tms_ws = TmsWebsocket::new(rsa.clone(), clients.clone(), self.config.ws_port);
     let tms_http = TmsHttpServer::new(tms_event_service.to_owned(), tms_db, rsa.clone(), clients.to_owned(), self.config.http_port, self.config.ws_port);
 
-    // tokio::spawn(async move {
-    //   m_dns.start().await;
-    // });
+    tokio::spawn(async move {
+      m_dns.start().await;
+    });
 
     tokio::spawn(async move {
       tms_ws.start().await
@@ -69,9 +69,9 @@ async fn main() {
   pretty_env_logger::init();
   
   let main_server = TmsServer::new(ServerConfig { 
-    http_port: 2121,
-    ws_port: 2122,
-    mdns_port: 5353,
+    http_port: 2121, // 2121
+    ws_port: 2122, // 2122
+    mdns_port: 5353, // 5353
     mdns_name: "_mdns-tms-server".to_string()
   });
 

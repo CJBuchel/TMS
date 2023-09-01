@@ -13,7 +13,6 @@ import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tuple/tuple.dart';
-import 'package:uuid/uuid.dart';
 
 // Static implementation and combined classes of both network protocols
 class Network {
@@ -63,8 +62,9 @@ class Network {
   // Try to connect to server and test endpoint
   static Future<void> connect() async {
     // Must register first before connecting to websocket
-    await _http.register(await getServerIP()).then((registerResponse) async {
-      await _ws.connect(registerResponse.url);
+    String ip = await getServerIP();
+    await _http.register(ip).then((url) async {
+      await _ws.connect(url);
     });
   }
 

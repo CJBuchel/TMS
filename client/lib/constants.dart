@@ -11,8 +11,7 @@ const defaultFontFamilyBold = "MontserratBold";
 
 // Variable constants
 const mdnsName = '_mdns-tms-server._udp.local';
-const requestPort = 2121;
-const wsPort = 2122;
+const requestPort = 2121; // 2121
 const watchDogTime = Duration(seconds: 5);
 const connectionRetries = 5;
 

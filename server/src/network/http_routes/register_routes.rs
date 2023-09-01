@@ -1,4 +1,3 @@
-use local_ip_address::local_ip;
 use ::log::warn;
 use rocket::*;
 use rocket::State;
@@ -27,17 +26,19 @@ fn unregister_client(user_id: String, clients: TmsClients) {
 #[post("/register", data = "<register_request>")]
 pub fn register_route(clients: &State<TmsClients>, s_public_key: &State<Vec<u8>>, ws_port: &State<u16>, register_request: Json<RegisterRequest>) -> TmsRouteResponse<()> {
   let user_id = register_request.user_id.clone();
-  let server_ip = local_ip().unwrap();
+
+  let res = RegisterResponse {
+    key: String::from_utf8(s_public_key.to_vec()).unwrap(),
+    url_scheme: String::from("ws://"),
+    url_path: format!(":{}/ws/{}", ws_port, user_id)
+  };
 
   if clients.read().unwrap().contains_key(&user_id) {
     warn!("Already registered client");
 
     TmsRespond!(
       Status::AlreadyReported, 
-      RegisterResponse {
-        key: String::from_utf8(s_public_key.to_vec()).unwrap(),
-        url: format!("ws://{:?}:{}/ws/{}", server_ip, ws_port, user_id)
-      },
+      res,
       register_request.key.clone()
     );
   }
@@ -47,10 +48,7 @@ pub fn register_route(clients: &State<TmsClients>, s_public_key: &State<Vec<u8>>
   
   TmsRespond!(
     Status::Ok,
-    RegisterResponse {
-      key: String::from_utf8(s_public_key.to_vec()).unwrap(),
-      url: format!("ws://{:?}:{}/ws/{}", server_ip, ws_port, user_id)
-    },
+    res,
     register_request.key.clone()
   );
 }

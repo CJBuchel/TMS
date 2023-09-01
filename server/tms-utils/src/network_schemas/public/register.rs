@@ -11,5 +11,6 @@ pub struct RegisterRequest {
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct RegisterResponse {
   pub key: String,
-  pub url: String,
+  pub url_scheme: String, // ws://
+  pub url_path: String, // ws/<uuid>
 }

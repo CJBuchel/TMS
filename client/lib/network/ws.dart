@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';

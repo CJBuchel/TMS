@@ -19,6 +19,7 @@ class Network {
   static final NetworkWebSocket _ws = NetworkWebSocket();
   static final NetworkHttp _http = NetworkHttp();
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  static ValueNotifier<String> serverVersion = ValueNotifier<String>("");
 
   static Future<void> setAutoConfig(bool auto) async {
     await _localStorage.then((value) => value.setBool(storeNtAutoConfigure, auto));
@@ -55,6 +56,7 @@ class Network {
   }
 
   static Future<void> setServerVersion(String version) async {
+    serverVersion.value = version;
     await _localStorage.then((value) => value.setString(storeNtServerVersion, version));
   }
 
@@ -62,11 +64,14 @@ class Network {
     try {
       var version = await _localStorage.then((value) => value.getString(storeNtServerVersion));
       if (version != null) {
+        serverVersion.value = version;
         return version;
       } else {
+        serverVersion.value = "";
         return "";
       }
     } catch (e) {
+      serverVersion.value = "";
       return "";
     }
   }

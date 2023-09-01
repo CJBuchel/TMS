@@ -54,6 +54,23 @@ class Network {
     }
   }
 
+  static Future<void> setServerVersion(String version) async {
+    await _localStorage.then((value) => value.setString(storeNtServerVersion, version));
+  }
+
+  static Future<String> getServerVersion() async {
+    try {
+      var version = await _localStorage.then((value) => value.getString(storeNtServerVersion));
+      if (version != null) {
+        return version;
+      } else {
+        return "";
+      }
+    } catch (e) {
+      return "";
+    }
+  }
+
   // Get the overall state of the network, combined tuple containing both the protocol states
   static Future<Tuple3<NetworkHttpConnectionState, NetworkWebSocketState, SecurityState>> getStates() async {
     return Tuple3(await _http.getState(), _ws.getState(), await NetworkSecurity.getState());
@@ -63,8 +80,9 @@ class Network {
   static Future<void> connect() async {
     // Must register first before connecting to websocket
     String ip = await getServerIP();
-    await _http.register(ip).then((url) async {
-      await _ws.connect(url);
+    await _http.register(ip).then((res) async {
+      setServerVersion(res.item2);
+      await _ws.connect(res.item1);
     });
   }
 

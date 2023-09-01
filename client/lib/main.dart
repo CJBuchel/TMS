@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tms/app.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';
@@ -68,7 +69,8 @@ class NetworkObserver extends WidgetsBindingObserver {
   }
 }
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   final networkObserver = NetworkObserver();
   WidgetsBinding.instance.addObserver(networkObserver);

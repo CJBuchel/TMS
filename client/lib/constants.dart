@@ -25,6 +25,7 @@ const storeWsConnectUrl = "ServerWSConnectUrl";
 const storeSecState = "NetworkSecurityState";
 const storeNtConnectionState = "ServerNetworkConnectionState";
 const storeNtServerIP = "ntServerIP";
+const storeNtServerVersion = "ntServerVersion";
 const storeNtUuid = "ntUuid";
 const storeNtPublicKey = "ntPublicKey";
 const storeNtPrivateKey = "ntPrivateKey";

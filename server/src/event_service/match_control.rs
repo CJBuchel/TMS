@@ -46,7 +46,6 @@ impl MatchControl {
 
 
     for i in (0..time as i32).rev() {
-      warn!("Time: {}", i);
       // publish time message
       let message = tms_utils::network_schemas::SocketMessage {
         from_id: None,
@@ -59,7 +58,6 @@ impl MatchControl {
       tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
     timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
-    println!("Time's up!");
   }
 
   pub fn start_timer(&mut self) {

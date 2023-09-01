@@ -355,20 +355,24 @@ class RegisterRequest {
 class RegisterResponse {
     RegisterResponse({
         required this.key,
-        required this.url,
+        required this.urlPath,
+        required this.urlScheme,
     });
 
     String key;
-    String url;
+    String urlPath;
+    String urlScheme;
 
     factory RegisterResponse.fromJson(Map<String, dynamic> json) => RegisterResponse(
         key: json["key"],
-        url: json["url"],
+        urlPath: json["url_path"],
+        urlScheme: json["url_scheme"],
     );
 
     Map<String, dynamic> toJson() => {
         "key": key,
-        "url": url,
+        "url_path": urlPath,
+        "url_scheme": urlScheme,
     };
 }
 

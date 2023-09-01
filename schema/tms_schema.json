@@ -392,13 +392,17 @@
       "type": "object",
       "required": [
         "key",
-        "url"
+        "url_path",
+        "url_scheme"
       ],
       "properties": {
         "key": {
           "type": "string"
         },
-        "url": {
+        "url_path": {
+          "type": "string"
+        },
+        "url_scheme": {
           "type": "string"
         }
       }

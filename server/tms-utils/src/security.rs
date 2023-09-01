@@ -1,4 +1,4 @@
-use log::info;
+use log::{info, error};
 use openssl::{rsa::{Rsa, Padding}};
 use base64::{Engine, engine::general_purpose};
 
@@ -37,7 +37,14 @@ pub fn decrypt(key: String, buf: String) -> String {
 
   for channel_chunk in channels {
     let mut data: Vec<u8> = vec![0; rsa.size() as usize];
-    let _ = rsa.private_decrypt(channel_chunk, &mut data, Padding::PKCS1).unwrap();
+    match rsa.private_decrypt(channel_chunk, &mut data, Padding::PKCS1) {
+      Ok(_) => {},
+      Err(e) => {
+        error!("Error decrypting data: {}", e);
+        continue;
+      }
+    }
+
     let string_data = String::from_utf8(data).unwrap().trim_matches(char::from(0)).to_string();
     decrypted_data.push_str(string_data.as_str());
   }

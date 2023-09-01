@@ -139,7 +139,7 @@ class NetworkHttp {
   }
 
   // Register with the server, provides uuid and key. Server returns the url and it's own key
-  Future<RegisterResponse> register(String addr) async {
+  Future<String> register(String addr) async {
     var keyPair = await NetworkSecurity.generateKeyPair();
     var uuid = await getUuid();
     if (uuid.isEmpty) {
@@ -156,28 +156,28 @@ class NetworkHttp {
         Uri.parse('http://$addr:$requestPort/requests/register'),
         body: jsonEncode(request.toJson()),
       );
+      var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+      String url = "${message.urlScheme}$addr${message.urlPath}";
 
       switch (response.statusCode) {
         case HttpStatus.ok: // Status OK
-          var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
           NetworkSecurity.setKeys(keyPair);
           NetworkSecurity.setServerKey(message.key);
           setState(NetworkHttpConnectionState.connected);
-          setConnectUrl(message.url);
+          setConnectUrl(url);
           NetworkAuth.login(addr, uuid);
-          return message;
+          return getConnectUrl();
 
         case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
-          var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
           // Check the network integrity
           switch (await getPulseIntegrity(addr)) {
             case true:
               // Pulse is good, integrity is good. Use existing settings (don't set keys)
               setState(NetworkHttpConnectionState.connected);
-              setConnectUrl(message.url);
+              setConnectUrl(url);
               NetworkAuth.login(addr, uuid);
               Logger().i("Already Registered, Keeping Settings");
-              return message;
+              return getConnectUrl();
             case false:
               // Pulse is bad, delete the existing uuid and start again
               Logger().w("Existing Register Unstable, Re-Registering...");
@@ -194,7 +194,7 @@ class NetworkHttp {
       }
     } catch (e) {
       setState(NetworkHttpConnectionState.disconnected);
-      return RegisterResponse(key: "", url: "");
+      return "";
     }
   }
 

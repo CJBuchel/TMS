@@ -22,4 +22,4 @@ EXPOSE 2122
 EXPOSE 5353
 EXPOSE 8080
 
-CMD [ "./docker-start.sh" ]
+ENTRYPOINT [ "./docker-start.sh" ]

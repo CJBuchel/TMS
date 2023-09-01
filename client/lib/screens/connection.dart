@@ -71,128 +71,125 @@ class ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-        appBar: TmsToolBar(displayActions: false),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // y axis
+      appBar: TmsToolBar(displayActions: false),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center, // y axis
+        children: <Widget>[
+          // Logo
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center, // x axis
+            crossAxisAlignment: CrossAxisAlignment.center, // y axis
             children: <Widget>[
-              // Logo
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center, // x axis
-                crossAxisAlignment: CrossAxisAlignment.center, // y axis
-                children: <Widget>[
-                  Image.asset(
-                    'assets/logos/TMS_LOGO.png',
-                    height: imageSize[0],
-                    width: imageSize[1],
-                  )
-                ],
-              ),
-              // Address input
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  // Auto configure
-                  SizedBox(
-                    width: buttonWidth,
-                    child: ListTile(
-                      title: Text(
-                        "Auto",
-                        style: TextStyle(color: Colors.white, fontSize: textSize),
-                      ),
-                      leading: Radio<bool>(
-                          value: true,
-                          groupValue: _autoConfigureNetwork,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              setState(() {
-                                _autoConfigureNetwork = value;
-                                Network.setAutoConfig(value);
-                              });
-                            }
-                          }),
-                    ),
-                  ),
-
-                  // Manual configure
-                  SizedBox(
-                    width: buttonWidth,
-                    child: ListTile(
-                      title: Text(
-                        "Manual",
-                        style: TextStyle(color: Colors.white, fontSize: textSize),
-                      ),
-                      leading: Radio<bool>(
-                          value: false,
-                          groupValue: _autoConfigureNetwork,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              setState(() {
-                                _autoConfigureNetwork = value;
-                                Network.setAutoConfig(value);
-                              });
-                            }
-                          }),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
-                      child: TextField(
-                        controller: _controller,
-                        decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Server Address',
-                            hintText: 'Enter the address of the server, e.g: `10.53.33.2`'),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Logger().i("Finding server");
-                            findServer();
-                          },
-                          icon: const Icon(Icons.search),
-                          label: Text(
-                            'Scan for Server',
-                            style: TextStyle(color: Colors.white, fontSize: textSize),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: buttonHeight,
-                        width: buttonWidth,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            connectToServer();
-                          },
-                          icon: const Icon(Icons.link),
-                          label: Text(
-                            'Connect',
-                            style: TextStyle(color: Colors.white, fontSize: textSize),
-                          ),
-                        ),
-                      )
-                    ],
-                  ))
+              Image.asset(
+                'assets/logos/TMS_LOGO.png',
+                height: imageSize[0],
+                width: imageSize[1],
+              )
             ],
           ),
-        ));
+          // Address input
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Auto configure
+              SizedBox(
+                width: buttonWidth,
+                child: ListTile(
+                  title: Text(
+                    "Auto",
+                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                  ),
+                  leading: Radio<bool>(
+                      value: true,
+                      groupValue: _autoConfigureNetwork,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _autoConfigureNetwork = value;
+                            Network.setAutoConfig(value);
+                          });
+                        }
+                      }),
+                ),
+              ),
+
+              // Manual configure
+              SizedBox(
+                width: buttonWidth,
+                child: ListTile(
+                  title: Text(
+                    "Manual",
+                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                  ),
+                  leading: Radio<bool>(
+                      value: false,
+                      groupValue: _autoConfigureNetwork,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _autoConfigureNetwork = value;
+                            Network.setAutoConfig(value);
+                          });
+                        }
+                      }),
+                ),
+              )
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 25),
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Server Address', hintText: 'Enter the address of the server, e.g: `10.53.33.2`'),
+                  ),
+                ),
+              )
+            ],
+          ),
+
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: buttonHeight,
+                    width: buttonWidth,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Logger().i("Finding server");
+                        findServer();
+                      },
+                      icon: const Icon(Icons.search),
+                      label: Text(
+                        'Scan for Server',
+                        style: TextStyle(color: Colors.white, fontSize: textSize),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: buttonHeight,
+                    width: buttonWidth,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        connectToServer();
+                      },
+                      icon: const Icon(Icons.link),
+                      label: Text(
+                        'Connect',
+                        style: TextStyle(color: Colors.white, fontSize: textSize),
+                      ),
+                    ),
+                  )
+                ],
+              ))
+        ],
+      ),
+    );
   }
 }

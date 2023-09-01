@@ -14,12 +14,42 @@ class Connection extends StatefulWidget {
 
 class ConnectionState extends State<Connection> {
   final TextEditingController _controller = TextEditingController();
-  String _serverVersion = "";
+  Text _serverVersionText = const Text("Server-N/A", style: TextStyle(color: Colors.red));
+  Text _clientVersionText = Text("Client-${dotenv.env['TMS_TAG']}", style: const TextStyle(color: Colors.green));
   bool _autoConfigureNetwork = true;
+
+  int versionToNumber(String version) {
+    var parts = version.split(".");
+    if (parts.length != 3) {
+      return 0;
+    }
+    var major = int.parse(parts[0]);
+    var minor = int.parse(parts[1]);
+    var patch = int.parse(parts[2]);
+    return major * 10000 + minor * 100 + patch;
+  }
+
+  void checkVersion() async {
+    Network.getServerVersion().then((value) {
+      setState(() {
+        if (versionToNumber(value) == versionToNumber("${dotenv.env['TMS_TAG']}")) {
+          _serverVersionText = Text("Server-$value", style: const TextStyle(color: Colors.green));
+          _clientVersionText = Text("Client-${dotenv.env['TMS_TAG']}", style: const TextStyle(color: Colors.green));
+        } else if (versionToNumber(value) < versionToNumber("${dotenv.env['TMS_TAG']}")) {
+          _serverVersionText = Text("Server-$value", style: const TextStyle(color: Colors.red));
+          _clientVersionText = Text("Client-${dotenv.env['TMS_TAG']}", style: const TextStyle(color: Colors.green));
+        } else if (versionToNumber(value) > versionToNumber("${dotenv.env['TMS_TAG']}")) {
+          _serverVersionText = Text("Server-$value", style: const TextStyle(color: Colors.green));
+          _clientVersionText = Text("Client-${dotenv.env['TMS_TAG']}", style: const TextStyle(color: Colors.red));
+        }
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+
     Network.getServerIP().then((value) {
       setState(() {
         _controller.text = value;
@@ -32,11 +62,13 @@ class ConnectionState extends State<Connection> {
       });
     });
 
-    Network.getServerVersion().then((value) {
-      setState(() {
-        _serverVersion = value.toString();
-      });
-    });
+    Network.serverVersion.addListener(checkVersion);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Network.serverVersion.removeListener(checkVersion);
   }
 
   void findServer() async {
@@ -200,9 +232,9 @@ class ConnectionState extends State<Connection> {
 
           Padding(
             padding: const EdgeInsets.only(bottom: 5),
-            child: Text(
-              "Build: [Client-${dotenv.env['TMS_TAG']},  Server-$_serverVersion]",
-              style: TextStyle(color: Colors.white, fontSize: textSize),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Text("Build: [ "), _clientVersionText, const Text(",  "), _serverVersionText, const Text(" ]")],
             ),
           ),
         ],

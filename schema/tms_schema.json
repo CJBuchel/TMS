@@ -393,7 +393,8 @@
       "required": [
         "key",
         "url_path",
-        "url_scheme"
+        "url_scheme",
+        "version"
       ],
       "properties": {
         "key": {
@@ -403,6 +404,9 @@
           "type": "string"
         },
         "url_scheme": {
+          "type": "string"
+        },
+        "version": {
           "type": "string"
         }
       }

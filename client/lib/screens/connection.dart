@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/responsive.dart';
@@ -13,6 +14,7 @@ class Connection extends StatefulWidget {
 
 class ConnectionState extends State<Connection> {
   final TextEditingController _controller = TextEditingController();
+  String _serverVersion = "";
   bool _autoConfigureNetwork = true;
 
   @override
@@ -27,6 +29,12 @@ class ConnectionState extends State<Connection> {
     Network.getAutoConfig().then((value) {
       setState(() {
         _autoConfigureNetwork = value;
+      });
+    });
+
+    Network.getServerVersion().then((value) {
+      setState(() {
+        _serverVersion = value.toString();
       });
     });
   }
@@ -152,42 +160,51 @@ class ConnectionState extends State<Connection> {
           ),
 
           Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: buttonHeight,
-                    width: buttonWidth,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Logger().i("Finding server");
-                        findServer();
-                      },
-                      icon: const Icon(Icons.search),
-                      label: Text(
-                        'Scan for Server',
-                        style: TextStyle(color: Colors.white, fontSize: textSize),
-                      ),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  height: buttonHeight,
+                  width: buttonWidth,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Logger().i("Finding server");
+                      findServer();
+                    },
+                    icon: const Icon(Icons.search),
+                    label: Text(
+                      'Scan for Server',
+                      style: TextStyle(color: Colors.white, fontSize: textSize),
                     ),
                   ),
-                  SizedBox(
-                    height: buttonHeight,
-                    width: buttonWidth,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        connectToServer();
-                      },
-                      icon: const Icon(Icons.link),
-                      label: Text(
-                        'Connect',
-                        style: TextStyle(color: Colors.white, fontSize: textSize),
-                      ),
+                ),
+                SizedBox(
+                  height: buttonHeight,
+                  width: buttonWidth,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      connectToServer();
+                    },
+                    icon: const Icon(Icons.link),
+                    label: Text(
+                      'Connect',
+                      style: TextStyle(color: Colors.white, fontSize: textSize),
                     ),
-                  )
-                ],
-              ))
+                  ),
+                )
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: Text(
+              "Build: [Client-${dotenv.env['TMS_TAG']},  Server-$_serverVersion]",
+              style: TextStyle(color: Colors.white, fontSize: textSize),
+            ),
+          ),
         ],
       ),
     );

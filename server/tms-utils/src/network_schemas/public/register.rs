@@ -13,4 +13,5 @@ pub struct RegisterResponse {
   pub key: String,
   pub url_scheme: String, // ws://
   pub url_path: String, // ws/<uuid>
+  pub version: String, // server version
 }

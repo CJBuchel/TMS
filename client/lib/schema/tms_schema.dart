@@ -357,22 +357,26 @@ class RegisterResponse {
         required this.key,
         required this.urlPath,
         required this.urlScheme,
+        required this.version,
     });
 
     String key;
     String urlPath;
     String urlScheme;
+    String version;
 
     factory RegisterResponse.fromJson(Map<String, dynamic> json) => RegisterResponse(
         key: json["key"],
         urlPath: json["url_path"],
         urlScheme: json["url_scheme"],
+        version: json["version"],
     );
 
     Map<String, dynamic> toJson() => {
         "key": key,
         "url_path": urlPath,
         "url_scheme": urlScheme,
+        "version": version,
     };
 }
 

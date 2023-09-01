@@ -9,6 +9,7 @@ import 'package:tms/constants.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
@@ -139,7 +140,7 @@ class NetworkHttp {
   }
 
   // Register with the server, provides uuid and key. Server returns the url and it's own key
-  Future<String> register(String addr) async {
+  Future<Tuple2<String, String>> register(String addr) async {
     var keyPair = await NetworkSecurity.generateKeyPair();
     var uuid = await getUuid();
     if (uuid.isEmpty) {
@@ -166,7 +167,7 @@ class NetworkHttp {
           setState(NetworkHttpConnectionState.connected);
           setConnectUrl(url);
           NetworkAuth.login(addr, uuid);
-          return getConnectUrl();
+          return Tuple2(url, message.version);
 
         case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
           // Check the network integrity
@@ -177,7 +178,7 @@ class NetworkHttp {
               setConnectUrl(url);
               NetworkAuth.login(addr, uuid);
               Logger().i("Already Registered, Keeping Settings");
-              return getConnectUrl();
+              return Tuple2(url, message.version);
             case false:
               // Pulse is bad, delete the existing uuid and start again
               Logger().w("Existing Register Unstable, Re-Registering...");
@@ -194,7 +195,7 @@ class NetworkHttp {
       }
     } catch (e) {
       setState(NetworkHttpConnectionState.disconnected);
-      return "";
+      return const Tuple2("", "");
     }
   }
 

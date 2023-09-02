@@ -63,16 +63,16 @@ class Network {
   static Future<String> getServerVersion() async {
     try {
       var version = await _localStorage.then((value) => value.getString(storeNtServerVersion));
-      if (version != null) {
+      if (version != null && version.isNotEmpty) {
         serverVersion.value = version;
         return version;
       } else {
         serverVersion.value = "";
-        return "";
+        return "N/A";
       }
     } catch (e) {
       serverVersion.value = "";
-      return "";
+      return "N/A";
     }
   }
 

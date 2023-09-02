@@ -62,6 +62,7 @@ class ConnectionState extends State<Connection> {
       });
     });
 
+    checkVersion();
     Network.serverVersion.addListener(checkVersion);
   }
 

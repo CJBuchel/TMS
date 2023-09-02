@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use ::log::info;
 use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}};
 
@@ -47,6 +49,11 @@ fn pulse_integrity_route(security: &State<Security>, clients: &State<TmsClients>
   TmsRespond!(Status::Ok, message, clients.inner(), uuid);
 }
 
+#[options("/<path..>")]
+fn cors_preflight(path: PathBuf) -> Status {
+  Status::NoContent
+}
+
 pub struct TmsHttpServer {
   tms_event_service: std::sync::Arc<std::sync::Mutex<TmsEventService>>,
   tms_db: std::sync::Arc<TmsDB>,
@@ -82,6 +89,10 @@ impl TmsHttpServer {
         publish_route,
         login_route,
         start_timer_route,
+
+
+        // preflight catcher
+        cors_preflight
       ]).attach(CORS)
   }
 }

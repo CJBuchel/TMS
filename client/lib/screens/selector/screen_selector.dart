@@ -12,6 +12,16 @@ class ScreenSelector extends StatefulWidget {
   _ScreenSelectorState createState() => _ScreenSelectorState();
 }
 
+/**
+ * Pastel colors
+ * 0xff8E97FD blue/purple
+ * 0xffFFC97E yellow
+ * 0xffFA6E5A red
+ * 0xff6CB28E green
+ * 0xff3B3A55 dark blue
+ */
+///
+
 class _ScreenSelectorState extends State<ScreenSelector> {
   User _user = User(password: "", permissions: Permissions(admin: false), username: "");
 
@@ -48,24 +58,28 @@ class _ScreenSelectorState extends State<ScreenSelector> {
           ),
         ),
 
-        // First Set of cards
+        // Admin Setup Cards
         IntrinsicHeight(
-          child: Row(children: [
-            // Scoreboard card
-            Flexible(
-              flex: 1,
-              child: ScreenCard(
-                type: "SETUP",
-                title: "Setup",
-                color: const Color(0xffEDB4D0),
-                textColor: const Color(0xff3F414E),
-                image: const Image(
-                  image: AssetImage('assets/images/FIRST_LOGO.png'),
+          child: Row(
+            children: [
+              // Scoreboard card
+              Flexible(
+                flex: 1,
+                child: ScreenCard(
+                  type: "SETUP",
+                  title: "Setup",
+                  color: const Color(0xffFA6E5A),
+                  textColor: const Color(0xff3F414E),
+                  image: const Image(
+                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+                  ),
+                  onPress: () {
+                    Navigator.pushNamed(context, '/admin/setup');
+                  },
                 ),
-                onPress: () {},
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
       ];
     }

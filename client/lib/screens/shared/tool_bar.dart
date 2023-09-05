@@ -22,6 +22,7 @@ class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
 
 class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMixin {
   Icon connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
+  Icon themeIcon = const Icon(Icons.light_mode, color: Colors.white);
   Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
 
   late AnimationController _animationController;
@@ -204,6 +205,18 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     }
   }
 
+  void toggleTheme() {
+    if (isDarkTheme.value) {
+      setState(() {
+        themeIcon = const Icon(Icons.light_mode, color: Colors.white);
+      });
+    } else {
+      setState(() {
+        themeIcon = const Icon(Icons.brightness_3_sharp, color: Colors.white);
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -212,6 +225,8 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
     // animation controller
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500))..repeat();
+
+    isDarkTheme.addListener(toggleTheme);
 
     NetworkHttp.httpState.addListener(checkConnection);
     NetworkWebSocket.wsState.addListener(checkConnection);
@@ -228,6 +243,8 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
   void dispose() {
     _animationController.dispose();
     super.dispose();
+
+    isDarkTheme.removeListener(toggleTheme);
 
     NetworkHttp.httpState.removeListener(checkConnection);
     NetworkWebSocket.wsState.removeListener(checkConnection);
@@ -247,6 +264,10 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     if (widget.displayActions) {
       return [
         IconButton(
+          onPressed: () => isDarkTheme.value = !isDarkTheme.value,
+          icon: themeIcon,
+        ),
+        IconButton(
           onPressed: () => pushTo(context, "/server_connection"),
           icon: connectionIcon,
         ),
@@ -256,7 +277,12 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         ),
       ];
     } else {
-      return [];
+      return [
+        IconButton(
+          onPressed: () => isDarkTheme.value = !isDarkTheme.value,
+          icon: themeIcon,
+        ),
+      ];
     }
   }
 

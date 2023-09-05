@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 
 class Responsive extends StatelessWidget {
   final Widget mobile;
@@ -18,6 +19,52 @@ class Responsive extends StatelessWidget {
   static bool isTablet(BuildContext context) => MediaQuery.of(context).size.width < 1100 && MediaQuery.of(context).size.width >= 850;
 
   static bool isDesktop(BuildContext context) => MediaQuery.of(context).size.width >= 1100;
+
+  static double fontSize(BuildContext context, double scale) {
+    double fontSize = 25;
+    if (isTablet(context)) {
+      fontSize = 24;
+    } else if (isMobile(context)) {
+      fontSize = 18;
+    }
+
+    return fontSize * (scale <= 0 ? 1 : scale);
+  }
+
+  static double buttonWidth(BuildContext context, double scale) {
+    double buttonWidth = 250;
+    if (isTablet(context)) {
+      buttonWidth = 200;
+    } else if (isMobile(context)) {
+      buttonWidth = 150;
+    }
+
+    return buttonWidth * (scale <= 0 ? 1 : scale);
+  }
+
+  static double buttonHeight(BuildContext context, double scale) {
+    double buttonHeight = 50;
+    if (isMobile(context)) {
+      buttonHeight = 40;
+    }
+
+    return buttonHeight * (scale <= 0 ? 1 : scale);
+  }
+
+  // image size Tuple2(hight,width)
+  static Tuple2<double, double> imageSize(BuildContext context, double scale) {
+    double height = 300;
+    double width = 500;
+    if (isTablet(context)) {
+      height = 150;
+      width = 300;
+    } else if (isMobile(context)) {
+      height = 100;
+      width = 250;
+    }
+
+    return Tuple2<double, double>(height * (scale <= 0 ? 1 : scale), width * (scale <= 0 ? 1 : scale));
+  }
 
   @override
   Widget build(BuildContext context) {

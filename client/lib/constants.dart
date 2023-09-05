@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-ValueNotifier<bool> isDarkTheme = ValueNotifier<bool>(true);
+// ValueNotifier<bool> isDarkTheme = ValueNotifier<bool>(true);
 
 // Style constants (dark)
 const primaryColorDark = Color(0xFF2697FF);
@@ -14,12 +15,28 @@ const secondaryColorLight = Color(0xFF2A2D3E);
 const bgColorLight = Color(0xFFFFFFFF);
 const bgSecondaryColorLight = Color(0xFFEEEEEE);
 
-Color get primaryColor => isDarkTheme.value ? primaryColorDark : primaryColorLight;
-Color get secondaryColor => isDarkTheme.value ? secondaryColorDark : secondaryColorLight;
-Color get bgColor => isDarkTheme.value ? bgColorDark : bgColorLight;
-Color get bgSecondaryColor => isDarkTheme.value ? bgSecondaryColorDark : bgSecondaryColorLight;
-Color get textColor => isDarkTheme.value ? Colors.white : Colors.black;
-Brightness get brightness => isDarkTheme.value ? Brightness.dark : Brightness.light;
+class AppTheme {
+  static final ValueNotifier<bool> isDarkThemeNotifier = ValueNotifier<bool>(true);
+  static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  static bool get isDarkTheme {
+    _localStorage.then((value) {
+      isDarkThemeNotifier.value = value.getBool(storeDarkTheme) ?? true;
+    });
+    return isDarkThemeNotifier.value;
+  }
+
+  static set setDarkTheme(bool dark) {
+    _localStorage.then((value) => value.setBool(storeDarkTheme, dark));
+    isDarkThemeNotifier.value = dark;
+  }
+}
+
+Color get primaryColor => AppTheme.isDarkThemeNotifier.value ? primaryColorDark : primaryColorLight;
+Color get secondaryColor => AppTheme.isDarkThemeNotifier.value ? secondaryColorDark : secondaryColorLight;
+Color get bgColor => AppTheme.isDarkThemeNotifier.value ? bgColorDark : bgColorLight;
+Color get bgSecondaryColor => AppTheme.isDarkThemeNotifier.value ? bgSecondaryColorDark : bgSecondaryColorLight;
+Color get textColor => AppTheme.isDarkThemeNotifier.value ? Colors.white : Colors.black;
+Brightness get brightness => AppTheme.isDarkThemeNotifier.value ? Brightness.dark : Brightness.light;
 
 const defaultPadding = 16.0;
 const defaultFontFamily = "MontserratLight";
@@ -48,3 +65,4 @@ const storeNtPrivateKey = "ntPrivateKey";
 const storeNtServerKey = "ntServerKey";
 const storeNtAutoConfigure = "ntAutoConf";
 const storeNtAuthUser = "ntAuthUser";
+const storeDarkTheme = "isDarkTheme";

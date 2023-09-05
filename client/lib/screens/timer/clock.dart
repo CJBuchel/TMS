@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/responsive.dart';
 
@@ -45,7 +46,6 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin {
         parseTime(_time.toDouble()),
         style: const TextStyle(
           fontSize: 300,
-          color: Colors.white,
           fontFamily: "Radioland",
         ),
       );
@@ -54,7 +54,6 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin {
         parseTime(_time.toDouble()),
         style: const TextStyle(
           fontSize: 200,
-          color: Colors.white,
           fontFamily: "Radioland",
         ),
       );
@@ -63,7 +62,6 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin {
         parseTime(_time.toDouble()),
         style: const TextStyle(
           fontSize: 80,
-          color: Colors.white,
           fontFamily: "Radioland",
         ),
       );

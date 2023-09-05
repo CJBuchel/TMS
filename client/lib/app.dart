@@ -13,30 +13,40 @@ class TMSApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: true,
-      title: 'TMS Client',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: bgColor,
-        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(bodyColor: Colors.white, fontFamily: defaultFontFamily),
-        canvasColor: secondaryColor,
-      ),
+    return ValueListenableBuilder<bool>(
+      valueListenable: isDarkTheme,
+      builder: (context, darkThemeSelected, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: true,
+          title: 'TMS Client',
+          theme: ThemeData(
+            brightness: brightness,
+            primaryColor: primaryColor,
+            scaffoldBackgroundColor: bgColor,
+            textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(
+              bodyColor: textColor,
+              fontFamily: defaultFontFamily,
+            ),
+            canvasColor: bgSecondaryColor,
+            // visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
 
-      // Main Router
+          // Main Router
+          routes: {
+            '/': (context) => const ScreenSelector(),
 
-      routes: {
-        '/': (context) => const ScreenSelector(),
+            // Utility screens
+            '/server_connection': (context) => const Connection(),
+            '/login': (context) => Login(),
+            '/logout': (context) => const Logout(),
 
-        // Utility screens
-        '/server_connection': (context) => const Connection(),
-        '/login': (context) => Login(),
-        '/logout': (context) => const Logout(),
+            // basic screens
+            '/timer': (context) => const Timer(),
 
-        // basic screens
-        '/timer': (context) => const Timer(),
-
-        // admin screens
-        '/admin/setup': (context) => const Setup(),
+            // admin screens
+            '/admin/setup': (context) => const Setup(),
+          },
+        );
       },
     );
   }

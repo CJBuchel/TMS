@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
 
-// Style constants
-const primaryColor = Color(0xFF2697FF);
-const secondaryColor = Color(0xFF2A2D3E);
-const bgColor = Color(0xFF212332);
+ValueNotifier<bool> isDarkTheme = ValueNotifier<bool>(true);
+
+// Style constants (dark)
+const primaryColorDark = Color(0xFF2697FF);
+const secondaryColorDark = Color(0xFF2A2D3E);
+const bgColorDark = Color(0xFF212332);
+const bgSecondaryColorDark = Color(0xFF2A2D3E);
+
+// Style constants (light)
+const primaryColorLight = Color(0xFF2697FF);
+const secondaryColorLight = Color(0xFF2A2D3E);
+const bgColorLight = Color(0xFFFFFFFF);
+const bgSecondaryColorLight = Color(0xFFEEEEEE);
+
+Color get primaryColor => isDarkTheme.value ? primaryColorDark : primaryColorLight;
+Color get secondaryColor => isDarkTheme.value ? secondaryColorDark : secondaryColorLight;
+Color get bgColor => isDarkTheme.value ? bgColorDark : bgColorLight;
+Color get bgSecondaryColor => isDarkTheme.value ? bgSecondaryColorDark : bgSecondaryColorLight;
+Color get textColor => isDarkTheme.value ? Colors.white : Colors.black;
+Brightness get brightness => isDarkTheme.value ? Brightness.dark : Brightness.light;
 
 const defaultPadding = 16.0;
 const defaultFontFamily = "MontserratLight";

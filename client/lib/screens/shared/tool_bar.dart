@@ -161,9 +161,10 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     if (httpState == NetworkHttpConnectionState.connected && wsState == NetworkWebSocketState.connected && secState == SecurityState.secure) {
       setState(() {
         connectionIcon = const Icon(Icons.wifi, color: Colors.green);
+
         titleBar = [
           const Text(
-            "THIS IS A LONG TITLE",
+            "THIS IS A LONG TITLE", // 20 characters (MAX)
           )
         ];
       });
@@ -206,7 +207,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
   }
 
   void toggleTheme() {
-    if (isDarkTheme.value) {
+    if (AppTheme.isDarkTheme) {
       setState(() {
         themeIcon = const Icon(Icons.light_mode, color: Colors.white);
       });
@@ -226,7 +227,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     // animation controller
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500))..repeat();
 
-    isDarkTheme.addListener(toggleTheme);
+    AppTheme.isDarkThemeNotifier.addListener(toggleTheme);
 
     NetworkHttp.httpState.addListener(checkConnection);
     NetworkWebSocket.wsState.addListener(checkConnection);
@@ -244,7 +245,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     _animationController.dispose();
     super.dispose();
 
-    isDarkTheme.removeListener(toggleTheme);
+    AppTheme.isDarkThemeNotifier.removeListener(toggleTheme);
 
     NetworkHttp.httpState.removeListener(checkConnection);
     NetworkWebSocket.wsState.removeListener(checkConnection);
@@ -261,39 +262,80 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
   }
 
   List<Widget> getActions() {
-    if (widget.displayActions) {
-      return [
-        IconButton(
-          onPressed: () => isDarkTheme.value = !isDarkTheme.value,
-          icon: themeIcon,
-        ),
-        IconButton(
-          onPressed: () => pushTo(context, "/server_connection"),
-          icon: connectionIcon,
-        ),
-        IconButton(
-          onPressed: () => pushTo(context, loginScreen),
-          icon: loginIcon,
-        ),
-      ];
+    if (!Responsive.isMobile(context)) {
+      if (widget.displayActions) {
+        return [
+          IconButton(
+            onPressed: () => AppTheme.setDarkTheme = !AppTheme.isDarkTheme,
+            icon: themeIcon,
+          ),
+          IconButton(
+            onPressed: () => pushTo(context, "/server_connection"),
+            icon: connectionIcon,
+          ),
+          IconButton(
+            onPressed: () => pushTo(context, loginScreen),
+            icon: loginIcon,
+          ),
+        ];
+      } else {
+        return [
+          IconButton(
+            onPressed: () => AppTheme.setDarkTheme = !AppTheme.isDarkTheme,
+            icon: themeIcon,
+          ),
+        ];
+      }
     } else {
-      return [
-        IconButton(
-          onPressed: () => isDarkTheme.value = !isDarkTheme.value,
-          icon: themeIcon,
-        ),
-      ];
+      if (widget.displayActions) {
+        return [
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.light_mode),
+                  title: const Text("Theme"),
+                  onTap: () => AppTheme.setDarkTheme = !AppTheme.isDarkTheme,
+                ),
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: connectionIcon,
+                  title: const Text("Server Connection"),
+                  onTap: () => pushTo(context, "/server_connection"),
+                ),
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: loginIcon,
+                  title: const Text("Login/Logout"),
+                  onTap: () => pushTo(context, loginScreen),
+                ),
+              ),
+            ],
+          )
+        ];
+      } else {
+        return [
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.light_mode),
+                  title: const Text("Theme"),
+                  onTap: () => AppTheme.setDarkTheme = !AppTheme.isDarkTheme,
+                ),
+              ),
+            ],
+          )
+        ];
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = 25;
-    if (Responsive.isTablet(context)) {
-      fontSize = 24;
-    } else if (Responsive.isMobile(context)) {
-      fontSize = 18;
-    }
+    double fontSize = Responsive.fontSize(context, 1.0);
 
     return AppBar(
       titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),

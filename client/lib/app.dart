@@ -13,11 +13,12 @@ class TMSApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppTheme.isDarkTheme; // trigger getter for local storage
     return ValueListenableBuilder<bool>(
-      valueListenable: isDarkTheme,
+      valueListenable: AppTheme.isDarkThemeNotifier,
       builder: (context, darkThemeSelected, _) {
         return MaterialApp(
-          debugShowCheckedModeBanner: true,
+          debugShowCheckedModeBanner: false,
           title: 'TMS Client',
           theme: ThemeData(
             brightness: brightness,

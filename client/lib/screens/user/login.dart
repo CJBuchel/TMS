@@ -32,18 +32,6 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var imageSize = <double>[300, 500];
-    double buttonWidth = 250;
-    double buttonHeight = 50;
-    if (Responsive.isTablet(context)) {
-      imageSize = [150, 300];
-      buttonWidth = 200;
-    } else if (Responsive.isMobile(context)) {
-      imageSize = [100, 250];
-      buttonWidth = 150;
-      buttonHeight = 40;
-    }
-
     return Scaffold(
       appBar: TmsToolBar(displayActions: false),
       body: Column(
@@ -56,8 +44,8 @@ class Login extends StatelessWidget {
             children: <Widget>[
               Image.asset(
                 'assets/logos/TMS_LOGO.png',
-                height: imageSize[0],
-                width: imageSize[1],
+                height: Responsive.imageSize(context, 1).item1,
+                width: Responsive.imageSize(context, 1).item2,
               ),
             ],
           ),
@@ -67,7 +55,7 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                width: imageSize[1],
+                width: Responsive.imageSize(context, 1).item2,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
                   child: TextField(
@@ -88,7 +76,7 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                width: imageSize[1],
+                width: Responsive.imageSize(context, 1).item2,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
                   child: TextField(
@@ -110,8 +98,8 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                width: buttonWidth,
-                height: buttonHeight,
+                width: Responsive.buttonWidth(context, 1),
+                height: Responsive.buttonHeight(context, 1),
                 child: ElevatedButton.icon(
                   onPressed: () => loginController(context),
                   icon: const Icon(Icons.login),

@@ -49,8 +49,8 @@ fn pulse_integrity_route(security: &State<Security>, clients: &State<TmsClients>
   TmsRespond!(Status::Ok, message, clients.inner(), uuid);
 }
 
-#[options("/<path..>")]
-fn cors_preflight(path: PathBuf) -> Status {
+#[options("/<_path..>")]
+fn cors_preflight(_path: PathBuf) -> Status {
   Status::NoContent
 }
 

@@ -138,7 +138,7 @@ class ConnectionState extends State<Connection> {
                 child: ListTile(
                   title: Text(
                     "Auto",
-                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                    style: TextStyle(fontSize: textSize),
                   ),
                   leading: Radio<bool>(
                       value: true,
@@ -160,7 +160,7 @@ class ConnectionState extends State<Connection> {
                 child: ListTile(
                   title: Text(
                     "Manual",
-                    style: TextStyle(color: Colors.white, fontSize: textSize),
+                    style: TextStyle(fontSize: textSize),
                   ),
                   leading: Radio<bool>(
                       value: false,

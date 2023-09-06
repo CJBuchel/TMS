@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:flutter/services.dart';
+import 'package:tms/requests/setup_requests.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/admin/setup/parse_schedule.dart';
 import 'package:tms/screens/shared/list_util.dart';
+import 'package:tuple/tuple.dart';
 
 class OfflineSetup extends StatefulWidget {
   const OfflineSetup({Key? key}) : super(key: key);
@@ -14,8 +19,10 @@ class OfflineSetup extends StatefulWidget {
 
 class _OfflineSetupState extends State<OfflineSetup> {
   FilePickerResult? _selectedSchedule;
+  SetupRequest? _setupRequest;
   final TextEditingController _adminPasswordController = TextEditingController();
   final TextEditingController _eventNameController = TextEditingController();
+  final TextEditingController _timerCountdownController = TextEditingController();
 
   final List<String> _dropDownSeasons = [
     "2023",
@@ -63,6 +70,26 @@ class _OfflineSetupState extends State<OfflineSetup> {
     );
   }
 
+  Future<bool?> showParseError(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: const [
+              Icon(Icons.warning, color: Colors.orange),
+              Text(
+                "Error Parsing Schedule",
+                style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          content: const Text("The CSV file you have selected is not valid."),
+        );
+      },
+    );
+  }
+
   void onClear() {
     _adminPasswordController.clear();
     _eventNameController.clear();
@@ -72,7 +99,41 @@ class _OfflineSetupState extends State<OfflineSetup> {
     });
   }
 
-  void onSubmit() {}
+  void onSubmit(BuildContext context) async {
+    Event event = Event(
+      eventRounds: _setupRequest!.event.eventRounds,
+      name: _eventNameController.text,
+      onlineLink: _setupRequest!.event.onlineLink,
+      pods: _setupRequest!.event.pods,
+      season: _selectedSeason!,
+      tables: _setupRequest!.event.tables,
+      timerLength: int.parse(_timerCountdownController.text),
+    );
+
+    SetupRequest request = SetupRequest(
+      authToken: "", // handled by setupRequester
+      adminPassword: _adminPasswordController.text,
+      event: event,
+      judgingSessions: _setupRequest!.judgingSessions,
+      matches: _setupRequest!.matches,
+      teams: _setupRequest!.teams,
+      users: _setupRequest!.users,
+    );
+
+    setupRequest(request).then((res) {
+      if (res != HttpStatus.ok) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text("Setup Error"),
+            content: SingleChildScrollView(
+              child: Text(res == HttpStatus.unauthorized ? "Invalid Authorization" : "Server Error"),
+            ),
+          ),
+        );
+      }
+    });
+  }
 
   void onPurge() async {
     final shouldPurge = await showConfirmPurge(context);
@@ -85,6 +146,7 @@ class _OfflineSetupState extends State<OfflineSetup> {
   void initState() {
     super.initState();
     _selectedSeason = _dropDownSeasons[0];
+    _timerCountdownController.value = const TextEditingValue(text: "150");
   }
 
   Widget importCSV() {
@@ -107,17 +169,24 @@ class _OfflineSetupState extends State<OfflineSetup> {
             height: Responsive.buttonHeight(context, 1),
             width: Responsive.buttonWidth(context, 1),
             child: ElevatedButton.icon(
-              onPressed: () async {
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
+              onPressed: () {
+                FilePicker.platform.pickFiles(
                   type: FileType.custom,
                   allowedExtensions: ['csv', 'txt'],
-                );
-                if (result != null) {
-                  parseSchedule(result);
-                  setState(() {
-                    _selectedSchedule = result;
-                  });
-                }
+                ).then((result) {
+                  if (result != null) {
+                    // parse the schedule, if it's not valid, pop up dialog
+                    Tuple2<bool, SetupRequest?> parsed = parseSchedule(result);
+                    if (parsed.item1) {
+                      setState(() {
+                        _selectedSchedule = result;
+                        _setupRequest = parsed.item2;
+                      });
+                    } else {
+                      showParseError(context);
+                    }
+                  }
+                });
               },
               icon: const Icon(Icons.upload_file),
               label: const Text("Import CSV"),
@@ -217,6 +286,19 @@ class _OfflineSetupState extends State<OfflineSetup> {
               ),
             ),
 
+            Padding(
+                padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+                child: TextField(
+                  controller: _timerCountdownController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Timer Countdown',
+                    hintText: 'Enter Timer Countdown: e.g `150`',
+                  ),
+                )),
+
             // Purge
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
@@ -269,7 +351,7 @@ class _OfflineSetupState extends State<OfflineSetup> {
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
                         ),
-                        onPressed: onSubmit,
+                        onPressed: () => onSubmit(context),
                         icon: const Icon(Icons.send, color: Colors.white),
                         label: const Text(
                           "Submit",

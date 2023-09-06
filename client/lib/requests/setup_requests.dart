@@ -3,10 +3,10 @@ import 'package:tms/network/auth.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/schema/tms_schema.dart';
 
-Future<int> timerStartRequest() async {
+Future<int> setupRequest(SetupRequest request) async {
   try {
-    var message = StartTimerRequest(authToken: await NetworkAuth.getToken());
-    var res = await Network.serverPost("timer/start", message.toJson());
+    request.authToken = await NetworkAuth.getToken();
+    var res = await Network.serverPost("setup", request.toJson());
 
     if (res.item1) {
       return res.item2;

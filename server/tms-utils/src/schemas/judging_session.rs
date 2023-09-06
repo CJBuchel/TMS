@@ -6,7 +6,7 @@ pub struct JudgingSession {
   session: String,
   start_time: String,
   end_time: String,
-  room: String,
+  pod: String,
   team_number: String,
   complete: bool,
   deferred: bool,

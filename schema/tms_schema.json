@@ -9,8 +9,10 @@
     "judging_session",
     "login_request",
     "login_response",
+    "purge_request",
     "register_request",
     "register_response",
+    "setup_request",
     "socket_event",
     "start_timer_request",
     "team",
@@ -35,11 +37,17 @@
     "login_response": {
       "$ref": "#/definitions/LoginResponse"
     },
+    "purge_request": {
+      "$ref": "#/definitions/PurgeRequest"
+    },
     "register_request": {
       "$ref": "#/definitions/RegisterRequest"
     },
     "register_response": {
       "$ref": "#/definitions/RegisterResponse"
+    },
+    "setup_request": {
+      "$ref": "#/definitions/SetupRequest"
     },
     "socket_event": {
       "$ref": "#/definitions/SocketMessage"
@@ -238,7 +246,7 @@
         "custom_session",
         "deferred",
         "end_time",
-        "room",
+        "pod",
         "session",
         "start_time",
         "team_number"
@@ -256,7 +264,7 @@
         "end_time": {
           "type": "string"
         },
-        "room": {
+        "pod": {
           "type": "string"
         },
         "session": {
@@ -373,6 +381,17 @@
         }
       }
     },
+    "PurgeRequest": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
     "RegisterRequest": {
       "type": "object",
       "required": [
@@ -408,6 +427,53 @@
         },
         "version": {
           "type": "string"
+        }
+      }
+    },
+    "SetupRequest": {
+      "type": "object",
+      "required": [
+        "admin_password",
+        "auth_token",
+        "event",
+        "judging_sessions",
+        "matches",
+        "teams",
+        "users"
+      ],
+      "properties": {
+        "admin_password": {
+          "type": "string"
+        },
+        "auth_token": {
+          "type": "string"
+        },
+        "event": {
+          "$ref": "#/definitions/Event"
+        },
+        "judging_sessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgingSession"
+          }
+        },
+        "matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GameMatch"
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Team"
+          }
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
         }
       }
     },

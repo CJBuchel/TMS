@@ -16,8 +16,10 @@ class TmsSchema {
         required this.judgingSession,
         required this.loginRequest,
         required this.loginResponse,
+        required this.purgeRequest,
         required this.registerRequest,
         required this.registerResponse,
+        required this.setupRequest,
         required this.socketEvent,
         required this.startTimerRequest,
         required this.team,
@@ -30,8 +32,10 @@ class TmsSchema {
     JudgingSession judgingSession;
     LoginRequest loginRequest;
     LoginResponse loginResponse;
+    PurgeRequest purgeRequest;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
+    SetupRequest setupRequest;
     SocketMessage socketEvent;
     StartTimerRequest startTimerRequest;
     Team team;
@@ -44,8 +48,10 @@ class TmsSchema {
         judgingSession: JudgingSession.fromJson(json["judging_session"]),
         loginRequest: LoginRequest.fromJson(json["login_request"]),
         loginResponse: LoginResponse.fromJson(json["login_response"]),
+        purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
         registerResponse: RegisterResponse.fromJson(json["register_response"]),
+        setupRequest: SetupRequest.fromJson(json["setup_request"]),
         socketEvent: SocketMessage.fromJson(json["socket_event"]),
         startTimerRequest: StartTimerRequest.fromJson(json["start_timer_request"]),
         team: Team.fromJson(json["team"]),
@@ -59,8 +65,10 @@ class TmsSchema {
         "judging_session": judgingSession.toJson(),
         "login_request": loginRequest.toJson(),
         "login_response": loginResponse.toJson(),
+        "purge_request": purgeRequest.toJson(),
         "register_request": registerRequest.toJson(),
         "register_response": registerResponse.toJson(),
+        "setup_request": setupRequest.toJson(),
         "socket_event": socketEvent.toJson(),
         "start_timer_request": startTimerRequest.toJson(),
         "team": team.toJson(),
@@ -222,7 +230,7 @@ class JudgingSession {
         required this.customSession,
         required this.judgingSessionDeferred,
         required this.endTime,
-        required this.room,
+        required this.pod,
         required this.session,
         required this.startTime,
         required this.teamNumber,
@@ -232,7 +240,7 @@ class JudgingSession {
     bool customSession;
     bool judgingSessionDeferred;
     String endTime;
-    String room;
+    String pod;
     String session;
     String startTime;
     String teamNumber;
@@ -242,7 +250,7 @@ class JudgingSession {
         customSession: json["custom_session"],
         judgingSessionDeferred: json["deferred"],
         endTime: json["end_time"],
-        room: json["room"],
+        pod: json["pod"],
         session: json["session"],
         startTime: json["start_time"],
         teamNumber: json["team_number"],
@@ -253,7 +261,7 @@ class JudgingSession {
         "custom_session": customSession,
         "deferred": judgingSessionDeferred,
         "end_time": endTime,
-        "room": room,
+        "pod": pod,
         "session": session,
         "start_time": startTime,
         "team_number": teamNumber,
@@ -332,6 +340,22 @@ class Permissions {
     };
 }
 
+class PurgeRequest {
+    PurgeRequest({
+        required this.authToken,
+    });
+
+    String authToken;
+
+    factory PurgeRequest.fromJson(Map<String, dynamic> json) => PurgeRequest(
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+    };
+}
+
 class RegisterRequest {
     RegisterRequest({
         required this.key,
@@ -380,47 +404,43 @@ class RegisterResponse {
     };
 }
 
-class SocketMessage {
-    SocketMessage({
-        this.fromId,
-        this.message,
-        this.subTopic,
-        required this.topic,
-    });
-
-    String? fromId;
-    String? message;
-    String? subTopic;
-    String topic;
-
-    factory SocketMessage.fromJson(Map<String, dynamic> json) => SocketMessage(
-        fromId: json["from_id"],
-        message: json["message"],
-        subTopic: json["sub_topic"],
-        topic: json["topic"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "from_id": fromId,
-        "message": message,
-        "sub_topic": subTopic,
-        "topic": topic,
-    };
-}
-
-class StartTimerRequest {
-    StartTimerRequest({
+class SetupRequest {
+    SetupRequest({
+        required this.adminPassword,
         required this.authToken,
+        required this.event,
+        required this.judgingSessions,
+        required this.matches,
+        required this.teams,
+        required this.users,
     });
 
+    String adminPassword;
     String authToken;
+    Event event;
+    List<JudgingSession> judgingSessions;
+    List<GameMatch> matches;
+    List<Team> teams;
+    List<User> users;
 
-    factory StartTimerRequest.fromJson(Map<String, dynamic> json) => StartTimerRequest(
+    factory SetupRequest.fromJson(Map<String, dynamic> json) => SetupRequest(
+        adminPassword: json["admin_password"],
         authToken: json["auth_token"],
+        event: Event.fromJson(json["event"]),
+        judgingSessions: List<JudgingSession>.from(json["judging_sessions"].map((x) => JudgingSession.fromJson(x))),
+        matches: List<GameMatch>.from(json["matches"].map((x) => GameMatch.fromJson(x))),
+        teams: List<Team>.from(json["teams"].map((x) => Team.fromJson(x))),
+        users: List<User>.from(json["users"].map((x) => User.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
+        "admin_password": adminPassword,
         "auth_token": authToken,
+        "event": event.toJson(),
+        "judging_sessions": List<dynamic>.from(judgingSessions.map((x) => x.toJson())),
+        "matches": List<dynamic>.from(matches.map((x) => x.toJson())),
+        "teams": List<dynamic>.from(teams.map((x) => x.toJson())),
+        "users": List<dynamic>.from(users.map((x) => x.toJson())),
     };
 }
 
@@ -581,5 +601,49 @@ class User {
         "password": password,
         "permissions": permissions.toJson(),
         "username": username,
+    };
+}
+
+class SocketMessage {
+    SocketMessage({
+        this.fromId,
+        this.message,
+        this.subTopic,
+        required this.topic,
+    });
+
+    String? fromId;
+    String? message;
+    String? subTopic;
+    String topic;
+
+    factory SocketMessage.fromJson(Map<String, dynamic> json) => SocketMessage(
+        fromId: json["from_id"],
+        message: json["message"],
+        subTopic: json["sub_topic"],
+        topic: json["topic"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "from_id": fromId,
+        "message": message,
+        "sub_topic": subTopic,
+        "topic": topic,
+    };
+}
+
+class StartTimerRequest {
+    StartTimerRequest({
+        required this.authToken,
+    });
+
+    String authToken;
+
+    factory StartTimerRequest.fromJson(Map<String, dynamic> json) => StartTimerRequest(
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
     };
 }

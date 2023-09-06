@@ -15,6 +15,9 @@ use user_routes::*;
 mod timer_routes;
 use timer_routes::*;
 
+mod setup_routes;
+use setup_routes::*;
+
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage};
 
 use crate::{db::db::TmsDB, event_service::TmsEventService};

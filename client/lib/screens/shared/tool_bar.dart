@@ -206,7 +206,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     }
   }
 
-  void toggleTheme() {
+  void checkTheme() {
     if (AppTheme.isDarkTheme) {
       setState(() {
         themeIcon = const Icon(Icons.light_mode, color: Colors.white);
@@ -223,11 +223,12 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     super.initState();
     checkConnection();
     checkLogin();
+    checkTheme();
 
     // animation controller
     _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500))..repeat();
 
-    AppTheme.isDarkThemeNotifier.addListener(toggleTheme);
+    AppTheme.isDarkThemeNotifier.addListener(checkTheme);
 
     NetworkHttp.httpState.addListener(checkConnection);
     NetworkWebSocket.wsState.addListener(checkConnection);
@@ -245,7 +246,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     _animationController.dispose();
     super.dispose();
 
-    AppTheme.isDarkThemeNotifier.removeListener(toggleTheme);
+    AppTheme.isDarkThemeNotifier.removeListener(checkTheme);
 
     NetworkHttp.httpState.removeListener(checkConnection);
     NetworkWebSocket.wsState.removeListener(checkConnection);

@@ -3,19 +3,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct OnTable {
-  table: String,
-  team_number: String,
-  score_submitted: bool
+  pub table: String,
+  pub team_number: String,
+  pub score_submitted: bool
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct GameMatch {
-  match_number: String,
-  start_time: String,
-  end_time: String,
-  on_table_first: OnTable,
-  on_table_second: OnTable,
-  complete: bool,
-  deferred: bool,
-  custom_match: bool
+  pub match_number: String,
+  pub start_time: String,
+  pub end_time: String,
+  pub on_table_first: OnTable,
+  pub on_table_second: OnTable,
+  pub complete: bool,
+  pub deferred: bool,
+  pub custom_match: bool
 }

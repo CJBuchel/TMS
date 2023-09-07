@@ -1,7 +1,6 @@
 use schemars::JsonSchema;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use crate::schemas::{Event, GameMatch, JudgingSession, User, Team};
-
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct SetupRequest {
@@ -16,5 +15,5 @@ pub struct SetupRequest {
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct PurgeRequest {
-  auth_token: String,
+  pub auth_token: String,
 }

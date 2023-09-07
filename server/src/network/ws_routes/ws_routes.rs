@@ -1,6 +1,6 @@
 use futures::{FutureExt, StreamExt};
 use log::{error, warn};
-use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send, network_schemas::SocketMessage};
+use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send, network_schemas::SocketMessage, with_clients_write};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::{ws::Message, Reply, ws::WebSocket};
 use tokio::sync::mpsc;
@@ -34,7 +34,9 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
 
   let shared_clients = clients.clone();
   client.ws_sender = Some(client_sender);
-  clients.write().unwrap().insert(user_id.clone(), client);
+  with_clients_write(&clients, |client_map| {
+    client_map.insert(user_id.clone(), client);
+  }).unwrap();
   warn!("{} connected", user_id.clone());
 
   let client_list_update = SocketMessage {
@@ -63,7 +65,9 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
     client_msg(user_id.clone(), msg, clients.to_owned(), security.clone()).await;
   }
 
-  clients.write().unwrap().remove(&user_id);
+  with_clients_write(&clients, |client_map| {
+    client_map.remove(&user_id);
+  }).unwrap();
   warn!("{} disconnected", user_id.to_owned());
   tms_clients_ws_send(client_list_update.clone(), clients.clone(), Some(String::from("")));
 }

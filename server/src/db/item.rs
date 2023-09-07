@@ -40,7 +40,10 @@ where
     }
   }
 
-  pub fn delete(&self) {
-    self.db.remove(self.key.clone()).unwrap();
+  pub fn clear(&self) -> SledResult<()> {
+    match self.db.remove(&self.key) {
+      Ok(_) => Ok(()),
+      Err(e) => Err(sled_extensions::Error::Sled(e)),
+    }
   }
 }

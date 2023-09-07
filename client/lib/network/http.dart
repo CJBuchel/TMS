@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -143,7 +144,7 @@ class NetworkHttp {
   Future<Tuple2<String, String>> register(String addr) async {
     var keyPair = await NetworkSecurity.generateKeyPair();
     var uuid = await getUuid();
-    if (uuid.isEmpty) {
+    if (uuid.isEmpty || kIsWeb) {
       await setUuid(const Uuid().v4()).then((v) async {
         uuid = await getUuid();
       });

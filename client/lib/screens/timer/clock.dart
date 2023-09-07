@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';
+import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
 
 class Clock extends StatefulWidget {
@@ -25,11 +27,31 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin {
     }
   }
 
-  int _time = 150;
+  static const _defaultTime = 150;
+  int _time = _defaultTime; // default
+
+  void getInitialTime() {
+    getEventRequest().then((event) {
+      if (event.item1 == HttpStatus.ok) {
+        setState(() {
+          _time = event.item2?.timerLength ?? _defaultTime;
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+
+    getInitialTime();
+
+    autoSubscribe("event", (m) {
+      if (m.subTopic == "update") {
+        getInitialTime();
+      }
+    });
+
     autoSubscribe("clock", (m) {
       if (m.subTopic == "time" && m.message != null) {
         setState(() {

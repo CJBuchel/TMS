@@ -8,6 +8,16 @@ pub struct OnlineLink {
   linked: bool
 }
 
+impl OnlineLink {
+  pub fn new() -> Self {
+    Self {
+      tournament_id: String::from(""),
+      tournament_token: String::from(""),
+      linked: false
+    }
+  }
+}
+
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct Event {
   pub name: String,
@@ -16,7 +26,6 @@ pub struct Event {
   pub pods: Vec<String>,
   pub event_rounds: u8,
   pub season: String,
-  pub online_link: OnlineLink
 }
 
 impl Event {
@@ -28,11 +37,6 @@ impl Event {
       pods: Vec::new(),
       event_rounds: 3,
       season: String::from(""),
-      online_link: OnlineLink {
-        tournament_id: String::from(""),
-        tournament_token: String::from(""),
-        linked: false
-      }
     }
   }
 }

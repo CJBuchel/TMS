@@ -83,7 +83,6 @@
       "required": [
         "event_rounds",
         "name",
-        "online_link",
         "pods",
         "season",
         "tables",
@@ -97,9 +96,6 @@
         },
         "name": {
           "type": "string"
-        },
-        "online_link": {
-          "$ref": "#/definitions/OnlineLink"
         },
         "pods": {
           "type": "array",
@@ -323,25 +319,6 @@
           "type": "string"
         },
         "team_number": {
-          "type": "string"
-        }
-      }
-    },
-    "OnlineLink": {
-      "type": "object",
-      "required": [
-        "linked",
-        "tournament_id",
-        "tournament_token"
-      ],
-      "properties": {
-        "linked": {
-          "type": "boolean"
-        },
-        "tournament_id": {
-          "type": "string"
-        },
-        "tournament_token": {
           "type": "string"
         }
       }

@@ -80,7 +80,6 @@ class Event {
     Event({
         required this.eventRounds,
         required this.name,
-        required this.onlineLink,
         required this.pods,
         required this.season,
         required this.tables,
@@ -89,7 +88,6 @@ class Event {
 
     int eventRounds;
     String name;
-    OnlineLink onlineLink;
     List<String> pods;
     String season;
     List<String> tables;
@@ -98,7 +96,6 @@ class Event {
     factory Event.fromJson(Map<String, dynamic> json) => Event(
         eventRounds: json["event_rounds"],
         name: json["name"],
-        onlineLink: OnlineLink.fromJson(json["online_link"]),
         pods: List<String>.from(json["pods"].map((x) => x)),
         season: json["season"],
         tables: List<String>.from(json["tables"].map((x) => x)),
@@ -108,35 +105,10 @@ class Event {
     Map<String, dynamic> toJson() => {
         "event_rounds": eventRounds,
         "name": name,
-        "online_link": onlineLink.toJson(),
         "pods": List<dynamic>.from(pods.map((x) => x)),
         "season": season,
         "tables": List<dynamic>.from(tables.map((x) => x)),
         "timer_length": timerLength,
-    };
-}
-
-class OnlineLink {
-    OnlineLink({
-        required this.linked,
-        required this.tournamentId,
-        required this.tournamentToken,
-    });
-
-    bool linked;
-    String tournamentId;
-    String tournamentToken;
-
-    factory OnlineLink.fromJson(Map<String, dynamic> json) => OnlineLink(
-        linked: json["linked"],
-        tournamentId: json["tournament_id"],
-        tournamentToken: json["tournament_token"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "linked": linked,
-        "tournament_id": tournamentId,
-        "tournament_token": tournamentToken,
     };
 }
 

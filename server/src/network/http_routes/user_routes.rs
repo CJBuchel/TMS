@@ -1,7 +1,7 @@
 
 use rocket::{*, http::Status};
 use rocket::State;
-use tms_utils::TmsRouteResponse;
+use tms_utils::{TmsRouteResponse, with_clients_write};
 use tms_utils::network_schemas::{LoginResponse, LoginRequest};
 use tms_utils::{TmsClients, TmsRequest, security::Security, TmsRespond, security::encrypt};
 use uuid::Uuid;
@@ -23,9 +23,11 @@ pub fn login_route(security: &State<Security>, clients: &State<TmsClients>, db: 
     if clients.read().unwrap().contains_key(&uuid) {
       // Generate auth token and apply it to the client connection
       let auth_token = Uuid::new_v4();
-      clients.write().unwrap().get_mut(&uuid).unwrap().auth_token = auth_token.to_string();
-      // Copy and apply the specified user permissions to the client
-      clients.write().unwrap().get_mut(&uuid).unwrap().permissions = user.permissions.clone();
+      with_clients_write(&clients, |client_map| {
+        client_map.get_mut(&uuid).unwrap().auth_token = auth_token.to_string();
+        // Copy and apply the specified user permissions to the client
+        client_map.get_mut(&uuid).unwrap().permissions = user.permissions.clone();
+      }).unwrap();
       
       // Respond to the client with the auth token
       let res = LoginResponse {

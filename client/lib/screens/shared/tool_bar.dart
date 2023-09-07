@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/auth.dart';
 
@@ -6,6 +9,7 @@ import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
+import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
 
 class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
@@ -20,7 +24,7 @@ class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMixin {
+class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMixin, AutoUnsubScribeMixin {
   Icon connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
   Icon themeIcon = const Icon(Icons.light_mode, color: Colors.white);
   Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
@@ -161,12 +165,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     if (httpState == NetworkHttpConnectionState.connected && wsState == NetworkWebSocketState.connected && secState == SecurityState.secure) {
       setState(() {
         connectionIcon = const Icon(Icons.wifi, color: Colors.green);
-
-        titleBar = [
-          const Text(
-            "THIS IS A LONG TITLE", // 20 characters (MAX)
-          )
-        ];
+        getTitle();
       });
     } else if (httpState == NetworkHttpConnectionState.disconnected &&
         wsState == NetworkWebSocketState.disconnected &&
@@ -195,7 +194,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     bool loginState = await NetworkAuth.getLoginState();
     if (loginState) {
       setState(() {
-        loginIcon = const Icon(Icons.person);
+        loginIcon = const Icon(Icons.person, color: Colors.white);
         loginScreen = "/logout";
       });
     } else {
@@ -218,9 +217,26 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     }
   }
 
+  void getTitle() {
+    getEventRequest().then((event) {
+      if (event.item1 == HttpStatus.ok) {
+        setState(() {
+          titleBar = [Text(event.item2?.name ?? "")];
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    autoSubscribe("event", (m) {
+      if (m.subTopic == "update") {
+        getTitle();
+      }
+    });
+
     checkConnection();
     checkLogin();
     checkTheme();
@@ -340,7 +356,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
     return AppBar(
       titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
-      iconTheme: IconThemeData(size: fontSize),
+      iconTheme: IconThemeData(size: fontSize, color: Colors.white),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
       actions: getActions(),
     );

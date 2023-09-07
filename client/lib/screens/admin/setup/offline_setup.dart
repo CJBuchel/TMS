@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tms/requests/setup_requests.dart';
+import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/admin/setup/parse_schedule.dart';
+import 'package:tms/screens/admin/setup/setup.dart';
 import 'package:tms/screens/shared/list_util.dart';
 import 'package:tuple/tuple.dart';
 
@@ -93,20 +94,21 @@ class _OfflineSetupState extends State<OfflineSetup> {
   void onClear() {
     _adminPasswordController.clear();
     _eventNameController.clear();
+    _timerCountdownController.clear();
     setState(() {
       _selectedSchedule = null;
       _selectedSeason = _dropDownSeasons[0];
+      _timerCountdownController.value = const TextEditingValue(text: "150");
     });
   }
 
   void onSubmit(BuildContext context) async {
     Event event = Event(
-      eventRounds: _setupRequest!.event.eventRounds,
+      eventRounds: _setupRequest?.event.eventRounds ?? 3,
       name: _eventNameController.text,
-      onlineLink: _setupRequest!.event.onlineLink,
-      pods: _setupRequest!.event.pods,
-      season: _selectedSeason!,
-      tables: _setupRequest!.event.tables,
+      pods: _setupRequest?.event.pods ?? [],
+      season: _selectedSeason ?? "",
+      tables: _setupRequest?.event.tables ?? [],
       timerLength: int.parse(_timerCountdownController.text),
     );
 
@@ -114,13 +116,13 @@ class _OfflineSetupState extends State<OfflineSetup> {
       authToken: "", // handled by setupRequester
       adminPassword: _adminPasswordController.text,
       event: event,
-      judgingSessions: _setupRequest!.judgingSessions,
-      matches: _setupRequest!.matches,
-      teams: _setupRequest!.teams,
-      users: _setupRequest!.users,
+      judgingSessions: _setupRequest?.judgingSessions ?? [],
+      matches: _setupRequest?.matches ?? [],
+      teams: _setupRequest?.teams ?? [],
+      users: _setupRequest?.users ?? [],
     );
 
-    setupRequest(request).then((res) {
+    setupEventRequest(request).then((res) {
       if (res != HttpStatus.ok) {
         showDialog(
           context: context,
@@ -131,6 +133,22 @@ class _OfflineSetupState extends State<OfflineSetup> {
             ),
           ),
         );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Row(
+              children: const [
+                Icon(Icons.check, color: Colors.green),
+                Text(
+                  "Setup Success",
+                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            content: Text("The event ${_eventNameController.text} has been successfully setup."),
+          ),
+        );
       }
     });
   }
@@ -138,7 +156,35 @@ class _OfflineSetupState extends State<OfflineSetup> {
   void onPurge() async {
     final shouldPurge = await showConfirmPurge(context);
     if (shouldPurge == true) {
-      // @TODO: Purge submit request to purge
+      purgeEventRequest().then((res) {
+        if (res != HttpStatus.ok) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text("Purge Error"),
+              content: SingleChildScrollView(
+                child: Text(res == HttpStatus.unauthorized ? "Invalid Authorization" : "Server Error"),
+              ),
+            ),
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: Row(
+                children: const [
+                  Icon(Icons.check, color: Colors.green),
+                  Text(
+                    "Purge Success",
+                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              content: const Text("The event has successfully been purged"),
+            ),
+          );
+        }
+      });
     }
   }
 

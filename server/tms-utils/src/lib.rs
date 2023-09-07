@@ -2,11 +2,12 @@ pub mod security;
 pub mod schemas;
 pub mod network_schemas;
 
+use log::warn;
 use rocket::{http::Status, serde::json::Json, State};
 use schemas::Permissions;
 use security::encrypt;
 use serde::{Serialize};
-use std::{sync::{RwLock, Arc}, collections::HashMap};
+use std::{sync::{RwLock, Arc}, collections::HashMap, time::SystemTime};
 use tokio::sync::mpsc;
 use warp::{ws::Message, Rejection};
 
@@ -17,6 +18,7 @@ pub struct TmsClient {
   pub key: String, // public key for this client
   pub auth_token: String, // is this client authorized with a user
   pub permissions: Permissions, // set of permissions for this client
+  pub last_timestamp: SystemTime, // timestamp of last message
   pub ws_sender: Option<mpsc::UnboundedSender<std::result::Result<Message, warp::Error>>> // socket sender used for dispatching messages
 }
 
@@ -24,6 +26,20 @@ pub type TmsClientResult<T> = std::result::Result<T, Rejection>;
 pub type TmsClients = Arc<RwLock<HashMap<String, TmsClient>>>;
 pub fn new_clients_map() -> TmsClients {
   return Arc::new(RwLock::new(HashMap::new()));
+}
+
+pub fn with_clients_write<F, R>(clients: &TmsClients, f: F) -> Result<R, &'static str>
+where
+  F: FnOnce(&mut HashMap<String, TmsClient>) -> R,
+{
+  match clients.write() {
+    Ok(mut guard) => Ok(f(&mut *guard)),
+    Err(poisoned) => {
+      warn!("The Clients Lock was Poisoned. Recovering...");
+      let mut guard = poisoned.into_inner();
+      Ok(f(&mut *guard))
+    },
+  }
 }
 
 // Route response for clients
@@ -144,3 +160,4 @@ macro_rules! TmsRespond {
     }
   };
 }
+

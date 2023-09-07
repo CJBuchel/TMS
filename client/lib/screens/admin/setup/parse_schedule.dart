@@ -172,7 +172,6 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
     Event event = Event(
       eventRounds: numRounds,
       name: "",
-      onlineLink: OnlineLink(linked: false, tournamentId: "", tournamentToken: ""),
       pods: pods,
       season: "",
       tables: tables,

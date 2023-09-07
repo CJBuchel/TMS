@@ -12,10 +12,11 @@ pub fn start_timer_route(tms_event_service: &State<std::sync::Arc<std::sync::Mut
   let mut perms = create_permissions();
   perms.head_referee = Some(true);
   if check_permissions(clients, uuid, message.auth_token, perms) {
-    // @TODO start timer
     tms_event_service.lock().unwrap().match_control.start_timer();
     TmsRespond!()
   }
   
   TmsRespond!(Status::Unauthorized)
 }
+
+// @TODO: pre-start timer

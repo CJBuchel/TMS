@@ -3,12 +3,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct JudgingSession {
-  session: String,
-  start_time: String,
-  end_time: String,
-  pod: String,
-  team_number: String,
-  complete: bool,
-  deferred: bool,
-  custom_session: bool
+  pub session: String,
+  pub start_time: String,
+  pub end_time: String,
+  pub pod: String,
+  pub team_number: String,
+  pub complete: bool,
+  pub deferred: bool,
+  pub custom_session: bool
 }

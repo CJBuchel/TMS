@@ -70,5 +70,48 @@ impl TmsDB {
     }
 
     Self { db, tms_data}
-  } 
+  }
+
+  pub fn setup_default(&self) {
+    // Setup
+    let tms_data = Database {
+      teams: self.db.open_bincode_tree("teams").expect("Failed to open team tree"),
+      matches: self.db.open_bincode_tree("matches").expect("Failed to open match tree"),
+      judging_sessions: self.db.open_bincode_tree("judging_sessions").expect("Failed to open judging session tree"),
+      users: self.db.open_bincode_tree("users").expect("Failed to open user tree"),
+      event: Item::new(self.db.clone(), "event")
+    };
+
+    // Create event if it doesn't exist
+    match tms_data.event.get().unwrap() {
+      Some(event) => warn!("Event Exists: {}", event.name),
+      None => {
+        warn!("No Event, generating...");
+        let _ = tms_data.event.set(Event::new());
+      }
+    }
+
+    // Create admin user
+    let mut new_admin = create_user();
+    new_admin.username = String::from("admin");
+    new_admin.password = String::from("password");
+    new_admin.permissions.admin = true;
+
+    // Check if admin is present, if not add one
+    match tms_data.users.get(String::from("admin")).unwrap() {
+      Some(user) => warn!("Admin Exists: [{}, {}]", user.username, user.password),
+      None => {
+        warn!("No Admin, generating...");
+        let _ = tms_data.users.insert(new_admin.username.as_bytes(), new_admin.clone());
+      }
+    }
+  }
+
+  pub fn purge(&self) -> sled_extensions::Result<()> {
+    self.tms_data.teams.clear()
+      .and_then(|_| self.tms_data.matches.clear())
+      .and_then(|_| self.tms_data.judging_sessions.clear())
+      .and_then(|_| self.tms_data.users.clear())
+      .and_then(|_| self.tms_data.event.clear())
+  }
 }

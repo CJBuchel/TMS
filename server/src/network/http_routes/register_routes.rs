@@ -3,23 +3,28 @@ use rocket::*;
 use rocket::State;
 use rocket::http::Status;
 use rocket::serde::json::Json;
-use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt, schemas::create_permissions, network_schemas::{RegisterResponse, RegisterRequest}};
+use tms_utils::{TmsRespond, TmsRouteResponse, TmsClients, TmsClient, security::encrypt, schemas::create_permissions, network_schemas::{RegisterResponse, RegisterRequest}, with_clients_write};
 
 fn register_client(user_id: String, key: String, clients: TmsClients) {
-  clients.write().unwrap().insert(
-    user_id.clone(),
-    TmsClient {
-      user_id,
-      key,
-      auth_token: String::from(""),
-      permissions: create_permissions(),
-      ws_sender: None
-    },
-  );
+  with_clients_write(&clients, |client_map| {
+    client_map.insert(
+      user_id.clone(),
+      TmsClient {
+        user_id: user_id.clone(),
+        key: key.clone(),
+        auth_token: String::from(""),
+        permissions: create_permissions(),
+        last_timestamp: std::time::SystemTime::now(),
+        ws_sender: None
+      },
+    );
+  }).unwrap();
 }
 
-fn unregister_client(user_id: String, clients: TmsClients) {
-  clients.write().unwrap().remove(&user_id);
+pub fn unregister_client(user_id: String, clients: TmsClients) {
+  with_clients_write(&clients, |client_map| {
+    client_map.remove(&user_id);
+  }).unwrap();
   warn!("Unregistered Client {}", user_id);
 }
 
@@ -33,7 +38,7 @@ pub fn register_route(clients: &State<TmsClients>, s_public_key: &State<Vec<u8>>
     url_path: format!(":{}/ws/{}", ws_port, user_id),
     version: std::env::var("VERSION").unwrap_or(String::from("0.0.0"))
   };
-
+  
   if clients.read().unwrap().contains_key(&user_id) {
     warn!("Already registered client");
 

@@ -144,6 +144,12 @@ class NetworkHttp {
   Future<Tuple2<String, String>> register(String addr) async {
     var keyPair = await NetworkSecurity.generateKeyPair();
     var uuid = await getUuid();
+
+    // If we're on the web always generate a new uuid
+    // (the web can have multiple tabs, we want every tab to be a different client to stop confusion and bugs)
+    // Yes, I'm aware this causes a high amount of unused uuids to be generated,
+    // Dw, the server is specifically built to handle this with stale connection that exceed 5 minutes.
+    // I thought of it :)
     if (uuid.isEmpty || kIsWeb) {
       await setUuid(const Uuid().v4()).then((v) async {
         uuid = await getUuid();

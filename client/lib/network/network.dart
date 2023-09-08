@@ -139,6 +139,7 @@ class Network {
     var states = await getStates();
     if (states.item1 != NetworkHttpConnectionState.connected && states.item2 != NetworkWebSocketState.connected) {
       String ip = await getServerIP();
+
       if (kIsWeb) {
         ip = await _findServerWeb(ip);
       } else {

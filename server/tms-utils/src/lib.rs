@@ -93,7 +93,7 @@ pub fn check_permissions(clients: &State<TmsClients>, uuid: String, auth_token: 
     }
   }
 
-  return false;
+  return false; // if fall through
 }
 
 /// Converts the request message to a json format (uses serde)

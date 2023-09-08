@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/screens/admin/setup/setup.dart';
 import 'package:tms/screens/connection.dart';
+import 'package:tms/screens/match_control/match_control.dart';
 import 'package:tms/screens/timer/timer.dart';
 import 'package:tms/screens/user/login.dart';
 import 'package:tms/screens/user/logout.dart';
@@ -46,6 +47,9 @@ class TMSApp extends StatelessWidget {
 
             // admin screens
             '/admin/setup': (context) => const Setup(),
+
+            // Referee screens
+            '/referee/match_control': (context) => const MatchControl(),
           },
         );
       },

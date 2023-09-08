@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use ::log::{info, warn};
+use ::log::{info};
 use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}, data::{Limits, ToByteUnit}};
 
 mod register_routes;

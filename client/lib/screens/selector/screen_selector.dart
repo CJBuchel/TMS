@@ -3,6 +3,7 @@ import 'package:tms/constants.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/selector/screen_card.dart';
+import 'package:tms/screens/shared/permissions_utils.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
 class ScreenSelector extends StatefulWidget {
@@ -18,7 +19,7 @@ class ScreenSelector extends StatefulWidget {
  * 0xffFFC97E yellow
  * 0xffFA6E5A red
  * 0xff6CB28E green
- * 0xff3B3A55 dark blue
+ * 0xffD291BC violet
  */
 ///
 
@@ -36,7 +37,7 @@ class _ScreenSelectorState extends State<ScreenSelector> {
   List<Widget> get _adminScreens {
     List<Widget> widgets = [const SizedBox.shrink()];
 
-    if (_user.permissions.admin) {
+    if (checkPermissions(Permissions(admin: true), _user)) {
       widgets = [
         // Admin Title
         IntrinsicHeight(
@@ -66,7 +67,7 @@ class _ScreenSelectorState extends State<ScreenSelector> {
               Flexible(
                 flex: 1,
                 child: ScreenCard(
-                  type: "SETUP",
+                  type: "ADMIN",
                   title: "Setup",
                   color: const Color(0xffFA6E5A),
                   textColor: const Color(0xff3F414E),
@@ -81,6 +82,76 @@ class _ScreenSelectorState extends State<ScreenSelector> {
             ],
           ),
         ),
+      ];
+    }
+
+    return widgets;
+  }
+
+  List<Widget> get _refereeScreens {
+    List<Widget> widgets = [const SizedBox.shrink()];
+
+    if (checkPermissions(Permissions(admin: true, headReferee: true, referee: true), _user)) {
+      widgets = [
+        // Referee Title
+        IntrinsicHeight(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 40, 0, 0),
+                child: Text(
+                  "Referee Screens",
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: Colors.blueGrey[800],
+                    fontFamily: defaultFontFamilyBold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Referee Screen cards
+        IntrinsicHeight(
+          child: Row(
+            children: [
+              // Scoring card
+              Flexible(
+                flex: 1,
+                child: ScreenCard(
+                  type: "REFEREE",
+                  title: "Scoring",
+                  color: const Color(0xff6CB28E),
+                  textColor: const Color(0xff3F414E),
+                  image: const Image(
+                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+                  ),
+                  onPress: () {},
+                ),
+              ),
+
+              // Head Referee card
+              if (checkPermissions(Permissions(admin: true, headReferee: true), _user))
+                Flexible(
+                  flex: 1,
+                  child: ScreenCard(
+                    type: "HEAD REFEREE",
+                    title: "Match Control",
+                    color: const Color(0xffD291BC),
+                    textColor: const Color(0xff3F414E),
+                    image: const Image(
+                      image: AssetImage('assets/images/FIRST_LOGO.png'),
+                    ),
+                    onPress: () {
+                      Navigator.pushNamed(context, '/referee/match_control');
+                    },
+                  ),
+                ),
+            ],
+          ),
+        )
       ];
     }
 
@@ -167,7 +238,8 @@ class _ScreenSelectorState extends State<ScreenSelector> {
                 ]),
               ),
 
-              ..._adminScreens
+              ..._adminScreens,
+              ..._refereeScreens,
             ],
           ));
         },

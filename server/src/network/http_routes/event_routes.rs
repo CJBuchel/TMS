@@ -1,7 +1,7 @@
 use log::{info, error};
 use rocket::{State, post, get, http::Status};
 use tms_macros::tms_private_route;
-use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, security::encrypt, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest}, tms_clients_ws_send};
+use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, security::encrypt, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse}, tms_clients_ws_send};
 
 use crate::{db::db::TmsDB, event_service::TmsEventService};
 
@@ -15,9 +15,13 @@ pub fn event_get_route(_security: &State<Security>, clients: &State<TmsClients>,
     }
   };
 
+  let event_response = EventResponse {
+    event
+  };
+
   TmsRespond!(
     Status::Ok,
-    event,
+    event_response,
     clients,
     uuid
   )

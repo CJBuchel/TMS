@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
+import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
 
@@ -12,7 +13,7 @@ class Clock extends StatefulWidget {
   State<Clock> createState() => _ClockState();
 }
 
-class _ClockState extends State<Clock> with AutoUnsubScribeMixin {
+class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   String padTime(int value, int length) {
     return value.toString().padLeft(length, '0');
   }
@@ -44,12 +45,14 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin {
   void initState() {
     super.initState();
 
-    getInitialTime();
+    // get initial time
+    getEvent().then((event) => _time = event.timerLength);
 
-    autoSubscribe("event", (m) {
-      if (m.subTopic == "update") {
-        getInitialTime();
-      }
+    // Update time on event update
+    onEventUpdate((event) {
+      setState(() {
+        _time = event.timerLength;
+      });
     });
 
     autoSubscribe("clock", (m) {

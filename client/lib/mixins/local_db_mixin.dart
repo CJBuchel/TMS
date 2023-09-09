@@ -10,6 +10,9 @@ import 'package:tms/network/network.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/requests/event_requests.dart';
+import 'package:tms/requests/judging_requests.dart';
+import 'package:tms/requests/match_requests.dart';
+import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 
 // Database mixin for local database to update widget based on changes (update triggers only)
@@ -18,9 +21,24 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
 
   // trigger list
   final List<Function(Event)> _eventTriggers = [];
+  final List<Function(List<Team>)> _teamTriggers = [];
+  final List<Function(List<GameMatch>)> _matchTriggers = [];
+  final List<Function(List<JudgingSession>)> _judgingSessionTriggers = [];
 
   void onEventUpdate(Function(Event) callback) {
     _eventTriggers.add(callback);
+  }
+
+  void onTeamUpdate(Function(List<Team>) callback) {
+    _teamTriggers.add(callback);
+  }
+
+  void onMatchUpdate(Function(List<GameMatch>) callback) {
+    _matchTriggers.add(callback);
+  }
+
+  void onJudgingSessionUpdate(Function(List<JudgingSession>) callback) {
+    _judgingSessionTriggers.add(callback);
   }
 
   void syncDatabase() async {
@@ -29,6 +47,24 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       getEventRequest().then((value) async {
         if (value.item1 == HttpStatus.ok) {
           await _setEvent(value.item2 ?? await getEvent()); // use previous data as default
+        }
+      });
+
+      getTeamsRequest().then((value) async {
+        if (value.item1 == HttpStatus.ok) {
+          await _setTeams(value.item2.isNotEmpty ? value.item2 : await getTeams()); // use previous data as default
+        }
+      });
+
+      getMatchesRequest().then((value) async {
+        if (value.item1 == HttpStatus.ok) {
+          await _setMatches(value.item2.isNotEmpty ? value.item2 : await getMatches()); // use previous data as default
+        }
+      });
+
+      getJudgingSessionsRequest().then((value) async {
+        if (value.item1 == HttpStatus.ok) {
+          await _setJudgingSessions(value.item2.isNotEmpty ? value.item2 : await getJudgingSessions()); // use previous data as default
         }
       });
     }
@@ -48,6 +84,36 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
         getEventRequest().then((value) async {
           if (value.item1 == HttpStatus.ok) {
             _setEvent(value.item2 ?? await getEvent()); // use previous data as default
+          }
+        });
+      }
+    });
+
+    autoSubscribe("teams", (m) {
+      if (m.subTopic == "update") {
+        getTeamsRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            _setTeams(value.item2.isNotEmpty ? value.item2 : await getTeams()); // use previous data as default
+          }
+        });
+      }
+    });
+
+    autoSubscribe("matches", (m) {
+      if (m.subTopic == "update") {
+        getMatchesRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            _setMatches(value.item2.isNotEmpty ? value.item2 : await getMatches()); // use previous data as default
+          }
+        });
+      }
+    });
+
+    autoSubscribe("judging_sessions", (m) {
+      if (m.subTopic == "update") {
+        getJudgingSessionsRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            _setJudgingSessions(value.item2.isNotEmpty ? value.item2 : await getJudgingSessions()); // use previous data as default
           }
         });
       }
@@ -76,10 +142,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
 
   Future<void> _setEvent(Event event) async {
     var eventJson = event.toJson();
+    await _localStorage.then((value) => value.setString(storeDbEvent, jsonEncode(eventJson)));
     for (var trigger in _eventTriggers) {
       trigger(event);
     }
-    await _localStorage.then((value) => value.setString(storeDbEvent, jsonEncode(eventJson)));
   }
 
   Future<Event> getEvent() async {
@@ -106,6 +172,9 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   Future<void> _setTeams(List<Team> teams) async {
     var teamJson = teams.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbTeams, jsonEncode(teamJson)));
+    for (var trigger in _teamTriggers) {
+      trigger(teams);
+    }
   }
 
   Future<List<Team>> getTeams() async {
@@ -132,6 +201,9 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   Future<void> _setMatches(List<GameMatch> matches) async {
     var matchesJson = matches.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbMatches, jsonEncode(matchesJson)));
+    for (var trigger in _matchTriggers) {
+      trigger(matches);
+    }
   }
 
   Future<List<GameMatch>> getMatches() async {
@@ -158,6 +230,9 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   Future<void> _setJudgingSessions(List<JudgingSession> judgingSessions) async {
     var judgingSessionsJson = judgingSessions.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbJudgingSessions, jsonEncode(judgingSessionsJson)));
+    for (var trigger in _judgingSessionTriggers) {
+      trigger(judgingSessions);
+    }
   }
 
   Future<List<JudgingSession>> getJudgingSessions() async {

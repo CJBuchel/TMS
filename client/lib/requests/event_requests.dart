@@ -25,7 +25,7 @@ Future<Tuple2<int, Event?>> getEventRequest() async {
     var res = await Network.serverGet("event/get");
 
     if (res.item1) {
-      return Tuple2(res.item2, Event.fromJson(res.item3));
+      return Tuple2(res.item2, EventResponse.fromJson(res.item3).event);
     } else {
       return Tuple2(res.item2, null);
     }

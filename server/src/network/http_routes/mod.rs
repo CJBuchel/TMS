@@ -18,6 +18,15 @@ use timer_routes::*;
 mod event_routes;
 use event_routes::*;
 
+mod team_routes;
+use team_routes::*;
+
+mod match_routes;
+use match_routes::*;
+
+mod judging_routes;
+use judging_routes::*;
+
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
@@ -155,6 +164,9 @@ impl TmsHttpServer {
         event_setup_route,
         event_purge_route,
         event_get_route,
+        teams_get_route,
+        matches_get_route,
+        judging_sessions_get_route,
 
         // preflight catcher
         cors_preflight

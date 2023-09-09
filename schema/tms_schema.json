@@ -4,11 +4,14 @@
   "type": "object",
   "required": [
     "event",
+    "events_get_response",
     "game_match",
     "integrity_message",
     "judging_session",
+    "judging_sessions_get_response",
     "login_request",
     "login_response",
+    "matches_get_response",
     "purge_request",
     "register_request",
     "register_response",
@@ -16,11 +19,15 @@
     "socket_event",
     "start_timer_request",
     "team",
+    "teams_get_response",
     "users"
   ],
   "properties": {
     "event": {
       "$ref": "#/definitions/Event"
+    },
+    "events_get_response": {
+      "$ref": "#/definitions/EventResponse"
     },
     "game_match": {
       "$ref": "#/definitions/GameMatch"
@@ -31,11 +38,17 @@
     "judging_session": {
       "$ref": "#/definitions/JudgingSession"
     },
+    "judging_sessions_get_response": {
+      "$ref": "#/definitions/JudgingSessionsResponse"
+    },
     "login_request": {
       "$ref": "#/definitions/LoginRequest"
     },
     "login_response": {
       "$ref": "#/definitions/LoginResponse"
+    },
+    "matches_get_response": {
+      "$ref": "#/definitions/MatchesResponse"
     },
     "purge_request": {
       "$ref": "#/definitions/PurgeRequest"
@@ -57,6 +70,9 @@
     },
     "team": {
       "$ref": "#/definitions/Team"
+    },
+    "teams_get_response": {
+      "$ref": "#/definitions/TeamsResponse"
     },
     "users": {
       "$ref": "#/definitions/User"
@@ -116,6 +132,17 @@
           "type": "integer",
           "format": "uint32",
           "minimum": 0.0
+        }
+      }
+    },
+    "EventResponse": {
+      "type": "object",
+      "required": [
+        "event"
+      ],
+      "properties": {
+        "event": {
+          "$ref": "#/definitions/Event"
         }
       }
     },
@@ -274,6 +301,20 @@
         }
       }
     },
+    "JudgingSessionsResponse": {
+      "type": "object",
+      "required": [
+        "judging_sessions"
+      ],
+      "properties": {
+        "judging_sessions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgingSession"
+          }
+        }
+      }
+    },
     "LoginRequest": {
       "type": "object",
       "required": [
@@ -301,6 +342,20 @@
         },
         "permissions": {
           "$ref": "#/definitions/Permissions"
+        }
+      }
+    },
+    "MatchesResponse": {
+      "type": "object",
+      "required": [
+        "matches"
+      ],
+      "properties": {
+        "matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GameMatch"
+          }
         }
       }
     },
@@ -548,6 +603,20 @@
         },
         "team_number": {
           "type": "string"
+        }
+      }
+    },
+    "TeamsResponse": {
+      "type": "object",
+      "required": [
+        "teams"
+      ],
+      "properties": {
+        "teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Team"
+          }
         }
       }
     },

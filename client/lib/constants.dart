@@ -66,3 +66,9 @@ const storeNtServerKey = "ntServerKey";
 const storeNtAutoConfigure = "ntAutoConf";
 const storeNtAuthUser = "ntAuthUser";
 const storeDarkTheme = "isDarkTheme";
+
+// Local database storage constants
+const storeDbEvent = "dbEvent";
+const storeDbTeams = "dbTeams";
+const storeDbMatches = "dbMatches";
+const storeDbJudgingSessions = "dbJudgingSessions";

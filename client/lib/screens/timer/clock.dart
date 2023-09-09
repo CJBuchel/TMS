@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tms/network/network.dart';
+import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
 

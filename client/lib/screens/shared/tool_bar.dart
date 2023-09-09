@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/mixins/auto_subscribe.dart';
+import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/auth.dart';
 
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
-import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/schema/tms_schema.dart';
 
 class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
   TmsToolBar({super.key, this.displayActions = true});
@@ -24,7 +26,7 @@ class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMixin, AutoUnsubScribeMixin {
+class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMixin, AutoUnsubScribeMixin, LocalDatabaseMixin {
   Icon connectionIcon = const Icon(Icons.signal_wifi_connected_no_internet_4_outlined, color: Colors.red);
   Icon themeIcon = const Icon(Icons.light_mode, color: Colors.white);
   Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
@@ -165,7 +167,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     if (httpState == NetworkHttpConnectionState.connected && wsState == NetworkWebSocketState.connected && secState == SecurityState.secure) {
       setState(() {
         connectionIcon = const Icon(Icons.wifi, color: Colors.green);
-        getTitle();
+        getEvent().then((event) => getTitle(event));
       });
     } else if (httpState == NetworkHttpConnectionState.disconnected &&
         wsState == NetworkWebSocketState.disconnected &&
@@ -217,13 +219,9 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     }
   }
 
-  void getTitle() {
-    getEventRequest().then((event) {
-      if (event.item1 == HttpStatus.ok) {
-        setState(() {
-          titleBar = [Text(event.item2?.name ?? "")];
-        });
-      }
+  void getTitle(Event event) {
+    setState(() {
+      titleBar = [Text(event.name)];
     });
   }
 
@@ -231,10 +229,8 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
   void initState() {
     super.initState();
 
-    autoSubscribe("event", (m) {
-      if (m.subTopic == "update") {
-        getTitle();
-      }
+    onEventUpdate((event) {
+      getTitle(event);
     });
 
     checkConnection();

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
@@ -93,7 +94,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       if (m.subTopic == "update") {
         getTeamsRequest().then((value) async {
           if (value.item1 == HttpStatus.ok) {
-            _setTeams(value.item2.isNotEmpty ? value.item2 : await getTeams()); // use previous data as default
+            _setTeams(value.item2); // use previous data as default
           }
         });
       }
@@ -103,7 +104,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       if (m.subTopic == "update") {
         getMatchesRequest().then((value) async {
           if (value.item1 == HttpStatus.ok) {
-            _setMatches(value.item2.isNotEmpty ? value.item2 : await getMatches()); // use previous data as default
+            _setMatches(value.item2); // use previous data as default
           }
         });
       }
@@ -113,7 +114,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       if (m.subTopic == "update") {
         getJudgingSessionsRequest().then((value) async {
           if (value.item1 == HttpStatus.ok) {
-            _setJudgingSessions(value.item2.isNotEmpty ? value.item2 : await getJudgingSessions()); // use previous data as default
+            _setJudgingSessions(value.item2); // use previous data as default
           }
         });
       }

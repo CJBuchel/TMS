@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/screens/match_control/data_table.dart';
 import 'package:tms/screens/selector/screen_selector.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
@@ -20,24 +21,6 @@ class _MatchControlState extends State<MatchControl> {
     ];
   }
 
-  Widget _getTable() {
-    return DataTable(
-      columns: const [
-        DataColumn(label: Text("Header A")),
-        DataColumn(label: Text("Header B")),
-      ],
-      rows: List.generate(
-        60,
-        (index) => DataRow(
-          cells: [
-            DataCell(Text("Cell A$index")),
-            DataCell(Text("Cell B$index")),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,15 +31,15 @@ class _MatchControlState extends State<MatchControl> {
             return Row(
               children: [
                 Container(
-                  width: constraints.maxWidth / 3, // 1/3 dedicated to control
+                  width: constraints.maxWidth / 2, // 50%
                   child: Column(
                     children: _getControl(),
                   ),
                 ),
                 Container(
-                  width: (constraints.maxWidth / 3) * 2, // 2/3 dedicated to match table,
-                  child: SingleChildScrollView(
-                    child: _getTable(),
+                  width: (constraints.maxWidth / 2), // 50%
+                  child: const SingleChildScrollView(
+                    child: MatchControlTable(),
                   ),
                 ),
               ],

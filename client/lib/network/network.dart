@@ -302,27 +302,3 @@ class Network {
     _ws.unsubscribe(topic, onEvent);
   }
 }
-
-mixin AutoUnsubScribeMixin<T extends StatefulWidget> on State<T> {
-  List<Tuple2<String, Function(SocketMessage)>> _subscriptions = [];
-
-  void autoSubscribe(String channel, Function(SocketMessage) callback) {
-    Network.subscribe(channel, callback);
-    _subscriptions.add(Tuple2(channel, callback));
-  }
-
-  void autoUnsubscribe() {
-    for (var sub in _subscriptions) {
-      Network.unsubscribe(
-        sub.item1,
-        sub.item2,
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    autoUnsubscribe();
-    super.dispose();
-  }
-}

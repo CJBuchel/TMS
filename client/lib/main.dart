@@ -74,6 +74,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final networkObserver = NetworkObserver();
   WidgetsBinding.instance.addObserver(networkObserver);
-  networkStartup();
+  networkStartup(); // startup network
   runApp(const TMSApp());
 }

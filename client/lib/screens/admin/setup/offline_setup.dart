@@ -7,7 +7,6 @@ import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/admin/setup/parse_schedule.dart';
-import 'package:tms/screens/admin/setup/setup.dart';
 import 'package:tms/screens/shared/list_util.dart';
 import 'package:tuple/tuple.dart';
 
@@ -23,6 +22,8 @@ class _OfflineSetupState extends State<OfflineSetup> {
   SetupRequest? _setupRequest;
   final TextEditingController _adminPasswordController = TextEditingController();
   final TextEditingController _eventNameController = TextEditingController();
+
+  final TextEditingController _endgameTimerCountdownController = TextEditingController();
   final TextEditingController _timerCountdownController = TextEditingController();
 
   final List<String> _dropDownSeasons = [
@@ -109,6 +110,7 @@ class _OfflineSetupState extends State<OfflineSetup> {
       pods: _setupRequest?.event.pods ?? [],
       season: _selectedSeason ?? "",
       tables: _setupRequest?.event.tables ?? [],
+      endGameTimerLength: int.parse(_endgameTimerCountdownController.text),
       timerLength: int.parse(_timerCountdownController.text),
     );
 
@@ -192,6 +194,7 @@ class _OfflineSetupState extends State<OfflineSetup> {
   void initState() {
     super.initState();
     _selectedSeason = _dropDownSeasons[0];
+    _endgameTimerCountdownController.value = const TextEditingValue(text: "30");
     _timerCountdownController.value = const TextEditingValue(text: "150");
   }
 
@@ -333,17 +336,32 @@ class _OfflineSetupState extends State<OfflineSetup> {
             ),
 
             Padding(
-                padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
-                child: TextField(
-                  controller: _timerCountdownController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Timer Countdown',
-                    hintText: 'Enter Timer Countdown: e.g `150`',
-                  ),
-                )),
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+              child: TextField(
+                controller: _endgameTimerCountdownController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Endgame Timer Countdown',
+                  hintText: 'Enter Timer Countdown: e.g `30` seconds',
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+              child: TextField(
+                controller: _timerCountdownController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Timer Countdown',
+                  hintText: 'Enter Timer Countdown: e.g `150` seconds',
+                ),
+              ),
+            ),
 
             // Purge
             Padding(

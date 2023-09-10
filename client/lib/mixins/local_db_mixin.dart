@@ -73,8 +73,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   }
 
   void syncDatabase() async {
-    var s = await Network.getStates();
-    if (s.item1 == NetworkHttpConnectionState.connected && s.item2 == NetworkWebSocketState.connected && s.item3 == SecurityState.secure) {
+    if (await Network.isConnected()) {
       if (_registeredEventListener) {
         getEventRequest().then((value) async {
           if (value.item1 == HttpStatus.ok) {
@@ -214,6 +213,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       pods: [],
       season: "",
       tables: [],
+      endGameTimerLength: 30,
       timerLength: 150,
     );
   }
@@ -332,6 +332,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       gameMatchDeferred: false,
       endTime: "",
       matchNumber: "",
+      roundNumber: 0,
       onTableFirst: _onTableDefault(),
       onTableSecond: _onTableDefault(),
       startTime: "",

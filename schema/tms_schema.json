@@ -121,6 +121,7 @@
     "Event": {
       "type": "object",
       "required": [
+        "end_game_timer_length",
         "event_rounds",
         "name",
         "pods",
@@ -129,6 +130,11 @@
         "timer_length"
       ],
       "properties": {
+        "end_game_timer_length": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
         "event_rounds": {
           "type": "integer",
           "format": "uint8",
@@ -180,6 +186,7 @@
         "match_number",
         "on_table_first",
         "on_table_second",
+        "round_number",
         "start_time"
       ],
       "properties": {
@@ -203,6 +210,11 @@
         },
         "on_table_second": {
           "$ref": "#/definitions/OnTable"
+        },
+        "round_number": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
         },
         "start_time": {
           "type": "string"
@@ -234,7 +246,7 @@
         },
         "round": {
           "type": "integer",
-          "format": "uint8",
+          "format": "uint32",
           "minimum": 0.0
         },
         "team_id": {

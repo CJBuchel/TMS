@@ -11,6 +11,7 @@ pub struct OnTable {
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct GameMatch {
   pub match_number: String,
+  pub round_number: u32,
   pub start_time: String,
   pub end_time: String,
   pub on_table_first: OnTable,

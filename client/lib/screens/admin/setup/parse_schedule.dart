@@ -112,6 +112,7 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
         startTime: startTime,
         endTime: endTime,
         matchNumber: matchNumber,
+        roundNumber: 0,
         onTableFirst: onTables[0],
         onTableSecond: onTables[1],
       );
@@ -129,6 +130,7 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
       for (var match in matches) {
         if (match.onTableFirst.teamNumber == teamNum || match.onTableSecond.teamNumber == teamNum) {
           numRoundsTeam++;
+          match.roundNumber = numRoundsTeam;
         }
       }
 
@@ -182,6 +184,7 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
       pods: pods,
       season: "",
       tables: tables,
+      endGameTimerLength: 30,
       timerLength: 150,
     );
 

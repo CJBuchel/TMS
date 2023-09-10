@@ -365,6 +365,8 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     double fontSize = Responsive.fontSize(context, 1.0);
 
     return AppBar(
+      backgroundColor: Colors.blueGrey[800],
+      // backgroundColor: AppTheme.isDarkTheme ? Colors.blueGrey[800] : Colors.blueGrey[500],
       titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
       iconTheme: IconThemeData(size: fontSize, color: Colors.white),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),

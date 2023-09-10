@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/match_control/match_control_table.dart';
 import 'package:tms/screens/selector/screen_selector.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
@@ -12,6 +14,8 @@ class MatchControl extends StatefulWidget {
 }
 
 class _MatchControlState extends State<MatchControl> {
+  String? loadedMatch;
+
   List<Widget> _getControl() {
     return [
       const Text("Information 1"),
@@ -19,6 +23,10 @@ class _MatchControlState extends State<MatchControl> {
       ElevatedButton(onPressed: () {}, child: const Text("Button 1")),
       ElevatedButton(onPressed: () {}, child: const Text("Button 2")),
     ];
+  }
+
+  void onSelectedMatches(List<GameMatch> matches) {
+    Logger().i("Selected Matches: ${matches.map((e) => e.matchNumber).toList()}");
   }
 
   @override
@@ -30,22 +38,30 @@ class _MatchControlState extends State<MatchControl> {
           if (!Responsive.isMobile(context)) {
             return Row(
               children: [
-                Container(
+                SizedBox(
                   width: constraints.maxWidth / 2, // 50%
                   child: Column(
                     children: _getControl(),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: (constraints.maxWidth / 2), // 50%
-                  child: MatchControlTable(con: constraints),
+                  child: MatchControlTable(
+                    con: constraints,
+                    onSelected: onSelectedMatches,
+                    loadedMatch: loadedMatch,
+                  ),
                 ),
               ],
             );
           } else {
             return SizedBox(
               width: constraints.maxWidth,
-              child: const Text("Mobile View not available"),
+              child: MatchControlTable(
+                con: constraints,
+                onSelected: onSelectedMatches,
+                loadedMatch: loadedMatch,
+              ),
             );
           }
         },

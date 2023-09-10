@@ -21,6 +21,7 @@ impl OnlineLink {
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct Event {
   pub name: String,
+  pub end_game_timer_length: u32, // 30 seconds is the default
   pub timer_length: u32, // time in seconds the match takes i.e 150 is default
   pub tables: Vec<String>,
   pub pods: Vec<String>,
@@ -32,6 +33,7 @@ impl Event {
   pub fn new() -> Self {
     Self {
       name: String::from(""),
+      end_game_timer_length: 30,
       timer_length: 150,
       tables: Vec::new(),
       pods: Vec::new(),

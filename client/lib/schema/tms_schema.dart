@@ -118,6 +118,7 @@ class TmsSchema {
 
 class Event {
     Event({
+        required this.endGameTimerLength,
         required this.eventRounds,
         required this.name,
         required this.pods,
@@ -126,6 +127,7 @@ class Event {
         required this.timerLength,
     });
 
+    int endGameTimerLength;
     int eventRounds;
     String name;
     List<String> pods;
@@ -134,6 +136,7 @@ class Event {
     int timerLength;
 
     factory Event.fromJson(Map<String, dynamic> json) => Event(
+        endGameTimerLength: json["end_game_timer_length"],
         eventRounds: json["event_rounds"],
         name: json["name"],
         pods: List<String>.from(json["pods"].map((x) => x)),
@@ -143,6 +146,7 @@ class Event {
     );
 
     Map<String, dynamic> toJson() => {
+        "end_game_timer_length": endGameTimerLength,
         "event_rounds": eventRounds,
         "name": name,
         "pods": List<dynamic>.from(pods.map((x) => x)),
@@ -177,6 +181,7 @@ class GameMatch {
         required this.matchNumber,
         required this.onTableFirst,
         required this.onTableSecond,
+        required this.roundNumber,
         required this.startTime,
     });
 
@@ -187,6 +192,7 @@ class GameMatch {
     String matchNumber;
     OnTable onTableFirst;
     OnTable onTableSecond;
+    int roundNumber;
     String startTime;
 
     factory GameMatch.fromJson(Map<String, dynamic> json) => GameMatch(
@@ -197,6 +203,7 @@ class GameMatch {
         matchNumber: json["match_number"],
         onTableFirst: OnTable.fromJson(json["on_table_first"]),
         onTableSecond: OnTable.fromJson(json["on_table_second"]),
+        roundNumber: json["round_number"],
         startTime: json["start_time"],
     );
 
@@ -208,6 +215,7 @@ class GameMatch {
         "match_number": matchNumber,
         "on_table_first": onTableFirst.toJson(),
         "on_table_second": onTableSecond.toJson(),
+        "round_number": roundNumber,
         "start_time": startTime,
     };
 }

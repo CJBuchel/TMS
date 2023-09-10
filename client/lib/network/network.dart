@@ -81,6 +81,11 @@ class Network {
     return Tuple3(await _http.getState(), _ws.getState(), await NetworkSecurity.getState());
   }
 
+  static Future<bool> isConnected() async {
+    var s = await getStates();
+    return (s.item1 == NetworkHttpConnectionState.connected && s.item2 == NetworkWebSocketState.connected && s.item3 == SecurityState.secure);
+  }
+
   // Try to connect to server and test endpoint
   static Future<void> connect() async {
     // Must register first before connecting to websocket

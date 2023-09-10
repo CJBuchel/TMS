@@ -317,44 +317,54 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
       if (widget.displayActions) {
         return [
           PopupMenuButton(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            color: Colors.blueGrey[800],
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: ListTile(
-                  leading: const Icon(Icons.light_mode),
-                  title: const Text("Theme"),
-                  onTap: () => AppTheme.setDarkTheme = !AppTheme.isDarkTheme,
+                  leading: themeIcon,
+                  title: const Text("Theme", style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    AppTheme.setDarkTheme = !AppTheme.isDarkTheme;
+                    Navigator.pop(context);
+                  },
                 ),
               ),
               PopupMenuItem(
                 child: ListTile(
                   leading: connectionIcon,
-                  title: const Text("Server Connection"),
+                  title: const Text("Server Connection", style: TextStyle(color: Colors.white)),
                   onTap: () => pushTo(context, "/server_connection"),
                 ),
               ),
               PopupMenuItem(
                 child: ListTile(
                   leading: loginIcon,
-                  title: const Text("Login/Logout"),
+                  title: const Text("Login/Logout", style: TextStyle(color: Colors.white)),
                   onTap: () => pushTo(context, loginScreen),
                 ),
               ),
             ],
-          )
+          ),
         ];
       } else {
         return [
           PopupMenuButton(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            color: Colors.blueGrey[800],
             itemBuilder: (context) => [
               PopupMenuItem(
                 child: ListTile(
-                  leading: const Icon(Icons.light_mode),
-                  title: const Text("Theme"),
-                  onTap: () => AppTheme.setDarkTheme = !AppTheme.isDarkTheme,
+                  leading: themeIcon,
+                  title: const Text("Theme", style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    AppTheme.setDarkTheme = !AppTheme.isDarkTheme;
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ],
-          )
+          ),
         ];
       }
     }
@@ -366,7 +376,6 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
     return AppBar(
       backgroundColor: Colors.blueGrey[800],
-      // backgroundColor: AppTheme.isDarkTheme ? Colors.blueGrey[800] : Colors.blueGrey[500],
       titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
       iconTheme: IconThemeData(size: fontSize, color: Colors.white),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),

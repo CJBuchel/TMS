@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/screens/match_control/data_table.dart';
+import 'package:tms/screens/match_control/match_control_table.dart';
 import 'package:tms/screens/selector/screen_selector.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
@@ -38,9 +38,7 @@ class _MatchControlState extends State<MatchControl> {
                 ),
                 Container(
                   width: (constraints.maxWidth / 2), // 50%
-                  child: const SingleChildScrollView(
-                    child: MatchControlTable(),
-                  ),
+                  child: MatchControlTable(con: constraints),
                 ),
               ],
             );

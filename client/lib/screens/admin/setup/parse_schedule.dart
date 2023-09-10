@@ -146,26 +146,33 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
     // Parse Judging Sessions
     var judgingSessions = <JudgingSession>[];
     for (var i = 5; i < judgingBlock.length; i++) {
-      String session = "${judgingBlock[i][0]}";
+      String sessionNumber = "${judgingBlock[i][0]}";
       String startTime = "${judgingBlock[i][1]}";
       String endTime = "${judgingBlock[i][2]}";
+      var judgingPods = <JudgingPod>[];
 
+      // determine teams in each pod
       for (var j = 3; j < judgingBlock[i].length; j++) {
         if (judgingBlock[i][j] != "" && judgingBlock[i][j] != null) {
-          judgingSessions.add(
-            JudgingSession(
-              complete: false,
-              customSession: false,
-              judgingSessionDeferred: false,
-              startTime: startTime,
-              endTime: endTime,
-              session: session,
+          judgingPods.add(
+            JudgingPod(
+              scoreSubmitted: false,
               teamNumber: "${judgingBlock[i][j]}",
               pod: pods[j - 3],
             ),
           );
         }
       }
+
+      JudgingSession session = JudgingSession(
+        sessionNumber: sessionNumber,
+        complete: false,
+        customSession: false,
+        judgingSessionDeferred: false,
+        startTime: startTime,
+        endTime: endTime,
+        judgingPods: judgingPods,
+      );
     }
 
     // Parse Event

@@ -22,23 +22,41 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
 
   // trigger list
   final List<Function(Event)> _eventTriggers = [];
-  final List<Function(List<Team>)> _teamTriggers = [];
-  final List<Function(List<GameMatch>)> _matchTriggers = [];
-  final List<Function(List<JudgingSession>)> _judgingSessionTriggers = [];
+
+  final List<Function(List<Team>)> _teamListTriggers = [];
+  final List<Function(Team)> _teamTriggers = [];
+
+  final List<Function(List<GameMatch>)> _matchListTriggers = [];
+  final List<Function(GameMatch)> _matchTriggers = [];
+
+  final List<Function(List<JudgingSession>)> _judgingSessionListTriggers = [];
+  final List<Function(JudgingSession)> _judgingSessionTriggers = [];
 
   void onEventUpdate(Function(Event) callback) {
     _eventTriggers.add(callback);
   }
 
-  void onTeamUpdate(Function(List<Team>) callback) {
+  void onTeamsUpdate(Function(List<Team>) callback) {
+    _teamListTriggers.add(callback);
+  }
+
+  void onTeamUpdate(Function(Team) callback) {
     _teamTriggers.add(callback);
   }
 
-  void onMatchUpdate(Function(List<GameMatch>) callback) {
+  void onMatchesUpdate(Function(List<GameMatch>) callback) {
+    _matchListTriggers.add(callback);
+  }
+
+  void onMatchUpdate(Function(GameMatch) callback) {
     _matchTriggers.add(callback);
   }
 
-  void onJudgingSessionUpdate(Function(List<JudgingSession>) callback) {
+  void onJudgingSessionsUpdate(Function(List<JudgingSession>) callback) {
+    _judgingSessionListTriggers.add(callback);
+  }
+
+  void onJudgingSessionUpdate(Function(JudgingSession) callback) {
     _judgingSessionTriggers.add(callback);
   }
 
@@ -100,6 +118,19 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       }
     });
 
+    autoSubscribe("team", (m) {
+      if (m.subTopic == "update") {
+        if (m.message != null && m.message is String) {
+          Logger().i("Received team update for ${m.message}");
+          getTeamRequest(m.message as String).then((value) async {
+            if (value.item1 == HttpStatus.ok) {
+              _setTeam(value.item2 ?? await getTeam(m.message as String)); // use previous data as default
+            }
+          });
+        }
+      }
+    });
+
     autoSubscribe("matches", (m) {
       if (m.subTopic == "update") {
         getMatchesRequest().then((value) async {
@@ -110,6 +141,19 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       }
     });
 
+    autoSubscribe("match", (m) {
+      if (m.subTopic == "update") {
+        if (m.message != null && m.message is String) {
+          Logger().i("Received match update for ${m.message}");
+          getMatchRequest(m.message as String).then((value) async {
+            if (value.item1 == HttpStatus.ok) {
+              _setMatch(value.item2 ?? await getMatch(m.message as String)); // use previous data as default
+            }
+          });
+        }
+      }
+    });
+
     autoSubscribe("judging_sessions", (m) {
       if (m.subTopic == "update") {
         getJudgingSessionsRequest().then((value) async {
@@ -117,6 +161,19 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
             _setJudgingSessions(value.item2); // use previous data as default
           }
         });
+      }
+    });
+
+    autoSubscribe("judging_session", (m) {
+      if (m.subTopic == "update") {
+        if (m.message != null && m.message is String) {
+          Logger().i("Received judging session update for ${m.message}");
+          getJudgingSessionRequest(m.message as String).then((value) async {
+            if (value.item1 == HttpStatus.ok) {
+              _setJudgingSession(value.item2 ?? await getJudgingSession(m.message as String)); // use previous data as default
+            }
+          });
+        }
       }
     });
   }
@@ -170,11 +227,41 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     return [];
   }
 
+  Team _teamDefault() {
+    return Team(
+      coreValuesScores: [],
+      gameScores: [],
+      innovationProjectScores: [],
+      ranking: 0,
+      robotDesignScores: [],
+      teamAffiliation: "",
+      teamId: "",
+      teamName: "",
+      teamNumber: "",
+    );
+  }
+
   Future<void> _setTeams(List<Team> teams) async {
     var teamJson = teams.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbTeams, jsonEncode(teamJson)));
-    for (var trigger in _teamTriggers) {
+    for (var trigger in _teamListTriggers) {
       trigger(teams);
+    }
+  }
+
+  Future<void> _setTeam(Team team) async {
+    var teams = await getTeams();
+    var index = teams.indexWhere((t) => t.teamNumber == team.teamNumber);
+    if (index != -1) {
+      teams[index] = team;
+    } else {
+      teams.add(team);
+    }
+
+    var teamsJson = teams.map((e) => e.toJson()).toList();
+    await _localStorage.then((value) => value.setString(storeDbTeams, jsonEncode(teamsJson)));
+    for (var trigger in _teamTriggers) {
+      trigger(team);
     }
   }
 
@@ -192,6 +279,21 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     }
   }
 
+  Future<Team> getTeam(String teamNumber) async {
+    try {
+      // find team in list and return
+      var teams = await getTeams();
+      var index = teams.indexWhere((t) => t.teamNumber == teamNumber);
+      if (index != -1) {
+        return teams[index];
+      } else {
+        return _teamDefault();
+      }
+    } catch (e) {
+      return _teamDefault();
+    }
+  }
+
   //
   // MATCH DATA
   //
@@ -199,11 +301,44 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     return [];
   }
 
+  OnTable _onTableDefault() {
+    return OnTable(scoreSubmitted: false, table: "", teamNumber: "");
+  }
+
+  GameMatch _matchDefault() {
+    return GameMatch(
+      complete: false,
+      customMatch: false,
+      gameMatchDeferred: false,
+      endTime: "",
+      matchNumber: "",
+      onTableFirst: _onTableDefault(),
+      onTableSecond: _onTableDefault(),
+      startTime: "",
+    );
+  }
+
   Future<void> _setMatches(List<GameMatch> matches) async {
     var matchesJson = matches.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbMatches, jsonEncode(matchesJson)));
-    for (var trigger in _matchTriggers) {
+    for (var trigger in _matchListTriggers) {
       trigger(matches);
+    }
+  }
+
+  Future<void> _setMatch(GameMatch match) async {
+    var matches = await getMatches();
+    var index = matches.indexWhere((m) => m.matchNumber == match.matchNumber);
+    if (index != -1) {
+      matches[index] = match;
+    } else {
+      matches.add(match);
+    }
+
+    var matchesJson = matches.map((e) => e.toJson()).toList();
+    await _localStorage.then((value) => value.setString(storeDbMatches, jsonEncode(matchesJson)));
+    for (var trigger in _matchTriggers) {
+      trigger(match);
     }
   }
 
@@ -221,6 +356,21 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     }
   }
 
+  Future<GameMatch> getMatch(String matchNumber) async {
+    try {
+      // find match in list and return
+      var matches = await getMatches();
+      var index = matches.indexWhere((m) => m.matchNumber == matchNumber);
+      if (index != -1) {
+        return matches[index];
+      } else {
+        return _matchDefault();
+      }
+    } catch (e) {
+      return _matchDefault();
+    }
+  }
+
   //
   // JUDGING SESSION DATA
   //
@@ -228,11 +378,39 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     return [];
   }
 
+  JudgingSession _judgingSessionDefault() {
+    return JudgingSession(
+      sessionNumber: "",
+      complete: false,
+      customSession: false,
+      judgingSessionDeferred: false,
+      startTime: "",
+      endTime: "",
+      judgingPods: [],
+    );
+  }
+
   Future<void> _setJudgingSessions(List<JudgingSession> judgingSessions) async {
     var judgingSessionsJson = judgingSessions.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbJudgingSessions, jsonEncode(judgingSessionsJson)));
-    for (var trigger in _judgingSessionTriggers) {
+    for (var trigger in _judgingSessionListTriggers) {
       trigger(judgingSessions);
+    }
+  }
+
+  Future<void> _setJudgingSession(JudgingSession session) async {
+    var judgingSessions = await getJudgingSessions();
+    var index = judgingSessions.indexWhere((js) => js.sessionNumber == session.sessionNumber);
+    if (index != -1) {
+      judgingSessions[index] = session;
+    } else {
+      judgingSessions.add(session);
+    }
+
+    var judgingSessionsJson = judgingSessions.map((e) => e.toJson()).toList();
+    await _localStorage.then((value) => value.setString(storeDbJudgingSessions, jsonEncode(judgingSessionsJson)));
+    for (var trigger in _judgingSessionTriggers) {
+      trigger(session);
     }
   }
 
@@ -247,6 +425,21 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       }
     } catch (e) {
       return _judgingSessionsDefault();
+    }
+  }
+
+  Future<JudgingSession> getJudgingSession(String sessionNumber) async {
+    try {
+      // find session in list and return
+      var judgingSessions = await getJudgingSessions();
+      var index = judgingSessions.indexWhere((js) => js.sessionNumber == sessionNumber);
+      if (index != -1) {
+        return judgingSessions[index];
+      } else {
+        return _judgingSessionDefault();
+      }
+    } catch (e) {
+      return _judgingSessionDefault();
     }
   }
 }

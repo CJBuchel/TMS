@@ -36,16 +36,19 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
   Text ntStatusText = const Text(
     "NO NT",
     style: TextStyle(color: Colors.red),
+    overflow: TextOverflow.ellipsis,
   );
 
   Text wsStatusText = const Text(
     "NO WS",
     style: TextStyle(color: Colors.red),
+    overflow: TextOverflow.ellipsis,
   );
 
   Text secStateText = const Text(
     "NO SEC",
     style: TextStyle(color: Colors.red),
+    overflow: TextOverflow.ellipsis,
   );
 
   List<Widget> titleBar = const [];
@@ -59,6 +62,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           ntStatusText = const Text(
             "NO NT",
             style: TextStyle(color: Colors.red),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -68,6 +72,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           ntStatusText = const Text(
             "NO PULSE",
             style: TextStyle(color: Colors.orange),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -77,6 +82,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           ntStatusText = const Text(
             "OK",
             style: TextStyle(color: Colors.green),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -85,6 +91,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           ntStatusText = const Text(
             "NO NT",
             style: TextStyle(color: Colors.red),
+            overflow: TextOverflow.ellipsis,
           );
         });
     }
@@ -97,6 +104,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           wsStatusText = const Text(
             "NO WS",
             style: TextStyle(color: Colors.red),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -106,6 +114,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           wsStatusText = const Text(
             "OK",
             style: TextStyle(color: Colors.green),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -114,6 +123,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           wsStatusText = const Text(
             "NO WS",
             style: TextStyle(color: Colors.red),
+            overflow: TextOverflow.ellipsis,
           );
         });
     }
@@ -126,6 +136,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           secStateText = const Text(
             "NO SEC",
             style: TextStyle(color: Colors.red),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -134,6 +145,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           secStateText = const Text(
             "ENC",
             style: TextStyle(color: Colors.orange),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -142,6 +154,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           secStateText = const Text(
             "SECURE",
             style: TextStyle(color: Colors.green),
+            overflow: TextOverflow.ellipsis,
           );
         });
         break;
@@ -150,6 +163,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
           secStateText = const Text(
             "NO SEC",
             style: TextStyle(color: Colors.red),
+            overflow: TextOverflow.ellipsis,
           );
         });
     }
@@ -221,7 +235,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
   void getTitle(Event event) {
     setState(() {
-      titleBar = [Text(event.name)];
+      titleBar = [Text(event.name, overflow: TextOverflow.ellipsis)];
     });
   }
 

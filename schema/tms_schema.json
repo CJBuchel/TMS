@@ -8,9 +8,13 @@
     "game_match",
     "integrity_message",
     "judging_session",
+    "judging_session_get_request",
+    "judging_session_get_response",
     "judging_sessions_get_response",
     "login_request",
     "login_response",
+    "match_get_request",
+    "match_get_response",
     "matches_get_response",
     "purge_request",
     "register_request",
@@ -19,6 +23,8 @@
     "socket_event",
     "start_timer_request",
     "team",
+    "team_get_request",
+    "team_get_response",
     "teams_get_response",
     "users"
   ],
@@ -38,6 +44,12 @@
     "judging_session": {
       "$ref": "#/definitions/JudgingSession"
     },
+    "judging_session_get_request": {
+      "$ref": "#/definitions/JudgingSessionRequest"
+    },
+    "judging_session_get_response": {
+      "$ref": "#/definitions/JudgingSessionResponse"
+    },
     "judging_sessions_get_response": {
       "$ref": "#/definitions/JudgingSessionsResponse"
     },
@@ -46,6 +58,12 @@
     },
     "login_response": {
       "$ref": "#/definitions/LoginResponse"
+    },
+    "match_get_request": {
+      "$ref": "#/definitions/MatchRequest"
+    },
+    "match_get_response": {
+      "$ref": "#/definitions/MatchResponse"
     },
     "matches_get_response": {
       "$ref": "#/definitions/MatchesResponse"
@@ -70,6 +88,12 @@
     },
     "team": {
       "$ref": "#/definitions/Team"
+    },
+    "team_get_request": {
+      "$ref": "#/definitions/TeamRequest"
+    },
+    "team_get_response": {
+      "$ref": "#/definitions/TeamResponse"
     },
     "teams_get_response": {
       "$ref": "#/definitions/TeamsResponse"
@@ -232,6 +256,25 @@
         }
       }
     },
+    "JudgingPod": {
+      "type": "object",
+      "required": [
+        "pod",
+        "score_submitted",
+        "team_number"
+      ],
+      "properties": {
+        "pod": {
+          "type": "string"
+        },
+        "score_submitted": {
+          "type": "boolean"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
     "JudgingScoresheet": {
       "type": "object",
       "required": [
@@ -269,10 +312,9 @@
         "custom_session",
         "deferred",
         "end_time",
-        "pod",
-        "session",
-        "start_time",
-        "team_number"
+        "judging_pods",
+        "session_number",
+        "start_time"
       ],
       "properties": {
         "complete": {
@@ -287,17 +329,39 @@
         "end_time": {
           "type": "string"
         },
-        "pod": {
-          "type": "string"
+        "judging_pods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgingPod"
+          }
         },
-        "session": {
+        "session_number": {
           "type": "string"
         },
         "start_time": {
           "type": "string"
-        },
-        "team_number": {
+        }
+      }
+    },
+    "JudgingSessionRequest": {
+      "type": "object",
+      "required": [
+        "session_number"
+      ],
+      "properties": {
+        "session_number": {
           "type": "string"
+        }
+      }
+    },
+    "JudgingSessionResponse": {
+      "type": "object",
+      "required": [
+        "judging_session"
+      ],
+      "properties": {
+        "judging_session": {
+          "$ref": "#/definitions/JudgingSession"
         }
       }
     },
@@ -342,6 +406,28 @@
         },
         "permissions": {
           "$ref": "#/definitions/Permissions"
+        }
+      }
+    },
+    "MatchRequest": {
+      "type": "object",
+      "required": [
+        "match_number"
+      ],
+      "properties": {
+        "match_number": {
+          "type": "string"
+        }
+      }
+    },
+    "MatchResponse": {
+      "type": "object",
+      "required": [
+        "game_match"
+      ],
+      "properties": {
+        "game_match": {
+          "$ref": "#/definitions/GameMatch"
         }
       }
     },
@@ -603,6 +689,28 @@
         },
         "team_number": {
           "type": "string"
+        }
+      }
+    },
+    "TeamRequest": {
+      "type": "object",
+      "required": [
+        "team_number"
+      ],
+      "properties": {
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
+    "TeamResponse": {
+      "type": "object",
+      "required": [
+        "team"
+      ],
+      "properties": {
+        "team": {
+          "$ref": "#/definitions/Team"
         }
       }
     },

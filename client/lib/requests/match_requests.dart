@@ -17,3 +17,19 @@ Future<Tuple2<int, List<GameMatch>>> getMatchesRequest() async {
     rethrow;
   }
 }
+
+Future<Tuple2<int, GameMatch?>> getMatchRequest(String matchNUmber) async {
+  try {
+    var message = MatchRequest(matchNumber: matchNUmber).toJson();
+    var res = await Network.serverPost("match/get", message);
+
+    if (res.item1) {
+      return Tuple2(res.item2, GameMatch.fromJson(res.item3));
+    } else {
+      return Tuple2(res.item2, null);
+    }
+  } catch (e) {
+    Logger().e(e);
+    rethrow;
+  }
+}

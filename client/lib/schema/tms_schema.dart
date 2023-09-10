@@ -15,9 +15,13 @@ class TmsSchema {
         required this.gameMatch,
         required this.integrityMessage,
         required this.judgingSession,
+        required this.judgingSessionGetRequest,
+        required this.judgingSessionGetResponse,
         required this.judgingSessionsGetResponse,
         required this.loginRequest,
         required this.loginResponse,
+        required this.matchGetRequest,
+        required this.matchGetResponse,
         required this.matchesGetResponse,
         required this.purgeRequest,
         required this.registerRequest,
@@ -26,6 +30,8 @@ class TmsSchema {
         required this.socketEvent,
         required this.startTimerRequest,
         required this.team,
+        required this.teamGetRequest,
+        required this.teamGetResponse,
         required this.teamsGetResponse,
         required this.users,
     });
@@ -35,9 +41,13 @@ class TmsSchema {
     GameMatch gameMatch;
     IntegrityMessage integrityMessage;
     JudgingSession judgingSession;
+    JudgingSessionRequest judgingSessionGetRequest;
+    JudgingSessionResponse judgingSessionGetResponse;
     JudgingSessionsResponse judgingSessionsGetResponse;
     LoginRequest loginRequest;
     LoginResponse loginResponse;
+    MatchRequest matchGetRequest;
+    MatchResponse matchGetResponse;
     MatchesResponse matchesGetResponse;
     PurgeRequest purgeRequest;
     RegisterRequest registerRequest;
@@ -46,6 +56,8 @@ class TmsSchema {
     SocketMessage socketEvent;
     StartTimerRequest startTimerRequest;
     Team team;
+    TeamRequest teamGetRequest;
+    TeamResponse teamGetResponse;
     TeamsResponse teamsGetResponse;
     User users;
 
@@ -55,9 +67,13 @@ class TmsSchema {
         gameMatch: GameMatch.fromJson(json["game_match"]),
         integrityMessage: IntegrityMessage.fromJson(json["integrity_message"]),
         judgingSession: JudgingSession.fromJson(json["judging_session"]),
+        judgingSessionGetRequest: JudgingSessionRequest.fromJson(json["judging_session_get_request"]),
+        judgingSessionGetResponse: JudgingSessionResponse.fromJson(json["judging_session_get_response"]),
         judgingSessionsGetResponse: JudgingSessionsResponse.fromJson(json["judging_sessions_get_response"]),
         loginRequest: LoginRequest.fromJson(json["login_request"]),
         loginResponse: LoginResponse.fromJson(json["login_response"]),
+        matchGetRequest: MatchRequest.fromJson(json["match_get_request"]),
+        matchGetResponse: MatchResponse.fromJson(json["match_get_response"]),
         matchesGetResponse: MatchesResponse.fromJson(json["matches_get_response"]),
         purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
@@ -66,6 +82,8 @@ class TmsSchema {
         socketEvent: SocketMessage.fromJson(json["socket_event"]),
         startTimerRequest: StartTimerRequest.fromJson(json["start_timer_request"]),
         team: Team.fromJson(json["team"]),
+        teamGetRequest: TeamRequest.fromJson(json["team_get_request"]),
+        teamGetResponse: TeamResponse.fromJson(json["team_get_response"]),
         teamsGetResponse: TeamsResponse.fromJson(json["teams_get_response"]),
         users: User.fromJson(json["users"]),
     );
@@ -76,9 +94,13 @@ class TmsSchema {
         "game_match": gameMatch.toJson(),
         "integrity_message": integrityMessage.toJson(),
         "judging_session": judgingSession.toJson(),
+        "judging_session_get_request": judgingSessionGetRequest.toJson(),
+        "judging_session_get_response": judgingSessionGetResponse.toJson(),
         "judging_sessions_get_response": judgingSessionsGetResponse.toJson(),
         "login_request": loginRequest.toJson(),
         "login_response": loginResponse.toJson(),
+        "match_get_request": matchGetRequest.toJson(),
+        "match_get_response": matchGetResponse.toJson(),
         "matches_get_response": matchesGetResponse.toJson(),
         "purge_request": purgeRequest.toJson(),
         "register_request": registerRequest.toJson(),
@@ -87,6 +109,8 @@ class TmsSchema {
         "socket_event": socketEvent.toJson(),
         "start_timer_request": startTimerRequest.toJson(),
         "team": team.toJson(),
+        "team_get_request": teamGetRequest.toJson(),
+        "team_get_response": teamGetResponse.toJson(),
         "teams_get_response": teamsGetResponse.toJson(),
         "users": users.toJson(),
     };
@@ -234,30 +258,27 @@ class JudgingSession {
         required this.customSession,
         required this.judgingSessionDeferred,
         required this.endTime,
-        required this.pod,
-        required this.session,
+        required this.judgingPods,
+        required this.sessionNumber,
         required this.startTime,
-        required this.teamNumber,
     });
 
     bool complete;
     bool customSession;
     bool judgingSessionDeferred;
     String endTime;
-    String pod;
-    String session;
+    List<JudgingPod> judgingPods;
+    String sessionNumber;
     String startTime;
-    String teamNumber;
 
     factory JudgingSession.fromJson(Map<String, dynamic> json) => JudgingSession(
         complete: json["complete"],
         customSession: json["custom_session"],
         judgingSessionDeferred: json["deferred"],
         endTime: json["end_time"],
-        pod: json["pod"],
-        session: json["session"],
+        judgingPods: List<JudgingPod>.from(json["judging_pods"].map((x) => JudgingPod.fromJson(x))),
+        sessionNumber: json["session_number"],
         startTime: json["start_time"],
-        teamNumber: json["team_number"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -265,10 +286,65 @@ class JudgingSession {
         "custom_session": customSession,
         "deferred": judgingSessionDeferred,
         "end_time": endTime,
-        "pod": pod,
-        "session": session,
+        "judging_pods": List<dynamic>.from(judgingPods.map((x) => x.toJson())),
+        "session_number": sessionNumber,
         "start_time": startTime,
+    };
+}
+
+class JudgingPod {
+    JudgingPod({
+        required this.pod,
+        required this.scoreSubmitted,
+        required this.teamNumber,
+    });
+
+    String pod;
+    bool scoreSubmitted;
+    String teamNumber;
+
+    factory JudgingPod.fromJson(Map<String, dynamic> json) => JudgingPod(
+        pod: json["pod"],
+        scoreSubmitted: json["score_submitted"],
+        teamNumber: json["team_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "pod": pod,
+        "score_submitted": scoreSubmitted,
         "team_number": teamNumber,
+    };
+}
+
+class JudgingSessionRequest {
+    JudgingSessionRequest({
+        required this.sessionNumber,
+    });
+
+    String sessionNumber;
+
+    factory JudgingSessionRequest.fromJson(Map<String, dynamic> json) => JudgingSessionRequest(
+        sessionNumber: json["session_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "session_number": sessionNumber,
+    };
+}
+
+class JudgingSessionResponse {
+    JudgingSessionResponse({
+        required this.judgingSession,
+    });
+
+    JudgingSession judgingSession;
+
+    factory JudgingSessionResponse.fromJson(Map<String, dynamic> json) => JudgingSessionResponse(
+        judgingSession: JudgingSession.fromJson(json["judging_session"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "judging_session": judgingSession.toJson(),
     };
 }
 
@@ -357,6 +433,38 @@ class Permissions {
         "judge": judge,
         "judge_advisor": judgeAdvisor,
         "referee": referee,
+    };
+}
+
+class MatchRequest {
+    MatchRequest({
+        required this.matchNumber,
+    });
+
+    String matchNumber;
+
+    factory MatchRequest.fromJson(Map<String, dynamic> json) => MatchRequest(
+        matchNumber: json["match_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "match_number": matchNumber,
+    };
+}
+
+class MatchResponse {
+    MatchResponse({
+        required this.gameMatch,
+    });
+
+    GameMatch gameMatch;
+
+    factory MatchResponse.fromJson(Map<String, dynamic> json) => MatchResponse(
+        gameMatch: GameMatch.fromJson(json["game_match"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "game_match": gameMatch.toJson(),
     };
 }
 
@@ -681,6 +789,38 @@ class StartTimerRequest {
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+    };
+}
+
+class TeamRequest {
+    TeamRequest({
+        required this.teamNumber,
+    });
+
+    String teamNumber;
+
+    factory TeamRequest.fromJson(Map<String, dynamic> json) => TeamRequest(
+        teamNumber: json["team_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "team_number": teamNumber,
+    };
+}
+
+class TeamResponse {
+    TeamResponse({
+        required this.team,
+    });
+
+    Team team;
+
+    factory TeamResponse.fromJson(Map<String, dynamic> json) => TeamResponse(
+        team: Team.fromJson(json["team"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "team": team.toJson(),
     };
 }
 

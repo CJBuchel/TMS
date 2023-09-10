@@ -78,7 +78,7 @@ impl MatchControl {
       let timer_flag = self.timer_running.clone();
       let clients = self.tms_clients.clone();
       tokio::task::spawn(async move {
-        MatchControl::timer(time, clients, timer_flag).await;
+        MatchControl::timer(time, clients.clone(), timer_flag).await;
       });
     } else {
       warn!("Timer already running!");

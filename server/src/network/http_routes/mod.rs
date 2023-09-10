@@ -154,19 +154,26 @@ impl TmsHttpServer {
       .manage(self.security.public_key.clone())
       .manage(self.ws_port.clone())
       .mount("/requests", routes![
+        // generic routes
         pulse_route,
         pulse_integrity_route,
         register_route,
         unregister_route,
         publish_route,
         login_route,
-        start_timer_route,
+        // setup routes
         event_setup_route,
         event_purge_route,
+        // main data routes
         event_get_route,
         teams_get_route,
+        team_get_route,
         matches_get_route,
+        match_get_route,
         judging_sessions_get_route,
+        judging_session_get_route,
+        // control routes
+        start_timer_route,
 
         // preflight catcher
         cors_preflight

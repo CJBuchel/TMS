@@ -17,3 +17,19 @@ Future<Tuple2<int, List<JudgingSession>>> getJudgingSessionsRequest() async {
     rethrow;
   }
 }
+
+Future<Tuple2<int, JudgingSession?>> getJudgingSessionRequest(String sessionNumber) async {
+  try {
+    var message = JudgingSessionRequest(sessionNumber: sessionNumber).toJson();
+    var res = await Network.serverPost("judging_session/get", message);
+
+    if (res.item1) {
+      return Tuple2(res.item2, JudgingSession.fromJson(res.item3));
+    } else {
+      return Tuple2(res.item2, null);
+    }
+  } catch (e) {
+    Logger().e(e);
+    rethrow;
+  }
+}

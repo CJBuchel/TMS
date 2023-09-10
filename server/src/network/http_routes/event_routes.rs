@@ -1,7 +1,7 @@
 use log::{info, error};
 use rocket::{State, post, get, http::Status};
 use tms_macros::tms_private_route;
-use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, security::encrypt, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse}, tms_clients_ws_send};
+use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, security::encrypt, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse, SocketMessage}, tms_clients_ws_send};
 
 use crate::{db::db::TmsDB, event_service::TmsEventService};
 
@@ -38,14 +38,41 @@ pub fn event_purge_route(_tms_event_service: &State<std::sync::Arc<std::sync::Mu
       Ok(_) => {
         info!("Database purged successfully");
         db.setup_default();
+        
 
-        let s_m = tms_utils::network_schemas::SocketMessage {
+        // send event update
+        tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("event"),
           sub_topic: Some(String::from("update")),
           message: None
-        };
-        tms_clients_ws_send(s_m, clients.inner().to_owned(), None);
+        }, clients.inner().to_owned(), None);
+        
+        // send teams update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("teams"),
+          sub_topic: Some(String::from("update")),
+          message: None
+        }, clients.inner().to_owned(), None);
+
+        // send matches update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("matches"),
+          sub_topic: Some(String::from("update")),
+          message: None
+        }, clients.inner().to_owned(), None);
+
+        // send judging sessions update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("judging_sessions"),
+          sub_topic: Some(String::from("update")),
+          message: None
+        }, clients.inner().to_owned(), None);
+
+        // good response
         TmsRespond!()
       },
       Err(e) => {
@@ -108,13 +135,13 @@ pub fn event_setup_route(_tms_event_service: &State<std::sync::Arc<std::sync::Mu
 
     // supply new judging sessions (the team number is the key)
     for judging_session in message.judging_sessions {
-      match db.tms_data.judging_sessions.insert(judging_session.team_number.as_bytes(), judging_session.clone()) {
+      match db.tms_data.judging_sessions.insert(judging_session.session_number.as_bytes(), judging_session.clone()) {
         Ok(_) => {
-          info!("Judging Session {} setup successfully for team {}", judging_session.session, judging_session.team_number);
+          info!("Successfully setup Judging Session {}", judging_session.session_number);
         },
         Err(e) => {
-          error!("Failed to setup judging session {} for team {}: {}", judging_session.session, judging_session.team_number, e);
-          TmsRespond!(Status::BadRequest, format!("Failed to setup judging session {} for team {}", judging_session.session, judging_session.team_number));
+          error!("Failed to setup judging session {}: {}", judging_session.session_number, e);
+          TmsRespond!(Status::BadRequest, format!("Failed to setup judging session {}", judging_session.session_number));
         }
       }
     }
@@ -144,14 +171,39 @@ pub fn event_setup_route(_tms_event_service: &State<std::sync::Arc<std::sync::Mu
     }
 
 
-    // if success
-    let s_m = tms_utils::network_schemas::SocketMessage {
+    // send event update
+    tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("event"),
       sub_topic: Some(String::from("update")),
       message: None
-    };
-    tms_clients_ws_send(s_m, clients.inner().to_owned(), None);
+    }, clients.inner().to_owned(), None);
+    
+    // send teams update
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("teams"),
+      sub_topic: Some(String::from("update")),
+      message: None
+    }, clients.inner().to_owned(), None);
+
+    // send matches update
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("matches"),
+      sub_topic: Some(String::from("update")),
+      message: None
+    }, clients.inner().to_owned(), None);
+
+    // send judging sessions update
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("judging_sessions"),
+      sub_topic: Some(String::from("update")),
+      message: None
+    }, clients.inner().to_owned(), None);
+
+    // good response
     TmsRespond!()
   }
   

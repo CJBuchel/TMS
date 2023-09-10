@@ -32,60 +32,80 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   final List<Function(List<JudgingSession>)> _judgingSessionListTriggers = [];
   final List<Function(JudgingSession)> _judgingSessionTriggers = [];
 
+  bool _registeredEventListener = false;
+  bool _registeredTeamListener = false;
+  bool _registeredMatchListener = false;
+  bool _registeredJudgingSessionListener = false;
+
   void onEventUpdate(Function(Event) callback) {
+    _registeredEventListener = true;
     _eventTriggers.add(callback);
   }
 
   void onTeamsUpdate(Function(List<Team>) callback) {
+    _registeredTeamListener = true;
     _teamListTriggers.add(callback);
   }
 
   void onTeamUpdate(Function(Team) callback) {
+    _registeredTeamListener = true;
     _teamTriggers.add(callback);
   }
 
   void onMatchesUpdate(Function(List<GameMatch>) callback) {
+    _registeredMatchListener = true;
     _matchListTriggers.add(callback);
   }
 
   void onMatchUpdate(Function(GameMatch) callback) {
+    _registeredMatchListener = true;
     _matchTriggers.add(callback);
   }
 
   void onJudgingSessionsUpdate(Function(List<JudgingSession>) callback) {
+    _registeredJudgingSessionListener = true;
     _judgingSessionListTriggers.add(callback);
   }
 
   void onJudgingSessionUpdate(Function(JudgingSession) callback) {
+    _registeredJudgingSessionListener = true;
     _judgingSessionTriggers.add(callback);
   }
 
   void syncDatabase() async {
     var s = await Network.getStates();
     if (s.item1 == NetworkHttpConnectionState.connected && s.item2 == NetworkWebSocketState.connected && s.item3 == SecurityState.secure) {
-      getEventRequest().then((value) async {
-        if (value.item1 == HttpStatus.ok) {
-          await _setEvent(value.item2 ?? await getEvent()); // use previous data as default
-        }
-      });
+      if (_registeredEventListener) {
+        getEventRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            await _setEvent(value.item2 ?? await getEvent()); // use previous data as default
+          }
+        });
+      }
 
-      getTeamsRequest().then((value) async {
-        if (value.item1 == HttpStatus.ok) {
-          await _setTeams(value.item2.isNotEmpty ? value.item2 : await getTeams()); // use previous data as default
-        }
-      });
+      if (_registeredTeamListener) {
+        getTeamsRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            await _setTeams(value.item2.isNotEmpty ? value.item2 : await getTeams()); // use previous data as default
+          }
+        });
+      }
 
-      getMatchesRequest().then((value) async {
-        if (value.item1 == HttpStatus.ok) {
-          await _setMatches(value.item2.isNotEmpty ? value.item2 : await getMatches()); // use previous data as default
-        }
-      });
+      if (_registeredMatchListener) {
+        getMatchesRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            await _setMatches(value.item2.isNotEmpty ? value.item2 : await getMatches()); // use previous data as default
+          }
+        });
+      }
 
-      getJudgingSessionsRequest().then((value) async {
-        if (value.item1 == HttpStatus.ok) {
-          await _setJudgingSessions(value.item2.isNotEmpty ? value.item2 : await getJudgingSessions()); // use previous data as default
-        }
-      });
+      if (_registeredJudgingSessionListener) {
+        getJudgingSessionsRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            await _setJudgingSessions(value.item2.isNotEmpty ? value.item2 : await getJudgingSessions()); // use previous data as default
+          }
+        });
+      }
     }
   }
 

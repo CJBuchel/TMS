@@ -6,23 +6,10 @@ import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/schema/tms_schema.dart';
 
 class MatchRow {
-  String matchNumber;
-  String startTime;
-
-  String firstTable;
-  String firstTableTeam;
-
-  String secondTable;
-  String secondTableTeam;
-
+  GameMatch match;
   bool isChecked;
   MatchRow({
-    required this.matchNumber,
-    required this.startTime,
-    required this.firstTable,
-    required this.firstTableTeam,
-    required this.secondTable,
-    required this.secondTableTeam,
+    required this.match,
     required this.isChecked,
   });
 }
@@ -47,12 +34,7 @@ class _MatchControlTableState extends State<MatchControlTable> with AutoUnsubScr
     for (var match in gameMatches) {
       m.add(
         MatchRow(
-          matchNumber: match.matchNumber,
-          startTime: match.startTime,
-          firstTable: match.onTableFirst.table,
-          firstTableTeam: match.onTableFirst.teamNumber,
-          secondTable: match.onTableSecond.table,
-          secondTableTeam: match.onTableSecond.teamNumber,
+          match: match,
           isChecked: false,
         ),
       );
@@ -76,10 +58,10 @@ class _MatchControlTableState extends State<MatchControlTable> with AutoUnsubScr
     );
   }
 
-  DataRow2 _styledRow(MatchRow match, int index) {
+  DataRow2 _styledRow(MatchRow matchRow, int index) {
     return DataRow2(
       onTap: () {
-        Logger().i("Selected: ${match.matchNumber}");
+        Logger().i("Selected: ${matchRow.match.matchNumber}");
       },
       color: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
         if (index.isEven) return Theme.of(context).splashColor; // Color for even rows
@@ -89,20 +71,20 @@ class _MatchControlTableState extends State<MatchControlTable> with AutoUnsubScr
         if (multiMatch)
           DataCell(
             Checkbox(
-              value: match.isChecked,
+              value: matchRow.isChecked,
               onChanged: (bool? value) {
                 setState(() {
-                  match.isChecked = value!;
+                  matchRow.isChecked = value!;
                 });
               },
             ),
           ),
-        _styledCell(match.matchNumber),
-        _styledCell(match.startTime),
-        _styledCell(match.firstTable),
-        _styledCell(match.firstTableTeam),
-        _styledCell(match.secondTable),
-        _styledCell(match.secondTableTeam),
+        _styledCell(matchRow.match.matchNumber),
+        _styledCell(matchRow.match.startTime),
+        _styledCell(matchRow.match.onTableFirst.table),
+        _styledCell(matchRow.match.onTableFirst.teamNumber),
+        _styledCell(matchRow.match.onTableSecond.table),
+        _styledCell(matchRow.match.onTableSecond.teamNumber),
       ],
     );
   }
@@ -111,24 +93,19 @@ class _MatchControlTableState extends State<MatchControlTable> with AutoUnsubScr
   void initState() {
     super.initState();
     onMatchesUpdate((matches) {
-      Logger().i("Match Update");
       setMatches(matches);
     });
 
     onMatchUpdate((match) {
       // find match number in current match array
-      int idx = matches.indexWhere((m) => m.matchNumber == match.matchNumber);
+      int idx = matches.indexWhere((m) => m.match.matchNumber == match.matchNumber);
       if (idx != -1) {
         setState(() {
-          matches[idx].startTime = match.startTime;
-          matches[idx].firstTable = match.onTableFirst.table;
-          matches[idx].firstTableTeam = match.onTableFirst.teamNumber;
-          matches[idx].secondTable = match.onTableSecond.table;
-          matches[idx].secondTableTeam = match.onTableSecond.teamNumber;
+          matches[idx].match = match;
         });
       }
     });
-    getMatches().then((matches) => setMatches(matches));
+    // getMatches().then((matches) => setMatches(matches));
   }
 
   @override
@@ -193,12 +170,13 @@ class _MatchControlTableState extends State<MatchControlTable> with AutoUnsubScr
               DataColumn2(label: _styledHeader('Table')),
               DataColumn2(label: _styledHeader('Team')),
             ],
+            // rows: ,
             rows: matches.map((match) {
               int idx = matches.indexOf(match);
               return _styledRow(match, idx);
             }).toList(),
           ),
-        )
+        ),
       ],
     );
   }

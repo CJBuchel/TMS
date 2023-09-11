@@ -1,7 +1,12 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tuple/tuple.dart';
+import 'package:logger/logger.dart';
 
 String _detectEol(String input) {
   if (input.contains('\r\n')) {
@@ -16,7 +21,22 @@ String _detectEol(String input) {
 // CSV Parser
 Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
   try {
-    final input = result.files.single.bytes!;
+    // Check file and get bytes from file
+    Uint8List input = Uint8List(0);
+    if (kIsWeb) {
+      if (result.files.single.bytes != null) {
+        input = result.files.single.bytes!;
+      } else {
+        return const Tuple2(false, null);
+      }
+    } else {
+      if (result.files.single.path != null && result.files.single.path != "") {
+        input = File(result.files.single.path ?? "").readAsBytesSync();
+      } else {
+        return const Tuple2(false, null);
+      }
+    }
+
     // convert bytes to string
     final csvString = String.fromCharCodes(input);
 
@@ -26,6 +46,7 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
 
     if (rows[0][1] != 1) {
       // check version is 1
+      Logger().e("Incorrect Version Format");
       return const Tuple2(false, null); // @TODO, return with bad flag
     }
 
@@ -201,6 +222,7 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
       ),
     );
   } catch (e) {
+    Logger().e("Error parsing schedule: $e");
     return const Tuple2(false, null);
   }
 }

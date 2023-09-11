@@ -185,7 +185,7 @@ class Network {
           Logger().i("Server Integrity Holding, Connecting WS...");
           _ws.connect(await _http.getConnectUrl());
         } else {
-          Logger().w("Websocket Could Not Reconnect");
+          Logger().w("Websocket Could Not Reconnect (Starting Full Reconnect...)");
           await connect();
         }
       } else {
@@ -199,6 +199,7 @@ class Network {
       if (states.item1 == NetworkHttpConnectionState.connected &&
           states.item2 == NetworkWebSocketState.connected &&
           states.item3 == SecurityState.secure) {
+        Logger().i("Reconnection Successful");
         return true;
       } else {
         return false;

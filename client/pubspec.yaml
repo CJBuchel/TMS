@@ -57,6 +57,14 @@ flutter:
         - asset: assets/fonts/RADIOLAND.TTF
         - asset: assets/fonts/RADIOLANDSLIM.ttf
 
+    - family: lcdbold
+      fonts:
+        - asset: assets/fonts/LCDBOLD.ttf
+    
+    - family: Digital7
+      fonts:
+        - asset: assets/fonts/DIGITAL7.ttf
+
   assets:
     - assets/images/
     - assets/icons/

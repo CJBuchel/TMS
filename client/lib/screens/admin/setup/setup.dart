@@ -26,12 +26,18 @@ class Setup extends StatelessWidget {
             // scrollable row
             return Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
-                Expanded(
-                  child: OfflineSetup(),
+              children: [
+                SizedBox(
+                  width: constraints.maxWidth / 2,
+                  height: constraints.maxHeight,
+                  child: const SingleChildScrollView(
+                    child: OfflineSetup(),
+                  ),
                 ),
-                Expanded(
-                  child: APISetup(),
+                SizedBox(
+                  width: constraints.maxWidth / 2,
+                  height: constraints.maxHeight,
+                  child: const APISetup(),
                 ),
               ],
             );

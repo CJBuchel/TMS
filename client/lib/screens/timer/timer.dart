@@ -18,7 +18,7 @@ class Timer extends StatelessWidget {
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text("Unauthorized"),
+            title: const Text("Unauthorised"),
             content: SingleChildScrollView(
               child: Text(res == HttpStatus.unauthorized ? "Invalid User Permissions" : "Server Error"),
             ),

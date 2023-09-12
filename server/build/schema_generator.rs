@@ -30,14 +30,18 @@ pub struct TmsSchema {
   //
   register_request: RegisterRequest,
   register_response: RegisterResponse,
-  socket_event: SocketMessage,
   integrity_message: IntegrityMessage,
   login_request: LoginRequest,
   login_response: LoginResponse,
-  start_timer_request: StartTimerRequest,
   setup_request: SetupRequest,
   purge_request: PurgeRequest,
-
+  
+  //
+  // Network structures (Socket)
+  //
+  socket_event: SocketMessage,
+  socket_match_loaded_message: SocketMatchLoadedMessage,
+  
   //
   // Network structures (Event Data)
   //
@@ -54,6 +58,12 @@ pub struct TmsSchema {
   judging_sessions_get_response: JudgingSessionsResponse,
   judging_session_get_request: JudgingSessionRequest,
   judging_session_get_response: JudgingSessionResponse,
+  
+  //
+  // Network structures (Controls)
+  //
+  start_timer_request: TimerRequest,
+  match_loaded_request: MatchLoadRequest,
 }
 
 pub fn generate_schema(outdir: &OsString) {

@@ -9,3 +9,9 @@ pub struct SocketMessage {
   pub sub_topic: Option<String>, // time, start, update i.e (clock:time, event:update)
   pub message: Option<String>
 }
+
+// Sent over the SocketMessage::message in serialized form
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
+pub struct SocketMatchLoadedMessage{
+  pub match_numbers: Vec<String>,
+}

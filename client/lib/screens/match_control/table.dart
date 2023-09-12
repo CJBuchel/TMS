@@ -2,26 +2,28 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
 
-class MatchRow {
-  GameMatch match;
-  bool isChecked;
-  MatchRow({
-    required this.match,
-    required this.isChecked,
-  });
-}
+// class MatchRow {
+//   GameMatch match;
+//   bool isChecked;
+//   MatchRow({
+//     required this.match,
+//     required this.isChecked,
+//   });
+// }
 
 class MatchControlTable extends StatefulWidget {
   final BoxConstraints con;
   final List<GameMatch> matches;
+  final List<GameMatch> selectedMatches;
   final Function(List<GameMatch> selectedMatches) onSelected;
-  final String? loadedMatch;
+  final List<GameMatch> loadedMatches;
   const MatchControlTable({
     Key? key,
     required this.con,
     required this.matches,
+    required this.selectedMatches,
     required this.onSelected,
-    required this.loadedMatch,
+    required this.loadedMatches,
   }) : super(key: key);
 
   @override
@@ -29,8 +31,7 @@ class MatchControlTable extends StatefulWidget {
 }
 
 class _MatchControlTableState extends State<MatchControlTable> {
-  List<MatchRow> _matchRows = [];
-  final List<GameMatch> _selectedMatches = [];
+  // List<MatchRow> _matchRows = []; // for multi select
   bool _multiMatch = false;
 
   Widget _styledHeader(String content) {
@@ -53,76 +54,80 @@ class _MatchControlTableState extends State<MatchControlTable> {
     );
   }
 
-  DataRow2 _styledRow(MatchRow matchRow, int index) {
-    // check if a match with the same table is already checked
-    bool isSelectable = true;
-    isSelectable = _selectedMatches.map((e) => e.onTableFirst.table).contains(matchRow.match.onTableFirst.table) ? false : isSelectable;
-    isSelectable = _selectedMatches.map((e) => e.onTableSecond.table).contains(matchRow.match.onTableSecond.table) ? false : isSelectable;
-    isSelectable = matchRow.isChecked ? true : isSelectable;
+  DataRow2 _styledRow(GameMatch match, int index) {
+    // check if this match is loaded
+    bool isLoaded = widget.loadedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
 
     // check if this match is currently selected
-    bool isSelected = _selectedMatches.map((e) => e.matchNumber).contains(matchRow.match.matchNumber) ? true : false;
+    bool isSelected = widget.selectedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
+
+    // check if a match with the same table is already checked
+    bool isSelectable = true;
+    isSelectable = widget.selectedMatches.map((e) => e.onTableFirst.table).contains(match.onTableFirst.table) ? false : isSelectable;
+    isSelectable = widget.selectedMatches.map((e) => e.onTableSecond.table).contains(match.onTableSecond.table) ? false : isSelectable;
+    isSelectable = isSelected ? true : isSelectable;
+    isSelectable = widget.loadedMatches.isNotEmpty ? false : isSelectable;
 
     return DataRow2(
       onTap: () {
-        if (!_multiMatch) {
+        if (!_multiMatch && widget.loadedMatches.isEmpty) {
           setState(() {
-            _selectedMatches.clear();
-            _selectedMatches.add(matchRow.match);
-            widget.onSelected(_selectedMatches);
+            List<GameMatch> m = [match];
+            widget.onSelected(m);
           });
         }
       },
       color: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        if (isLoaded) return Colors.orange;
         if (isSelected) return Colors.blue[300] ?? Colors.blue;
-        if (index.isEven) return matchRow.match.complete ? Colors.green : Theme.of(context).splashColor; // Color for even rows
-        return matchRow.match.complete ? Colors.green[300] ?? Colors.green : Theme.of(context).colorScheme.secondary.withOpacity(0.1);
+        if (index.isEven) return match.complete ? Colors.green : Theme.of(context).splashColor; // Color for even rows
+        return match.complete ? Colors.green[300] ?? Colors.green : Theme.of(context).colorScheme.secondary.withOpacity(0.1);
       }),
       cells: [
         if (_multiMatch && isSelectable)
           DataCell(
             Checkbox(
-              value: matchRow.isChecked,
+              value: isSelected,
               checkColor: Colors.white,
               activeColor: Colors.blue[900],
               onChanged: (bool? value) {
                 setState(() {
-                  matchRow.isChecked = value!;
-                  if (value) {
-                    _selectedMatches.add(matchRow.match);
+                  List<GameMatch> m = [...widget.selectedMatches];
+                  if (value!) {
+                    m.add(match);
                   } else {
-                    _selectedMatches.remove(matchRow.match);
+                    m.remove(match);
                   }
-                  widget.onSelected(_selectedMatches);
+                  widget.onSelected(m);
                 });
               },
             ),
           ),
         if (_multiMatch && !isSelectable) const DataCell(SizedBox()),
-        _styledCell(matchRow.match.matchNumber, null),
-        _styledCell(matchRow.match.startTime, null),
+        _styledCell(match.matchNumber, null),
+        _styledCell(match.startTime, null),
         _styledCell(
-          matchRow.match.onTableFirst.table,
-          matchRow.match.complete && !matchRow.match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          match.onTableFirst.table,
+          match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
         ),
         _styledCell(
-          matchRow.match.onTableFirst.teamNumber,
-          matchRow.match.complete && !matchRow.match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          match.onTableFirst.teamNumber,
+          match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
         ),
         _styledCell(
-          matchRow.match.onTableSecond.table,
-          matchRow.match.complete && !matchRow.match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          match.onTableSecond.table,
+          match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
         ),
         _styledCell(
-          matchRow.match.onTableSecond.teamNumber,
-          matchRow.match.complete && !matchRow.match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          match.onTableSecond.teamNumber,
+          match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
         ),
       ],
     );
   }
 
   Widget getTable() {
-    if (_matchRows.isEmpty) {
+    if (widget.matches.isEmpty) {
       // circular loader
       return const Center(
         child: CircularProgressIndicator(),
@@ -144,28 +149,12 @@ class _MatchControlTableState extends State<MatchControlTable> {
           DataColumn2(label: _styledHeader('Team')),
         ],
         // rows: ,
-        rows: _matchRows.map((match) {
-          int idx = _matchRows.indexOf(match);
+        rows: widget.matches.map((match) {
+          int idx = widget.matches.indexOf(match);
           return _styledRow(match, idx);
         }).toList(),
       );
     }
-  }
-
-  @override
-  void didUpdateWidget(covariant MatchControlTable oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.matches != widget.matches) {
-      setState(() {
-        _matchRows = widget.matches.map((e) => MatchRow(match: e, isChecked: false)).toList();
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _matchRows = widget.matches.map((e) => MatchRow(match: e, isChecked: false)).toList();
   }
 
   @override
@@ -186,13 +175,8 @@ class _MatchControlTableState extends State<MatchControlTable> {
                     groupValue: _multiMatch,
                     onChanged: (bool? value) {
                       if (value != null) {
-                        for (var match in _matchRows) {
-                          match.isChecked = false;
-                        }
-
                         setState(() {
                           _multiMatch = value;
-                          _selectedMatches.clear();
                           widget.onSelected([]);
                         });
                       }
@@ -210,7 +194,6 @@ class _MatchControlTableState extends State<MatchControlTable> {
                       if (value != null) {
                         setState(() {
                           _multiMatch = value;
-                          _selectedMatches.clear();
                           widget.onSelected([]);
                         });
                       }

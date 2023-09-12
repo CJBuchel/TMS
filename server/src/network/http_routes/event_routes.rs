@@ -3,10 +3,10 @@ use rocket::{State, post, get, http::Status};
 use tms_macros::tms_private_route;
 use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, security::encrypt, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse, SocketMessage}, tms_clients_ws_send};
 
-use crate::{db::db::TmsDB, event_service::TmsEventService};
+use crate::{db::db::TmsDB};
 
 #[get("/event/get/<uuid>")]
-pub fn event_get_route(_security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
   let event = match db.tms_data.event.get().unwrap() {
     Some(event) => event,
     None => {
@@ -29,7 +29,7 @@ pub fn event_get_route(_security: &State<Security>, clients: &State<TmsClients>,
 
 #[tms_private_route]
 #[post("/event/purge/<uuid>", data = "<message>")]
-pub fn event_purge_route(_tms_event_service: &State<std::sync::Arc<std::sync::Mutex<TmsEventService>>>, message: String) -> TmsRouteResponse<()> {
+pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
   let message: PurgeRequest = TmsRequest!(message.clone(), security);
 
   let perms = create_permissions(); // only admin can purge
@@ -87,7 +87,7 @@ pub fn event_purge_route(_tms_event_service: &State<std::sync::Arc<std::sync::Mu
 
 #[tms_private_route]
 #[post("/event/setup/<uuid>", data = "<message>")]
-pub fn event_setup_route(_tms_event_service: &State<std::sync::Arc<std::sync::Mutex<TmsEventService>>>, message: String) -> TmsRouteResponse<()> {
+pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
   let message: SetupRequest = TmsRequest!(message.clone(), security);
 
   let perms = create_permissions(); // only admin can setup

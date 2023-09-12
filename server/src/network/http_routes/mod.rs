@@ -161,9 +161,11 @@ impl TmsHttpServer {
         unregister_route,
         publish_route,
         login_route,
+
         // setup routes
         event_setup_route,
         event_purge_route,
+
         // main data routes
         event_get_route,
         teams_get_route,
@@ -172,8 +174,16 @@ impl TmsHttpServer {
         match_get_route,
         judging_sessions_get_route,
         judging_session_get_route,
-        // control routes
+
+        // timer control routes
         start_timer_route,
+        pre_start_timer_route,
+        stop_timer_route,
+        reload_timer_route,
+        
+        // match control routes
+        match_load_route,
+        match_unload_route,
 
         // preflight catcher
         cors_preflight

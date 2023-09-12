@@ -22,12 +22,14 @@ class TmsSchema {
         required this.loginResponse,
         required this.matchGetRequest,
         required this.matchGetResponse,
+        required this.matchLoadedRequest,
         required this.matchesGetResponse,
         required this.purgeRequest,
         required this.registerRequest,
         required this.registerResponse,
         required this.setupRequest,
         required this.socketEvent,
+        required this.socketMatchLoadedMessage,
         required this.startTimerRequest,
         required this.team,
         required this.teamGetRequest,
@@ -48,13 +50,15 @@ class TmsSchema {
     LoginResponse loginResponse;
     MatchRequest matchGetRequest;
     MatchResponse matchGetResponse;
+    MatchLoadRequest matchLoadedRequest;
     MatchesResponse matchesGetResponse;
     PurgeRequest purgeRequest;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
     SetupRequest setupRequest;
     SocketMessage socketEvent;
-    StartTimerRequest startTimerRequest;
+    SocketMatchLoadedMessage socketMatchLoadedMessage;
+    TimerRequest startTimerRequest;
     Team team;
     TeamRequest teamGetRequest;
     TeamResponse teamGetResponse;
@@ -74,13 +78,15 @@ class TmsSchema {
         loginResponse: LoginResponse.fromJson(json["login_response"]),
         matchGetRequest: MatchRequest.fromJson(json["match_get_request"]),
         matchGetResponse: MatchResponse.fromJson(json["match_get_response"]),
+        matchLoadedRequest: MatchLoadRequest.fromJson(json["match_loaded_request"]),
         matchesGetResponse: MatchesResponse.fromJson(json["matches_get_response"]),
         purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
         registerResponse: RegisterResponse.fromJson(json["register_response"]),
         setupRequest: SetupRequest.fromJson(json["setup_request"]),
         socketEvent: SocketMessage.fromJson(json["socket_event"]),
-        startTimerRequest: StartTimerRequest.fromJson(json["start_timer_request"]),
+        socketMatchLoadedMessage: SocketMatchLoadedMessage.fromJson(json["socket_match_loaded_message"]),
+        startTimerRequest: TimerRequest.fromJson(json["start_timer_request"]),
         team: Team.fromJson(json["team"]),
         teamGetRequest: TeamRequest.fromJson(json["team_get_request"]),
         teamGetResponse: TeamResponse.fromJson(json["team_get_response"]),
@@ -101,12 +107,14 @@ class TmsSchema {
         "login_response": loginResponse.toJson(),
         "match_get_request": matchGetRequest.toJson(),
         "match_get_response": matchGetResponse.toJson(),
+        "match_loaded_request": matchLoadedRequest.toJson(),
         "matches_get_response": matchesGetResponse.toJson(),
         "purge_request": purgeRequest.toJson(),
         "register_request": registerRequest.toJson(),
         "register_response": registerResponse.toJson(),
         "setup_request": setupRequest.toJson(),
         "socket_event": socketEvent.toJson(),
+        "socket_match_loaded_message": socketMatchLoadedMessage.toJson(),
         "start_timer_request": startTimerRequest.toJson(),
         "team": team.toJson(),
         "team_get_request": teamGetRequest.toJson(),
@@ -476,6 +484,26 @@ class MatchResponse {
     };
 }
 
+class MatchLoadRequest {
+    MatchLoadRequest({
+        required this.authToken,
+        required this.matchNumbers,
+    });
+
+    String authToken;
+    List<String> matchNumbers;
+
+    factory MatchLoadRequest.fromJson(Map<String, dynamic> json) => MatchLoadRequest(
+        authToken: json["auth_token"],
+        matchNumbers: List<String>.from(json["match_numbers"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "match_numbers": List<dynamic>.from(matchNumbers.map((x) => x)),
+    };
+}
+
 class MatchesResponse {
     MatchesResponse({
         required this.matches,
@@ -784,14 +812,30 @@ class SocketMessage {
     };
 }
 
-class StartTimerRequest {
-    StartTimerRequest({
+class SocketMatchLoadedMessage {
+    SocketMatchLoadedMessage({
+        required this.matchNumbers,
+    });
+
+    List<String> matchNumbers;
+
+    factory SocketMatchLoadedMessage.fromJson(Map<String, dynamic> json) => SocketMatchLoadedMessage(
+        matchNumbers: List<String>.from(json["match_numbers"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "match_numbers": List<dynamic>.from(matchNumbers.map((x) => x)),
+    };
+}
+
+class TimerRequest {
+    TimerRequest({
         required this.authToken,
     });
 
     String authToken;
 
-    factory StartTimerRequest.fromJson(Map<String, dynamic> json) => StartTimerRequest(
+    factory TimerRequest.fromJson(Map<String, dynamic> json) => TimerRequest(
         authToken: json["auth_token"],
     );
 

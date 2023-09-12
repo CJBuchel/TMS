@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
@@ -16,10 +19,10 @@ class MatchControl extends StatefulWidget {
 }
 
 class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  String? _loadedMatch;
   List<GameMatch> _matches = [];
+  List<GameMatch> _loadedMatches = [];
+  List<GameMatch> _selectedMatches = [];
   List<Team> _teams = [];
-  final List<GameMatch> _selectedMatches = [];
 
   // Set teams
   void setTeams(List<Team> teams) async {
@@ -51,10 +54,12 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
   }
 
   void onSelectedMatches(List<GameMatch> matches) {
-    setState(() {
-      _selectedMatches.clear();
-      _selectedMatches.addAll(matches);
-    });
+    if (_loadedMatches.isEmpty) {
+      setState(() {
+        _selectedMatches.clear();
+        _selectedMatches.addAll(matches);
+      });
+    }
   }
 
   @override
@@ -81,6 +86,44 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
       }
     });
 
+    autoSubscribe("match", (m) {
+      if (m.subTopic == "load") {
+        if (m.message != null && m.message is String && m.message!.isNotEmpty) {
+          final jsonString = jsonDecode(m.message!);
+          SocketMatchLoadedMessage message = SocketMatchLoadedMessage.fromJson(jsonString);
+
+          List<GameMatch> loadedMatches = [];
+          for (var loadedMatchNumber in message.matchNumbers) {
+            int idx = _matches.indexWhere((m) => m.matchNumber == loadedMatchNumber);
+            for (var match in _matches) {
+              if (match.matchNumber == loadedMatchNumber) {
+                loadedMatches.add(match);
+              }
+            }
+          }
+
+          // check if the loaded matches are the same
+          if (!listEquals(_loadedMatches, loadedMatches)) {
+            setState(() {
+              _loadedMatches = loadedMatches;
+            });
+          }
+
+          if (!listEquals(_selectedMatches, loadedMatches)) {
+            setState(() {
+              _selectedMatches.clear();
+              _selectedMatches.addAll(loadedMatches);
+            });
+          }
+        }
+      } else if (m.subTopic == "unload") {
+        setState(() {
+          _loadedMatches = [];
+          _selectedMatches = [];
+        });
+      }
+    });
+
     Future.delayed(const Duration(seconds: 1), () async {
       if (!await Network.isConnected()) {
         getTeams().then((teams) => setTeams(teams));
@@ -103,8 +146,9 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
                   child: MatchControlControls(
                     con: constraints,
                     teams: _teams,
-                    selectedMatches: _selectedMatches,
                     matches: _matches,
+                    loadedMatches: _loadedMatches,
+                    selectedMatches: _selectedMatches,
                   ),
                 ),
                 SizedBox(
@@ -113,7 +157,8 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
                     con: constraints,
                     matches: _matches,
                     onSelected: onSelectedMatches,
-                    loadedMatch: _loadedMatch,
+                    selectedMatches: _selectedMatches,
+                    loadedMatches: _loadedMatches,
                   ),
                 ),
               ],
@@ -124,8 +169,9 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
               child: MatchControlTable(
                 con: constraints,
                 matches: _matches,
+                selectedMatches: _selectedMatches,
                 onSelected: onSelectedMatches,
-                loadedMatch: _loadedMatch,
+                loadedMatches: _loadedMatches,
               ),
             );
           }

@@ -5,7 +5,7 @@ use tms_utils::{security::Security, security::encrypt, TmsClients, network_schem
 use crate::db::db::TmsDB;
 
 #[get("/teams/get/<uuid>")]
-pub fn teams_get_route(_security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub fn teams_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
   // get teams from db and put into TeamsResponse
   let mut teams:Vec<Team> = vec![];
 

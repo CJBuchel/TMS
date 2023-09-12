@@ -6,7 +6,7 @@ use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteRespo
 use crate::db::db::TmsDB;
 
 #[get("/judging_sessions/get/<uuid>")]
-pub fn judging_sessions_get_route(_security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub fn judging_sessions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
   // get matches from db and put into MatchesResponse
   let mut judging_sessions:Vec<JudgingSession> = vec![];
 

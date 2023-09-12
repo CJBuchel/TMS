@@ -75,7 +75,7 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   // clear local storage if debug mode
-  if (kDebugMode) {
+  if (kDebugMode && !kIsWeb) {
     SharedPreferences.getInstance().then((value) => value.clear()); // clear everything if in debug mode
   }
 

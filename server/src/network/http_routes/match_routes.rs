@@ -1,12 +1,13 @@
 
 use log::error;
 use rocket::{State, get, http::Status, post};
-use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::GameMatch, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse}, TmsRequest};
+use tms_macros::tms_private_route;
+use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{GameMatch, create_permissions}, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse, MatchLoadRequest}, TmsRequest, check_permissions};
 
-use crate::db::db::TmsDB;
+use crate::{db::db::TmsDB, event_service::TmsEventService};
 
 #[get("/matches/get/<uuid>")]
-pub fn matches_get_route(_security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub fn matches_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
   // get matches from db and put into MatchesResponse
   let mut matches:Vec<GameMatch> = vec![];
 
@@ -54,4 +55,32 @@ pub fn match_get_route(security: &State<Security>, clients: &State<TmsClients>, 
       TmsRespond!(Status::BadRequest, "Failed to get match".to_string());
     }
   };
+}
+
+#[tms_private_route]
+#[post("/match/load/<uuid>", data = "<message>")]
+pub fn match_load_route(tms_event_service: &State<std::sync::Arc<std::sync::Mutex<TmsEventService>>>, message: String) -> TmsRouteResponse<()> {
+  let message: MatchLoadRequest = TmsRequest!(message.clone(), security);
+  let mut perms = create_permissions();
+  perms.head_referee = Some(true);
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    tms_event_service.lock().unwrap().match_control.load_matches(message.match_numbers);
+    TmsRespond!()
+  }
+  
+  TmsRespond!(Status::Unauthorized)
+}
+
+#[tms_private_route]
+#[post("/match/unload/<uuid>", data = "<message>")]
+pub fn match_unload_route(tms_event_service: &State<std::sync::Arc<std::sync::Mutex<TmsEventService>>>, message: String) -> TmsRouteResponse<()> {
+  let message: MatchLoadRequest = TmsRequest!(message.clone(), security);
+  let mut perms = create_permissions();
+  perms.head_referee = Some(true);
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    tms_event_service.lock().unwrap().match_control.unload_matches();
+    TmsRespond!()
+  }
+  
+  TmsRespond!(Status::Unauthorized)
 }

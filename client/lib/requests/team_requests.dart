@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:logger/logger.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/schema/tms_schema.dart';
@@ -7,14 +9,14 @@ Future<Tuple2<int, List<Team>>> getTeamsRequest() async {
   try {
     var res = await Network.serverGet("teams/get");
 
-    if (res.item1) {
+    if (res.item1 && res.item3.isNotEmpty) {
       return Tuple2(res.item2, TeamsResponse.fromJson(res.item3).teams);
     } else {
       return Tuple2(res.item2, []);
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return const Tuple2(HttpStatus.badRequest, []);
   }
 }
 
@@ -23,13 +25,13 @@ Future<Tuple2<int, Team?>> getTeamRequest(String teamNumber) async {
     var message = TeamRequest(teamNumber: teamNumber).toJson();
     var res = await Network.serverPost("team/get", message);
 
-    if (res.item1) {
+    if (res.item1 && res.item3.isNotEmpty) {
       return Tuple2(res.item2, Team.fromJson(res.item3));
     } else {
       return Tuple2(res.item2, null);
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return const Tuple2(HttpStatus.badRequest, null);
   }
 }

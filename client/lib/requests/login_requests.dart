@@ -30,6 +30,6 @@ Future<int> loginRequest(String username, String password) async {
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return HttpStatus.badRequest;
   }
 }

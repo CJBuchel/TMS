@@ -54,6 +54,7 @@ pub struct TmsSchema {
   matches_get_response: MatchesResponse,
   match_get_request: MatchRequest,
   match_get_response: MatchResponse,
+  match_update_request: MatchUpdateRequest,
   //judging
   judging_sessions_get_response: JudgingSessionsResponse,
   judging_session_get_request: JudgingSessionRequest,

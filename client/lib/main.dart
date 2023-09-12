@@ -13,7 +13,7 @@ Future<bool> checkConnection() async {
   try {
     ok = await Network.checkConnection();
   } catch (e) {
-    rethrow;
+    ok = false;
   }
 
   if (!ok) {

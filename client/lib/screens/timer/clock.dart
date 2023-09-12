@@ -1,19 +1,32 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/screens/timer/timer.dart';
 
 class Clock extends StatefulWidget {
-  const Clock({Key? key}) : super(key: key);
+  final double? fontSize;
+  const Clock({Key? key, this.fontSize}) : super(key: key);
 
   @override
   State<Clock> createState() => _ClockState();
 }
 
+enum TimerState {
+  idle,
+  preStart,
+  running,
+  endgame,
+  ended,
+  stopped, // aborted
+}
+
 class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+  TimerState _timerState = TimerState.idle;
   String padTime(int value, int length) {
     return value.toString().padLeft(length, '0');
   }
@@ -45,10 +58,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
   void initState() {
     super.initState();
 
-    // get initial time
-    getEvent().then((event) => _time = event.timerLength);
-
-    // Update time on event update
+    // Update time on event update (db auto sync on initState so this will resolve itself)
     onEventUpdate((event) {
       setState(() {
         _time = event.timerLength;
@@ -57,8 +67,38 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
 
     autoSubscribe("clock", (m) {
       if (m.subTopic == "time" && m.message != null) {
+        if (_timerState == TimerState.idle) {
+          setState(() {
+            _timerState = TimerState.running;
+          });
+        }
         setState(() {
           _time = int.parse(m.message ?? "0");
+        });
+      } else if (m.subTopic == "reload") {
+        getInitialTime();
+        setState(() {
+          _timerState = TimerState.idle;
+        });
+      } else if (m.subTopic == "start") {
+        setState(() {
+          _timerState = TimerState.running;
+        });
+      } else if (m.subTopic == "stop") {
+        setState(() {
+          _timerState = TimerState.stopped;
+        });
+      } else if (m.subTopic == "endgame") {
+        setState(() {
+          _timerState = TimerState.endgame;
+        });
+      } else if (m.subTopic == "pre_start") {
+        setState(() {
+          _timerState = TimerState.preStart;
+        });
+      } else if (m.subTopic == "ended") {
+        setState(() {
+          _timerState = TimerState.ended;
         });
       }
     });
@@ -66,27 +106,49 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
 
   @override
   Widget build(BuildContext context) {
+    Color timerColor = _timerState == TimerState.running
+        ? Colors.green
+        : (_timerState == TimerState.endgame || _timerState == TimerState.preStart)
+            ? Colors.yellow
+            : (_timerState == TimerState.ended || _timerState == TimerState.stopped)
+                ? Colors.red
+                : Colors.white;
+
+    if (widget.fontSize != null) {
+      return Text(
+        parseTime(_time.toDouble()),
+        style: TextStyle(
+          fontSize: widget.fontSize,
+          color: timerColor,
+          fontFamily: "Radioland",
+        ),
+      );
+    }
+
     if (Responsive.isDesktop(context)) {
       return Text(
         parseTime(_time.toDouble()),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 300,
+          color: timerColor,
           fontFamily: "Radioland",
         ),
       );
     } else if (Responsive.isTablet(context)) {
       return Text(
         parseTime(_time.toDouble()),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 200,
+          color: timerColor,
           fontFamily: "Radioland",
         ),
       );
     } else {
       return Text(
         parseTime(_time.toDouble()),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 80,
+          color: timerColor,
           fontFamily: "Radioland",
         ),
       );

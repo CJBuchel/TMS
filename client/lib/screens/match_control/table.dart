@@ -1,15 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
-
-// class MatchRow {
-//   GameMatch match;
-//   bool isChecked;
-//   MatchRow({
-//     required this.match,
-//     required this.isChecked,
-//   });
-// }
 
 class MatchControlTable extends StatefulWidget {
   final BoxConstraints con;
@@ -38,16 +30,33 @@ class _MatchControlTableState extends State<MatchControlTable> {
     return Text(content, style: const TextStyle(fontWeight: FontWeight.bold));
   }
 
-  DataCell _styledCell(String context, Color? color) {
+  DataCell _styledCell(String context, {Color? color, bool? deferred}) {
+    Widget child = Container(
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              context,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (deferred ?? false)
+            Align(
+              alignment: Alignment.center,
+              child: Divider(
+                color: AppTheme.isDarkTheme ? Colors.white : Colors.black,
+                thickness: 2,
+              ),
+            ),
+        ],
+      ),
+    );
+
     return DataCell(
       Container(
         color: color ?? Colors.transparent,
-        child: Center(
-          child: Text(
-            context,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
+        child: Center(child: child),
       ),
       showEditIcon: false,
       placeholder: false,
@@ -57,6 +66,9 @@ class _MatchControlTableState extends State<MatchControlTable> {
   DataRow2 _styledRow(GameMatch match, int index) {
     // check if this match is loaded
     bool isLoaded = widget.loadedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
+
+    // check if this match is deferred
+    bool isDeferred = match.gameMatchDeferred;
 
     // check if this match is currently selected
     bool isSelected = widget.selectedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
@@ -104,23 +116,27 @@ class _MatchControlTableState extends State<MatchControlTable> {
             ),
           ),
         if (_multiMatch && !isSelectable) const DataCell(SizedBox()),
-        _styledCell(match.matchNumber, null),
-        _styledCell(match.startTime, null),
+        _styledCell(match.matchNumber, deferred: isDeferred),
+        _styledCell(match.startTime, deferred: isDeferred),
         _styledCell(
           match.onTableFirst.table,
-          match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          deferred: isDeferred,
         ),
         _styledCell(
           match.onTableFirst.teamNumber,
-          match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          deferred: isDeferred,
         ),
         _styledCell(
           match.onTableSecond.table,
-          match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          deferred: isDeferred,
         ),
         _styledCell(
           match.onTableSecond.teamNumber,
-          match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          deferred: isDeferred,
         ),
       ],
     );
@@ -132,7 +148,6 @@ class _MatchControlTableState extends State<MatchControlTable> {
       return const Center(
         child: CircularProgressIndicator(),
       );
-      // return const Center(child: Text("No Matches", style: TextStyle(fontSize: 45)));
     } else {
       return DataTable2(
         headingRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -148,7 +163,6 @@ class _MatchControlTableState extends State<MatchControlTable> {
           DataColumn2(label: _styledHeader('Table')),
           DataColumn2(label: _styledHeader('Team')),
         ],
-        // rows: ,
         rows: widget.matches.map((match) {
           int idx = widget.matches.indexOf(match);
           return _styledRow(match, idx);

@@ -140,7 +140,6 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     autoSubscribe("team", (m) {
       if (m.subTopic == "update") {
         if (m.message != null && m.message is String) {
-          Logger().i("Received team update for ${m.message}");
           getTeamRequest(m.message as String).then((value) async {
             if (value.item1 == HttpStatus.ok) {
               _setTeam(value.item2 ?? await getTeam(m.message as String)); // use previous data as default
@@ -163,7 +162,6 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     autoSubscribe("match", (m) {
       if (m.subTopic == "update") {
         if (m.message != null && m.message is String) {
-          Logger().i("Received match update for ${m.message}");
           getMatchRequest(m.message as String).then((value) async {
             if (value.item1 == HttpStatus.ok) {
               _setMatch(value.item2 ?? await getMatch(m.message as String)); // use previous data as default
@@ -186,7 +184,6 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     autoSubscribe("judging_session", (m) {
       if (m.subTopic == "update") {
         if (m.message != null && m.message is String) {
-          Logger().i("Received judging session update for ${m.message}");
           getJudgingSessionRequest(m.message as String).then((value) async {
             if (value.item1 == HttpStatus.ok) {
               _setJudgingSession(value.item2 ?? await getJudgingSession(m.message as String)); // use previous data as default

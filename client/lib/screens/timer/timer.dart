@@ -10,24 +10,6 @@ import 'package:tms/responsive.dart';
 class Timer extends StatelessWidget {
   const Timer({super.key});
 
-  void testTimerController(BuildContext context) async {
-    Logger().i("testTimerController");
-    timerStartRequest().then((res) {
-      if (res == HttpStatus.ok) {
-      } else if (res == HttpStatus.unauthorized) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text("Unauthorised"),
-            content: SingleChildScrollView(
-              child: Text(res == HttpStatus.unauthorized ? "Invalid User Permissions" : "Server Error"),
-            ),
-          ),
-        );
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var imageSize = <double>[300, 500];
@@ -54,22 +36,6 @@ class Timer extends StatelessWidget {
               Clock(),
             ],
           ),
-
-          // Start button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                width: buttonWidth,
-                height: buttonHeight,
-                child: ElevatedButton.icon(
-                  onPressed: () => testTimerController(context),
-                  icon: const Icon(Icons.login),
-                  label: const Text("Start"),
-                ),
-              )
-            ],
-          )
         ],
       ),
     );

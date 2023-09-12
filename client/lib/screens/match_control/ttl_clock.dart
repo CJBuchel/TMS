@@ -73,7 +73,7 @@ class _TTLClockState extends State<TTLClock> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (widget.matches.isNotEmpty) {
         // find first match that hasn't been completed and use the start time
-        String time = widget.matches.firstWhere((m) => m.complete == false).startTime;
+        String time = widget.matches.firstWhere((m) => (m.complete == false && m.gameMatchDeferred == false)).startTime;
         setState(() {
           _difference = getTimeDifference(time);
         });

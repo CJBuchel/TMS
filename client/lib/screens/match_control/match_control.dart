@@ -86,6 +86,15 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
       }
     });
 
+    autoSubscribe("clock", (m) {
+      if (m.subTopic == "end") {
+        setState(() {
+          _loadedMatches = [];
+          _selectedMatches = [];
+        });
+      }
+    });
+
     autoSubscribe("match", (m) {
       if (m.subTopic == "load") {
         if (m.message != null && m.message is String && m.message!.isNotEmpty) {
@@ -119,7 +128,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
       } else if (m.subTopic == "unload") {
         setState(() {
           _loadedMatches = [];
-          _selectedMatches = [];
+          // _selectedMatches = [];
         });
       }
     });

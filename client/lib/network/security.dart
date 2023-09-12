@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:fast_rsa/fast_rsa.dart';
 import 'package:flutter/foundation.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 
@@ -71,26 +72,38 @@ class NetworkSecurity {
   }
 
   static Future<KeyPair> generateKeyPair() async {
-    setState(SecurityState.encrypting);
-    KeyPair keyPair;
-    if (kIsWeb) {
-      keyPair = await RSA.generate(rsaBitSizeWeb);
-    } else {
-      keyPair = await RSA.generate(rsaBitSize);
+    try {
+      setState(SecurityState.encrypting);
+      KeyPair keyPair;
+      if (kIsWeb) {
+        keyPair = await RSA.generate(rsaBitSizeWeb);
+      } else {
+        keyPair = await RSA.generate(rsaBitSize);
+      }
+      setState(SecurityState.secure);
+      return keyPair;
+    } catch (e) {
+      return KeyPair("", "");
     }
-    setState(SecurityState.secure);
-    return keyPair;
   }
 
   static Future<String> encryptMessage(dynamic json, {String key = ''}) async {
-    key = key.isEmpty ? await getServerKey() : key;
-    setState(key.isEmpty ? SecurityState.noSecurity : await getState());
-    return RSA.encryptPKCS1v15(jsonEncode(json), key);
+    try {
+      key = key.isEmpty ? await getServerKey() : key;
+      setState(key.isEmpty ? SecurityState.noSecurity : await getState());
+      return RSA.encryptPKCS1v15(jsonEncode(json), key);
+    } catch (e) {
+      return "";
+    }
   }
 
-  static Future<dynamic> decryptMessage(String message, {String key = ''}) async {
-    key = key.isEmpty ? (await getKeys()).privateKey : key;
-    setState(key.isEmpty ? SecurityState.noSecurity : await getState());
-    return jsonDecode(await RSA.decryptPKCS1v15(message, key));
+  static Future<Map<String, dynamic>> decryptMessage(String message, {String key = ''}) async {
+    try {
+      key = key.isEmpty ? (await getKeys()).privateKey : key;
+      setState(key.isEmpty ? SecurityState.noSecurity : await getState());
+      return jsonDecode(await RSA.decryptPKCS1v15(message, key));
+    } catch (e) {
+      return {};
+    }
   }
 }

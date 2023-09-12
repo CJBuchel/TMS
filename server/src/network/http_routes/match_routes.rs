@@ -1,8 +1,8 @@
 
-use log::error;
+use log::{error, warn};
 use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
-use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{GameMatch, create_permissions}, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse, MatchLoadRequest}, TmsRequest, check_permissions};
+use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{GameMatch, create_permissions}, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse, MatchLoadRequest, MatchUpdateRequest, SocketMessage}, TmsRequest, check_permissions, tms_clients_ws_send};
 
 use crate::{db::db::TmsDB, event_service::TmsEventService};
 
@@ -15,7 +15,7 @@ pub fn matches_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<
     let game_match = match match_raw {
       Ok(game_match) => game_match.1,
       _ => {
-        error!("Failed to get match");
+        error!("Failed to get match (matches get) {}", match_raw.err().unwrap());
         TmsRespond!(Status::BadRequest, "Failed to get match".to_string());
       }
     };
@@ -38,8 +38,7 @@ pub fn matches_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<
 #[post("/match/get/<uuid>", data = "<message>")]
 pub fn match_get_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String, message: String) -> TmsRouteResponse<()> {
   let match_request: MatchRequest = TmsRequest!(message.clone(), security);
-
-  match db.tms_data.matches.get(&match_request.match_number).unwrap() {
+  match db.tms_data.matches.get(match_request.match_number.clone()).unwrap() {
     Some(m) => {
       let match_response: MatchResponse = MatchResponse { game_match: m.clone() };
 
@@ -51,10 +50,49 @@ pub fn match_get_route(security: &State<Security>, clients: &State<TmsClients>, 
       )
     },
     None => {
-      error!("Failed to get match");
+      error!("Failed to get match (match get) {}", match_request.match_number);
       TmsRespond!(Status::BadRequest, "Failed to get match".to_string());
     }
   };
+}
+
+#[post("/match/update/<uuid>", data = "<message>")]
+pub fn match_update_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String, message: String) -> TmsRouteResponse<()> {
+  let message: MatchUpdateRequest = TmsRequest!(message.clone(), security);
+
+  let mut perms = create_permissions();
+  perms.head_referee = Some(true);
+  perms.referee = Some(true); // referees can update if a score has been submitted or not
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    match db.tms_data.matches.get(message.match_number.clone()).unwrap() {
+      Some(m) => {
+        let origin_match_number = m.match_number.clone();
+        let _ = db.tms_data.matches.insert(origin_match_number.as_bytes(), message.match_data.clone());
+        // send updates to clients
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("match"),
+          sub_topic: Some(String::from("update")),
+          message: Some(origin_match_number.clone()),
+        }, clients.inner().clone(), None);
+
+        // send another update for the new match (if the new match number changed from origin)
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("match"),
+          sub_topic: Some(String::from("update")),
+          message: Some(message.match_data.match_number.clone()),
+        }, clients.inner().clone(), None);
+        TmsRespond!();
+      },
+      None => {
+        error!("Failed to get match (update) {}", message.match_number);
+        TmsRespond!(Status::BadRequest, "Failed to get match".to_string());
+      }
+    };
+  }
+
+  TmsRespond!(Status::Unauthorized)
 }
 
 #[tms_private_route]

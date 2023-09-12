@@ -23,6 +23,7 @@ class TmsSchema {
         required this.matchGetRequest,
         required this.matchGetResponse,
         required this.matchLoadedRequest,
+        required this.matchUpdateRequest,
         required this.matchesGetResponse,
         required this.purgeRequest,
         required this.registerRequest,
@@ -51,6 +52,7 @@ class TmsSchema {
     MatchRequest matchGetRequest;
     MatchResponse matchGetResponse;
     MatchLoadRequest matchLoadedRequest;
+    MatchUpdateRequest matchUpdateRequest;
     MatchesResponse matchesGetResponse;
     PurgeRequest purgeRequest;
     RegisterRequest registerRequest;
@@ -79,6 +81,7 @@ class TmsSchema {
         matchGetRequest: MatchRequest.fromJson(json["match_get_request"]),
         matchGetResponse: MatchResponse.fromJson(json["match_get_response"]),
         matchLoadedRequest: MatchLoadRequest.fromJson(json["match_loaded_request"]),
+        matchUpdateRequest: MatchUpdateRequest.fromJson(json["match_update_request"]),
         matchesGetResponse: MatchesResponse.fromJson(json["matches_get_response"]),
         purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
@@ -108,6 +111,7 @@ class TmsSchema {
         "match_get_request": matchGetRequest.toJson(),
         "match_get_response": matchGetResponse.toJson(),
         "match_loaded_request": matchLoadedRequest.toJson(),
+        "match_update_request": matchUpdateRequest.toJson(),
         "matches_get_response": matchesGetResponse.toJson(),
         "purge_request": purgeRequest.toJson(),
         "register_request": registerRequest.toJson(),
@@ -501,6 +505,30 @@ class MatchLoadRequest {
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
         "match_numbers": List<dynamic>.from(matchNumbers.map((x) => x)),
+    };
+}
+
+class MatchUpdateRequest {
+    MatchUpdateRequest({
+        required this.authToken,
+        required this.matchData,
+        required this.matchNumber,
+    });
+
+    String authToken;
+    GameMatch matchData;
+    String matchNumber;
+
+    factory MatchUpdateRequest.fromJson(Map<String, dynamic> json) => MatchUpdateRequest(
+        authToken: json["auth_token"],
+        matchData: GameMatch.fromJson(json["match_data"]),
+        matchNumber: json["match_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "match_data": matchData.toJson(),
+        "match_number": matchNumber,
     };
 }
 

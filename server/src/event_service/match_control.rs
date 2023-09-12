@@ -32,8 +32,16 @@ impl MatchControl {
       from_id: None,
       topic: String::from("clock"),
       sub_topic: Some(String::from("start")),
-      message: Some(time.to_string())
+      message: None
     }, clients.clone(), None);
+
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("clock"),
+      sub_topic: Some(String::from("time")),
+      message: Some(time.to_string()),
+    }, clients.clone(), None);
+    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
 
 
     for i in (0..time).rev() {
@@ -75,13 +83,12 @@ impl MatchControl {
         Ok(Some(mut game_match)) => {
           game_match.complete = true;
           let _ = tms_db.tms_data.matches.insert(game_match.match_number.as_bytes(), game_match.clone());
+          
           tms_clients_ws_send(SocketMessage {
             from_id: None,
             topic: String::from("match"),
             sub_topic: Some(String::from("update")),
-            message: Some(serde_json::to_string(&SocketMatchLoadedMessage {
-              match_numbers: vec![match_number.clone()]
-            }).unwrap())
+            message: Some(game_match.match_number.clone()),
           }, clients.clone(), None);
         },
         Ok(None) => {
@@ -152,7 +159,15 @@ impl MatchControl {
       message: None,
     }, clients.clone(), None);
 
-    for i in (0..pre_start_timer).rev() {
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("clock"),
+      sub_topic: Some(String::from("time")),
+      message: Some(pre_start_timer.to_string()),
+    }, clients.clone(), None);
+    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
+    for i in (1..pre_start_timer).rev() {
       if !timer_running.load(std::sync::atomic::Ordering::Relaxed) {
         return;
       }
@@ -199,7 +214,7 @@ impl MatchControl {
       tokio::task::spawn(async move {
         MatchControl::pre_timer(clients, timer_flag.clone()).await;
         if timer_flag.load(std::sync::atomic::Ordering::Relaxed) {
-          start_timer_function(false);
+          start_timer_function(true);
         }
       });
     } else {

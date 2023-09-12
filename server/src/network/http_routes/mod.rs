@@ -172,6 +172,7 @@ impl TmsHttpServer {
         team_get_route,
         matches_get_route,
         match_get_route,
+        match_update_route,
         judging_sessions_get_route,
         judging_session_get_route,
 

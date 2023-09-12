@@ -16,6 +16,7 @@
     "match_get_request",
     "match_get_response",
     "match_loaded_request",
+    "match_update_request",
     "matches_get_response",
     "purge_request",
     "register_request",
@@ -69,6 +70,9 @@
     },
     "match_loaded_request": {
       "$ref": "#/definitions/MatchLoadRequest"
+    },
+    "match_update_request": {
+      "$ref": "#/definitions/MatchUpdateRequest"
     },
     "matches_get_response": {
       "$ref": "#/definitions/MatchesResponse"
@@ -466,6 +470,25 @@
       "properties": {
         "game_match": {
           "$ref": "#/definitions/GameMatch"
+        }
+      }
+    },
+    "MatchUpdateRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "match_data",
+        "match_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "match_data": {
+          "$ref": "#/definitions/GameMatch"
+        },
+        "match_number": {
+          "type": "string"
         }
       }
     },

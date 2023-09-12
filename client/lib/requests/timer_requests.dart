@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:logger/logger.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/network/network.dart';
@@ -15,7 +17,7 @@ Future<int> timerStartRequest() async {
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return HttpStatus.badRequest;
   }
 }
 
@@ -31,7 +33,7 @@ Future<int> timerPreStartRequest() async {
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return HttpStatus.badRequest;
   }
 }
 
@@ -47,7 +49,7 @@ Future<int> timerStopRequest() async {
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return HttpStatus.badRequest;
   }
 }
 
@@ -63,6 +65,6 @@ Future<int> timerReloadRequest() async {
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return HttpStatus.badRequest;
   }
 }

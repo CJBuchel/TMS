@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:logger/logger.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/network/network.dart';
@@ -16,7 +18,7 @@ Future<int> setupEventRequest(SetupRequest request) async {
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return HttpStatus.badRequest;
   }
 }
 
@@ -24,14 +26,14 @@ Future<Tuple2<int, Event?>> getEventRequest() async {
   try {
     var res = await Network.serverGet("event/get");
 
-    if (res.item1) {
+    if (res.item1 && res.item3.isNotEmpty) {
       return Tuple2(res.item2, EventResponse.fromJson(res.item3).event);
     } else {
       return Tuple2(res.item2, null);
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return const Tuple2(HttpStatus.badRequest, null);
   }
 }
 
@@ -47,6 +49,6 @@ Future<int> purgeEventRequest() async {
     }
   } catch (e) {
     Logger().e(e);
-    rethrow;
+    return HttpStatus.badRequest;
   }
 }

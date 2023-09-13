@@ -182,7 +182,6 @@ impl MatchControl {
   pub fn pre_start_timer(&mut self) {
     // get time from db
     if !self.is_timer_running.load(std::sync::atomic::Ordering::Relaxed) {
-      warn!("Pre-Starting timer...");
       self.is_timer_running.store(true, std::sync::atomic::Ordering::Relaxed);
       
       let timer_flag = self.is_timer_running.clone();
@@ -221,13 +220,23 @@ impl MatchControl {
 
   pub fn stop_timer(&mut self) {
     warn!("Stopping timer...");
-    self.is_timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
-    tms_clients_ws_send(SocketMessage {
-      from_id: None,
-      topic: String::from("clock"),
-      sub_topic: String::from("stop"),
-      message: None
-    }, self.tms_clients.clone(), None);
+    if self.is_timer_running.load(std::sync::atomic::Ordering::Relaxed) {
+      self.is_timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
+      tms_clients_ws_send(SocketMessage {
+        from_id: None,
+        topic: String::from("clock"),
+        sub_topic: String::from("stop"),
+        message: None
+      }, self.tms_clients.clone(), None);
+    } else {
+      warn!("Cannot abort match. Timer is not running! Reloading clocks...");
+      tms_clients_ws_send(SocketMessage {
+        from_id: None,
+        topic: String::from("clock"),
+        sub_topic: String::from("reload"),
+        message: None
+      }, self.tms_clients.clone(), None);
+    }
   }
 
   async fn send_load_matches(loaded_matches: Vec<String>, clients: TmsClients, matches_loaded: std::sync::Arc<std::sync::atomic::AtomicBool>) {

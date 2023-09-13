@@ -1,10 +1,17 @@
-use log::warn;
 
-use serde::{Serialize, de::DeserializeOwned};
+
+use log::{warn, error};
+
+use serde::{Serialize, Deserialize, de::DeserializeOwned};
 use sled_extensions::{bincode::Tree, DbExt, Db};
 use tms_utils::schemas::{Team, GameMatch, JudgingSession, User, Event, create_user};
 
 use super::item::Item;
+
+#[derive(Deserialize, Serialize, Clone)]
+pub struct SystemInfo {
+  pub version: String,
+}
 
 #[derive(Clone)]
 pub struct Database {
@@ -12,7 +19,8 @@ pub struct Database {
   pub matches: Tree<GameMatch>,
   pub judging_sessions: Tree<JudgingSession>,
   pub users: Tree<User>,
-  pub event: Item<Event> // there is only one event, so make it singular (optional just in case of data flow problems)
+  pub event: Item<Event>, // there is only one event, so make it singular (optional just in case of data flow problems)
+  pub system_info: Item<SystemInfo>
 }
 
 pub trait RequestDatabase {
@@ -42,8 +50,23 @@ impl TmsDB {
       matches: db.open_bincode_tree("matches").expect("Failed to open match tree"),
       judging_sessions: db.open_bincode_tree("judging_sessions").expect("Failed to open judging session tree"),
       users: db.open_bincode_tree("users").expect("Failed to open user tree"),
-      event: Item::new(db.clone(), "event")
+      event: Item::new(db.clone(), "event"),
+      system_info: Item::new(db.clone(), "system_info")
     };
+
+    match tms_data.system_info.get().unwrap() {
+      Some(info) => {
+        if info.version != std::env::var("VERSION").unwrap_or(String::from("0.0.0")) {
+          error!("Version Mismatch: {} != {}, this may causes issues", info.version, std::env::var("VERSION").unwrap_or(String::from("0.0.0")));
+        }
+      },
+      None => {
+        warn!("No System Info, generating...");
+        let _ = tms_data.system_info.set(SystemInfo {
+          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0"))
+        });
+      }
+    }
 
     // Create event if it doesn't exist
     match tms_data.event.get().unwrap() {
@@ -79,8 +102,23 @@ impl TmsDB {
       matches: self.db.open_bincode_tree("matches").expect("Failed to open match tree"),
       judging_sessions: self.db.open_bincode_tree("judging_sessions").expect("Failed to open judging session tree"),
       users: self.db.open_bincode_tree("users").expect("Failed to open user tree"),
-      event: Item::new(self.db.clone(), "event")
+      event: Item::new(self.db.clone(), "event"),
+      system_info: Item::new(self.db.clone(), "system_info")
     };
+
+    match tms_data.system_info.get().unwrap() {
+      Some(info) => {
+        if info.version != std::env::var("VERSION").unwrap_or(String::from("0.0.0")) {
+          error!("Version Mismatch: {} != {}, this may cause issues", info.version, std::env::var("VERSION").unwrap_or(String::from("0.0.0")));
+        }
+      },
+      None => {
+        warn!("No System Info, generating...");
+        let _ = tms_data.system_info.set(SystemInfo {
+          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0"))
+        });
+      }
+    }
 
     // Create event if it doesn't exist
     match tms_data.event.get().unwrap() {

@@ -30,6 +30,10 @@ enum TimerState {
 
 class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
   TimerState _currentTimerState = TimerState.idle;
+  double desktopButtonHeight = 40;
+  double tabletButtonHeight = 24;
+  double desktopButtonTextSize = 18;
+  double tabletButtonTextSize = 14;
   void displayErrorDialog(int serverRes) {
     showDialog(
       context: context,
@@ -106,7 +110,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       children: [
         Expanded(
           child: SizedBox(
-            height: Responsive.isDesktop(context) ? 40 : 20,
+            height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
@@ -117,14 +121,14 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
                   sendTimerStatus(TimerSendStatus.preStart);
                 }
               },
-              child: Text("Pre-Start", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
+              child: Text("Pre-Start", style: TextStyle(fontSize: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize)),
             ),
           ),
         ),
         const SizedBox(width: 16), // spacing
         Expanded(
           child: SizedBox(
-            height: Responsive.isDesktop(context) ? 40 : 20,
+            height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
@@ -135,7 +139,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
                   sendTimerStatus(TimerSendStatus.start);
                 }
               },
-              child: Text("Start", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
+              child: Text("Start", style: TextStyle(fontSize: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize)),
             ),
           ),
         ),
@@ -149,7 +153,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       children: [
         Expanded(
           child: SizedBox(
-            height: Responsive.isDesktop(context) ? 40 : 20,
+            height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
@@ -157,7 +161,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
               onPressed: () {
                 sendTimerStatus(TimerSendStatus.stop);
               },
-              child: Text("Abort", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
+              child: Text("Abort", style: TextStyle(fontSize: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize)),
             ),
           ),
         ),
@@ -171,7 +175,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       children: [
         Expanded(
           child: SizedBox(
-            height: Responsive.isDesktop(context) ? 40 : 20,
+            height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
             child: ElevatedButton.icon(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
@@ -180,7 +184,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
                 sendTimerStatus(TimerSendStatus.reload);
               },
               icon: const Icon(Icons.replay),
-              label: Text("Reload", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
+              label: Text("Reload", style: TextStyle(fontSize: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize)),
             ),
           ),
         ),

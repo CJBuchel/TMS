@@ -65,7 +65,6 @@ impl MatchControl {
           message: Some(i.to_string()),
         }, clients.clone(), None);
       }
-
     }
 
     tms_clients_ws_send(SocketMessage {

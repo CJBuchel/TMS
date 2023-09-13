@@ -41,10 +41,10 @@ impl MatchControl {
       sub_topic: Some(String::from("time")),
       message: Some(time.to_string()),
     }, clients.clone(), None);
-    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
 
 
     for i in (0..time).rev() {
+      tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
       if !timer_running.load(std::sync::atomic::Ordering::Relaxed) {
         return;
       }
@@ -66,8 +66,6 @@ impl MatchControl {
         }, clients.clone(), None);
       }
 
-
-      tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
 
     tms_clients_ws_send(SocketMessage {

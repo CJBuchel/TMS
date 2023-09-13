@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/screens/timer/timer.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class Clock extends StatefulWidget {
   final double? fontSize;
@@ -26,6 +25,7 @@ enum TimerState {
 }
 
 class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+  final player = AudioPlayer();
   TimerState _timerState = TimerState.idle;
   String padTime(int value, int length) {
     return value.toString().padLeft(length, '0');
@@ -58,6 +58,8 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
   void initState() {
     super.initState();
 
+    player.setVolume(1.0);
+
     // Update time on event update (db auto sync on initState so this will resolve itself)
     onEventUpdate((event) {
       setState(() {
@@ -81,14 +83,17 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
           _timerState = TimerState.idle;
         });
       } else if (m.subTopic == "start") {
+        player.play(AssetSource("audio/start.mp3"));
         setState(() {
           _timerState = TimerState.running;
         });
       } else if (m.subTopic == "stop") {
+        player.play(AssetSource("audio/stop.mp3"));
         setState(() {
           _timerState = TimerState.stopped;
         });
       } else if (m.subTopic == "endgame") {
+        player.play(AssetSource("audio/end-game.mp3"));
         setState(() {
           _timerState = TimerState.endgame;
         });
@@ -96,7 +101,8 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
         setState(() {
           _timerState = TimerState.preStart;
         });
-      } else if (m.subTopic == "ended") {
+      } else if (m.subTopic == "end") {
+        player.play(AssetSource("audio/end.mp3"));
         setState(() {
           _timerState = TimerState.ended;
         });

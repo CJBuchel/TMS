@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/http.dart';
@@ -71,7 +72,9 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
   void unloadOnDisconnect() async {
     var states = await Network.getStates();
     if (states.item1 != NetworkHttpConnectionState.connected || states.item2 != NetworkWebSocketState.connected) {
-      _loadedMatches = [];
+      setState(() {
+        _loadedMatches = [];
+      });
     }
   }
 

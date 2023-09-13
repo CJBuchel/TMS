@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/event_requests.dart';
 import 'package:tms/responsive.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 
 class Clock extends StatefulWidget {
   final double? fontSize;
@@ -15,7 +16,7 @@ class Clock extends StatefulWidget {
   State<Clock> createState() => _ClockState();
 }
 
-enum TimerState {
+enum TimerClockState {
   idle,
   preStart,
   running,
@@ -25,8 +26,26 @@ enum TimerState {
 }
 
 class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  final player = AudioPlayer();
-  TimerState _timerState = TimerState.idle;
+  TimerClockState _TimerClockState = TimerClockState.idle;
+
+  void playAudio(String assetAudio) async {
+    if (kIsWeb) {
+      var player = AudioPlayer();
+      player.setAsset(assetAudio).then((value) {
+        player.play();
+      });
+    } else {
+      if (!Platform.isWindows && !Platform.isLinux && !Platform.isMacOS) {
+        var player = AudioPlayer();
+        player.setAsset(assetAudio).then((value) {
+          player.play();
+        });
+      } else {
+        print("Audio not supported on desktop");
+      }
+    }
+  }
+
   String padTime(int value, int length) {
     return value.toString().padLeft(length, '0');
   }
@@ -58,8 +77,6 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
   void initState() {
     super.initState();
 
-    player.setVolume(1.0);
-
     // Update time on event update (db auto sync on initState so this will resolve itself)
     onEventUpdate((event) {
       setState(() {
@@ -69,9 +86,9 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
 
     autoSubscribe("clock", (m) {
       if (m.subTopic == "time" && m.message != null) {
-        if (_timerState == TimerState.idle) {
+        if (_TimerClockState == TimerClockState.idle) {
           setState(() {
-            _timerState = TimerState.running;
+            _TimerClockState = TimerClockState.running;
           });
         }
         setState(() {
@@ -80,31 +97,31 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
       } else if (m.subTopic == "reload") {
         getInitialTime();
         setState(() {
-          _timerState = TimerState.idle;
+          _TimerClockState = TimerClockState.idle;
         });
       } else if (m.subTopic == "start") {
-        player.play(AssetSource("audio/start.mp3"));
+        playAudio("audio/start.mp3");
         setState(() {
-          _timerState = TimerState.running;
+          _TimerClockState = TimerClockState.running;
         });
       } else if (m.subTopic == "stop") {
-        player.play(AssetSource("audio/stop.mp3"));
+        playAudio("audio/stop.mp3");
         setState(() {
-          _timerState = TimerState.stopped;
+          _TimerClockState = TimerClockState.stopped;
         });
       } else if (m.subTopic == "endgame") {
-        player.play(AssetSource("audio/end-game.mp3"));
+        playAudio("audio/end-game.mp3");
         setState(() {
-          _timerState = TimerState.endgame;
+          _TimerClockState = TimerClockState.endgame;
         });
       } else if (m.subTopic == "pre_start") {
         setState(() {
-          _timerState = TimerState.preStart;
+          _TimerClockState = TimerClockState.preStart;
         });
       } else if (m.subTopic == "end") {
-        player.play(AssetSource("audio/end.mp3"));
+        playAudio("audio/end.mp3");
         setState(() {
-          _timerState = TimerState.ended;
+          _TimerClockState = TimerClockState.ended;
         });
       }
     });
@@ -112,11 +129,11 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
 
   @override
   Widget build(BuildContext context) {
-    Color timerColor = _timerState == TimerState.running
+    Color timerColor = _TimerClockState == TimerClockState.running
         ? Colors.green
-        : (_timerState == TimerState.endgame || _timerState == TimerState.preStart)
+        : (_TimerClockState == TimerClockState.endgame || _TimerClockState == TimerClockState.preStart)
             ? Colors.yellow
-            : (_timerState == TimerState.ended || _timerState == TimerState.stopped)
+            : (_TimerClockState == TimerClockState.ended || _TimerClockState == TimerClockState.stopped)
                 ? Colors.red
                 : Colors.white;
 

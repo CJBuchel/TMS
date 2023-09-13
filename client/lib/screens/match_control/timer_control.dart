@@ -47,7 +47,6 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       case TimerSendStatus.preStart:
         timerPreStartRequest().then((res) {
           if (res == HttpStatus.ok) {
-          } else if (res == HttpStatus.unauthorized) {
             displayErrorDialog(res);
           }
         });
@@ -55,7 +54,6 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       case TimerSendStatus.start:
         timerStartRequest().then((res) {
           if (res == HttpStatus.ok) {
-          } else if (res == HttpStatus.unauthorized) {
             displayErrorDialog(res);
           }
         });
@@ -63,7 +61,6 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       case TimerSendStatus.stop:
         timerStopRequest().then((res) {
           if (res == HttpStatus.ok) {
-          } else if (res == HttpStatus.unauthorized) {
             displayErrorDialog(res);
           }
         });
@@ -71,7 +68,6 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       case TimerSendStatus.reload:
         timerReloadRequest().then((res) {
           if (res == HttpStatus.ok) {
-          } else if (res == HttpStatus.unauthorized) {
             displayErrorDialog(res);
           }
         });
@@ -110,7 +106,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       children: [
         Expanded(
           child: SizedBox(
-            height: Responsive.buttonHeight(context, 1),
+            height: Responsive.isDesktop(context) ? 40 : 20,
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
@@ -121,14 +117,14 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
                   sendTimerStatus(TimerSendStatus.preStart);
                 }
               },
-              child: const Text("Pre-Start", style: TextStyle(fontSize: 18)),
+              child: Text("Pre-Start", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
             ),
           ),
         ),
         const SizedBox(width: 16), // spacing
         Expanded(
           child: SizedBox(
-            height: Responsive.buttonHeight(context, 1),
+            height: Responsive.isDesktop(context) ? 40 : 20,
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
@@ -139,7 +135,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
                   sendTimerStatus(TimerSendStatus.start);
                 }
               },
-              child: const Text("Start", style: TextStyle(fontSize: 18)),
+              child: Text("Start", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
             ),
           ),
         ),
@@ -153,7 +149,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       children: [
         Expanded(
           child: SizedBox(
-            height: Responsive.buttonHeight(context, 1),
+            height: Responsive.isDesktop(context) ? 40 : 20,
             child: ElevatedButton.icon(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
@@ -162,7 +158,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
                 sendTimerStatus(TimerSendStatus.stop);
               },
               icon: const Icon(Icons.warning_amber),
-              label: const Text("Abort", style: TextStyle(fontSize: 18)),
+              label: Text("Abort", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
             ),
           ),
         ),
@@ -176,7 +172,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
       children: [
         Expanded(
           child: SizedBox(
-            height: Responsive.buttonHeight(context, 1),
+            height: Responsive.isDesktop(context) ? 40 : 20,
             child: ElevatedButton.icon(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
@@ -185,7 +181,7 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
                 sendTimerStatus(TimerSendStatus.reload);
               },
               icon: const Icon(Icons.replay),
-              label: const Text("Reload", style: TextStyle(fontSize: 18)),
+              label: Text("Reload", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
             ),
           ),
         ),

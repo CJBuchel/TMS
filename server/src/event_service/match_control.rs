@@ -31,14 +31,14 @@ impl MatchControl {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
-      sub_topic: Some(String::from("start")),
+      sub_topic: String::from("start"),
       message: None
     }, clients.clone(), None);
 
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
-      sub_topic: Some(String::from("time")),
+      sub_topic: String::from("time"),
       message: Some(time.to_string()),
     }, clients.clone(), None);
 
@@ -52,7 +52,7 @@ impl MatchControl {
       tms_clients_ws_send(SocketMessage {
         from_id: None,
         topic: String::from("clock"),
-        sub_topic: Some(String::from("time")),
+        sub_topic: String::from("time"),
         message: Some(i.to_string())
       }, clients.clone(), None);
 
@@ -61,7 +61,7 @@ impl MatchControl {
         tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("clock"),
-          sub_topic: Some(String::from("endgame")),
+          sub_topic: String::from("endgame"),
           message: Some(i.to_string()),
         }, clients.clone(), None);
       }
@@ -71,7 +71,7 @@ impl MatchControl {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
-      sub_topic: Some(String::from("end")),
+      sub_topic: String::from("end"),
       message: None
     }, clients.clone(), None);
 
@@ -85,7 +85,7 @@ impl MatchControl {
           tms_clients_ws_send(SocketMessage {
             from_id: None,
             topic: String::from("match"),
-            sub_topic: Some(String::from("update")),
+            sub_topic: String::from("update"),
             message: Some(game_match.match_number.clone()),
           }, clients.clone(), None);
         },
@@ -104,7 +104,7 @@ impl MatchControl {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("match"),
-      sub_topic: Some(String::from("unload")),
+      sub_topic: String::from("unload"),
       message: None
     }, clients.clone(), None);
 
@@ -153,14 +153,14 @@ impl MatchControl {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
-      sub_topic: Some(String::from("pre_start")),
+      sub_topic: String::from("pre_start"),
       message: None,
     }, clients.clone(), None);
 
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
-      sub_topic: Some(String::from("time")),
+      sub_topic: String::from("time"),
       message: Some(pre_start_timer.to_string()),
     }, clients.clone(), None);
     tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
@@ -173,7 +173,7 @@ impl MatchControl {
       tms_clients_ws_send(SocketMessage {
         from_id: None,
         topic: String::from("clock"),
-        sub_topic: Some(String::from("time")),
+        sub_topic: String::from("time"),
         message: Some(i.to_string()),
       }, clients.clone(), None);
       tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
@@ -226,7 +226,7 @@ impl MatchControl {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
-      sub_topic: Some(String::from("stop")),
+      sub_topic: String::from("stop"),
       message: None
     }, self.tms_clients.clone(), None);
   }
@@ -236,7 +236,7 @@ impl MatchControl {
       tms_clients_ws_send(SocketMessage {
         from_id: None,
         topic: String::from("match"),
-        sub_topic: Some(String::from("load")),
+        sub_topic: String::from("load"),
         message: Some(serde_json::to_string(&SocketMatchLoadedMessage {
           match_numbers: loaded_matches.clone()
         }).unwrap())
@@ -267,7 +267,7 @@ impl MatchControl {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("match"),
-      sub_topic: Some(String::from("unload")),
+      sub_topic: String::from("unload"),
       message: None
     }, self.tms_clients.clone(), None);
   }

@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
@@ -35,19 +32,19 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
   Text ntStatusText = const Text(
     "NO NT",
-    style: TextStyle(color: Colors.red),
+    style: TextStyle(color: Colors.red, fontSize: 20),
     overflow: TextOverflow.ellipsis,
   );
 
   Text wsStatusText = const Text(
     "NO WS",
-    style: TextStyle(color: Colors.red),
+    style: TextStyle(color: Colors.red, fontSize: 20),
     overflow: TextOverflow.ellipsis,
   );
 
   Text secStateText = const Text(
     "NO SEC",
-    style: TextStyle(color: Colors.red),
+    style: TextStyle(color: Colors.red, fontSize: 20),
     overflow: TextOverflow.ellipsis,
   );
 
@@ -59,9 +56,9 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     switch (state) {
       case NetworkHttpConnectionState.disconnected:
         setState(() {
-          ntStatusText = const Text(
+          ntStatusText = Text(
             "NO NT",
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -69,9 +66,9 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
       case NetworkHttpConnectionState.connectedNoPulse:
         setState(() {
-          ntStatusText = const Text(
+          ntStatusText = Text(
             "NO PULSE",
-            style: TextStyle(color: Colors.orange),
+            style: TextStyle(color: Colors.orange, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -79,18 +76,18 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
       case NetworkHttpConnectionState.connected:
         setState(() {
-          ntStatusText = const Text(
+          ntStatusText = Text(
             "OK",
-            style: TextStyle(color: Colors.green),
+            style: TextStyle(color: Colors.green, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
         break;
       default:
         setState(() {
-          ntStatusText = const Text(
+          ntStatusText = Text(
             "NO NT",
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -101,9 +98,9 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     switch (state) {
       case NetworkWebSocketState.disconnected:
         setState(() {
-          wsStatusText = const Text(
+          wsStatusText = Text(
             "NO WS",
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -111,18 +108,18 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
       case NetworkWebSocketState.connected:
         setState(() {
-          wsStatusText = const Text(
+          wsStatusText = Text(
             "OK",
-            style: TextStyle(color: Colors.green),
+            style: TextStyle(color: Colors.green, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
         break;
       default:
         setState(() {
-          wsStatusText = const Text(
+          wsStatusText = Text(
             "NO WS",
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -133,36 +130,36 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
     switch (state) {
       case SecurityState.noSecurity:
         setState(() {
-          secStateText = const Text(
+          secStateText = Text(
             "NO SEC",
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
         break;
       case SecurityState.encrypting:
         setState(() {
-          secStateText = const Text(
+          secStateText = Text(
             "ENC",
-            style: TextStyle(color: Colors.orange),
+            style: TextStyle(color: Colors.orange, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
         break;
       case SecurityState.secure:
         setState(() {
-          secStateText = const Text(
+          secStateText = Text(
             "SECURE",
-            style: TextStyle(color: Colors.green),
+            style: TextStyle(color: Colors.green, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });
         break;
       default:
         setState(() {
-          secStateText = const Text(
+          secStateText = Text(
             "NO SEC",
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
             overflow: TextOverflow.ellipsis,
           );
         });

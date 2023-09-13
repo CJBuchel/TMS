@@ -673,6 +673,7 @@
     "SocketMessage": {
       "type": "object",
       "required": [
+        "sub_topic",
         "topic"
       ],
       "properties": {
@@ -689,10 +690,7 @@
           ]
         },
         "sub_topic": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "topic": {
           "type": "string"

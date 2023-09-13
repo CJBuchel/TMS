@@ -72,7 +72,7 @@ pub fn match_update_route(security: &State<Security>, clients: &State<TmsClients
         tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("match"),
-          sub_topic: Some(String::from("update")),
+          sub_topic: String::from("update"),
           message: Some(origin_match_number.clone()),
         }, clients.inner().clone(), None);
 
@@ -80,7 +80,7 @@ pub fn match_update_route(security: &State<Security>, clients: &State<TmsClients
         tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("match"),
-          sub_topic: Some(String::from("update")),
+          sub_topic: String::from("update"),
           message: Some(message.match_data.match_number.clone()),
         }, clients.inner().clone(), None);
         TmsRespond!();

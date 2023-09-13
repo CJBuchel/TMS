@@ -44,7 +44,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
         tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("event"),
-          sub_topic: Some(String::from("update")),
+          sub_topic: String::from("update"),
           message: None
         }, clients.inner().to_owned(), None);
         
@@ -52,7 +52,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
         tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("teams"),
-          sub_topic: Some(String::from("update")),
+          sub_topic: String::from("update"),
           message: None
         }, clients.inner().to_owned(), None);
 
@@ -60,7 +60,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
         tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("matches"),
-          sub_topic: Some(String::from("update")),
+          sub_topic: String::from("update"),
           message: None
         }, clients.inner().to_owned(), None);
 
@@ -68,7 +68,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
         tms_clients_ws_send(SocketMessage {
           from_id: None,
           topic: String::from("judging_sessions"),
-          sub_topic: Some(String::from("update")),
+          sub_topic: String::from("update"),
           message: None
         }, clients.inner().to_owned(), None);
 
@@ -175,7 +175,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("event"),
-      sub_topic: Some(String::from("update")),
+      sub_topic: String::from("update"),
       message: None
     }, clients.inner().to_owned(), None);
     
@@ -183,7 +183,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("teams"),
-      sub_topic: Some(String::from("update")),
+      sub_topic: String::from("update"),
       message: None
     }, clients.inner().to_owned(), None);
 
@@ -191,7 +191,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("matches"),
-      sub_topic: Some(String::from("update")),
+      sub_topic: String::from("update"),
       message: None
     }, clients.inner().to_owned(), None);
 
@@ -199,7 +199,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("judging_sessions"),
-      sub_topic: Some(String::from("update")),
+      sub_topic: String::from("update"),
       message: None
     }, clients.inner().to_owned(), None);
 

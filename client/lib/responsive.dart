@@ -6,6 +6,12 @@ class Responsive extends StatelessWidget {
   final Widget? tablet;
   final Widget desktop;
 
+  static const double _mobileWidthThreshold = 810; // ipad air is 820 in portrait mode
+  static const double _tabletWidthThreshold = 1100;
+
+  static const double _mobileHeightThreshold = 600;
+  static const double _tabletHeightThreshold = 800;
+
   const Responsive({
     Key? key,
     required this.mobile,
@@ -14,11 +20,33 @@ class Responsive extends StatelessWidget {
   }) : super(key: key);
 
   // This isMobile, isTablet, isDesktop helps us later
-  static bool isMobile(BuildContext context) => MediaQuery.of(context).size.width < 850;
+  static bool isMobile(BuildContext context) {
+    if (MediaQuery.of(context).size.width < _mobileWidthThreshold || MediaQuery.of(context).size.height < _mobileHeightThreshold) {
+      return true;
+    }
 
-  static bool isTablet(BuildContext context) => MediaQuery.of(context).size.width < 1100 && MediaQuery.of(context).size.width >= 850;
+    return false;
+  }
 
-  static bool isDesktop(BuildContext context) => MediaQuery.of(context).size.width >= 1100;
+  static bool isTablet(BuildContext context) {
+    if (MediaQuery.of(context).size.width < _tabletWidthThreshold && MediaQuery.of(context).size.width >= _mobileWidthThreshold) {
+      return true;
+    }
+
+    if (MediaQuery.of(context).size.height < _tabletHeightThreshold && MediaQuery.of(context).size.height >= _mobileHeightThreshold) {
+      return true;
+    }
+
+    return false;
+  }
+
+  static bool isDesktop(BuildContext context) {
+    if (MediaQuery.of(context).size.width >= _tabletWidthThreshold && MediaQuery.of(context).size.height >= _tabletHeightThreshold) {
+      return true;
+    }
+
+    return false;
+  }
 
   static double fontSize(BuildContext context, double scale) {
     double fontSize = 25;

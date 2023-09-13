@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 
 class TTLClock extends StatefulWidget {
@@ -47,17 +48,17 @@ class _TTLClockState extends State<TTLClock> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           "TTL: ",
           style: TextStyle(
-            fontSize: 65,
+            fontSize: Responsive.isDesktop(context) ? 60 : 40,
           ),
         ),
         Text(
           time >= 0 ? "+${parseTime(time)}" : "-${parseTime(time)}",
           style: TextStyle(
             fontFamily: "lcdbold",
-            fontSize: 70,
+            fontSize: Responsive.isDesktop(context) ? 60 : 40,
             color: time >= 0 ? Colors.green : Colors.red,
           ),
         ),

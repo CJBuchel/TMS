@@ -42,7 +42,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
   let client_list_update = SocketMessage {
     from_id: Some(String::from("")),
     topic: String::from("clients"),
-    sub_topic: Some(String::from("update")),
+    sub_topic: String::from("update"),
     message: None
   };
 

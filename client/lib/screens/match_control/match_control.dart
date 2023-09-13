@@ -5,7 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
+import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/match_control/controls.dart';
@@ -66,11 +68,22 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
     }
   }
 
+  void unloadOnDisconnect() async {
+    var states = await Network.getStates();
+    if (states.item1 != NetworkHttpConnectionState.connected || states.item2 != NetworkWebSocketState.connected) {
+      _loadedMatches = [];
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     onTeamsUpdate((teams) => setTeams(teams));
     onMatchesUpdate((matches) => setMatches(matches));
+
+    // add notifier for disconnect (remove loaded matches if we're disconnected)
+    NetworkHttp.httpState.addListener(unloadOnDisconnect);
+    NetworkWebSocket.wsState.addListener(unloadOnDisconnect);
 
     onTeamUpdate((team) {
       int idx = _teams.indexWhere((t) => t.teamNumber == team.teamNumber);
@@ -194,6 +207,23 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
         floatingActionButton: LayoutBuilder(
           builder: (context, constraints) {
             if (Responsive.isMobile(context)) {
+              bool isLoadable = _selectedMatches.isNotEmpty && _loadedMatches.isEmpty && _selectedMatches.every((element) => !element.complete);
+
+              for (var selectedMatch in _selectedMatches) {
+                // find any previous matches that are complete and tables that have not submitted their scores
+                for (var previousMatch in _matches.where((element) => element.complete)) {
+                  if (previousMatch.onTableFirst.table == selectedMatch.onTableFirst.table) {
+                    if (!previousMatch.onTableFirst.scoreSubmitted) {
+                      isLoadable = false;
+                    }
+                  }
+                  if (previousMatch.onTableSecond.table == selectedMatch.onTableSecond.table) {
+                    if (!previousMatch.onTableSecond.scoreSubmitted) {
+                      isLoadable = false;
+                    }
+                  }
+                }
+              }
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -206,7 +236,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
                               displayErrorDialog(value, context);
                             }
                           });
-                        } else if (_selectedMatches.isNotEmpty && _loadedMatches.isEmpty) {
+                        } else if (isLoadable) {
                           loadMatch(MatchLoadStatus.load, context, _selectedMatches).then((value) {
                             if (value != HttpStatus.ok) {
                               displayErrorDialog(value, context);
@@ -215,7 +245,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
                         }
                       },
                       enableFeedback: true,
-                      backgroundColor: (_selectedMatches.isNotEmpty || _loadedMatches.isNotEmpty) ? Colors.orange : Colors.grey,
+                      backgroundColor: (isLoadable || _loadedMatches.isNotEmpty) ? Colors.orange : Colors.grey,
                       child: _loadedMatches.isEmpty
                           ? const Icon(Icons.arrow_downward, color: Colors.white)
                           : const Icon(Icons.arrow_upward, color: Colors.white)),

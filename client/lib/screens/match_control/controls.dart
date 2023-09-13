@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
@@ -55,6 +56,24 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
   Widget getControls(double maxHeight) {
     bool isLoadable =
         widget.selectedMatches.isNotEmpty && widget.loadedMatches.isEmpty && widget.selectedMatches.every((element) => !element.complete);
+
+    for (var selectedMatch in widget.selectedMatches) {
+      // find any previous matches that are complete and tables that have not submitted their scores
+      for (var previousMatch in widget.matches.where((element) => element.complete)) {
+        if (previousMatch.onTableFirst.table == selectedMatch.onTableFirst.table) {
+          if (!previousMatch.onTableFirst.scoreSubmitted) {
+            Logger().i("Match ${previousMatch.matchNumber} on table ${previousMatch.onTableSecond.table} has not submitted scores");
+            isLoadable = false;
+          }
+        }
+        if (previousMatch.onTableSecond.table == selectedMatch.onTableSecond.table) {
+          if (!previousMatch.onTableSecond.scoreSubmitted) {
+            Logger().i("Match ${previousMatch.matchNumber} on table ${previousMatch.onTableSecond.table} has not submitted scores");
+            isLoadable = false;
+          }
+        }
+      }
+    }
     bool isDeferrable = isLoadable;
     bool isIncomplete = isLoadable;
     bool isUnloadable = widget.loadedMatches.isNotEmpty;

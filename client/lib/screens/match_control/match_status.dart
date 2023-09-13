@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:tms/responsive.dart';
 
 class MatchStatus extends StatefulWidget {
   final bool isLoaded;
@@ -30,20 +32,20 @@ class _MatchStatusState extends State<MatchStatus> with SingleTickerProviderStat
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           "Status: ",
           style: TextStyle(
-            fontSize: 35,
+            fontSize: Responsive.isDesktop(context) ? 35 : 25,
           ),
         ),
         AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {
             if (widget.isLoaded) {
-              return const Text(
+              return Text(
                 "Match Loaded",
                 style: TextStyle(
-                  fontSize: 35,
+                  fontSize: Responsive.isDesktop(context) ? 35 : 25,
                   color: Colors.orange,
                 ),
               );
@@ -51,7 +53,7 @@ class _MatchStatusState extends State<MatchStatus> with SingleTickerProviderStat
               return Text(
                 "No Match Loaded",
                 style: TextStyle(
-                  fontSize: 35,
+                  fontSize: Responsive.isDesktop(context) ? 35 : 20,
                   color: _controller.value < 0.5 ? Colors.red : Colors.grey,
                 ),
               );

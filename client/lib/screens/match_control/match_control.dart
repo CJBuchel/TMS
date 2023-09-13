@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:tms/network/network.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/match_control/controls.dart';
+import 'package:tms/screens/match_control/controls_mobile.dart';
+import 'package:tms/screens/match_control/controls_shared.dart';
 import 'package:tms/screens/match_control/table.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
 
@@ -144,48 +147,104 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (!Responsive.isMobile(context)) {
-            return Row(
-              children: [
-                SizedBox(
-                  width: constraints.maxWidth / 2, // 50%
-                  child: MatchControlControls(
-                    con: constraints,
-                    teams: _teams,
-                    matches: _matches,
-                    loadedMatches: _loadedMatches,
-                    selectedMatches: _selectedMatches,
+        appBar: TmsToolBar(),
+        body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (!Responsive.isMobile(context)) {
+              return Row(
+                children: [
+                  SizedBox(
+                    width: constraints.maxWidth / 2, // 50%
+                    child: MatchControlControls(
+                      con: constraints,
+                      teams: _teams,
+                      matches: _matches,
+                      loadedMatches: _loadedMatches,
+                      selectedMatches: _selectedMatches,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: (constraints.maxWidth / 2), // 50%
-                  child: MatchControlTable(
-                    con: constraints,
-                    matches: _matches,
-                    onSelected: onSelectedMatches,
-                    selectedMatches: _selectedMatches,
-                    loadedMatches: _loadedMatches,
+                  SizedBox(
+                    width: (constraints.maxWidth / 2), // 50%
+                    child: MatchControlTable(
+                      con: constraints,
+                      matches: _matches,
+                      onSelected: onSelectedMatches,
+                      selectedMatches: _selectedMatches,
+                      loadedMatches: _loadedMatches,
+                    ),
                   ),
+                ],
+              );
+            } else {
+              return SizedBox(
+                width: constraints.maxWidth,
+                child: MatchControlTable(
+                  con: constraints,
+                  matches: _matches,
+                  selectedMatches: _selectedMatches,
+                  onSelected: onSelectedMatches,
+                  loadedMatches: _loadedMatches,
                 ),
-              ],
-            );
-          } else {
-            return SizedBox(
-              width: constraints.maxWidth,
-              child: MatchControlTable(
-                con: constraints,
-                matches: _matches,
-                selectedMatches: _selectedMatches,
-                onSelected: onSelectedMatches,
-                loadedMatches: _loadedMatches,
-              ),
-            );
-          }
-        },
-      ),
-    );
+              );
+            }
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: LayoutBuilder(
+          builder: (context, constraints) {
+            if (Responsive.isMobile(context)) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FloatingActionButton(
+                      heroTag: "load-unload",
+                      onPressed: () {
+                        if (_loadedMatches.isNotEmpty) {
+                          loadMatch(MatchLoadStatus.unload, context, _selectedMatches).then((value) {
+                            if (value != HttpStatus.ok) {
+                              displayErrorDialog(value, context);
+                            }
+                          });
+                        } else if (_selectedMatches.isNotEmpty && _loadedMatches.isEmpty) {
+                          loadMatch(MatchLoadStatus.load, context, _selectedMatches).then((value) {
+                            if (value != HttpStatus.ok) {
+                              displayErrorDialog(value, context);
+                            }
+                          });
+                        }
+                      },
+                      enableFeedback: true,
+                      backgroundColor: (_selectedMatches.isNotEmpty || _loadedMatches.isNotEmpty) ? Colors.orange : Colors.grey,
+                      child: _loadedMatches.isEmpty
+                          ? const Icon(Icons.arrow_downward, color: Colors.white)
+                          : const Icon(Icons.arrow_upward, color: Colors.white)),
+                  FloatingActionButton(
+                    heroTag: "next",
+                    onPressed: () {
+                      if (_selectedMatches.isNotEmpty && _loadedMatches.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MatchControlMobileControls(
+                              teams: _teams,
+                              matches: _matches,
+                              loadedMatches: _loadedMatches,
+                              selectedMatches: _selectedMatches,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    enableFeedback: true,
+                    backgroundColor: (_selectedMatches.isNotEmpty && _loadedMatches.isNotEmpty) ? Colors.blue[300] : Colors.grey,
+                    child: const Icon(Icons.double_arrow, color: Colors.white),
+                  ),
+                ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
+        ));
   }
 }

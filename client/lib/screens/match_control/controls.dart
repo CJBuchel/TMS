@@ -292,10 +292,9 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const SizedBox(height: 15),
                   Clock(fontSize: Responsive.isDesktop(context) ? 90 : 70),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: TimerControl(
                       loadedMatches: widget.loadedMatches,
                     ),

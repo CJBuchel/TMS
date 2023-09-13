@@ -46,28 +46,28 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
     switch (status) {
       case TimerSendStatus.preStart:
         timerPreStartRequest().then((res) {
-          if (res == HttpStatus.ok) {
+          if (res != HttpStatus.ok) {
             displayErrorDialog(res);
           }
         });
         break;
       case TimerSendStatus.start:
         timerStartRequest().then((res) {
-          if (res == HttpStatus.ok) {
+          if (res != HttpStatus.ok) {
             displayErrorDialog(res);
           }
         });
         break;
       case TimerSendStatus.stop:
         timerStopRequest().then((res) {
-          if (res == HttpStatus.ok) {
+          if (res != HttpStatus.ok) {
             displayErrorDialog(res);
           }
         });
         break;
       case TimerSendStatus.reload:
         timerReloadRequest().then((res) {
-          if (res == HttpStatus.ok) {
+          if (res != HttpStatus.ok) {
             displayErrorDialog(res);
           }
         });
@@ -150,15 +150,14 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
         Expanded(
           child: SizedBox(
             height: Responsive.isDesktop(context) ? 40 : 20,
-            child: ElevatedButton.icon(
+            child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
               ),
               onPressed: () {
                 sendTimerStatus(TimerSendStatus.stop);
               },
-              icon: const Icon(Icons.warning_amber),
-              label: Text("Abort", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
+              child: Text("Abort", style: TextStyle(fontSize: Responsive.isDesktop(context) ? 18 : 14)),
             ),
           ),
         ),

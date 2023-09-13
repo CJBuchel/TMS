@@ -94,7 +94,7 @@ class NetworkWebSocket {
       }
     } else {
       try {
-        publish(SocketMessage(message: "ping", topic: "none"));
+        publish(SocketMessage(message: "ping", topic: "none", subTopic: "none"));
       } catch (e) {
         setState(NetworkWebSocketState.disconnected);
       }

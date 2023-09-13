@@ -27,7 +27,7 @@ class _MatchControlTableState extends State<MatchControlTable> {
   bool _multiMatch = false;
 
   Widget _styledHeader(String content) {
-    return Text(content, style: const TextStyle(fontWeight: FontWeight.bold));
+    return Center(child: Text(content, style: const TextStyle(fontWeight: FontWeight.bold)));
   }
 
   DataCell _styledCell(String context, {Color? color, bool? deferred}) {

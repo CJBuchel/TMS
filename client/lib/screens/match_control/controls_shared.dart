@@ -81,7 +81,7 @@ Future<int> updateMatch(MatchUpdateStatus status, BuildContext context, List<Gam
 }
 
 Widget styledHeader(String content) {
-  return Text(content, style: const TextStyle(fontWeight: FontWeight.bold));
+  return Center(child: Text(content, style: const TextStyle(fontWeight: FontWeight.bold)));
 }
 
 DataCell styledCell(String text, AnimationController controller, List<GameMatch> loadedMatches, {bool? isTable}) {

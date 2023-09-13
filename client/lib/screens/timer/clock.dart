@@ -100,17 +100,17 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
           _TimerClockState = TimerClockState.idle;
         });
       } else if (m.subTopic == "start") {
-        playAudio("audio/start.mp3");
+        playAudio("assets/audio/start.mp3");
         setState(() {
           _TimerClockState = TimerClockState.running;
         });
       } else if (m.subTopic == "stop") {
-        playAudio("audio/stop.mp3");
+        playAudio("assets/audio/stop.mp3");
         setState(() {
           _TimerClockState = TimerClockState.stopped;
         });
       } else if (m.subTopic == "endgame") {
-        playAudio("audio/end-game.mp3");
+        playAudio("assets/audio/end-game.mp3");
         setState(() {
           _TimerClockState = TimerClockState.endgame;
         });
@@ -119,7 +119,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
           _TimerClockState = TimerClockState.preStart;
         });
       } else if (m.subTopic == "end") {
-        playAudio("audio/end.mp3");
+        playAudio("assets/audio/end.mp3");
         setState(() {
           _TimerClockState = TimerClockState.ended;
         });
@@ -143,7 +143,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
         style: TextStyle(
           fontSize: widget.fontSize,
           color: timerColor,
-          fontFamily: "Radioland",
+          fontFamily: "lcdbold",
         ),
       );
     }
@@ -154,7 +154,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
         style: TextStyle(
           fontSize: 300,
           color: timerColor,
-          fontFamily: "Radioland",
+          fontFamily: "lcdbold",
         ),
       );
     } else if (Responsive.isTablet(context)) {
@@ -163,7 +163,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
         style: TextStyle(
           fontSize: 200,
           color: timerColor,
-          fontFamily: "Radioland",
+          fontFamily: "lzcdbold",
         ),
       );
     } else {
@@ -172,7 +172,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
         style: TextStyle(
           fontSize: 80,
           color: timerColor,
-          fontFamily: "Radioland",
+          fontFamily: "lcdbold",
         ),
       );
     }

@@ -816,13 +816,13 @@ class SocketMessage {
     SocketMessage({
         this.fromId,
         this.message,
-        this.subTopic,
+        required this.subTopic,
         required this.topic,
     });
 
     String? fromId;
     String? message;
-    String? subTopic;
+    String subTopic;
     String topic;
 
     factory SocketMessage.fromJson(Map<String, dynamic> json) => SocketMessage(

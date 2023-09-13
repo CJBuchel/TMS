@@ -6,9 +6,9 @@
 # sudo apt update && apt install -y musl-tools musl-dev openssl
 # sudo update-ca-certificates
 
-(cd ./server; cargo build --target x86_64-unknown-linux-musl --release)
-(cd ./client; npm run prepare; flutter build web --release)
-sudo docker-compose build
+sudo docker stop tms
+sudo docker rm tms
+sudo docker image rm cjbuchel/tms
 
 # Defaults
 RUN_CLIENT=true
@@ -30,6 +30,19 @@ for arg in "$@"; do
       ;;
   esac
 done
+
+
+if [ "$RUN_SERVER" = true ] ; then
+  (cd ./server; cargo build --target x86_64-unknown-linux-musl --release)
+fi
+
+if [ "$RUN_CLIENT" = true ] ; then
+  (cd ./client; npm run prepare; flutter build web --release)
+fi
+
+
+sudo docker-compose build
+
 
 if [ "$RUN_SERVER" = false ] ; then
   echo "NO SERVER MODE"

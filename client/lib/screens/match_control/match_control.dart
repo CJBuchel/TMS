@@ -13,6 +13,7 @@ import 'package:tms/screens/match_control/controls_mobile.dart';
 import 'package:tms/screens/match_control/controls_shared.dart';
 import 'package:tms/screens/match_control/table.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
+import 'package:tms/screens/timer/clock.dart';
 
 class MatchControl extends StatefulWidget {
   const MatchControl({Key? key}) : super(key: key);

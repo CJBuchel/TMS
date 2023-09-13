@@ -13,7 +13,7 @@ class Clock extends StatefulWidget {
   const Clock({Key? key, this.fontSize}) : super(key: key);
 
   @override
-  State<Clock> createState() => _ClockState();
+  _ClockState createState() => _ClockState();
 }
 
 enum TimerClockState {
@@ -72,6 +72,8 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
       }
     });
   }
+
+  TimerClockState get getState => _TimerClockState;
 
   @override
   void initState() {

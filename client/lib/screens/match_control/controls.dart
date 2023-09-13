@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/match_control/controls_shared.dart';
@@ -29,11 +30,10 @@ class MatchControlControls extends StatefulWidget {
   _MatchControlControlsState createState() => _MatchControlControlsState();
 }
 
-class _MatchControlControlsState extends State<MatchControlControls> with SingleTickerProviderStateMixin {
+class _MatchControlControlsState extends State<MatchControlControls> with SingleTickerProviderStateMixin, AutoUnsubScribeMixin {
   late AnimationController _controller;
-
   double desktopButtonHeight = 40;
-  double tabletButtonHeight = 20;
+  double tabletButtonHeight = 24;
   double desktopButtonTextSize = 18;
   double tabletButtonTextSize = 14;
 
@@ -53,6 +53,13 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
   }
 
   Widget getControls(double maxHeight) {
+    bool isLoadable =
+        widget.selectedMatches.isNotEmpty && widget.loadedMatches.isEmpty && widget.selectedMatches.every((element) => !element.complete);
+    bool isDeferrable = isLoadable;
+    bool isIncomplete = isLoadable;
+    bool isUnloadable = widget.loadedMatches.isNotEmpty;
+    bool isComplete =
+        widget.selectedMatches.isNotEmpty && widget.loadedMatches.isEmpty && widget.selectedMatches.every((element) => element.complete);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -70,14 +77,11 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                       height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
                       child: ElevatedButton.icon(
                         style: ButtonStyle(
-                          backgroundColor: (widget.selectedMatches.isNotEmpty &&
-                                  widget.loadedMatches.isEmpty &&
-                                  widget.selectedMatches.every((element) => !element.complete))
-                              ? MaterialStateProperty.all<Color>(Colors.orange)
-                              : MaterialStateProperty.all<Color>(Colors.grey),
+                          backgroundColor:
+                              isLoadable ? MaterialStateProperty.all<Color>(Colors.orange) : MaterialStateProperty.all<Color>(Colors.grey),
                         ),
                         onPressed: () {
-                          if (widget.selectedMatches.isNotEmpty && widget.loadedMatches.isEmpty) {
+                          if (isLoadable) {
                             loadMatch(MatchLoadStatus.load, context, widget.selectedMatches).then((value) {
                               if (value != HttpStatus.ok) {
                                 displayErrorDialog(value, context);
@@ -96,12 +100,11 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                       height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
                       child: ElevatedButton.icon(
                         style: ButtonStyle(
-                          backgroundColor: widget.loadedMatches.isNotEmpty
-                              ? MaterialStateProperty.all<Color>(Colors.orange)
-                              : MaterialStateProperty.all<Color>(Colors.grey),
+                          backgroundColor:
+                              isUnloadable ? MaterialStateProperty.all<Color>(Colors.orange) : MaterialStateProperty.all<Color>(Colors.grey),
                         ),
                         onPressed: () {
-                          if (widget.loadedMatches.isNotEmpty) {
+                          if (isUnloadable) {
                             loadMatch(MatchLoadStatus.unload, context, widget.loadedMatches).then((value) {
                               if (value != HttpStatus.ok) {
                                 displayErrorDialog(value, context);
@@ -171,16 +174,11 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                             height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
                             child: ElevatedButton.icon(
                               style: ButtonStyle(
-                                backgroundColor: (widget.selectedMatches.isNotEmpty &&
-                                        widget.loadedMatches.isEmpty &&
-                                        widget.selectedMatches.every((element) => element.complete))
-                                    ? MaterialStateProperty.all<Color>(Colors.red)
-                                    : MaterialStateProperty.all<Color>(Colors.grey),
+                                backgroundColor:
+                                    isComplete ? MaterialStateProperty.all<Color>(Colors.red) : MaterialStateProperty.all<Color>(Colors.grey),
                               ),
                               onPressed: () {
-                                if (widget.selectedMatches.isNotEmpty &&
-                                    widget.loadedMatches.isEmpty &&
-                                    widget.selectedMatches.every((element) => element.complete)) {
+                                if (isComplete) {
                                   updateMatch(MatchUpdateStatus.incomplete, context, widget.selectedMatches).then((value) {
                                     if (value != HttpStatus.ok) {
                                       displayErrorDialog(value, context);
@@ -201,16 +199,11 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                             height: Responsive.isDesktop(context) ? desktopButtonHeight : tabletButtonHeight,
                             child: ElevatedButton.icon(
                               style: ButtonStyle(
-                                backgroundColor: (widget.selectedMatches.isNotEmpty &&
-                                        widget.loadedMatches.isEmpty &&
-                                        widget.selectedMatches.every((element) => !element.complete))
-                                    ? MaterialStateProperty.all<Color>(Colors.green)
-                                    : MaterialStateProperty.all<Color>(Colors.grey),
+                                backgroundColor:
+                                    isIncomplete ? MaterialStateProperty.all<Color>(Colors.green) : MaterialStateProperty.all<Color>(Colors.grey),
                               ),
                               onPressed: () {
-                                if (widget.selectedMatches.isNotEmpty &&
-                                    widget.loadedMatches.isEmpty &&
-                                    widget.selectedMatches.every((element) => !element.complete)) {
+                                if (isIncomplete) {
                                   updateMatch(MatchUpdateStatus.complete, context, widget.selectedMatches).then((value) {
                                     if (value != HttpStatus.ok) {
                                       displayErrorDialog(value, context);
@@ -236,16 +229,11 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                       width: Responsive.buttonWidth(context, 1),
                       child: ElevatedButton.icon(
                         style: ButtonStyle(
-                          backgroundColor: (widget.selectedMatches.isNotEmpty &&
-                                  widget.loadedMatches.isEmpty &&
-                                  widget.selectedMatches.every((element) => !element.complete))
-                              ? MaterialStateProperty.all<Color>(Colors.blue)
-                              : MaterialStateProperty.all<Color>(Colors.grey),
+                          backgroundColor:
+                              isDeferrable ? MaterialStateProperty.all<Color>(Colors.blue) : MaterialStateProperty.all<Color>(Colors.grey),
                         ),
                         onPressed: () {
-                          if (widget.selectedMatches.isNotEmpty &&
-                              widget.loadedMatches.isEmpty &&
-                              widget.selectedMatches.every((element) => !element.complete)) {
+                          if (isDeferrable) {
                             if (widget.selectedMatches.every((element) => element.gameMatchDeferred)) {
                               updateMatch(MatchUpdateStatus.expedite, context, widget.selectedMatches).then((value) {
                                 if (value != HttpStatus.ok) {

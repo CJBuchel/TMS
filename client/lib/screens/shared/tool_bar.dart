@@ -28,6 +28,8 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
   Icon themeIcon = const Icon(Icons.light_mode, color: Colors.white);
   Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
 
+  double _scaledFontSize = 20;
+
   late AnimationController _animationController;
 
   Text ntStatusText = const Text(
@@ -58,7 +60,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           ntStatusText = Text(
             "NO NT",
-            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.red, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -68,7 +70,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           ntStatusText = Text(
             "NO PULSE",
-            style: TextStyle(color: Colors.orange, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.orange, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -78,7 +80,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           ntStatusText = Text(
             "OK",
-            style: TextStyle(color: Colors.green, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.green, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -87,7 +89,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           ntStatusText = Text(
             "NO NT",
-            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.red, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -100,7 +102,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           wsStatusText = Text(
             "NO WS",
-            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.red, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -110,7 +112,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           wsStatusText = Text(
             "OK",
-            style: TextStyle(color: Colors.green, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.green, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -119,7 +121,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           wsStatusText = Text(
             "NO WS",
-            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.red, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -132,7 +134,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           secStateText = Text(
             "NO SEC",
-            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.red, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -141,7 +143,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           secStateText = Text(
             "ENC",
-            style: TextStyle(color: Colors.orange, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.orange, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -150,7 +152,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           secStateText = Text(
             "SECURE",
-            style: TextStyle(color: Colors.green, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.green, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -159,7 +161,7 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
         setState(() {
           secStateText = Text(
             "NO SEC",
-            style: TextStyle(color: Colors.red, fontSize: Responsive.isDesktop(context) ? 20 : 15),
+            style: TextStyle(color: Colors.red, fontSize: _scaledFontSize),
             overflow: TextOverflow.ellipsis,
           );
         });
@@ -369,12 +371,18 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    double fontSize = Responsive.fontSize(context, 1.0);
+    if (Responsive.isDesktop(context)) {
+      _scaledFontSize = 20;
+    } else if (Responsive.isTablet(context)) {
+      _scaledFontSize = 15;
+    } else {
+      _scaledFontSize = 8;
+    }
 
     return AppBar(
       backgroundColor: Colors.blueGrey[800],
-      titleTextStyle: TextStyle(fontSize: fontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
-      iconTheme: IconThemeData(size: fontSize, color: Colors.white),
+      titleTextStyle: TextStyle(fontSize: _scaledFontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
+      iconTheme: IconThemeData(size: _scaledFontSize, color: Colors.white),
       title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
       actions: getActions(),
     );

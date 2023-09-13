@@ -53,7 +53,7 @@ class _MatchStatusState extends State<MatchStatus> with SingleTickerProviderStat
               return Text(
                 "No Match Loaded",
                 style: TextStyle(
-                  fontSize: Responsive.isDesktop(context) ? 35 : 20,
+                  fontSize: Responsive.isDesktop(context) ? 35 : 25,
                   color: _controller.value < 0.5 ? Colors.red : Colors.grey,
                 ),
               );

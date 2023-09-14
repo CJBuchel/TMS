@@ -1,0 +1,268 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AusFLLSchema",
+  "type": "object",
+  "required": [
+    "default_value",
+    "game",
+    "games",
+    "mission",
+    "mission_picture",
+    "question_input",
+    "score",
+    "score_answer",
+    "score_error"
+  ],
+  "properties": {
+    "default_value": {
+      "$ref": "#/definitions/DefaultValue"
+    },
+    "game": {
+      "$ref": "#/definitions/Game"
+    },
+    "games": {
+      "$ref": "#/definitions/Games"
+    },
+    "mission": {
+      "$ref": "#/definitions/Mission"
+    },
+    "mission_picture": {
+      "$ref": "#/definitions/MissionPicture"
+    },
+    "question_input": {
+      "$ref": "#/definitions/QuestionInput"
+    },
+    "score": {
+      "$ref": "#/definitions/Score"
+    },
+    "score_answer": {
+      "$ref": "#/definitions/ScoreAnswer"
+    },
+    "score_error": {
+      "$ref": "#/definitions/ScoreError"
+    }
+  },
+  "definitions": {
+    "DefaultValue": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "Number"
+          ],
+          "properties": {
+            "Number": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "Text"
+          ],
+          "properties": {
+            "Text": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Game": {
+      "type": "object",
+      "required": [
+        "missions",
+        "name",
+        "program",
+        "questions",
+        "season"
+      ],
+      "properties": {
+        "missions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Mission"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "program": {
+          "type": "string"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Score"
+          }
+        },
+        "season": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "Games": {
+      "type": "object",
+      "required": [
+        "game_2023"
+      ],
+      "properties": {
+        "game_2023": {
+          "$ref": "#/definitions/Game"
+        }
+      }
+    },
+    "Mission": {
+      "type": "object",
+      "required": [
+        "prefix",
+        "title"
+      ],
+      "properties": {
+        "image": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "MissionPicture": {
+      "type": "object",
+      "required": [
+        "prefix",
+        "url"
+      ],
+      "properties": {
+        "prefix": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "QuestionInput": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "Numerical"
+          ],
+          "properties": {
+            "Numerical": {
+              "type": "object",
+              "required": [
+                "max",
+                "min"
+              ],
+              "properties": {
+                "max": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "min": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "Categorical"
+          ],
+          "properties": {
+            "Categorical": {
+              "type": "object",
+              "required": [
+                "options"
+              ],
+              "properties": {
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Score": {
+      "type": "object",
+      "required": [
+        "default_value",
+        "id",
+        "label",
+        "label_short",
+        "question_input"
+      ],
+      "properties": {
+        "default_value": {
+          "$ref": "#/definitions/DefaultValue"
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "label_short": {
+          "type": "string"
+        },
+        "question_input": {
+          "$ref": "#/definitions/QuestionInput"
+        }
+      }
+    },
+    "ScoreAnswer": {
+      "type": "object",
+      "required": [
+        "answer",
+        "id"
+      ],
+      "properties": {
+        "answer": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "ScoreError": {
+      "type": "object",
+      "required": [
+        "id",
+        "message"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "ausfll-dart",
+  "version": "1.0.0",
+  "description": "A new Flutter project.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "prepare": "quicktype -l dart -s schema ../schema/ausfll_schema.json -o lib/schema/ausfll_schema.dart"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "quicktype": "^23.0.19"
+  }
+}

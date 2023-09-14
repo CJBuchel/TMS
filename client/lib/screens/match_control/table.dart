@@ -93,7 +93,7 @@ class _MatchControlTableState extends State<MatchControlTable> {
         if (isLoaded) return Colors.orange;
         if (isSelected) return Colors.blue[300] ?? Colors.blue;
         if (index.isEven) return match.complete ? Colors.green : Theme.of(context).splashColor; // Color for even rows
-        return match.complete ? Colors.green[300] ?? Colors.green : Theme.of(context).colorScheme.secondary.withOpacity(0.1);
+        return match.complete ? Colors.green : Theme.of(context).colorScheme.secondary.withOpacity(0.1);
       }),
       cells: [
         if (_multiMatch && isSelectable)
@@ -120,22 +120,38 @@ class _MatchControlTableState extends State<MatchControlTable> {
         _styledCell(match.startTime, deferred: isDeferred),
         _styledCell(
           match.onTableFirst.table,
-          color: match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableFirst.scoreSubmitted
+              ? Colors.red
+              : !match.complete && match.onTableFirst.scoreSubmitted
+                  ? Colors.green
+                  : null,
           deferred: isDeferred,
         ),
         _styledCell(
           match.onTableFirst.teamNumber,
-          color: match.complete && !match.onTableFirst.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableFirst.scoreSubmitted
+              ? Colors.red
+              : !match.complete && match.onTableFirst.scoreSubmitted
+                  ? Colors.green
+                  : null,
           deferred: isDeferred,
         ),
         _styledCell(
           match.onTableSecond.table,
-          color: match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableSecond.scoreSubmitted
+              ? Colors.red
+              : !match.complete && match.onTableSecond.scoreSubmitted
+                  ? Colors.green
+                  : null,
           deferred: isDeferred,
         ),
         _styledCell(
           match.onTableSecond.teamNumber,
-          color: match.complete && !match.onTableSecond.scoreSubmitted ? Colors.red : null,
+          color: match.complete && !match.onTableSecond.scoreSubmitted
+              ? Colors.red
+              : !match.complete && match.onTableSecond.scoreSubmitted
+                  ? Colors.green
+                  : null,
           deferred: isDeferred,
         ),
       ],

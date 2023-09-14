@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "schema"
+			"path": "ausfll-score-calculator"
 		},
 		{
 			"path": "server"

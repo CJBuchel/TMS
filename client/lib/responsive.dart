@@ -21,31 +21,19 @@ class Responsive extends StatelessWidget {
 
   // This isMobile, isTablet, isDesktop helps us later
   static bool isMobile(BuildContext context) {
-    if (MediaQuery.of(context).size.width < _mobileWidthThreshold || MediaQuery.of(context).size.height < _mobileHeightThreshold) {
-      return true;
-    }
-
-    return false;
+    return MediaQuery.of(context).size.width < _mobileWidthThreshold || MediaQuery.of(context).size.height < _mobileHeightThreshold;
   }
 
   static bool isTablet(BuildContext context) {
-    if (MediaQuery.of(context).size.width < _tabletWidthThreshold && MediaQuery.of(context).size.width >= _mobileWidthThreshold) {
-      return true;
+    if (!isMobile(context)) {
+      return MediaQuery.of(context).size.width < _tabletWidthThreshold || MediaQuery.of(context).size.height < _tabletHeightThreshold;
+    } else {
+      return false;
     }
-
-    if (MediaQuery.of(context).size.height < _tabletHeightThreshold && MediaQuery.of(context).size.height >= _mobileHeightThreshold) {
-      return true;
-    }
-
-    return false;
   }
 
   static bool isDesktop(BuildContext context) {
-    if (MediaQuery.of(context).size.width >= _tabletWidthThreshold && MediaQuery.of(context).size.height >= _tabletHeightThreshold) {
-      return true;
-    }
-
-    return false;
+    return MediaQuery.of(context).size.width >= _tabletWidthThreshold && MediaQuery.of(context).size.height >= _tabletHeightThreshold;
   }
 
   static double fontSize(BuildContext context, double scale) {

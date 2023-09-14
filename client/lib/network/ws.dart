@@ -53,7 +53,12 @@ class NetworkWebSocket {
           // On a regular data message decrypt the message
           NetworkSecurity.decryptMessage(event).then((value) {
             // Convert the message to a socket message type
-            SocketMessage m = SocketMessage.fromJson(value);
+            SocketMessage m;
+            try {
+              m = SocketMessage.fromJson(value);
+            } catch (e) {
+              m = SocketMessage(message: "", subTopic: "", topic: "");
+            }
             // Iterate through the subscribers and check if the topic matches
             _subscribers.forEach((topic, functionList) {
               if (topic == m.topic) {

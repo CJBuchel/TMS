@@ -62,7 +62,7 @@ pub fn reload_timer_route(message: String) -> TmsRouteResponse<()> {
       from_id: None,
       topic: String::from("clock"),
       sub_topic: String::from("reload"),
-      message: None
+      message: String::from("")
     }, clients.inner().clone(), None);
     TmsRespond!()
   }

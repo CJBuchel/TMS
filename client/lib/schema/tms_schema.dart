@@ -815,13 +815,13 @@ class User {
 class SocketMessage {
     SocketMessage({
         this.fromId,
-        this.message,
+        required this.message,
         required this.subTopic,
         required this.topic,
     });
 
     String? fromId;
-    String? message;
+    String message;
     String subTopic;
     String topic;
 

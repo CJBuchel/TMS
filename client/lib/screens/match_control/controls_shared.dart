@@ -22,7 +22,7 @@ void displayErrorDialog(int serverRes, BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) => AlertDialog(
-      title: const Text("Unauthorised"),
+      title: const Text("Bad Request"),
       content: SingleChildScrollView(
         child: Text(serverRes == HttpStatus.unauthorized ? "Invalid User Permissions" : "Server Error"),
       ),

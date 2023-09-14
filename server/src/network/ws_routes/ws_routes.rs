@@ -19,7 +19,7 @@ async fn client_msg(_user_id: String, msg: Message, _clients: TmsClients, securi
 
   let _socket_message: SocketMessage = serde_json::from_str(decrypted_message.as_str()).unwrap();
 
-  if _socket_message.message == Some("ping".to_string()) || _socket_message.message == Some("ping\n".to_string()) {
+  if _socket_message.message == "ping".to_string() || _socket_message.message == "ping\n".to_string() {
     return;
   }
   // @todo use socket message for something. (Off chance that the client sends a socket message instead of the server)
@@ -43,7 +43,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
     from_id: Some(String::from("")),
     topic: String::from("clients"),
     sub_topic: String::from("update"),
-    message: None
+    message: String::from(""),
   };
 
   tms_clients_ws_send(client_list_update.clone(), shared_clients.clone(), Some(String::from("")));

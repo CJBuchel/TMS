@@ -94,7 +94,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
           });
         }
         setState(() {
-          _time = int.parse(m.message ?? "0");
+          _time = int.parse(m.message);
         });
       } else if (m.subTopic == "reload") {
         getInitialTime();
@@ -165,7 +165,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
         style: TextStyle(
           fontSize: 200,
           color: timerColor,
-          fontFamily: "lzcdbold",
+          fontFamily: "lcdbold",
         ),
       );
     } else {

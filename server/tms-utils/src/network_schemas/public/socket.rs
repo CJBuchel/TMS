@@ -7,7 +7,7 @@ pub struct SocketMessage {
   pub from_id: Option<String>,
   pub topic: String, // clock, team, event, etc
   pub sub_topic: String, // time, start, update i.e (clock:time, event:update)
-  pub message: Option<String>
+  pub message: String
 }
 
 // Sent over the SocketMessage::message in serialized form

@@ -372,11 +372,15 @@ class TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateMi
   @override
   Widget build(BuildContext context) {
     if (Responsive.isDesktop(context)) {
+      _scaledFontSize = 25;
+    }
+
+    if (Responsive.isTablet(context)) {
       _scaledFontSize = 20;
-    } else if (Responsive.isTablet(context)) {
+    }
+
+    if (Responsive.isMobile(context)) {
       _scaledFontSize = 15;
-    } else {
-      _scaledFontSize = 8;
     }
 
     return AppBar(

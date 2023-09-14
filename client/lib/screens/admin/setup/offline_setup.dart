@@ -17,6 +17,7 @@ class OfflineSetup extends StatefulWidget {
   _OfflineSetupState createState() => _OfflineSetupState();
 }
 
+// @TODO, make defaults the current setup (if applicable)
 class _OfflineSetupState extends State<OfflineSetup> {
   FilePickerResult? _selectedSchedule;
   SetupRequest? _setupRequest;

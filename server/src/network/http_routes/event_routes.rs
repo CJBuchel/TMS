@@ -45,7 +45,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           from_id: None,
           topic: String::from("event"),
           sub_topic: String::from("update"),
-          message: None
+          message: String::from("")
         }, clients.inner().to_owned(), None);
         
         // send teams update
@@ -53,7 +53,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           from_id: None,
           topic: String::from("teams"),
           sub_topic: String::from("update"),
-          message: None
+          message: String::from("")
         }, clients.inner().to_owned(), None);
 
         // send matches update
@@ -61,7 +61,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           from_id: None,
           topic: String::from("matches"),
           sub_topic: String::from("update"),
-          message: None
+          message: String::from("")
         }, clients.inner().to_owned(), None);
 
         // send judging sessions update
@@ -69,7 +69,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           from_id: None,
           topic: String::from("judging_sessions"),
           sub_topic: String::from("update"),
-          message: None
+          message: String::from("")
         }, clients.inner().to_owned(), None);
 
         // good response
@@ -176,7 +176,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       from_id: None,
       topic: String::from("event"),
       sub_topic: String::from("update"),
-      message: None
+      message: String::from("")
     }, clients.inner().to_owned(), None);
     
     // send teams update
@@ -184,7 +184,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       from_id: None,
       topic: String::from("teams"),
       sub_topic: String::from("update"),
-      message: None
+      message: String::from("")
     }, clients.inner().to_owned(), None);
 
     // send matches update
@@ -192,7 +192,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       from_id: None,
       topic: String::from("matches"),
       sub_topic: String::from("update"),
-      message: None
+      message: String::from("")
     }, clients.inner().to_owned(), None);
 
     // send judging sessions update
@@ -200,7 +200,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       from_id: None,
       topic: String::from("judging_sessions"),
       sub_topic: String::from("update"),
-      message: None
+      message: String::from("")
     }, clients.inner().to_owned(), None);
 
     // good response

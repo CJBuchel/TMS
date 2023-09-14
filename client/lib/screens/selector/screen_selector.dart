@@ -128,7 +128,9 @@ class _ScreenSelectorState extends State<ScreenSelector> {
                   image: const Image(
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
-                  onPress: () {},
+                  onPress: () {
+                    Navigator.pushNamed(context, '/referee/scoring');
+                  },
                 ),
               ),
 

@@ -73,7 +73,7 @@ pub fn match_update_route(security: &State<Security>, clients: &State<TmsClients
           from_id: None,
           topic: String::from("match"),
           sub_topic: String::from("update"),
-          message: Some(origin_match_number.clone()),
+          message: origin_match_number.clone(),
         }, clients.inner().clone(), None);
 
         // send another update for the new match (if the new match number changed from origin)
@@ -81,7 +81,7 @@ pub fn match_update_route(security: &State<Security>, clients: &State<TmsClients
           from_id: None,
           topic: String::from("match"),
           sub_topic: String::from("update"),
-          message: Some(message.match_data.match_number.clone()),
+          message: message.match_data.match_number.clone(),
         }, clients.inner().clone(), None);
         TmsRespond!();
       },

@@ -9,6 +9,7 @@ build = "build/main.rs"
 
 [dependencies]
 tms-utils = { path = "tms-utils" }
+# ausfll-score-calculator = { path = "ausfll-score-calculator" }
 tokio = { version = "^1.27", features = ["macros", "sync", "rt-multi-thread"] }
 tokio-stream = "^0.1.9"
 warp = { version = "^0.3", features = ["tls"] }

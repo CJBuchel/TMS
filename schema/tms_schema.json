@@ -115,21 +115,6 @@
     }
   },
   "definitions": {
-    "Answer": {
-      "type": "object",
-      "required": [
-        "answer",
-        "id"
-      ],
-      "properties": {
-        "answer": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        }
-      }
-    },
     "Event": {
       "type": "object",
       "required": [
@@ -247,7 +232,7 @@
         "answers": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Answer"
+            "$ref": "#/definitions/ScoreAnswer"
           }
         },
         "private_comment": {
@@ -312,7 +297,7 @@
         "answers": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Answer"
+            "$ref": "#/definitions/ScoreAnswer"
           }
         },
         "feedback_crit": {
@@ -609,6 +594,21 @@
         }
       }
     },
+    "ScoreAnswer": {
+      "type": "object",
+      "required": [
+        "answer",
+        "id"
+      ],
+      "properties": {
+        "answer": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
     "SetupRequest": {
       "type": "object",
       "required": [
@@ -673,6 +673,7 @@
     "SocketMessage": {
       "type": "object",
       "required": [
+        "message",
         "sub_topic",
         "topic"
       ],
@@ -684,10 +685,7 @@
           ]
         },
         "message": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string"
         },
         "sub_topic": {
           "type": "string"

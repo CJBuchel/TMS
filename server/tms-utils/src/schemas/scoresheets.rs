@@ -1,7 +1,8 @@
+use schema_utils::schemas::ScoreAnswer;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use ausfll_score_calculator::schemas::ScoreAnswer;
+
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct GameScoresheet {

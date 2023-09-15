@@ -1,18 +1,15 @@
 {
 	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "ausfll-score-calculator"
-		},
-		{
-			"path": "server"
-		},
-		{
-			"path": "client"
-		}
-	],
+    {
+      "path": "server"
+    },
+    {
+      "path": "client"
+    },
+    {
+      "path": "ausfll-score-calculator/ausfll-rs/schema-utils"
+    }
+  ],
   "settings": {
     "rust-analyzer.showUnlinkedFileNotification": false
   }

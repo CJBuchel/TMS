@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
@@ -45,32 +46,23 @@ Future<int> loadMatch(MatchLoadStatus status, BuildContext context, List<GameMat
 }
 
 Future<int> updateMatch(MatchUpdateStatus status, BuildContext context, List<GameMatch> selectedMatches) async {
-  List<GameMatch> updateMatches = selectedMatches;
-  switch (status) {
-    case MatchUpdateStatus.complete:
-      for (var match in updateMatches) {
-        match.complete = true;
-      }
-      break;
-    case MatchUpdateStatus.incomplete:
-      for (var match in updateMatches) {
-        match.complete = false;
-      }
-      break;
-    case MatchUpdateStatus.defer:
-      for (var match in updateMatches) {
-        match.gameMatchDeferred = true;
-      }
-      break;
-    case MatchUpdateStatus.expedite:
-      for (var match in updateMatches) {
-        match.gameMatchDeferred = false;
-      }
-      break;
-  }
-
+  List<GameMatch> updateMatches = List.from(selectedMatches);
   int statusCode = HttpStatus.ok;
   for (var match in updateMatches) {
+    switch (status) {
+      case MatchUpdateStatus.complete:
+        match.complete = true;
+        break;
+      case MatchUpdateStatus.incomplete:
+        match.complete = false;
+        break;
+      case MatchUpdateStatus.defer:
+        match.gameMatchDeferred = true;
+        break;
+      case MatchUpdateStatus.expedite:
+        match.gameMatchDeferred = false;
+        break;
+    }
     int res = await updateMatchRequest(match.matchNumber, match);
     if (res != HttpStatus.ok) {
       statusCode = res;

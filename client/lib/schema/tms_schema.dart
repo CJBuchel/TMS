@@ -12,6 +12,7 @@ class TmsSchema {
     TmsSchema({
         required this.event,
         required this.eventsGetResponse,
+        required this.gameGetResponse,
         required this.gameMatch,
         required this.integrityMessage,
         required this.judgingSession,
@@ -25,7 +26,9 @@ class TmsSchema {
         required this.matchLoadedRequest,
         required this.matchUpdateRequest,
         required this.matchesGetResponse,
+        required this.missionsGetResponse,
         required this.purgeRequest,
+        required this.questionsGetResponse,
         required this.registerRequest,
         required this.registerResponse,
         required this.setupRequest,
@@ -41,6 +44,7 @@ class TmsSchema {
 
     Event event;
     EventResponse eventsGetResponse;
+    GameResponse gameGetResponse;
     GameMatch gameMatch;
     IntegrityMessage integrityMessage;
     JudgingSession judgingSession;
@@ -54,7 +58,9 @@ class TmsSchema {
     MatchLoadRequest matchLoadedRequest;
     MatchUpdateRequest matchUpdateRequest;
     MatchesResponse matchesGetResponse;
+    MissionsResponse missionsGetResponse;
     PurgeRequest purgeRequest;
+    QuestionsResponse questionsGetResponse;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
     SetupRequest setupRequest;
@@ -70,6 +76,7 @@ class TmsSchema {
     factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
         event: Event.fromJson(json["event"]),
         eventsGetResponse: EventResponse.fromJson(json["events_get_response"]),
+        gameGetResponse: GameResponse.fromJson(json["game_get_response"]),
         gameMatch: GameMatch.fromJson(json["game_match"]),
         integrityMessage: IntegrityMessage.fromJson(json["integrity_message"]),
         judgingSession: JudgingSession.fromJson(json["judging_session"]),
@@ -83,7 +90,9 @@ class TmsSchema {
         matchLoadedRequest: MatchLoadRequest.fromJson(json["match_loaded_request"]),
         matchUpdateRequest: MatchUpdateRequest.fromJson(json["match_update_request"]),
         matchesGetResponse: MatchesResponse.fromJson(json["matches_get_response"]),
+        missionsGetResponse: MissionsResponse.fromJson(json["missions_get_response"]),
         purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
+        questionsGetResponse: QuestionsResponse.fromJson(json["questions_get_response"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
         registerResponse: RegisterResponse.fromJson(json["register_response"]),
         setupRequest: SetupRequest.fromJson(json["setup_request"]),
@@ -100,6 +109,7 @@ class TmsSchema {
     Map<String, dynamic> toJson() => {
         "event": event.toJson(),
         "events_get_response": eventsGetResponse.toJson(),
+        "game_get_response": gameGetResponse.toJson(),
         "game_match": gameMatch.toJson(),
         "integrity_message": integrityMessage.toJson(),
         "judging_session": judgingSession.toJson(),
@@ -113,7 +123,9 @@ class TmsSchema {
         "match_loaded_request": matchLoadedRequest.toJson(),
         "match_update_request": matchUpdateRequest.toJson(),
         "matches_get_response": matchesGetResponse.toJson(),
+        "missions_get_response": missionsGetResponse.toJson(),
         "purge_request": purgeRequest.toJson(),
+        "questions_get_response": questionsGetResponse.toJson(),
         "register_request": registerRequest.toJson(),
         "register_response": registerResponse.toJson(),
         "setup_request": setupRequest.toJson(),
@@ -181,6 +193,182 @@ class EventResponse {
 
     Map<String, dynamic> toJson() => {
         "event": event.toJson(),
+    };
+}
+
+class GameResponse {
+    GameResponse({
+        required this.game,
+    });
+
+    Game game;
+
+    factory GameResponse.fromJson(Map<String, dynamic> json) => GameResponse(
+        game: Game.fromJson(json["game"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "game": game.toJson(),
+    };
+}
+
+class Game {
+    Game({
+        required this.missions,
+        required this.name,
+        required this.program,
+        required this.questions,
+    });
+
+    List<Mission> missions;
+    String name;
+    String program;
+    List<Score> questions;
+
+    factory Game.fromJson(Map<String, dynamic> json) => Game(
+        missions: List<Mission>.from(json["missions"].map((x) => Mission.fromJson(x))),
+        name: json["name"],
+        program: json["program"],
+        questions: List<Score>.from(json["questions"].map((x) => Score.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "missions": List<dynamic>.from(missions.map((x) => x.toJson())),
+        "name": name,
+        "program": program,
+        "questions": List<dynamic>.from(questions.map((x) => x.toJson())),
+    };
+}
+
+class Mission {
+    Mission({
+        this.image,
+        required this.prefix,
+        required this.title,
+    });
+
+    String? image;
+    String prefix;
+    String title;
+
+    factory Mission.fromJson(Map<String, dynamic> json) => Mission(
+        image: json["image"],
+        prefix: json["prefix"],
+        title: json["title"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "image": image,
+        "prefix": prefix,
+        "title": title,
+    };
+}
+
+class Score {
+    Score({
+        required this.defaultValue,
+        required this.id,
+        required this.label,
+        required this.labelShort,
+        required this.questionInput,
+    });
+
+    DefaultValue defaultValue;
+    String id;
+    String label;
+    String labelShort;
+    QuestionInput questionInput;
+
+    factory Score.fromJson(Map<String, dynamic> json) => Score(
+        defaultValue: DefaultValue.fromJson(json["default_value"]),
+        id: json["id"],
+        label: json["label"],
+        labelShort: json["label_short"],
+        questionInput: QuestionInput.fromJson(json["question_input"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "default_value": defaultValue.toJson(),
+        "id": id,
+        "label": label,
+        "label_short": labelShort,
+        "question_input": questionInput.toJson(),
+    };
+}
+
+class DefaultValue {
+    DefaultValue({
+        this.number,
+        this.text,
+    });
+
+    int? number;
+    String? text;
+
+    factory DefaultValue.fromJson(Map<String, dynamic> json) => DefaultValue(
+        number: json["Number"],
+        text: json["Text"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "Number": number,
+        "Text": text,
+    };
+}
+
+class QuestionInput {
+    QuestionInput({
+        this.numerical,
+        this.categorical,
+    });
+
+    Numerical? numerical;
+    Categorical? categorical;
+
+    factory QuestionInput.fromJson(Map<String, dynamic> json) => QuestionInput(
+        numerical: json["Numerical"] == null ? null : Numerical.fromJson(json["Numerical"]),
+        categorical: json["Categorical"] == null ? null : Categorical.fromJson(json["Categorical"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "Numerical": numerical?.toJson(),
+        "Categorical": categorical?.toJson(),
+    };
+}
+
+class Categorical {
+    Categorical({
+        required this.options,
+    });
+
+    List<String> options;
+
+    factory Categorical.fromJson(Map<String, dynamic> json) => Categorical(
+        options: List<String>.from(json["options"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "options": List<dynamic>.from(options.map((x) => x)),
+    };
+}
+
+class Numerical {
+    Numerical({
+        required this.max,
+        required this.min,
+    });
+
+    int max;
+    int min;
+
+    factory Numerical.fromJson(Map<String, dynamic> json) => Numerical(
+        max: json["max"],
+        min: json["min"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "max": max,
+        "min": min,
     };
 }
 
@@ -548,6 +736,22 @@ class MatchesResponse {
     };
 }
 
+class MissionsResponse {
+    MissionsResponse({
+        required this.missions,
+    });
+
+    List<Mission> missions;
+
+    factory MissionsResponse.fromJson(Map<String, dynamic> json) => MissionsResponse(
+        missions: List<Mission>.from(json["missions"].map((x) => Mission.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "missions": List<dynamic>.from(missions.map((x) => x.toJson())),
+    };
+}
+
 class PurgeRequest {
     PurgeRequest({
         required this.authToken,
@@ -561,6 +765,22 @@ class PurgeRequest {
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+    };
+}
+
+class QuestionsResponse {
+    QuestionsResponse({
+        required this.questions,
+    });
+
+    List<Score> questions;
+
+    factory QuestionsResponse.fromJson(Map<String, dynamic> json) => QuestionsResponse(
+        questions: List<Score>.from(json["questions"].map((x) => Score.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "questions": List<dynamic>.from(questions.map((x) => x.toJson())),
     };
 }
 
@@ -709,14 +929,14 @@ class JudgingScoresheet {
         required this.tournamentId,
     });
 
-    List<Answer> answers;
+    List<ScoreAnswer> answers;
     String feedbackCrit;
     String feedbackPros;
     String teamId;
     String tournamentId;
 
     factory JudgingScoresheet.fromJson(Map<String, dynamic> json) => JudgingScoresheet(
-        answers: List<Answer>.from(json["answers"].map((x) => Answer.fromJson(x))),
+        answers: List<ScoreAnswer>.from(json["answers"].map((x) => ScoreAnswer.fromJson(x))),
         feedbackCrit: json["feedback_crit"],
         feedbackPros: json["feedback_pros"],
         teamId: json["team_id"],
@@ -732,8 +952,8 @@ class JudgingScoresheet {
     };
 }
 
-class Answer {
-    Answer({
+class ScoreAnswer {
+    ScoreAnswer({
         required this.answer,
         required this.id,
     });
@@ -741,7 +961,7 @@ class Answer {
     String answer;
     String id;
 
-    factory Answer.fromJson(Map<String, dynamic> json) => Answer(
+    factory ScoreAnswer.fromJson(Map<String, dynamic> json) => ScoreAnswer(
         answer: json["answer"],
         id: json["id"],
     );
@@ -762,7 +982,7 @@ class GameScoresheet {
         required this.tournamentId,
     });
 
-    List<Answer> answers;
+    List<ScoreAnswer> answers;
     String privateComment;
     String publicComment;
     int round;
@@ -770,7 +990,7 @@ class GameScoresheet {
     String tournamentId;
 
     factory GameScoresheet.fromJson(Map<String, dynamic> json) => GameScoresheet(
-        answers: List<Answer>.from(json["answers"].map((x) => Answer.fromJson(x))),
+        answers: List<ScoreAnswer>.from(json["answers"].map((x) => ScoreAnswer.fromJson(x))),
         privateComment: json["private_comment"],
         publicComment: json["public_comment"],
         round: json["round"],

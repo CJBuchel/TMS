@@ -5,6 +5,7 @@
   "required": [
     "event",
     "events_get_response",
+    "game_get_response",
     "game_match",
     "integrity_message",
     "judging_session",
@@ -18,7 +19,9 @@
     "match_loaded_request",
     "match_update_request",
     "matches_get_response",
+    "missions_get_response",
     "purge_request",
+    "questions_get_response",
     "register_request",
     "register_response",
     "setup_request",
@@ -37,6 +40,9 @@
     },
     "events_get_response": {
       "$ref": "#/definitions/EventResponse"
+    },
+    "game_get_response": {
+      "$ref": "#/definitions/GameResponse"
     },
     "game_match": {
       "$ref": "#/definitions/GameMatch"
@@ -77,8 +83,14 @@
     "matches_get_response": {
       "$ref": "#/definitions/MatchesResponse"
     },
+    "missions_get_response": {
+      "$ref": "#/definitions/MissionsResponse"
+    },
     "purge_request": {
       "$ref": "#/definitions/PurgeRequest"
+    },
+    "questions_get_response": {
+      "$ref": "#/definitions/QuestionsResponse"
     },
     "register_request": {
       "$ref": "#/definitions/RegisterRequest"
@@ -115,6 +127,35 @@
     }
   },
   "definitions": {
+    "DefaultValue": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "Number"
+          ],
+          "properties": {
+            "Number": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "Text"
+          ],
+          "properties": {
+            "Text": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
     "Event": {
       "type": "object",
       "required": [
@@ -173,6 +214,35 @@
         }
       }
     },
+    "Game": {
+      "type": "object",
+      "required": [
+        "missions",
+        "name",
+        "program",
+        "questions"
+      ],
+      "properties": {
+        "missions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Mission"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "program": {
+          "type": "string"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Score"
+          }
+        }
+      }
+    },
     "GameMatch": {
       "type": "object",
       "required": [
@@ -215,6 +285,17 @@
         },
         "start_time": {
           "type": "string"
+        }
+      }
+    },
+    "GameResponse": {
+      "type": "object",
+      "required": [
+        "game"
+      ],
+      "properties": {
+        "game": {
+          "$ref": "#/definitions/Game"
         }
       }
     },
@@ -491,6 +572,41 @@
         }
       }
     },
+    "Mission": {
+      "type": "object",
+      "required": [
+        "prefix",
+        "title"
+      ],
+      "properties": {
+        "image": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "MissionsResponse": {
+      "type": "object",
+      "required": [
+        "missions"
+      ],
+      "properties": {
+        "missions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Mission"
+          }
+        }
+      }
+    },
     "OnTable": {
       "type": "object",
       "required": [
@@ -556,6 +672,73 @@
         }
       }
     },
+    "QuestionInput": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "Numerical"
+          ],
+          "properties": {
+            "Numerical": {
+              "type": "object",
+              "required": [
+                "max",
+                "min"
+              ],
+              "properties": {
+                "max": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "min": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "Categorical"
+          ],
+          "properties": {
+            "Categorical": {
+              "type": "object",
+              "required": [
+                "options"
+              ],
+              "properties": {
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "QuestionsResponse": {
+      "type": "object",
+      "required": [
+        "questions"
+      ],
+      "properties": {
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Score"
+          }
+        }
+      }
+    },
     "RegisterRequest": {
       "type": "object",
       "required": [
@@ -591,6 +774,33 @@
         },
         "version": {
           "type": "string"
+        }
+      }
+    },
+    "Score": {
+      "type": "object",
+      "required": [
+        "default_value",
+        "id",
+        "label",
+        "label_short",
+        "question_input"
+      ],
+      "properties": {
+        "default_value": {
+          "$ref": "#/definitions/DefaultValue"
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "label_short": {
+          "type": "string"
+        },
+        "question_input": {
+          "$ref": "#/definitions/QuestionInput"
         }
       }
     },

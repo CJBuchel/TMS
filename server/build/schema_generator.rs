@@ -59,6 +59,10 @@ pub struct TmsSchema {
   judging_sessions_get_response: JudgingSessionsResponse,
   judging_session_get_request: JudgingSessionRequest,
   judging_session_get_response: JudgingSessionResponse,
+  // games
+  game_get_response: GameResponse,
+  missions_get_response: MissionsResponse,
+  questions_get_response: QuestionsResponse,
   
   //
   // Network structures (Controls)

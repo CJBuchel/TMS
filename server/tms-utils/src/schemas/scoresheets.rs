@@ -3,7 +3,6 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 
-
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct GameScoresheet {
   team_id: String,

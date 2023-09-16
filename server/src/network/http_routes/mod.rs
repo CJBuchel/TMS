@@ -27,6 +27,9 @@ use match_routes::*;
 mod judging_routes;
 use judging_routes::*;
 
+mod game_routes;
+use game_routes::*;
+
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
@@ -175,6 +178,9 @@ impl TmsHttpServer {
         match_update_route,
         judging_sessions_get_route,
         judging_session_get_route,
+        missions_get_route,
+        questions_get_route,
+        game_get_route,
 
         // timer control routes
         start_timer_route,

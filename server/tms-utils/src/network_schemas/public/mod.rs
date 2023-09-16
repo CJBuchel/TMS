@@ -21,3 +21,6 @@ pub use judging::*;
 
 mod event;
 pub use event::*;
+
+mod game;
+pub use game::*;

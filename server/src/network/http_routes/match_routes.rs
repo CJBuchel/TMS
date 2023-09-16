@@ -56,8 +56,9 @@ pub fn match_get_route(security: &State<Security>, clients: &State<TmsClients>, 
   };
 }
 
+#[tms_private_route]
 #[post("/match/update/<uuid>", data = "<message>")]
-pub fn match_update_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String, message: String) -> TmsRouteResponse<()> {
+pub fn match_update_route(message: String) -> TmsRouteResponse<()> {
   let message: MatchUpdateRequest = TmsRequest!(message.clone(), security);
 
   let mut perms = create_permissions();

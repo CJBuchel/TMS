@@ -1,6 +1,7 @@
 pub mod security;
 pub mod schemas;
 pub mod network_schemas;
+pub use schema_utils::schemas::*;
 
 use log::warn;
 use rocket::{http::Status, serde::json::Json, State};

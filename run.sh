@@ -32,14 +32,8 @@ for arg in "$@"; do
 done
 
 
-if [ "$RUN_SERVER" = true ] ; then
-  (cd ./server; cargo build --target x86_64-unknown-linux-musl --release)
-fi
-
-if [ "$RUN_CLIENT" = true ] ; then
-  (cd ./client; npm run prepare; flutter build web --release)
-fi
-
+(cd ./server; cargo build --target x86_64-unknown-linux-musl --release)
+(cd ./client; npm run prepare; flutter build web --release)
 
 sudo docker-compose build
 

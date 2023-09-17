@@ -6,7 +6,6 @@ use crate::db::db::TmsDB;
 
 #[get("/missions/get/<uuid>")]
 pub fn missions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
-  
   // get season
   let season = db.tms_data.event.get().unwrap().unwrap().season;
   let missions = match Games::get_games().get(season.as_str()) {
@@ -42,7 +41,6 @@ pub fn questions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Ar
 
 #[get("/game/get/<uuid>")]
 pub fn game_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
-  
   // get season
   let season = db.tms_data.event.get().unwrap().unwrap().season;
   let game = match Games::get_games().get(season.as_str()) {

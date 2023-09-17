@@ -69,6 +69,7 @@ const storeDarkTheme = "isDarkTheme";
 
 // Local database storage constants
 const storeDbEvent = "dbEvent";
+const storeDbGame = "dbGame";
 const storeDbTeams = "dbTeams";
 const storeDbMatches = "dbMatches";
 const storeDbJudgingSessions = "dbJudgingSessions";

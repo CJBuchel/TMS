@@ -24,3 +24,6 @@ pub use event::*;
 
 mod game;
 pub use game::*;
+
+mod proxy;
+pub use proxy::*;

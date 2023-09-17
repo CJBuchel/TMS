@@ -8,6 +8,9 @@
     },
     {
       "path": "ausfll-score-calculator/ausfll-rs/schema-utils"
+    },
+    {
+      "path": "."
     }
   ],
   "settings": {

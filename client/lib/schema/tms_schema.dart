@@ -27,6 +27,8 @@ class TmsSchema {
         required this.matchUpdateRequest,
         required this.matchesGetResponse,
         required this.missionsGetResponse,
+        required this.proxyImageRequest,
+        required this.proxyImageResponse,
         required this.purgeRequest,
         required this.questionsGetResponse,
         required this.registerRequest,
@@ -59,6 +61,8 @@ class TmsSchema {
     MatchUpdateRequest matchUpdateRequest;
     MatchesResponse matchesGetResponse;
     MissionsResponse missionsGetResponse;
+    ProxyImageRequest proxyImageRequest;
+    ProxyImageResponse proxyImageResponse;
     PurgeRequest purgeRequest;
     QuestionsResponse questionsGetResponse;
     RegisterRequest registerRequest;
@@ -91,6 +95,8 @@ class TmsSchema {
         matchUpdateRequest: MatchUpdateRequest.fromJson(json["match_update_request"]),
         matchesGetResponse: MatchesResponse.fromJson(json["matches_get_response"]),
         missionsGetResponse: MissionsResponse.fromJson(json["missions_get_response"]),
+        proxyImageRequest: ProxyImageRequest.fromJson(json["proxy_image_request"]),
+        proxyImageResponse: ProxyImageResponse.fromJson(json["proxy_image_response"]),
         purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
         questionsGetResponse: QuestionsResponse.fromJson(json["questions_get_response"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
@@ -124,6 +130,8 @@ class TmsSchema {
         "match_update_request": matchUpdateRequest.toJson(),
         "matches_get_response": matchesGetResponse.toJson(),
         "missions_get_response": missionsGetResponse.toJson(),
+        "proxy_image_request": proxyImageRequest.toJson(),
+        "proxy_image_response": proxyImageResponse.toJson(),
         "purge_request": purgeRequest.toJson(),
         "questions_get_response": questionsGetResponse.toJson(),
         "register_request": registerRequest.toJson(),
@@ -749,6 +757,38 @@ class MissionsResponse {
 
     Map<String, dynamic> toJson() => {
         "missions": List<dynamic>.from(missions.map((x) => x.toJson())),
+    };
+}
+
+class ProxyImageRequest {
+    ProxyImageRequest({
+        required this.url,
+    });
+
+    String url;
+
+    factory ProxyImageRequest.fromJson(Map<String, dynamic> json) => ProxyImageRequest(
+        url: json["url"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "url": url,
+    };
+}
+
+class ProxyImageResponse {
+    ProxyImageResponse({
+        required this.image,
+    });
+
+    List<int> image;
+
+    factory ProxyImageResponse.fromJson(Map<String, dynamic> json) => ProxyImageResponse(
+        image: List<int>.from(json["image"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "image": List<dynamic>.from(image.map((x) => x)),
     };
 }
 

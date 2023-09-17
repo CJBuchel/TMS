@@ -3,7 +3,7 @@ use rocket::{State, post, get, http::Status};
 use tms_macros::tms_private_route;
 use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, security::encrypt, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse, SocketMessage}, tms_clients_ws_send};
 
-use crate::{db::db::TmsDB};
+use crate::db::db::TmsDB;
 
 #[get("/event/get/<uuid>")]
 pub fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
@@ -175,6 +175,14 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("event"),
+      sub_topic: String::from("update"),
+      message: String::from("")
+    }, clients.inner().to_owned(), None);
+
+    // send game update
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("game"),
       sub_topic: String::from("update"),
       message: String::from("")
     }, clients.inner().to_owned(), None);

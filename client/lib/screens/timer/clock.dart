@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/event_requests.dart';
@@ -131,13 +132,13 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
 
   @override
   Widget build(BuildContext context) {
-    Color timerColor = _TimerClockState == TimerClockState.running
+    Color? timerColor = _TimerClockState == TimerClockState.running
         ? Colors.green
         : (_TimerClockState == TimerClockState.endgame || _TimerClockState == TimerClockState.preStart)
             ? Colors.yellow
             : (_TimerClockState == TimerClockState.ended || _TimerClockState == TimerClockState.stopped)
                 ? Colors.red
-                : Colors.white;
+                : null; // sets it to theme default (i.e white or black depending)
 
     if (widget.fontSize != null) {
       return Text(

@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';

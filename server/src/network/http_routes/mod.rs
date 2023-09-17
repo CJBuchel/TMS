@@ -30,6 +30,9 @@ use judging_routes::*;
 mod game_routes;
 use game_routes::*;
 
+mod proxy_routes;
+use proxy_routes::*;
+
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
@@ -164,6 +167,7 @@ impl TmsHttpServer {
         unregister_route,
         publish_route,
         login_route,
+        proxy_image_get_route,
 
         // setup routes
         event_setup_route,

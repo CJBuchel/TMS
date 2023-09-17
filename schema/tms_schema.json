@@ -20,6 +20,8 @@
     "match_update_request",
     "matches_get_response",
     "missions_get_response",
+    "proxy_image_request",
+    "proxy_image_response",
     "purge_request",
     "questions_get_response",
     "register_request",
@@ -85,6 +87,12 @@
     },
     "missions_get_response": {
       "$ref": "#/definitions/MissionsResponse"
+    },
+    "proxy_image_request": {
+      "$ref": "#/definitions/ProxyImageRequest"
+    },
+    "proxy_image_response": {
+      "$ref": "#/definitions/ProxyImageResponse"
     },
     "purge_request": {
       "$ref": "#/definitions/PurgeRequest"
@@ -658,6 +666,33 @@
             "boolean",
             "null"
           ]
+        }
+      }
+    },
+    "ProxyImageRequest": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "ProxyImageResponse": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
         }
       }
     },

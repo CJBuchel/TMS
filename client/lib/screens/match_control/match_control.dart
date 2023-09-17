@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/http.dart';
@@ -16,7 +15,6 @@ import 'package:tms/screens/match_control/controls_mobile.dart';
 import 'package:tms/screens/match_control/controls_shared.dart';
 import 'package:tms/screens/match_control/table.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
-import 'package:tms/screens/timer/clock.dart';
 
 class MatchControl extends StatefulWidget {
   const MatchControl({Key? key}) : super(key: key);

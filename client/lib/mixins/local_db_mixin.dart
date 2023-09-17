@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
@@ -11,6 +10,7 @@ import 'package:tms/network/network.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/requests/event_requests.dart';
+import 'package:tms/requests/game_requests.dart';
 import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
@@ -22,6 +22,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
 
   // trigger list
   final List<Function(Event)> _eventTriggers = [];
+  final List<Function(Game)> _gameTriggers = [];
 
   final List<Function(List<Team>)> _teamListTriggers = [];
   final List<Function(Team)> _teamTriggers = [];
@@ -33,6 +34,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   final List<Function(JudgingSession)> _judgingSessionTriggers = [];
 
   bool _registeredEventListener = false;
+  bool _registeredGameListener = false;
   bool _registeredTeamListener = false;
   bool _registeredMatchListener = false;
   bool _registeredJudgingSessionListener = false;
@@ -40,6 +42,11 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   void onEventUpdate(Function(Event) callback) {
     _registeredEventListener = true;
     _eventTriggers.add(callback);
+  }
+
+  void onGameEventUpdate(Function(Game) callback) {
+    _registeredGameListener = true;
+    _gameTriggers.add(callback);
   }
 
   void onTeamsUpdate(Function(List<Team>) callback) {
@@ -78,6 +85,14 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
         getEventRequest().then((value) async {
           if (value.item1 == HttpStatus.ok) {
             await _setEvent(value.item2 ?? await getEvent()); // use previous data as default
+          }
+        });
+      }
+
+      if (_registeredGameListener) {
+        getGameRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            await _setGame(value.item2 ?? await getGame()); // use previous data as default
           }
         });
       }
@@ -127,6 +142,16 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       }
     });
 
+    autoSubscribe("game", (m) {
+      if (m.subTopic == "update") {
+        getGameRequest().then((value) async {
+          if (value.item1 == HttpStatus.ok) {
+            _setGame(value.item2 ?? await getGame()); // use previous data as default
+          }
+        });
+      }
+    });
+
     autoSubscribe("teams", (m) {
       if (m.subTopic == "update") {
         getTeamsRequest().then((value) async {
@@ -139,10 +164,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
 
     autoSubscribe("team", (m) {
       if (m.subTopic == "update") {
-        if (m.message != null && m.message is String) {
-          getTeamRequest(m.message as String).then((value) async {
+        if (m.message.isNotEmpty) {
+          getTeamRequest(m.message).then((value) async {
             if (value.item1 == HttpStatus.ok) {
-              _setTeam(value.item2 ?? await getTeam(m.message as String)); // use previous data as default
+              _setTeam(value.item2 ?? await getTeam(m.message)); // use previous data as default
             }
           });
         }
@@ -161,10 +186,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
 
     autoSubscribe("match", (m) {
       if (m.subTopic == "update") {
-        if (m.message != null && m.message is String) {
-          getMatchRequest(m.message as String).then((value) async {
+        if (m.message.isNotEmpty) {
+          getMatchRequest(m.message).then((value) async {
             if (value.item1 == HttpStatus.ok) {
-              _setMatch(value.item2 ?? await getMatch(m.message as String)); // use previous data as default
+              _setMatch(value.item2 ?? await getMatch(m.message)); // use previous data as default
             }
           });
         }
@@ -183,10 +208,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
 
     autoSubscribe("judging_session", (m) {
       if (m.subTopic == "update") {
-        if (m.message != null && m.message is String) {
-          getJudgingSessionRequest(m.message as String).then((value) async {
+        if (m.message.isNotEmpty) {
+          getJudgingSessionRequest(m.message).then((value) async {
             if (value.item1 == HttpStatus.ok) {
-              _setJudgingSession(value.item2 ?? await getJudgingSession(m.message as String)); // use previous data as default
+              _setJudgingSession(value.item2 ?? await getJudgingSession(m.message)); // use previous data as default
             }
           });
         }
@@ -458,6 +483,40 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       }
     } catch (e) {
       return _judgingSessionDefault();
+    }
+  }
+
+  //
+  // Game Data
+  //
+  Game _gameDefault() {
+    return Game(
+      name: "",
+      program: "",
+      missions: [],
+      questions: [],
+    );
+  }
+
+  Future<void> _setGame(Game game) async {
+    var gameJson = game.toJson();
+    await _localStorage.then((value) => value.setString(storeDbGame, jsonEncode(gameJson)));
+    for (var trigger in _gameTriggers) {
+      trigger(game);
+    }
+  }
+
+  Future<Game> getGame() async {
+    try {
+      var gameString = await _localStorage.then((value) => value.getString(storeDbGame));
+      if (gameString != null) {
+        var game = Game.fromJson(jsonDecode(gameString));
+        return game;
+      } else {
+        return _gameDefault();
+      }
+    } catch (e) {
+      return _gameDefault();
     }
   }
 }

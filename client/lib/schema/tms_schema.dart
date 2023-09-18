@@ -31,8 +31,11 @@ class TmsSchema {
         required this.proxyImageResponse,
         required this.purgeRequest,
         required this.questionsGetResponse,
+        required this.questionsValidateRequest,
+        required this.questionsValidateResponse,
         required this.registerRequest,
         required this.registerResponse,
+        required this.seasonsGetResponse,
         required this.setupRequest,
         required this.socketEvent,
         required this.socketMatchLoadedMessage,
@@ -65,8 +68,11 @@ class TmsSchema {
     ProxyImageResponse proxyImageResponse;
     PurgeRequest purgeRequest;
     QuestionsResponse questionsGetResponse;
+    QuestionsValidateRequest questionsValidateRequest;
+    QuestionsValidateResponse questionsValidateResponse;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
+    SeasonsResponse seasonsGetResponse;
     SetupRequest setupRequest;
     SocketMessage socketEvent;
     SocketMatchLoadedMessage socketMatchLoadedMessage;
@@ -99,8 +105,11 @@ class TmsSchema {
         proxyImageResponse: ProxyImageResponse.fromJson(json["proxy_image_response"]),
         purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
         questionsGetResponse: QuestionsResponse.fromJson(json["questions_get_response"]),
+        questionsValidateRequest: QuestionsValidateRequest.fromJson(json["questions_validate_request"]),
+        questionsValidateResponse: QuestionsValidateResponse.fromJson(json["questions_validate_response"]),
         registerRequest: RegisterRequest.fromJson(json["register_request"]),
         registerResponse: RegisterResponse.fromJson(json["register_response"]),
+        seasonsGetResponse: SeasonsResponse.fromJson(json["seasons_get_response"]),
         setupRequest: SetupRequest.fromJson(json["setup_request"]),
         socketEvent: SocketMessage.fromJson(json["socket_event"]),
         socketMatchLoadedMessage: SocketMatchLoadedMessage.fromJson(json["socket_match_loaded_message"]),
@@ -134,8 +143,11 @@ class TmsSchema {
         "proxy_image_response": proxyImageResponse.toJson(),
         "purge_request": purgeRequest.toJson(),
         "questions_get_response": questionsGetResponse.toJson(),
+        "questions_validate_request": questionsValidateRequest.toJson(),
+        "questions_validate_response": questionsValidateResponse.toJson(),
         "register_request": registerRequest.toJson(),
         "register_response": registerResponse.toJson(),
+        "seasons_get_response": seasonsGetResponse.toJson(),
         "setup_request": setupRequest.toJson(),
         "socket_event": socketEvent.toJson(),
         "socket_match_loaded_message": socketMatchLoadedMessage.toJson(),
@@ -824,6 +836,86 @@ class QuestionsResponse {
     };
 }
 
+class QuestionsValidateRequest {
+    QuestionsValidateRequest({
+        required this.answers,
+        required this.authToken,
+    });
+
+    List<ScoreAnswer> answers;
+    String authToken;
+
+    factory QuestionsValidateRequest.fromJson(Map<String, dynamic> json) => QuestionsValidateRequest(
+        answers: List<ScoreAnswer>.from(json["answers"].map((x) => ScoreAnswer.fromJson(x))),
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "answers": List<dynamic>.from(answers.map((x) => x.toJson())),
+        "auth_token": authToken,
+    };
+}
+
+class ScoreAnswer {
+    ScoreAnswer({
+        required this.answer,
+        required this.id,
+    });
+
+    String answer;
+    String id;
+
+    factory ScoreAnswer.fromJson(Map<String, dynamic> json) => ScoreAnswer(
+        answer: json["answer"],
+        id: json["id"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "answer": answer,
+        "id": id,
+    };
+}
+
+class QuestionsValidateResponse {
+    QuestionsValidateResponse({
+        required this.errors,
+        required this.score,
+    });
+
+    List<ScoreError> errors;
+    int score;
+
+    factory QuestionsValidateResponse.fromJson(Map<String, dynamic> json) => QuestionsValidateResponse(
+        errors: List<ScoreError>.from(json["errors"].map((x) => ScoreError.fromJson(x))),
+        score: json["score"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "errors": List<dynamic>.from(errors.map((x) => x.toJson())),
+        "score": score,
+    };
+}
+
+class ScoreError {
+    ScoreError({
+        required this.id,
+        required this.message,
+    });
+
+    String id;
+    String message;
+
+    factory ScoreError.fromJson(Map<String, dynamic> json) => ScoreError(
+        id: json["id"],
+        message: json["message"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "message": message,
+    };
+}
+
 class RegisterRequest {
     RegisterRequest({
         required this.key,
@@ -869,6 +961,22 @@ class RegisterResponse {
         "url_path": urlPath,
         "url_scheme": urlScheme,
         "version": version,
+    };
+}
+
+class SeasonsResponse {
+    SeasonsResponse({
+        required this.seasons,
+    });
+
+    List<String> seasons;
+
+    factory SeasonsResponse.fromJson(Map<String, dynamic> json) => SeasonsResponse(
+        seasons: List<String>.from(json["seasons"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "seasons": List<dynamic>.from(seasons.map((x) => x)),
     };
 }
 
@@ -989,26 +1097,6 @@ class JudgingScoresheet {
         "feedback_pros": feedbackPros,
         "team_id": teamId,
         "tournament_id": tournamentId,
-    };
-}
-
-class ScoreAnswer {
-    ScoreAnswer({
-        required this.answer,
-        required this.id,
-    });
-
-    String answer;
-    String id;
-
-    factory ScoreAnswer.fromJson(Map<String, dynamic> json) => ScoreAnswer(
-        answer: json["answer"],
-        id: json["id"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "answer": answer,
-        "id": id,
     };
 }
 

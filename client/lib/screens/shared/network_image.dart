@@ -1,6 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:build_web_compilers/builders.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:tms/network/auth.dart';
+import 'package:tms/network/http.dart';
+import 'package:tms/network/ws.dart';
 import 'package:tms/requests/proxy_requests.dart';
 
 class NetworkImageWidget extends StatefulWidget {
@@ -8,6 +13,7 @@ class NetworkImageWidget extends StatefulWidget {
   final double? width;
   final double? height;
   final ImageProvider? defaultImage;
+  final double? borderRadius;
 
   const NetworkImageWidget({
     Key? key,
@@ -15,6 +21,7 @@ class NetworkImageWidget extends StatefulWidget {
     this.width,
     this.height,
     this.defaultImage,
+    this.borderRadius,
   }) : super(key: key);
 
   @override
@@ -24,6 +31,11 @@ class NetworkImageWidget extends StatefulWidget {
 class _NetworkImageState extends State<NetworkImageWidget> {
   late Image _image;
 
+  void onConnected() {
+    precacheImage(_image.image, context);
+    _fetchData();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -32,13 +44,24 @@ class _NetworkImageState extends State<NetworkImageWidget> {
       width: widget.width,
       height: widget.height,
     );
+
+    NetworkHttp.httpState.addListener(onConnected);
+    NetworkWebSocket.wsState.addListener(onConnected);
+    NetworkAuth.loginState.addListener(onConnected);
+  }
+
+  @override
+  void dispose() {
+    NetworkHttp.httpState.removeListener(onConnected);
+    NetworkWebSocket.wsState.removeListener(onConnected);
+    NetworkAuth.loginState.removeListener(onConnected);
+    super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    precacheImage(_image.image, context);
-    _fetchData();
+    onConnected();
   }
 
   void _fetchData() async {
@@ -46,13 +69,16 @@ class _NetworkImageState extends State<NetworkImageWidget> {
       if (res.item1 == HttpStatus.ok && mounted) {
         MemoryImage memoryImage = MemoryImage(Uint8List.fromList(res.item2));
         precacheImage(memoryImage, context).then((value) {
-          setState(() {
-            _image = Image(
-              image: memoryImage,
-              width: widget.width,
-              height: widget.height,
-            );
-          });
+          if (mounted) {
+            setState(() {
+              _image = Image(
+                image: memoryImage,
+                width: widget.width,
+                height: widget.height,
+                fit: BoxFit.fill,
+              );
+            });
+          }
         });
       }
     });
@@ -60,6 +86,13 @@ class _NetworkImageState extends State<NetworkImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _image;
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(widget.borderRadius ?? 0),
+        child: _image,
+      ),
+    );
   }
 }

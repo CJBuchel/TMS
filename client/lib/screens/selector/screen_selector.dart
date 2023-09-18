@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/mixins/auto_subscribe.dart';
+import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/screens/scoring/table_setup.dart';
 import 'package:tms/screens/selector/screen_card.dart';
 import 'package:tms/screens/shared/permissions_utils.dart';
 import 'package:tms/screens/shared/tool_bar.dart';
@@ -23,7 +26,7 @@ class ScreenSelector extends StatefulWidget {
  */
 ///
 
-class _ScreenSelectorState extends State<ScreenSelector> {
+class _ScreenSelectorState extends State<ScreenSelector> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   User _user = User(password: "", permissions: Permissions(admin: false), username: "");
 
   void checkUser() {
@@ -129,7 +132,15 @@ class _ScreenSelectorState extends State<ScreenSelector> {
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
                   onPress: () {
-                    Navigator.pushNamed(context, '/referee/scoring');
+                    RefereeTableUtil.getTable().then((table) {
+                      getEvent().then((event) {
+                        if (table.isEmpty || !event.tables.contains(table)) {
+                          Navigator.pushNamed(context, '/referee/table_setup');
+                        } else {
+                          Navigator.pushNamed(context, '/referee/scoring');
+                        }
+                      });
+                    });
                   },
                 ),
               ),

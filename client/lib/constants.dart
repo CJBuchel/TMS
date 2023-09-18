@@ -66,6 +66,7 @@ const storeNtServerKey = "ntServerKey";
 const storeNtAutoConfigure = "ntAutoConf";
 const storeNtAuthUser = "ntAuthUser";
 const storeDarkTheme = "isDarkTheme";
+const storeRefereeTable = "refereeTable";
 
 // Local database storage constants
 const storeDbEvent = "dbEvent";

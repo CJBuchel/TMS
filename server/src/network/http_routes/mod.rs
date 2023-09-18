@@ -185,6 +185,8 @@ impl TmsHttpServer {
         missions_get_route,
         questions_get_route,
         game_get_route,
+        seasons_get_route,
+        validate_questions_route,
 
         // timer control routes
         start_timer_route,

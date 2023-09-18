@@ -65,6 +65,9 @@ pub struct TmsSchema {
   game_get_response: GameResponse,
   missions_get_response: MissionsResponse,
   questions_get_response: QuestionsResponse,
+  seasons_get_response: SeasonsResponse,
+  questions_validate_request: QuestionsValidateRequest,
+  questions_validate_response: QuestionsValidateResponse,
   
   //
   // Network structures (Controls)

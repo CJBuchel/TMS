@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';

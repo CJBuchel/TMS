@@ -24,8 +24,11 @@
     "proxy_image_response",
     "purge_request",
     "questions_get_response",
+    "questions_validate_request",
+    "questions_validate_response",
     "register_request",
     "register_response",
+    "seasons_get_response",
     "setup_request",
     "socket_event",
     "socket_match_loaded_message",
@@ -100,11 +103,20 @@
     "questions_get_response": {
       "$ref": "#/definitions/QuestionsResponse"
     },
+    "questions_validate_request": {
+      "$ref": "#/definitions/QuestionsValidateRequest"
+    },
+    "questions_validate_response": {
+      "$ref": "#/definitions/QuestionsValidateResponse"
+    },
     "register_request": {
       "$ref": "#/definitions/RegisterRequest"
     },
     "register_response": {
       "$ref": "#/definitions/RegisterResponse"
+    },
+    "seasons_get_response": {
+      "$ref": "#/definitions/SeasonsResponse"
     },
     "setup_request": {
       "$ref": "#/definitions/SetupRequest"
@@ -774,6 +786,43 @@
         }
       }
     },
+    "QuestionsValidateRequest": {
+      "type": "object",
+      "required": [
+        "answers",
+        "auth_token"
+      ],
+      "properties": {
+        "answers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScoreAnswer"
+          }
+        },
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
+    "QuestionsValidateResponse": {
+      "type": "object",
+      "required": [
+        "errors",
+        "score"
+      ],
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScoreError"
+          }
+        },
+        "score": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "RegisterRequest": {
       "type": "object",
       "required": [
@@ -851,6 +900,35 @@
         },
         "id": {
           "type": "string"
+        }
+      }
+    },
+    "ScoreError": {
+      "type": "object",
+      "required": [
+        "id",
+        "message"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "SeasonsResponse": {
+      "type": "object",
+      "required": [
+        "seasons"
+      ],
+      "properties": {
+        "seasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

@@ -3,7 +3,14 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tms/mixins/auto_subscribe.dart';
+import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/network/auth.dart';
+import 'package:tms/network/http.dart';
+import 'package:tms/network/network.dart';
+import 'package:tms/network/ws.dart';
 import 'package:tms/requests/event_requests.dart';
+import 'package:tms/requests/game_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/screens/admin/setup/parse_schedule.dart';
@@ -18,7 +25,7 @@ class OfflineSetup extends StatefulWidget {
 }
 
 // @TODO, make defaults the current setup (if applicable)
-class _OfflineSetupState extends State<OfflineSetup> {
+class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   FilePickerResult? _selectedSchedule;
   SetupRequest? _setupRequest;
   final TextEditingController _adminPasswordController = TextEditingController();
@@ -27,12 +34,7 @@ class _OfflineSetupState extends State<OfflineSetup> {
   final TextEditingController _endgameTimerCountdownController = TextEditingController();
   final TextEditingController _timerCountdownController = TextEditingController();
 
-  final List<String> _dropDownSeasons = [
-    "2023",
-    "2022",
-    "2021",
-    "2020",
-  ];
+  List<String> _dropDownSeasons = [];
   String? _selectedSeason;
 
   Future<bool?> showConfirmPurge(BuildContext context) {
@@ -191,12 +193,54 @@ class _OfflineSetupState extends State<OfflineSetup> {
     }
   }
 
+  void checkAvailableSeasons() async {
+    if (await Network.isConnected()) {
+      getSeasonsRequest().then((res) {
+        if (res.item1 == HttpStatus.ok) {
+          setState(() {
+            _dropDownSeasons = res.item2;
+            _dropDownSeasons.sort((a, b) => int.parse(b).compareTo(int.parse(a))); // compare them as int's, i.e 2023 vs 2022
+            var selected = (_selectedSeason == null ? "" : _selectedSeason!);
+            if (selected.isEmpty) {
+              _selectedSeason = _dropDownSeasons[0];
+            }
+          });
+        }
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _selectedSeason = _dropDownSeasons[0];
     _endgameTimerCountdownController.value = const TextEditingValue(text: "30");
     _timerCountdownController.value = const TextEditingValue(text: "150");
+    checkAvailableSeasons();
+
+    onEventUpdate((event) {
+      setState(() {
+        _eventNameController.text = event.name;
+        _endgameTimerCountdownController.text = event.endGameTimerLength.toString();
+        _timerCountdownController.text = event.timerLength.toString();
+        if (_dropDownSeasons.contains(event.season)) {
+          _selectedSeason = event.season;
+        }
+      });
+    });
+
+    // get available seasons
+    NetworkHttp.httpState.addListener(checkAvailableSeasons);
+    NetworkWebSocket.wsState.addListener(checkAvailableSeasons);
+    NetworkAuth.loginState.addListener(checkAvailableSeasons);
+  }
+
+  @override
+  void dispose() {
+    // remove listeners
+    NetworkHttp.httpState.removeListener(checkAvailableSeasons);
+    NetworkWebSocket.wsState.removeListener(checkAvailableSeasons);
+    NetworkAuth.loginState.removeListener(checkAvailableSeasons);
+    super.dispose();
   }
 
   Widget importCSV() {

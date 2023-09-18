@@ -115,8 +115,8 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
 
     autoSubscribe("match", (m) {
       if (m.subTopic == "load") {
-        if (m.message != null && m.message is String && m.message!.isNotEmpty) {
-          final jsonString = jsonDecode(m.message!);
+        if (m.message.isNotEmpty) {
+          final jsonString = jsonDecode(m.message);
           SocketMatchLoadedMessage message = SocketMatchLoadedMessage.fromJson(jsonString);
 
           List<GameMatch> loadedMatches = [];
@@ -157,6 +157,13 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
         getMatches().then((matches) => setMatches(matches));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    NetworkHttp.httpState.removeListener(unloadOnDisconnect);
+    NetworkWebSocket.wsState.removeListener(unloadOnDisconnect);
+    super.dispose();
   }
 
   @override

@@ -6,3 +6,6 @@ pub use event::*;
 
 mod matches;
 pub use matches::*;
+
+mod game;
+pub use game::*;

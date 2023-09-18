@@ -31,26 +31,24 @@ class _MatchControlTableState extends State<MatchControlTable> {
   }
 
   DataCell _styledCell(String context, {Color? color, bool? deferred}) {
-    Widget child = Container(
-      child: Stack(
-        children: [
+    Widget child = Stack(
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Text(
+            context,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (deferred ?? false)
           Align(
             alignment: Alignment.center,
-            child: Text(
-              context,
-              overflow: TextOverflow.ellipsis,
+            child: Divider(
+              color: AppTheme.isDarkTheme ? Colors.white : Colors.black,
+              thickness: 2,
             ),
           ),
-          if (deferred ?? false)
-            Align(
-              alignment: Alignment.center,
-              child: Divider(
-                color: AppTheme.isDarkTheme ? Colors.white : Colors.black,
-                thickness: 2,
-              ),
-            ),
-        ],
-      ),
+      ],
     );
 
     return DataCell(

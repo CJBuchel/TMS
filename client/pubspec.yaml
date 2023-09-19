@@ -43,7 +43,7 @@ dependencies:
   file_picker: ^5.2.10
   csv: ^5.0.2
   just_audio: ^0.9.35
-  syncfusion_flutter_pdfviewer: ^21.2.10
+  pdf: ^3.10.4
 
 dev_dependencies:
   flutter_test:

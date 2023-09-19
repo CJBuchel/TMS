@@ -20,8 +20,7 @@
     "match_update_request",
     "matches_get_response",
     "missions_get_response",
-    "proxy_image_request",
-    "proxy_image_response",
+    "proxy_bytes_response",
     "purge_request",
     "questions_get_response",
     "questions_validate_request",
@@ -91,11 +90,8 @@
     "missions_get_response": {
       "$ref": "#/definitions/MissionsResponse"
     },
-    "proxy_image_request": {
-      "$ref": "#/definitions/ProxyImageRequest"
-    },
-    "proxy_image_response": {
-      "$ref": "#/definitions/ProxyImageResponse"
+    "proxy_bytes_response": {
+      "$ref": "#/definitions/ProxyBytesResponse"
     },
     "purge_request": {
       "$ref": "#/definitions/PurgeRequest"
@@ -681,24 +677,13 @@
         }
       }
     },
-    "ProxyImageRequest": {
+    "ProxyBytesResponse": {
       "type": "object",
       "required": [
-        "url"
+        "bytes"
       ],
       "properties": {
-        "url": {
-          "type": "string"
-        }
-      }
-    },
-    "ProxyImageResponse": {
-      "type": "object",
-      "required": [
-        "image"
-      ],
-      "properties": {
-        "image": {
+        "bytes": {
           "type": "array",
           "items": {
             "type": "integer",

@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:build_web_compilers/builders.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/ws.dart';
@@ -66,7 +64,7 @@ class _NetworkImageState extends State<NetworkImageWidget> {
 
   void _fetchData() async {
     if (widget.src.isNotEmpty) {
-      getProxyNetworkImage(widget.src).then((res) {
+      getProxyBytes(widget.src).then((res) {
         if (res.item1 == HttpStatus.ok && mounted) {
           MemoryImage memoryImage = MemoryImage(Uint8List.fromList(res.item2));
           precacheImage(memoryImage, context).then((value) {

@@ -27,8 +27,7 @@ class TmsSchema {
         required this.matchUpdateRequest,
         required this.matchesGetResponse,
         required this.missionsGetResponse,
-        required this.proxyImageRequest,
-        required this.proxyImageResponse,
+        required this.proxyBytesResponse,
         required this.purgeRequest,
         required this.questionsGetResponse,
         required this.questionsValidateRequest,
@@ -64,8 +63,7 @@ class TmsSchema {
     MatchUpdateRequest matchUpdateRequest;
     MatchesResponse matchesGetResponse;
     MissionsResponse missionsGetResponse;
-    ProxyImageRequest proxyImageRequest;
-    ProxyImageResponse proxyImageResponse;
+    ProxyBytesResponse proxyBytesResponse;
     PurgeRequest purgeRequest;
     QuestionsResponse questionsGetResponse;
     QuestionsValidateRequest questionsValidateRequest;
@@ -101,8 +99,7 @@ class TmsSchema {
         matchUpdateRequest: MatchUpdateRequest.fromJson(json["match_update_request"]),
         matchesGetResponse: MatchesResponse.fromJson(json["matches_get_response"]),
         missionsGetResponse: MissionsResponse.fromJson(json["missions_get_response"]),
-        proxyImageRequest: ProxyImageRequest.fromJson(json["proxy_image_request"]),
-        proxyImageResponse: ProxyImageResponse.fromJson(json["proxy_image_response"]),
+        proxyBytesResponse: ProxyBytesResponse.fromJson(json["proxy_bytes_response"]),
         purgeRequest: PurgeRequest.fromJson(json["purge_request"]),
         questionsGetResponse: QuestionsResponse.fromJson(json["questions_get_response"]),
         questionsValidateRequest: QuestionsValidateRequest.fromJson(json["questions_validate_request"]),
@@ -139,8 +136,7 @@ class TmsSchema {
         "match_update_request": matchUpdateRequest.toJson(),
         "matches_get_response": matchesGetResponse.toJson(),
         "missions_get_response": missionsGetResponse.toJson(),
-        "proxy_image_request": proxyImageRequest.toJson(),
-        "proxy_image_response": proxyImageResponse.toJson(),
+        "proxy_bytes_response": proxyBytesResponse.toJson(),
         "purge_request": purgeRequest.toJson(),
         "questions_get_response": questionsGetResponse.toJson(),
         "questions_validate_request": questionsValidateRequest.toJson(),
@@ -772,35 +768,19 @@ class MissionsResponse {
     };
 }
 
-class ProxyImageRequest {
-    ProxyImageRequest({
-        required this.url,
+class ProxyBytesResponse {
+    ProxyBytesResponse({
+        required this.bytes,
     });
 
-    String url;
+    List<int> bytes;
 
-    factory ProxyImageRequest.fromJson(Map<String, dynamic> json) => ProxyImageRequest(
-        url: json["url"],
+    factory ProxyBytesResponse.fromJson(Map<String, dynamic> json) => ProxyBytesResponse(
+        bytes: List<int>.from(json["bytes"].map((x) => x)),
     );
 
     Map<String, dynamic> toJson() => {
-        "url": url,
-    };
-}
-
-class ProxyImageResponse {
-    ProxyImageResponse({
-        required this.image,
-    });
-
-    List<int> image;
-
-    factory ProxyImageResponse.fromJson(Map<String, dynamic> json) => ProxyImageResponse(
-        image: List<int>.from(json["image"].map((x) => x)),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "image": List<dynamic>.from(image.map((x) => x)),
+        "bytes": List<dynamic>.from(bytes.map((x) => x)),
     };
 }
 

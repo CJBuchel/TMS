@@ -28,6 +28,8 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   Team? _nextTeam;
   GameMatch? _nextMatch;
   GameMatch? _tableLoadedMatch;
+  bool _locked = true; // locked to match controller
+  int _rounds = 0;
 
   List<GameMatch> _matches = [];
   List<Team> _teams = [];
@@ -47,20 +49,22 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   }
 
   bool checkSetNextMatch(String thisTable, GameMatch match) {
-    if (_matches.isNotEmpty && _teams.isNotEmpty) {
-      if (match.onTableFirst.table == thisTable || match.onTableSecond.table == thisTable) {
-        setState(() {
-          _nextMatch = match;
-          _nextTeam = _teams.firstWhere((team) {
-            return team.teamNumber == _nextMatch!.onTableFirst.teamNumber || team.teamNumber == _nextMatch!.onTableSecond.teamNumber;
+    if (_locked) {
+      if (_matches.isNotEmpty && _teams.isNotEmpty) {
+        if (match.onTableFirst.table == thisTable || match.onTableSecond.table == thisTable) {
+          setState(() {
+            _nextMatch = match;
+            _nextTeam = _teams.firstWhere((team) {
+              return team.teamNumber == _nextMatch!.onTableFirst.teamNumber || team.teamNumber == _nextMatch!.onTableSecond.teamNumber;
+            });
+            if (_nextMatch != null && _nextTeam != null) {
+              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
+              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
+            }
+            sendTableLoadedMatch(thisTable);
           });
-          if (_nextMatch != null && _nextTeam != null) {
-            widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
-            widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
-          }
-          sendTableLoadedMatch(thisTable);
-        });
-        return true;
+          return true;
+        }
       }
     }
     return false;
@@ -116,7 +120,11 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   @override
   void initState() {
     super.initState();
-
+    onEventUpdate((event) {
+      setState(() {
+        _rounds = event.eventRounds;
+      });
+    });
     onMatchesUpdate((matches) => setMatches(matches));
     onTeamsUpdate((teams) => setTeams(teams));
 
@@ -190,6 +198,91 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     });
   }
 
+  Widget getTeamWidget() {
+    if (_locked) {
+      return Text(
+        "${_nextTeam?.teamNumber} | ${_nextTeam?.teamName}",
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          // color: ,
+        ),
+      );
+    } else {
+      return DropdownButton<String>(
+        value: _nextTeam?.teamNumber.toString(),
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            final team = _teams.firstWhere((team) => team.teamNumber.toString() == newValue);
+            setState(() {
+              _nextTeam = team;
+              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
+            });
+          }
+        },
+        items: _teams.map<DropdownMenuItem<String>>((Team team) {
+          return DropdownMenuItem<String>(
+            value: team.teamNumber.toString(),
+            child: Text(
+              "${team.teamNumber} | ${team.teamName}",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }).toList(),
+      );
+    }
+  }
+
+  Widget getRoundWidget() {
+    if (_locked) {
+      return Text(
+        "Round: ${_nextMatch?.roundNumber}",
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    } else {
+      return DropdownButton<String>(
+        value: _nextMatch?.roundNumber.toString(),
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            final match = _matches.firstWhere((match) => match.roundNumber.toString() == newValue);
+            setState(() {
+              _nextMatch = match;
+              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
+            });
+          }
+        },
+        items: List.generate(_rounds, (index) => index + 1).map<DropdownMenuItem<String>>((int round) {
+          return DropdownMenuItem<String>(
+            value: round.toString(),
+            child: Text(
+              "Round: $round",
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        }).toList(),
+      );
+    }
+  }
+
+  Widget getMatchWidget() {
+    return Text(
+      _locked ? "Match: ${_nextMatch?.matchNumber}/${_matches.length}" : "Custom",
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -204,28 +297,9 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
-            "${_nextTeam?.teamNumber} | ${_nextTeam?.teamName}",
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              // color: ,
-            ),
-          ),
-          Text(
-            "Round: ${_nextMatch?.roundNumber}",
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            "Match: ${_nextMatch?.matchNumber}/${_matches.length}",
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          getTeamWidget(),
+          getRoundWidget(),
+          getMatchWidget(),
           PopupMenuButton(
             icon: const Icon(Icons.more_horiz),
             itemBuilder: (context) => [
@@ -242,9 +316,37 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
               )),
               PopupMenuItem(
                 child: ListTile(
-                  leading: const Icon(Icons.lock_open),
-                  title: const Text("Unlock"),
-                  onTap: () {},
+                  leading: _locked ? const Icon(Icons.lock_open) : const Icon(Icons.lock),
+                  title: _locked ? const Text("Unlock") : const Text("Lock"),
+                  onTap: () {
+                    RefereeTableUtil.getTable().then((thisTable) {
+                      sendTableLoadedMatch(thisTable, forceNone: true);
+                      setState(() {
+                        _locked = !_locked;
+                        Navigator.pop(context);
+                      });
+                    });
+                  },
+                ),
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.schedule),
+                  title: const Text("Schedule"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, "/referee/schedule");
+                  },
+                ),
+              ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.book),
+                  title: const Text("Rule Book"),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, "/referee/rule_book");
+                  },
                 ),
               ),
             ],

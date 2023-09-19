@@ -35,8 +35,7 @@ pub struct TmsSchema {
   login_response: LoginResponse,
   setup_request: SetupRequest,
   purge_request: PurgeRequest,
-  proxy_image_request: ProxyImageRequest,
-  proxy_image_response: ProxyImageResponse,
+  proxy_bytes_response: ProxyBytesResponse,
   
   //
   // Network structures (Socket)

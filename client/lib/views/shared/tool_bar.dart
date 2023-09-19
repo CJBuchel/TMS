@@ -11,7 +11,7 @@ import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 
-class TmsToolBar extends StatefulWidget with PreferredSizeWidget {
+class TmsToolBar extends StatefulWidget implements PreferredSizeWidget {
   TmsToolBar({super.key, this.displayActions = true});
 
   final bool displayActions;

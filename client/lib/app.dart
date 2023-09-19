@@ -57,7 +57,7 @@ class TMSApp extends StatelessWidget {
             '/referee/scoring': ((context) => const Scoring()),
             '/referee/table_setup': (context) => const TableSetup(),
             '/referee/schedule': (context) => const RefereeSchedule(),
-            '/referee/rule_book': (context) => const RuleBook(),
+            // '/referee/rule_book': (context) => const RuleBook(), // no good cross compatible pdf viewer
           },
         );
       },

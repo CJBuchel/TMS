@@ -1,26 +1,26 @@
 use log::warn;
 use reqwest::StatusCode;
 use rocket::{get, http::Status};
-use tms_utils::{TmsRouteResponse, TmsRespond, network_schemas::ProxyImageResponse};
+use tms_utils::{TmsRouteResponse, TmsRespond, network_schemas::ProxyBytesResponse};
 
 // image cache
 use lru_cache::LruCache;
 use once_cell::sync::Lazy;
 
-static IMAGE_CACHE: Lazy<tokio::sync::Mutex<LruCache<String, Vec<u8>>>> = Lazy::new(|| tokio::sync::Mutex::new(LruCache::new(100)));
+static BYTES_CACHE: Lazy<tokio::sync::Mutex<LruCache<String, Vec<u8>>>> = Lazy::new(|| tokio::sync::Mutex::new(LruCache::new(100)));
 
-#[get("/proxy_image/get?<url>")]
+#[get("/proxy_bytes/get?<url>")]
 pub async fn proxy_image_get_route(url: String) -> TmsRouteResponse<()> {
 
   // check if we have the image cached first
-  let cached_image = {
-    let mut cache = IMAGE_CACHE.lock().await;
+  let cached_bytes = {
+    let mut cache = BYTES_CACHE.lock().await;
     cache.get_mut(&url).cloned()
   };
 
-  if let Some(image) = cached_image {
-    let response = ProxyImageResponse {
-      image
+  if let Some(bytes) = cached_bytes {
+    let response = ProxyBytesResponse {
+      bytes
     };
     let m: String = serde_json::to_string(&response).unwrap();
     TmsRespond!(Status::Ok, m);
@@ -31,16 +31,16 @@ pub async fn proxy_image_get_route(url: String) -> TmsRouteResponse<()> {
     Ok(res) => {
       if res.status() == StatusCode::OK {
         match res.bytes().await {
-          Ok(image) => {
-            let response = ProxyImageResponse {
-              image: image.to_vec()
+          Ok(bytes) => {
+            let response = ProxyBytesResponse {
+              bytes: bytes.to_vec()
             };
             {
-              let mut cache = IMAGE_CACHE.lock().await;
-              cache.insert(url.clone(), image.to_vec());
+              let mut cache = BYTES_CACHE.lock().await;
+              cache.insert(url.clone(), bytes.to_vec());
             }
             let m: String = serde_json::to_string(&response).unwrap();
-            warn!("New proxy image, {} caching...", url);
+            warn!("New proxy url, {} caching bytes...", url);
             TmsRespond!(Status::Ok, m);
           },
           Err(e) => {

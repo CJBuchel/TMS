@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/screens/admin/setup/setup.dart';
-import 'package:tms/screens/connection.dart';
-import 'package:tms/screens/match_control/match_control.dart';
-import 'package:tms/screens/scoring/scoring.dart';
-import 'package:tms/screens/scoring/table_setup.dart';
-import 'package:tms/screens/timer/timer.dart';
-import 'package:tms/screens/user/login.dart';
-import 'package:tms/screens/user/logout.dart';
-import 'package:tms/screens/selector/screen_selector.dart';
+import 'package:tms/views/admin/setup/setup.dart';
+import 'package:tms/views/connection.dart';
+import 'package:tms/views/match_control/match_control.dart';
+import 'package:tms/views/scoring/scoring.dart';
+import 'package:tms/views/scoring/table_setup.dart';
+import 'package:tms/views/timer/timer.dart';
+import 'package:tms/views/user/login.dart';
+import 'package:tms/views/user/logout.dart';
+import 'package:tms/views/selector/screen_selector.dart';
 
 class TMSApp extends StatelessWidget {
   const TMSApp({super.key});

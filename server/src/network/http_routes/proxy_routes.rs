@@ -1,3 +1,4 @@
+use log::warn;
 use reqwest::StatusCode;
 use rocket::{get, http::Status};
 use tms_utils::{TmsRouteResponse, TmsRespond, network_schemas::ProxyImageResponse};
@@ -12,10 +13,14 @@ static IMAGE_CACHE: Lazy<tokio::sync::Mutex<LruCache<String, Vec<u8>>>> = Lazy::
 pub async fn proxy_image_get_route(url: String) -> TmsRouteResponse<()> {
 
   // check if we have the image cached first
-  let mut cache = IMAGE_CACHE.lock().await;
-  if let Some(image) = cache.get_mut(&url) {
+  let cached_image = {
+    let mut cache = IMAGE_CACHE.lock().await;
+    cache.get_mut(&url).cloned()
+  };
+
+  if let Some(image) = cached_image {
     let response = ProxyImageResponse {
-      image: image.clone()
+      image
     };
     let m: String = serde_json::to_string(&response).unwrap();
     TmsRespond!(Status::Ok, m);
@@ -30,8 +35,12 @@ pub async fn proxy_image_get_route(url: String) -> TmsRouteResponse<()> {
             let response = ProxyImageResponse {
               image: image.to_vec()
             };
-            cache.insert(url.clone(), image.to_vec());
+            {
+              let mut cache = IMAGE_CACHE.lock().await;
+              cache.insert(url.clone(), image.to_vec());
+            }
             let m: String = serde_json::to_string(&response).unwrap();
+            warn!("New proxy image, {} caching...", url);
             TmsRespond!(Status::Ok, m);
           },
           Err(e) => {

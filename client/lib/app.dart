@@ -4,6 +4,8 @@ import 'package:tms/constants.dart';
 import 'package:tms/views/admin/setup/setup.dart';
 import 'package:tms/views/connection.dart';
 import 'package:tms/views/match_control/match_control.dart';
+import 'package:tms/views/scoring/rule_book.dart';
+import 'package:tms/views/scoring/schedule.dart';
 import 'package:tms/views/scoring/scoring.dart';
 import 'package:tms/views/scoring/table_setup.dart';
 import 'package:tms/views/timer/timer.dart';
@@ -54,6 +56,8 @@ class TMSApp extends StatelessWidget {
             '/referee/match_control': (context) => const MatchControl(),
             '/referee/scoring': ((context) => const Scoring()),
             '/referee/table_setup': (context) => const TableSetup(),
+            '/referee/schedule': (context) => const RefereeSchedule(),
+            '/referee/rule_book': (context) => const RuleBook(),
           },
         );
       },

@@ -299,27 +299,17 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
           // Timer Controls
           SizedBox(
             height: (maxHeight / 100) * 35, // 40%
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    width: 3.0,
-                    color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Clock(fontSize: Responsive.isDesktop(context) ? 90 : 70),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: TimerControl(
+                    loadedMatches: widget.loadedMatches,
                   ),
                 ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Clock(fontSize: Responsive.isDesktop(context) ? 90 : 70),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: TimerControl(
-                      loadedMatches: widget.loadedMatches,
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
           ),
         ],

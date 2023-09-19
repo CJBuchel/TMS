@@ -62,11 +62,9 @@ class _MatchControlMobileControlsState extends State<MatchControlMobileControls>
 
     autoSubscribe("table", (m) {
       // check if there is a table in the current map, add if not
-      if (!_tableLoadedMatches.containsKey(m.subTopic)) {
-        setState(() {
-          _tableLoadedMatches[m.subTopic] = m.message;
-        });
-      }
+      setState(() {
+        _tableLoadedMatches[m.subTopic] = m.message;
+      });
     });
   }
 

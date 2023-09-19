@@ -12,7 +12,6 @@ import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/scoring/mission.dart';
 import 'package:tms/views/scoring/scoring_footer.dart';
 import 'package:tms/views/scoring/scoring_header.dart';
-import 'package:tms/views/shared/sorter_util.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 import 'package:tms/views/timer/clock.dart';
 
@@ -25,8 +24,6 @@ class Scoring extends StatefulWidget {
 
 class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   final ScrollController _scrollController = ScrollController();
-  // List<GameMatch> _matches = [];
-  // List<Team> _teams = [];
   List<ScoreAnswer> _answers = [];
   int _score = 0;
   List<ScoreError> _errors = [];

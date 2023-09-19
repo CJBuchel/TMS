@@ -8,15 +8,15 @@ import 'package:tms/network/network.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tuple/tuple.dart';
 
-Future<Tuple2<int, Uint8List>> getProxyNetworkImage(String url) async {
+Future<Tuple2<int, Uint8List>> getProxyBytes(String url) async {
   try {
     var address = await Network.getServerIP();
     var encodedUrl = Uri.encodeComponent(url);
-    var res = await http.get(Uri.parse("http://$address:$requestPort/requests/proxy_image/get?url=$encodedUrl"));
+    var res = await http.get(Uri.parse("http://$address:$requestPort/requests/proxy_bytes/get?url=$encodedUrl"));
 
     if (res.body.isNotEmpty) {
-      var proxyImageResponse = ProxyImageResponse.fromJson(jsonDecode(res.body));
-      return Tuple2(res.statusCode, Uint8List.fromList(proxyImageResponse.image));
+      var proxyImageResponse = ProxyBytesResponse.fromJson(jsonDecode(res.body));
+      return Tuple2(res.statusCode, Uint8List.fromList(proxyImageResponse.bytes));
     } else {
       return Tuple2(HttpStatus.badRequest, Uint8List.fromList([]));
     }

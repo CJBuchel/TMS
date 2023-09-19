@@ -15,6 +15,7 @@ import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/shared/sorter_util.dart';
 
 // Database mixin for local database to update widget based on changes (update triggers only)
 mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
@@ -362,6 +363,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   }
 
   Future<void> _setMatches(List<GameMatch> matches) async {
+    matches = sortMatchesByTime(matches);
     var matchesJson = matches.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbMatches, jsonEncode(matchesJson)));
     for (var trigger in _matchListTriggers) {
@@ -390,7 +392,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       var matchesString = await _localStorage.then((value) => value.getString(storeDbMatches));
       if (matchesString != null) {
         var matches = jsonDecode(matchesString).map<GameMatch>((e) => GameMatch.fromJson(e)).toList();
-        return matches;
+        return sortMatchesByTime(matches);
       } else {
         return _matchesDefault();
       }

@@ -47,10 +47,14 @@ pub struct TmsSchema {
   // Network structures (Event Data)
   //
   events_get_response: EventResponse,
+  event_get_api_link_request: ApiLinkRequest,
+  event_get_api_link_response: ApiLinkResponse,
   //teams
   teams_get_response: TeamsResponse,
   team_get_request: TeamRequest,
   team_get_response: TeamResponse,
+  team_update_request: TeamUpdateRequest,
+  team_post_game_scoresheet_request: TeamPostGameScoresheetRequest,
   // matches
   matches_get_response: MatchesResponse,
   match_get_request: MatchRequest,

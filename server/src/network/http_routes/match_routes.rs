@@ -35,8 +35,9 @@ pub fn matches_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<
   )
 }
 
+#[tms_private_route]
 #[post("/match/get/<uuid>", data = "<message>")]
-pub fn match_get_route(security: &State<Security>, clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String, message: String) -> TmsRouteResponse<()> {
+pub fn match_get_route(message: String) -> TmsRouteResponse<()> {
   let match_request: MatchRequest = TmsRequest!(message.clone(), security);
   match db.tms_data.matches.get(match_request.match_number.clone()).unwrap() {
     Some(m) => {

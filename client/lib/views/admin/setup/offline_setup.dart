@@ -44,8 +44,8 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Row(
-            children: const [
+          title: const Row(
+            children: [
               Icon(Icons.warning, color: Colors.red),
               Text(
                 "Confirm Purge",
@@ -80,9 +80,9 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
+        return const AlertDialog(
           title: Row(
-            children: const [
+            children: [
               Icon(Icons.warning, color: Colors.orange),
               Text(
                 "Error Parsing Schedule",
@@ -90,7 +90,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
               ),
             ],
           ),
-          content: const Text("The CSV file you have selected is not valid."),
+          content: Text("The CSV file you have selected is not valid."),
         );
       },
     );
@@ -143,8 +143,8 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: Row(
-              children: const [
+            title: const Row(
+              children: [
                 Icon(Icons.check, color: Colors.green),
                 Text(
                   "Setup Success",
@@ -176,9 +176,9 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
         } else {
           showDialog(
             context: context,
-            builder: (BuildContext context) => AlertDialog(
+            builder: (BuildContext context) => const AlertDialog(
               title: Row(
-                children: const [
+                children: [
                   Icon(Icons.check, color: Colors.green),
                   Text(
                     "Purge Success",
@@ -186,7 +186,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
                   ),
                 ],
               ),
-              content: const Text("The event has successfully been purged"),
+              content: Text("The event has successfully been purged"),
             ),
           );
         }

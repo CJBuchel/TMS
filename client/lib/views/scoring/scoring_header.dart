@@ -51,7 +51,8 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   bool checkSetNextMatch(String thisTable, GameMatch match) {
     if (_locked) {
       if (_matches.isNotEmpty && _teams.isNotEmpty) {
-        if (match.onTableFirst.table == thisTable || match.onTableSecond.table == thisTable) {
+        if ((match.onTableFirst.table == thisTable && !match.onTableFirst.scoreSubmitted) ||
+            (match.onTableSecond.table == thisTable && !match.onTableSecond.scoreSubmitted)) {
           setState(() {
             _nextMatch = match;
             _nextTeam = _teams.firstWhere((team) {

@@ -9,6 +9,7 @@ import 'package:tms/network/network.dart';
 import 'package:tms/requests/game_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/scoring/comments.dart';
 import 'package:tms/views/scoring/mission.dart';
 import 'package:tms/views/scoring/scoring_footer.dart';
 import 'package:tms/views/scoring/scoring_header.dart';
@@ -26,6 +27,8 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
   final ScrollController _scrollController = ScrollController();
   List<ScoreAnswer> _answers = [];
   int _score = 0;
+  String _publicComment = "";
+  String _privateComment = "";
   List<ScoreError> _errors = [];
   GameMatch? _nextMatch;
   Team? _nextTeam;
@@ -176,7 +179,19 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
               cacheExtent: 10000, // 10,000 pixels in every direction
               children: [
                 ...getMissions(),
-                // @TODO add public/private comments
+                ScoringComments(
+                  color: (AppTheme.isDarkTheme ? const Color.fromARGB(255, 69, 80, 100) : Colors.white),
+                  onPublicCommentChange: (pub) {
+                    setState(() {
+                      _publicComment = pub;
+                    });
+                  },
+                  onPrivateCommentChange: (priv) {
+                    setState(() {
+                      _privateComment = priv;
+                    });
+                  },
+                ),
                 const SizedBox(height: 80),
               ],
             ),
@@ -190,7 +205,19 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
               errors: _errors,
               nextMatch: _nextMatch,
               nextTeam: _nextTeam,
+              score: _score,
+              answers: _answers,
+              publicComment: _publicComment,
+              privateComment: _privateComment,
               onClear: () {
+                setDefault();
+                scrollToTop();
+              },
+              onSubmit: () {
+                setDefault();
+                scrollToTop();
+              },
+              onNoShow: () {
                 setDefault();
                 scrollToTop();
               },

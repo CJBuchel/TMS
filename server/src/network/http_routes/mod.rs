@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-use ::log::{info};
 use rocket::{*, http::{Status, Header}, fairing::{Fairing, Info, Kind}, data::{Limits, ToByteUnit}};
 
 mod register_routes;
@@ -175,8 +174,11 @@ impl TmsHttpServer {
 
         // main data routes
         event_get_route,
+        event_get_api_link_route,
         teams_get_route,
         team_get_route,
+        team_update_route,
+        team_post_game_scoresheet_route,
         matches_get_route,
         match_get_route,
         match_update_route,

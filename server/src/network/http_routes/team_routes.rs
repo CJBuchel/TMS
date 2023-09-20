@@ -1,6 +1,7 @@
 use log::error;
 use rocket::{State, get, http::Status, post};
-use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse}, schemas::Team, TmsRespond, TmsRouteResponse, TmsRequest};
+use tms_macros::tms_private_route;
+use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest}, schemas::{Team, create_permissions}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
 
 use crate::db::db::TmsDB;
 
@@ -53,4 +54,78 @@ pub fn team_get_route(security: &State<Security>, clients: &State<TmsClients>, d
       TmsRespond!(Status::BadRequest, "Failed to get team".to_string());
     }
   };
+}
+
+#[tms_private_route]
+#[post("/team/update/<uuid>", data = "<message>")]
+pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
+  let message: TeamUpdateRequest = TmsRequest!(message.clone(), security);
+
+  let mut perms = create_permissions();
+  perms.head_referee = Some(true);
+  perms.judge_advisor = Some(true);
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
+      Some(t) => {
+        let origin_team_number = t.team_number.clone();
+        let _ = db.tms_data.teams.insert(origin_team_number.as_bytes(), message.team_data.clone());
+        // send updates to clients
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("teams"),
+          sub_topic: String::from("update"),
+          message: origin_team_number.clone(),
+        }, clients.inner().to_owned(), None);
+
+        // send another update for the new team (if the new team number changed from origin)
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("teams"),
+          sub_topic: String::from("update"),
+          message: message.team_data.team_number.clone(),
+        }, clients.inner().to_owned(), None);
+        TmsRespond!();
+
+      },
+      None => {
+        error!("Failed to get team (update) {}", message.team_number);
+        TmsRespond!(Status::BadRequest, "Failed to get team".to_string());
+      }
+    }
+  }
+
+  TmsRespond!(Status::Unauthorized)
+}
+
+#[tms_private_route]
+#[post("/team/post/game_scoresheet/<uuid>", data = "<message>")]
+pub fn team_post_game_scoresheet_route(message: String) -> TmsRouteResponse<()> {
+  let message: TeamPostGameScoresheetRequest = TmsRequest!(message.clone(), security);
+
+  let mut perms = create_permissions();
+  perms.head_referee = Some(true);
+  perms.referee = Some(true);
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
+      Some(mut t) => {
+        t.game_scores.push(message.scoresheet.clone());
+
+        // send update to clients
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("teams"),
+          sub_topic: String::from("update"),
+          message: t.team_number.clone(),
+        }, clients.inner().clone(), None);
+
+        TmsRespond!()
+      },
+      None => {
+        error!("Failed to get team (scoresheet post) {}", message.team_number);
+        TmsRespond!(Status::BadRequest, "Failed to get team".to_string());
+      }
+    }
+  }
+
+  TmsRespond!(Status::Unauthorized)
 }

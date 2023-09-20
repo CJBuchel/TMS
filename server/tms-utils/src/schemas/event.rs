@@ -2,13 +2,13 @@ use schemars::JsonSchema;
 use serde::{Serialize, Deserialize};
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
-pub struct OnlineLink {
+pub struct APILink {
   tournament_id: String,
   tournament_token: String,
   linked: bool
 }
 
-impl OnlineLink {
+impl APILink {
   pub fn new() -> Self {
     Self {
       tournament_id: String::from(""),

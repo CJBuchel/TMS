@@ -11,6 +11,8 @@ String tmsSchemaToJson(TmsSchema data) => json.encode(data.toJson());
 class TmsSchema {
     TmsSchema({
         required this.event,
+        required this.eventGetApiLinkRequest,
+        required this.eventGetApiLinkResponse,
         required this.eventsGetResponse,
         required this.gameGetResponse,
         required this.gameMatch,
@@ -42,11 +44,15 @@ class TmsSchema {
         required this.team,
         required this.teamGetRequest,
         required this.teamGetResponse,
+        required this.teamPostGameScoresheetRequest,
+        required this.teamUpdateRequest,
         required this.teamsGetResponse,
         required this.users,
     });
 
     Event event;
+    ApiLinkRequest eventGetApiLinkRequest;
+    ApiLinkResponse eventGetApiLinkResponse;
     EventResponse eventsGetResponse;
     GameResponse gameGetResponse;
     GameMatch gameMatch;
@@ -78,11 +84,15 @@ class TmsSchema {
     Team team;
     TeamRequest teamGetRequest;
     TeamResponse teamGetResponse;
+    TeamPostGameScoresheetRequest teamPostGameScoresheetRequest;
+    TeamUpdateRequest teamUpdateRequest;
     TeamsResponse teamsGetResponse;
     User users;
 
     factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
         event: Event.fromJson(json["event"]),
+        eventGetApiLinkRequest: ApiLinkRequest.fromJson(json["event_get_api_link_request"]),
+        eventGetApiLinkResponse: ApiLinkResponse.fromJson(json["event_get_api_link_response"]),
         eventsGetResponse: EventResponse.fromJson(json["events_get_response"]),
         gameGetResponse: GameResponse.fromJson(json["game_get_response"]),
         gameMatch: GameMatch.fromJson(json["game_match"]),
@@ -114,12 +124,16 @@ class TmsSchema {
         team: Team.fromJson(json["team"]),
         teamGetRequest: TeamRequest.fromJson(json["team_get_request"]),
         teamGetResponse: TeamResponse.fromJson(json["team_get_response"]),
+        teamPostGameScoresheetRequest: TeamPostGameScoresheetRequest.fromJson(json["team_post_game_scoresheet_request"]),
+        teamUpdateRequest: TeamUpdateRequest.fromJson(json["team_update_request"]),
         teamsGetResponse: TeamsResponse.fromJson(json["teams_get_response"]),
         users: User.fromJson(json["users"]),
     );
 
     Map<String, dynamic> toJson() => {
         "event": event.toJson(),
+        "event_get_api_link_request": eventGetApiLinkRequest.toJson(),
+        "event_get_api_link_response": eventGetApiLinkResponse.toJson(),
         "events_get_response": eventsGetResponse.toJson(),
         "game_get_response": gameGetResponse.toJson(),
         "game_match": gameMatch.toJson(),
@@ -151,6 +165,8 @@ class TmsSchema {
         "team": team.toJson(),
         "team_get_request": teamGetRequest.toJson(),
         "team_get_response": teamGetResponse.toJson(),
+        "team_post_game_scoresheet_request": teamPostGameScoresheetRequest.toJson(),
+        "team_update_request": teamUpdateRequest.toJson(),
         "teams_get_response": teamsGetResponse.toJson(),
         "users": users.toJson(),
     };
@@ -193,6 +209,62 @@ class Event {
         "season": season,
         "tables": List<dynamic>.from(tables.map((x) => x)),
         "timer_length": timerLength,
+    };
+}
+
+class ApiLinkRequest {
+    ApiLinkRequest({
+        required this.authToken,
+    });
+
+    String authToken;
+
+    factory ApiLinkRequest.fromJson(Map<String, dynamic> json) => ApiLinkRequest(
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+    };
+}
+
+class ApiLinkResponse {
+    ApiLinkResponse({
+        required this.apiLink,
+    });
+
+    ApiLink apiLink;
+
+    factory ApiLinkResponse.fromJson(Map<String, dynamic> json) => ApiLinkResponse(
+        apiLink: ApiLink.fromJson(json["api_link"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "api_link": apiLink.toJson(),
+    };
+}
+
+class ApiLink {
+    ApiLink({
+        required this.linked,
+        required this.tournamentId,
+        required this.tournamentToken,
+    });
+
+    bool linked;
+    String tournamentId;
+    String tournamentToken;
+
+    factory ApiLink.fromJson(Map<String, dynamic> json) => ApiLink(
+        linked: json["linked"],
+        tournamentId: json["tournament_id"],
+        tournamentToken: json["tournament_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "linked": linked,
+        "tournament_id": tournamentId,
+        "tournament_token": tournamentToken,
     };
 }
 
@@ -1013,22 +1085,22 @@ class Team {
         required this.teamNumber,
     });
 
-    List<JudgingScoresheet> coreValuesScores;
-    List<GameScoresheet> gameScores;
-    List<JudgingScoresheet> innovationProjectScores;
+    List<TeamJudgingScore> coreValuesScores;
+    List<TeamGameScore> gameScores;
+    List<TeamJudgingScore> innovationProjectScores;
     int ranking;
-    List<JudgingScoresheet> robotDesignScores;
+    List<TeamJudgingScore> robotDesignScores;
     String teamAffiliation;
     String teamId;
     String teamName;
     String teamNumber;
 
     factory Team.fromJson(Map<String, dynamic> json) => Team(
-        coreValuesScores: List<JudgingScoresheet>.from(json["core_values_scores"].map((x) => JudgingScoresheet.fromJson(x))),
-        gameScores: List<GameScoresheet>.from(json["game_scores"].map((x) => GameScoresheet.fromJson(x))),
-        innovationProjectScores: List<JudgingScoresheet>.from(json["innovation_project_scores"].map((x) => JudgingScoresheet.fromJson(x))),
+        coreValuesScores: List<TeamJudgingScore>.from(json["core_values_scores"].map((x) => TeamJudgingScore.fromJson(x))),
+        gameScores: List<TeamGameScore>.from(json["game_scores"].map((x) => TeamGameScore.fromJson(x))),
+        innovationProjectScores: List<TeamJudgingScore>.from(json["innovation_project_scores"].map((x) => TeamJudgingScore.fromJson(x))),
         ranking: json["ranking"],
-        robotDesignScores: List<JudgingScoresheet>.from(json["robot_design_scores"].map((x) => JudgingScoresheet.fromJson(x))),
+        robotDesignScores: List<TeamJudgingScore>.from(json["robot_design_scores"].map((x) => TeamJudgingScore.fromJson(x))),
         teamAffiliation: json["team_affiliation"],
         teamId: json["team_id"],
         teamName: json["team_name"],
@@ -1045,6 +1117,38 @@ class Team {
         "team_id": teamId,
         "team_name": teamName,
         "team_number": teamNumber,
+    };
+}
+
+class TeamJudgingScore {
+    TeamJudgingScore({
+        required this.cloudPublished,
+        required this.judge,
+        required this.noShow,
+        required this.score,
+        required this.scoresheet,
+    });
+
+    bool cloudPublished;
+    String judge;
+    bool noShow;
+    int score;
+    JudgingScoresheet scoresheet;
+
+    factory TeamJudgingScore.fromJson(Map<String, dynamic> json) => TeamJudgingScore(
+        cloudPublished: json["cloud_published"],
+        judge: json["judge"],
+        noShow: json["no_show"],
+        score: json["score"],
+        scoresheet: JudgingScoresheet.fromJson(json["scoresheet"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "cloud_published": cloudPublished,
+        "judge": judge,
+        "no_show": noShow,
+        "score": score,
+        "scoresheet": scoresheet.toJson(),
     };
 }
 
@@ -1077,6 +1181,42 @@ class JudgingScoresheet {
         "feedback_pros": feedbackPros,
         "team_id": teamId,
         "tournament_id": tournamentId,
+    };
+}
+
+class TeamGameScore {
+    TeamGameScore({
+        required this.cloudPublished,
+        required this.gp,
+        required this.noShow,
+        required this.referee,
+        required this.score,
+        required this.scoresheet,
+    });
+
+    bool cloudPublished;
+    String gp;
+    bool noShow;
+    String referee;
+    int score;
+    GameScoresheet scoresheet;
+
+    factory TeamGameScore.fromJson(Map<String, dynamic> json) => TeamGameScore(
+        cloudPublished: json["cloud_published"],
+        gp: json["gp"],
+        noShow: json["no_show"],
+        referee: json["referee"],
+        score: json["score"],
+        scoresheet: GameScoresheet.fromJson(json["scoresheet"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "cloud_published": cloudPublished,
+        "gp": gp,
+        "no_show": noShow,
+        "referee": referee,
+        "score": score,
+        "scoresheet": scoresheet.toJson(),
     };
 }
 
@@ -1229,6 +1369,54 @@ class TeamResponse {
 
     Map<String, dynamic> toJson() => {
         "team": team.toJson(),
+    };
+}
+
+class TeamPostGameScoresheetRequest {
+    TeamPostGameScoresheetRequest({
+        required this.authToken,
+        required this.scoresheet,
+        required this.teamNumber,
+    });
+
+    String authToken;
+    TeamGameScore scoresheet;
+    String teamNumber;
+
+    factory TeamPostGameScoresheetRequest.fromJson(Map<String, dynamic> json) => TeamPostGameScoresheetRequest(
+        authToken: json["auth_token"],
+        scoresheet: TeamGameScore.fromJson(json["scoresheet"]),
+        teamNumber: json["team_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "scoresheet": scoresheet.toJson(),
+        "team_number": teamNumber,
+    };
+}
+
+class TeamUpdateRequest {
+    TeamUpdateRequest({
+        required this.authToken,
+        required this.teamData,
+        required this.teamNumber,
+    });
+
+    String authToken;
+    Team teamData;
+    String teamNumber;
+
+    factory TeamUpdateRequest.fromJson(Map<String, dynamic> json) => TeamUpdateRequest(
+        authToken: json["auth_token"],
+        teamData: Team.fromJson(json["team_data"]),
+        teamNumber: json["team_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "team_data": teamData.toJson(),
+        "team_number": teamNumber,
     };
 }
 

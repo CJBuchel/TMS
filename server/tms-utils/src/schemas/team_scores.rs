@@ -9,7 +9,6 @@ pub struct TeamGameScore {
   referee: String,
   no_show: bool,
   score: u32,
-  valid_scoresheet: bool,
   cloud_published: bool,
   scoresheet: GameScoresheet
 }
@@ -19,7 +18,6 @@ pub struct TeamJudgingScore {
   judge: String,
   no_show: bool,
   score: u32,
-  valid_scoresheet: bool,
   cloud_published: bool,
   scoresheet: JudgingScoresheet
 }

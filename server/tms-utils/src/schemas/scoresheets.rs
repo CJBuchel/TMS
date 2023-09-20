@@ -9,8 +9,8 @@ pub struct GameScoresheet {
   tournament_id: String,
   round: u32,
   answers: Vec<ScoreAnswer>,
-  private_comment: String,
-  public_comment: String
+  public_comment: String,
+  private_comment: String
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]

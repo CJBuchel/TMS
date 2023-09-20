@@ -4,6 +4,8 @@
   "type": "object",
   "required": [
     "event",
+    "event_get_api_link_request",
+    "event_get_api_link_response",
     "events_get_response",
     "game_get_response",
     "game_match",
@@ -35,12 +37,20 @@
     "team",
     "team_get_request",
     "team_get_response",
+    "team_post_game_scoresheet_request",
+    "team_update_request",
     "teams_get_response",
     "users"
   ],
   "properties": {
     "event": {
       "$ref": "#/definitions/Event"
+    },
+    "event_get_api_link_request": {
+      "$ref": "#/definitions/ApiLinkRequest"
+    },
+    "event_get_api_link_response": {
+      "$ref": "#/definitions/ApiLinkResponse"
     },
     "events_get_response": {
       "$ref": "#/definitions/EventResponse"
@@ -135,6 +145,12 @@
     "team_get_response": {
       "$ref": "#/definitions/TeamResponse"
     },
+    "team_post_game_scoresheet_request": {
+      "$ref": "#/definitions/TeamPostGameScoresheetRequest"
+    },
+    "team_update_request": {
+      "$ref": "#/definitions/TeamUpdateRequest"
+    },
     "teams_get_response": {
       "$ref": "#/definitions/TeamsResponse"
     },
@@ -143,6 +159,47 @@
     }
   },
   "definitions": {
+    "APILink": {
+      "type": "object",
+      "required": [
+        "linked",
+        "tournament_id",
+        "tournament_token"
+      ],
+      "properties": {
+        "linked": {
+          "type": "boolean"
+        },
+        "tournament_id": {
+          "type": "string"
+        },
+        "tournament_token": {
+          "type": "string"
+        }
+      }
+    },
+    "ApiLinkRequest": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
+    "ApiLinkResponse": {
+      "type": "object",
+      "required": [
+        "api_link"
+      ],
+      "properties": {
+        "api_link": {
+          "$ref": "#/definitions/APILink"
+        }
+      }
+    },
     "DefaultValue": {
       "oneOf": [
         {
@@ -1020,19 +1077,19 @@
         "core_values_scores": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/JudgingScoresheet"
+            "$ref": "#/definitions/TeamJudgingScore"
           }
         },
         "game_scores": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/GameScoresheet"
+            "$ref": "#/definitions/TeamGameScore"
           }
         },
         "innovation_project_scores": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/JudgingScoresheet"
+            "$ref": "#/definitions/TeamJudgingScore"
           }
         },
         "ranking": {
@@ -1043,7 +1100,7 @@
         "robot_design_scores": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/JudgingScoresheet"
+            "$ref": "#/definitions/TeamJudgingScore"
           }
         },
         "team_affiliation": {
@@ -1054,6 +1111,87 @@
         },
         "team_name": {
           "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
+    "TeamGameScore": {
+      "type": "object",
+      "required": [
+        "cloud_published",
+        "gp",
+        "no_show",
+        "referee",
+        "score",
+        "scoresheet"
+      ],
+      "properties": {
+        "cloud_published": {
+          "type": "boolean"
+        },
+        "gp": {
+          "type": "string"
+        },
+        "no_show": {
+          "type": "boolean"
+        },
+        "referee": {
+          "type": "string"
+        },
+        "score": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "scoresheet": {
+          "$ref": "#/definitions/GameScoresheet"
+        }
+      }
+    },
+    "TeamJudgingScore": {
+      "type": "object",
+      "required": [
+        "cloud_published",
+        "judge",
+        "no_show",
+        "score",
+        "scoresheet"
+      ],
+      "properties": {
+        "cloud_published": {
+          "type": "boolean"
+        },
+        "judge": {
+          "type": "string"
+        },
+        "no_show": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "scoresheet": {
+          "$ref": "#/definitions/JudgingScoresheet"
+        }
+      }
+    },
+    "TeamPostGameScoresheetRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "scoresheet",
+        "team_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "scoresheet": {
+          "$ref": "#/definitions/TeamGameScore"
         },
         "team_number": {
           "type": "string"
@@ -1079,6 +1217,25 @@
       "properties": {
         "team": {
           "$ref": "#/definitions/Team"
+        }
+      }
+    },
+    "TeamUpdateRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "team_data",
+        "team_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "team_data": {
+          "$ref": "#/definitions/Team"
+        },
+        "team_number": {
+          "type": "string"
         }
       }
     },

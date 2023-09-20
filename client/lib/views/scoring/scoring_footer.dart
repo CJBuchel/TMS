@@ -73,6 +73,43 @@ class ScoringFooter extends StatelessWidget {
     }
   }
 
+  Future<bool?> showConfirmNoShow(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.warning, color: Colors.orange),
+              Text(
+                "Confirm No Show",
+                style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          content: const Text("This omits the team from this round. Are you sure?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text(
+                "Confirm",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
   void submitScoresheet(BuildContext context) {
     if (nextMatch == null || nextTeam == null) return;
     RefereeTableUtil.getRefereeTable().then((refereeTable) {
@@ -135,8 +172,65 @@ class ScoringFooter extends StatelessWidget {
     });
   }
 
-  void submitNoShow() {
-    onNoShow();
+  void submitNoShow(BuildContext context) {
+    // build scoresheet and send to server
+    RefereeTableUtil.getRefereeTable().then((refereeTable) {
+      GameScoresheet innerScoresheet = GameScoresheet(
+        answers: [],
+        privateComment: "",
+        publicComment: "",
+        round: nextMatch?.roundNumber ?? 1,
+        teamId: nextTeam?.teamId ?? "",
+        tournamentId: "", // only the server can set this
+      );
+
+      TeamGameScore scoresheet = TeamGameScore(
+        cloudPublished: false,
+        gp: "",
+        noShow: true,
+        referee: refereeTable.item1,
+        score: 0,
+        scoresheet: innerScoresheet,
+      );
+
+      // send to server
+      postTeamGameScoresheetRequest(nextTeam!.teamNumber, scoresheet).then((teamSubmitStatus) {
+        if (teamSubmitStatus == HttpStatus.ok) {
+          // update match
+          GameMatch updatedGameMatch = nextMatch!;
+          if (updatedGameMatch.onTableFirst.table == refereeTable.item2) {
+            updatedGameMatch.onTableFirst.scoreSubmitted = true;
+          } else if (updatedGameMatch.onTableSecond.table == refereeTable.item2) {
+            updatedGameMatch.onTableSecond.scoreSubmitted = true;
+          } else {
+            showSubmitErrorDialog(context, "This table does not match the expected table for this match");
+            return;
+          }
+
+          updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
+            if (matchUpdateStatus == HttpStatus.ok) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Row(
+                    children: [
+                      Icon(Icons.check, color: Colors.green),
+                      SizedBox(width: 16),
+                      Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                  backgroundColor: Colors.blueGrey[800],
+                ),
+              );
+              onSubmit();
+            } else {
+              showStatusError(context, matchUpdateStatus);
+            }
+          });
+        } else {
+          showStatusError(context, teamSubmitStatus);
+        }
+      });
+    });
   }
 
   @override
@@ -169,7 +263,13 @@ class ScoringFooter extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      if (isValidNoShow) {}
+                      if (isValidNoShow) {
+                        showConfirmNoShow(context).then((confirmed) {
+                          if (confirmed != null && confirmed) {
+                            submitNoShow(context);
+                          }
+                        });
+                      }
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(isValidNoShow ? Colors.orange : Colors.grey),

@@ -1,7 +1,8 @@
 use log::{info, error};
 use rocket::{State, post, get, http::Status};
 use tms_macros::tms_private_route;
-use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, security::encrypt, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse, SocketMessage}, tms_clients_ws_send};
+use tms_utils::security::encrypt;
+use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse, SocketMessage, ApiLinkRequest, ApiLinkResponse}, tms_clients_ws_send};
 
 use crate::db::db::TmsDB;
 
@@ -25,6 +26,34 @@ pub fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<Tm
     clients,
     uuid
   )
+}
+
+#[tms_private_route]
+#[post("/event/get/api_link/<uuid>", data = "<message>")]
+pub fn event_get_api_link_route(message: String) -> TmsRouteResponse<()> {
+  let message: ApiLinkRequest = TmsRequest!(message.clone(), security);
+
+  let perms = create_permissions(); // only admin can get api link
+  if check_permissions(clients, uuid.clone(), message.auth_token, perms) {
+    match db.tms_data.api_link.get().unwrap() {
+      Some(api_link) => {
+        let api_response = ApiLinkResponse {
+          api_link
+        };
+        TmsRespond!(
+          Status::Ok,
+          api_response,
+          clients,
+          uuid
+        )
+      },
+      None => {
+        println!("API Link not found");
+        TmsRespond!(Status::BadRequest, "API Link not found".to_string());
+      }
+    };
+  }
+  TmsRespond!(Status::Unauthorized)
 }
 
 #[tms_private_route]

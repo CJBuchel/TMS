@@ -5,9 +5,27 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tuple/tuple.dart';
 
 class RefereeTableUtil {
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+
+  static Future<void> setRefereeName(String referee) async {
+    await _localStorage.then((value) => value.setString(storeRefereeName, referee));
+  }
+
+  static Future<String> getRefereeName() async {
+    try {
+      var referee = await _localStorage.then((value) => value.getString(storeRefereeName));
+      if (referee != null) {
+        return referee;
+      } else {
+        return "";
+      }
+    } catch (e) {
+      return "";
+    }
+  }
 
   static Future<void> setTable(String table) async {
     await _localStorage.then((value) => value.setString(storeRefereeTable, table));
@@ -25,6 +43,17 @@ class RefereeTableUtil {
       return "";
     }
   }
+
+  // Get Tuple2<Referee, Table>
+  static Future<Tuple2<String, String>> getRefereeTable() async {
+    try {
+      var referee = await getRefereeName();
+      var table = await getTable();
+      return Tuple2(referee, table);
+    } catch (e) {
+      return const Tuple2("", "");
+    }
+  }
 }
 
 class TableSetup extends StatefulWidget {
@@ -37,6 +66,7 @@ class TableSetup extends StatefulWidget {
 class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   List<String> _eventTables = [];
   String? _selectedTable;
+  String? _selectedReferee;
   Color _buttonColor = Colors.grey;
   final TextEditingController _refereeNameController = TextEditingController();
 
@@ -90,7 +120,12 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
                   child: TextField(
-                    onChanged: (value) => checkIfValid(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedReferee = value;
+                        checkIfValid();
+                      });
+                    },
                     controller: _refereeNameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -135,9 +170,11 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
                     backgroundColor: MaterialStateProperty.all<Color>(_buttonColor),
                   ),
                   onPressed: () {
-                    if (_selectedTable != null && _refereeNameController.value.text.isNotEmpty) {
-                      RefereeTableUtil.setTable(_selectedTable!).then((value) {
-                        Navigator.pushReplacementNamed(context, '/referee/scoring');
+                    if (_selectedTable != null && _selectedReferee != null) {
+                      RefereeTableUtil.setTable(_selectedTable!).then((tableVoid) {
+                        RefereeTableUtil.setRefereeName(_selectedReferee!).then((refereeVoid) {
+                          Navigator.pushReplacementNamed(context, '/referee/scoring');
+                        });
                       });
                     }
                   },

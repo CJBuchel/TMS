@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:logger/logger.dart';
+import 'package:tms/network/auth.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tuple/tuple.dart';
@@ -33,5 +34,35 @@ Future<Tuple2<int, Team?>> getTeamRequest(String teamNumber) async {
   } catch (e) {
     Logger().e(e);
     return const Tuple2(HttpStatus.badRequest, null);
+  }
+}
+
+Future<int> updateTeamRequest(String originTeamNumber, Team team) async {
+  try {
+    var message = TeamUpdateRequest(authToken: await NetworkAuth.getToken(), teamNumber: originTeamNumber, teamData: team);
+    var res = await Network.serverPost("team/update", message.toJson());
+    if (res.item1) {
+      return res.item2;
+    } else {
+      return res.item2;
+    }
+  } catch (e) {
+    Logger().e(e);
+    return HttpStatus.badRequest;
+  }
+}
+
+Future<int> postTeamGameScoresheetRequest(String teamNumber, TeamGameScore scoresheet) async {
+  try {
+    var scoresheetRequest = TeamPostGameScoresheetRequest(authToken: await NetworkAuth.getToken(), teamNumber: teamNumber, scoresheet: scoresheet);
+    var res = await Network.serverPost("team/post/game_scoresheet", scoresheetRequest.toJson());
+    if (res.item1) {
+      return res.item2;
+    } else {
+      return res.item2;
+    }
+  } catch (e) {
+    Logger().e(e);
+    return HttpStatus.badRequest;
   }
 }

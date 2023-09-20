@@ -32,48 +32,56 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
 
   // Set teams
   void setTeams(List<Team> teams) async {
-    List<Team> t = [];
+    if (mounted) {
+      List<Team> t = [];
 
-    teams.sort((a, b) => int.parse(a.teamNumber).compareTo(int.parse(b.teamNumber)));
+      teams.sort((a, b) => int.parse(a.teamNumber).compareTo(int.parse(b.teamNumber)));
 
-    for (var team in teams) {
-      t.add(team);
+      for (var team in teams) {
+        t.add(team);
+      }
+
+      setState(() {
+        _teams = t;
+      });
     }
-
-    setState(() {
-      _teams = t;
-    });
   }
 
   void setMatches(List<GameMatch> gameMatches) async {
-    List<GameMatch> m = [];
+    if (mounted) {
+      List<GameMatch> m = [];
 
-    gameMatches = sortMatchesByTime(gameMatches);
+      gameMatches = sortMatchesByTime(gameMatches);
 
-    for (var match in gameMatches) {
-      m.add(match);
+      for (var match in gameMatches) {
+        m.add(match);
+      }
+
+      setState(() {
+        _matches = m;
+      });
     }
-
-    setState(() {
-      _matches = m;
-    });
   }
 
   void onSelectedMatches(List<GameMatch> matches) {
-    if (_loadedMatches.isEmpty) {
-      setState(() {
-        _selectedMatches.clear();
-        _selectedMatches.addAll(matches);
-      });
+    if (mounted) {
+      if (_loadedMatches.isEmpty) {
+        setState(() {
+          _selectedMatches.clear();
+          _selectedMatches.addAll(matches);
+        });
+      }
     }
   }
 
   void unloadOnDisconnect() async {
-    var states = await Network.getStates();
-    if (states.item1 != NetworkHttpConnectionState.connected || states.item2 != NetworkWebSocketState.connected) {
-      setState(() {
-        _loadedMatches = [];
-      });
+    if (mounted) {
+      var states = await Network.getStates();
+      if (states.item1 != NetworkHttpConnectionState.connected || states.item2 != NetworkWebSocketState.connected) {
+        setState(() {
+          _loadedMatches = [];
+        });
+      }
     }
   }
 

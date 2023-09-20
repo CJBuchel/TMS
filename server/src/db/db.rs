@@ -4,7 +4,7 @@ use log::{warn, error};
 
 use serde::{Serialize, Deserialize, de::DeserializeOwned};
 use sled_extensions::{bincode::Tree, DbExt, Db};
-use tms_utils::schemas::{Team, GameMatch, JudgingSession, User, Event, create_user};
+use tms_utils::schemas::{Team, GameMatch, JudgingSession, User, Event, create_user, APILink};
 
 use super::item::Item;
 
@@ -19,6 +19,7 @@ pub struct Database {
   pub matches: Tree<GameMatch>,
   pub judging_sessions: Tree<JudgingSession>,
   pub users: Tree<User>,
+  pub api_link: Item<APILink>,
   pub event: Item<Event>, // there is only one event, so make it singular (optional just in case of data flow problems)
   pub system_info: Item<SystemInfo>
 }
@@ -50,6 +51,7 @@ impl TmsDB {
       matches: db.open_bincode_tree("matches").expect("Failed to open match tree"),
       judging_sessions: db.open_bincode_tree("judging_sessions").expect("Failed to open judging session tree"),
       users: db.open_bincode_tree("users").expect("Failed to open user tree"),
+      api_link: Item::new(db.clone(), "api_link"),
       event: Item::new(db.clone(), "event"),
       system_info: Item::new(db.clone(), "system_info")
     };
@@ -103,6 +105,9 @@ impl TmsDB {
       judging_sessions: self.db.open_bincode_tree("judging_sessions").expect("Failed to open judging session tree"),
       users: self.db.open_bincode_tree("users").expect("Failed to open user tree"),
       event: Item::new(self.db.clone(), "event"),
+      api_link: Item::new(self.db.clone(), "api_link"),
+
+      // this shouldn't be purged. (I think... don't remember)
       system_info: Item::new(self.db.clone(), "system_info")
     };
 
@@ -151,5 +156,6 @@ impl TmsDB {
       .and_then(|_| self.tms_data.judging_sessions.clear())
       .and_then(|_| self.tms_data.users.clear())
       .and_then(|_| self.tms_data.event.clear())
+      .and_then(|_| self.tms_data.api_link.clear())
   }
 }

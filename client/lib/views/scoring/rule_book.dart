@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
@@ -67,12 +66,6 @@ class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDat
         setState(() {
           _season = event.season;
         });
-      }
-    });
-
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted && _pdfBytes.isEmpty) {
-        _fetchData();
       }
     });
   }

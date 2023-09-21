@@ -227,7 +227,9 @@ class _ScreenSelectorState extends State<ScreenSelector> with AutoUnsubScribeMix
                       image: const Image(
                         image: AssetImage('assets/images/FIRST_LOGO.png'),
                       ),
-                      onPress: () {},
+                      onPress: () {
+                        Navigator.pushNamed(context, '/scoreboard');
+                      },
                     ),
                   ),
 

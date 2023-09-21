@@ -1,4 +1,4 @@
-use log::error;
+use log::{error, warn};
 use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest}, schemas::{Team, create_permissions}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
@@ -108,12 +108,16 @@ pub fn team_post_game_scoresheet_route(message: String) -> TmsRouteResponse<()> 
   if check_permissions(clients, uuid, message.auth_token, perms) {
     match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
       Some(mut t) => {
+        warn!("Scoresheet post {}", message.scoresheet.score);
         t.game_scores.push(message.scoresheet.clone());
+
+        // update the team in the database
+        let _ = db.tms_data.teams.insert(t.team_number.as_bytes(), t.clone());
 
         // send update to clients
         tms_clients_ws_send(SocketMessage {
           from_id: None,
-          topic: String::from("teams"),
+          topic: String::from("team"),
           sub_topic: String::from("update"),
           message: t.team_number.clone(),
         }, clients.inner().clone(), None);

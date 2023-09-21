@@ -5,19 +5,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct GameScoresheet {
-  team_id: String,
-  tournament_id: String,
-  round: u32,
-  answers: Vec<ScoreAnswer>,
-  public_comment: String,
-  private_comment: String
+  pub team_id: String,
+  pub tournament_id: String,
+  pub round: u32,
+  pub answers: Vec<ScoreAnswer>,
+  pub public_comment: String,
+  pub private_comment: String
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct JudgingScoresheet {
-  team_id: String,
-  tournament_id: String,
-  answers: Vec<ScoreAnswer>,
-  feedback_pros: String,
-  feedback_crit: String
+  pub team_id: String,
+  pub tournament_id: String,
+  pub answers: Vec<ScoreAnswer>,
+  pub feedback_pros: String,
+  pub feedback_crit: String
 }

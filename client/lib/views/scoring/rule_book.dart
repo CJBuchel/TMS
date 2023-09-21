@@ -8,6 +8,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/requests/event_requests.dart';
+import 'package:tms/requests/game_requests.dart';
 import 'package:tms/requests/proxy_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/tool_bar.dart';
@@ -21,11 +22,11 @@ class RuleBook extends StatefulWidget {
 
 class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   Uint8List _pdfBytes = Uint8List(0);
-  String _season = "";
+  String ruleBookUrl = "";
   late PdfViewerController _pdfViewerController;
 
   void _fetchData() async {
-    var response = await getProxyBytes(ChallengeRuleBook.getRules(_season));
+    var response = await getProxyBytes(ruleBookUrl);
 
     if (response.item1 == HttpStatus.ok) {
       if (mounted) {
@@ -38,11 +39,11 @@ class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDat
 
   void onConnect() {
     if (mounted) {
-      if (_season.isEmpty) {
-        getEventRequest().then((event) {
-          if (mounted && event.item1 == HttpStatus.ok) {
+      if (ruleBookUrl.isEmpty) {
+        getGameRequest().then((game) {
+          if (mounted && game.item1 == HttpStatus.ok) {
             setState(() {
-              _season = event.item2?.season ?? "";
+              ruleBookUrl = game.item2?.ruleBookUrl ?? "";
             });
             _fetchData();
           }
@@ -57,16 +58,17 @@ class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDat
   void initState() {
     super.initState();
     _pdfViewerController = PdfViewerController();
-    Network.isConnected().then((connected) {
-      if (connected) onConnect();
-    });
-
-    onEventUpdate((event) {
+    onGameEventUpdate((game) {
       if (mounted) {
         setState(() {
-          _season = event.season;
+          ruleBookUrl = game.ruleBookUrl;
         });
+        _fetchData();
       }
+    });
+
+    Network.isConnected().then((connected) {
+      if (connected) onConnect();
     });
   }
 

@@ -27,6 +27,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
   final ScrollController _scrollController = ScrollController();
   List<ScoreAnswer> _answers = [];
   int _score = 0;
+  bool _locked = false;
   String _publicComment = "";
   String _privateComment = "";
   List<ScoreError> _errors = [];
@@ -36,6 +37,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
   Game _game = Game(
     name: "",
     program: "",
+    ruleBookUrl: "",
     missions: [],
     questions: [],
   );
@@ -162,6 +164,11 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
           child: Center(
             child: ScoringHeader(
               height: headerHeight,
+              onLock: (locked) {
+                setState(() {
+                  _locked = locked;
+                });
+              },
               onNextTeamMatch: (team, match) {
                 setState(() {
                   _nextTeam = team;
@@ -205,6 +212,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
               errors: _errors,
               nextMatch: _nextMatch,
               nextTeam: _nextTeam,
+              locked: _locked,
               score: _score,
               answers: _answers,
               publicComment: _publicComment,
@@ -280,7 +288,11 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
 
   @override
   Widget build(BuildContext context) {
-    double headerHeight = Responsive.isTablet(context) ? 50 : 80;
+    double headerHeight = Responsive.isMobile(context)
+        ? 40
+        : Responsive.isTablet(context)
+            ? 40
+            : 45;
     double footerHeight = Responsive.isDesktop(context)
         ? 150
         : Responsive.isTablet(context)

@@ -12,6 +12,7 @@ class ScoringFooter extends StatelessWidget {
   final double height;
   final Team? nextTeam;
   final GameMatch? nextMatch;
+  final bool locked;
   final int score;
   final String publicComment;
   final String privateComment;
@@ -24,6 +25,7 @@ class ScoringFooter extends StatelessWidget {
     Key? key,
     required this.height,
     required this.answers,
+    required this.locked,
     required this.score,
     required this.publicComment,
     required this.privateComment,
@@ -207,25 +209,29 @@ class ScoringFooter extends StatelessWidget {
             return;
           }
 
-          updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
-            if (matchUpdateStatus == HttpStatus.ok) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Row(
-                    children: [
-                      Icon(Icons.check, color: Colors.green),
-                      SizedBox(width: 16),
-                      Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
-                    ],
+          if (locked) {
+            updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
+              if (matchUpdateStatus == HttpStatus.ok) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Row(
+                      children: [
+                        Icon(Icons.check, color: Colors.green),
+                        SizedBox(width: 16),
+                        Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                    backgroundColor: Colors.blueGrey[800],
                   ),
-                  backgroundColor: Colors.blueGrey[800],
-                ),
-              );
-              onSubmit();
-            } else {
-              showStatusError(context, matchUpdateStatus);
-            }
-          });
+                );
+                onSubmit();
+              } else {
+                showStatusError(context, matchUpdateStatus);
+              }
+            });
+          } else {
+            onSubmit();
+          }
         } else {
           showStatusError(context, teamSubmitStatus);
         }

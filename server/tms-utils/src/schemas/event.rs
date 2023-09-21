@@ -3,9 +3,9 @@ use serde::{Serialize, Deserialize};
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct APILink {
-  tournament_id: String,
-  tournament_token: String,
-  linked: bool
+  pub tournament_id: String,
+  pub tournament_token: String,
+  pub linked: bool
 }
 
 impl APILink {

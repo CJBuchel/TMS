@@ -9,6 +9,8 @@ DateTime? _parseStringTime(String time) {
     final second = int.parse(matchTime.group(3)!);
     final now = DateTime.now();
     return DateTime(now.year, now.month, now.day, hour, minute, second);
+  } else {
+    return null;
   }
 }
 
@@ -23,4 +25,17 @@ List<GameMatch> sortMatchesByTime(List<GameMatch> matches) {
     }
   });
   return matches;
+}
+
+List<Team> sortTeamsByRank(List<Team> teams) {
+  Set<int> uniqueRanks = teams.map((e) => e.ranking).toSet();
+
+  if (uniqueRanks.length == 1) {
+    return teams;
+  } else {
+    teams.sort((a, b) {
+      return a.ranking.compareTo(b.ranking);
+    });
+    return teams;
+  }
 }

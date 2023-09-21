@@ -4,6 +4,7 @@ import 'package:tms/constants.dart';
 import 'package:tms/views/admin/setup/setup.dart';
 import 'package:tms/views/connection.dart';
 import 'package:tms/views/match_control/match_control.dart';
+import 'package:tms/views/scoreboard/scoreboard.dart';
 import 'package:tms/views/scoring/rule_book.dart';
 import 'package:tms/views/scoring/schedule.dart';
 import 'package:tms/views/scoring/scoring.dart';
@@ -48,6 +49,7 @@ class TMSApp extends StatelessWidget {
 
             // basic screens
             '/timer': (context) => const Timer(),
+            '/scoreboard': (context) => const Scoreboard(),
 
             // admin screens
             '/admin/setup': (context) => const Setup(),

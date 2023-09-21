@@ -38,36 +38,36 @@ Color get bgSecondaryColor => AppTheme.isDarkThemeNotifier.value ? bgSecondaryCo
 Color get textColor => AppTheme.isDarkThemeNotifier.value ? Colors.white : Colors.black;
 Brightness get brightness => AppTheme.isDarkThemeNotifier.value ? Brightness.dark : Brightness.light;
 
-class ChallengeRuleBook {
-  static const String fll2019 =
-      "https://www.first-lego-league.org/files/inhalt/fll_en/fll/fll_2018_19/FLL_2018_19_Robot_Game_Rules_Setup_Missions.pdf";
-  static const String fll2020 = "https://firstinspiresst01.blob.core.windows.net/fll/2020/city-shaper-game-guide-pdf.pdf";
-  static const String fll2021 =
-      "https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-robot-game-rulebook.pdf";
-  static const String fll2022 =
-      "https://firstinspiresst01.blob.core.windows.net/first-energize/fll-challenge/fll-challenge-superpowered-robot-game-rulebook.pdf";
-  static const String fll2023 =
-      "https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-rgr-en.pdf";
+// class ChallengeRuleBook {
+//   static const String fll2019 =
+//       "https://www.first-lego-league.org/files/inhalt/fll_en/fll/fll_2018_19/FLL_2018_19_Robot_Game_Rules_Setup_Missions.pdf";
+//   static const String fll2020 = "https://firstinspiresst01.blob.core.windows.net/fll/2020/city-shaper-game-guide-pdf.pdf";
+//   static const String fll2021 =
+//       "https://firstinspiresst01.blob.core.windows.net/first-forward/fll-challenge/fll-challenge-cargo-connect-robot-game-rulebook.pdf";
+//   static const String fll2022 =
+//       "https://firstinspiresst01.blob.core.windows.net/first-energize/fll-challenge/fll-challenge-superpowered-robot-game-rulebook.pdf";
+//   static const String fll2023 =
+//       "https://firstinspiresst01.blob.core.windows.net/first-in-show-masterpiece/fll-challenge/fll-challenge-masterpiece-rgr-en.pdf";
 
-  static String getRules(String season) {
-    switch (season) {
-      case "2019":
-        return fll2019;
-      case "2020":
-        return fll2020;
-      case "2021":
-        return fll2021;
-      case "2022":
-        return fll2022;
-      case "2023":
-        return fll2023;
+//   static String getRules(String season) {
+//     switch (season) {
+//       case "2019":
+//         return fll2019;
+//       case "2020":
+//         return fll2020;
+//       case "2021":
+//         return fll2021;
+//       case "2022":
+//         return fll2022;
+//       case "2023":
+//         return fll2023;
 
-      // default
-      default:
-        return fll2023;
-    }
-  }
-}
+//       // default
+//       default:
+//         return fll2023;
+//     }
+//   }
+// }
 
 const defaultPadding = 16.0;
 const defaultFontFamily = "MontserratLight";
@@ -99,6 +99,8 @@ const storeNtAuthUser = "ntAuthUser";
 const storeDarkTheme = "isDarkTheme";
 const storeRefereeTable = "refereeTable";
 const storeRefereeName = "refereeName";
+const storeScoreboardAlwaysMatchSchedule = "scoreboardAlwaysMatchSchedule";
+const storeScoreboardAlwaysJudgeSchedule = "scoreboardAlwaysJudgeSchedule";
 
 // Local database storage constants
 const storeDbEvent = "dbEvent";

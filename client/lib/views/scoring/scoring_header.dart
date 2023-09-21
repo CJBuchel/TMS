@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/publish_requests.dart';
@@ -14,10 +13,12 @@ import 'package:tms/views/shared/sorter_util.dart';
 class ScoringHeader extends StatefulWidget {
   final double height;
   final Function(Team team, GameMatch match) onNextTeamMatch;
+  final Function(bool locked) onLock;
   const ScoringHeader({
     Key? key,
     required this.height,
     required this.onNextTeamMatch,
+    required this.onLock,
   }) : super(key: key);
 
   @override
@@ -206,12 +207,13 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
         style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
-          // color: ,
+          color: Colors.white,
         ),
       );
     } else {
       return DropdownButton<String>(
         value: _nextTeam?.teamNumber.toString(),
+        dropdownColor: Colors.blueGrey[800],
         onChanged: (String? newValue) {
           if (newValue != null) {
             final team = _teams.firstWhere((team) => team.teamNumber.toString() == newValue);
@@ -229,6 +231,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
           );
@@ -244,11 +247,13 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
         style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
       );
     } else {
       return DropdownButton<String>(
         value: _nextMatch?.roundNumber.toString(),
+        dropdownColor: Colors.blueGrey[800],
         onChanged: (String? newValue) {
           if (newValue != null) {
             final match = _matches.firstWhere((match) => match.roundNumber.toString() == newValue);
@@ -266,6 +271,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
           );
@@ -276,10 +282,11 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
 
   Widget getMatchWidget() {
     return Text(
-      _locked ? "Match: ${_nextMatch?.matchNumber}/${_matches.length}" : "Custom",
+      _locked ? "Match: ${_nextMatch?.matchNumber}/${_matches.length}" : "None",
       style: const TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.bold,
+        color: Colors.white,
       ),
     );
   }
@@ -290,9 +297,14 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
       height: widget.height,
       decoration: BoxDecoration(
         // color: AppTheme.isDarkTheme ? Colors.blueGrey[800] : Colors.white,
-        color: AppTheme.isDarkTheme ? Colors.transparent : Colors.white,
-        border: Border(
-          bottom: BorderSide(color: AppTheme.isDarkTheme ? Colors.white : Colors.black),
+        // color: AppTheme.isDarkTheme ? Colors.transparent : Colors.white,
+        // border: Border(
+        //   bottom: BorderSide(color: AppTheme.isDarkTheme ? Colors.white : Colors.black),
+        // ),
+        color: Colors.blueGrey[800],
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
         ),
       ),
       child: Row(
@@ -302,7 +314,10 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
           getRoundWidget(),
           getMatchWidget(),
           PopupMenuButton(
-            icon: const Icon(Icons.more_horiz),
+            icon: const Icon(
+              Icons.more_horiz,
+              color: Colors.white,
+            ),
             itemBuilder: (context) => [
               PopupMenuItem(
                   child: ListTile(
@@ -324,6 +339,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
                       sendTableLoadedMatch(thisTable, forceNone: true);
                       setState(() {
                         _locked = !_locked;
+                        widget.onLock(_locked);
                         Navigator.pop(context);
                       });
                     });

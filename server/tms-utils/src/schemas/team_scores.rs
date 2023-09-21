@@ -5,19 +5,19 @@ use super::{GameScoresheet, JudgingScoresheet};
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct TeamGameScore {
-  gp: String,
-  referee: String,
-  no_show: bool,
-  score: u32,
-  cloud_published: bool,
-  scoresheet: GameScoresheet
+  pub gp: String,
+  pub referee: String,
+  pub no_show: bool,
+  pub score: u32,
+  pub cloud_published: bool,
+  pub scoresheet: GameScoresheet
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct TeamJudgingScore {
-  judge: String,
-  no_show: bool,
-  score: u32,
-  cloud_published: bool,
-  scoresheet: JudgingScoresheet
+  pub judge: String,
+  pub no_show: bool,
+  pub score: u32,
+  pub cloud_published: bool,
+  pub scoresheet: JudgingScoresheet
 }

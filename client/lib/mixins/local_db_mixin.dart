@@ -495,6 +495,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     return Game(
       name: "",
       program: "",
+      ruleBookUrl: "",
       missions: [],
       questions: [],
     );

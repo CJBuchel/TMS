@@ -27,7 +27,8 @@ Future<Tuple2<int, Team?>> getTeamRequest(String teamNumber) async {
     var res = await Network.serverPost("team/get", message);
 
     if (res.item1 && res.item3.isNotEmpty) {
-      return Tuple2(res.item2, Team.fromJson(res.item3));
+      Team team = TeamResponse.fromJson(res.item3).team;
+      return Tuple2(res.item2, team);
     } else {
       return Tuple2(res.item2, null);
     }

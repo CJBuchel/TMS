@@ -306,18 +306,21 @@ class Game {
         required this.name,
         required this.program,
         required this.questions,
+        required this.ruleBookUrl,
     });
 
     List<Mission> missions;
     String name;
     String program;
     List<Score> questions;
+    String ruleBookUrl;
 
     factory Game.fromJson(Map<String, dynamic> json) => Game(
         missions: List<Mission>.from(json["missions"].map((x) => Mission.fromJson(x))),
         name: json["name"],
         program: json["program"],
         questions: List<Score>.from(json["questions"].map((x) => Score.fromJson(x))),
+        ruleBookUrl: json["rule_book_url"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -325,6 +328,7 @@ class Game {
         "name": name,
         "program": program,
         "questions": List<dynamic>.from(questions.map((x) => x.toJson())),
+        "rule_book_url": ruleBookUrl,
     };
 }
 

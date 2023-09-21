@@ -82,6 +82,7 @@ pub fn game_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<Tms
     None => tms_utils::Game {
       name: "".to_string(),
       program: "".to_string(),
+      rule_book_url: "".to_string(),
       missions: vec![],
       questions: vec![],
     }

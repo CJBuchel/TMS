@@ -109,7 +109,7 @@ class _CategoricalQuestionState extends State<CategoricalQuestion> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                widget.error?.message ?? "",
+                widget.error.message,
                 style: const TextStyle(color: Colors.red),
               ),
             ],

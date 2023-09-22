@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/event_requests.dart';
@@ -88,7 +87,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
     });
 
     autoSubscribe("clock", (m) {
-      if (m.subTopic == "time" && m.message != null) {
+      if (m.subTopic == "time") {
         if (_TimerClockState == TimerClockState.idle) {
           setState(() {
             _TimerClockState = TimerClockState.running;

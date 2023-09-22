@@ -13,6 +13,7 @@ import 'package:tms/views/scoring/comments.dart';
 import 'package:tms/views/scoring/mission.dart';
 import 'package:tms/views/scoring/scoring_footer.dart';
 import 'package:tms/views/scoring/scoring_header.dart';
+import 'package:tms/views/shared/network_image.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 import 'package:tms/views/timer/clock.dart';
 
@@ -144,6 +145,13 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
         mission: mission,
         errors: _errors,
         answers: _answers,
+        image: NetworkImageWidget(
+          src: mission.image ?? "",
+          width: 160,
+          height: 90,
+          borderRadius: 10,
+          defaultImage: const AssetImage('assets/images/FIRST_LOGO.png'),
+        ),
         scores: _game.questions.where((q) {
           return q.id.startsWith(mission.prefix);
         }).toList(),
@@ -308,7 +316,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
             return Stack(
               children: [
                 getScoringColumn(headerHeight, footerHeight, constraints),
-                // getFloatingTimer(headerHeight),
+                // getFloatingTimer(headerHeight), // maybe make it only appear when timer is running
                 getFloatingScore(footerHeight),
               ],
             );

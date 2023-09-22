@@ -3,11 +3,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/requests/event_requests.dart';
 import 'package:tms/requests/game_requests.dart';
 import 'package:tms/requests/proxy_requests.dart';
 import 'package:tms/responsive.dart';

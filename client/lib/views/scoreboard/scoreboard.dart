@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/network/network.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/scoreboard/match_info.dart';
 import 'package:tms/views/scoreboard/team_table.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
@@ -58,8 +60,8 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
   List<Team>? _teamData;
   List<GameMatch>? _matchData;
 
-  bool _alwaysMatchSchedule = false;
-  bool _alwaysJudgeSchedule = false;
+  bool _alwaysMatchInfo = false;
+  bool _alwaysJudgeInfo = false;
 
   void setEvent(Event event) {
     if (mounted) {
@@ -87,6 +89,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
 
   @override
   void initState() {
+    super.initState();
     onEventUpdate((event) => setEvent(event));
     onTeamsUpdate((teams) => setTeams(teams));
     onMatchesUpdate((matches) => setMatches(matches));
@@ -117,24 +120,37 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
 
     ScoreboardUtil.getAlwaysMatchSchedule().then((value) {
       setState(() {
-        _alwaysMatchSchedule = value;
+        _alwaysMatchInfo = value;
       });
     });
 
     ScoreboardUtil.getAlwaysJudgeSchedule().then((value) {
       setState(() {
-        _alwaysJudgeSchedule = value;
+        _alwaysJudgeInfo = value;
       });
     });
-    super.initState();
+
+    // delay and get event data
+    Future.delayed(const Duration(seconds: 1), () async {
+      if (!await Network.isConnected()) {
+        getEvent().then((event) => setEvent(event));
+        getTeams().then((teams) => setTeams(teams));
+        getMatches().then((matches) => setMatches(matches));
+      }
+    });
   }
 
   Widget getTable() {
+    double edgeInset = Responsive.isDesktop(context)
+        ? 50
+        : Responsive.isTablet(context)
+            ? 20
+            : 0;
     // if table has data display otherwise
     if (_teamData?.isNotEmpty ?? false) {
       return Expanded(
         child: Container(
-          padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+          padding: EdgeInsets.fromLTRB(edgeInset, 0, edgeInset, 0),
           child: TeamTable(
             teams: _teamData ?? [],
             matches: _matchData ?? [],
@@ -145,7 +161,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
     } else {
       return const Expanded(
         child: Center(
-          child: Text("No Event Data"),
+          child: CircularProgressIndicator(),
         ),
       );
     }
@@ -161,10 +177,6 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
           Container(
             decoration: BoxDecoration(
               color: Colors.blueGrey[800],
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
             ),
             height: 40,
             child: Row(
@@ -176,11 +188,11 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
                     Theme(
                       data: ThemeData(unselectedWidgetColor: Colors.white),
                       child: Checkbox(
-                        value: _alwaysMatchSchedule,
+                        value: _alwaysMatchInfo,
                         onChanged: (v) {
                           setState(() {
                             ScoreboardUtil.setAlwaysMatchSchedule(v!);
-                            _alwaysMatchSchedule = v;
+                            _alwaysMatchInfo = v;
                           });
                         },
                       ),
@@ -193,11 +205,11 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
                     Theme(
                       data: ThemeData(unselectedWidgetColor: Colors.white),
                       child: Checkbox(
-                        value: _alwaysJudgeSchedule,
+                        value: _alwaysJudgeInfo,
                         onChanged: (v) {
                           setState(() {
                             ScoreboardUtil.setAlwaysJudgeSchedule(v!);
-                            _alwaysJudgeSchedule = v;
+                            _alwaysJudgeInfo = v;
                           });
                         },
                       ),
@@ -210,6 +222,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
 
           // main infinite table
           getTable(),
+          MatchInfo(alwaysMatchInfo: _alwaysMatchInfo),
         ],
       ),
     );

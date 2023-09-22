@@ -31,6 +31,8 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
   final TextEditingController _adminPasswordController = TextEditingController();
   final TextEditingController _eventNameController = TextEditingController();
 
+  final TextEditingController _roundNumberController = TextEditingController();
+
   final TextEditingController _endgameTimerCountdownController = TextEditingController();
   final TextEditingController _timerCountdownController = TextEditingController();
 
@@ -109,7 +111,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
 
   void onSubmit(BuildContext context) async {
     Event event = Event(
-      eventRounds: _setupRequest?.event.eventRounds ?? 3,
+      eventRounds: int.parse(_roundNumberController.text),
       name: _eventNameController.text,
       pods: _setupRequest?.event.pods ?? _event?.pods ?? [],
       season: _selectedSeason ?? _event?.season ?? "",
@@ -214,6 +216,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
   @override
   void initState() {
     super.initState();
+    _roundNumberController.value = const TextEditingValue(text: "3");
     _endgameTimerCountdownController.value = const TextEditingValue(text: "30");
     _timerCountdownController.value = const TextEditingValue(text: "150");
     checkAvailableSeasons();
@@ -222,6 +225,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
       setState(() {
         _event = event;
         _eventNameController.text = event.name;
+        _roundNumberController.text = event.eventRounds.toString();
         _endgameTimerCountdownController.text = event.endGameTimerLength.toString();
         _timerCountdownController.text = event.timerLength.toString();
         if (_dropDownSeasons.contains(event.season)) {
@@ -378,6 +382,20 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
                   border: OutlineInputBorder(),
                   labelText: 'Event Name',
                   hintText: 'Enter Event Name: e.g `Curtin Championship`',
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+              child: TextField(
+                controller: _roundNumberController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Rounds',
+                  hintText: 'Enter Rounds: e.g `3` rounds',
                 ),
               ),
             ),

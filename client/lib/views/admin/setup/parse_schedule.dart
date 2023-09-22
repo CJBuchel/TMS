@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
@@ -196,6 +195,8 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
         endTime: endTime,
         judgingPods: judgingPods,
       );
+
+      judgingSessions.add(session);
     }
 
     // Parse Event

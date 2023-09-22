@@ -130,7 +130,7 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Referee',
-                      hintText: 'Enter your name e.g `Nathan`',
+                      hintText: 'Enter your name e.g `Monika`',
                     ),
                   ),
                 ),

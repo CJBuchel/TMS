@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 
@@ -36,6 +35,8 @@ class _TTLClockState extends State<TTLClock> {
       final second = int.parse(matchTime.group(3)!);
       final now = DateTime.now();
       return DateTime(now.year, now.month, now.day, hour, minute, second);
+    } else {
+      return null;
     }
   }
 

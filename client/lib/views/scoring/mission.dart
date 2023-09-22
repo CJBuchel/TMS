@@ -12,25 +12,18 @@ class MissionWidget extends StatelessWidget {
   final Function(List<ScoreAnswer>) onAnswers;
   final List<ScoreAnswer> answers;
   final Color? color;
-  late NetworkImageWidget _image;
+  final NetworkImageWidget? image;
 
-  MissionWidget({
+  const MissionWidget({
     Key? key,
     required this.mission,
     required this.scores,
     required this.errors,
     required this.onAnswers,
     required this.answers,
+    required this.image,
     this.color,
-  }) : super(key: key) {
-    _image = NetworkImageWidget(
-      src: mission.image ?? "",
-      width: 160,
-      height: 90,
-      borderRadius: 10,
-      defaultImage: const AssetImage('assets/images/FIRST_LOGO.png'),
-    );
-  }
+  }) : super(key: key);
 
   Widget getMissionHeader(BuildContext context) {
     if (!Responsive.isMobile(context)) {
@@ -39,7 +32,7 @@ class MissionWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: _image,
+            child: image,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20),
@@ -69,7 +62,7 @@ class MissionWidget extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-            child: _image,
+            child: image,
           ),
         ],
       );

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
@@ -25,7 +26,6 @@ class _TeamTableState extends State<TeamTable> with AutomaticKeepAliveClientMixi
 
   late ScrollController _scrollController;
   late AnimationController _animationController;
-  bool _animationInitialized = false;
   bool _animationHasEverBeenInitialized = false;
   final Color nthRowColor = const Color.fromARGB(255, 218, 218, 218);
 
@@ -33,25 +33,38 @@ class _TeamTableState extends State<TeamTable> with AutomaticKeepAliveClientMixi
   static const double rowHeight = 40.0; // change this later to be dynamic, but I know that the rows are all 50
   static const double headerHeight = 50;
 
-  void initializeInfiniteAnimation() {
-    _animationHasEverBeenInitialized = true;
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: widget.teams.length * _scrollSpeed),
-    )
-      ..addListener(() {
-        double resetPosition = widget.teams.length * rowHeight; // Position where the second table starts
-        double currentScroll = _animationController.value * resetPosition * 2; // Scrolling through double the data
+  bool _nthSwitch = false;
 
-        if (currentScroll >= resetPosition) {
-          _animationController.forward(from: 0.0);
-        } else {
-          if (_scrollController.hasClients) {
-            _scrollController.jumpTo(currentScroll);
+  void toggleNth() {
+    setState(() {
+      _nthSwitch = !_nthSwitch;
+    });
+  }
+
+  void initializeInfiniteAnimation() {
+    if (widget.teams.isNotEmpty) {
+      _animationHasEverBeenInitialized = true;
+      _animationController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: (widget.teams.isEmpty ? 1 : widget.teams.length) * _scrollSpeed),
+      )
+        ..addListener(() {
+          double resetPosition = widget.teams.length * rowHeight; // Position where the second table starts
+          double currentScroll = _animationController.value * resetPosition * 2; // Scrolling through double the data
+
+          if (currentScroll >= resetPosition && _scrollController.hasClients && widget.teams.isNotEmpty) {
+            if (widget.teams.length.isOdd) {
+              toggleNth();
+            }
+            _animationController.forward(from: 0.0);
+          } else {
+            if (_scrollController.hasClients) {
+              _scrollController.jumpTo(currentScroll);
+            }
           }
-        }
-      })
-      ..repeat();
+        })
+        ..repeat();
+    }
   }
 
   @override
@@ -59,28 +72,17 @@ class _TeamTableState extends State<TeamTable> with AutomaticKeepAliveClientMixi
     super.initState();
 
     _scrollController = ScrollController();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.teams.isNotEmpty) {
-        initializeInfiniteAnimation();
-        _animationInitialized = true;
-      } else {
-        _animationInitialized = false;
-      }
-    });
+    initializeInfiniteAnimation();
   }
 
   @override
   void didUpdateWidget(covariant TeamTable oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget != oldWidget) {
-      if (widget.teams.isNotEmpty) {
-        if (!_animationInitialized) {
+      if (!listEquals(widget.teams, oldWidget.teams)) {
+        if (!_animationHasEverBeenInitialized) {
           initializeInfiniteAnimation();
-          _animationInitialized = true;
         }
-      } else {
-        _animationInitialized = false;
       }
     }
   }
@@ -159,11 +161,16 @@ class _TeamTableState extends State<TeamTable> with AutomaticKeepAliveClientMixi
   }
 
   Widget _buildRow(double rankWidth, double teamWidth, Team team, Color rowColor, int rounds) {
+    String rankString = team.ranking.toString();
+    if (team.ranking < 1) {
+      rankString = "";
+    }
+
     return SizedBox(
       height: rowHeight,
       child: Row(
         children: [
-          _buildCell(team.ranking.toString(), backgroundColor: rowColor, textColor: Colors.black, width: rankWidth),
+          _buildCell(rankString, backgroundColor: rowColor, textColor: Colors.black, width: rankWidth),
           _buildCell(team.teamName, backgroundColor: rowColor, textColor: Colors.black, width: teamWidth),
           ..._getRoundScores(team, rowColor),
         ],
@@ -181,7 +188,7 @@ class _TeamTableState extends State<TeamTable> with AutomaticKeepAliveClientMixi
           rankWidth,
           teamWidth,
           teams[index % teams.length],
-          index.isEven ? Colors.white : nthRowColor,
+          (_nthSwitch ? index.isEven : index.isOdd) ? Colors.white : nthRowColor,
           widget.rounds,
         );
       },

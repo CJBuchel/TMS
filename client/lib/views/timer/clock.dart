@@ -10,7 +10,8 @@ import 'package:just_audio/just_audio.dart';
 
 class Clock extends StatefulWidget {
   final double? fontSize;
-  const Clock({Key? key, this.fontSize}) : super(key: key);
+  final Color? overrideFontColor;
+  const Clock({Key? key, this.fontSize, this.overrideFontColor}) : super(key: key);
 
   @override
   State<Clock> createState() => _ClockState();
@@ -139,44 +140,21 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
                 ? Colors.red
                 : null; // sets it to theme default (i.e white or black depending)
 
-    if (widget.fontSize != null) {
-      return Text(
-        parseTime(_time.toDouble()),
-        style: TextStyle(
-          fontSize: widget.fontSize,
-          color: timerColor,
-          fontFamily: "lcdbold",
-        ),
-      );
-    }
+    double fontSize = widget.fontSize != null
+        ? widget.fontSize!
+        : Responsive.isDesktop(context)
+            ? 300
+            : Responsive.isTablet(context)
+                ? 200
+                : 80;
 
-    if (Responsive.isDesktop(context)) {
-      return Text(
-        parseTime(_time.toDouble()),
-        style: TextStyle(
-          fontSize: 300,
-          color: timerColor,
-          fontFamily: "lcdbold",
-        ),
-      );
-    } else if (Responsive.isTablet(context)) {
-      return Text(
-        parseTime(_time.toDouble()),
-        style: TextStyle(
-          fontSize: 200,
-          color: timerColor,
-          fontFamily: "lcdbold",
-        ),
-      );
-    } else {
-      return Text(
-        parseTime(_time.toDouble()),
-        style: TextStyle(
-          fontSize: 80,
-          color: timerColor,
-          fontFamily: "lcdbold",
-        ),
-      );
-    }
+    return Text(
+      parseTime(_time.toDouble()),
+      style: TextStyle(
+        fontSize: fontSize,
+        color: widget.overrideFontColor ?? timerColor,
+        fontFamily: "lcdbold",
+      ),
+    );
   }
 }

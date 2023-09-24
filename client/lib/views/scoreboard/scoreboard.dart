@@ -6,6 +6,7 @@ import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/scoreboard/judge_info.dart';
 import 'package:tms/views/scoreboard/match_info.dart';
 import 'package:tms/views/scoreboard/team_table.dart';
 import 'package:tms/views/shared/tool_bar.dart';
@@ -167,6 +168,45 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
     }
   }
 
+  Widget getJudgeInfo() {
+    if (!Responsive.isMobile(context)) {
+      double edgeInset = Responsive.isDesktop(context)
+          ? 50
+          : Responsive.isTablet(context)
+              ? 20
+              : 0;
+      // if table has data display otherwise
+      return Padding(
+        padding: EdgeInsets.fromLTRB(edgeInset, 0, edgeInset, 0),
+        child: const JudgeInfo(),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget getMatchInfo() {
+    // only display if not mobile
+    if (!Responsive.isMobile(context)) {
+      double edgeInset = Responsive.isDesktop(context)
+          ? 50
+          : Responsive.isTablet(context)
+              ? 20
+              : 0;
+      // if table has data display otherwise
+      return Padding(
+        padding: EdgeInsets.fromLTRB(edgeInset, 0, edgeInset, 0),
+        child: MatchInfo(
+          alwaysMatchInfo: _alwaysMatchInfo,
+          teams: _teamData ?? [],
+          matches: _matchData ?? [],
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,8 +261,9 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
           ),
 
           // main infinite table
+          // getJudgeInfo(),
           getTable(),
-          MatchInfo(alwaysMatchInfo: _alwaysMatchInfo),
+          getMatchInfo(),
         ],
       ),
     );

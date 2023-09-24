@@ -52,12 +52,17 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   bool checkSetNextMatch(String thisTable, GameMatch match) {
     if (_locked) {
       if (_matches.isNotEmpty && _teams.isNotEmpty) {
-        if ((match.onTableFirst.table == thisTable && !match.onTableFirst.scoreSubmitted) ||
-            (match.onTableSecond.table == thisTable && !match.onTableSecond.scoreSubmitted)) {
+        bool validFirst = match.onTableFirst.table == thisTable && !match.onTableFirst.scoreSubmitted;
+        bool validSecond = match.onTableSecond.table == thisTable && !match.onTableSecond.scoreSubmitted;
+        if (validFirst || validSecond) {
           setState(() {
             _nextMatch = match;
             _nextTeam = _teams.firstWhere((team) {
-              return team.teamNumber == _nextMatch!.onTableFirst.teamNumber || team.teamNumber == _nextMatch!.onTableSecond.teamNumber;
+              if (validFirst) {
+                return team.teamNumber == match.onTableFirst.teamNumber;
+              } else {
+                return team.teamNumber == match.onTableSecond.teamNumber;
+              }
             });
             if (_nextMatch != null && _nextTeam != null) {
               widget.onNextTeamMatch(_nextTeam!, _nextMatch!);

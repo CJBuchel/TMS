@@ -183,7 +183,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
                         ),
                       ),
                       width: (constraints.maxWidth / 100) * 40,
-                      child: Center(child: Text("Match: ${getLoadedMatches()} / ${widget.matches.length}", style: TextStyle(fontSize: fontSize))),
+                      child: Center(child: Text("Match: ${getLoadedMatches()}", style: TextStyle(fontSize: fontSize))),
                     )
                   ],
                 ),

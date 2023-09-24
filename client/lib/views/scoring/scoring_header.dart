@@ -331,6 +331,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
                 onTap: () {
                   Logger().i("Switch Table");
                   RefereeTableUtil.setTable("").then((v) {
+                    Navigator.pop(context);
                     Navigator.popAndPushNamed(context, "/referee/table_setup");
                   });
                 },

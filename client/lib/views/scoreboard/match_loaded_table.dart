@@ -20,10 +20,10 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
   bool get wantKeepAlive => true;
 
   final double _tableWidth = 100;
-  final double _headerHeight = 25;
-  final double _rowHeight = 35;
+  final double _headerHeight = 24;
+  final double _rowHeight = 48;
 
-  final int _scrollSpeed = 3;
+  final int _scrollSpeed = 5;
   late ScrollController _scrollController;
   late AnimationController _animationController;
 
@@ -138,14 +138,14 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
 
     return Container(
       height: _rowHeight,
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.black,
-            width: 1,
-          ),
-        ),
-      ),
+      // decoration: const BoxDecoration(
+      //   border: Border(
+      //     bottom: BorderSide(
+      //       color: Colors.black,
+      //       width: 1,
+      //     ),
+      //   ),
+      // ),
       child: Row(
         children: [
           _buildCell(table.table, width: _tableWidth, backgroundColor: rowColor, textColor: Colors.black),

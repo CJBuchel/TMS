@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
@@ -60,6 +61,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
   Event? _eventData;
   List<Team>? _teamData;
   List<GameMatch>? _matchData;
+  List<JudgingSession>? _judgingData;
 
   bool _alwaysMatchInfo = false;
   bool _alwaysJudgeInfo = false;
@@ -72,30 +74,59 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
     }
   }
 
-  void setTeams(List<Team> teams) {
+  void setTeams(List<Team> teams) async {
     if (mounted) {
-      setState(() {
-        _teamData = teams;
-      });
+      if (!listEquals(_teamData, teams)) {
+        setState(() {
+          _teamData = teams;
+        });
+      }
     }
   }
 
-  void setMatches(List<GameMatch> matches) {
+  void setMatches(List<GameMatch> matches) async {
     if (mounted) {
-      setState(() {
-        _matchData = matches;
-      });
+      // check for equality
+      if (!listEquals(_matchData, matches)) {
+        setState(() {
+          _matchData = matches;
+        });
+      }
+    }
+  }
+
+  void setJudgingSessions(List<JudgingSession> sessions) async {
+    if (mounted) {
+      // check for equality
+      if (!listEquals(_judgingData, sessions)) {
+        setState(() {
+          _judgingData = sessions;
+        });
+      }
     }
   }
 
   @override
   void initState() {
     super.initState();
-    onEventUpdate((event) => setEvent(event));
-    onTeamsUpdate((teams) => setTeams(teams));
-    onMatchesUpdate((matches) => setMatches(matches));
+    onEventUpdate((event) async => setEvent(event));
+    onTeamsUpdate((teams) async => setTeams(teams));
+    onMatchesUpdate((matches) async => setMatches(matches));
+    onJudgingSessionsUpdate((sessions) async => setJudgingSessions(sessions));
 
-    onMatchUpdate((m) {
+    onJudgingSessionUpdate((j) async {
+      // find judging session and update it
+      int idx = _judgingData?.indexWhere((session) => session.sessionNumber == j.sessionNumber) ?? -1;
+      if (idx != -1) {
+        if (mounted) {
+          setState(() {
+            _judgingData?[idx] = j;
+          });
+        }
+      }
+    });
+
+    onMatchUpdate((m) async {
       // find match and update it
       int idx = _matchData?.indexWhere((match) => match.matchNumber == m.matchNumber) ?? -1;
       if (idx != -1) {
@@ -107,7 +138,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
       }
     });
 
-    onTeamUpdate((t) {
+    onTeamUpdate((t) async {
       // find team and update it
       int idx = _teamData?.indexWhere((team) => team.teamNumber == t.teamNumber) ?? -1;
       if (idx != -1) {
@@ -119,13 +150,13 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
       }
     });
 
-    ScoreboardUtil.getAlwaysMatchSchedule().then((value) {
+    ScoreboardUtil.getAlwaysMatchSchedule().then((value) async {
       setState(() {
         _alwaysMatchInfo = value;
       });
     });
 
-    ScoreboardUtil.getAlwaysJudgeSchedule().then((value) {
+    ScoreboardUtil.getAlwaysJudgeSchedule().then((value) async {
       setState(() {
         _alwaysJudgeInfo = value;
       });
@@ -178,7 +209,12 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
       // if table has data display otherwise
       return Padding(
         padding: EdgeInsets.fromLTRB(edgeInset, 0, edgeInset, 0),
-        child: const JudgeInfo(),
+        child: JudgeInfo(
+          alwaysJudgeSchedule: _alwaysJudgeInfo,
+          judgingSessions: _judgingData ?? [],
+          teams: _teamData ?? [],
+          event: _eventData,
+        ),
       );
     } else {
       return const SizedBox.shrink();
@@ -200,6 +236,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
           alwaysMatchInfo: _alwaysMatchInfo,
           teams: _teamData ?? [],
           matches: _matchData ?? [],
+          event: _eventData,
         ),
       );
     } else {
@@ -261,7 +298,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
           ),
 
           // main infinite table
-          // getJudgeInfo(),
+          getJudgeInfo(),
           getTable(),
           getMatchInfo(),
         ],

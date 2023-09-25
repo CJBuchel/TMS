@@ -136,22 +136,15 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
       }
     }
 
-    return Container(
+    return SizedBox(
       height: _rowHeight,
-      // decoration: const BoxDecoration(
-      //   border: Border(
-      //     bottom: BorderSide(
-      //       color: Colors.black,
-      //       width: 1,
-      //     ),
-      //   ),
-      // ),
       child: Row(
         children: [
           _buildCell(table.table, width: _tableWidth, backgroundColor: rowColor, textColor: Colors.black),
           Expanded(
-              child: _buildCell(tmpTeam != null ? "${tmpTeam.teamNumber} | ${tmpTeam.teamName}" : "",
-                  backgroundColor: rowColor, textColor: Colors.black)),
+            child:
+                _buildCell(tmpTeam != null ? "${tmpTeam.teamNumber} | ${tmpTeam.teamName}" : "", backgroundColor: rowColor, textColor: Colors.black),
+          ),
         ],
       ),
     );
@@ -161,7 +154,7 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
     // build list view
     return ListView.builder(
       controller: _scrollController,
-      itemCount: (_tables.length.isOdd ? _tables.length + 1 : _tables.length) * 2,
+      itemCount: _tables.length * 2,
       itemBuilder: (context, index) {
         return _buildRow(
           widget.teams,

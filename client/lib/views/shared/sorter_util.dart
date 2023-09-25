@@ -39,3 +39,16 @@ List<Team> sortTeamsByRank(List<Team> teams) {
     return teams;
   }
 }
+
+List<JudgingSession> sortJudgingByTime(List<JudgingSession> judging) {
+  judging.sort((a, b) {
+    final aTime = _parseStringTime(a.startTime);
+    final bTime = _parseStringTime(b.startTime);
+    if (aTime != null && bTime != null) {
+      return aTime.compareTo(bTime);
+    } else {
+      return 0;
+    }
+  });
+  return judging;
+}

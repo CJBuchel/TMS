@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
@@ -112,6 +113,64 @@ class ScoringFooter extends StatelessWidget {
     );
   }
 
+  void postScoresheet(TeamGameScore scoresheet, BuildContext context) {
+    RefereeTableUtil.getRefereeTable().then((refereeTable) {
+      // send to server
+      postTeamGameScoresheetRequest(nextTeam!.teamNumber, scoresheet).then((teamSubmitStatus) {
+        if (teamSubmitStatus == HttpStatus.ok) {
+          // update match
+          if (locked) {
+            GameMatch updatedGameMatch = nextMatch!;
+            if (updatedGameMatch.onTableFirst.table == refereeTable.item2) {
+              updatedGameMatch.onTableFirst.scoreSubmitted = true;
+            } else if (updatedGameMatch.onTableSecond.table == refereeTable.item2) {
+              updatedGameMatch.onTableSecond.scoreSubmitted = true;
+            } else {
+              showSubmitErrorDialog(context, "This table does not match the expected table for this match");
+              return;
+            }
+
+            updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
+              if (matchUpdateStatus == HttpStatus.ok) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Row(
+                      children: [
+                        Icon(Icons.check, color: Colors.green),
+                        SizedBox(width: 16),
+                        Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                    backgroundColor: Colors.blueGrey[800],
+                  ),
+                );
+                onSubmit();
+              } else {
+                showStatusError(context, matchUpdateStatus);
+              }
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Row(
+                  children: [
+                    Icon(Icons.check, color: Colors.green),
+                    SizedBox(width: 16),
+                    Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+                backgroundColor: Colors.blueGrey[800],
+              ),
+            );
+            onSubmit();
+          }
+        } else {
+          showStatusError(context, teamSubmitStatus);
+        }
+      });
+    });
+  }
+
   void submitScoresheet(BuildContext context) {
     if (nextMatch == null || nextTeam == null) return;
     RefereeTableUtil.getRefereeTable().then((refereeTable) {
@@ -134,48 +193,13 @@ class ScoringFooter extends StatelessWidget {
         scoresheet: innerScoresheet,
       );
 
-      // send to server
-      postTeamGameScoresheetRequest(nextTeam!.teamNumber, scoresheet).then((teamSubmitStatus) {
-        if (teamSubmitStatus == HttpStatus.ok) {
-          // update match
-          GameMatch updatedGameMatch = nextMatch!;
-          if (updatedGameMatch.onTableFirst.table == refereeTable.item2) {
-            updatedGameMatch.onTableFirst.scoreSubmitted = true;
-          } else if (updatedGameMatch.onTableSecond.table == refereeTable.item2) {
-            updatedGameMatch.onTableSecond.scoreSubmitted = true;
-          } else {
-            showSubmitErrorDialog(context, "This table does not match the expected table for this match");
-            return;
-          }
-
-          updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
-            if (matchUpdateStatus == HttpStatus.ok) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Row(
-                    children: [
-                      Icon(Icons.check, color: Colors.green),
-                      SizedBox(width: 16),
-                      Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
-                    ],
-                  ),
-                  backgroundColor: Colors.blueGrey[800],
-                ),
-              );
-              onSubmit();
-            } else {
-              showStatusError(context, matchUpdateStatus);
-            }
-          });
-        } else {
-          showStatusError(context, teamSubmitStatus);
-        }
-      });
+      postScoresheet(scoresheet, context);
     });
   }
 
   void submitNoShow(BuildContext context) {
     // build scoresheet and send to server
+    if (nextMatch == null || nextTeam == null) return;
     RefereeTableUtil.getRefereeTable().then((refereeTable) {
       GameScoresheet innerScoresheet = GameScoresheet(
         answers: [],
@@ -195,47 +219,7 @@ class ScoringFooter extends StatelessWidget {
         scoresheet: innerScoresheet,
       );
 
-      // send to server
-      postTeamGameScoresheetRequest(nextTeam!.teamNumber, scoresheet).then((teamSubmitStatus) {
-        if (teamSubmitStatus == HttpStatus.ok) {
-          // update match
-          GameMatch updatedGameMatch = nextMatch!;
-          if (updatedGameMatch.onTableFirst.table == refereeTable.item2) {
-            updatedGameMatch.onTableFirst.scoreSubmitted = true;
-          } else if (updatedGameMatch.onTableSecond.table == refereeTable.item2) {
-            updatedGameMatch.onTableSecond.scoreSubmitted = true;
-          } else {
-            showSubmitErrorDialog(context, "This table does not match the expected table for this match");
-            return;
-          }
-
-          if (locked) {
-            updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
-              if (matchUpdateStatus == HttpStatus.ok) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Row(
-                      children: [
-                        Icon(Icons.check, color: Colors.green),
-                        SizedBox(width: 16),
-                        Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                    backgroundColor: Colors.blueGrey[800],
-                  ),
-                );
-                onSubmit();
-              } else {
-                showStatusError(context, matchUpdateStatus);
-              }
-            });
-          } else {
-            onSubmit();
-          }
-        } else {
-          showStatusError(context, teamSubmitStatus);
-        }
-      });
+      postScoresheet(scoresheet, context);
     });
   }
 

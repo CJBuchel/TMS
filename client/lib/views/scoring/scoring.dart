@@ -28,7 +28,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
   final ScrollController _scrollController = ScrollController();
   List<ScoreAnswer> _answers = [];
   int _score = 0;
-  bool _locked = false;
+  bool _locked = true;
   String _publicComment = "";
   String _privateComment = "";
   List<ScoreError> _errors = [];

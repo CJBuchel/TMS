@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/match_control/ttl_clock.dart';
+import 'package:tms/views/scoreboard/match_info_table.dart';
 import 'package:tms/views/scoreboard/match_loaded_table.dart';
 import 'package:tms/views/shared/sorter_util.dart';
 import 'package:tms/views/timer/clock.dart';
@@ -18,8 +20,9 @@ class MatchInfo extends StatefulWidget {
   final bool alwaysMatchInfo;
   final List<Team> teams;
   final List<GameMatch> matches;
+  final Event? event;
   final double? height;
-  const MatchInfo({Key? key, required this.alwaysMatchInfo, required this.teams, required this.matches, this.height}) : super(key: key);
+  const MatchInfo({Key? key, required this.alwaysMatchInfo, required this.teams, required this.matches, this.event, this.height}) : super(key: key);
 
   @override
   State<MatchInfo> createState() => _MatchInfoState();
@@ -32,7 +35,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
   List<OnTable> _loadedSecondTables = []; // second set of tables
   List<GameMatch> _loadedMatches = [];
 
-  void setLoadedInfo(List<GameMatch> matches) {
+  void setLoadedInfo(List<GameMatch> matches) async {
     // set first set of tables
     List<OnTable> loadedFirst = [];
     List<OnTable> loadedSecond = [];
@@ -69,7 +72,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
     }
 
     // match info
-    autoSubscribe("match", (m) {
+    autoSubscribe("match", (m) async {
       if (m.subTopic == "load") {
         if (m.message.isNotEmpty) {
           // on load
@@ -129,7 +132,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
 
   Widget getLoadedInfo(double height) {
     double fontSize = Responsive.isDesktop(context)
-        ? 20
+        ? 25
         : Responsive.isTablet(context)
             ? 10
             : 8;
@@ -223,11 +226,82 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
     );
   }
 
+  Widget getMatchInfo(double height) {
+    double fontSize = Responsive.isDesktop(context)
+        ? 25
+        : Responsive.isTablet(context)
+            ? 10
+            : 8;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          height: height,
+          width: constraints.maxWidth,
+          child: Column(
+            children: [
+              // header row
+
+              SizedBox(
+                height: 40,
+                child: Row(
+                  children: [
+                    // header title
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xff4FC3A1),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                          top: BorderSide(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      width: (constraints.maxWidth / 100) * 60,
+                      child: Center(child: Text("Match Schedule", style: TextStyle(fontSize: fontSize))),
+                    ),
+
+                    // ttl
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xff324960),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                          top: BorderSide(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      width: (constraints.maxWidth / 100) * 40,
+                      child: Center(child: TTLClock(matches: widget.matches, fontSize: fontSize)),
+                    ),
+                  ],
+                ),
+              ),
+
+              // next set of matches
+              Expanded(
+                child: MatchInfoTable(matches: widget.matches, teams: widget.teams),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // return getLoadedInfo(widget.height ?? 160);
     if (_currentState == MatchInfoState.info) {
-      return const Text("Info");
+      return getMatchInfo(widget.height ?? 160);
     } else if (_currentState == MatchInfoState.loadedInfo) {
       return getLoadedInfo(widget.height ?? 160);
     } else {

@@ -32,16 +32,20 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
         }
       }
 
-      setState(() {
-        _tableMatches = tableMatches;
-      });
+      if (mounted) {
+        setState(() {
+          _tableMatches = tableMatches;
+        });
+      }
     });
   }
 
   void setTeams(List<Team> teams) {
-    setState(() {
-      _teams = teams;
-    });
+    if (mounted) {
+      setState(() {
+        _teams = teams;
+      });
+    }
   }
 
   @override
@@ -51,26 +55,32 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
     onTeamsUpdate((teams) => setTeams(teams));
 
     RefereeTableUtil.getTable().then((thisTable) {
-      setState(() {
-        _thisTable = thisTable;
-      });
+      if (mounted) {
+        setState(() {
+          _thisTable = thisTable;
+        });
+      }
     });
 
     onMatchUpdate((m) {
       var index = _tableMatches.indexWhere((match) => match.matchNumber == m.matchNumber);
       if (index != -1) {
-        setState(() {
-          _tableMatches[index] = m;
-        });
+        if (mounted) {
+          setState(() {
+            _tableMatches[index] = m;
+          });
+        }
       }
     });
 
     onTeamUpdate((t) {
       var index = _teams.indexWhere((team) => team.teamNumber == t.teamNumber);
       if (index != -1) {
-        setState(() {
-          _teams[index] = t;
-        });
+        if (mounted) {
+          setState(() {
+            _teams[index] = t;
+          });
+        }
       }
     });
 
@@ -91,15 +101,19 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
 
           // check if the loaded matches are the same
           if (!listEquals(_loadedMatches, loadedMatches)) {
-            setState(() {
-              _loadedMatches = loadedMatches;
-            });
+            if (mounted) {
+              setState(() {
+                _loadedMatches = loadedMatches;
+              });
+            }
           }
         }
       } else if (m.subTopic == "unload") {
-        setState(() {
-          _loadedMatches = [];
-        });
+        if (mounted) {
+          setState(() {
+            _loadedMatches = [];
+          });
+        }
       }
     });
 

@@ -237,7 +237,12 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
           height: constraints.maxHeight,
           width: constraints.maxWidth,
           color: Colors.white,
-          child: const Center(),
+          child: const Center(
+            child: Text(
+              "No Sessions",
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+          ),
         );
       } else {
         return SizedBox(

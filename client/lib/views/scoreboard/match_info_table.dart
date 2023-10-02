@@ -93,7 +93,11 @@ class MatchInfoTable extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (futureMatches.isEmpty || teams.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return Container(
+            color: Colors.white,
+            height: constraints.maxHeight,
+            child: const Center(child: Text("No Matches", style: TextStyle(fontSize: 20, color: Colors.black))),
+          );
         } else {
           return SizedBox(
             height: constraints.maxHeight,

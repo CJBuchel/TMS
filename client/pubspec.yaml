@@ -44,6 +44,7 @@ dependencies:
   csv: ^5.0.2
   just_audio: ^0.9.35
   syncfusion_flutter_pdfviewer: ^21.2.10
+  multiselect: ^0.1.0
 
 dev_dependencies:
   flutter_test:

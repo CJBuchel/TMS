@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/parse_util.dart';
@@ -35,10 +36,12 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
   bool get wantKeepAlive => true;
 
   JudgeInfoState _currentState = JudgeInfoState.none;
+  List<JudgingSession> _futureJudgingSessions = [];
+  Timer? _timer;
 
   final double _mainCellWidth = 400;
-
   final int _scrollSpeed = 25;
+
   late ScrollController _scrollController;
   late AnimationController _animationController;
 
@@ -67,6 +70,28 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
     }
   }
 
+  void setFutureJudgingSessions() {
+    List<JudgingSession> sessions = [];
+
+    for (var session in widget.judgingSessions) {
+      DateTime? endTime = parseStringTime(session.endTime);
+
+      if (endTime != null) {
+        if (endTime.isAfter(DateTime.now())) {
+          sessions.add(session);
+        }
+      }
+    }
+
+    sessions = sortJudgingByTime(sessions);
+
+    if (!listEquals(sessions, _futureJudgingSessions)) {
+      setState(() {
+        _futureJudgingSessions = sessions;
+      });
+    }
+  }
+
   @override
   void didUpdateWidget(covariant JudgeInfo oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -89,6 +114,12 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
   void initState() {
     super.initState();
 
+    setFutureJudgingSessions();
+
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      setFutureJudgingSessions();
+    });
+
     _scrollController = ScrollController();
     initializeInfiniteAnimation();
 
@@ -99,6 +130,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
 
   @override
   void dispose() {
+    _timer?.cancel();
     _scrollController.dispose();
     if (_animationHasBeenInitialized) {
       _animationController.dispose();
@@ -197,18 +229,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
 
   Widget getJudgingTable() {
     // get the judging sessions that should be after the current system time
-    List<JudgingSession> futureJudgingSessions = [];
-    for (var session in widget.judgingSessions) {
-      DateTime? startTime = parseStringTime(session.startTime);
-
-      if (startTime != null) {
-        if (startTime.isAfter(DateTime.now())) {
-          futureJudgingSessions.add(session);
-        }
-      }
-    }
-
-    futureJudgingSessions = sortJudgingByTime(futureJudgingSessions);
+    List<JudgingSession> futureJudgingSessions = sortJudgingByTime(_futureJudgingSessions);
     int itemCount = 3;
     return LayoutBuilder(builder: ((context, constraints) {
       if (futureJudgingSessions.isEmpty || widget.teams.isEmpty) {
@@ -273,7 +294,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
                       ),
                     ),
                     width: (constraints.maxWidth / 100) * 60,
-                    child: Center(child: Text("Judging Schedule", style: TextStyle(fontSize: fontSize))),
+                    child: Center(child: Text("Judging Schedule", style: TextStyle(fontSize: fontSize, color: Colors.white))),
                   ),
 
                   // ttl
@@ -292,7 +313,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
                       ),
                     ),
                     width: (constraints.maxWidth / 100) * 40,
-                    child: Center(child: Text("TTL: N/A", style: TextStyle(fontSize: fontSize))),
+                    child: Center(child: Text("TTL: N/A", style: TextStyle(fontSize: fontSize, color: Colors.white))),
                   ),
                 ],
               ),

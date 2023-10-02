@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
@@ -227,8 +226,13 @@ class ScoringFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isValidSubmit = errors.isEmpty && nextMatch != null && nextTeam != null;
     bool isValidNoShow = isValidSubmit;
+    double buttonHeight = Responsive.isDesktop(context)
+        ? 40
+        : Responsive.isTablet(context)
+            ? 40
+            : 35;
     double? fontSize = Responsive.isDesktop(context)
-        ? 25
+        ? 20
         : Responsive.isTablet(context)
             ? 16
             : null;
@@ -251,34 +255,40 @@ class ScoringFooter extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      if (isValidNoShow) {
-                        showConfirmNoShow(context).then((confirmed) {
-                          if (confirmed != null && confirmed) {
-                            submitNoShow(context);
-                          }
-                        });
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(isValidNoShow ? Colors.orange : Colors.grey),
+                  child: SizedBox(
+                    height: buttonHeight,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        if (isValidNoShow) {
+                          showConfirmNoShow(context).then((confirmed) {
+                            if (confirmed != null && confirmed) {
+                              submitNoShow(context);
+                            }
+                          });
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(isValidNoShow ? Colors.orange : Colors.grey),
+                      ),
+                      icon: Icon(Icons.no_accounts, size: fontSize),
+                      label: Text("No Show", style: TextStyle(color: Colors.white, fontSize: fontSize)),
                     ),
-                    icon: Icon(Icons.no_accounts, size: fontSize),
-                    label: Text("No Show", style: TextStyle(color: Colors.white, fontSize: fontSize)),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      onClear();
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  child: SizedBox(
+                    height: buttonHeight,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        onClear();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                      ),
+                      icon: Icon(Icons.clear, size: fontSize),
+                      label: Text("Clear", style: TextStyle(color: Colors.white, fontSize: fontSize)),
                     ),
-                    icon: Icon(Icons.clear, size: fontSize),
-                    label: Text("Clear", style: TextStyle(color: Colors.white, fontSize: fontSize)),
                   ),
                 ),
               ],
@@ -290,17 +300,20 @@ class ScoringFooter extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      if (isValidSubmit) {
-                        submitScoresheet(context);
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(isValidSubmit ? Colors.green : Colors.grey),
+                  child: SizedBox(
+                    height: buttonHeight,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        if (isValidSubmit) {
+                          submitScoresheet(context);
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(isValidSubmit ? Colors.green : Colors.grey),
+                      ),
+                      icon: Icon(Icons.send, size: fontSize),
+                      label: Text("Submit", style: TextStyle(color: Colors.white, fontSize: fontSize)),
                     ),
-                    icon: Icon(Icons.send, size: fontSize),
-                    label: Text("Submit", style: TextStyle(color: Colors.white, fontSize: fontSize)),
                   ),
                 ),
               ],

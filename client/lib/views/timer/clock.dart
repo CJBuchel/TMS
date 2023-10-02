@@ -11,7 +11,8 @@ import 'package:just_audio/just_audio.dart';
 class Clock extends StatefulWidget {
   final double? fontSize;
   final Color? overrideFontColor;
-  const Clock({Key? key, this.fontSize, this.overrideFontColor}) : super(key: key);
+  final bool? enabled;
+  const Clock({Key? key, this.fontSize, this.overrideFontColor, this.enabled}) : super(key: key);
 
   @override
   State<Clock> createState() => _ClockState();
@@ -88,44 +89,46 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
     });
 
     autoSubscribe("clock", (m) {
-      if (m.subTopic == "time") {
-        if (_TimerClockState == TimerClockState.idle) {
+      if (widget.enabled ?? true) {
+        if (m.subTopic == "time") {
+          if (_TimerClockState == TimerClockState.idle) {
+            setState(() {
+              _TimerClockState = TimerClockState.running;
+            });
+          }
+          setState(() {
+            _time = int.parse(m.message);
+          });
+        } else if (m.subTopic == "reload") {
+          getInitialTime();
+          setState(() {
+            _TimerClockState = TimerClockState.idle;
+          });
+        } else if (m.subTopic == "start") {
+          playAudio("assets/audio/start.mp3");
           setState(() {
             _TimerClockState = TimerClockState.running;
           });
+        } else if (m.subTopic == "stop") {
+          playAudio("assets/audio/stop.mp3");
+          setState(() {
+            _TimerClockState = TimerClockState.stopped;
+          });
+        } else if (m.subTopic == "endgame") {
+          playAudio("assets/audio/end-game.mp3");
+          setState(() {
+            _TimerClockState = TimerClockState.endgame;
+          });
+        } else if (m.subTopic == "pre_start") {
+          setState(() {
+            _TimerClockState = TimerClockState.preStart;
+          });
+        } else if (m.subTopic == "end") {
+          playAudio("assets/audio/end.mp3");
+          setState(() {
+            _TimerClockState = TimerClockState.ended;
+          });
         }
-        setState(() {
-          _time = int.parse(m.message);
-        });
-      } else if (m.subTopic == "reload") {
-        getInitialTime();
-        setState(() {
-          _TimerClockState = TimerClockState.idle;
-        });
-      } else if (m.subTopic == "start") {
-        playAudio("assets/audio/start.mp3");
-        setState(() {
-          _TimerClockState = TimerClockState.running;
-        });
-      } else if (m.subTopic == "stop") {
-        playAudio("assets/audio/stop.mp3");
-        setState(() {
-          _TimerClockState = TimerClockState.stopped;
-        });
-      } else if (m.subTopic == "endgame") {
-        playAudio("assets/audio/end-game.mp3");
-        setState(() {
-          _TimerClockState = TimerClockState.endgame;
-        });
-      } else if (m.subTopic == "pre_start") {
-        setState(() {
-          _TimerClockState = TimerClockState.preStart;
-        });
-      } else if (m.subTopic == "end") {
-        playAudio("assets/audio/end.mp3");
-        setState(() {
-          _TimerClockState = TimerClockState.ended;
-        });
       }
     });
   }
@@ -143,7 +146,7 @@ class _ClockState extends State<Clock> with AutoUnsubScribeMixin, LocalDatabaseM
     double fontSize = widget.fontSize != null
         ? widget.fontSize!
         : Responsive.isDesktop(context)
-            ? 300
+            ? 400
             : Responsive.isTablet(context)
                 ? 200
                 : 80;

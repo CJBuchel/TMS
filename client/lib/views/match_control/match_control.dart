@@ -10,7 +10,7 @@ import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/match_control/controls.dart';
+import 'package:tms/views/match_control/controls_desktop.dart';
 import 'package:tms/views/match_control/controls_mobile.dart';
 import 'package:tms/views/match_control/controls_shared.dart';
 import 'package:tms/views/match_control/table.dart';

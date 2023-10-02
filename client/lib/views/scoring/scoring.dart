@@ -304,8 +304,8 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
     double footerHeight = Responsive.isDesktop(context)
         ? 150
         : Responsive.isTablet(context)
-            ? 100
-            : 120;
+            ? 120
+            : 100;
 
     return Scaffold(
       appBar: TmsToolBar(),

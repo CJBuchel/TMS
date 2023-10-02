@@ -115,7 +115,13 @@ class _MatchControlMobileControlsState extends State<MatchControlMobileControls>
           if (res != HttpStatus.ok) {
             displayErrorDialog(res, context);
           } else {
-            Navigator.pop(context);
+            timerReloadRequest().then((res) {
+              if (res != HttpStatus.ok) {
+                displayErrorDialog(res, context);
+              } else {
+                Navigator.pop(context);
+              }
+            });
           }
         });
         break;

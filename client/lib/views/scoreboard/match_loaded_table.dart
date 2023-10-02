@@ -1,12 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
 
 class MatchLoadedTable extends StatefulWidget {
+  final bool? autoRowColors;
   final List<Team> teams;
   final List<OnTable> tables;
   const MatchLoadedTable({
     Key? key,
+    this.autoRowColors,
     required this.teams,
     required this.tables,
   }) : super(key: key);
@@ -136,14 +139,15 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
       }
     }
 
+    Color textColor = widget.autoRowColors ?? false ? (AppTheme.isDarkTheme ? Colors.white : Colors.black) : Colors.black;
+
     return SizedBox(
       height: _rowHeight,
       child: Row(
         children: [
-          _buildCell(table.table, width: _tableWidth, backgroundColor: rowColor, textColor: Colors.black),
+          _buildCell(table.table, width: _tableWidth, backgroundColor: rowColor, textColor: textColor),
           Expanded(
-            child:
-                _buildCell(tmpTeam != null ? "${tmpTeam.teamNumber} | ${tmpTeam.teamName}" : "", backgroundColor: rowColor, textColor: Colors.black),
+            child: _buildCell(tmpTeam != null ? "${tmpTeam.teamNumber} | ${tmpTeam.teamName}" : "", backgroundColor: rowColor, textColor: textColor),
           ),
         ],
       ),
@@ -156,10 +160,14 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
       controller: _scrollController,
       itemCount: _tables.length * 2,
       itemBuilder: (context, index) {
+        bool isNth = (_nthSwitch ? index.isEven : index.isOdd);
+        Color regularRowColor = (_nthSwitch ? index.isEven : index.isOdd) ? Colors.white : const Color.fromARGB(255, 218, 218, 218);
+        Color autoRowColor = isNth ? Theme.of(context).colorScheme.secondary.withOpacity(0.1) : Theme.of(context).splashColor;
+        Color rowColor = widget.autoRowColors ?? false ? autoRowColor : regularRowColor;
         return _buildRow(
           widget.teams,
           _tables[index % _tables.length],
-          (_nthSwitch ? index.isEven : index.isOdd) ? Colors.white : const Color.fromARGB(255, 218, 218, 218),
+          rowColor,
         );
       },
     );
@@ -169,10 +177,14 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
     return ListView.builder(
       itemCount: _tables.length,
       itemBuilder: (context, index) {
+        bool isNth = (_nthSwitch ? index.isEven : index.isOdd);
+        Color regularRowColor = (_nthSwitch ? index.isEven : index.isOdd) ? Colors.white : const Color.fromARGB(255, 218, 218, 218);
+        Color autoRowColor = isNth ? Theme.of(context).colorScheme.secondary.withOpacity(0.1) : Theme.of(context).splashColor;
+        Color rowColor = widget.autoRowColors ?? false ? autoRowColor : regularRowColor;
         return _buildRow(
           widget.teams,
           _tables[index],
-          index.isEven ? Colors.white : const Color.fromARGB(255, 218, 218, 218),
+          rowColor,
         );
       },
     );

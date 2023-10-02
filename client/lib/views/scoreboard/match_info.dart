@@ -99,6 +99,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
         setState(() {
           _loadedFirstTables = [];
           _loadedSecondTables = [];
+          _loadedMatches = [];
         });
         // on unload
         if (widget.alwaysMatchInfo) {
@@ -167,7 +168,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
                       ),
                       // color: const Color(0xff4FC3A1),
                       width: (constraints.maxWidth / 100) * 60,
-                      child: Center(child: Text("Next Match: ${getScheduledMatchTime()}", style: TextStyle(fontSize: fontSize))),
+                      child: Center(child: Text("Next Match: ${getScheduledMatchTime()}", style: TextStyle(fontSize: fontSize, color: Colors.white))),
                     ),
 
                     // match numbers
@@ -186,7 +187,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
                         ),
                       ),
                       width: (constraints.maxWidth / 100) * 40,
-                      child: Center(child: Text("Match: ${getLoadedMatches()}", style: TextStyle(fontSize: fontSize))),
+                      child: Center(child: Text("Match: ${getLoadedMatches()}", style: TextStyle(fontSize: fontSize, color: Colors.white))),
                     )
                   ],
                 ),
@@ -262,7 +263,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
                         ),
                       ),
                       width: (constraints.maxWidth / 100) * 60,
-                      child: Center(child: Text("Match Schedule", style: TextStyle(fontSize: fontSize))),
+                      child: Center(child: Text("Match Schedule", style: TextStyle(fontSize: fontSize, color: Colors.white))),
                     ),
 
                     // ttl
@@ -281,7 +282,7 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
                         ),
                       ),
                       width: (constraints.maxWidth / 100) * 40,
-                      child: Center(child: TTLClock(matches: widget.matches, fontSize: fontSize)),
+                      child: Center(child: TTLClock(matches: widget.matches, fontSize: fontSize, textColor: Colors.white)),
                     ),
                   ],
                 ),

@@ -99,6 +99,7 @@ const storeNtAuthUser = "ntAuthUser";
 const storeDarkTheme = "isDarkTheme";
 const storeRefereeTable = "refereeTable";
 const storeRefereeName = "refereeName";
+const storeTimerTableListeners = "timerTableListeners";
 const storeScoreboardAlwaysMatchSchedule = "scoreboardAlwaysMatchSchedule";
 const storeScoreboardAlwaysJudgeSchedule = "scoreboardAlwaysJudgeSchedule";
 

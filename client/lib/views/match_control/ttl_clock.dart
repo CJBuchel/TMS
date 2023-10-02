@@ -8,7 +8,8 @@ import 'package:tms/views/shared/parse_util.dart';
 class TTLClock extends StatefulWidget {
   final List<GameMatch> matches;
   final double? fontSize;
-  const TTLClock({Key? key, required this.matches, this.fontSize}) : super(key: key);
+  final Color? textColor;
+  const TTLClock({Key? key, required this.matches, this.fontSize, this.textColor}) : super(key: key);
 
   @override
   State<TTLClock> createState() => _TTLClockState();
@@ -34,6 +35,7 @@ class _TTLClockState extends State<TTLClock> {
           "TTL: ",
           style: TextStyle(
             fontSize: widget.fontSize ?? (Responsive.isDesktop(context) ? 60 : 40),
+            color: widget.textColor,
           ),
         ),
         Text(

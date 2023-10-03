@@ -1,5 +1,5 @@
 
-use schema_utils::schemas::{Mission, ScoreError};
+use fll_games::schemas::{Mission, ScoreError};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -10,12 +10,12 @@ pub struct MissionsResponse {
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct QuestionsResponse {
-  pub questions: Vec<schema_utils::schemas::Score>
+  pub questions: Vec<fll_games::schemas::Score>
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct GameResponse {
-  pub game: schema_utils::schemas::Game
+  pub game: fll_games::schemas::Game
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]

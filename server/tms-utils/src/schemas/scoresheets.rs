@@ -1,4 +1,4 @@
-use schema_utils::schemas::ScoreAnswer;
+use fll_games::schemas::ScoreAnswer;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 

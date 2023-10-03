@@ -1,4 +1,0 @@
-[submodule "ausfll-score-calculator"]
-	path = ausfll-score-calculator
-  branch = interop
-	url = https://github.com/CJBuchel/ausfll-score-calculator.git

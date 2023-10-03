@@ -28,16 +28,16 @@ List<GameMatch> sortMatchesByTime(List<GameMatch> matches) {
 }
 
 List<Team> sortTeamsByRank(List<Team> teams) {
-  Set<int> uniqueRanks = teams.map((e) => e.ranking).toSet();
+  final originalIndices = Map.fromEntries(teams.asMap().entries.map((e) => MapEntry(e.value, e.key)));
 
-  if (uniqueRanks.length == 1) {
-    return teams;
-  } else {
-    teams.sort((a, b) {
-      return a.ranking.compareTo(b.ranking);
-    });
-    return teams;
-  }
+  teams.sort((a, b) {
+    if (a.ranking == b.ranking) {
+      return originalIndices[a]!.compareTo(originalIndices[b]!);
+    }
+    return a.ranking.compareTo(b.ranking);
+  });
+
+  return teams;
 }
 
 List<JudgingSession> sortJudgingByTime(List<JudgingSession> judging) {

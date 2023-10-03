@@ -285,6 +285,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   }
 
   Future<void> _setTeams(List<Team> teams) async {
+    teams = sortTeamsByRank(teams);
     var teamJson = teams.map((e) => e.toJson()).toList();
     await _localStorage.then((value) => value.setString(storeDbTeams, jsonEncode(teamJson)));
     for (var trigger in _teamListTriggers) {

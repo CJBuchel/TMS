@@ -313,7 +313,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       var teamsString = await _localStorage.then((value) => value.getString(storeDbTeams));
       if (teamsString != null) {
         var teams = jsonDecode(teamsString).map<Team>((e) => Team.fromJson(e)).toList();
-        return teams;
+        return sortTeamsByRank(teams);
       } else {
         return _teamsDefault();
       }

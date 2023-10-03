@@ -10,6 +10,7 @@ import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/scoreboard/judge_info.dart';
 import 'package:tms/views/scoreboard/match_info.dart';
 import 'package:tms/views/scoreboard/team_table.dart';
+import 'package:tms/views/shared/sorter_util.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
 class ScoreboardUtil {
@@ -78,7 +79,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
     if (mounted) {
       if (!listEquals(_teamData, teams)) {
         setState(() {
-          _teamData = teams;
+          _teamData = sortTeamsByRank(teams);
         });
       }
     }
@@ -143,8 +144,10 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
       int idx = _teamData?.indexWhere((team) => team.teamNumber == t.teamNumber) ?? -1;
       if (idx != -1) {
         if (mounted) {
+          var teams = _teamData;
+          teams?[idx] = t;
           setState(() {
-            _teamData?[idx] = t;
+            _teamData = sortTeamsByRank(teams ?? []);
           });
         }
       }

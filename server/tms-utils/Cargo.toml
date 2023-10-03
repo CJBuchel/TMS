@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fll-games = { path = "../../fll-games" }
+fll-games = { path = "../fll-games" }
 rocket = { version = "=0.5.0-rc.3", features = ["json"] } # use command: rustup default nightly
 tokio = { version = "^1.27", features = ["macros", "sync", "rt-multi-thread"] }
 tokio-stream = "^0.1.9"

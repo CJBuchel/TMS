@@ -1,7 +1,7 @@
 use log::{error, warn};
 use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
-use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest}, schemas::{Team, create_permissions}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
+use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest}, schemas::{Team, create_permissions, rank_teams}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
 
 use crate::db::db::TmsDB;
 
@@ -72,7 +72,7 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
         // send updates to clients
         tms_clients_ws_send(SocketMessage {
           from_id: None,
-          topic: String::from("teams"),
+          topic: String::from("team"),
           sub_topic: String::from("update"),
           message: origin_team_number.clone(),
         }, clients.inner().to_owned(), None);
@@ -80,7 +80,7 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
         // send another update for the new team (if the new team number changed from origin)
         tms_clients_ws_send(SocketMessage {
           from_id: None,
-          topic: String::from("teams"),
+          topic: String::from("team"),
           sub_topic: String::from("update"),
           message: message.team_data.team_number.clone(),
         }, clients.inner().to_owned(), None);
@@ -95,6 +95,53 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
   }
 
   TmsRespond!(Status::Unauthorized)
+}
+
+// returns true if success
+fn update_rankings(db: &State<std::sync::Arc<TmsDB>>) -> bool {
+  let mut teams:Vec<Team> = vec![];
+
+  for team_raw in db.tms_data.teams.iter() {
+    let team = match team_raw {
+      Ok(team) => team.1,
+      _ => {
+        error!("Failed to get team (rankings)");
+        return false;
+      }
+    };
+    
+    teams.push(team.clone());
+  }
+
+  let ranked_teams = rank_teams(teams);
+
+  for team in ranked_teams {
+    match db.tms_data.teams.insert(team.team_number.as_bytes(), team.clone()) {
+      Ok(_) => {},
+      Err(_) => {
+        error!("Failed to update team {}", team.team_number);
+        return false;
+      }
+    }
+  }
+  true
+}
+
+#[get("/teams/update_ranking")]
+pub fn teams_update_ranking_route(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsClients>) -> TmsRouteResponse<()> {
+  match update_rankings(db) {
+    true => {
+      // send update to clients
+      tms_clients_ws_send(SocketMessage {
+        from_id: None,
+        topic: String::from("teams"),
+        sub_topic: String::from("update"),
+        message: String::from(""),
+      }, clients.inner().clone(), None);
+      TmsRespond!(Status::Ok)
+    },
+    false => TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string())
+  }
 }
 
 #[tms_private_route]
@@ -114,15 +161,23 @@ pub fn team_post_game_scoresheet_route(message: String) -> TmsRouteResponse<()> 
         // update the team in the database
         let _ = db.tms_data.teams.insert(t.team_number.as_bytes(), t.clone());
 
-        // send update to clients
-        tms_clients_ws_send(SocketMessage {
-          from_id: None,
-          topic: String::from("team"),
-          sub_topic: String::from("update"),
-          message: t.team_number.clone(),
-        }, clients.inner().clone(), None);
+        // update rankings
+        if !update_rankings(db) {
+          TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
+        } else {
 
-        TmsRespond!()
+          // send update to clients (we update all teams because the rankings may have changed)
+          tms_clients_ws_send(SocketMessage {
+            from_id: None,
+            topic: String::from("teams"),
+            sub_topic: String::from("update"),
+            message: String::from(""),
+          }, clients.inner().clone(), None);
+          
+          // good response
+          TmsRespond!()
+        }
+
       },
       None => {
         error!("Failed to get team (scoresheet post) {}", message.team_number);

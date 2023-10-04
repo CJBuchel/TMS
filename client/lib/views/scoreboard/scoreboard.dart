@@ -250,7 +250,7 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -1,24 +1,25 @@
 import 'dart:io';
 
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/match_control/controls_shared.dart';
 import 'package:tms/views/match_control/match_status.dart';
+import 'package:tms/views/match_control/staging_table.dart';
 import 'package:tms/views/match_control/timer_control.dart';
 import 'package:tms/views/match_control/ttl_clock.dart';
 import 'package:tms/views/timer/clock.dart';
 
-class MatchControlControls extends StatefulWidget {
+class MatchControlDesktopControls extends StatelessWidget {
   final BoxConstraints con;
   final List<Team> teams;
   final List<GameMatch> matches;
   final List<GameMatch> loadedMatches;
   final List<GameMatch> selectedMatches;
-  const MatchControlControls({
+
+  // constructor
+  const MatchControlDesktopControls({
     Key? key,
     required this.con,
     required this.teams,
@@ -27,47 +28,17 @@ class MatchControlControls extends StatefulWidget {
     required this.loadedMatches,
   }) : super(key: key);
 
-  @override
-  State<MatchControlControls> createState() => _MatchControlControlsState();
-}
+  final double desktopButtonHeight = 40;
+  final double tabletButtonHeight = 24;
+  final double desktopButtonTextSize = 18;
+  final double tabletButtonTextSize = 14;
 
-class _MatchControlControlsState extends State<MatchControlControls> with SingleTickerProviderStateMixin, AutoUnsubScribeMixin {
-  late AnimationController _controller; // used for blinking non signaling devices
-  final Map<String, String> _tableLoadedMatches = Map(); // tables loaded match (Table, Match Number)
-  double desktopButtonHeight = 40;
-  double tabletButtonHeight = 24;
-  double desktopButtonTextSize = 18;
-  double tabletButtonTextSize = 14;
+  getControls(double maxHeight, BuildContext context) {
+    bool isLoadable = selectedMatches.isNotEmpty && loadedMatches.isEmpty && selectedMatches.every((element) => !element.complete);
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 50),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    autoSubscribe("table", (m) {
-      // check if there is a table in the current map, add if not
-      setState(() {
-        _tableLoadedMatches[m.subTopic] = m.message;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Widget getControls(double maxHeight) {
-    bool isLoadable =
-        widget.selectedMatches.isNotEmpty && widget.loadedMatches.isEmpty && widget.selectedMatches.every((element) => !element.complete);
-
-    for (var selectedMatch in widget.selectedMatches) {
+    for (var selectedMatch in selectedMatches) {
       // find any previous matches that are complete and tables that have not submitted their scores
-      for (var previousMatch in widget.matches.where((element) => element.complete)) {
+      for (var previousMatch in matches.where((element) => element.complete)) {
         if (previousMatch.onTableFirst.table == selectedMatch.onTableFirst.table) {
           if (!previousMatch.onTableFirst.scoreSubmitted) {
             Logger().i("Match ${previousMatch.matchNumber} on table ${previousMatch.onTableSecond.table} has not submitted scores");
@@ -82,12 +53,11 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
         }
       }
     }
-    isLoadable = widget.selectedMatches.every((element) => element.gameMatchDeferred) ? false : isLoadable;
-    bool isDeferrable = widget.selectedMatches.every((element) => element.gameMatchDeferred) ? true : isLoadable;
+    isLoadable = selectedMatches.every((element) => element.gameMatchDeferred) ? false : isLoadable;
+    bool isDeferrable = selectedMatches.every((element) => element.gameMatchDeferred) ? true : isLoadable;
     bool isIncomplete = isLoadable;
-    bool isUnloadable = widget.loadedMatches.isNotEmpty;
-    bool isComplete =
-        widget.selectedMatches.isNotEmpty && widget.loadedMatches.isEmpty && widget.selectedMatches.every((element) => element.complete);
+    bool isUnloadable = loadedMatches.isNotEmpty;
+    bool isComplete = selectedMatches.isNotEmpty && loadedMatches.isEmpty && selectedMatches.every((element) => element.complete);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -110,7 +80,7 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                         ),
                         onPressed: () {
                           if (isLoadable) {
-                            loadMatch(MatchLoadStatus.load, context, widget.selectedMatches).then((value) {
+                            loadMatch(MatchLoadStatus.load, context, selectedMatches).then((value) {
                               if (value != HttpStatus.ok) {
                                 displayErrorDialog(value, context);
                               }
@@ -133,10 +103,7 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                         ),
                         onPressed: () {
                           if (isUnloadable) {
-                            setState(() {
-                              _tableLoadedMatches.clear();
-                            });
-                            loadMatch(MatchLoadStatus.unload, context, widget.loadedMatches).then((value) {
+                            loadMatch(MatchLoadStatus.unload, context, loadedMatches).then((value) {
                               if (value != HttpStatus.ok) {
                                 displayErrorDialog(value, context);
                               }
@@ -171,7 +138,7 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                 ),
               ),
               child: Center(
-                child: TTLClock(matches: widget.matches),
+                child: TTLClock(matches: matches),
               ),
             ),
           ),
@@ -192,7 +159,7 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  MatchStatus(isLoaded: widget.loadedMatches.isNotEmpty),
+                  MatchStatus(isLoaded: loadedMatches.isNotEmpty),
 
                   // buttons for match setter
                   Padding(
@@ -210,12 +177,12 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                               ),
                               onPressed: () {
                                 if (isComplete) {
-                                  updateMatch(MatchUpdateStatus.incomplete, context, widget.selectedMatches).then((value) {
+                                  updateMatch(MatchUpdateStatus.incomplete, context, selectedMatches).then((value) {
                                     if (value != HttpStatus.ok) {
                                       displayErrorDialog(value, context);
                                     }
                                   });
-                                  widget.selectedMatches.clear();
+                                  selectedMatches.clear();
                                 }
                               },
                               icon: Icon(Icons.clear, size: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize),
@@ -235,12 +202,12 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                               ),
                               onPressed: () {
                                 if (isIncomplete) {
-                                  updateMatch(MatchUpdateStatus.complete, context, widget.selectedMatches).then((value) {
+                                  updateMatch(MatchUpdateStatus.complete, context, selectedMatches).then((value) {
                                     if (value != HttpStatus.ok) {
                                       displayErrorDialog(value, context);
                                     }
                                   });
-                                  widget.selectedMatches.clear();
+                                  selectedMatches.clear();
                                 }
                               },
                               icon: Icon(Icons.check, size: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize),
@@ -265,14 +232,14 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                         ),
                         onPressed: () {
                           if (isDeferrable) {
-                            if (widget.selectedMatches.every((element) => element.gameMatchDeferred)) {
-                              updateMatch(MatchUpdateStatus.expedite, context, widget.selectedMatches).then((value) {
+                            if (selectedMatches.every((element) => element.gameMatchDeferred)) {
+                              updateMatch(MatchUpdateStatus.expedite, context, selectedMatches).then((value) {
                                 if (value != HttpStatus.ok) {
                                   displayErrorDialog(value, context);
                                 }
                               });
                             } else {
-                              updateMatch(MatchUpdateStatus.defer, context, widget.selectedMatches).then((value) {
+                              updateMatch(MatchUpdateStatus.defer, context, selectedMatches).then((value) {
                                 if (value != HttpStatus.ok) {
                                   displayErrorDialog(value, context);
                                 }
@@ -282,7 +249,7 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                         },
                         icon: Icon(Icons.hourglass_empty, size: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize),
                         label: Text(
-                            widget.selectedMatches.every((element) {
+                            selectedMatches.every((element) {
                               return element.gameMatchDeferred;
                             })
                                 ? "Expedite Match"
@@ -306,7 +273,7 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: TimerControl(
-                    loadedMatches: widget.loadedMatches,
+                    loadedMatches: loadedMatches,
                   ),
                 ),
               ],
@@ -317,38 +284,22 @@ class _MatchControlControlsState extends State<MatchControlControls> with Single
     );
   }
 
-  Widget getStagingTable() {
-    if (widget.selectedMatches.isEmpty && widget.loadedMatches.isEmpty) {
-      return const Center(child: Text("No Matches Staged", style: TextStyle(fontSize: 45)));
-    } else {
-      return DataTable2(
-        headingRowColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-          return Colors.transparent;
-        }),
-        columnSpacing: 10,
-        columns: [
-          DataColumn2(label: styledHeader("Match"), size: ColumnSize.S),
-          DataColumn2(label: styledHeader("Table")),
-          DataColumn2(label: styledHeader("Team")),
-          DataColumn2(label: styledHeader("Name"), size: ColumnSize.L),
-        ],
-        rows: getRows(widget.selectedMatches, widget.loadedMatches, widget.teams, _controller, _tableLoadedMatches),
-      );
-    }
-  }
-
   @override
-  Widget build(BuildContext context) {
-    double controlMaxHeight = (widget.con.maxHeight / 3) * 2; // 2/3 of the screen
+  build(BuildContext context) {
+    double controlMaxHeight = (con.maxHeight / 3) * 2; // 2/3 of the screen
     return Column(
       children: [
         SizedBox(
-          height: widget.con.maxHeight / 3, // 1/3 of the screen
-          child: getStagingTable(),
+          height: con.maxHeight / 3, // 1/3 of the screen
+          child: StagingTable(
+            teams: teams,
+            loadedMatches: loadedMatches,
+            selectedMatches: selectedMatches,
+          ),
         ),
         SizedBox(
           height: controlMaxHeight,
-          child: getControls(controlMaxHeight),
+          child: getControls(controlMaxHeight, context),
         )
       ],
     );

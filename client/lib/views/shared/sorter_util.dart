@@ -15,10 +15,15 @@ DateTime? _parseStringTime(String time) {
 }
 
 List<GameMatch> sortMatchesByTime(List<GameMatch> matches) {
+  final originalIndices = Map.fromEntries(matches.asMap().entries.map((e) => MapEntry(e.value, e.key)));
+
   matches.sort((a, b) {
     final aTime = _parseStringTime(a.startTime);
     final bTime = _parseStringTime(b.startTime);
     if (aTime != null && bTime != null) {
+      if (aTime == bTime) {
+        return originalIndices[a]!.compareTo(originalIndices[b]!);
+      }
       return aTime.compareTo(bTime);
     } else {
       return 0;
@@ -41,10 +46,15 @@ List<Team> sortTeamsByRank(List<Team> teams) {
 }
 
 List<JudgingSession> sortJudgingByTime(List<JudgingSession> judging) {
+  final originalIndices = Map.fromEntries(judging.asMap().entries.map((e) => MapEntry(e.value, e.key)));
+
   judging.sort((a, b) {
     final aTime = _parseStringTime(a.startTime);
     final bTime = _parseStringTime(b.startTime);
     if (aTime != null && bTime != null) {
+      if (aTime == bTime) {
+        return originalIndices[a]!.compareTo(originalIndices[b]!);
+      }
       return aTime.compareTo(bTime);
     } else {
       return 0;

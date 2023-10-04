@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/requests/timer_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/match_control/controls_shared.dart';
+import 'package:tms/views/match_control/staging_table.dart';
 import 'package:tms/views/match_control/timer_control.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 import 'package:tms/views/timer/clock.dart';
@@ -27,9 +27,7 @@ class MatchControlMobileControls extends StatefulWidget {
   State<MatchControlMobileControls> createState() => _MatchControlMobileControlsState();
 }
 
-class _MatchControlMobileControlsState extends State<MatchControlMobileControls> with SingleTickerProviderStateMixin, AutoUnsubScribeMixin {
-  late AnimationController _controller;
-  Map<String, String> _tableLoadedMatches = Map();
+class _MatchControlMobileControlsState extends State<MatchControlMobileControls> with AutoUnsubScribeMixin {
   TimerState _currentTimerState = TimerState.idle;
   @override
   void initState() {
@@ -54,44 +52,6 @@ class _MatchControlMobileControlsState extends State<MatchControlMobileControls>
         });
       }
     });
-
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 50),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    autoSubscribe("table", (m) {
-      // check if there is a table in the current map, add if not
-      setState(() {
-        _tableLoadedMatches[m.subTopic] = m.message;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Widget getStagingTable() {
-    if (widget.loadedMatches.isEmpty) {
-      return const Center(child: Text("No Matches Selected", style: TextStyle(fontSize: 20)));
-    } else {
-      return DataTable2(
-        headingRowColor: MaterialStateColor.resolveWith((Set<MaterialState> states) {
-          return Colors.transparent;
-        }),
-        columnSpacing: 10,
-        columns: [
-          DataColumn2(label: styledHeader("Match"), size: ColumnSize.S),
-          DataColumn2(label: styledHeader("Table")),
-          DataColumn2(label: styledHeader("Team")),
-          DataColumn2(label: styledHeader("Name"), size: ColumnSize.L),
-        ],
-        rows: getRows(widget.selectedMatches, widget.loadedMatches, widget.teams, _controller, _tableLoadedMatches),
-      );
-    }
   }
 
   void sendTimerStatus(TimerSendStatus status) {
@@ -234,7 +194,7 @@ class _MatchControlMobileControlsState extends State<MatchControlMobileControls>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Column(
@@ -242,7 +202,11 @@ class _MatchControlMobileControlsState extends State<MatchControlMobileControls>
               Expanded(
                 child: SizedBox(
                   height: constraints.maxHeight / 2,
-                  child: getStagingTable(),
+                  child: StagingTable(
+                    teams: widget.teams,
+                    loadedMatches: widget.loadedMatches,
+                    selectedMatches: widget.selectedMatches,
+                  ),
                 ),
               ),
               Expanded(

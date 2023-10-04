@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/views/admin/dashboard/dashboard.dart';
 import 'package:tms/views/admin/setup/setup.dart';
 import 'package:tms/views/connection.dart';
 import 'package:tms/views/match_control/match_control.dart';
@@ -53,6 +54,7 @@ class TMSApp extends StatelessWidget {
 
             // admin screens
             '/admin/setup': (context) => const Setup(),
+            '/admin/dashboard': (context) => const Dashboard(),
 
             // Referee screens
             '/referee/match_control': (context) => const MatchControl(),

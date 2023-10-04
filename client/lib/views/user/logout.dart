@@ -46,7 +46,7 @@ class LogoutState extends State<Logout> {
     }
 
     return Scaffold(
-      appBar: TmsToolBar(displayActions: false),
+      appBar: const TmsToolBar(displayActions: false),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

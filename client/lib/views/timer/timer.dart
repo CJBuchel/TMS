@@ -155,7 +155,7 @@ class _TimerState extends State<Timer> with AutoUnsubScribeMixin, LocalDatabaseM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

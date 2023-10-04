@@ -35,19 +35,22 @@ class _TimerState extends State<Timer> with AutoUnsubScribeMixin, LocalDatabaseM
     List<GameMatch> loadedMatches = [];
     bool enabled = false;
 
+    // check if tables are in the table listener list, if so add them
     for (var match in matches) {
-      // check if tables are in the table listener list, if so add them
-      if (_tableListeners.contains(match.onTableFirst.table)) {
-        loadedFirst.add(match.onTableFirst);
-      }
-
-      if (_tableListeners.contains(match.onTableSecond.table)) {
-        loadedSecond.add(match.onTableSecond);
-      }
-
-      if (_tableListeners.contains(match.onTableFirst.table) || _tableListeners.contains(match.onTableSecond.table)) {
-        loadedMatches.add(match);
-        enabled = true;
+      // split evenly
+      bool first = true;
+      for (var onTable in match.matchTables) {
+        if (_tableListeners.contains(onTable.table)) {
+          if (first) {
+            loadedFirst.add(onTable);
+            first = false;
+          } else {
+            loadedSecond.add(onTable);
+            first = true;
+          }
+          loadedMatches.add(match);
+          enabled = true;
+        }
       }
     }
 

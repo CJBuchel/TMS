@@ -328,8 +328,7 @@
         "deferred",
         "end_time",
         "match_number",
-        "on_table_first",
-        "on_table_second",
+        "match_tables",
         "round_number",
         "start_time"
       ],
@@ -349,11 +348,11 @@
         "match_number": {
           "type": "string"
         },
-        "on_table_first": {
-          "$ref": "#/definitions/OnTable"
-        },
-        "on_table_second": {
-          "$ref": "#/definitions/OnTable"
+        "match_tables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OnTable"
+          }
         },
         "round_number": {
           "type": "integer",

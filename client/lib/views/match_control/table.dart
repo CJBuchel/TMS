@@ -5,6 +5,7 @@ import 'package:tms/schema/tms_schema.dart';
 
 class MatchControlTable extends StatefulWidget {
   final BoxConstraints con;
+  final Event? event;
   final List<GameMatch> matches;
   final List<GameMatch> selectedMatches;
   final Function(List<GameMatch> selectedMatches) onSelected;
@@ -12,6 +13,7 @@ class MatchControlTable extends StatefulWidget {
   const MatchControlTable({
     Key? key,
     required this.con,
+    required this.event,
     required this.matches,
     required this.selectedMatches,
     required this.onSelected,
@@ -72,8 +74,15 @@ class _MatchControlTableState extends State<MatchControlTable> {
 
     // check if a match with the same table is already checked
     bool isSelectable = true;
-    isSelectable = widget.selectedMatches.map((e) => e.onTableFirst.table).contains(match.onTableFirst.table) ? false : isSelectable;
-    isSelectable = widget.selectedMatches.map((e) => e.onTableSecond.table).contains(match.onTableSecond.table) ? false : isSelectable;
+    for (var selectedMatch in widget.selectedMatches) {
+      for (var onTable in selectedMatch.matchTables) {
+        for (var onThisTable in match.matchTables) {
+          if (onTable.table == onThisTable.table) {
+            isSelectable = false;
+          }
+        }
+      }
+    }
     isSelectable = isSelected ? true : isSelectable;
     isSelectable = widget.loadedMatches.isNotEmpty ? false : isSelectable;
 
@@ -115,42 +124,33 @@ class _MatchControlTableState extends State<MatchControlTable> {
         if (_multiMatch && !isSelectable) const DataCell(SizedBox()),
         _styledCell(match.matchNumber, deferred: isDeferred),
         _styledCell(match.startTime, deferred: isDeferred),
-        _styledCell(
-          match.onTableFirst.table,
-          color: match.complete && !match.onTableFirst.scoreSubmitted
-              ? Colors.red
-              : !match.complete && match.onTableFirst.scoreSubmitted
-                  ? Colors.green
-                  : null,
-          deferred: isDeferred,
-        ),
-        _styledCell(
-          match.onTableFirst.teamNumber,
-          color: match.complete && !match.onTableFirst.scoreSubmitted
-              ? Colors.red
-              : !match.complete && match.onTableFirst.scoreSubmitted
-                  ? Colors.green
-                  : null,
-          deferred: isDeferred,
-        ),
-        _styledCell(
-          match.onTableSecond.table,
-          color: match.complete && !match.onTableSecond.scoreSubmitted
-              ? Colors.red
-              : !match.complete && match.onTableSecond.scoreSubmitted
-                  ? Colors.green
-                  : null,
-          deferred: isDeferred,
-        ),
-        _styledCell(
-          match.onTableSecond.teamNumber,
-          color: match.complete && !match.onTableSecond.scoreSubmitted
-              ? Colors.red
-              : !match.complete && match.onTableSecond.scoreSubmitted
-                  ? Colors.green
-                  : null,
-          deferred: isDeferred,
-        ),
+
+        // generate cells for each table
+        ...match.matchTables.expand((table) {
+          return [
+            // table cell
+            _styledCell(
+              table.table,
+              color: match.complete && !table.scoreSubmitted
+                  ? Colors.red
+                  : !match.complete
+                      ? Colors.green
+                      : null,
+              deferred: isDeferred,
+            ),
+
+            // team cell
+            _styledCell(
+              table.teamNumber,
+              color: match.complete && !table.scoreSubmitted
+                  ? Colors.red
+                  : !match.complete
+                      ? Colors.green
+                      : null,
+              deferred: isDeferred,
+            ),
+          ];
+        }),
       ],
     );
   }
@@ -171,10 +171,7 @@ class _MatchControlTableState extends State<MatchControlTable> {
           if (_multiMatch) DataColumn2(label: _styledHeader(''), size: ColumnSize.S),
           DataColumn2(label: _styledHeader('Match'), size: ColumnSize.S),
           DataColumn2(label: _styledHeader('Time')),
-          DataColumn2(label: _styledHeader('Table')),
-          DataColumn2(label: _styledHeader('Team')),
-          DataColumn2(label: _styledHeader('Table')),
-          DataColumn2(label: _styledHeader('Team')),
+          ...List.generate((widget.event?.tables.length ?? 0) * 2, (index) => const DataColumn2(label: SizedBox.shrink())),
         ],
         rows: widget.matches.map((match) {
           int idx = widget.matches.indexOf(match);
@@ -186,57 +183,63 @@ class _MatchControlTableState extends State<MatchControlTable> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Radio Buttons
-        SizedBox(
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Row(
-                children: [
-                  Radio<bool>(
-                    value: false,
-                    groupValue: _multiMatch,
-                    onChanged: (bool? value) {
-                      if (value != null) {
-                        setState(() {
-                          _multiMatch = value;
-                          widget.onSelected([]);
-                        });
-                      }
-                    },
-                  ),
-                  const Text("Single Match"),
-                ],
-              ),
-              Row(
-                children: [
-                  Radio<bool>(
-                    value: true,
-                    groupValue: _multiMatch,
-                    onChanged: (bool? value) {
-                      if (value != null) {
-                        setState(() {
-                          _multiMatch = value;
-                          widget.onSelected([]);
-                        });
-                      }
-                    },
-                  ),
-                  const Text("Multi Match"),
-                ],
-              )
-            ],
+    if (widget.event?.tables.isEmpty ?? true) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Radio Buttons
+          SizedBox(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  children: [
+                    Radio<bool>(
+                      value: false,
+                      groupValue: _multiMatch,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _multiMatch = value;
+                            widget.onSelected([]);
+                          });
+                        }
+                      },
+                    ),
+                    const Text("Single Match"),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Radio<bool>(
+                      value: true,
+                      groupValue: _multiMatch,
+                      onChanged: (bool? value) {
+                        if (value != null) {
+                          setState(() {
+                            _multiMatch = value;
+                            widget.onSelected([]);
+                          });
+                        }
+                      },
+                    ),
+                    const Text("Multi Match"),
+                  ],
+                )
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: widget.con.maxHeight - 50,
-          child: getTable(),
-        ),
-      ],
-    );
+          SizedBox(
+            height: widget.con.maxHeight - 50,
+            child: getTable(),
+          ),
+        ],
+      );
+    }
   }
 }

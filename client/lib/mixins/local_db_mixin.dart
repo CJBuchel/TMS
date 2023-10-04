@@ -345,10 +345,6 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     return [];
   }
 
-  OnTable _onTableDefault() {
-    return OnTable(scoreSubmitted: false, table: "", teamNumber: "");
-  }
-
   GameMatch _matchDefault() {
     return GameMatch(
       complete: false,
@@ -357,8 +353,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       endTime: "",
       matchNumber: "",
       roundNumber: 0,
-      onTableFirst: _onTableDefault(),
-      onTableSecond: _onTableDefault(),
+      matchTables: [],
       startTime: "",
     );
   }

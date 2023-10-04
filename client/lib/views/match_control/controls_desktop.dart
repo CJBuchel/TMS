@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/match_control/controls_shared.dart';
@@ -36,23 +35,7 @@ class MatchControlDesktopControls extends StatelessWidget {
   getControls(double maxHeight, BuildContext context) {
     bool isLoadable = selectedMatches.isNotEmpty && loadedMatches.isEmpty && selectedMatches.every((element) => !element.complete);
 
-    for (var selectedMatch in selectedMatches) {
-      // find any previous matches that are complete and tables that have not submitted their scores
-      for (var previousMatch in matches.where((element) => element.complete)) {
-        if (previousMatch.onTableFirst.table == selectedMatch.onTableFirst.table) {
-          if (!previousMatch.onTableFirst.scoreSubmitted) {
-            Logger().i("Match ${previousMatch.matchNumber} on table ${previousMatch.onTableSecond.table} has not submitted scores");
-            isLoadable = false;
-          }
-        }
-        if (previousMatch.onTableSecond.table == selectedMatch.onTableSecond.table) {
-          if (!previousMatch.onTableSecond.scoreSubmitted) {
-            Logger().i("Match ${previousMatch.matchNumber} on table ${previousMatch.onTableSecond.table} has not submitted scores");
-            isLoadable = false;
-          }
-        }
-      }
-    }
+    isLoadable = checkCompletedMatchesHaveScores(selectedMatches, matches) ? isLoadable : false;
     isLoadable = selectedMatches.every((element) => element.gameMatchDeferred) ? false : isLoadable;
     bool isDeferrable = selectedMatches.every((element) => element.gameMatchDeferred) ? true : isLoadable;
     bool isIncomplete = isLoadable;

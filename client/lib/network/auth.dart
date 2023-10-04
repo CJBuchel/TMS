@@ -81,7 +81,7 @@ class NetworkAuth {
       Logger().e(e);
     }
 
-    Logger().w("Login failed");
+    // Logger().w("Login failed");
 
     setLoginState(false);
     return false;

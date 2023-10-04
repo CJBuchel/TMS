@@ -41,7 +41,7 @@ class ScoringComments extends StatelessWidget {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Public Comment (optional)',
-                hintText: "Enter public comment, (teams may see this)",
+                hintText: "Enter public comment (teams may see this)",
               ),
               onChanged: onPublicCommentChange,
             ),
@@ -52,7 +52,7 @@ class ScoringComments extends StatelessWidget {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Private Comment (optional)',
-                hintText: "Enter private, (only judges will see this)",
+                hintText: "Enter private comment (only judges will see this)",
               ),
               onChanged: onPublicCommentChange,
             ),

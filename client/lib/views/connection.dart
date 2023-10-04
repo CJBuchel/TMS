@@ -112,7 +112,7 @@ class _ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-      appBar: TmsToolBar(displayActions: false),
+      appBar: const TmsToolBar(displayActions: false),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // y axis
         children: <Widget>[

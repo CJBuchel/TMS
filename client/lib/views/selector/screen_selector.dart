@@ -66,7 +66,7 @@ class _ScreenSelectorState extends State<ScreenSelector> with AutoUnsubScribeMix
         IntrinsicHeight(
           child: Row(
             children: [
-              // Scoreboard card
+              // Setup card
               Flexible(
                 flex: 1,
                 child: ScreenCard(
@@ -79,6 +79,23 @@ class _ScreenSelectorState extends State<ScreenSelector> with AutoUnsubScribeMix
                   ),
                   onPress: () {
                     Navigator.pushNamed(context, '/admin/setup');
+                  },
+                ),
+              ),
+
+              // Dashboard card
+              Flexible(
+                flex: 1,
+                child: ScreenCard(
+                  type: "ADMIN",
+                  title: "Dashboard",
+                  color: const Color(0xff2ACAC8),
+                  textColor: const Color(0xff3F414E),
+                  image: const Image(
+                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+                  ),
+                  onPress: () {
+                    Navigator.pushNamed(context, '/admin/dashboard');
                   },
                 ),
               ),
@@ -187,7 +204,7 @@ class _ScreenSelectorState extends State<ScreenSelector> with AutoUnsubScribeMix
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: ValueListenableBuilder<bool>(
         valueListenable: NetworkAuth.loginState,
         builder: (context, isLoggedIn, child) {

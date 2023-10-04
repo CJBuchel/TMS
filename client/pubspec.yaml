@@ -45,6 +45,7 @@ dependencies:
   just_audio: ^0.9.35
   syncfusion_flutter_pdfviewer: ^21.2.10
   multiselect: ^0.1.0
+  dropdown_search: ^5.0.6
 
 dev_dependencies:
   flutter_test:

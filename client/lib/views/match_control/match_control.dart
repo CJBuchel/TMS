@@ -176,7 +176,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: TmsToolBar(),
+        appBar: const TmsToolBar(),
         body: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             if (!Responsive.isMobile(context)) {
@@ -184,7 +184,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
                 children: [
                   SizedBox(
                     width: constraints.maxWidth / 2, // 50%
-                    child: MatchControlControls(
+                    child: MatchControlDesktopControls(
                       con: constraints,
                       teams: _teams,
                       matches: _matches,

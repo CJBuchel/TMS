@@ -308,7 +308,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
             : 100;
 
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: Container(
         decoration: BoxDecoration(color: (AppTheme.isDarkTheme ? null : Colors.lightBlue[100])),
         child: LayoutBuilder(

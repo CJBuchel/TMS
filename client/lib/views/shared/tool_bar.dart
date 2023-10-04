@@ -12,9 +12,18 @@ import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 
 class TmsToolBar extends StatefulWidget implements PreferredSizeWidget {
-  TmsToolBar({super.key, this.displayActions = true});
-
   final bool displayActions;
+  final bool displayMenuButton;
+  final VoidCallback? onBackButtonPressed;
+  final VoidCallback? onMenuButtonPressed;
+
+  const TmsToolBar({
+    super.key,
+    this.displayActions = true,
+    this.displayMenuButton = false,
+    this.onBackButtonPressed,
+    this.onMenuButtonPressed,
+  });
 
   @override
   State<TmsToolBar> createState() => _TmsToolBarState();
@@ -369,6 +378,17 @@ class _TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateM
     }
   }
 
+  Widget leading() {
+    if (Navigator.canPop(context)) {
+      return IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: widget.onBackButtonPressed ?? () => Navigator.pop(context),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (Responsive.isDesktop(context)) {
@@ -387,7 +407,41 @@ class _TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateM
       backgroundColor: Colors.blueGrey[800],
       titleTextStyle: TextStyle(fontSize: _scaledFontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
       iconTheme: IconThemeData(size: _scaledFontSize, color: Colors.white),
-      title: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: titleBar),
+
+      // back button if applicable
+      leading: leading(),
+
+      // title
+      title: LayoutBuilder(
+        builder: (context, constraints) {
+          return Row(
+            children: [
+              if (widget.displayMenuButton)
+                IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: widget.onMenuButtonPressed ?? () => Scaffold.of(context).openDrawer(),
+                ),
+
+              // This will take any remaining space and push the next widgets to the end
+              const Expanded(child: SizedBox.shrink()),
+
+              // Use a container to set a fixed width to the middle content
+              SizedBox(
+                width: constraints.maxWidth * 0.5, // Taking up to half the available space
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: titleBar,
+                ),
+              ),
+
+              // This will take any remaining space after the middle content
+              const Expanded(child: SizedBox.shrink()),
+            ],
+          );
+        },
+      ),
+
+      // right actions
       actions: getActions(),
     );
   }

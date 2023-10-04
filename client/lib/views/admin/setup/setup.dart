@@ -10,13 +10,13 @@ class Setup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (Responsive.isMobile(context)) {
-            return SingleChildScrollView(
+            return const SingleChildScrollView(
               child: Column(
-                children: const [
+                children: [
                   OfflineSetup(),
                   APISetup(),
                 ],

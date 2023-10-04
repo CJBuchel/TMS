@@ -174,17 +174,17 @@ class Network {
     var wsState = _ws.getState();
     // After the pulse has completed check the websocket state
     if (httpState != NetworkHttpConnectionState.connected || wsState != NetworkWebSocketState.connected) {
-      Logger().w("No Server Connection");
+      // Logger().w("No Server Connection");
       // If either of the protocols cannot connect, reconnect.
       if (wsState != NetworkWebSocketState.connected && httpState == NetworkHttpConnectionState.connected) {
-        Logger().i("HTTP Connected , Testing Integrity");
+        // Logger().i("HTTP Connected , Testing Integrity");
         // If the websocket is only disconnected (timeout issues or closing the app) then do an integrity check and reconnect ws
         var goodIntegrity = await _http.getPulseIntegrity(await getServerIP());
         if (goodIntegrity) {
-          Logger().i("Server Integrity Holding, Connecting WS...");
+          // Logger().i("Server Integrity Holding, Connecting WS...");
           _ws.connect(await _http.getConnectUrl());
         } else {
-          Logger().w("Websocket Could Not Reconnect (Starting Full Reconnect...)");
+          // Logger().w("Websocket Could Not Reconnect (Starting Full Reconnect...)");
           await connect();
         }
       } else {

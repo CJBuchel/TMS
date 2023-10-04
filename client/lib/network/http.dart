@@ -125,11 +125,11 @@ class NetworkHttp {
         }
       }
     } catch (e) {
-      Logger().w("Pulse Error");
+      // Logger().w("Pulse Error");
       return false;
     }
 
-    Logger().w("Pulse Integrity Error");
+    // Logger().w("Pulse Integrity Error");
     return false; // if it falls through returns false
   }
 

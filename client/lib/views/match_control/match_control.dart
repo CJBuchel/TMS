@@ -13,7 +13,7 @@ import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/match_control/controls_desktop.dart';
 import 'package:tms/views/match_control/controls_mobile.dart';
 import 'package:tms/views/match_control/controls_shared.dart';
-import 'package:tms/views/match_control/table.dart';
+import 'package:tms/views/match_control/match_table.dart';
 import 'package:tms/views/shared/sorter_util.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
@@ -206,7 +206,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
                   ),
                   SizedBox(
                     width: (constraints.maxWidth / 2), // 50%
-                    child: MatchControlTable(
+                    child: MatchTable(
                       con: constraints,
                       event: _event,
                       matches: _matches,
@@ -220,7 +220,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
             } else {
               return SizedBox(
                 width: constraints.maxWidth,
-                child: MatchControlTable(
+                child: MatchTable(
                   con: constraints,
                   event: _event,
                   matches: _matches,

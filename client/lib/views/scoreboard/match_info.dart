@@ -299,9 +299,13 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
               ),
 
               // next set of matches
-              // Expanded(
-              //   child: MatchInfoTable(matches: widget.matches, teams: widget.teams),
-              // ),
+              Expanded(
+                child: MatchInfoTable(
+                  matches: widget.matches,
+                  teams: widget.teams,
+                  event: widget.event,
+                ),
+              ),
             ],
           ),
         );

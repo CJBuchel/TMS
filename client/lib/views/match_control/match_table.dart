@@ -182,11 +182,11 @@ class _MatchTableState extends State<MatchTable> {
         child: Row(
           children: [
             // checkbox
-            if (_multiMatch) Expanded(flex: 60, child: checkbox),
+            if (_multiMatch) SizedBox(width: 50, child: checkbox),
 
             // match number
-            Expanded(
-              flex: 60,
+            SizedBox(
+              width: 50,
               child: _styledTextCell(match.matchNumber, deferred: isDeferred),
             ),
 

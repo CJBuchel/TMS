@@ -2,44 +2,33 @@ import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 
-class OnTableEdit extends StatefulWidget {
+class OnTableAdd extends StatefulWidget {
   final List<Team> teams;
   final List<GameMatch> selectedMatches;
-  final GameMatch match;
-  final OnTable onTable;
 
-  const OnTableEdit({
+  const OnTableAdd({
     Key? key,
     required this.teams,
     required this.selectedMatches,
-    required this.match,
-    required this.onTable,
   }) : super(key: key);
 
   @override
-  State<OnTableEdit> createState() => _OnTableEditState();
+  State<OnTableAdd> createState() => _OnTableAddState();
 }
 
-class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+class _OnTableAddState extends State<OnTableAdd> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+  GameMatch? _selectedMatch;
+  OnTable? _onTable;
   Event? _event;
   final List<String> _tableOptions = [];
   final List<Team> _teamsOptions = [];
-  OnTable? _onTable;
-
-  void setEvent(Event event) {
-    if (mounted) {
-      setState(() {
-        _event = event;
-      });
-      setTableOptions();
-    }
-  }
 
   void _setTableOptions() {
     if (_event != null) {
@@ -68,8 +57,9 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
     }
   }
 
-  void _setTeamsOptions() {
+  void _setTeamOptions() {
     _teamsOptions.clear();
+
     List<String> currentTeams = widget.selectedMatches.map((match) {
       return match.matchTables.map((e) => e.teamNumber).toList();
     }).expand((element) {
@@ -87,13 +77,22 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
   void setTeamOptions() {
     if (mounted) {
       setState(() {
-        _setTeamsOptions();
+        _setTeamOptions();
       });
     }
   }
 
+  void setEvent(Event event) {
+    if (mounted) {
+      setState(() {
+        _event = event;
+      });
+      setTableOptions();
+    }
+  }
+
   @override
-  void didUpdateWidget(covariant OnTableEdit oldWidget) {
+  void didUpdateWidget(covariant OnTableAdd oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget != oldWidget) {
       setTableOptions();
@@ -106,18 +105,39 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
     super.initState();
     onEventUpdate((event) => setEvent(event));
 
-    _onTable = widget.onTable; // default
+    _onTable = OnTable(scoreSubmitted: false, table: "", teamNumber: "");
+    _selectedMatch = widget.selectedMatches.isNotEmpty ? widget.selectedMatches.first : null;
 
-    _setTeamsOptions();
+    _setTeamOptions();
     _setTableOptions();
 
-    // delay 1 second, get event
     Future.delayed(const Duration(seconds: 1), () async {
       if (!await Network.isConnected()) {
         getEvent().then((event) => setEvent(event));
         setTeamOptions();
       }
     });
+  }
+
+  Widget dropdownMatchSearch() {
+    return DropdownSearch<GameMatch>(
+      items: widget.selectedMatches,
+      itemAsString: (item) => item.matchNumber,
+      dropdownDecoratorProps: const DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          labelText: "Match",
+          hintText: "Select match to add to",
+        ),
+      ),
+      onChanged: (s) {
+        if (s != null) {
+          setState(() {
+            _selectedMatch = s;
+          });
+        }
+      },
+      selectedItem: _selectedMatch ?? (widget.selectedMatches.isNotEmpty ? widget.selectedMatches.first : null),
+    );
   }
 
   Widget dropdownTableSearch() {
@@ -169,7 +189,7 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
       onChanged: (s) {
         if (s != null) {
           setState(() {
-            _onTable?.teamNumber = _teamsOptions.firstWhere((e) => e == s).teamNumber;
+            _onTable?.teamNumber = s.teamNumber;
           });
         }
       },
@@ -191,12 +211,12 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
 
   Future<int> sendUpdate() async {
     int statusCode = HttpStatus.ok;
-    if (_onTable != null) {
+    Logger().i("sending update: $_onTable, $_selectedMatch");
+    if (_onTable != null && _selectedMatch != null) {
       // update on table
-      GameMatch updatedMatch = widget.match;
-      int tableIdx = updatedMatch.matchTables.indexOf(_onTable!);
-      updatedMatch.matchTables[tableIdx] = _onTable!;
-      int res = await updateMatchRequest(widget.match.matchNumber, updatedMatch);
+      GameMatch updatedMatch = _selectedMatch!;
+      updatedMatch.matchTables.add(_onTable!);
+      int res = await updateMatchRequest(_selectedMatch!.matchNumber, updatedMatch);
       if (res != HttpStatus.ok) {
         statusCode = res;
       }
@@ -205,20 +225,28 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
     return statusCode;
   }
 
-  void _editDialog() {
+  void _addDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Center(child: Text("Editing Table for Match ${widget.match.matchNumber}")),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // selector for tables
-              Padding(padding: const EdgeInsets.all(10), child: dropdownTableSearch()),
-              // selector for teams
-              Padding(padding: const EdgeInsets.all(10), child: dropdownTeamSearch()),
-            ],
+          title: const Center(
+            child: Row(
+              children: [
+                Icon(Icons.add, color: Colors.green),
+                SizedBox(width: 10),
+                Text("Add to match?"),
+              ],
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                dropdownMatchSearch(),
+                dropdownTableSearch(),
+                dropdownTeamSearch(),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -229,17 +257,19 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
             ),
             TextButton(
               onPressed: () {
-                // update table
-                sendUpdate().then((statusCode) {
-                  if (statusCode != HttpStatus.ok) {
-                    displayErrorDialog(statusCode, context);
-                  }
+                if (_onTable?.table != "" && _onTable?.teamNumber != "") {
+                  // update table
+                  sendUpdate().then((statusCode) {
+                    if (statusCode != HttpStatus.ok) {
+                      displayErrorDialog(statusCode, context);
+                    }
+                  });
                   Navigator.of(context).pop(true);
-                });
+                }
               },
               child: const Text(
-                "Confirm",
-                style: TextStyle(color: Colors.red),
+                "Add",
+                style: TextStyle(color: Colors.green),
               ),
             ),
           ],
@@ -251,8 +281,8 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.edit, color: Colors.blue),
-      onPressed: () => _editDialog(),
+      icon: const Icon(Icons.add, color: Colors.green),
+      onPressed: () => _addDialog(),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/match_control/add_on_table.dart';
+import 'package:tms/views/match_control/delete_on_table.dart';
 import 'package:tms/views/match_control/edit_on_table.dart';
 
 class StagingTable extends StatefulWidget {
@@ -108,23 +110,40 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
     );
   }
 
-  DataRow2 _styledRow(OnTable table, String matchNumber, List<Team> teams, List<GameMatch> loadedMatches, Map<String, String> tableMap) {
+  DataRow2 _styledRow(OnTable table, GameMatch match, List<Team> teams, List<GameMatch> loadedMatches, Map<String, String> tableMap) {
     // find table in tableMap and check it's match number
     bool goodSig = false;
-    if (matchNumber == tableMap[table.table]) {
+    if (match.matchNumber == tableMap[table.table]) {
       goodSig = true;
     }
+
+    // get match
+
     return DataRow2(cells: [
-      styledCell(matchNumber, loadedMatches),
+      // delete on table
+      DataCell(
+        Center(
+          child: DeleteOnTable(
+            onTable: table,
+            match: match,
+          ),
+        ),
+      ),
+
+      // info cells
+      styledCell(match.matchNumber, loadedMatches),
       styledCell(table.table, loadedMatches, isTable: true, goodSig: goodSig),
       styledCell(table.teamNumber, loadedMatches),
       styledCell(teams.firstWhere((t) => t.teamNumber == table.teamNumber).teamName, loadedMatches),
+
+      // edit on table
       DataCell(
         Center(
           child: OnTableEdit(
             teams: widget.teams,
             onTable: table,
-            matchNumber: matchNumber,
+            match: match,
+            selectedMatches: widget.selectedMatches,
           ),
         ),
       ),
@@ -141,9 +160,31 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
     List<DataRow2> rows = [];
     for (var match in matches) {
       for (var onTable in match.matchTables) {
-        rows.add(_styledRow(onTable, match.matchNumber, teams, loadedMatches, tableMap));
+        rows.add(_styledRow(onTable, match, teams, loadedMatches, tableMap));
       }
     }
+
+    // add final row for adding another team
+    rows.add(
+      DataRow2(cells: [
+        // delete on table
+        DataCell(
+          Center(
+            child: OnTableAdd(
+              teams: widget.teams,
+              selectedMatches: widget.selectedMatches,
+            ),
+          ),
+        ),
+
+        // info cells
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+      ]),
+    );
     return rows;
   }
 
@@ -162,6 +203,7 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
         // columns
         columnSpacing: 10,
         columns: [
+          const DataColumn2(label: SizedBox.shrink()), // no title for the delete button
           DataColumn2(label: styledHeader("Match"), size: ColumnSize.S),
           DataColumn2(label: styledHeader("Table")),
           DataColumn2(label: styledHeader("Team")),

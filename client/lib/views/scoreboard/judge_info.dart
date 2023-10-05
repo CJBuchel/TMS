@@ -48,7 +48,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
   bool _animationHasBeenInitialized = false;
 
   void initializeInfiniteAnimation() {
-    if (widget.event?.pods.isNotEmpty ?? false) {
+    if ((widget.event?.pods.isNotEmpty ?? false) && !_animationHasBeenInitialized) {
       _animationHasBeenInitialized = true;
       _animationController = AnimationController(
         vsync: this,
@@ -171,7 +171,6 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
   Widget _buildRow(List<Team> teams, JudgingSession session, Color rowColor, double rowHeight, double rowWidth) {
     // first cell needs to be the time and is static
     double cellWidth = 300;
-    double mainCellWidth = 400;
     return SizedBox(
       height: rowHeight,
       width: rowWidth,
@@ -186,7 +185,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
           LayoutBuilder(
             builder: (context, constraints) {
               double availableWidth = rowWidth - cellWidth;
-              if (availableWidth < session.judgingPods.length * mainCellWidth) {
+              if (availableWidth < session.judgingPods.length * _mainCellWidth) {
                 // infinite table
                 return Container(
                   color: rowColor,
@@ -230,6 +229,8 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
   Widget getJudgingTable() {
     // get the judging sessions that should be after the current system time
     List<JudgingSession> futureJudgingSessions = sortJudgingByTime(_futureJudgingSessions);
+    // int maxItems = 3;
+    // int itemCount = futureJudgingSessions.length > maxItems ? maxItems : futureJudgingSessions.length;
     int itemCount = 3;
     return LayoutBuilder(builder: ((context, constraints) {
       if (futureJudgingSessions.isEmpty || widget.teams.isEmpty) {
@@ -251,13 +252,22 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
           child: ListView.builder(
             itemCount: itemCount,
             itemBuilder: (context, index) {
-              return _buildRow(
-                widget.teams,
-                futureJudgingSessions[index],
-                index.isEven ? Colors.white : Colors.grey[300]!,
-                constraints.maxHeight / itemCount,
-                constraints.maxWidth,
-              );
+              if (index >= futureJudgingSessions.length) {
+                // add filler if there are less than 3 sessions
+                return Container(
+                  color: index.isEven ? Colors.white : Colors.grey[300]!,
+                  height: constraints.maxHeight / itemCount,
+                  width: constraints.maxWidth,
+                );
+              } else {
+                return _buildRow(
+                  widget.teams,
+                  futureJudgingSessions[index],
+                  index.isEven ? Colors.white : Colors.grey[300]!,
+                  constraints.maxHeight / itemCount,
+                  constraints.maxWidth,
+                );
+              }
             },
           ),
         );
@@ -269,7 +279,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
     double fontSize = Responsive.isDesktop(context)
         ? 25
         : Responsive.isTablet(context)
-            ? 10
+            ? 20
             : 8;
 
     return LayoutBuilder(builder: ((context, constraints) {

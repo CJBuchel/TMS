@@ -27,8 +27,10 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
     RefereeTableUtil.getTable().then((thisTable) {
       List<GameMatch> tableMatches = [];
       for (var match in matches) {
-        if (match.onTableFirst.table == thisTable || match.onTableSecond.table == thisTable) {
-          tableMatches.add(match);
+        for (var onTable in match.matchTables) {
+          if (onTable.table == thisTable) {
+            tableMatches.add(match);
+          }
         }
       }
 
@@ -166,7 +168,7 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
 
     // check if this match is deferred
     bool isDeferred = match.gameMatchDeferred;
-    OnTable onTable = match.onTableFirst.table == _thisTable ? match.onTableFirst : match.onTableSecond;
+    OnTable onTable = match.matchTables.firstWhere((table) => table.table == _thisTable);
     Team team = _teams.firstWhere((team) => team.teamNumber == onTable.teamNumber);
 
     return DataRow2(

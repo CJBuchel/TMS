@@ -120,15 +120,18 @@ class ScoringFooter extends StatelessWidget {
           // update match
           if (locked) {
             GameMatch updatedGameMatch = nextMatch!;
-            if (updatedGameMatch.onTableFirst.table == refereeTable.item2) {
-              updatedGameMatch.onTableFirst.scoreSubmitted = true;
-            } else if (updatedGameMatch.onTableSecond.table == refereeTable.item2) {
-              updatedGameMatch.onTableSecond.scoreSubmitted = true;
-            } else {
+            bool found = false;
+            for (var onTable in updatedGameMatch.matchTables) {
+              if (onTable.table == refereeTable.item1) {
+                onTable.scoreSubmitted = true;
+                found = true;
+              }
+            }
+
+            if (!found) {
               showSubmitErrorDialog(context, "This table does not match the expected table for this match");
               return;
             }
-
             updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
               if (matchUpdateStatus == HttpStatus.ok) {
                 ScaffoldMessenger.of(context).showSnackBar(

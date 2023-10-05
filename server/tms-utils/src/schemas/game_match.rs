@@ -14,8 +14,7 @@ pub struct GameMatch {
   pub round_number: u32,
   pub start_time: String,
   pub end_time: String,
-  pub on_table_first: OnTable,
-  pub on_table_second: OnTable,
+  pub match_tables: Vec<OnTable>,
   pub complete: bool,
   pub deferred: bool,
   pub custom_match: bool

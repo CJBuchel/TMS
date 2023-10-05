@@ -13,7 +13,7 @@ import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/match_control/controls_desktop.dart';
 import 'package:tms/views/match_control/controls_mobile.dart';
 import 'package:tms/views/match_control/controls_shared.dart';
-import 'package:tms/views/match_control/table.dart';
+import 'package:tms/views/match_control/match_table.dart';
 import 'package:tms/views/shared/sorter_util.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
@@ -25,10 +25,20 @@ class MatchControl extends StatefulWidget {
 }
 
 class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+  Event? _event;
   List<GameMatch> _matches = [];
   List<GameMatch> _loadedMatches = [];
   List<GameMatch> _selectedMatches = [];
   List<Team> _teams = [];
+
+  // set event
+  void setEvent(Event event) async {
+    if (mounted) {
+      setState(() {
+        _event = event;
+      });
+    }
+  }
 
   // Set teams
   void setTeams(List<Team> teams) async {
@@ -90,6 +100,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
     super.initState();
     onTeamsUpdate((teams) => setTeams(teams));
     onMatchesUpdate((matches) => setMatches(matches));
+    onEventUpdate((event) => setEvent(event));
 
     // add notifier for disconnect (remove loaded matches if we're disconnected)
     NetworkHttp.httpState.addListener(unloadOnDisconnect);
@@ -162,6 +173,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
       if (!await Network.isConnected()) {
         getTeams().then((teams) => setTeams(teams));
         getMatches().then((matches) => setMatches(matches));
+        getEvent().then((event) => setEvent(event));
       }
     });
   }
@@ -194,8 +206,9 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
                   ),
                   SizedBox(
                     width: (constraints.maxWidth / 2), // 50%
-                    child: MatchControlTable(
+                    child: MatchTable(
                       con: constraints,
+                      event: _event,
                       matches: _matches,
                       onSelected: onSelectedMatches,
                       selectedMatches: _selectedMatches,
@@ -207,8 +220,9 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
             } else {
               return SizedBox(
                 width: constraints.maxWidth,
-                child: MatchControlTable(
+                child: MatchTable(
                   con: constraints,
+                  event: _event,
                   matches: _matches,
                   selectedMatches: _selectedMatches,
                   onSelected: onSelectedMatches,
@@ -223,22 +237,7 @@ class _MatchControlState extends State<MatchControl> with AutoUnsubScribeMixin, 
           builder: (context, constraints) {
             if (Responsive.isMobile(context)) {
               bool isLoadable = _selectedMatches.isNotEmpty && _loadedMatches.isEmpty && _selectedMatches.every((element) => !element.complete);
-
-              for (var selectedMatch in _selectedMatches) {
-                // find any previous matches that are complete and tables that have not submitted their scores
-                for (var previousMatch in _matches.where((element) => element.complete)) {
-                  if (previousMatch.onTableFirst.table == selectedMatch.onTableFirst.table) {
-                    if (!previousMatch.onTableFirst.scoreSubmitted) {
-                      isLoadable = false;
-                    }
-                  }
-                  if (previousMatch.onTableSecond.table == selectedMatch.onTableSecond.table) {
-                    if (!previousMatch.onTableSecond.scoreSubmitted) {
-                      isLoadable = false;
-                    }
-                  }
-                }
-              }
+              isLoadable = checkCompletedMatchesHaveScores(_selectedMatches, _matches) ? isLoadable : false;
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

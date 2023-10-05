@@ -471,8 +471,7 @@ class GameMatch {
         required this.gameMatchDeferred,
         required this.endTime,
         required this.matchNumber,
-        required this.onTableFirst,
-        required this.onTableSecond,
+        required this.matchTables,
         required this.roundNumber,
         required this.startTime,
     });
@@ -482,8 +481,7 @@ class GameMatch {
     bool gameMatchDeferred;
     String endTime;
     String matchNumber;
-    OnTable onTableFirst;
-    OnTable onTableSecond;
+    List<OnTable> matchTables;
     int roundNumber;
     String startTime;
 
@@ -493,8 +491,7 @@ class GameMatch {
         gameMatchDeferred: json["deferred"],
         endTime: json["end_time"],
         matchNumber: json["match_number"],
-        onTableFirst: OnTable.fromJson(json["on_table_first"]),
-        onTableSecond: OnTable.fromJson(json["on_table_second"]),
+        matchTables: List<OnTable>.from(json["match_tables"].map((x) => OnTable.fromJson(x))),
         roundNumber: json["round_number"],
         startTime: json["start_time"],
     );
@@ -505,8 +502,7 @@ class GameMatch {
         "deferred": gameMatchDeferred,
         "end_time": endTime,
         "match_number": matchNumber,
-        "on_table_first": onTableFirst.toJson(),
-        "on_table_second": onTableSecond.toJson(),
+        "match_tables": List<dynamic>.from(matchTables.map((x) => x.toJson())),
         "round_number": roundNumber,
         "start_time": startTime,
     };

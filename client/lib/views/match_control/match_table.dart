@@ -103,7 +103,10 @@ class _MatchTableState extends State<MatchTable> {
       ],
     );
 
-    return Center(child: child);
+    return Container(
+      color: color,
+      child: Center(child: child),
+    );
   }
 
   Widget _styledRow(GameMatch match, int idx) {

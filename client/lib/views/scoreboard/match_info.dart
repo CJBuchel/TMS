@@ -40,8 +40,18 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
     List<OnTable> loadedFirst = [];
     List<OnTable> loadedSecond = [];
     for (var match in matches) {
-      loadedFirst.add(match.onTableFirst);
-      loadedSecond.add(match.onTableSecond);
+      // split tables evenly and add them to each list
+      bool first = true;
+      for (var onTable in match.matchTables) {
+        // add to first set
+        if (first) {
+          loadedFirst.add(onTable);
+          first = false;
+        } else {
+          loadedSecond.add(onTable);
+          first = true;
+        }
+      }
     }
 
     setState(() {
@@ -290,7 +300,11 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
 
               // next set of matches
               Expanded(
-                child: MatchInfoTable(matches: widget.matches, teams: widget.teams),
+                child: MatchInfoTable(
+                  matches: widget.matches,
+                  teams: widget.teams,
+                  event: widget.event,
+                ),
               ),
             ],
           ),

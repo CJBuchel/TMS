@@ -133,8 +133,7 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
         endTime: endTime,
         matchNumber: matchNumber,
         roundNumber: 0,
-        onTableFirst: onTables[0],
-        onTableSecond: onTables[1],
+        matchTables: onTables,
       );
 
       matches.add(match);
@@ -148,9 +147,11 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
 
       // Check how many times each team participates
       for (var match in matches) {
-        if (match.onTableFirst.teamNumber == teamNum || match.onTableSecond.teamNumber == teamNum) {
-          numRoundsTeam++;
-          match.roundNumber = numRoundsTeam;
+        for (var onTable in match.matchTables) {
+          if (onTable.teamNumber == teamNum) {
+            numRoundsTeam++;
+            match.roundNumber = numRoundsTeam;
+          }
         }
       }
 

@@ -52,25 +52,18 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   bool checkSetNextMatch(String thisTable, GameMatch match) {
     if (_locked) {
       if (_matches.isNotEmpty && _teams.isNotEmpty) {
-        bool validFirst = match.onTableFirst.table == thisTable && !match.onTableFirst.scoreSubmitted;
-        bool validSecond = match.onTableSecond.table == thisTable && !match.onTableSecond.scoreSubmitted;
-        if (validFirst || validSecond) {
-          setState(() {
-            _nextMatch = match;
-            _nextTeam = _teams.firstWhere((team) {
-              if (validFirst) {
-                return team.teamNumber == match.onTableFirst.teamNumber;
-              } else {
-                return team.teamNumber == match.onTableSecond.teamNumber;
+        for (var onTable in match.matchTables) {
+          if (onTable.table == thisTable && !onTable.scoreSubmitted) {
+            setState(() {
+              _nextMatch = match;
+              _nextTeam = _teams.firstWhere((team) => team.teamNumber == onTable.teamNumber);
+              if (_nextMatch != null && _nextTeam != null) {
+                widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
               }
+              sendTableLoadedMatch(thisTable);
             });
-            if (_nextMatch != null && _nextTeam != null) {
-              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
-              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
-            }
-            sendTableLoadedMatch(thisTable);
-          });
-          return true;
+            return true;
+          }
         }
       }
     }
@@ -176,12 +169,14 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
           // check if any of the loaded matches match this table
           RefereeTableUtil.getTable().then((thisTable) {
             for (var match in loadedMatches) {
-              if (match.onTableFirst.table == thisTable || match.onTableSecond.table == thisTable) {
-                setState(() {
-                  _tableLoadedMatch = match;
-                  setNextTableMatch();
-                });
-                break;
+              for (var onTable in match.matchTables) {
+                if (onTable.table == thisTable) {
+                  setState(() {
+                    _tableLoadedMatch = match;
+                    setNextTableMatch();
+                  });
+                  break;
+                }
               }
             }
           });

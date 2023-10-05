@@ -68,3 +68,24 @@ Future<int> updateMatch(MatchUpdateStatus status, BuildContext context, List<Gam
 
   return statusCode;
 }
+
+// checks previous matches to see if the table has submitted their scores
+// returns false if the any of the selected matches still need to submit their scores
+bool checkCompletedMatchesHaveScores(List<GameMatch> selectedMatches, List<GameMatch> matches) {
+  for (var selectedMatch in selectedMatches) {
+    // find any previous matches that are complete
+    for (var previousMatch in matches.where((m) => m.complete)) {
+      for (var prevOnTable in previousMatch.matchTables) {
+        for (var onTable in selectedMatch.matchTables) {
+          if (prevOnTable.table == onTable.table) {
+            if (!prevOnTable.scoreSubmitted) {
+              return false;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return true;
+}

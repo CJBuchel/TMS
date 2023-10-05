@@ -140,8 +140,9 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
   ) {
     List<DataRow2> rows = [];
     for (var match in matches) {
-      rows.add(_styledRow(match.onTableFirst, match.matchNumber, teams, loadedMatches, tableMap));
-      rows.add(_styledRow(match.onTableSecond, match.matchNumber, teams, loadedMatches, tableMap));
+      for (var onTable in match.matchTables) {
+        rows.add(_styledRow(onTable, match.matchNumber, teams, loadedMatches, tableMap));
+      }
     }
     return rows;
   }

@@ -58,7 +58,7 @@ class _TimerHeaderState extends State<TimerHeader> with SingleTickerProviderStat
   }
 
   String getMatchNumbers(List<GameMatch> matches) {
-    return matches.map((m) => m.matchNumber.toString()).join(", ");
+    return matches.map((m) => m.matchNumber).join(", ");
   }
 
   Widget getLoadedMatches() {

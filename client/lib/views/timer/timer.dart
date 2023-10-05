@@ -48,10 +48,10 @@ class _TimerState extends State<Timer> with AutoUnsubScribeMixin, LocalDatabaseM
             loadedSecond.add(onTable);
             first = true;
           }
-          loadedMatches.add(match);
           enabled = true;
         }
       }
+      loadedMatches.add(match);
     }
 
     setState(() {

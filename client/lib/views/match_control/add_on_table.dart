@@ -91,12 +91,21 @@ class _OnTableAddState extends State<OnTableAdd> with AutoUnsubScribeMixin, Loca
     }
   }
 
+  void setSelectedMatch({GameMatch? match}) {
+    if (mounted) {
+      setState(() {
+        _selectedMatch = match ?? (widget.selectedMatches.isNotEmpty ? widget.selectedMatches.first : null);
+      });
+    }
+  }
+
   @override
   void didUpdateWidget(covariant OnTableAdd oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget != oldWidget) {
       setTableOptions();
       setTeamOptions();
+      setSelectedMatch();
     }
   }
 
@@ -106,14 +115,15 @@ class _OnTableAddState extends State<OnTableAdd> with AutoUnsubScribeMixin, Loca
     onEventUpdate((event) => setEvent(event));
 
     _onTable = OnTable(scoreSubmitted: false, table: "", teamNumber: "");
-    _selectedMatch = widget.selectedMatches.isNotEmpty ? widget.selectedMatches.first : null;
 
     _setTeamOptions();
     _setTableOptions();
+    setSelectedMatch();
 
     Future.delayed(const Duration(seconds: 1), () async {
       if (!await Network.isConnected()) {
         getEvent().then((event) => setEvent(event));
+        setSelectedMatch();
         setTeamOptions();
       }
     });
@@ -131,12 +141,10 @@ class _OnTableAddState extends State<OnTableAdd> with AutoUnsubScribeMixin, Loca
       ),
       onChanged: (s) {
         if (s != null) {
-          setState(() {
-            _selectedMatch = s;
-          });
+          setSelectedMatch(match: s);
         }
       },
-      selectedItem: _selectedMatch ?? (widget.selectedMatches.isNotEmpty ? widget.selectedMatches.first : null),
+      selectedItem: _selectedMatch,
     );
   }
 

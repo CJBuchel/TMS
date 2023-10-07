@@ -37,25 +37,25 @@ class _TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateM
   Icon themeIcon = const Icon(Icons.light_mode, color: Colors.white);
   Icon loginIcon = const Icon(Icons.login_sharp, color: Colors.red);
 
-  double _scaledFontSize = 20;
+  double _scaledFontSize = 15;
 
   late AnimationController _animationController;
 
   Text ntStatusText = const Text(
-    "NO NT",
-    style: TextStyle(color: Colors.red, fontSize: 20),
+    "-",
+    style: TextStyle(color: Colors.red, fontSize: 15),
     overflow: TextOverflow.ellipsis,
   );
 
   Text wsStatusText = const Text(
-    "NO WS",
-    style: TextStyle(color: Colors.red, fontSize: 20),
+    "-",
+    style: TextStyle(color: Colors.red, fontSize: 15),
     overflow: TextOverflow.ellipsis,
   );
 
   Text secStateText = const Text(
-    "NO SEC",
-    style: TextStyle(color: Colors.red, fontSize: 20),
+    "-",
+    style: TextStyle(color: Colors.red, fontSize: 15),
     overflow: TextOverflow.ellipsis,
   );
 
@@ -426,8 +426,9 @@ class _TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateM
               const Expanded(child: SizedBox.shrink()),
 
               // Use a container to set a fixed width to the middle content
-              SizedBox(
-                width: constraints.maxWidth * 0.5, // Taking up to half the available space
+              Center(
+                // decoration: BoxDecoration(border: Border.all(color: Colors.white)),
+                // width: constraints.maxWidth * 0.5, // Taking up to half the available space
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: titleBar,

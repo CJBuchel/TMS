@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/views/shared/color_utils.dart';
+import 'package:tms/responsive.dart';
+import 'package:tms/views/admin/dashboard/dashboard.dart';
+import 'package:tms/views/admin/dashboard/overview/overview.dart';
+import 'package:tms/views/admin/dashboard/users/users.dart';
 
 class DrawerListTile extends StatelessWidget {
   final String title, svgSrc;
@@ -32,24 +35,39 @@ class DrawerListTile extends StatelessWidget {
 }
 
 class SideMenu extends StatelessWidget {
-  const SideMenu({Key? key}) : super(key: key);
+  final Function(Widget view) onView;
+  const SideMenu({Key? key, required this.onView}) : super(key: key);
+
+  void _handleViewSwitch(Widget view, BuildContext context) {
+    onView(view);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Theme.of(context).canvasColor,
+      width: Responsive.isDesktop(context)
+          ? null
+          : Responsive.isTablet(context)
+              ? 250
+              : 200,
       child: ListView(
         children: [
           DrawerHeader(
             child: Image.asset(
               'assets/logos/TMS_LOGO_NO_TEXT.png',
-              height: 100,
             ),
           ),
           DrawerListTile(
-            title: 'Dashboard',
-            svgSrc: 'assets/icons/menu_dashbord.svg',
-            press: () {},
+            title: 'Overview',
+            svgSrc: 'assets/icons/menu_dashboard.svg',
+            press: () => _handleViewSwitch(const Overview(), context),
+          ),
+          DrawerListTile(
+            title: 'Users',
+            svgSrc: 'assets/icons/menu_profile.svg',
+            press: () => _handleViewSwitch(const Users(), context),
           ),
           DrawerListTile(
             title: 'Transaction',
@@ -74,11 +92,6 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: 'Notification',
             svgSrc: 'assets/icons/menu_notification.svg',
-            press: () {},
-          ),
-          DrawerListTile(
-            title: 'Profile',
-            svgSrc: 'assets/icons/menu_profile.svg',
             press: () {},
           ),
           DrawerListTile(

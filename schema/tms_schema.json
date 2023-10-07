@@ -3,6 +3,8 @@
   "title": "TmsSchema",
   "type": "object",
   "required": [
+    "add_user_request",
+    "delete_user_request",
     "event",
     "event_get_api_link_request",
     "event_get_api_link_response",
@@ -40,9 +42,18 @@
     "team_post_game_scoresheet_request",
     "team_update_request",
     "teams_get_response",
-    "users"
+    "update_user_request",
+    "users",
+    "users_request",
+    "users_response"
   ],
   "properties": {
+    "add_user_request": {
+      "$ref": "#/definitions/AddUserRequest"
+    },
+    "delete_user_request": {
+      "$ref": "#/definitions/DeleteUserRequest"
+    },
     "event": {
       "$ref": "#/definitions/Event"
     },
@@ -154,8 +165,17 @@
     "teams_get_response": {
       "$ref": "#/definitions/TeamsResponse"
     },
+    "update_user_request": {
+      "$ref": "#/definitions/UpdateUserRequest"
+    },
     "users": {
       "$ref": "#/definitions/User"
+    },
+    "users_request": {
+      "$ref": "#/definitions/UsersRequest"
+    },
+    "users_response": {
+      "$ref": "#/definitions/UsersResponse"
     }
   },
   "definitions": {
@@ -175,6 +195,21 @@
         },
         "tournament_token": {
           "type": "string"
+        }
+      }
+    },
+    "AddUserRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "user"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
         }
       }
     },
@@ -228,6 +263,21 @@
           "additionalProperties": false
         }
       ]
+    },
+    "DeleteUserRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "username"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
     },
     "Event": {
       "type": "object",
@@ -1267,6 +1317,25 @@
         }
       }
     },
+    "UpdateUserRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "updated_user",
+        "username"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "updated_user": {
+          "$ref": "#/definitions/User"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
     "User": {
       "type": "object",
       "required": [
@@ -1283,6 +1352,31 @@
         },
         "username": {
           "type": "string"
+        }
+      }
+    },
+    "UsersRequest": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
+    "UsersResponse": {
+      "type": "object",
+      "required": [
+        "users"
+      ],
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          }
         }
       }
     }

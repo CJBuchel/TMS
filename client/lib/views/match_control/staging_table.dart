@@ -49,7 +49,52 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
     return Center(child: Text(content, style: const TextStyle(fontWeight: FontWeight.bold)));
   }
 
-  DataCell styledCell(String text, List<GameMatch> loadedMatches, {bool? isTable, bool? goodSig}) {
+  DataCell styledCell(String text) {
+    return DataCell(Center(
+      child: Text(
+        text,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 12),
+      ),
+    ));
+  }
+
+  DataCell sigCell(List<GameMatch> loadedMatches, {bool? badSig, bool? goodSig}) {
+    return DataCell(
+      Center(
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: ((context, child) {
+            if (loadedMatches.isNotEmpty && (badSig ?? false)) {
+              return Text(
+                "SIG",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: _controller.value < 0.5 ? Colors.red : Colors.transparent,
+                ),
+              );
+            } else if (loadedMatches.isNotEmpty && (goodSig ?? false)) {
+              return const Text(
+                "OK",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          }),
+        ),
+      ),
+    );
+  }
+
+  DataCell styledCellOldCell(String text, List<GameMatch> loadedMatches, {bool? isTable, bool? goodSig}) {
     return DataCell(
       AnimatedBuilder(
         animation: _controller,
@@ -62,7 +107,7 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
                 children: [
                   if (!(goodSig ?? false))
                     Align(
-                      alignment: Responsive.isMobile(context) ? const Alignment(-1.5, 0) : Alignment.centerLeft,
+                      alignment: Responsive.isMobile(context) ? const Alignment(-2, 0) : Alignment.centerLeft,
                       child: Text(
                         "SIG",
                         overflow: TextOverflow.ellipsis,
@@ -75,7 +120,7 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
                     ),
                   if ((goodSig ?? false))
                     Align(
-                      alignment: Responsive.isMobile(context) ? const Alignment(1.5, 0) : Alignment.centerRight,
+                      alignment: Responsive.isMobile(context) ? const Alignment(2, 0) : Alignment.centerRight,
                       child: const Text(
                         "OK",
                         overflow: TextOverflow.ellipsis,
@@ -118,6 +163,7 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
     }
 
     // get match
+    String teamName = teams.firstWhere((t) => t.teamNumber == table.teamNumber).teamName;
 
     return DataRow2(cells: [
       // delete on table
@@ -131,10 +177,11 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
       ),
 
       // info cells
-      styledCell(match.matchNumber, loadedMatches),
-      styledCell(table.table, loadedMatches, isTable: true, goodSig: goodSig),
-      styledCell(table.teamNumber, loadedMatches),
-      styledCell(teams.firstWhere((t) => t.teamNumber == table.teamNumber).teamName, loadedMatches),
+      styledCell(match.matchNumber),
+      sigCell(loadedMatches, badSig: !goodSig),
+      styledCell(table.table),
+      sigCell(loadedMatches, goodSig: goodSig),
+      styledCell("${table.teamNumber} | $teamName"),
 
       // edit on table
       DataCell(
@@ -183,6 +230,7 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
         const DataCell(SizedBox.shrink()),
         const DataCell(SizedBox.shrink()),
         const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
       ]),
     );
     return rows;
@@ -203,12 +251,13 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
         // columns
         columnSpacing: 10,
         columns: [
-          const DataColumn2(label: SizedBox.shrink()), // no title for the delete button
-          DataColumn2(label: styledHeader("Match"), size: ColumnSize.S),
+          const DataColumn2(label: SizedBox.shrink(), size: ColumnSize.S), // no title for the delete button
+          DataColumn2(label: styledHeader("#"), size: ColumnSize.S),
+          DataColumn2(label: styledHeader("BS"), size: ColumnSize.S), // SIG
           DataColumn2(label: styledHeader("Table")),
-          DataColumn2(label: styledHeader("Team")),
-          DataColumn2(label: styledHeader("Name"), size: ColumnSize.L),
-          const DataColumn2(label: SizedBox.shrink()), // no title for the edit button
+          DataColumn2(label: styledHeader("GS"), size: ColumnSize.S), // OK
+          DataColumn2(label: styledHeader("Team"), size: ColumnSize.L),
+          const DataColumn2(label: SizedBox.shrink(), size: ColumnSize.S), // no title for the edit button
         ],
 
         // rows

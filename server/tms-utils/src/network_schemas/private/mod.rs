@@ -12,3 +12,6 @@ pub use teams::*;
 
 mod game;
 pub use game::*;
+
+mod user;
+pub use user::*;

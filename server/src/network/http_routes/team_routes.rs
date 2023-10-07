@@ -3,7 +3,7 @@ use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest}, schemas::{Team, create_permissions, rank_teams}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
 
-use crate::db::db::TmsDB;
+use crate::db::{db::TmsDB, tree::UpdateTree};
 
 #[get("/teams/get/<uuid>")]
 pub fn teams_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
@@ -68,7 +68,8 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
     match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
       Some(t) => {
         let origin_team_number = t.team_number.clone();
-        let _ = db.tms_data.teams.insert(origin_team_number.as_bytes(), message.team_data.clone());
+        // update db
+        let _ = db.tms_data.teams.update(origin_team_number.as_bytes(), message.team_number.as_bytes(), message.team_data.clone());
         // send updates to clients
         tms_clients_ws_send(SocketMessage {
           from_id: None,
@@ -116,7 +117,7 @@ fn update_rankings(db: &State<std::sync::Arc<TmsDB>>) -> bool {
   let ranked_teams = rank_teams(teams);
 
   for team in ranked_teams {
-    match db.tms_data.teams.insert(team.team_number.as_bytes(), team.clone()) {
+    match db.tms_data.teams.update(team.team_number.as_bytes(), team.team_number.as_bytes(), team.clone()) {
       Ok(_) => {},
       Err(_) => {
         error!("Failed to update team {}", team.team_number);
@@ -159,7 +160,7 @@ pub fn team_post_game_scoresheet_route(message: String) -> TmsRouteResponse<()> 
         t.game_scores.push(message.scoresheet.clone());
 
         // update the team in the database
-        let _ = db.tms_data.teams.insert(t.team_number.as_bytes(), t.clone());
+        let _ = db.tms_data.teams.update(t.team_number.as_bytes(), t.team_number.as_bytes(), t.clone());
 
         // update rankings
         if !update_rankings(db) {

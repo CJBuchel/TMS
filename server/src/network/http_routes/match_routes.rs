@@ -4,7 +4,7 @@ use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{GameMatch, create_permissions}, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse, MatchLoadRequest, MatchUpdateRequest, SocketMessage}, TmsRequest, check_permissions, tms_clients_ws_send};
 
-use crate::{db::db::TmsDB, event_service::TmsEventService};
+use crate::{db::{db::TmsDB, tree::UpdateTree}, event_service::TmsEventService};
 
 #[get("/matches/get/<uuid>")]
 pub fn matches_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
@@ -69,7 +69,7 @@ pub fn match_update_route(message: String) -> TmsRouteResponse<()> {
     match db.tms_data.matches.get(message.match_number.clone()).unwrap() {
       Some(m) => {
         let origin_match_number = m.match_number.clone();
-        let _ = db.tms_data.matches.insert(origin_match_number.as_bytes(), message.match_data.clone());
+        let _ = db.tms_data.matches.update(origin_match_number.as_bytes(), message.match_data.match_number.as_bytes(), message.match_data.clone());
         // send updates to clients
         tms_clients_ws_send(SocketMessage {
           from_id: None,

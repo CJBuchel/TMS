@@ -10,6 +10,8 @@ String tmsSchemaToJson(TmsSchema data) => json.encode(data.toJson());
 
 class TmsSchema {
     TmsSchema({
+        required this.addUserRequest,
+        required this.deleteUserRequest,
         required this.event,
         required this.eventGetApiLinkRequest,
         required this.eventGetApiLinkResponse,
@@ -47,9 +49,14 @@ class TmsSchema {
         required this.teamPostGameScoresheetRequest,
         required this.teamUpdateRequest,
         required this.teamsGetResponse,
+        required this.updateUserRequest,
         required this.users,
+        required this.usersRequest,
+        required this.usersResponse,
     });
 
+    AddUserRequest addUserRequest;
+    DeleteUserRequest deleteUserRequest;
     Event event;
     ApiLinkRequest eventGetApiLinkRequest;
     ApiLinkResponse eventGetApiLinkResponse;
@@ -87,9 +94,14 @@ class TmsSchema {
     TeamPostGameScoresheetRequest teamPostGameScoresheetRequest;
     TeamUpdateRequest teamUpdateRequest;
     TeamsResponse teamsGetResponse;
+    UpdateUserRequest updateUserRequest;
     User users;
+    UsersRequest usersRequest;
+    UsersResponse usersResponse;
 
     factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
+        addUserRequest: AddUserRequest.fromJson(json["add_user_request"]),
+        deleteUserRequest: DeleteUserRequest.fromJson(json["delete_user_request"]),
         event: Event.fromJson(json["event"]),
         eventGetApiLinkRequest: ApiLinkRequest.fromJson(json["event_get_api_link_request"]),
         eventGetApiLinkResponse: ApiLinkResponse.fromJson(json["event_get_api_link_response"]),
@@ -127,10 +139,15 @@ class TmsSchema {
         teamPostGameScoresheetRequest: TeamPostGameScoresheetRequest.fromJson(json["team_post_game_scoresheet_request"]),
         teamUpdateRequest: TeamUpdateRequest.fromJson(json["team_update_request"]),
         teamsGetResponse: TeamsResponse.fromJson(json["teams_get_response"]),
+        updateUserRequest: UpdateUserRequest.fromJson(json["update_user_request"]),
         users: User.fromJson(json["users"]),
+        usersRequest: UsersRequest.fromJson(json["users_request"]),
+        usersResponse: UsersResponse.fromJson(json["users_response"]),
     );
 
     Map<String, dynamic> toJson() => {
+        "add_user_request": addUserRequest.toJson(),
+        "delete_user_request": deleteUserRequest.toJson(),
         "event": event.toJson(),
         "event_get_api_link_request": eventGetApiLinkRequest.toJson(),
         "event_get_api_link_response": eventGetApiLinkResponse.toJson(),
@@ -168,7 +185,106 @@ class TmsSchema {
         "team_post_game_scoresheet_request": teamPostGameScoresheetRequest.toJson(),
         "team_update_request": teamUpdateRequest.toJson(),
         "teams_get_response": teamsGetResponse.toJson(),
+        "update_user_request": updateUserRequest.toJson(),
         "users": users.toJson(),
+        "users_request": usersRequest.toJson(),
+        "users_response": usersResponse.toJson(),
+    };
+}
+
+class AddUserRequest {
+    AddUserRequest({
+        required this.authToken,
+        required this.user,
+    });
+
+    String authToken;
+    User user;
+
+    factory AddUserRequest.fromJson(Map<String, dynamic> json) => AddUserRequest(
+        authToken: json["auth_token"],
+        user: User.fromJson(json["user"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "user": user.toJson(),
+    };
+}
+
+class User {
+    User({
+        required this.password,
+        required this.permissions,
+        required this.username,
+    });
+
+    String password;
+    Permissions permissions;
+    String username;
+
+    factory User.fromJson(Map<String, dynamic> json) => User(
+        password: json["password"],
+        permissions: Permissions.fromJson(json["permissions"]),
+        username: json["username"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "password": password,
+        "permissions": permissions.toJson(),
+        "username": username,
+    };
+}
+
+class Permissions {
+    Permissions({
+        required this.admin,
+        this.headReferee,
+        this.judge,
+        this.judgeAdvisor,
+        this.referee,
+    });
+
+    bool admin;
+    bool? headReferee;
+    bool? judge;
+    bool? judgeAdvisor;
+    bool? referee;
+
+    factory Permissions.fromJson(Map<String, dynamic> json) => Permissions(
+        admin: json["admin"],
+        headReferee: json["head_referee"],
+        judge: json["judge"],
+        judgeAdvisor: json["judge_advisor"],
+        referee: json["referee"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "admin": admin,
+        "head_referee": headReferee,
+        "judge": judge,
+        "judge_advisor": judgeAdvisor,
+        "referee": referee,
+    };
+}
+
+class DeleteUserRequest {
+    DeleteUserRequest({
+        required this.authToken,
+        required this.username,
+    });
+
+    String authToken;
+    String username;
+
+    factory DeleteUserRequest.fromJson(Map<String, dynamic> json) => DeleteUserRequest(
+        authToken: json["auth_token"],
+        username: json["username"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "username": username,
     };
 }
 
@@ -700,38 +816,6 @@ class LoginResponse {
     };
 }
 
-class Permissions {
-    Permissions({
-        required this.admin,
-        this.headReferee,
-        this.judge,
-        this.judgeAdvisor,
-        this.referee,
-    });
-
-    bool admin;
-    bool? headReferee;
-    bool? judge;
-    bool? judgeAdvisor;
-    bool? referee;
-
-    factory Permissions.fromJson(Map<String, dynamic> json) => Permissions(
-        admin: json["admin"],
-        headReferee: json["head_referee"],
-        judge: json["judge"],
-        judgeAdvisor: json["judge_advisor"],
-        referee: json["referee"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "admin": admin,
-        "head_referee": headReferee,
-        "judge": judge,
-        "judge_advisor": judgeAdvisor,
-        "referee": referee,
-    };
-}
-
 class MatchRequest {
     MatchRequest({
         required this.matchNumber,
@@ -1256,30 +1340,6 @@ class GameScoresheet {
     };
 }
 
-class User {
-    User({
-        required this.password,
-        required this.permissions,
-        required this.username,
-    });
-
-    String password;
-    Permissions permissions;
-    String username;
-
-    factory User.fromJson(Map<String, dynamic> json) => User(
-        password: json["password"],
-        permissions: Permissions.fromJson(json["permissions"]),
-        username: json["username"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "password": password,
-        "permissions": permissions.toJson(),
-        "username": username,
-    };
-}
-
 class SocketMessage {
     SocketMessage({
         this.fromId,
@@ -1433,5 +1493,61 @@ class TeamsResponse {
 
     Map<String, dynamic> toJson() => {
         "teams": List<dynamic>.from(teams.map((x) => x.toJson())),
+    };
+}
+
+class UpdateUserRequest {
+    UpdateUserRequest({
+        required this.authToken,
+        required this.updatedUser,
+        required this.username,
+    });
+
+    String authToken;
+    User updatedUser;
+    String username;
+
+    factory UpdateUserRequest.fromJson(Map<String, dynamic> json) => UpdateUserRequest(
+        authToken: json["auth_token"],
+        updatedUser: User.fromJson(json["updated_user"]),
+        username: json["username"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "updated_user": updatedUser.toJson(),
+        "username": username,
+    };
+}
+
+class UsersRequest {
+    UsersRequest({
+        required this.authToken,
+    });
+
+    String authToken;
+
+    factory UsersRequest.fromJson(Map<String, dynamic> json) => UsersRequest(
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+    };
+}
+
+class UsersResponse {
+    UsersResponse({
+        required this.users,
+    });
+
+    List<User> users;
+
+    factory UsersResponse.fromJson(Map<String, dynamic> json) => UsersResponse(
+        users: List<User>.from(json["users"].map((x) => User.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "users": List<dynamic>.from(users.map((x) => x.toJson())),
     };
 }

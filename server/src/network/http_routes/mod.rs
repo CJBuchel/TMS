@@ -165,8 +165,14 @@ impl TmsHttpServer {
         register_route,
         unregister_route,
         publish_route,
-        login_route,
         proxy_image_get_route,
+        
+        // user routes
+        login_route,
+        users_get_route,
+        user_add_route,
+        user_delete_route,
+        user_update_route,
 
         // setup routes
         event_setup_route,

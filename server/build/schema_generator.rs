@@ -31,11 +31,17 @@ pub struct TmsSchema {
   register_request: RegisterRequest,
   register_response: RegisterResponse,
   integrity_message: IntegrityMessage,
-  login_request: LoginRequest,
-  login_response: LoginResponse,
   setup_request: SetupRequest,
   purge_request: PurgeRequest,
   proxy_bytes_response: ProxyBytesResponse,
+  // users
+  login_request: LoginRequest,
+  login_response: LoginResponse,
+  users_request: UsersRequest,
+  users_response: UsersResponse,
+  add_user_request: AddUserRequest,
+  delete_user_request: DeleteUserRequest,
+  update_user_request: UpdateUserRequest,
   
   //
   // Network structures (Socket)

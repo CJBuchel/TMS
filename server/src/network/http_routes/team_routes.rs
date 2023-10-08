@@ -3,7 +3,7 @@ use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest}, schemas::{Team, create_permissions, rank_teams}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
 
-use crate::db::{db::TmsDB, tree::UpdateTree};
+use crate::{db::{db::TmsDB, tree::UpdateTree}, event_service::TmsEventServiceArc};
 
 #[get("/teams/get/<uuid>")]
 pub fn teams_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
@@ -147,7 +147,7 @@ pub fn teams_update_ranking_route(db: &State<std::sync::Arc<TmsDB>>, clients: &S
 
 #[tms_private_route]
 #[post("/team/post/game_scoresheet/<uuid>", data = "<message>")]
-pub fn team_post_game_scoresheet_route(message: String) -> TmsRouteResponse<()> {
+pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
   let message: TeamPostGameScoresheetRequest = TmsRequest!(message.clone(), security);
 
   let mut perms = create_permissions();
@@ -156,27 +156,44 @@ pub fn team_post_game_scoresheet_route(message: String) -> TmsRouteResponse<()> 
   if check_permissions(clients, uuid, message.auth_token, perms) {
     match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
       Some(mut t) => {
-        warn!("Scoresheet post {}", message.scoresheet.score);
-        t.game_scores.push(message.scoresheet.clone());
+        // validate scoresheet, make sure there are no errors and update the score.
+        let answers = message.scoresheet.scoresheet.answers.clone();
+        match tms_event_service.lock().unwrap().scoring.validate(answers) {
+          Some(validation) => {
+            if validation.errors.is_empty() {
+              let mut scoresheet = message.scoresheet.clone();
+              scoresheet.score = validation.score;
+              warn!("Scoresheet post {}", scoresheet.score);
 
-        // update the team in the database
-        let _ = db.tms_data.teams.update(t.team_number.as_bytes(), t.team_number.as_bytes(), t.clone());
-
-        // update rankings
-        if !update_rankings(db) {
-          TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
-        } else {
-
-          // send update to clients (we update all teams because the rankings may have changed)
-          tms_clients_ws_send(SocketMessage {
-            from_id: None,
-            topic: String::from("teams"),
-            sub_topic: String::from("update"),
-            message: String::from(""),
-          }, clients.inner().clone(), None);
-          
-          // good response
-          TmsRespond!()
+              t.game_scores.push(scoresheet.clone());
+              // update the team in the database
+              let _ = db.tms_data.teams.update(t.team_number.as_bytes(), t.team_number.as_bytes(), t.clone());
+      
+              // update rankings
+              if !update_rankings(db) {
+                TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
+              } else {
+      
+                // send update to clients (we update all teams because the rankings may have changed)
+                tms_clients_ws_send(SocketMessage {
+                  from_id: None,
+                  topic: String::from("teams"),
+                  sub_topic: String::from("update"),
+                  message: String::from(""),
+                }, clients.inner().clone(), None);
+                
+                // good response
+                TmsRespond!()
+              }
+            } else {
+              error!("Scoresheet validation failed");
+              TmsRespond!(Status::BadRequest, "Scoresheet validation failed".to_string());
+            }
+          },
+          None => {
+            error!("Failed to get event");
+            TmsRespond!(Status::BadRequest, "Failed to get event".to_string());
+          }
         }
 
       },

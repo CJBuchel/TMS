@@ -35,7 +35,7 @@ use proxy_routes::*;
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
-use crate::{db::db::TmsDB, event_service::TmsEventService};
+use crate::{db::db::TmsDB, event_service::{TmsEventService, TmsEventServiceArc}};
 
 // CORS fairing
 pub struct CORS;
@@ -127,7 +127,7 @@ fn cors_preflight(_path: PathBuf) -> Status {
 }
 
 pub struct TmsHttpServer {
-  tms_event_service: std::sync::Arc<std::sync::Mutex<TmsEventService>>,
+  tms_event_service: TmsEventServiceArc,
   tms_db: std::sync::Arc<TmsDB>,
   security: Security,
   clients: TmsClients,

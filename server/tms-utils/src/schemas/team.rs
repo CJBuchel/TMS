@@ -23,8 +23,8 @@ pub enum TeamCompareResult {
 }
 
 impl Team {
-  pub fn get_sorted_game_scores(&self) -> Vec<u32> {
-    let mut scores: Vec<u32> = self.game_scores.iter().map(|game| game.score).collect();
+  pub fn get_sorted_game_scores(&self) -> Vec<i32> {
+    let mut scores: Vec<i32> = self.game_scores.iter().map(|game| game.score).collect();
     scores.sort_by(|a, b| b.cmp(a));
     scores
   }

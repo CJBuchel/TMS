@@ -8,7 +8,7 @@ pub struct TeamGameScore {
   pub gp: String,
   pub referee: String,
   pub no_show: bool,
-  pub score: u32,
+  pub score: i32,
   pub cloud_published: bool,
   pub scoresheet: GameScoresheet
 }
@@ -17,7 +17,7 @@ pub struct TeamGameScore {
 pub struct TeamJudgingScore {
   pub judge: String,
   pub no_show: bool,
-  pub score: u32,
+  pub score: i32,
   pub cloud_published: bool,
   pub scoresheet: JudgingScoresheet
 }

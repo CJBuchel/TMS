@@ -1195,8 +1195,7 @@
         },
         "score": {
           "type": "integer",
-          "format": "uint32",
-          "minimum": 0.0
+          "format": "int32"
         },
         "scoresheet": {
           "$ref": "#/definitions/GameScoresheet"
@@ -1224,8 +1223,7 @@
         },
         "score": {
           "type": "integer",
-          "format": "uint32",
-          "minimum": 0.0
+          "format": "int32"
         },
         "scoresheet": {
           "$ref": "#/definitions/JudgingScoresheet"

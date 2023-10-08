@@ -3,7 +3,7 @@ use tms_macros::tms_private_route;
 use tms_utils::{security::encrypt, TmsClients, TmsRouteResponse, Mission, Games, TmsRespond, network_schemas::{MissionsResponse, QuestionsResponse, GameResponse, SeasonsResponse, QuestionsValidateRequest, QuestionsValidateResponse}, TmsRequest, schemas::create_permissions, check_permissions};
 use tms_utils::security::Security;
 
-use crate::db::db::TmsDB;
+use crate::{db::db::TmsDB, event_service::TmsEventServiceArc};
 
 
 #[get("/missions/get/<uuid>")]
@@ -43,7 +43,7 @@ pub fn questions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Ar
 
 #[tms_private_route]
 #[post("/questions/validate/<uuid>", data = "<message>")]
-pub fn validate_questions_route(message: String) -> TmsRouteResponse<()> {
+pub fn validate_questions_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
   let message: QuestionsValidateRequest = TmsRequest!(message.clone(), security);
 
   let mut perms = create_permissions(); // referees/head referee/admin
@@ -52,14 +52,11 @@ pub fn validate_questions_route(message: String) -> TmsRouteResponse<()> {
 
   if check_permissions(clients, uuid.clone(), message.auth_token, perms) {
     // get event from db and check season string
-    let season = db.tms_data.event.get().unwrap().unwrap().season;
-    match Games::get_games().get(season.as_str()) {
-      Some(g) => {
-        let errors = g.validate(message.answers.clone());
-        let score = g.score(message.answers.clone());
+    match tms_event_service.lock().unwrap().scoring.validate(message.answers) {
+      Some(validation) => {
         TmsRespond!(
           Status::Ok,
-          QuestionsValidateResponse { errors, score },
+          QuestionsValidateResponse { errors: validation.errors, score: validation.score },
           clients,
           uuid
         )
@@ -74,19 +71,9 @@ pub fn validate_questions_route(message: String) -> TmsRouteResponse<()> {
 }
 
 #[get("/game/get/<uuid>")]
-pub fn game_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub fn game_get_route(clients: &State<TmsClients>, tms_event_service: &State<TmsEventServiceArc>, uuid: String) -> TmsRouteResponse<()> {
   // get season
-  let season = db.tms_data.event.get().unwrap().unwrap().season;
-  let game = match Games::get_games().get(season.as_str()) {
-    Some(g) => g.get_game(),
-    None => tms_utils::Game {
-      name: "".to_string(),
-      program: "".to_string(),
-      rule_book_url: "".to_string(),
-      missions: vec![],
-      questions: vec![],
-    }
-  };
+  let game = tms_event_service.lock().unwrap().scoring.get_game();
 
   TmsRespond!(
     Status::Ok,

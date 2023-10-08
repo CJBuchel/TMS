@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
@@ -89,7 +90,7 @@ class ScoringFooter extends StatelessWidget {
               ),
             ],
           ),
-          content: const Text("This omits the team from this round. Are you sure?"),
+          content: const Text("This omits the team from the round. Are you sure?"),
           actions: [
             TextButton(
               onPressed: () {
@@ -114,24 +115,27 @@ class ScoringFooter extends StatelessWidget {
 
   void postScoresheet(TeamGameScore scoresheet, BuildContext context) {
     RefereeTableUtil.getRefereeTable().then((refereeTable) {
+      GameMatch updatedGameMatch = nextMatch!;
+      if (locked) {
+        bool found = false;
+        for (var onTable in updatedGameMatch.matchTables) {
+          if (onTable.table == refereeTable.table) {
+            onTable.scoreSubmitted = true;
+            found = true;
+          }
+        }
+
+        if (!found) {
+          showSubmitErrorDialog(context, "This table does not match the expected table for this match");
+          return;
+        }
+      }
+
       // send to server
       postTeamGameScoresheetRequest(nextTeam!.teamNumber, scoresheet).then((teamSubmitStatus) {
         if (teamSubmitStatus == HttpStatus.ok) {
           // update match
           if (locked) {
-            GameMatch updatedGameMatch = nextMatch!;
-            bool found = false;
-            for (var onTable in updatedGameMatch.matchTables) {
-              if (onTable.table == refereeTable.item1) {
-                onTable.scoreSubmitted = true;
-                found = true;
-              }
-            }
-
-            if (!found) {
-              showSubmitErrorDialog(context, "This table does not match the expected table for this match");
-              return;
-            }
             updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
               if (matchUpdateStatus == HttpStatus.ok) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -190,7 +194,7 @@ class ScoringFooter extends StatelessWidget {
         cloudPublished: false,
         gp: answers.firstWhere((element) => element.id == "gp").answer,
         noShow: false,
-        referee: refereeTable.item1,
+        referee: refereeTable.referee,
         score: score,
         scoresheet: innerScoresheet,
       );
@@ -216,7 +220,7 @@ class ScoringFooter extends StatelessWidget {
         cloudPublished: false,
         gp: "",
         noShow: true,
-        referee: refereeTable.item1,
+        referee: refereeTable.referee,
         score: 0,
         scoresheet: innerScoresheet,
       );

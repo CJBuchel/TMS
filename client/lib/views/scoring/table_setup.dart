@@ -5,7 +5,13 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/tool_bar.dart';
-import 'package:tuple/tuple.dart';
+
+class RefereeTable {
+  final String referee;
+  final String table;
+
+  RefereeTable(this.referee, this.table);
+}
 
 class RefereeTableUtil {
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
@@ -45,13 +51,13 @@ class RefereeTableUtil {
   }
 
   // Get Tuple2<Referee, Table>
-  static Future<Tuple2<String, String>> getRefereeTable() async {
+  static Future<RefereeTable> getRefereeTable() async {
     try {
       var referee = await getRefereeName();
       var table = await getTable();
-      return Tuple2(referee, table);
+      return RefereeTable(referee, table);
     } catch (e) {
-      return const Tuple2("", "");
+      return RefereeTable("", "");
     }
   }
 }

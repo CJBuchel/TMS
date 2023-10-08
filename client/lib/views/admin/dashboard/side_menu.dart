@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/admin/dashboard/dashboard.dart';
+import 'package:tms/views/admin/dashboard/matches/matches.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
 import 'package:tms/views/admin/dashboard/users/users.dart';
 
@@ -70,35 +70,35 @@ class SideMenu extends StatelessWidget {
             press: () => _handleViewSwitch(const Users(), context),
           ),
           DrawerListTile(
-            title: 'Transaction',
-            svgSrc: 'assets/icons/menu_tran.svg',
-            press: () {},
+            title: 'Matches',
+            svgSrc: 'assets/icons/table.svg',
+            press: () => _handleViewSwitch(const Matches(), context),
           ),
           DrawerListTile(
-            title: 'Task',
-            svgSrc: 'assets/icons/menu_task.svg',
+            title: 'Teams',
+            svgSrc: 'assets/icons/teams.svg',
             press: () {},
           ),
-          DrawerListTile(
-            title: 'Documents',
-            svgSrc: 'assets/icons/menu_doc.svg',
-            press: () {},
-          ),
-          DrawerListTile(
-            title: 'Store',
-            svgSrc: 'assets/icons/menu_store.svg',
-            press: () {},
-          ),
-          DrawerListTile(
-            title: 'Notification',
-            svgSrc: 'assets/icons/menu_notification.svg',
-            press: () {},
-          ),
-          DrawerListTile(
-            title: 'Settings',
-            svgSrc: 'assets/icons/menu_setting.svg',
-            press: () {},
-          ),
+          // DrawerListTile(
+          //   title: 'Documents',
+          //   svgSrc: 'assets/icons/menu_doc.svg',
+          //   press: () {},
+          // ),
+          // DrawerListTile(
+          //   title: 'Store',
+          //   svgSrc: 'assets/icons/menu_store.svg',
+          //   press: () {},
+          // ),
+          // DrawerListTile(
+          //   title: 'Notification',
+          //   svgSrc: 'assets/icons/menu_notification.svg',
+          //   press: () {},
+          // ),
+          // DrawerListTile(
+          //   title: 'Settings',
+          //   svgSrc: 'assets/icons/menu_setting.svg',
+          //   press: () {},
+          // ),
         ],
       ),
     );

@@ -4,23 +4,110 @@ import 'package:flutter/material.dart';
 import 'package:tms/requests/user_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
+import 'package:tms/views/shared/permissions_utils.dart';
+
+class _PermissionCheckbox extends StatefulWidget {
+  final String label;
+  final bool value;
+  final Function(bool) onChanged;
+
+  const _PermissionCheckbox({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  _PermissionCheckboxState createState() => _PermissionCheckboxState();
+}
+
+class _PermissionCheckboxState extends State<_PermissionCheckbox> {
+  bool _value = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(widget.label),
+        Checkbox(
+          value: _value,
+          onChanged: (value) {
+            setState(() {
+              _value = value!;
+              widget.onChanged(value);
+            });
+          },
+        ),
+      ],
+    );
+  }
+}
 
 class EditUser extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final PermissionController _permissionController = PermissionController(Permissions(admin: false));
 
   final Function() onEditUser;
   final User originUser;
   EditUser({Key? key, required this.onEditUser, required this.originUser}) : super(key: key) {
     _usernameController.text = originUser.username;
     _passwordController.text = originUser.password;
+    _permissionController.perms = originUser.permissions;
   }
 
-  void _addUser(BuildContext context) {
+  List<Widget> _getPermissionCheckboxes() {
+    return [
+      _PermissionCheckbox(
+        label: "Admin",
+        value: _permissionController.value.admin,
+        onChanged: (value) {
+          _permissionController.setAdmin(value);
+        },
+      ),
+      _PermissionCheckbox(
+        label: "Head Referee",
+        value: _permissionController.value.headReferee ?? false,
+        onChanged: (value) {
+          _permissionController.setHeadReferee(value);
+        },
+      ),
+      _PermissionCheckbox(
+        label: "Referee",
+        value: _permissionController.value.referee ?? false,
+        onChanged: (value) {
+          _permissionController.setReferee(value);
+        },
+      ),
+      _PermissionCheckbox(
+        label: "Judge Advisor",
+        value: _permissionController.value.judgeAdvisor ?? false,
+        onChanged: (value) {
+          _permissionController.setJudgeAdvisor(value);
+        },
+      ),
+      _PermissionCheckbox(
+        label: "Judge",
+        value: _permissionController.value.judge ?? false,
+        onChanged: (value) {
+          _permissionController.setJudge(value);
+        },
+      ),
+    ];
+  }
+
+  void _updateUser(BuildContext context) {
     User user = User(
       username: _usernameController.text,
       password: _passwordController.text,
-      permissions: originUser.permissions,
+      permissions: _permissionController.value,
     );
 
     // add user
@@ -55,7 +142,7 @@ class EditUser extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 10),
                   child: TextField(
                     controller: _usernameController,
                     decoration: const InputDecoration(
@@ -66,7 +153,7 @@ class EditUser extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                  padding: const EdgeInsets.only(top: 10),
                   child: TextField(
                     controller: _passwordController,
                     obscureText: true,
@@ -75,6 +162,12 @@ class EditUser extends StatelessWidget {
                       labelText: 'Password',
                       hintText: 'Enter Password e.g `password1!`',
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Column(
+                    children: _getPermissionCheckboxes(),
                   ),
                 ),
               ],
@@ -89,7 +182,7 @@ class EditUser extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                _addUser(context);
+                _updateUser(context);
                 Navigator.of(context).pop();
               },
               child: const Text("Update", style: TextStyle(color: Colors.blue)),

@@ -8,6 +8,7 @@ import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/requests/user_requests.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/users/add_defaults.dart';
 import 'package:tms/views/admin/dashboard/users/add_user.dart';
@@ -91,20 +92,9 @@ class _UsersState extends State<Users> {
     return value ?? false;
   }
 
-  DataRow2 _styledRow(User user) {
-    return DataRow2(
-      cells: [
-        DataCell(
-          Center(
-            child: DeleteUser(
-              username: user.username,
-              onDeleteUser: () {
-                fetchUsers();
-              },
-            ),
-          ),
-        ),
-        DataCell(Text(user.username)),
+  List<DataCell> getCheckboxes({User? user}) {
+    if (user != null) {
+      return [
         DataCell(
           Center(
             child: Checkbox(
@@ -160,6 +150,33 @@ class _UsersState extends State<Users> {
             ),
           ),
         ), // judge
+      ];
+    } else {
+      return [
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+        const DataCell(SizedBox.shrink()),
+      ];
+    }
+  }
+
+  DataRow2 _styledRow(User user) {
+    return DataRow2(
+      cells: [
+        DataCell(
+          Center(
+            child: DeleteUser(
+              username: user.username,
+              onDeleteUser: () {
+                fetchUsers();
+              },
+            ),
+          ),
+        ),
+        DataCell(Text(user.username)),
+        if (!Responsive.isMobile(context)) ...getCheckboxes(user: user),
         DataCell(
           Center(
             child: EditUser(
@@ -187,11 +204,7 @@ class _UsersState extends State<Users> {
           ),
           // blank spaces for checkboxes
           const DataCell(SizedBox.shrink()),
-          const DataCell(SizedBox.shrink()),
-          const DataCell(SizedBox.shrink()),
-          const DataCell(SizedBox.shrink()),
-          const DataCell(SizedBox.shrink()),
-          const DataCell(SizedBox.shrink()),
+          if (!Responsive.isMobile(context)) ...getCheckboxes(),
           const DataCell(SizedBox.shrink()),
         ],
       ),
@@ -200,17 +213,23 @@ class _UsersState extends State<Users> {
     return rows;
   }
 
+  List<DataColumn2> getCheckboxHeaders() {
+    return const [
+      DataColumn2(label: Center(child: Text('Admin'))),
+      DataColumn2(label: Center(child: Text('Head Referee'))),
+      DataColumn2(label: Center(child: Text('Referee'))),
+      DataColumn2(label: Center(child: Text('Judge Advisor'))),
+      DataColumn2(label: Center(child: Text('Judge'))),
+    ];
+  }
+
   Widget usersTable() {
     return DataTable2(
-      columns: const [
-        DataColumn2(label: SizedBox.shrink()), // delete button
-        DataColumn2(label: Text('Username')),
-        DataColumn2(label: Center(child: Text('Admin'))),
-        DataColumn2(label: Center(child: Text('Head Referee'))),
-        DataColumn2(label: Center(child: Text('Referee'))),
-        DataColumn2(label: Center(child: Text('Judge Advisor'))),
-        DataColumn2(label: Center(child: Text('Judge'))),
-        DataColumn2(label: SizedBox.shrink()), // edit button
+      columns: [
+        const DataColumn2(label: SizedBox.shrink(), size: ColumnSize.S), // delete button
+        const DataColumn2(label: Text('Username'), size: ColumnSize.L),
+        if (!Responsive.isMobile(context)) ...getCheckboxHeaders(),
+        const DataColumn2(label: SizedBox.shrink(), size: ColumnSize.S), // edit button
       ],
       rows: getRows(),
     );

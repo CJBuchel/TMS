@@ -17,5 +17,5 @@ pub struct GameMatch {
   pub match_tables: Vec<OnTable>,
   pub complete: bool,
   pub deferred: bool,
-  pub custom_match: bool
+  pub exhibition_match: bool
 }

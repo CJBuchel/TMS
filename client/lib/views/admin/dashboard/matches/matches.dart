@@ -14,15 +14,14 @@ class _MatchesState extends State<Matches> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Row(
+        return Column(
           children: [
             // info section
             Container(
-              width: constraints.maxWidth * 0.3,
-              height: constraints.maxHeight,
+              height: 100,
               decoration: const BoxDecoration(
                 border: Border(
-                  right: BorderSide(
+                  bottom: BorderSide(
                     color: Colors.grey,
                     width: 2,
                   ),
@@ -32,10 +31,8 @@ class _MatchesState extends State<Matches> {
             ),
 
             // table section
-            SizedBox(
-              width: constraints.maxWidth * 0.7,
-              height: constraints.maxHeight,
-              child: const MatchEditTable(),
+            const Expanded(
+              child: MatchEditTable(),
             ),
           ],
         );

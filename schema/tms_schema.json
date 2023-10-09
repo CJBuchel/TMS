@@ -18,6 +18,7 @@
     "judging_sessions_get_response",
     "login_request",
     "login_response",
+    "match_delete_request",
     "match_get_request",
     "match_get_response",
     "match_loaded_request",
@@ -37,6 +38,7 @@
     "socket_match_loaded_message",
     "start_timer_request",
     "team",
+    "team_delete_request",
     "team_get_request",
     "team_get_response",
     "team_post_game_scoresheet_request",
@@ -92,6 +94,9 @@
     },
     "login_response": {
       "$ref": "#/definitions/LoginResponse"
+    },
+    "match_delete_request": {
+      "$ref": "#/definitions/MatchDeleteRequest"
     },
     "match_get_request": {
       "$ref": "#/definitions/MatchRequest"
@@ -149,6 +154,9 @@
     },
     "team": {
       "$ref": "#/definitions/Team"
+    },
+    "team_delete_request": {
+      "$ref": "#/definitions/TeamDeleteRequest"
     },
     "team_get_request": {
       "$ref": "#/definitions/TeamRequest"
@@ -374,9 +382,9 @@
       "type": "object",
       "required": [
         "complete",
-        "custom_match",
         "deferred",
         "end_time",
+        "exhibition_match",
         "match_number",
         "match_tables",
         "round_number",
@@ -386,14 +394,14 @@
         "complete": {
           "type": "boolean"
         },
-        "custom_match": {
-          "type": "boolean"
-        },
         "deferred": {
           "type": "boolean"
         },
         "end_time": {
           "type": "string"
+        },
+        "exhibition_match": {
+          "type": "boolean"
         },
         "match_number": {
           "type": "string"
@@ -622,6 +630,21 @@
         },
         "permissions": {
           "$ref": "#/definitions/Permissions"
+        }
+      }
+    },
+    "MatchDeleteRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "match_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "match_number": {
+          "type": "string"
         }
       }
     },
@@ -1170,6 +1193,21 @@
         }
       }
     },
+    "TeamDeleteRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "team_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
     "TeamGameScore": {
       "type": "object",
       "required": [
@@ -1178,7 +1216,8 @@
         "no_show",
         "referee",
         "score",
-        "scoresheet"
+        "scoresheet",
+        "time_stamp"
       ],
       "properties": {
         "cloud_published": {
@@ -1199,6 +1238,11 @@
         },
         "scoresheet": {
           "$ref": "#/definitions/GameScoresheet"
+        },
+        "time_stamp": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
         }
       }
     },
@@ -1209,7 +1253,8 @@
         "judge",
         "no_show",
         "score",
-        "scoresheet"
+        "scoresheet",
+        "time_stamp"
       ],
       "properties": {
         "cloud_published": {
@@ -1227,6 +1272,11 @@
         },
         "scoresheet": {
           "$ref": "#/definitions/JudgingScoresheet"
+        },
+        "time_stamp": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
         }
       }
     },

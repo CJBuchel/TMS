@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
@@ -197,6 +196,7 @@ class ScoringFooter extends StatelessWidget {
         referee: refereeTable.referee,
         score: score,
         scoresheet: innerScoresheet,
+        timeStamp: 0,
       );
 
       postScoresheet(scoresheet, context);
@@ -223,6 +223,7 @@ class ScoringFooter extends StatelessWidget {
         referee: refereeTable.referee,
         score: 0,
         scoresheet: innerScoresheet,
+        timeStamp: 0,
       );
 
       postScoresheet(scoresheet, context);

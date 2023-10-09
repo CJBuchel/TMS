@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/requests/match_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/admin/dashboard/matches/match_edit_row.dart';
+import 'package:tms/views/shared/network_error_popup.dart';
+import 'package:tms/views/shared/sorter_util.dart';
 
 class MatchEditTable extends StatefulWidget {
   const MatchEditTable({Key? key}) : super(key: key);
@@ -16,6 +22,7 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
 
   set setMatches(List<GameMatch> value) {
     if (mounted) {
+      value = sortMatchesByTime(value);
       setState(() {
         _matches = value;
       });
@@ -62,6 +69,16 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
     }
   }
 
+  void fetchMatches() {
+    getMatchesRequest().then((value) {
+      if (value.item1 == HttpStatus.ok) {
+        setMatches = value.item2;
+      } else {
+        showNetworkError(value.item1, context, subMessage: "Error fetching matches");
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -78,7 +95,9 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            fetchMatches();
+          },
           icon: const Icon(Icons.refresh, color: Colors.orange),
         ),
         IconButton(
@@ -90,7 +109,13 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
   }
 
   Widget _getTable() {
-    return const Center(child: Text('@TODO Table'));
+    // list view table
+    return ListView.builder(
+      itemCount: _matches.length,
+      itemBuilder: (context, index) {
+        return MatchEditRow(match: _matches[index], teams: _teams);
+      },
+    );
   }
 
   @override
@@ -104,7 +129,12 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
           ),
 
           // main table
-          Expanded(child: _getTable()),
+          Expanded(
+            child: SizedBox(
+              width: constraints.maxWidth * 0.9,
+              child: _getTable(),
+            ),
+          ),
         ],
       );
     }));

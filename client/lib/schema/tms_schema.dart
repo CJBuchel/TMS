@@ -25,6 +25,7 @@ class TmsSchema {
         required this.judgingSessionsGetResponse,
         required this.loginRequest,
         required this.loginResponse,
+        required this.matchDeleteRequest,
         required this.matchGetRequest,
         required this.matchGetResponse,
         required this.matchLoadedRequest,
@@ -44,6 +45,7 @@ class TmsSchema {
         required this.socketMatchLoadedMessage,
         required this.startTimerRequest,
         required this.team,
+        required this.teamDeleteRequest,
         required this.teamGetRequest,
         required this.teamGetResponse,
         required this.teamPostGameScoresheetRequest,
@@ -70,6 +72,7 @@ class TmsSchema {
     JudgingSessionsResponse judgingSessionsGetResponse;
     LoginRequest loginRequest;
     LoginResponse loginResponse;
+    MatchDeleteRequest matchDeleteRequest;
     MatchRequest matchGetRequest;
     MatchResponse matchGetResponse;
     MatchLoadRequest matchLoadedRequest;
@@ -89,6 +92,7 @@ class TmsSchema {
     SocketMatchLoadedMessage socketMatchLoadedMessage;
     TimerRequest startTimerRequest;
     Team team;
+    TeamDeleteRequest teamDeleteRequest;
     TeamRequest teamGetRequest;
     TeamResponse teamGetResponse;
     TeamPostGameScoresheetRequest teamPostGameScoresheetRequest;
@@ -115,6 +119,7 @@ class TmsSchema {
         judgingSessionsGetResponse: JudgingSessionsResponse.fromJson(json["judging_sessions_get_response"]),
         loginRequest: LoginRequest.fromJson(json["login_request"]),
         loginResponse: LoginResponse.fromJson(json["login_response"]),
+        matchDeleteRequest: MatchDeleteRequest.fromJson(json["match_delete_request"]),
         matchGetRequest: MatchRequest.fromJson(json["match_get_request"]),
         matchGetResponse: MatchResponse.fromJson(json["match_get_response"]),
         matchLoadedRequest: MatchLoadRequest.fromJson(json["match_loaded_request"]),
@@ -134,6 +139,7 @@ class TmsSchema {
         socketMatchLoadedMessage: SocketMatchLoadedMessage.fromJson(json["socket_match_loaded_message"]),
         startTimerRequest: TimerRequest.fromJson(json["start_timer_request"]),
         team: Team.fromJson(json["team"]),
+        teamDeleteRequest: TeamDeleteRequest.fromJson(json["team_delete_request"]),
         teamGetRequest: TeamRequest.fromJson(json["team_get_request"]),
         teamGetResponse: TeamResponse.fromJson(json["team_get_response"]),
         teamPostGameScoresheetRequest: TeamPostGameScoresheetRequest.fromJson(json["team_post_game_scoresheet_request"]),
@@ -161,6 +167,7 @@ class TmsSchema {
         "judging_sessions_get_response": judgingSessionsGetResponse.toJson(),
         "login_request": loginRequest.toJson(),
         "login_response": loginResponse.toJson(),
+        "match_delete_request": matchDeleteRequest.toJson(),
         "match_get_request": matchGetRequest.toJson(),
         "match_get_response": matchGetResponse.toJson(),
         "match_loaded_request": matchLoadedRequest.toJson(),
@@ -180,6 +187,7 @@ class TmsSchema {
         "socket_match_loaded_message": socketMatchLoadedMessage.toJson(),
         "start_timer_request": startTimerRequest.toJson(),
         "team": team.toJson(),
+        "team_delete_request": teamDeleteRequest.toJson(),
         "team_get_request": teamGetRequest.toJson(),
         "team_get_response": teamGetResponse.toJson(),
         "team_post_game_scoresheet_request": teamPostGameScoresheetRequest.toJson(),
@@ -583,9 +591,9 @@ class Numerical {
 class GameMatch {
     GameMatch({
         required this.complete,
-        required this.customMatch,
         required this.gameMatchDeferred,
         required this.endTime,
+        required this.exhibitionMatch,
         required this.matchNumber,
         required this.matchTables,
         required this.roundNumber,
@@ -593,9 +601,9 @@ class GameMatch {
     });
 
     bool complete;
-    bool customMatch;
     bool gameMatchDeferred;
     String endTime;
+    bool exhibitionMatch;
     String matchNumber;
     List<OnTable> matchTables;
     int roundNumber;
@@ -603,9 +611,9 @@ class GameMatch {
 
     factory GameMatch.fromJson(Map<String, dynamic> json) => GameMatch(
         complete: json["complete"],
-        customMatch: json["custom_match"],
         gameMatchDeferred: json["deferred"],
         endTime: json["end_time"],
+        exhibitionMatch: json["exhibition_match"],
         matchNumber: json["match_number"],
         matchTables: List<OnTable>.from(json["match_tables"].map((x) => OnTable.fromJson(x))),
         roundNumber: json["round_number"],
@@ -614,9 +622,9 @@ class GameMatch {
 
     Map<String, dynamic> toJson() => {
         "complete": complete,
-        "custom_match": customMatch,
         "deferred": gameMatchDeferred,
         "end_time": endTime,
+        "exhibition_match": exhibitionMatch,
         "match_number": matchNumber,
         "match_tables": List<dynamic>.from(matchTables.map((x) => x.toJson())),
         "round_number": roundNumber,
@@ -813,6 +821,26 @@ class LoginResponse {
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
         "permissions": permissions.toJson(),
+    };
+}
+
+class MatchDeleteRequest {
+    MatchDeleteRequest({
+        required this.authToken,
+        required this.matchNumber,
+    });
+
+    String authToken;
+    String matchNumber;
+
+    factory MatchDeleteRequest.fromJson(Map<String, dynamic> json) => MatchDeleteRequest(
+        authToken: json["auth_token"],
+        matchNumber: json["match_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "match_number": matchNumber,
     };
 }
 
@@ -1211,6 +1239,7 @@ class TeamJudgingScore {
         required this.noShow,
         required this.score,
         required this.scoresheet,
+        required this.timeStamp,
     });
 
     bool cloudPublished;
@@ -1218,6 +1247,7 @@ class TeamJudgingScore {
     bool noShow;
     int score;
     JudgingScoresheet scoresheet;
+    int timeStamp;
 
     factory TeamJudgingScore.fromJson(Map<String, dynamic> json) => TeamJudgingScore(
         cloudPublished: json["cloud_published"],
@@ -1225,6 +1255,7 @@ class TeamJudgingScore {
         noShow: json["no_show"],
         score: json["score"],
         scoresheet: JudgingScoresheet.fromJson(json["scoresheet"]),
+        timeStamp: json["time_stamp"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -1233,6 +1264,7 @@ class TeamJudgingScore {
         "no_show": noShow,
         "score": score,
         "scoresheet": scoresheet.toJson(),
+        "time_stamp": timeStamp,
     };
 }
 
@@ -1276,6 +1308,7 @@ class TeamGameScore {
         required this.referee,
         required this.score,
         required this.scoresheet,
+        required this.timeStamp,
     });
 
     bool cloudPublished;
@@ -1284,6 +1317,7 @@ class TeamGameScore {
     String referee;
     int score;
     GameScoresheet scoresheet;
+    int timeStamp;
 
     factory TeamGameScore.fromJson(Map<String, dynamic> json) => TeamGameScore(
         cloudPublished: json["cloud_published"],
@@ -1292,6 +1326,7 @@ class TeamGameScore {
         referee: json["referee"],
         score: json["score"],
         scoresheet: GameScoresheet.fromJson(json["scoresheet"]),
+        timeStamp: json["time_stamp"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -1301,6 +1336,7 @@ class TeamGameScore {
         "referee": referee,
         "score": score,
         "scoresheet": scoresheet.toJson(),
+        "time_stamp": timeStamp,
     };
 }
 
@@ -1397,6 +1433,26 @@ class TimerRequest {
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+    };
+}
+
+class TeamDeleteRequest {
+    TeamDeleteRequest({
+        required this.authToken,
+        required this.teamNumber,
+    });
+
+    String authToken;
+    String teamNumber;
+
+    factory TeamDeleteRequest.fromJson(Map<String, dynamic> json) => TeamDeleteRequest(
+        authToken: json["auth_token"],
+        teamNumber: json["team_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "team_number": teamNumber,
     };
 }
 

@@ -89,3 +89,19 @@ Future<int> unloadMatchRequest() async {
     return HttpStatus.badRequest;
   }
 }
+
+Future<int> deleteMatchRequest(String matchNumber) async {
+  try {
+    var message = MatchDeleteRequest(authToken: await NetworkAuth.getToken(), matchNumber: matchNumber);
+    var res = await Network.serverPost("match/delete", message);
+
+    if (res.item1) {
+      return res.item2;
+    } else {
+      return res.item2;
+    }
+  } catch (e) {
+    Logger().e(e);
+    return HttpStatus.badRequest;
+  }
+}

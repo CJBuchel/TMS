@@ -46,6 +46,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^21.2.10
   multiselect: ^0.1.0
   dropdown_search: ^5.0.6
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

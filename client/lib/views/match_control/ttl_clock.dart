@@ -23,7 +23,7 @@ class _TTLClockState extends State<TTLClock> {
   }
 
   int getTimeDifference(String time) {
-    int diff = parseStringTime(time)?.difference(DateTime.now()).inSeconds ?? 0;
+    int diff = parseStringTimeToDateTime(time)?.difference(DateTime.now()).inSeconds ?? 0;
     return diff;
   }
 

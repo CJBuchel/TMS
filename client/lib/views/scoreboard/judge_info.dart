@@ -74,7 +74,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
     List<JudgingSession> sessions = [];
 
     for (var session in widget.judgingSessions) {
-      DateTime? endTime = parseStringTime(session.endTime);
+      DateTime? endTime = parseStringTimeToDateTime(session.endTime);
 
       if (endTime != null) {
         if (endTime.isAfter(DateTime.now())) {

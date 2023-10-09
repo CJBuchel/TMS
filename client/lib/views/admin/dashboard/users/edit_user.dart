@@ -115,6 +115,7 @@ class EditUser extends StatelessWidget {
       if (value != HttpStatus.ok) {
         showNetworkError(value, context, subMessage: "Error updating ${originUser.username}");
       } else {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Updated ${user.username}"),

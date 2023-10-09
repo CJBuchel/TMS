@@ -127,7 +127,7 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
 
       GameMatch match = GameMatch(
         complete: false,
-        customMatch: false,
+        exhibitionMatch: false,
         gameMatchDeferred: false,
         startTime: startTime,
         endTime: endTime,

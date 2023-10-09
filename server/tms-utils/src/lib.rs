@@ -7,7 +7,7 @@ use log::warn;
 use rocket::{http::Status, serde::json::Json, State};
 use schemas::Permissions;
 use security::encrypt;
-use serde::{Serialize};
+use serde::Serialize;
 use std::{sync::{RwLock, Arc}, collections::HashMap, time::SystemTime};
 use tokio::sync::mpsc;
 use warp::{ws::Message, Rejection};

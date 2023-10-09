@@ -348,7 +348,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   GameMatch _matchDefault() {
     return GameMatch(
       complete: false,
-      customMatch: false,
+      exhibitionMatch: false,
       gameMatchDeferred: false,
       endTime: "",
       matchNumber: "",

@@ -1,4 +1,4 @@
-use schemars::{JsonSchema};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use super::{GameScoresheet, JudgingScoresheet};
@@ -10,7 +10,8 @@ pub struct TeamGameScore {
   pub no_show: bool,
   pub score: i32,
   pub cloud_published: bool,
-  pub scoresheet: GameScoresheet
+  pub scoresheet: GameScoresheet,
+  pub time_stamp: u64,
 }
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
@@ -19,5 +20,6 @@ pub struct TeamJudgingScore {
   pub no_show: bool,
   pub score: i32,
   pub cloud_published: bool,
-  pub scoresheet: JudgingScoresheet
+  pub scoresheet: JudgingScoresheet,
+  pub time_stamp: u64,
 }

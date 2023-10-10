@@ -3,22 +3,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/edit_match_checkbox.dart';
-import 'package:tms/views/admin/dashboard/matches/edit_time.dart';
+import 'package:tms/views/admin/dashboard/matches/match_edit/edit_match_checkbox.dart';
+import 'package:tms/views/admin/dashboard/matches/match_edit/edit_time.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class EditMatch extends StatefulWidget {
-  final Function() onEditMatch;
-  final GameMatch match;
+  final String matchNumber;
 
-  const EditMatch({Key? key, required this.onEditMatch, required this.match}) : super(key: key);
+  const EditMatch({Key? key, required this.matchNumber}) : super(key: key);
 
   @override
   State<EditMatch> createState() => _EditMatchState();
 }
 
-// edits
-// complete, deferred, match tables, exhibition
 class _EditMatchState extends State<EditMatch> {
   final TextEditingController _matchNumberController = TextEditingController();
   final TextEditingController _roundNumberController = TextEditingController();
@@ -28,13 +25,31 @@ class _EditMatchState extends State<EditMatch> {
   // edits
   late GameMatch _updatedMatch;
 
+  Future<void> _getMatch() async {
+    await getMatchRequest(widget.matchNumber).then((res) {
+      if (res.item1 != HttpStatus.ok) {
+        showNetworkError(res.item1, context, subMessage: "Failed to get match");
+      } else {
+        if (res.item2 != null) {
+          if (mounted) {
+            GameMatch m = res.item2!;
+            setState(() {
+              _updatedMatch = m;
+
+              _matchNumberController.text = m.matchNumber;
+              _roundNumberController.text = m.roundNumber.toString();
+              _startTimeController.text = m.startTime;
+            });
+          }
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _updatedMatch = widget.match;
-    _matchNumberController.text = widget.match.matchNumber;
-    _roundNumberController.text = widget.match.roundNumber.toString();
-    _startTimeController.text = widget.match.startTime;
+    _getMatch();
   }
 
   void _updateMatch() {
@@ -43,18 +58,17 @@ class _EditMatchState extends State<EditMatch> {
     _updatedMatch.startTime = _startTimeController.text;
     _updatedMatch.endTime = _endTimeController.text;
 
-    updateMatchRequest(widget.match.matchNumber, _updatedMatch).then((res) {
+    updateMatchRequest(widget.matchNumber, _updatedMatch).then((res) {
       if (res != HttpStatus.ok) {
         showNetworkError(res, context, subMessage: "Failed to update match");
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Updated ${widget.match.matchNumber}"),
+            content: Text("Updated ${widget.matchNumber}"),
             backgroundColor: Colors.green,
           ),
         );
-        widget.onEditMatch();
       }
     });
   }
@@ -102,7 +116,7 @@ class _EditMatchState extends State<EditMatch> {
     );
   }
 
-  void _editMatchDialog(BuildContext context) {
+  void _editMatchDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -112,7 +126,7 @@ class _EditMatchState extends State<EditMatch> {
               title: Row(
                 children: [
                   const Icon(Icons.edit, color: Colors.blue),
-                  Text(" Editing Match ${widget.match.matchNumber}"),
+                  Text(" Editing Match ${widget.matchNumber}"),
                 ],
               ),
               content: SizedBox(
@@ -169,7 +183,7 @@ class _EditMatchState extends State<EditMatch> {
                     _updateMatch();
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Update", style: TextStyle(color: Colors.orange)),
+                  child: const Text("Update", style: TextStyle(color: Colors.red)),
                 ),
               ],
             );
@@ -182,10 +196,11 @@ class _EditMatchState extends State<EditMatch> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        _editMatchDialog(context);
+      onPressed: () async {
+        await _getMatch();
+        _editMatchDialog();
       },
-      icon: const Icon(Icons.edit, color: Colors.blue),
+      icon: const Icon(Icons.edit, color: Colors.orange),
     );
   }
 }

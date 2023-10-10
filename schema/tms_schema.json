@@ -18,6 +18,7 @@
     "judging_sessions_get_response",
     "login_request",
     "login_response",
+    "match_add_request",
     "match_delete_request",
     "match_get_request",
     "match_get_response",
@@ -94,6 +95,9 @@
     },
     "login_response": {
       "$ref": "#/definitions/LoginResponse"
+    },
+    "match_add_request": {
+      "$ref": "#/definitions/MatchAddRequest"
     },
     "match_delete_request": {
       "$ref": "#/definitions/MatchDeleteRequest"
@@ -630,6 +634,21 @@
         },
         "permissions": {
           "$ref": "#/definitions/Permissions"
+        }
+      }
+    },
+    "MatchAddRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "match_data"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "match_data": {
+          "$ref": "#/definitions/GameMatch"
         }
       }
     },

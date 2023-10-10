@@ -5,6 +5,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/admin/dashboard/matches/add_match/add_match.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit_row.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 import 'package:tms/views/shared/sorter_util.dart';
@@ -100,10 +101,9 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
           },
           icon: const Icon(Icons.refresh, color: Colors.orange),
         ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.add, color: Colors.green),
-        ),
+
+        // add match
+        AddMatch(matches: _matches),
       ],
     );
   }
@@ -113,7 +113,28 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
     return ListView.builder(
       itemCount: _matches.length,
       itemBuilder: (context, index) {
-        return MatchEditRow(match: _matches[index], teams: _teams);
+        bool isDeferred = _matches[index].gameMatchDeferred;
+        bool isComplete = _matches[index].complete;
+
+        Color rowColor = Colors.transparent; // default
+
+        if (isDeferred) {
+          rowColor = Colors.cyan;
+        } else if (index.isEven) {
+          if (isComplete) {
+            rowColor = Colors.green;
+          } else {
+            rowColor = Theme.of(context).splashColor;
+          }
+        } else {
+          if (isComplete) {
+            rowColor = Colors.green[300] ?? Colors.green;
+          } else {
+            rowColor = Theme.of(context).colorScheme.secondary.withOpacity(0.1);
+          }
+        }
+
+        return MatchEditRow(match: _matches[index], teams: _teams, rowColor: rowColor);
       },
     );
   }
@@ -124,7 +145,7 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
       return Column(
         children: [
           SizedBox(
-            height: 100,
+            height: 50,
             child: _topButtons(),
           ),
 

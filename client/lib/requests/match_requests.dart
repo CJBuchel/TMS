@@ -105,3 +105,19 @@ Future<int> deleteMatchRequest(String matchNumber) async {
     return HttpStatus.badRequest;
   }
 }
+
+Future<int> addMatchRequest(GameMatch match) async {
+  try {
+    var message = MatchAddRequest(authToken: await NetworkAuth.getToken(), matchData: match);
+    var res = await Network.serverPost("match/add", message.toJson());
+
+    if (res.item1) {
+      return res.item2;
+    } else {
+      return res.item2;
+    }
+  } catch (e) {
+    Logger().e(e);
+    return HttpStatus.badRequest;
+  }
+}

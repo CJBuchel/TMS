@@ -174,25 +174,34 @@ impl TmsHttpServer {
         user_delete_route,
         user_update_route,
 
-        // setup routes
+        // event routes
         event_setup_route,
         event_purge_route,
-
-        // main data routes
         event_get_route,
         event_get_api_link_route,
+
+        // team routes
         teams_get_route,
         team_get_route,
         team_update_route,
         team_delete_route,
         teams_update_ranking_route,
         team_post_game_scoresheet_route,
+
+        // match routes
         matches_get_route,
         match_get_route,
         match_update_route,
         match_delete_route,
+        match_add_route,
+        match_load_route,
+        match_unload_route,
+
+        // judging routes
         judging_sessions_get_route,
         judging_session_get_route,
+
+        // game routes
         missions_get_route,
         questions_get_route,
         game_get_route,
@@ -204,10 +213,6 @@ impl TmsHttpServer {
         pre_start_timer_route,
         stop_timer_route,
         reload_timer_route,
-        
-        // match control routes
-        match_load_route,
-        match_unload_route,
 
         // preflight catcher
         cors_preflight

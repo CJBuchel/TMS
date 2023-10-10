@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/delete_match.dart';
-import 'package:tms/views/admin/dashboard/matches/edit_match.dart';
-import 'package:tms/views/admin/dashboard/matches/edit_on_table.dart';
+import 'package:tms/views/admin/dashboard/matches/on_tables/edit_on_tables.dart';
+import 'package:tms/views/admin/dashboard/matches/match_edit/delete_match.dart';
+import 'package:tms/views/admin/dashboard/matches/match_edit/edit_match.dart';
 
 class MatchEditRow extends StatelessWidget {
   final GameMatch match;
   final List<Team> teams;
+  final Color rowColor;
 
-  const MatchEditRow({Key? key, required this.match, required this.teams}) : super(key: key);
-
-  Team? _getTeam(String teamNumber) {
-    // safely find team
-    final index = teams.indexWhere((t) => t.teamNumber == teamNumber);
-    if (index != -1) {
-      return teams[index];
-    } else {
-      return null;
-    }
-  }
+  const MatchEditRow({Key? key, required this.match, required this.teams, required this.rowColor}) : super(key: key);
 
   Widget _styledTextCell(String label, {Color? color}) {
     return Container(
@@ -27,6 +18,7 @@ class MatchEditRow extends StatelessWidget {
         child: Text(
           label,
           style: const TextStyle(
+            overflow: TextOverflow.ellipsis,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -34,34 +26,53 @@ class MatchEditRow extends StatelessWidget {
     );
   }
 
-  List<Widget> _getOnTableRow(List<OnTable> tables) {
-    return tables.expand((table) {
-      return [
-        // table cell
+  Widget _styledCell(Widget inner, {Color? color}) {
+    return Container(
+      color: color,
+      child: Center(
+        child: inner,
+      ),
+    );
+  }
+
+  Widget _getOnTableRow(List<OnTable> tables, {Color? color}) {
+    List<Widget> onTableRows = [];
+
+    for (var table in tables) {
+      // table cells
+      onTableRows.add(
         Expanded(
+          flex: 1,
           child: _styledTextCell(
             table.table,
             color: match.complete && !table.scoreSubmitted
                 ? Colors.red
                 : table.scoreSubmitted
                     ? Colors.green
-                    : null,
+                    : color,
           ),
         ),
+      );
 
-        // team cell
+      // team cell
+      onTableRows.add(
         Expanded(
+          flex: 1,
           child: _styledTextCell(
             table.teamNumber,
             color: match.complete && !table.scoreSubmitted
                 ? Colors.red
                 : table.scoreSubmitted
                     ? Colors.green
-                    : null,
+                    : color,
           ),
         ),
-      ];
-    }).toList();
+      );
+    }
+
+    return Row(
+      children: onTableRows,
+    );
   }
 
   @override
@@ -80,29 +91,43 @@ class MatchEditRow extends StatelessWidget {
         children: [
           // Delete button
           Expanded(
-            child: DeleteMatch(onDeleteMatch: () {}, matchNumber: match.matchNumber),
+            flex: 1,
+            child: _styledCell(DeleteMatch(matchNumber: match.matchNumber)),
           ),
 
           // match number
           Expanded(
             flex: 1,
-            child: _styledTextCell(match.matchNumber.toString()),
+            child: _styledTextCell(match.matchNumber.toString(), color: rowColor),
           ),
 
           Expanded(
             flex: 1,
-            child: _styledTextCell(match.roundNumber.toString()),
+            child: _styledTextCell(match.roundNumber.toString(), color: rowColor),
           ),
 
           Expanded(
-            flex: 1,
-            child: _styledTextCell(match.startTime),
+            flex: 2,
+            child: _styledTextCell(match.startTime, color: rowColor),
           ),
-          Expanded(child: EditMatch(onEditMatch: () {}, match: match)),
 
-          ..._getOnTableRow(match.matchTables),
+          // edit the match
+          Expanded(
+            flex: 1,
+            child: EditMatch(matchNumber: match.matchNumber),
+          ),
 
-          EditOnTable(match: match, onTableChanged: (tables) {}),
+          // table info
+          Expanded(
+            flex: 2,
+            child: _getOnTableRow(match.matchTables, color: rowColor),
+          ),
+
+          // edit the tables
+          Expanded(
+            flex: 1,
+            child: _styledCell(EditOnTables(matchNumber: match.matchNumber, teams: teams)),
+          ),
           // Edit button
         ],
       ),

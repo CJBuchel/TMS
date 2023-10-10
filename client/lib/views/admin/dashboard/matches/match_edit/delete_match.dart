@@ -5,11 +5,11 @@ import 'package:tms/requests/match_requests.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class DeleteMatch extends StatelessWidget {
-  final Function() onDeleteMatch;
+  final Function()? onDeleteMatch;
   final String matchNumber;
   const DeleteMatch({
     Key? key,
-    required this.onDeleteMatch,
+    this.onDeleteMatch,
     required this.matchNumber,
   }) : super(key: key);
 
@@ -21,12 +21,12 @@ class DeleteMatch extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Deleted $matchNumber"),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.red,
           ),
         );
       }
 
-      onDeleteMatch();
+      onDeleteMatch?.call();
     });
   }
 

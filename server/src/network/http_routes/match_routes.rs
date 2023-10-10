@@ -2,7 +2,7 @@
 use log::error;
 use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
-use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{GameMatch, create_permissions}, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse, MatchLoadRequest, MatchUpdateRequest, SocketMessage, MatchDeleteRequest}, TmsRequest, check_permissions, tms_clients_ws_send};
+use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{GameMatch, create_permissions}, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse, MatchLoadRequest, MatchUpdateRequest, SocketMessage, MatchDeleteRequest, MatchAddRequest}, TmsRequest, check_permissions, tms_clients_ws_send};
 
 use crate::{db::{db::TmsDB, tree::UpdateTree}, event_service::TmsEventServiceArc};
 
@@ -150,6 +150,30 @@ pub fn match_delete_route(message: String) -> TmsRouteResponse<()> {
         TmsRespond!(Status::NotFound, "Failed to get match".to_string());
       }
     };
+  }
+
+  TmsRespond!(Status::Unauthorized)
+}
+
+#[tms_private_route]
+#[post("/match/add/<uuid>", data = "<message>")]
+pub fn match_add_route(message: String) -> TmsRouteResponse<()> {
+  let message: MatchAddRequest = TmsRequest!(message.clone(), security);
+  let mut perms = create_permissions();
+  perms.head_referee = Some(true);
+
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    let match_number = message.match_data.match_number.clone();
+    let match_data = message.match_data.clone();
+    let _ = db.tms_data.matches.insert(match_number.as_bytes(), match_data);
+    // send updates to clients
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("matches"),
+      sub_topic: String::from("update"),
+      message: "".to_string(),
+    }, clients.inner().clone(), None);
+    TmsRespond!()
   }
 
   TmsRespond!(Status::Unauthorized)

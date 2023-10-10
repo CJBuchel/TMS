@@ -5,8 +5,15 @@ class EditTime extends StatefulWidget {
   final TextEditingController controller;
   final String? label;
   final String? initialTime;
+  final Function(String)? onChange;
 
-  const EditTime({Key? key, this.label, this.initialTime, required this.controller}) : super(key: key);
+  const EditTime({
+    Key? key,
+    this.label,
+    this.initialTime,
+    this.onChange,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   State<EditTime> createState() => _EditStartTimeState();
@@ -23,6 +30,7 @@ class _EditStartTimeState extends State<EditTime> {
     if (mounted) {
       setState(() {
         widget.controller.text = parseTimeOfDayToString(time);
+        widget.onChange?.call(widget.controller.text);
       });
     }
   }

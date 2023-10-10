@@ -22,3 +22,9 @@ pub struct MatchDeleteRequest {
   pub auth_token: String,
   pub match_number: String,
 }
+
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
+pub struct MatchAddRequest {
+  pub auth_token: String,
+  pub match_data: GameMatch,
+}

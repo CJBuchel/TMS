@@ -94,67 +94,6 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
     );
   }
 
-  DataCell styledCellOldCell(String text, List<GameMatch> loadedMatches, {bool? isTable, bool? goodSig}) {
-    return DataCell(
-      AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          if ((isTable ?? false) && loadedMatches.isNotEmpty) {
-            return Container(
-              color: Colors.transparent,
-              // width: 100,
-              child: Stack(
-                children: [
-                  if (!(goodSig ?? false))
-                    Align(
-                      alignment: Responsive.isMobile(context) ? const Alignment(-2, 0) : Alignment.centerLeft,
-                      child: Text(
-                        "SIG",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: _controller.value < 0.5 ? Colors.red : Colors.transparent,
-                        ),
-                      ),
-                    ),
-                  if ((goodSig ?? false))
-                    Align(
-                      alignment: Responsive.isMobile(context) ? const Alignment(2, 0) : Alignment.centerRight,
-                      child: const Text(
-                        "OK",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  Center(
-                    child: Text(
-                      text,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Center(
-              child: Text(
-                text,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12),
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
   DataRow2 _styledRow(OnTable table, GameMatch match, List<Team> teams, List<GameMatch> loadedMatches, Map<String, String> tableMap) {
     // find table in tableMap and check it's match number
     bool goodSig = false;
@@ -162,7 +101,7 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
       goodSig = true;
     }
 
-    // get match
+    // get team
     String teamName = teams.firstWhere((t) => t.teamNumber == table.teamNumber).teamName;
 
     return DataRow2(cells: [

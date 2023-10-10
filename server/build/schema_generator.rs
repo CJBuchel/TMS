@@ -68,6 +68,7 @@ pub struct TmsSchema {
   match_get_response: MatchResponse,
   match_update_request: MatchUpdateRequest,
   match_delete_request: MatchDeleteRequest,
+  match_add_request: MatchAddRequest,
   //judging
   judging_sessions_get_response: JudgingSessionsResponse,
   judging_session_get_request: JudgingSessionRequest,

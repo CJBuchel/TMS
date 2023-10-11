@@ -29,14 +29,14 @@ TimeOfDay? parseStringTimeToTimeOfDay(String time) {
   }
 }
 
-// convert date time to string (Time in the format of 10:00:00 AM)
+// convert date time to string (Time in the format of 15:00:00 PM)
 String parseDateTimeToStringTime(DateTime time) {
-  final DateFormat formatter = DateFormat('hh:mm:ss a');
+  final DateFormat formatter = DateFormat('HH:mm:ss a');
   final String formattedTime = formatter.format(time);
   return formattedTime;
 }
 
-// convert time of day to string (Time in the format of 10:00:00 AM)
+// convert time of day to string (Time in the format of 15:00:00 PM)
 String parseTimeOfDayToString(TimeOfDay time) {
   final DateTime now = DateTime.now();
   final DateTime dateTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
@@ -68,4 +68,8 @@ String parseServerTimestampToString(int timestamp) {
   final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
   final String formattedTime = formatter.format(dateTime);
   return formattedTime;
+}
+
+int parseTimeOfDayToMinutes(TimeOfDay time) {
+  return time.hour * 60 + time.minute;
 }

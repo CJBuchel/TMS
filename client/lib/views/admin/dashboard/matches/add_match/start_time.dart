@@ -26,36 +26,26 @@ class StartTime extends StatelessWidget {
     // search through all matches and find the two matches that are closest to the start time
     TimeOfDay setTime = parseStringTimeToTimeOfDay(value) ?? TimeOfDay.now();
     GameMatch matchBefore = matches.first;
-    GameMatch matchAfter = matches.last;
 
     List<GameMatch> sortedMatches = sortMatchesByTime(matches);
     // first iterate and find the match before the start time
     for (var match in sortedMatches) {
       TimeOfDay matchTime = parseStringTimeToTimeOfDay(match.startTime) ?? TimeOfDay.now();
-      if (matchTime.hour < setTime.hour) {
+      if (parseTimeOfDayToMinutes(matchTime) < parseTimeOfDayToMinutes(setTime)) {
         matchBefore = match;
       }
     }
 
-    // then iterate and find the match after the start time
-    for (var match in sortedMatches.reversed) {
-      TimeOfDay matchTime = parseStringTimeToTimeOfDay(match.startTime) ?? TimeOfDay.now();
-      if (matchTime.hour > setTime.hour) {
-        matchAfter = match;
-      }
-    }
-
     // check the first match number and create a sub match number, i.e 1.1, 1.2, 1.3, etc.
-    double beforeNumber = double.tryParse(matchBefore.matchNumber) ?? 0.0;
-    double afterNumber = double.tryParse(matchAfter.matchNumber) ?? 0.0;
+    List<String> beforeSplit = matchBefore.matchNumber.split(".");
+    String beforeMain = beforeSplit[0];
+    int beforeSub = beforeSplit.length > 1 ? (int.tryParse(beforeSplit[1]) ?? 0) : 0;
 
     String newMatchNumber;
-
-    if (afterNumber - beforeNumber >= 1.0) {
-      newMatchNumber = "$beforeNumber.1";
+    if (parseTimeOfDayToMinutes(setTime) < parseTimeOfDayToMinutes(parseStringTimeToTimeOfDay(matchBefore.startTime) ?? TimeOfDay.now())) {
+      newMatchNumber = "";
     } else {
-      int decimalPart = int.tryParse(matchBefore.matchNumber.split(".").last) ?? 0;
-      newMatchNumber = "${beforeNumber.toStringAsFixed(0)}.${decimalPart + 1}";
+      newMatchNumber = "$beforeMain.${beforeSub + 1}";
     }
 
     if (onProposedMatchNumber != null) {

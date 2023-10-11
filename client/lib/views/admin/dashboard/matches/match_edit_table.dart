@@ -1,95 +1,24 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:tms/mixins/auto_subscribe.dart';
-import 'package:tms/mixins/local_db_mixin.dart';
-import 'package:tms/requests/match_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/matches/add_match/add_match.dart';
+import 'package:tms/views/admin/dashboard/matches/checks/errors.dart';
+import 'package:tms/views/admin/dashboard/matches/checks/warnings.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit_row.dart';
-import 'package:tms/views/shared/network_error_popup.dart';
-import 'package:tms/views/shared/sorter_util.dart';
 
-class MatchEditTable extends StatefulWidget {
-  const MatchEditTable({Key? key}) : super(key: key);
-
-  @override
-  State<MatchEditTable> createState() => _MatchTableState();
-}
-
-class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  List<GameMatch> _matches = [];
-  List<Team> _teams = [];
-
-  set setMatches(List<GameMatch> value) {
-    if (mounted) {
-      value = sortMatchesByTime(value);
-      setState(() {
-        _matches = value;
-      });
-    }
-  }
-
-  set setMatch(GameMatch match) {
-    if (mounted) {
-      // find match if exists
-      final index = _matches.indexWhere((m) => m.matchNumber == match.matchNumber);
-      if (index != -1) {
-        setState(() {
-          _matches[index] = match;
-        });
-      } else {
-        setState(() {
-          _matches.add(match);
-        });
-      }
-    }
-  }
-
-  set setTeams(List<Team> teams) {
-    if (mounted) {
-      setState(() {
-        _teams = teams;
-      });
-    }
-  }
-
-  set setTeam(Team team) {
-    if (mounted) {
-      // find team if exists
-      final index = _teams.indexWhere((t) => t.teamNumber == team.teamNumber);
-      if (index != -1) {
-        setState(() {
-          _teams[index] = team;
-        });
-      } else {
-        setState(() {
-          _teams.add(team);
-        });
-      }
-    }
-  }
-
-  void fetchMatches() {
-    getMatchesRequest().then((value) {
-      if (value.item1 == HttpStatus.ok) {
-        setMatches = value.item2;
-      } else {
-        showNetworkError(value.item1, context, subMessage: "Error fetching matches");
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // live setters
-    onMatchesUpdate((m) => setMatches = m);
-    onMatchUpdate((m) => setMatch = m);
-    onTeamsUpdate((t) => setTeams = t);
-    onTeamUpdate((t) => setTeam = t);
-  }
+class MatchEditTable extends StatelessWidget {
+  final List<GameMatch> matches;
+  final List<Team> teams;
+  final Function() requestMatches;
+  final List<MatchWarning> warnings;
+  final List<MatchError> errors;
+  const MatchEditTable({
+    Key? key,
+    required this.matches,
+    required this.teams,
+    required this.requestMatches,
+    required this.errors,
+    required this.warnings,
+  }) : super(key: key);
 
   Widget _topButtons() {
     return Row(
@@ -97,13 +26,13 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
       children: [
         IconButton(
           onPressed: () {
-            fetchMatches();
+            requestMatches();
           },
           icon: const Icon(Icons.refresh, color: Colors.orange),
         ),
 
         // add match
-        AddMatch(matches: _matches),
+        AddMatch(matches: matches),
       ],
     );
   }
@@ -111,10 +40,10 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
   Widget _getTable() {
     // list view table
     return ListView.builder(
-      itemCount: _matches.length,
+      itemCount: matches.length,
       itemBuilder: (context, index) {
-        bool isDeferred = _matches[index].gameMatchDeferred;
-        bool isComplete = _matches[index].complete;
+        bool isDeferred = matches[index].gameMatchDeferred;
+        bool isComplete = matches[index].complete;
 
         Color rowColor = Colors.transparent; // default
 
@@ -134,7 +63,13 @@ class _MatchTableState extends State<MatchEditTable> with AutoUnsubScribeMixin, 
           }
         }
 
-        return MatchEditRow(match: _matches[index], teams: _teams, rowColor: rowColor);
+        return MatchEditRow(
+          match: matches[index],
+          teams: teams,
+          rowColor: rowColor,
+          warnings: warnings,
+          errors: errors,
+        );
       },
     );
   }

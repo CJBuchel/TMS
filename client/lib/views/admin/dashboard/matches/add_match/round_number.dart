@@ -43,6 +43,9 @@ class _RoundNumberState extends State<RoundNumber> {
           value: widget.isExhibition.value,
           onChanged: (value) {
             if (mounted) {
+              if (value) {
+                widget.controller.text = "0";
+              }
               setState(() {
                 widget.isExhibition.value = value;
               });

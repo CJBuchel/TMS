@@ -9,7 +9,8 @@ class TTLClock extends StatefulWidget {
   final List<GameMatch> matches;
   final double? fontSize;
   final Color? textColor;
-  const TTLClock({Key? key, required this.matches, this.fontSize, this.textColor}) : super(key: key);
+  final bool? showOnlyClock;
+  const TTLClock({Key? key, required this.matches, this.fontSize, this.textColor, this.showOnlyClock}) : super(key: key);
 
   @override
   State<TTLClock> createState() => _TTLClockState();
@@ -31,13 +32,14 @@ class _TTLClockState extends State<TTLClock> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "TTL: ",
-          style: TextStyle(
-            fontSize: widget.fontSize ?? (Responsive.isDesktop(context) ? 60 : 40),
-            color: widget.textColor,
+        if (widget.showOnlyClock == null || widget.showOnlyClock == false)
+          Text(
+            "TTL: ",
+            style: TextStyle(
+              fontSize: widget.fontSize ?? (Responsive.isDesktop(context) ? 60 : 40),
+              color: widget.textColor,
+            ),
           ),
-        ),
         Text(
           time >= 0 ? "+${parseTime(time)}" : "-${parseTime(time)}",
           style: TextStyle(

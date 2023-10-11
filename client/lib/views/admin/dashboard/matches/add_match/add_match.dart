@@ -125,8 +125,10 @@ class AddMatch extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                _addMatch(context);
-                Navigator.of(context).pop();
+                if (_roundNumberController.text.isNotEmpty) {
+                  _addMatch(context);
+                  Navigator.of(context).pop();
+                }
               },
               child: const Text("Add", style: TextStyle(color: Colors.green)),
             ),

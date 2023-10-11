@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/errors.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/warnings.dart';
 import 'package:tms/views/admin/dashboard/matches/on_tables/edit_on_tables.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit/delete_match.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit/edit_match.dart';
@@ -11,16 +9,11 @@ class MatchEditRow extends StatelessWidget {
   final List<Team> teams;
   final Color rowColor;
 
-  final List<MatchWarning> warnings;
-  final List<MatchError> errors;
-
   const MatchEditRow({
     Key? key,
     required this.match,
     required this.teams,
     required this.rowColor,
-    required this.warnings,
-    required this.errors,
   }) : super(key: key);
 
   Widget _styledTextCell(String label, {Color? color, Color? textColor}) {

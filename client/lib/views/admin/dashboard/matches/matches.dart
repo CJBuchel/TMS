@@ -5,8 +5,6 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/errors.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/warnings.dart';
 import 'package:tms/views/admin/dashboard/matches/info.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit_table.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
@@ -23,31 +21,7 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
   List<GameMatch> _matches = [];
   List<Team> _teams = [];
   List<JudgingSession> _judgingSessions = [];
-  List<MatchWarning> _warnings = [];
-  List<MatchError> _errors = [];
   Event? _event;
-
-  set setWarnings(List<MatchWarning> warnings) {
-    // wait frame after build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        setState(() {
-          _warnings = warnings;
-        });
-      }
-    });
-  }
-
-  set setErrors(List<MatchError> errors) {
-    // wait frame after build
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        setState(() {
-          _errors = errors;
-        });
-      }
-    });
-  }
 
   set setMatches(List<GameMatch> value) {
     if (mounted) {
@@ -177,10 +151,6 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
                 teams: _teams,
                 judgingSessions: _judgingSessions,
                 event: _event,
-
-                // checks
-                onErrors: (e) => setErrors = e,
-                onWarnings: (w) => setWarnings = w,
               ),
             ),
 
@@ -190,8 +160,6 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
                 matches: _matches,
                 teams: _teams,
                 requestMatches: () => fetchMatches(),
-                errors: _errors,
-                warnings: _warnings,
               ),
             ),
           ],

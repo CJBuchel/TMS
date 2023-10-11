@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/matches/add_match/add_match.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit_row.dart';
@@ -24,6 +23,7 @@ class _MatchEditTableState extends State<MatchEditTable> {
   List<GameMatch> _filteredMatches = [];
   String matchNumberFilter = '';
   String roundNumberFilter = '';
+  String timeFilter = '';
   String tableFilter = '';
   String teamFilter = '';
 
@@ -39,6 +39,14 @@ class _MatchEditTableState extends State<MatchEditTable> {
     if (mounted) {
       setState(() {
         roundNumberFilter = r;
+      });
+    }
+  }
+
+  void setTimeFilter(String t) {
+    if (mounted) {
+      setState(() {
+        timeFilter = t;
       });
     }
   }
@@ -76,6 +84,10 @@ class _MatchEditTableState extends State<MatchEditTable> {
 
     if (roundNumberFilter.isNotEmpty) {
       matches = matches.where((match) => match.roundNumber == int.parse(roundNumberFilter)).toList();
+    }
+
+    if (timeFilter.isNotEmpty) {
+      matches = matches.where((match) => match.startTime.contains(timeFilter)).toList();
     }
 
     if (tableFilter.isNotEmpty) {
@@ -179,6 +191,19 @@ class _MatchEditTableState extends State<MatchEditTable> {
     );
   }
 
+  Widget filterTime() {
+    return TextField(
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Time',
+      ),
+      onChanged: (value) {
+        setTimeFilter(value);
+        _applyFilter();
+      },
+    );
+  }
+
   Widget filterTable() {
     return TextField(
       decoration: const InputDecoration(
@@ -213,7 +238,7 @@ class _MatchEditTableState extends State<MatchEditTable> {
         const Expanded(flex: 1, child: SizedBox.shrink()),
         Expanded(flex: 1, child: filterMatchNumber()),
         Expanded(flex: 1, child: filterRoundNumber()),
-        const Expanded(flex: 2, child: SizedBox.shrink()),
+        Expanded(flex: 2, child: filterTime()),
         const Expanded(flex: 1, child: SizedBox.shrink()),
         Expanded(
             flex: 2,

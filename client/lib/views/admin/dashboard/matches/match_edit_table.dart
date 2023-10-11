@@ -24,7 +24,8 @@ class _MatchEditTableState extends State<MatchEditTable> {
   List<GameMatch> _filteredMatches = [];
   String matchNumberFilter = '';
   String roundNumberFilter = '';
-  String tableTeamFilter = '';
+  String tableFilter = '';
+  String teamFilter = '';
 
   void setMatchNumberFilter(String m) {
     if (mounted) {
@@ -42,10 +43,18 @@ class _MatchEditTableState extends State<MatchEditTable> {
     }
   }
 
-  void setTableTeamFilter(String t) {
+  void setTableFilter(String t) {
     if (mounted) {
       setState(() {
-        tableTeamFilter = t;
+        tableFilter = t;
+      });
+    }
+  }
+
+  void setTeamFilter(String t) {
+    if (mounted) {
+      setState(() {
+        teamFilter = t;
       });
     }
   }
@@ -69,12 +78,36 @@ class _MatchEditTableState extends State<MatchEditTable> {
       matches = matches.where((match) => match.roundNumber == int.parse(roundNumberFilter)).toList();
     }
 
-    if (tableTeamFilter.isNotEmpty) {
+    if (tableFilter.isNotEmpty) {
       matches = matches.where((match) {
         bool found = false;
         for (var table in match.matchTables) {
           // check for team number and table name
-          if (table.teamNumber.contains(tableTeamFilter) || table.table.toLowerCase().contains(tableTeamFilter.toLowerCase())) {
+          if (table.table.toLowerCase().contains(tableFilter.toLowerCase())) {
+            found = true;
+            break;
+          }
+        }
+        return found;
+      }).toList();
+    }
+
+    if (teamFilter.isNotEmpty) {
+      matches = matches.where((match) {
+        bool found = false;
+        for (var table in match.matchTables) {
+          Team? team;
+          for (var t in widget.teams) {
+            if (t.teamNumber == table.teamNumber) {
+              team = t;
+              break;
+            }
+          }
+
+          String teamNumber = table.teamNumber.toLowerCase();
+          String teamName = team?.teamName.toLowerCase() ?? '';
+          // check for team number and team name
+          if (teamNumber.contains(teamFilter.toLowerCase()) || teamName.contains(teamFilter.toLowerCase())) {
             found = true;
             break;
           }
@@ -146,14 +179,27 @@ class _MatchEditTableState extends State<MatchEditTable> {
     );
   }
 
-  Widget filterTableTeam() {
+  Widget filterTable() {
     return TextField(
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        labelText: 'Table/Team',
+        labelText: 'Table',
       ),
       onChanged: (value) {
-        setTableTeamFilter(value);
+        setTableFilter(value);
+        _applyFilter();
+      },
+    );
+  }
+
+  Widget filterTeam() {
+    return TextField(
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Team',
+      ),
+      onChanged: (value) {
+        setTeamFilter(value);
         _applyFilter();
       },
     );
@@ -169,7 +215,14 @@ class _MatchEditTableState extends State<MatchEditTable> {
         Expanded(flex: 1, child: filterRoundNumber()),
         const Expanded(flex: 2, child: SizedBox.shrink()),
         const Expanded(flex: 1, child: SizedBox.shrink()),
-        Expanded(flex: 2, child: filterTableTeam()),
+        Expanded(
+            flex: 2,
+            child: Row(
+              children: [
+                Expanded(flex: 1, child: filterTable()),
+                Expanded(flex: 1, child: filterTeam()),
+              ],
+            )),
         const Expanded(flex: 1, child: SizedBox.shrink()),
       ],
     );

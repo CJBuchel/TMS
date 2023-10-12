@@ -5,6 +5,7 @@ import 'package:tms/responsive.dart';
 import 'package:tms/views/admin/dashboard/judging/judging.dart';
 import 'package:tms/views/admin/dashboard/matches/matches.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
+import 'package:tms/views/admin/dashboard/teams/teams.dart';
 import 'package:tms/views/admin/dashboard/users/users.dart';
 
 class DrawerListTile extends StatelessWidget {
@@ -83,7 +84,7 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: 'Teams',
             svgSrc: 'assets/icons/teams.svg',
-            press: () {},
+            press: () => _handleViewSwitch(const Teams(), context),
           ),
           // DrawerListTile(
           //   title: 'Documents',

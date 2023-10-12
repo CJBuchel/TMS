@@ -212,7 +212,7 @@ class _MatchEditTableState extends State<MatchEditTable> {
     );
   }
 
-  Widget getFilters() {
+  Widget _getFilters() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -301,7 +301,7 @@ class _MatchEditTableState extends State<MatchEditTable> {
           SizedBox(
             height: 30,
             width: constraints.maxWidth * 0.9,
-            child: getFilters(),
+            child: _getFilters(),
           ),
 
           // main table

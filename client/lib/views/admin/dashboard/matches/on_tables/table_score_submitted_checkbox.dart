@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
 
-class ScoreSubmittedCheckbox extends StatefulWidget {
+class TableScoreSubmittedCheckbox extends StatefulWidget {
   final OnTable onTable;
   final GameMatch match;
   final Function(GameMatch) onTableUpdate;
 
-  const ScoreSubmittedCheckbox({
+  const TableScoreSubmittedCheckbox({
     Key? key,
     required this.onTable,
     required this.match,
@@ -14,15 +14,10 @@ class ScoreSubmittedCheckbox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ScoreSubmittedCheckbox> createState() => _ScoreSubmittedCheckboxState();
+  State<TableScoreSubmittedCheckbox> createState() => _ScoreSubmittedCheckboxState();
 }
 
-class _ScoreSubmittedCheckboxState extends State<ScoreSubmittedCheckbox> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _ScoreSubmittedCheckboxState extends State<TableScoreSubmittedCheckbox> {
   void _toggleState(bool? value) {
     if (mounted && value != null) {
       final index = widget.match.matchTables.indexWhere((element) => element.table == widget.onTable.table);

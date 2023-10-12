@@ -1,70 +1,68 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tms/requests/match_requests.dart';
+import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/on_tables/on_tables.dart';
+import 'package:tms/views/admin/dashboard/judging/pods/pods_table.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
-class EditOnTables extends StatefulWidget {
-  final String matchNumber;
+class EditPods extends StatefulWidget {
+  final String sessionNumber;
   final List<Team> teams;
 
-  const EditOnTables({Key? key, required this.matchNumber, required this.teams}) : super(key: key);
+  const EditPods({Key? key, required this.sessionNumber, required this.teams}) : super(key: key);
 
   @override
-  State<EditOnTables> createState() => _EditOnTablesState();
+  State<EditPods> createState() => _EditPodsState();
 }
 
-class _EditOnTablesState extends State<EditOnTables> {
-  GameMatch _match = GameMatch(
-    complete: false,
-    matchNumber: "",
-    gameMatchDeferred: false,
+class _EditPodsState extends State<EditPods> {
+  JudgingSession _session = JudgingSession(
+    sessionNumber: "",
     startTime: "",
     endTime: "",
-    exhibitionMatch: false,
-    roundNumber: 0,
-    matchTables: [],
+    complete: false,
+    judgingSessionDeferred: false,
+    judgingPods: [],
   );
 
-  void _updateMatch() {
-    updateMatchRequest(widget.matchNumber, _match).then((res) {
+  void _updateSession() {
+    updateJudgingSessionRequest(widget.sessionNumber, _session).then((res) {
       if (res != HttpStatus.ok) {
-        showNetworkError(res, context, subMessage: "Failed to update match");
+        showNetworkError(res, context, subMessage: "Failed to update session");
       } else {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.green,
-          content: Text("Match ${widget.matchNumber} updated"),
+          content: Text("Session ${widget.sessionNumber} updated"),
         ));
       }
     });
   }
 
-  void _setMatch(GameMatch m) {
+  void _setSession(JudgingSession session) {
     if (mounted) {
       setState(() {
-        _match = m;
+        _session = session;
       });
     }
   }
 
-  Future<void> _getMatch() async {
-    await getMatchRequest(widget.matchNumber).then((res) {
+  Future<void> _getSession() async {
+    await getJudgingSessionRequest(widget.sessionNumber).then((res) {
       if (res.item1 != HttpStatus.ok) {
-        showNetworkError(res.item1, context, subMessage: "Failed to get match");
+        showNetworkError(res.item1, context, subMessage: "Failed to get session");
       } else {
         if (res.item2 != null) {
-          GameMatch m = res.item2!;
-          _setMatch(m);
+          JudgingSession s = res.item2!;
+          _setSession(s);
         }
       }
     });
   }
 
-  void _editOnTablesDialog() {
+  void _editPodsDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -76,17 +74,17 @@ class _EditOnTablesState extends State<EditOnTables> {
             title: Row(
               children: [
                 const Icon(Icons.edit, color: Colors.pink),
-                Text(" Editing Tables For Match ${widget.matchNumber}"),
+                Text(" Editing Pods For Match ${widget.sessionNumber}"),
               ],
             ),
             content: SizedBox(
               height: height,
               width: width,
-              child: OnTables(
+              child: PodTable(
+                session: _session,
                 teams: widget.teams,
-                match: _match,
-                onMatchUpdate: (match) {
-                  _setMatch(match);
+                onSessionUpdate: (session) {
+                  _setSession(session);
                 },
               ),
             ),
@@ -99,7 +97,7 @@ class _EditOnTablesState extends State<EditOnTables> {
               ),
               TextButton(
                 onPressed: () {
-                  _updateMatch();
+                  _updateSession();
                   Navigator.of(context).pop();
                 },
                 child: const Text("Update", style: TextStyle(color: Colors.red)),
@@ -116,8 +114,8 @@ class _EditOnTablesState extends State<EditOnTables> {
     return IconButton(
       icon: const Icon(Icons.edit, color: Colors.pink),
       onPressed: () async {
-        await _getMatch();
-        _editOnTablesDialog();
+        await _getSession();
+        _editPodsDialog();
       },
     );
   }

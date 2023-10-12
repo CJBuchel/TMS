@@ -15,3 +15,6 @@ pub use game::*;
 
 mod user;
 pub use user::*;
+
+mod judging;
+pub use judging::*;

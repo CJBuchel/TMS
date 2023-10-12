@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/matches/add_match/add_match.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit_row.dart';
@@ -135,7 +136,6 @@ class _MatchEditTableState extends State<MatchEditTable> {
   void didUpdateWidget(covariant MatchEditTable oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget != widget) {
-      setFilteredMatches(widget.matches);
       _applyFilter();
     }
   }
@@ -143,25 +143,7 @@ class _MatchEditTableState extends State<MatchEditTable> {
   @override
   void initState() {
     super.initState();
-    setFilteredMatches(widget.matches);
     _applyFilter();
-  }
-
-  Widget _topButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        IconButton(
-          onPressed: () {
-            widget.requestMatches();
-          },
-          icon: const Icon(Icons.refresh, color: Colors.orange),
-        ),
-
-        // add match
-        AddMatch(matches: widget.matches),
-      ],
-    );
   }
 
   Widget filterMatchNumber() {
@@ -240,14 +222,15 @@ class _MatchEditTableState extends State<MatchEditTable> {
         Expanded(flex: 1, child: filterRoundNumber()),
         Expanded(flex: 2, child: filterTime()),
         const Expanded(flex: 1, child: SizedBox.shrink()),
-        Expanded(
-            flex: 2,
-            child: Row(
-              children: [
-                Expanded(flex: 1, child: filterTable()),
-                Expanded(flex: 1, child: filterTeam()),
-              ],
-            )),
+        if (!Responsive.isMobile(context))
+          Expanded(
+              flex: 2,
+              child: Row(
+                children: [
+                  Expanded(flex: 1, child: filterTable()),
+                  Expanded(flex: 1, child: filterTeam()),
+                ],
+              )),
         const Expanded(flex: 1, child: SizedBox.shrink()),
       ],
     );
@@ -288,9 +271,26 @@ class _MatchEditTableState extends State<MatchEditTable> {
     );
   }
 
+  Widget _topButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          onPressed: () {
+            widget.requestMatches();
+          },
+          icon: const Icon(Icons.refresh, color: Colors.orange),
+        ),
+
+        // add match
+        AddMatch(matches: widget.matches),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: ((context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return Column(
         children: [
           SizedBox(
@@ -313,6 +313,6 @@ class _MatchEditTableState extends State<MatchEditTable> {
           ),
         ],
       );
-    }));
+    });
   }
 }

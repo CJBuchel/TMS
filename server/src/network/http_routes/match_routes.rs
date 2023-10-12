@@ -52,7 +52,7 @@ pub fn match_get_route(message: String) -> TmsRouteResponse<()> {
     },
     None => {
       error!("Failed to get match (match get) {}", match_request.match_number);
-      TmsRespond!(Status::BadRequest, "Failed to get match".to_string());
+      TmsRespond!(Status::NotFound, "Failed to get match".to_string());
     }
   };
 }
@@ -89,7 +89,7 @@ pub fn match_update_route(message: String) -> TmsRouteResponse<()> {
       },
       None => {
         error!("Failed to get match (update) {}", message.match_number);
-        TmsRespond!(Status::BadRequest, "Failed to get match".to_string());
+        TmsRespond!(Status::NotFound, "Failed to get match".to_string());
       }
     };
   }

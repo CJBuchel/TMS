@@ -1,78 +1,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tms/requests/match_requests.dart';
+import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/add_match/round_number.dart';
-import 'package:tms/views/admin/dashboard/matches/add_match/start_time.dart';
+import 'package:tms/views/admin/dashboard/judging/add_session/start_time.dart';
 import 'package:tms/views/shared/edit_time.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
-class AddMatch extends StatelessWidget {
-  final List<GameMatch> matches;
-  AddMatch({
+class AddSession extends StatelessWidget {
+  final List<JudgingSession> sessions;
+
+  AddSession({
     Key? key,
-    required this.matches,
+    required this.sessions,
   }) : super(key: key);
 
-  final TextEditingController _matchNumberController = TextEditingController();
-  final TextEditingController _roundNumberController = TextEditingController();
+  final TextEditingController _sessionNumberController = TextEditingController();
   final TextEditingController _startTimeController = TextEditingController();
   final TextEditingController _endTimeController = TextEditingController();
-  final ValueNotifier<bool> _isExhibition = ValueNotifier<bool>(false);
-
-  void _addMatch(BuildContext context) {
-    final GameMatch match = GameMatch(
-      // default fields
-      complete: false,
-      gameMatchDeferred: false,
-      matchTables: [],
-
-      // edited fields
-      matchNumber: _matchNumberController.text,
-      roundNumber: int.tryParse(_roundNumberController.text) ?? 1,
-      startTime: _startTimeController.text,
-      endTime: _endTimeController.text,
-      exhibitionMatch: _isExhibition.value,
-    );
-
-    addMatchRequest(match).then((value) {
-      if (value != HttpStatus.ok) {
-        showNetworkError(value, context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.green,
-            content: Text("Match added"),
-          ),
-        );
-      }
-    });
-  }
-
-  Widget _editMatchNumber() {
-    return TextFormField(
-      controller: _matchNumberController,
-      decoration: const InputDecoration(
-        labelText: "Match Number",
-        border: OutlineInputBorder(),
-      ),
-    );
-  }
-
-  Widget _editRoundNumber() {
-    return RoundNumber(
-      isExhibition: _isExhibition,
-      controller: _roundNumberController,
-    );
-  }
 
   Widget _editStartTime() {
-    return MatchStartTime(
-      matches: matches,
+    return JudgingStartTime(
+      sessions: sessions,
       controller: _startTimeController,
-      onProposedMatchNumber: (value) {
-        _matchNumberController.text = value;
+      onProposedSessionNumber: (value) {
+        _sessionNumberController.text = value;
       },
       onProposedEndTime: (value) {
         _endTimeController.text = value;
@@ -87,6 +39,43 @@ class AddMatch extends StatelessWidget {
     );
   }
 
+  Widget _editSessionNumber() {
+    return TextFormField(
+      controller: _sessionNumberController,
+      decoration: const InputDecoration(
+        labelText: "Session Number",
+        border: OutlineInputBorder(),
+      ),
+    );
+  }
+
+  void _addSession(BuildContext context) {
+    final JudgingSession session = JudgingSession(
+      // default fields
+      complete: false,
+      judgingSessionDeferred: false,
+      judgingPods: [],
+
+      // edited fields
+      sessionNumber: _sessionNumberController.text,
+      startTime: _startTimeController.text,
+      endTime: _endTimeController.text,
+    );
+
+    addJudgingSessionRequest(session).then((value) {
+      if (value != HttpStatus.ok) {
+        showNetworkError(value, context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.green,
+            content: Text("Session added"),
+          ),
+        );
+      }
+    });
+  }
+
   Widget _rowPadding(Widget widget) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -94,7 +83,7 @@ class AddMatch extends StatelessWidget {
     );
   }
 
-  void _addMatchDialog(BuildContext context) {
+  void _addSessionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -111,8 +100,7 @@ class AddMatch extends StatelessWidget {
               children: [
                 _rowPadding(_editStartTime()),
                 _rowPadding(_editEndTime()),
-                _rowPadding(_editRoundNumber()),
-                _rowPadding(_editMatchNumber()),
+                _rowPadding(_editSessionNumber()),
               ],
             ),
           ),
@@ -125,8 +113,8 @@ class AddMatch extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                if (_roundNumberController.text.isNotEmpty && _matchNumberController.text.isNotEmpty) {
-                  _addMatch(context);
+                if (_sessionNumberController.text.isNotEmpty) {
+                  _addSession(context);
                   Navigator.of(context).pop();
                 }
               },
@@ -143,7 +131,7 @@ class AddMatch extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.add, color: Colors.green),
       onPressed: () {
-        _addMatchDialog(context);
+        _addSessionDialog(context);
       },
     );
   }

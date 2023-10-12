@@ -190,7 +190,6 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
       JudgingSession session = JudgingSession(
         sessionNumber: sessionNumber,
         complete: false,
-        customSession: false,
         judgingSessionDeferred: false,
         startTime: startTime,
         endTime: endTime,

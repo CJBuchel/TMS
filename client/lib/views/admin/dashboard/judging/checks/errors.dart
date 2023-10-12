@@ -1,72 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
 
-class MatchError {
+class JudgingError {
   final String message;
-  final String? matchNumber;
+  final String? sessionNumber;
   final String? teamNumber;
 
-  MatchError({
+  JudgingError({
     required this.message,
-    this.matchNumber,
+    this.sessionNumber,
     this.teamNumber,
   });
 }
 
-class MatchErrors extends StatefulWidget {
+class JudgingErrors extends StatefulWidget {
   final List<GameMatch> matches;
   final List<Team> teams;
+  final List<JudgingSession> judgingSessions;
   final Event? event;
   final double? fontSize;
 
-  const MatchErrors({
+  const JudgingErrors({
     Key? key,
     required this.matches,
     required this.teams,
+    required this.judgingSessions,
     required this.event,
     this.fontSize,
   }) : super(key: key);
 
   @override
-  State<MatchErrors> createState() => _MatchErrorsState();
+  State<JudgingErrors> createState() => _JudgingErrorsState();
 }
 
-class _MatchErrorsState extends State<MatchErrors> {
-  List<MatchError> _errors = [];
+class _JudgingErrorsState extends State<JudgingErrors> {
+  List<JudgingError> _errors = [];
 
-  List<MatchError> onTableErrors() {
-    List<MatchError> errors = [];
-    List<String> tables = widget.event?.tables ?? [];
-    for (var match in widget.matches) {
-      // check on the tables
-      for (var onTable in match.matchTables) {
-        // check if table is blank
-        if (onTable.table.isNotEmpty && !tables.contains(onTable.table)) {
-          errors.add(MatchError(message: "Table ${onTable.table} does not exist in this event", matchNumber: match.matchNumber));
+  List<JudgingError> podErrors() {
+    List<JudgingError> errors = [];
+    List<String> pods = widget.event?.pods ?? [];
+    for (var session in widget.judgingSessions) {
+      for (var pod in session.judgingPods) {
+        if (pod.pod.isNotEmpty && !pods.contains(pod.pod)) {
+          errors.add(JudgingError(message: "Pod ${pod.pod} does not exist in this event", sessionNumber: session.sessionNumber));
         }
       }
     }
+
     return errors;
   }
 
-  List<MatchError> teamErrors() {
-    List<MatchError> errors = [];
+  List<JudgingError> teamErrors() {
+    List<JudgingError> errors = [];
 
-    int rounds = widget.event?.eventRounds ?? 0;
     for (var team in widget.teams) {
-      int teamMatches = 0;
-      for (var match in widget.matches) {
-        for (var onTable in match.matchTables) {
-          if (onTable.teamNumber == team.teamNumber) {
-            teamMatches++;
+      int teamSessions = 0;
+      for (var session in widget.judgingSessions) {
+        for (var pod in session.judgingPods) {
+          if (pod.teamNumber == team.teamNumber) {
+            teamSessions++;
           }
         }
       }
 
-      if (teamMatches < rounds) {
-        errors.add(MatchError(message: "Team has less matches than the number of rounds", teamNumber: team.teamNumber));
-      } else if (teamMatches > rounds) {
-        errors.add(MatchError(message: "Team has more matches than the number of rounds", teamNumber: team.teamNumber));
+      if (teamSessions == 0) {
+        errors.add(JudgingError(message: "Team is not in any judging sessions", teamNumber: team.teamNumber));
+      } else if (teamSessions > 1) {
+        errors.add(JudgingError(message: "Team is in more than one judging session", teamNumber: team.teamNumber));
       }
     }
 
@@ -75,9 +75,15 @@ class _MatchErrorsState extends State<MatchErrors> {
 
   void setErrors() {
     _errors = [
-      ...onTableErrors(),
+      ...podErrors(),
       ...teamErrors(),
     ];
+  }
+
+  @override
+  void didUpdateWidget(covariant JudgingErrors oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setErrors();
   }
 
   @override
@@ -86,17 +92,11 @@ class _MatchErrorsState extends State<MatchErrors> {
     setErrors();
   }
 
-  @override
-  void didUpdateWidget(covariant MatchErrors oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setErrors();
-  }
-
-  String? getTooltips(MatchError e) {
-    if (e.matchNumber != null && e.teamNumber != null) {
-      return "Session ${e.matchNumber} - Team ${e.teamNumber}: ${e.message}";
-    } else if (e.matchNumber != null) {
-      return "Session ${e.matchNumber}: ${e.message}";
+  String? getTooltips(JudgingError e) {
+    if (e.sessionNumber != null && e.teamNumber != null) {
+      return "Session ${e.sessionNumber} - Team ${e.teamNumber}: ${e.message}";
+    } else if (e.sessionNumber != null) {
+      return "Session ${e.sessionNumber}: ${e.message}";
     } else if (e.teamNumber != null) {
       return "Team ${e.teamNumber}: ${e.message}";
     } else {
@@ -108,7 +108,7 @@ class _MatchErrorsState extends State<MatchErrors> {
     if (_errors.isEmpty) {
       return Text(
         "Errors: 0",
-        style: TextStyle(fontSize: widget.fontSize),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.fontSize),
         overflow: TextOverflow.ellipsis,
       );
     } else {
@@ -139,7 +139,11 @@ class _MatchErrorsState extends State<MatchErrors> {
         if (_errors.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: Icon(Icons.warning, color: Colors.red, size: widget.fontSize),
+            child: Icon(
+              Icons.warning,
+              color: Colors.red,
+              size: widget.fontSize,
+            ),
           ),
         if (_errors.isEmpty)
           Padding(

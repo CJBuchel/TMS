@@ -7,7 +7,7 @@ import 'package:tms/views/match_control/controls_shared.dart';
 import 'package:tms/views/match_control/match_status.dart';
 import 'package:tms/views/match_control/staging_table.dart';
 import 'package:tms/views/match_control/timer_control.dart';
-import 'package:tms/views/match_control/ttl_clock.dart';
+import 'package:tms/views/shared/match_ttl_clock.dart';
 import 'package:tms/views/timer/clock.dart';
 
 class MatchControlDesktopControls extends StatelessWidget {
@@ -121,7 +121,7 @@ class MatchControlDesktopControls extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: TTLClock(matches: matches),
+                child: MatchTTLClock(matches: matches),
               ),
             ),
           ),

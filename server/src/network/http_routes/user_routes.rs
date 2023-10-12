@@ -19,7 +19,7 @@ pub fn login_route(message: String) -> TmsRouteResponse<()> {
   let user = match db.tms_data.users.get(message.username.clone()).unwrap() {
     Some(user) => user,
     None => {
-      TmsRespond!(Status::Unauthorized)
+      TmsRespond!(Status::NotFound)
     }
   };
 
@@ -158,7 +158,7 @@ pub fn user_delete_route(message: String) -> TmsRouteResponse<()> {
           )
         },
         None => {
-          TmsRespond!(Status::BadRequest, "User does not exist".to_string());
+          TmsRespond!(Status::NotFound, "User does not exist".to_string());
         }
       }
     }

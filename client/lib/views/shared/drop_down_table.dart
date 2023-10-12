@@ -63,7 +63,7 @@ class _DropdownTableState extends State<DropdownTable> with AutoUnsubScribeMixin
   Widget dropdownTableSearch() {
     return DropdownSearch<String>(
       popupProps: const PopupProps.menu(
-        showSelectedItems: true,
+        showSearchBox: true,
       ),
       items: _tableOptions,
       dropdownDecoratorProps: const DropDownDecoratorProps(

@@ -169,6 +169,12 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
           getTeamRequest(m.message).then((value) async {
             if (value.item1 == HttpStatus.ok) {
               _setTeam(value.item2 ?? await getTeam(m.message)); // use previous data as default
+            } else {
+              getTeamsRequest().then((value) async {
+                if (value.item1 == HttpStatus.ok) {
+                  _setTeams(value.item2); // use previous data as default
+                }
+              });
             }
           });
         }
@@ -191,6 +197,12 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
           getMatchRequest(m.message).then((value) async {
             if (value.item1 == HttpStatus.ok) {
               _setMatch(value.item2 ?? await getMatch(m.message)); // use previous data as default
+            } else {
+              getMatchesRequest().then((value) async {
+                if (value.item1 == HttpStatus.ok) {
+                  _setMatches(value.item2); // use previous data as default
+                }
+              });
             }
           });
         }
@@ -213,6 +225,12 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
           getJudgingSessionRequest(m.message).then((value) async {
             if (value.item1 == HttpStatus.ok) {
               _setJudgingSession(value.item2 ?? await getJudgingSession(m.message)); // use previous data as default
+            } else {
+              getJudgingSessionsRequest().then((value) async {
+                if (value.item1 == HttpStatus.ok) {
+                  _setJudgingSessions(value.item2); // use previous data as default
+                }
+              });
             }
           });
         }
@@ -423,7 +441,6 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     return JudgingSession(
       sessionNumber: "",
       complete: false,
-      customSession: false,
       judgingSessionDeferred: false,
       startTime: "",
       endTime: "",

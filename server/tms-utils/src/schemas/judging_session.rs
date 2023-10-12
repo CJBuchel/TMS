@@ -16,5 +16,4 @@ pub struct JudgingSession {
   pub judging_pods: Vec<JudgingPod>,
   pub complete: bool,
   pub deferred: bool,
-  pub custom_session: bool
 }

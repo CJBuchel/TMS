@@ -93,7 +93,7 @@ Future<int> unloadMatchRequest() async {
 Future<int> deleteMatchRequest(String matchNumber) async {
   try {
     var message = MatchDeleteRequest(authToken: await NetworkAuth.getToken(), matchNumber: matchNumber);
-    var res = await Network.serverPost("match/delete", message);
+    var res = await Network.serverPost("match/delete", message.toJson());
 
     if (res.item1) {
       return res.item2;

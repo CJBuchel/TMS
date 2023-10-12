@@ -1,54 +1,50 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tms/requests/match_requests.dart';
+import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/edit_checkbox.dart';
 import 'package:tms/views/shared/edit_time.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
-class EditMatch extends StatefulWidget {
-  final String matchNumber;
+class EditSession extends StatefulWidget {
+  final String sessionNumber;
   final Function()? onEdit;
-  const EditMatch({Key? key, required this.matchNumber, this.onEdit}) : super(key: key);
+  const EditSession({Key? key, required this.sessionNumber, this.onEdit}) : super(key: key);
 
   @override
-  State<EditMatch> createState() => _EditMatchState();
+  State<EditSession> createState() => _EditSessionState();
 }
 
-class _EditMatchState extends State<EditMatch> {
-  final TextEditingController _matchNumberController = TextEditingController();
-  final TextEditingController _roundNumberController = TextEditingController();
+class _EditSessionState extends State<EditSession> {
+  final TextEditingController _sessionNumberController = TextEditingController();
   final TextEditingController _startTimeController = TextEditingController();
   final TextEditingController _endTimeController = TextEditingController();
 
   // edits
-  GameMatch _updatedMatch = GameMatch(
-    complete: false,
-    gameMatchDeferred: false,
-    endTime: "",
-    exhibitionMatch: false,
-    matchNumber: "",
-    matchTables: [],
-    roundNumber: 0,
+  JudgingSession _updatedSession = JudgingSession(
+    sessionNumber: "",
     startTime: "",
+    endTime: "",
+    complete: false,
+    judgingSessionDeferred: false,
+    judgingPods: [],
   );
 
-  Future<void> _getMatch() async {
-    await getMatchRequest(widget.matchNumber).then((res) {
+  Future<void> _getSession() async {
+    await getJudgingSessionRequest(widget.sessionNumber).then((res) {
       if (res.item1 != HttpStatus.ok) {
-        showNetworkError(res.item1, context, subMessage: "Failed to get match");
+        showNetworkError(res.item1, context, subMessage: "Failed to get session");
       } else {
         if (res.item2 != null) {
           if (mounted) {
-            GameMatch m = res.item2!;
+            JudgingSession s = res.item2!;
             setState(() {
-              _updatedMatch = m;
+              _updatedSession = s;
 
-              _matchNumberController.text = m.matchNumber;
-              _roundNumberController.text = m.roundNumber.toString();
-              _startTimeController.text = m.startTime;
-              _endTimeController.text = m.endTime;
+              _sessionNumberController.text = s.sessionNumber;
+              _startTimeController.text = s.startTime;
+              _endTimeController.text = s.endTime;
             });
           }
         }
@@ -56,20 +52,19 @@ class _EditMatchState extends State<EditMatch> {
     });
   }
 
-  void _updateMatch() {
-    _updatedMatch.matchNumber = _matchNumberController.text;
-    _updatedMatch.roundNumber = int.parse(_roundNumberController.text);
-    _updatedMatch.startTime = _startTimeController.text;
-    _updatedMatch.endTime = _endTimeController.text;
+  void _updateSession() {
+    _updatedSession.sessionNumber = _sessionNumberController.text;
+    _updatedSession.startTime = _startTimeController.text;
+    _updatedSession.endTime = _endTimeController.text;
 
-    updateMatchRequest(widget.matchNumber, _updatedMatch).then((res) {
-      if (res != HttpStatus.ok) {
-        showNetworkError(res, context, subMessage: "Failed to update match");
+    updateJudgingSessionRequest(widget.sessionNumber, _updatedSession).then((value) {
+      if (value != HttpStatus.ok) {
+        showNetworkError(value, context, subMessage: "Error updating session");
       } else {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Updated ${widget.matchNumber}"),
+            content: Text("Updated session ${_updatedSession.sessionNumber}"),
             backgroundColor: Colors.green,
           ),
         );
@@ -79,22 +74,11 @@ class _EditMatchState extends State<EditMatch> {
     });
   }
 
-  Widget _editMatchNumber() {
+  Widget _editSessionNumber() {
     return TextField(
-      controller: _matchNumberController,
+      controller: _sessionNumberController,
       decoration: const InputDecoration(
-        labelText: "Match Number",
-      ),
-    );
-  }
-
-  Widget _editRoundNumber() {
-    return TextField(
-      controller: _roundNumberController,
-      // allow only numbers
-      keyboardType: TextInputType.number,
-      decoration: const InputDecoration(
-        labelText: "Round Number",
+        labelText: "Session Number",
       ),
     );
   }
@@ -116,13 +100,13 @@ class _EditMatchState extends State<EditMatch> {
           EditCheckbox(
             value: initialValue,
             onChanged: (value) => onChanged(value),
-          )
+          ),
         ],
       ),
     );
   }
 
-  void _editMatchDialog() {
+  void _editSessionDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -130,42 +114,34 @@ class _EditMatchState extends State<EditMatch> {
           title: Row(
             children: [
               const Icon(Icons.edit, color: Colors.blue),
-              Text(" Editing Match ${widget.matchNumber}"),
+              Text(" Editing Session ${_updatedSession.sessionNumber}"),
             ],
           ),
           content: SingleChildScrollView(
             child: Column(
               children: [
-                _editMatchNumber(),
-                _editRoundNumber(),
+                _editSessionNumber(),
                 EditTime(
                   label: "Start Time",
                   controller: _startTimeController,
-                  initialTime: _updatedMatch.startTime,
+                  initialTime: _updatedSession.startTime,
                 ),
                 EditTime(
                   label: "End Time",
                   controller: _endTimeController,
-                  initialTime: _updatedMatch.endTime,
+                  initialTime: _updatedSession.endTime,
                 ),
-                _checkboxContainer("Complete", _updatedMatch.complete, (value) {
+                _checkboxContainer("Complete", _updatedSession.complete, (value) {
                   if (mounted) {
                     setState(() {
-                      _updatedMatch.complete = value;
+                      _updatedSession.complete = value;
                     });
                   }
                 }),
-                _checkboxContainer("Deferred", _updatedMatch.gameMatchDeferred, (value) {
+                _checkboxContainer("Deferred", _updatedSession.judgingSessionDeferred, (value) {
                   if (mounted) {
                     setState(() {
-                      _updatedMatch.gameMatchDeferred = value;
-                    });
-                  }
-                }),
-                _checkboxContainer("Exhibition", _updatedMatch.exhibitionMatch, (value) {
-                  if (mounted) {
-                    setState(() {
-                      _updatedMatch.exhibitionMatch = value;
+                      _updatedSession.judgingSessionDeferred = value;
                     });
                   }
                 }),
@@ -181,10 +157,10 @@ class _EditMatchState extends State<EditMatch> {
             ),
             TextButton(
               onPressed: () {
-                _updateMatch();
+                _updateSession();
                 Navigator.of(context).pop();
               },
-              child: const Text("Update", style: TextStyle(color: Colors.red)),
+              child: const Text("Update", style: TextStyle(color: Colors.blue)),
             ),
           ],
         );
@@ -196,8 +172,8 @@ class _EditMatchState extends State<EditMatch> {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () async {
-        await _getMatch();
-        _editMatchDialog();
+        await _getSession();
+        _editSessionDialog();
       },
       icon: const Icon(Icons.edit, color: Colors.orange),
     );

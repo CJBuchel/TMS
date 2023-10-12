@@ -20,7 +20,6 @@ class MatchWarnings extends StatefulWidget {
   final List<JudgingSession> judgingSessions;
   final Event? event;
   final double? fontSize;
-  final Function(List<MatchWarning>)? onWarnings;
 
   const MatchWarnings({
     Key? key,
@@ -29,7 +28,6 @@ class MatchWarnings extends StatefulWidget {
     required this.judgingSessions,
     required this.event,
     this.fontSize,
-    this.onWarnings,
   }) : super(key: key);
 
   @override
@@ -59,7 +57,15 @@ class _MatchWarningsState extends State<MatchWarnings> {
     List<MatchWarning> warnings = [];
     for (var match in widget.matches) {
       // check on the tables
+      if (match.matchTables.isEmpty) {
+        warnings.add(MatchWarning(message: "No tables or teams specified for match", matchNumber: match.matchNumber));
+      }
+
       for (var onTable in match.matchTables) {
+        if (onTable.scoreSubmitted && !match.complete) {
+          warnings.add(MatchWarning(message: "Score submitted but match is not complete", matchNumber: match.matchNumber));
+        }
+
         // check if table is blank
         if (onTable.table.isEmpty) {
           warnings.add(MatchWarning(message: "No table specified", matchNumber: match.matchNumber));
@@ -122,10 +128,6 @@ class _MatchWarningsState extends State<MatchWarnings> {
       ...onTableWarnings(),
       ...teamWarnings(),
     ];
-
-    if (widget.onWarnings != null) {
-      widget.onWarnings!.call(_warnings);
-    }
   }
 
   @override
@@ -140,10 +142,11 @@ class _MatchWarningsState extends State<MatchWarnings> {
     setWarnings();
   }
 
-  // can only ever be either match error or team error
   String? getTooltips(MatchWarning e) {
-    if (e.matchNumber != null) {
-      return "Match ${e.matchNumber}: ${e.message}";
+    if (e.matchNumber != null && e.teamNumber != null) {
+      return "Session ${e.matchNumber} - Team ${e.teamNumber}: ${e.message}";
+    } else if (e.matchNumber != null) {
+      return "Session ${e.matchNumber}: ${e.message}";
     } else if (e.teamNumber != null) {
       return "Team ${e.teamNumber}: ${e.message}";
     } else {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/views/admin/dashboard/judging/judging.dart';
 import 'package:tms/views/admin/dashboard/matches/matches.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
 import 'package:tms/views/admin/dashboard/users/users.dart';
@@ -73,6 +74,11 @@ class SideMenu extends StatelessWidget {
             title: 'Matches',
             svgSrc: 'assets/icons/table.svg',
             press: () => _handleViewSwitch(const Matches(), context),
+          ),
+          DrawerListTile(
+            title: 'Judging',
+            svgSrc: 'assets/icons/table.svg',
+            press: () => _handleViewSwitch(const Judging(), context),
           ),
           DrawerListTile(
             title: 'Teams',

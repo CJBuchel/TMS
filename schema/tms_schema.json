@@ -13,8 +13,11 @@
     "game_match",
     "integrity_message",
     "judging_session",
+    "judging_session_add_request",
+    "judging_session_delete_request",
     "judging_session_get_request",
     "judging_session_get_response",
+    "judging_session_update_request",
     "judging_sessions_get_response",
     "login_request",
     "login_response",
@@ -81,11 +84,20 @@
     "judging_session": {
       "$ref": "#/definitions/JudgingSession"
     },
+    "judging_session_add_request": {
+      "$ref": "#/definitions/JudgingSessionAddRequest"
+    },
+    "judging_session_delete_request": {
+      "$ref": "#/definitions/JudgingSessionDeleteRequest"
+    },
     "judging_session_get_request": {
       "$ref": "#/definitions/JudgingSessionRequest"
     },
     "judging_session_get_response": {
       "$ref": "#/definitions/JudgingSessionResponse"
+    },
+    "judging_session_update_request": {
+      "$ref": "#/definitions/JudgingSessionUpdateRequest"
     },
     "judging_sessions_get_response": {
       "$ref": "#/definitions/JudgingSessionsResponse"
@@ -537,7 +549,6 @@
       "type": "object",
       "required": [
         "complete",
-        "custom_session",
         "deferred",
         "end_time",
         "judging_pods",
@@ -546,9 +557,6 @@
       ],
       "properties": {
         "complete": {
-          "type": "boolean"
-        },
-        "custom_session": {
           "type": "boolean"
         },
         "deferred": {
@@ -567,6 +575,36 @@
           "type": "string"
         },
         "start_time": {
+          "type": "string"
+        }
+      }
+    },
+    "JudgingSessionAddRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "judging_session"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "judging_session": {
+          "$ref": "#/definitions/JudgingSession"
+        }
+      }
+    },
+    "JudgingSessionDeleteRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "session_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "session_number": {
           "type": "string"
         }
       }
@@ -590,6 +628,25 @@
       "properties": {
         "judging_session": {
           "$ref": "#/definitions/JudgingSession"
+        }
+      }
+    },
+    "JudgingSessionUpdateRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "judging_session",
+        "session_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "judging_session": {
+          "$ref": "#/definitions/JudgingSession"
+        },
+        "session_number": {
+          "type": "string"
         }
       }
     },

@@ -12,7 +12,7 @@ pub fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<Tm
     Some(event) => event,
     None => {
       println!("Event not found");
-      TmsRespond!(Status::BadRequest, "Event not found".to_string());
+      TmsRespond!(Status::NotFound, "Event not found".to_string());
     }
   };
 
@@ -49,7 +49,7 @@ pub fn event_get_api_link_route(message: String) -> TmsRouteResponse<()> {
       },
       None => {
         println!("API Link not found");
-        TmsRespond!(Status::BadRequest, "API Link not found".to_string());
+        TmsRespond!(Status::NotFound, "API Link not found".to_string());
       }
     };
   }
@@ -128,7 +128,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       let mut user = match db.tms_data.users.get(String::from("admin")).unwrap() {
         Some(user) => user,
         None => {
-          TmsRespond!(Status::BadRequest, "Admin user not found".to_string());
+          TmsRespond!(Status::NotFound, "Admin user not found".to_string());
         }
       };
 

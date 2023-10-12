@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class MatchCheckbox extends StatefulWidget {
+class EditCheckbox extends StatefulWidget {
   final bool value;
   final Function(bool) onChanged;
 
-  const MatchCheckbox({Key? key, required this.value, required this.onChanged}) : super(key: key);
+  const EditCheckbox({Key? key, required this.value, required this.onChanged}) : super(key: key);
 
   @override
-  State<MatchCheckbox> createState() => _MatchCheckboxState();
+  State<EditCheckbox> createState() => _MatchCheckboxState();
 }
 
-class _MatchCheckboxState extends State<MatchCheckbox> {
+class _MatchCheckboxState extends State<EditCheckbox> {
   bool _value = false;
 
   @override

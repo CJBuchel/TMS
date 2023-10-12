@@ -4,59 +4,57 @@ import 'package:tms/views/shared/edit_time.dart';
 import 'package:tms/views/shared/parse_util.dart';
 import 'package:tms/views/shared/sorter_util.dart';
 
-class MatchStartTime extends StatelessWidget {
-  final List<GameMatch> matches;
+class JudgingStartTime extends StatelessWidget {
+  final List<JudgingSession> sessions;
   final TextEditingController controller;
   final String? label;
   final String? initialTime;
-  final Function(String)? onProposedMatchNumber;
+  final Function(String)? onProposedSessionNumber;
   final Function(String)? onProposedEndTime;
 
-  const MatchStartTime({
+  const JudgingStartTime({
     Key? key,
     this.label,
     this.initialTime,
-    this.onProposedMatchNumber,
+    this.onProposedSessionNumber,
     this.onProposedEndTime,
-    required this.matches,
+    required this.sessions,
     required this.controller,
   }) : super(key: key);
 
-  void setMatchNumber(String value) {
-    // search through all matches and find the two matches that are closest to the start time
+  void setSessionNumber(String value) {
     TimeOfDay setTime = parseStringTimeToTimeOfDay(value) ?? TimeOfDay.now();
-    GameMatch matchBefore = matches.first;
+    JudgingSession sessionBefore = sessions.first;
 
-    List<GameMatch> sortedMatches = sortMatchesByTime(matches);
+    List<JudgingSession> sortedSessions = sortJudgingByTime(sessions);
     // first iterate and find the match before the start time
-    for (var match in sortedMatches) {
-      TimeOfDay matchTime = parseStringTimeToTimeOfDay(match.startTime) ?? TimeOfDay.now();
-      if (parseTimeOfDayToMinutes(matchTime) < parseTimeOfDayToMinutes(setTime)) {
-        matchBefore = match;
+    for (var session in sortedSessions) {
+      TimeOfDay sessionTime = parseStringTimeToTimeOfDay(session.startTime) ?? TimeOfDay.now();
+      if (parseTimeOfDayToMinutes(sessionTime) < parseTimeOfDayToMinutes(setTime)) {
+        sessionBefore = session;
       }
     }
 
-    // check the first match number and create a sub match number, i.e 1.1, 1.2, 1.3, etc.
-    List<String> beforeSplit = matchBefore.matchNumber.split(".");
+    List<String> beforeSplit = sessionBefore.sessionNumber.split(".");
     String beforeMain = beforeSplit[0];
     int beforeSub = beforeSplit.length > 1 ? (int.tryParse(beforeSplit[1]) ?? 0) : 0;
 
     String newMatchNumber;
-    if (parseTimeOfDayToMinutes(setTime) < parseTimeOfDayToMinutes(parseStringTimeToTimeOfDay(matchBefore.startTime) ?? TimeOfDay.now())) {
+    if (parseTimeOfDayToMinutes(setTime) < parseTimeOfDayToMinutes(parseStringTimeToTimeOfDay(sessionBefore.startTime) ?? TimeOfDay.now())) {
       newMatchNumber = "";
     } else {
       newMatchNumber = "$beforeMain.${beforeSub + 1}";
     }
 
-    if (onProposedMatchNumber != null) {
-      onProposedMatchNumber!.call(newMatchNumber);
+    if (onProposedSessionNumber != null) {
+      onProposedSessionNumber!.call(newMatchNumber);
     }
   }
 
   void setEndTime(String value) {
     TimeOfDay setTime = parseStringTimeToTimeOfDay(value) ?? TimeOfDay.now();
     // end time should be 4 minutes after setTime
-    TimeOfDay endTime = TimeOfDay(hour: setTime.hour, minute: setTime.minute + 4);
+    TimeOfDay endTime = TimeOfDay(hour: setTime.hour, minute: setTime.minute + 30);
     String endTimeString = parseTimeOfDayToString(endTime);
     if (onProposedEndTime != null) {
       onProposedEndTime!.call(endTimeString);
@@ -69,7 +67,7 @@ class MatchStartTime extends StatelessWidget {
       controller: controller,
       label: "Start Time",
       onChange: (v) {
-        setMatchNumber(v);
+        setSessionNumber(v);
         setEndTime(v);
       },
     );

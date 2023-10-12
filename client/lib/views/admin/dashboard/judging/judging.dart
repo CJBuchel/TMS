@@ -3,31 +3,31 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
-import 'package:tms/requests/match_requests.dart';
+import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/match_info.dart';
-import 'package:tms/views/admin/dashboard/matches/match_edit_table.dart';
+import 'package:tms/views/admin/dashboard/judging/judging_edit_table.dart';
+import 'package:tms/views/admin/dashboard/judging/judging_info.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 import 'package:tms/views/shared/sorter_util.dart';
 
-class Matches extends StatefulWidget {
-  const Matches({Key? key}) : super(key: key);
+class Judging extends StatefulWidget {
+  const Judging({Key? key}) : super(key: key);
 
   @override
-  State<Matches> createState() => _MatchesState();
+  State<Judging> createState() => _JudgingState();
 }
 
-class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+class _JudgingState extends State<Judging> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   List<GameMatch> _matches = [];
+  List<JudgingSession> _sessions = [];
   List<Team> _teams = [];
-  List<JudgingSession> _judgingSessions = [];
   Event? _event;
 
-  set setMatches(List<GameMatch> value) {
+  set setMatches(List<GameMatch> matches) {
     if (mounted) {
-      value = sortMatchesByTime(value);
+      matches = sortMatchesByTime(matches);
       setState(() {
-        _matches = value;
+        _matches = matches;
       });
     }
   }
@@ -74,8 +74,9 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
 
   set setJudgingSessions(List<JudgingSession> sessions) {
     if (mounted) {
+      sessions = sortJudgingByTime(sessions);
       setState(() {
-        _judgingSessions = sessions;
+        _sessions = sessions;
       });
     }
   }
@@ -83,14 +84,14 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
   set setJudgingSession(JudgingSession session) {
     if (mounted) {
       // find session if exists
-      final index = _judgingSessions.indexWhere((s) => s.sessionNumber == session.sessionNumber);
+      final index = _sessions.indexWhere((s) => s.sessionNumber == session.sessionNumber);
       if (index != -1) {
         setState(() {
-          _judgingSessions[index] = session;
+          _sessions[index] = session;
         });
       } else {
         setState(() {
-          _judgingSessions.add(session);
+          _sessions.add(session);
         });
       }
     }
@@ -104,12 +105,12 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
     }
   }
 
-  void fetchMatches() {
-    getMatchesRequest().then((value) {
+  void fetchJudging() {
+    getJudgingSessionsRequest().then((value) {
       if (value.item1 == HttpStatus.ok) {
-        setMatches = value.item2;
+        setJudgingSessions = value.item2;
       } else {
-        showNetworkError(value.item1, context, subMessage: "Error fetching matches");
+        showNetworkError(value.item1, context, subMessage: "Error fetching judging sessions");
       }
     });
   }
@@ -121,21 +122,20 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
     onEventUpdate((e) => setEvent = e);
 
     // live setters
-    onMatchesUpdate((m) => setMatches = m);
     onMatchUpdate((m) => setMatch = m);
-    onTeamsUpdate((t) => setTeams = t);
+    onMatchesUpdate((m) => setMatches = m);
     onTeamUpdate((t) => setTeam = t);
-    onJudgingSessionsUpdate((s) => setJudgingSessions = s);
+    onTeamsUpdate((t) => setTeams = t);
     onJudgingSessionUpdate((s) => setJudgingSession = s);
+    onJudgingSessionsUpdate((s) => setJudgingSessions = s);
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, constraints) {
+      builder: ((context, constraints) {
         return Column(
           children: [
-            // info section
             Container(
               height: 100,
               decoration: const BoxDecoration(
@@ -146,25 +146,25 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
                   ),
                 ),
               ),
-              child: MatchInfo(
+              child: JudgingInfo(
                 matches: _matches,
                 teams: _teams,
-                judgingSessions: _judgingSessions,
+                judgingSessions: _sessions,
                 event: _event,
               ),
             ),
 
             // table section
             Expanded(
-              child: MatchEditTable(
-                matches: _matches,
+              child: JudgingEditTable(
+                sessions: _sessions,
                 teams: _teams,
-                requestMatches: () => fetchMatches(),
+                requestJudgingSessions: () => fetchJudging(),
               ),
             ),
           ],
         );
-      },
+      }),
     );
   }
 }

@@ -2,12 +2,13 @@ use log::error;
 use rocket::{State, get, http::Status, post};
 
 use tms_macros::tms_private_route;
-use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::JudgingSession, TmsRespond, network_schemas::{JudgingSessionsResponse, JudgingSessionRequest, JudgingSessionResponse}, TmsRequest};
+use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{JudgingSession, create_permissions}, TmsRespond, network_schemas::{JudgingSessionsResponse, JudgingSessionRequest, JudgingSessionResponse, JudgingSessionUpdateRequest, SocketMessage, JudgingSessionDeleteRequest, JudgingSessionAddRequest}, TmsRequest, check_permissions, tms_clients_ws_send};
 
-use crate::db::db::TmsDB;
+use crate::db::{db::TmsDB, tree::UpdateTree};
 
+#[tms_private_route]
 #[get("/judging_sessions/get/<uuid>")]
-pub fn judging_sessions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub fn judging_sessions_get_route() -> TmsRouteResponse<()> {
   // get matches from db and put into MatchesResponse
   let mut judging_sessions:Vec<JudgingSession> = vec![];
 
@@ -52,8 +53,109 @@ pub fn judging_session_get_route(message: String) -> TmsRouteResponse<()> {
       )
     },
     None => {
-      error!("Failed to get judging session");
-      TmsRespond!(Status::BadRequest, "Failed to get judging session".to_string());
+      error!("Failed to get judging session {}", judging_session_request.session_number);
+      TmsRespond!(Status::NotFound, "Failed to get judging session".to_string());
     }
   };
+}
+
+#[tms_private_route]
+#[post("/judging_session/update/<uuid>", data = "<message>")]
+pub fn judging_session_update_route(message: String) -> TmsRouteResponse<()> {
+  let message: JudgingSessionUpdateRequest = TmsRequest!(message.clone(), security);
+
+  let mut perms = create_permissions();
+  perms.judge_advisor = Some(true);
+  perms.judge = Some(true);
+
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    match db.tms_data.judging_sessions.get(message.session_number.clone()).unwrap() {
+      Some(s) => {
+        let origin_session_number = s.session_number.clone();
+        let _ = db.tms_data.judging_sessions.update(origin_session_number.as_bytes(), message.judging_session.session_number.as_bytes(), message.judging_session.clone());
+
+        // send updates to clients
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("judging_session"),
+          sub_topic: String::from("update"),
+          message: origin_session_number.clone(),
+        }, clients.inner().clone(), None);
+
+        // send another update for the new match (if the new match number changed from origin)
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("judging_session"),
+          sub_topic: String::from("update"),
+          message: message.judging_session.session_number.clone(),
+        }, clients.inner().clone(), None);
+
+        TmsRespond!()
+      },
+      None => {
+        error!("Failed to get judging session {}", message.session_number);
+        TmsRespond!(Status::NotFound, "Failed to get judging session".to_string());
+      }
+    }
+  }
+
+  TmsRespond!(Status::Unauthorized)
+}
+
+#[tms_private_route]
+#[post("/judging_session/delete/<uuid>", data = "<message>")]
+pub fn judging_session_delete_route(message: String) -> TmsRouteResponse<()> {
+  let message: JudgingSessionDeleteRequest = TmsRequest!(message.clone(), security);
+
+  let mut perms = create_permissions();
+  perms.judge_advisor = Some(true);
+
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    match db.tms_data.judging_sessions.get(message.session_number.clone()).unwrap() {
+      Some(_) => {
+        let _ = db.tms_data.judging_sessions.remove(message.session_number.as_bytes());
+
+        // send updates to clients
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("judging_sessions"),
+          sub_topic: String::from("update"),
+          message: "".to_string(),
+        }, clients.inner().clone(), None);
+
+        TmsRespond!()
+      },
+      None => {
+        error!("Failed to get judging session {}", message.session_number);
+        TmsRespond!(Status::NotFound, "Failed to get judging session".to_string());
+      }
+    }
+  }
+
+  TmsRespond!(Status::Unauthorized)
+}
+
+
+#[tms_private_route]
+#[post("/judging_session/add/<uuid>", data = "<message>")]
+pub fn judging_session_add_route(message: String) -> TmsRouteResponse<()> {
+  let session_request: JudgingSessionAddRequest = TmsRequest!(message.clone(), security);
+  let mut perms = create_permissions();
+  perms.judge_advisor = Some(true);
+
+  if check_permissions(clients, uuid, session_request.auth_token, perms) {
+    let session_number = session_request.judging_session.session_number.clone();
+    let session = session_request.judging_session.clone();
+    let _ = db.tms_data.judging_sessions.insert(session_number.as_bytes(), session.clone());
+    // send updates to clients
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("judging_sessions"),
+      sub_topic: String::from("update"),
+      message: "".to_string(),
+    }, clients.inner().clone(), None);
+    TmsRespond!()
+  }
+
+  TmsRespond!(Status::Unauthorized)
 }

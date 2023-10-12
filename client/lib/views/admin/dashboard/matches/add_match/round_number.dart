@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tms/views/admin/dashboard/matches/match_edit/edit_match_checkbox.dart';
+import 'package:tms/views/shared/edit_checkbox.dart';
 
 class RoundNumber extends StatefulWidget {
   final TextEditingController controller;
@@ -39,7 +39,7 @@ class _RoundNumberState extends State<RoundNumber> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text("Exhibition Match"),
-        MatchCheckbox(
+        EditCheckbox(
           value: widget.isExhibition.value,
           onChanged: (value) {
             if (mounted) {

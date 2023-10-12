@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/shared/judging_ttl_clock.dart';
 import 'package:tms/views/shared/parse_util.dart';
 import 'package:tms/views/shared/sorter_util.dart';
 
@@ -328,7 +329,15 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
                       ),
                     ),
                     width: (constraints.maxWidth / 100) * 40,
-                    child: Center(child: Text("TTL: N/A", style: TextStyle(fontSize: fontSize, color: Colors.white))),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Next: ", style: TextStyle(fontSize: fontSize, color: Colors.white)),
+                          JudgingTTLClock(sessions: widget.judgingSessions, fontSize: fontSize, textColor: Colors.white, showOnlyClock: true),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),

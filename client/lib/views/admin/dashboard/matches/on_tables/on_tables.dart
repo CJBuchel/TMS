@@ -1,9 +1,9 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/on_tables/drop_down_table.dart';
-import 'package:tms/views/admin/dashboard/matches/on_tables/drop_down_team.dart';
-import 'package:tms/views/admin/dashboard/matches/on_tables/score_submitted_checkbox.dart';
+import 'package:tms/views/admin/dashboard/matches/on_tables/table_score_submitted_checkbox.dart';
+import 'package:tms/views/shared/drop_down_table.dart';
+import 'package:tms/views/shared/drop_down_team.dart';
 
 class OnTables extends StatefulWidget {
   final GameMatch match;
@@ -21,11 +21,6 @@ class OnTables extends StatefulWidget {
 }
 
 class _OnTablesState extends State<OnTables> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Widget _styledHeader(String content) {
     return Center(child: Text(content, style: const TextStyle(fontWeight: FontWeight.bold)));
   }
@@ -80,7 +75,7 @@ class _OnTablesState extends State<OnTables> {
       // submitted cell
       DataCell(
         Center(
-          child: ScoreSubmittedCheckbox(
+          child: TableScoreSubmittedCheckbox(
             onTable: table,
             match: widget.match,
             onTableUpdate: (m) {
@@ -104,7 +99,13 @@ class _OnTablesState extends State<OnTables> {
                 // add on table
                 GameMatch updatedMatch = widget.match;
                 setState(() {
-                  updatedMatch.matchTables.add(OnTable(table: "", teamNumber: "", scoreSubmitted: false));
+                  updatedMatch.matchTables.add(
+                    OnTable(
+                      table: "",
+                      teamNumber: "",
+                      scoreSubmitted: false,
+                    ),
+                  );
                   widget.onMatchUpdate(updatedMatch);
                 });
               },

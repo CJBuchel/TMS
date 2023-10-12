@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/errors.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/warnings.dart';
-import 'package:tms/views/match_control/ttl_clock.dart';
+import 'package:tms/views/admin/dashboard/judging/checks/errors.dart';
+import 'package:tms/views/admin/dashboard/judging/checks/warnings.dart';
+import 'package:tms/views/shared/judging_ttl_clock.dart';
 
-class Info extends StatelessWidget {
+class JudgingInfo extends StatelessWidget {
   final List<GameMatch> matches;
   final List<Team> teams;
   final List<JudgingSession> judgingSessions;
   final Event? event;
-  final Function(List<MatchError>)? onErrors;
-  final Function(List<MatchWarning>)? onWarnings;
 
-  const Info({
+  const JudgingInfo({
     Key? key,
     required this.matches,
     required this.teams,
-    required this.event,
     required this.judgingSessions,
-    this.onErrors,
-    this.onWarnings,
+    required this.event,
   }) : super(key: key);
 
-  Widget matchProgress(double? fontSize) {
-    int completedMatches = matches.asMap().entries.where((e) => e.value.complete).length;
+  Widget judgingProgress(double? fontSize) {
+    int completedJudgingSessions = judgingSessions.asMap().entries.where((e) => e.value.complete).length;
+
     return Row(
       children: [
         Padding(
@@ -34,7 +31,7 @@ class Info extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: Text(
-            '$completedMatches/${matches.length}',
+            '$completedJudgingSessions/${judgingSessions.length}',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
           ),
         ),
@@ -49,36 +46,32 @@ class Info extends StatelessWidget {
         : Responsive.isTablet(context)
             ? 20
             : 16;
-
-    return LayoutBuilder(builder: ((context, constraints) {
+    return LayoutBuilder(builder: (context, constraints) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        // Match progress
-        // team errors
         children: [
-          TTLClock(matches: matches, fontSize: fontSize, showOnlyClock: true),
-          matchProgress(fontSize),
+          JudgingTTLClock(sessions: judgingSessions, fontSize: fontSize, showOnlyClock: true),
+          judgingProgress(fontSize),
 
           // warning system
-          MatchWarnings(
+          JudgingWarnings(
             matches: matches,
             teams: teams,
-            event: event,
             judgingSessions: judgingSessions,
+            event: event,
             fontSize: fontSize,
-            onWarnings: onWarnings,
           ),
 
           // error system
-          MatchErrors(
+          JudgingErrors(
             matches: matches,
             teams: teams,
+            judgingSessions: judgingSessions,
             event: event,
             fontSize: fontSize,
-            onErrors: onErrors,
           ),
         ],
       );
-    }));
+    });
   }
 }

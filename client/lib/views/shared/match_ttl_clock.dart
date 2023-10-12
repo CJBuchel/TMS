@@ -5,18 +5,24 @@ import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/parse_util.dart';
 
-class TTLClock extends StatefulWidget {
+class MatchTTLClock extends StatefulWidget {
   final List<GameMatch> matches;
   final double? fontSize;
   final Color? textColor;
   final bool? showOnlyClock;
-  const TTLClock({Key? key, required this.matches, this.fontSize, this.textColor, this.showOnlyClock}) : super(key: key);
+  const MatchTTLClock({
+    Key? key,
+    required this.matches,
+    this.fontSize,
+    this.textColor,
+    this.showOnlyClock,
+  }) : super(key: key);
 
   @override
-  State<TTLClock> createState() => _TTLClockState();
+  State<MatchTTLClock> createState() => _TTLClockState();
 }
 
-class _TTLClockState extends State<TTLClock> {
+class _TTLClockState extends State<MatchTTLClock> {
   Timer? _timer;
   int _difference = 0;
   String padTime(int value, int length) {
@@ -61,9 +67,11 @@ class _TTLClockState extends State<TTLClock> {
       if (widget.matches.isNotEmpty) {
         // find first match that hasn't been completed and use the start time
         String time = widget.matches.firstWhere((m) => (m.complete == false && m.gameMatchDeferred == false)).startTime;
-        setState(() {
-          _difference = getTimeDifference(time);
-        });
+        if (mounted) {
+          setState(() {
+            _difference = getTimeDifference(time);
+          });
+        }
       }
     });
   }

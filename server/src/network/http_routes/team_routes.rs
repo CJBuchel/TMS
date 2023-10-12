@@ -51,7 +51,7 @@ pub fn team_get_route(security: &State<Security>, clients: &State<TmsClients>, d
     },
     None => {
       error!("Failed to get team");
-      TmsRespond!(Status::BadRequest, "Failed to get team".to_string());
+      TmsRespond!(Status::NotFound, "Failed to get team".to_string());
     }
   };
 }
@@ -90,7 +90,7 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
       },
       None => {
         error!("Failed to get team (update) {}", message.team_number);
-        TmsRespond!(Status::BadRequest, "Failed to get team".to_string());
+        TmsRespond!(Status::NotFound, "Failed to get team".to_string());
       }
     }
   }
@@ -193,14 +193,14 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
           },
           None => {
             error!("Failed to get event");
-            TmsRespond!(Status::BadRequest, "Failed to get event".to_string());
+            TmsRespond!(Status::NotFound, "Failed to get event".to_string());
           }
         }
 
       },
       None => {
         error!("Failed to get team (scoresheet post) {}", message.team_number);
-        TmsRespond!(Status::BadRequest, "Failed to get team".to_string());
+        TmsRespond!(Status::NotFound, "Failed to get team".to_string());
       }
     }
   }

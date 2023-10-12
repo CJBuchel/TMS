@@ -200,6 +200,9 @@ impl TmsHttpServer {
         // judging routes
         judging_sessions_get_route,
         judging_session_get_route,
+        judging_session_update_route,
+        judging_session_delete_route,
+        judging_session_add_route,
 
         // game routes
         missions_get_route,

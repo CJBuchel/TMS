@@ -20,8 +20,11 @@ class TmsSchema {
         required this.gameMatch,
         required this.integrityMessage,
         required this.judgingSession,
+        required this.judgingSessionAddRequest,
+        required this.judgingSessionDeleteRequest,
         required this.judgingSessionGetRequest,
         required this.judgingSessionGetResponse,
+        required this.judgingSessionUpdateRequest,
         required this.judgingSessionsGetResponse,
         required this.loginRequest,
         required this.loginResponse,
@@ -68,8 +71,11 @@ class TmsSchema {
     GameMatch gameMatch;
     IntegrityMessage integrityMessage;
     JudgingSession judgingSession;
+    JudgingSessionAddRequest judgingSessionAddRequest;
+    JudgingSessionDeleteRequest judgingSessionDeleteRequest;
     JudgingSessionRequest judgingSessionGetRequest;
     JudgingSessionResponse judgingSessionGetResponse;
+    JudgingSessionUpdateRequest judgingSessionUpdateRequest;
     JudgingSessionsResponse judgingSessionsGetResponse;
     LoginRequest loginRequest;
     LoginResponse loginResponse;
@@ -116,8 +122,11 @@ class TmsSchema {
         gameMatch: GameMatch.fromJson(json["game_match"]),
         integrityMessage: IntegrityMessage.fromJson(json["integrity_message"]),
         judgingSession: JudgingSession.fromJson(json["judging_session"]),
+        judgingSessionAddRequest: JudgingSessionAddRequest.fromJson(json["judging_session_add_request"]),
+        judgingSessionDeleteRequest: JudgingSessionDeleteRequest.fromJson(json["judging_session_delete_request"]),
         judgingSessionGetRequest: JudgingSessionRequest.fromJson(json["judging_session_get_request"]),
         judgingSessionGetResponse: JudgingSessionResponse.fromJson(json["judging_session_get_response"]),
+        judgingSessionUpdateRequest: JudgingSessionUpdateRequest.fromJson(json["judging_session_update_request"]),
         judgingSessionsGetResponse: JudgingSessionsResponse.fromJson(json["judging_sessions_get_response"]),
         loginRequest: LoginRequest.fromJson(json["login_request"]),
         loginResponse: LoginResponse.fromJson(json["login_response"]),
@@ -165,8 +174,11 @@ class TmsSchema {
         "game_match": gameMatch.toJson(),
         "integrity_message": integrityMessage.toJson(),
         "judging_session": judgingSession.toJson(),
+        "judging_session_add_request": judgingSessionAddRequest.toJson(),
+        "judging_session_delete_request": judgingSessionDeleteRequest.toJson(),
         "judging_session_get_request": judgingSessionGetRequest.toJson(),
         "judging_session_get_response": judgingSessionGetResponse.toJson(),
+        "judging_session_update_request": judgingSessionUpdateRequest.toJson(),
         "judging_sessions_get_response": judgingSessionsGetResponse.toJson(),
         "login_request": loginRequest.toJson(),
         "login_response": loginResponse.toJson(),
@@ -679,7 +691,6 @@ class IntegrityMessage {
 class JudgingSession {
     JudgingSession({
         required this.complete,
-        required this.customSession,
         required this.judgingSessionDeferred,
         required this.endTime,
         required this.judgingPods,
@@ -688,7 +699,6 @@ class JudgingSession {
     });
 
     bool complete;
-    bool customSession;
     bool judgingSessionDeferred;
     String endTime;
     List<JudgingPod> judgingPods;
@@ -697,7 +707,6 @@ class JudgingSession {
 
     factory JudgingSession.fromJson(Map<String, dynamic> json) => JudgingSession(
         complete: json["complete"],
-        customSession: json["custom_session"],
         judgingSessionDeferred: json["deferred"],
         endTime: json["end_time"],
         judgingPods: List<JudgingPod>.from(json["judging_pods"].map((x) => JudgingPod.fromJson(x))),
@@ -707,7 +716,6 @@ class JudgingSession {
 
     Map<String, dynamic> toJson() => {
         "complete": complete,
-        "custom_session": customSession,
         "deferred": judgingSessionDeferred,
         "end_time": endTime,
         "judging_pods": List<dynamic>.from(judgingPods.map((x) => x.toJson())),
@@ -740,6 +748,46 @@ class JudgingPod {
     };
 }
 
+class JudgingSessionAddRequest {
+    JudgingSessionAddRequest({
+        required this.authToken,
+        required this.judgingSession,
+    });
+
+    String authToken;
+    JudgingSession judgingSession;
+
+    factory JudgingSessionAddRequest.fromJson(Map<String, dynamic> json) => JudgingSessionAddRequest(
+        authToken: json["auth_token"],
+        judgingSession: JudgingSession.fromJson(json["judging_session"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "judging_session": judgingSession.toJson(),
+    };
+}
+
+class JudgingSessionDeleteRequest {
+    JudgingSessionDeleteRequest({
+        required this.authToken,
+        required this.sessionNumber,
+    });
+
+    String authToken;
+    String sessionNumber;
+
+    factory JudgingSessionDeleteRequest.fromJson(Map<String, dynamic> json) => JudgingSessionDeleteRequest(
+        authToken: json["auth_token"],
+        sessionNumber: json["session_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "session_number": sessionNumber,
+    };
+}
+
 class JudgingSessionRequest {
     JudgingSessionRequest({
         required this.sessionNumber,
@@ -769,6 +817,30 @@ class JudgingSessionResponse {
 
     Map<String, dynamic> toJson() => {
         "judging_session": judgingSession.toJson(),
+    };
+}
+
+class JudgingSessionUpdateRequest {
+    JudgingSessionUpdateRequest({
+        required this.authToken,
+        required this.judgingSession,
+        required this.sessionNumber,
+    });
+
+    String authToken;
+    JudgingSession judgingSession;
+    String sessionNumber;
+
+    factory JudgingSessionUpdateRequest.fromJson(Map<String, dynamic> json) => JudgingSessionUpdateRequest(
+        authToken: json["auth_token"],
+        judgingSession: JudgingSession.fromJson(json["judging_session"]),
+        sessionNumber: json["session_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "judging_session": judgingSession.toJson(),
+        "session_number": sessionNumber,
     };
 }
 

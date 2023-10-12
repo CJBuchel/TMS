@@ -1,36 +1,36 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tms/requests/match_requests.dart';
+import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
-class DeleteMatch extends StatelessWidget {
-  final Function()? onDeleteMatch;
-  final String matchNumber;
-  const DeleteMatch({
+class DeleteSession extends StatelessWidget {
+  final Function()? onDeleteSession;
+  final String sessionNumber;
+  const DeleteSession({
     Key? key,
-    this.onDeleteMatch,
-    required this.matchNumber,
+    this.onDeleteSession,
+    required this.sessionNumber,
   }) : super(key: key);
 
-  void _deleteMatch(BuildContext context) {
-    deleteMatchRequest(matchNumber).then((value) {
+  void _deleteSession(BuildContext context) {
+    deleteJudgingSessionRequest(sessionNumber).then((value) {
       if (value != HttpStatus.ok) {
-        showNetworkError(value, context, subMessage: "Error deleting $matchNumber");
+        showNetworkError(value, context, subMessage: "Error deleting $sessionNumber");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Deleted $matchNumber"),
+            content: Text(" Deleted $sessionNumber"),
             backgroundColor: Colors.red,
           ),
         );
       }
 
-      onDeleteMatch?.call();
+      onDeleteSession?.call();
     });
   }
 
-  void _deleteMatchDialog(BuildContext context) {
+  void _deleteSessionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -38,10 +38,10 @@ class DeleteMatch extends StatelessWidget {
           title: const Row(
             children: [
               Icon(Icons.warning, color: Colors.red),
-              Text(" Delete Match?"),
+              Text("Delete Session?"),
             ],
           ),
-          content: Text("Are you sure you want to delete match $matchNumber?"),
+          content: Text("Are you sure you want to delete session $sessionNumber?"),
           actions: [
             TextButton(
               onPressed: () {
@@ -51,7 +51,7 @@ class DeleteMatch extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                _deleteMatch(context);
+                _deleteSession(context);
                 Navigator.of(context).pop();
               },
               child: const Text("Delete", style: TextStyle(color: Colors.red)),
@@ -66,7 +66,7 @@ class DeleteMatch extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.delete, color: Colors.red),
-      onPressed: () => _deleteMatchDialog(context),
+      onPressed: () => _deleteSessionDialog(context),
     );
   }
 }

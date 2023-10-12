@@ -73,6 +73,9 @@ pub struct TmsSchema {
   judging_sessions_get_response: JudgingSessionsResponse,
   judging_session_get_request: JudgingSessionRequest,
   judging_session_get_response: JudgingSessionResponse,
+  judging_session_update_request: JudgingSessionUpdateRequest,
+  judging_session_delete_request: JudgingSessionDeleteRequest,
+  judging_session_add_request: JudgingSessionAddRequest,
   // games
   game_get_response: GameResponse,
   missions_get_response: MissionsResponse,

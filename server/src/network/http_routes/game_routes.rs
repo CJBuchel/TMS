@@ -62,7 +62,7 @@ pub fn validate_questions_route(message: String, tms_event_service: &State<TmsEv
         )
       },
       None => {
-        TmsRespond!(Status::BadRequest, "Season not found".to_string());
+        TmsRespond!(Status::NotFound, "Season not found".to_string());
       }
     };
   }

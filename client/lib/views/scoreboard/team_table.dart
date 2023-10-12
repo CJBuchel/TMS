@@ -166,12 +166,13 @@ class _TeamTableState extends State<TeamTable> with AutomaticKeepAliveClientMixi
       rankString = "";
     }
 
-    return SizedBox(
+    return Container(
+      color: rowColor,
       height: rowHeight,
       child: Row(
         children: [
-          _buildCell(rankString, backgroundColor: rowColor, textColor: Colors.black, width: rankWidth),
-          _buildCell(team.teamName, backgroundColor: rowColor, textColor: Colors.black, width: teamWidth),
+          _buildCell(rankString, textColor: Colors.black, width: rankWidth),
+          _buildCell(team.teamName, textColor: Colors.black, width: teamWidth),
           ..._getRoundScores(team, rowColor),
         ],
       ),

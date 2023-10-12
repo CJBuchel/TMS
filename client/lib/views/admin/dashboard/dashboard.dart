@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tms/views/admin/dashboard/judging/judging.dart';
 import 'package:tms/views/admin/dashboard/side_menu.dart';
+import 'package:tms/views/admin/dashboard/teams/teams.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -28,7 +28,7 @@ class _DashboardState extends State<Dashboard> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // default view
       // switchView(const Overview());
-      switchView(const Judging());
+      switchView(const Teams());
     });
   }
 

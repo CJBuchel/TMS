@@ -17,27 +17,25 @@ class MatchEditRow extends StatelessWidget {
     required this.rowColor,
   }) : super(key: key);
 
-  Widget _styledTextCell(String label, {Color? color, Color? textColor}) {
-    return Container(
-      color: color,
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            overflow: TextOverflow.ellipsis,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _styledCell(Widget inner, {Color? color}) {
     return Container(
       color: color,
       child: Center(
         child: inner,
+      ),
+    );
+  }
+
+  Widget _styledTextCell(String label, {Color? color, Color? textColor}) {
+    return _styledCell(
+      color: color,
+      Text(
+        label,
+        style: TextStyle(
+          overflow: TextOverflow.ellipsis,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
       ),
     );
   }

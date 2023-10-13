@@ -50,7 +50,7 @@ class _SingleTeamErrorsState extends State<SingleTeamErrors> {
   Widget checkWarnings() {
     if (_errors.isEmpty) {
       return Text(
-        "Warnings: 0",
+        "Errors: 0",
         style: TextStyle(
           fontSize: widget.fontSize,
         ),

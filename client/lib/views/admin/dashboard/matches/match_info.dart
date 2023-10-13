@@ -19,19 +19,19 @@ class MatchInfo extends StatelessWidget {
     required this.judgingSessions,
   }) : super(key: key);
 
-  Widget matchProgress(double? fontSize) {
+  Widget matchProgress() {
     int completedMatches = matches.asMap().entries.where((e) => e.value.complete).length;
     return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: Icon(Icons.check, color: Colors.green, size: fontSize),
+        const Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.check, color: Colors.green),
         ),
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: Text(
             '$completedMatches/${matches.length}',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
       ],
@@ -40,20 +40,18 @@ class MatchInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double? fontSize = Responsive.isDesktop(context)
-        ? 24
-        : Responsive.isTablet(context)
-            ? 20
-            : 16;
-
     return LayoutBuilder(builder: (context, constraints) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         // Match progress
         // team errors
         children: [
-          MatchTTLClock(matches: matches, fontSize: fontSize, showOnlyClock: true),
-          matchProgress(fontSize),
+          MatchTTLClock(
+            matches: matches,
+            showOnlyClock: true,
+            autoFontSize: false,
+          ),
+          matchProgress(),
 
           // warning system
           MatchWarnings(
@@ -61,7 +59,6 @@ class MatchInfo extends StatelessWidget {
             teams: teams,
             event: event,
             judgingSessions: judgingSessions,
-            fontSize: fontSize,
           ),
 
           // error system
@@ -69,7 +66,6 @@ class MatchInfo extends StatelessWidget {
             matches: matches,
             teams: teams,
             event: event,
-            fontSize: fontSize,
           ),
         ],
       );

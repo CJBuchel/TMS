@@ -137,7 +137,7 @@ class _MatchesState extends State<Matches> with AutoUnsubScribeMixin, LocalDatab
           children: [
             // info section
             Container(
-              height: 100,
+              height: 50,
               decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(

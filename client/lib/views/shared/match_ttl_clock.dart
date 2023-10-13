@@ -10,12 +10,14 @@ class MatchTTLClock extends StatefulWidget {
   final double? fontSize;
   final Color? textColor;
   final bool? showOnlyClock;
+  final bool autoFontSize;
   const MatchTTLClock({
     Key? key,
     required this.matches,
     this.fontSize,
     this.textColor,
     this.showOnlyClock,
+    this.autoFontSize = true,
   }) : super(key: key);
 
   @override
@@ -35,6 +37,7 @@ class _TTLClockState extends State<MatchTTLClock> {
   }
 
   Widget getClock(int time) {
+    double? fontSize = widget.autoFontSize ? widget.fontSize ?? (Responsive.isDesktop(context) ? 60 : 40) : 18;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -42,7 +45,7 @@ class _TTLClockState extends State<MatchTTLClock> {
           Text(
             "TTL: ",
             style: TextStyle(
-              fontSize: widget.fontSize ?? (Responsive.isDesktop(context) ? 60 : 40),
+              fontSize: fontSize,
               color: widget.textColor,
             ),
           ),
@@ -50,7 +53,7 @@ class _TTLClockState extends State<MatchTTLClock> {
           time >= 0 ? "+${parseTime(time)}" : "-${parseTime(time)}",
           style: TextStyle(
             fontFamily: "lcdbold",
-            fontSize: widget.fontSize ?? (Responsive.isDesktop(context) ? 60 : 40),
+            fontSize: fontSize,
             color: time >= 0 ? Colors.green : Colors.red,
           ),
         ),

@@ -137,7 +137,7 @@ class _JudgingState extends State<Judging> with AutoUnsubScribeMixin, LocalDatab
         return Column(
           children: [
             Container(
-              height: 100,
+              height: 50,
               decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(

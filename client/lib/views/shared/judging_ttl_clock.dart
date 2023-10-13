@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/shared/parse_util.dart';
-import 'package:tms/views/shared/sorter_util.dart';
+import 'package:tms/utils/parse_util.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 class JudgingTTLClock extends StatefulWidget {
   final List<JudgingSession> sessions;

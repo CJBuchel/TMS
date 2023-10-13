@@ -8,7 +8,7 @@ import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/matches/match_info.dart';
 import 'package:tms/views/admin/dashboard/matches/match_edit_table.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
-import 'package:tms/views/shared/sorter_util.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 class Matches extends StatefulWidget {
   const Matches({Key? key}) : super(key: key);

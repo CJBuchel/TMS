@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/edit_time.dart';
-import 'package:tms/views/shared/parse_util.dart';
-import 'package:tms/views/shared/sorter_util.dart';
+import 'package:tms/utils/parse_util.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 class MatchStartTime extends StatelessWidget {
   final List<GameMatch> matches;

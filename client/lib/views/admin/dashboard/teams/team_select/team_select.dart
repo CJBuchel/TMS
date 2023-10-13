@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/admin/dashboard/teams/team_select/team_select_table.dart';
 
 class TeamSelect extends StatefulWidget {
+  final Event? event;
   final List<Team> teams;
   final Function(Team) onTeamSelected;
   final Function() requestTeams;
 
   const TeamSelect({
     Key? key,
+    required this.event,
     required this.teams,
     required this.onTeamSelected,
     required this.requestTeams,
@@ -118,65 +121,6 @@ class _TeamSelectState extends State<TeamSelect> {
     );
   }
 
-  Widget _styledCell(Widget inner, {Color? color}) {
-    return Container(
-      color: color,
-      child: Center(
-        child: inner,
-      ),
-    );
-  }
-
-  Widget _styledTextCell(String label, {Color? color, Color? textColor}) {
-    return _styledCell(
-      color: color,
-      Text(
-        label,
-        style: TextStyle(
-          overflow: TextOverflow.ellipsis,
-          fontWeight: FontWeight.bold,
-          color: textColor,
-        ),
-      ),
-    );
-  }
-
-  Widget _getRow(Team t, {Color? color}) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: _styledTextCell(t.ranking.toString(), color: color),
-        ),
-        Expanded(
-          flex: 2,
-          child: _styledTextCell("${t.teamNumber} | ${t.teamName}", color: color),
-        ),
-      ],
-    );
-  }
-
-  Widget _getTable() {
-    return ListView.builder(
-      itemCount: _filteredTeams.length,
-      itemBuilder: (context, index) {
-        Color rowColor = Colors.transparent; // default
-
-        if (index.isEven) {
-          rowColor = Theme.of(context).splashColor;
-        } else {
-          rowColor = Theme.of(context).colorScheme.secondary.withOpacity(0.1);
-        }
-
-        return Container(
-          color: rowColor,
-          height: 50,
-          child: _getRow(_filteredTeams[index], color: rowColor),
-        );
-      },
-    );
-  }
-
   Widget _topButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -215,7 +159,11 @@ class _TeamSelectState extends State<TeamSelect> {
               child: _getFilters(),
             ),
             Expanded(
-              child: _getTable(),
+              child: TeamSelectTable(
+                event: widget.event,
+                teams: _filteredTeams,
+                onTeamSelected: (t) => widget.onTeamSelected(t),
+              ),
             ),
           ],
         );

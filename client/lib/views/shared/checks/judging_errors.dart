@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
-
-class JudgingError {
-  final String message;
-  final String? sessionNumber;
-  final String? teamNumber;
-
-  JudgingError({
-    required this.message,
-    this.sessionNumber,
-    this.teamNumber,
-  });
-}
+import 'package:tms/utils/checks/judging_error_checks.dart';
 
 class JudgingErrors extends StatefulWidget {
   final List<GameMatch> matches;
@@ -36,48 +25,12 @@ class JudgingErrors extends StatefulWidget {
 class _JudgingErrorsState extends State<JudgingErrors> {
   List<JudgingError> _errors = [];
 
-  List<JudgingError> podErrors() {
-    List<JudgingError> errors = [];
-    List<String> pods = widget.event?.pods ?? [];
-    for (var session in widget.judgingSessions) {
-      for (var pod in session.judgingPods) {
-        if (pod.pod.isNotEmpty && !pods.contains(pod.pod)) {
-          errors.add(JudgingError(message: "Pod ${pod.pod} does not exist in this event", sessionNumber: session.sessionNumber));
-        }
-      }
-    }
-
-    return errors;
-  }
-
-  List<JudgingError> teamErrors() {
-    List<JudgingError> errors = [];
-
-    for (var team in widget.teams) {
-      int teamSessions = 0;
-      for (var session in widget.judgingSessions) {
-        for (var pod in session.judgingPods) {
-          if (pod.teamNumber == team.teamNumber) {
-            teamSessions++;
-          }
-        }
-      }
-
-      if (teamSessions == 0) {
-        errors.add(JudgingError(message: "Team is not in any judging sessions", teamNumber: team.teamNumber));
-      } else if (teamSessions > 1) {
-        errors.add(JudgingError(message: "Team is in more than one judging session", teamNumber: team.teamNumber));
-      }
-    }
-
-    return errors;
-  }
-
   void setErrors() {
-    _errors = [
-      ...podErrors(),
-      ...teamErrors(),
-    ];
+    _errors = JudgingErrorChecks.getErrors(
+      judgingSessions: widget.judgingSessions,
+      teams: widget.teams,
+      event: widget.event,
+    );
   }
 
   @override

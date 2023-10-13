@@ -15,7 +15,7 @@ import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/shared/sorter_util.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 // Database mixin for local database to update widget based on changes (update triggers only)
 mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
@@ -247,7 +247,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   //
   // EVENT DATA
   //
-  Event _eventDefault() {
+  static Event eventDefault() {
     return Event(
       eventRounds: 3,
       name: "",
@@ -274,21 +274,21 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
         var event = Event.fromJson(jsonDecode(eventString));
         return event;
       } else {
-        return _eventDefault();
+        return eventDefault();
       }
     } catch (e) {
-      return _eventDefault();
+      return eventDefault();
     }
   }
 
   //
   // TEAM DATA
   //
-  List<Team> _teamsDefault() {
+  static List<Team> teamsDefault() {
     return [];
   }
 
-  Team _teamDefault() {
+  static Team teamDefault() {
     return Team(
       coreValuesScores: [],
       gameScores: [],
@@ -334,10 +334,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
         var teams = jsonDecode(teamsString).map<Team>((e) => Team.fromJson(e)).toList();
         return sortTeamsByRank(teams);
       } else {
-        return _teamsDefault();
+        return teamsDefault();
       }
     } catch (e) {
-      return _teamsDefault();
+      return teamsDefault();
     }
   }
 
@@ -349,21 +349,21 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       if (index != -1) {
         return teams[index];
       } else {
-        return _teamDefault();
+        return teamDefault();
       }
     } catch (e) {
-      return _teamDefault();
+      return teamDefault();
     }
   }
 
   //
   // MATCH DATA
   //
-  List<GameMatch> _matchesDefault() {
+  static List<GameMatch> matchesDefault() {
     return [];
   }
 
-  GameMatch _matchDefault() {
+  static GameMatch matchDefault() {
     return GameMatch(
       complete: false,
       exhibitionMatch: false,
@@ -408,10 +408,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
         var matches = jsonDecode(matchesString).map<GameMatch>((e) => GameMatch.fromJson(e)).toList();
         return sortMatchesByTime(matches);
       } else {
-        return _matchesDefault();
+        return matchesDefault();
       }
     } catch (e) {
-      return _matchesDefault();
+      return matchesDefault();
     }
   }
 
@@ -423,21 +423,21 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       if (index != -1) {
         return matches[index];
       } else {
-        return _matchDefault();
+        return matchDefault();
       }
     } catch (e) {
-      return _matchDefault();
+      return matchDefault();
     }
   }
 
   //
   // JUDGING SESSION DATA
   //
-  List<JudgingSession> _judgingSessionsDefault() {
+  static List<JudgingSession> judgingSessionsDefault() {
     return [];
   }
 
-  JudgingSession _judgingSessionDefault() {
+  static JudgingSession judgingSessionDefault() {
     return JudgingSession(
       sessionNumber: "",
       complete: false,
@@ -479,10 +479,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
         var judgingSessions = jsonDecode(judgingSessionsString).map<JudgingSession>((e) => JudgingSession.fromJson(e)).toList();
         return judgingSessions;
       } else {
-        return _judgingSessionsDefault();
+        return judgingSessionsDefault();
       }
     } catch (e) {
-      return _judgingSessionsDefault();
+      return judgingSessionsDefault();
     }
   }
 
@@ -494,17 +494,17 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
       if (index != -1) {
         return judgingSessions[index];
       } else {
-        return _judgingSessionDefault();
+        return judgingSessionDefault();
       }
     } catch (e) {
-      return _judgingSessionDefault();
+      return judgingSessionDefault();
     }
   }
 
   //
   // Game Data
   //
-  Game _gameDefault() {
+  static Game gameDefault() {
     return Game(
       name: "",
       program: "",
@@ -529,10 +529,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
         var game = Game.fromJson(jsonDecode(gameString));
         return game;
       } else {
-        return _gameDefault();
+        return gameDefault();
       }
     } catch (e) {
-      return _gameDefault();
+      return gameDefault();
     }
   }
 }

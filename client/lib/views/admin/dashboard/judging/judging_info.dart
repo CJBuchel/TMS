@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/judging/checks/errors.dart';
-import 'package:tms/views/admin/dashboard/judging/checks/warnings.dart';
+import 'package:tms/views/shared/checks/judging_errors.dart';
+import 'package:tms/views/shared/checks/judging_warnings.dart';
 import 'package:tms/views/shared/judging_ttl_clock.dart';
 
 class JudgingInfo extends StatelessWidget {

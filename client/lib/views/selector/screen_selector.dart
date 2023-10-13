@@ -6,7 +6,7 @@ import 'package:tms/network/auth.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/scoring/table_setup.dart';
 import 'package:tms/views/selector/screen_card.dart';
-import 'package:tms/views/shared/permissions_utils.dart';
+import 'package:tms/utils/permissions_utils.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
 class ScreenSelector extends StatefulWidget {

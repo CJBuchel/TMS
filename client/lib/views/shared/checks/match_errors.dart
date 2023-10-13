@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
-
-class MatchError {
-  final String message;
-  final String? matchNumber;
-  final String? teamNumber;
-
-  MatchError({
-    required this.message,
-    this.matchNumber,
-    this.teamNumber,
-  });
-}
+import 'package:tms/utils/checks/match_error_checks.dart';
 
 class MatchErrors extends StatefulWidget {
   final List<GameMatch> matches;
@@ -34,50 +23,12 @@ class MatchErrors extends StatefulWidget {
 class _MatchErrorsState extends State<MatchErrors> {
   List<MatchError> _errors = [];
 
-  List<MatchError> onTableErrors() {
-    List<MatchError> errors = [];
-    List<String> tables = widget.event?.tables ?? [];
-    for (var match in widget.matches) {
-      // check on the tables
-      for (var onTable in match.matchTables) {
-        // check if table is blank
-        if (onTable.table.isNotEmpty && !tables.contains(onTable.table)) {
-          errors.add(MatchError(message: "Table ${onTable.table} does not exist in this event", matchNumber: match.matchNumber));
-        }
-      }
-    }
-    return errors;
-  }
-
-  List<MatchError> teamErrors() {
-    List<MatchError> errors = [];
-
-    int rounds = widget.event?.eventRounds ?? 0;
-    for (var team in widget.teams) {
-      int teamMatches = 0;
-      for (var match in widget.matches) {
-        for (var onTable in match.matchTables) {
-          if (onTable.teamNumber == team.teamNumber) {
-            teamMatches++;
-          }
-        }
-      }
-
-      if (teamMatches < rounds) {
-        errors.add(MatchError(message: "Team has less matches than the number of rounds", teamNumber: team.teamNumber));
-      } else if (teamMatches > rounds) {
-        errors.add(MatchError(message: "Team has more matches than the number of rounds", teamNumber: team.teamNumber));
-      }
-    }
-
-    return errors;
-  }
-
   void setErrors() {
-    _errors = [
-      ...onTableErrors(),
-      ...teamErrors(),
-    ];
+    _errors = MatchErrorChecks.getErrors(
+      matches: widget.matches,
+      teams: widget.teams,
+      event: widget.event,
+    );
   }
 
   @override

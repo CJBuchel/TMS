@@ -14,7 +14,7 @@ import 'package:tms/views/match_control/controls_desktop.dart';
 import 'package:tms/views/match_control/controls_mobile.dart';
 import 'package:tms/views/match_control/controls_shared.dart';
 import 'package:tms/views/match_control/match_table.dart';
-import 'package:tms/views/shared/sorter_util.dart';
+import 'package:tms/utils/sorter_util.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
 class MatchControl extends StatefulWidget {

@@ -2,8 +2,8 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/matches/on_tables/table_score_submitted_checkbox.dart';
-import 'package:tms/views/shared/drop_down_table.dart';
-import 'package:tms/views/shared/drop_down_team.dart';
+import 'package:tms/views/shared/dropdowns/drop_down_table.dart';
+import 'package:tms/views/shared/dropdowns/drop_down_team.dart';
 
 class OnTables extends StatefulWidget {
   final GameMatch match;

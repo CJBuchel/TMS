@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/errors.dart';
-import 'package:tms/views/admin/dashboard/matches/checks/warnings.dart';
+import 'package:tms/views/shared/checks/match_errors.dart';
+import 'package:tms/views/shared/checks/match_warnings.dart';
 import 'package:tms/views/shared/match_ttl_clock.dart';
 
 class MatchInfo extends StatelessWidget {

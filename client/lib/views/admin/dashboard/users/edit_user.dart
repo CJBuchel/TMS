@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/requests/user_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
-import 'package:tms/views/shared/permissions_utils.dart';
+import 'package:tms/utils/permissions_utils.dart';
 
 class _PermissionCheckbox extends StatefulWidget {
   final String label;

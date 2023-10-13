@@ -8,7 +8,7 @@ import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/publish_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/scoring/table_setup.dart';
-import 'package:tms/views/shared/sorter_util.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 class ScoringHeader extends StatefulWidget {
   final double height;
@@ -256,7 +256,8 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
         dropdownColor: Colors.blueGrey[800],
         onChanged: (String? newValue) {
           if (newValue != null) {
-            final match = _matches.firstWhere((match) => match.roundNumber.toString() == newValue);
+            GameMatch match = LocalDatabaseMixin.matchDefault(); // create blank match for unlocked mode
+            match.roundNumber = int.parse(newValue);
             setState(() {
               _nextMatch = match;
               widget.onNextTeamMatch(_nextTeam!, _nextMatch!);

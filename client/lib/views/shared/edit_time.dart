@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tms/views/shared/parse_util.dart';
+import 'package:tms/utils/parse_util.dart';
 
 class EditTime extends StatefulWidget {
   final TextEditingController controller;

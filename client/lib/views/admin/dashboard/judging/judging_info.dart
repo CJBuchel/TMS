@@ -19,20 +19,20 @@ class JudgingInfo extends StatelessWidget {
     required this.event,
   }) : super(key: key);
 
-  Widget judgingProgress(double? fontSize) {
+  Widget judgingProgress() {
     int completedJudgingSessions = judgingSessions.asMap().entries.where((e) => e.value.complete).length;
 
     return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: Icon(Icons.check, color: Colors.green, size: fontSize),
+        const Padding(
+          padding: EdgeInsets.only(right: 10),
+          child: Icon(Icons.check, color: Colors.green),
         ),
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: Text(
             '$completedJudgingSessions/${judgingSessions.length}',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: fontSize),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
       ],
@@ -41,17 +41,16 @@ class JudgingInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double? fontSize = Responsive.isDesktop(context)
-        ? 24
-        : Responsive.isTablet(context)
-            ? 20
-            : 16;
     return LayoutBuilder(builder: (context, constraints) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          JudgingTTLClock(sessions: judgingSessions, fontSize: fontSize, showOnlyClock: true),
-          judgingProgress(fontSize),
+          JudgingTTLClock(
+            sessions: judgingSessions,
+            showOnlyClock: true,
+            autoFontSize: false,
+          ),
+          judgingProgress(),
 
           // warning system
           JudgingWarnings(
@@ -59,7 +58,6 @@ class JudgingInfo extends StatelessWidget {
             teams: teams,
             judgingSessions: judgingSessions,
             event: event,
-            fontSize: fontSize,
           ),
 
           // error system
@@ -68,7 +66,6 @@ class JudgingInfo extends StatelessWidget {
             teams: teams,
             judgingSessions: judgingSessions,
             event: event,
-            fontSize: fontSize,
           ),
         ],
       );

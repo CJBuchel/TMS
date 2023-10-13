@@ -62,7 +62,7 @@ class _SingleTeamWarningsState extends State<SingleTeamWarnings> {
         child: Row(
           children: [
             Text(
-              "Errors: ${_warnings.length}",
+              "Warnings: ${_warnings.length}",
               style: TextStyle(fontSize: widget.fontSize, color: Colors.orange),
               overflow: TextOverflow.ellipsis,
             ),

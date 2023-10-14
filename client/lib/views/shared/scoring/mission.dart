@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/scoring/question.dart';
 import 'package:tms/views/shared/network_image.dart';
+import 'package:tms/views/shared/scoring/question.dart';
 
 class MissionWidget extends StatelessWidget {
   final Mission mission;

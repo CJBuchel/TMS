@@ -13,6 +13,7 @@ class ScoringFooter extends StatelessWidget {
   final Team? nextTeam;
   final GameMatch? nextMatch;
   final bool locked;
+
   final int score;
   final String publicComment;
   final String privateComment;
@@ -137,6 +138,7 @@ class ScoringFooter extends StatelessWidget {
           if (locked) {
             updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
               if (matchUpdateStatus == HttpStatus.ok) {
+                ScaffoldMessenger.of(context).clearSnackBars();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Row(
@@ -155,6 +157,7 @@ class ScoringFooter extends StatelessWidget {
               }
             });
           } else {
+            ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: const Row(

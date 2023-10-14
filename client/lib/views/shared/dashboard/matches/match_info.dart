@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/checks/match_errors.dart';
 import 'package:tms/views/shared/checks/match_warnings.dart';

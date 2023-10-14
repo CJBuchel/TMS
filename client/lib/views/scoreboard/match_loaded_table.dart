@@ -141,13 +141,25 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
 
     Color textColor = widget.autoRowColors ?? false ? (AppTheme.isDarkTheme ? Colors.white : Colors.black) : Colors.black;
 
-    return SizedBox(
+    return Container(
+      decoration: BoxDecoration(
+        color: rowColor,
+        border: const Border(
+          bottom: BorderSide(
+            color: Colors.grey,
+            width: 1,
+          ),
+        ),
+      ),
       height: _rowHeight,
       child: Row(
         children: [
-          _buildCell(table.table, width: _tableWidth, backgroundColor: rowColor, textColor: textColor),
+          _buildCell(table.table, width: _tableWidth, textColor: textColor),
           Expanded(
-            child: _buildCell(tmpTeam != null ? "${tmpTeam.teamNumber} | ${tmpTeam.teamName}" : "", backgroundColor: rowColor, textColor: textColor),
+            child: _buildCell(
+              tmpTeam != null ? "${tmpTeam.teamNumber} | ${tmpTeam.teamName}" : "",
+              textColor: textColor,
+            ),
           ),
         ],
       ),

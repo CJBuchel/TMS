@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/add_match/add_match.dart';
-import 'package:tms/views/admin/dashboard/matches/match_edit_row.dart';
+import 'package:tms/views/shared/dashboard/matches/add_match/add_match.dart';
+import 'package:tms/views/shared/dashboard/matches/match_edit_row.dart';
 
 class MatchEditTable extends StatefulWidget {
   final List<GameMatch> matches;

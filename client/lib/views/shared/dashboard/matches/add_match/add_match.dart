@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/add_match/round_number.dart';
-import 'package:tms/views/admin/dashboard/matches/add_match/start_time.dart';
+import 'package:tms/views/shared/dashboard/matches/add_match/round_number.dart';
+import 'package:tms/views/shared/dashboard/matches/add_match/start_time.dart';
 import 'package:tms/views/shared/edit_time.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 

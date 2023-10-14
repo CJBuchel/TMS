@@ -19,10 +19,11 @@ class DeleteUser extends StatelessWidget {
       if (value != HttpStatus.ok) {
         showNetworkError(value, context, subMessage: "Error deleting $username");
       } else {
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Deleted $username"),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.red,
           ),
         );
       }

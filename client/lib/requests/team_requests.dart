@@ -53,6 +53,21 @@ Future<int> updateTeamRequest(String originTeamNumber, Team team) async {
   }
 }
 
+Future<int> deleteTeamRequest(String teamNumber) async {
+  try {
+    var message = TeamDeleteRequest(authToken: await NetworkAuth.getToken(), teamNumber: teamNumber);
+    var res = await Network.serverPost("team/delete", message.toJson());
+    if (res.item1) {
+      return res.item2;
+    } else {
+      return res.item2;
+    }
+  } catch (e) {
+    Logger().e(e);
+    return HttpStatus.badRequest;
+  }
+}
+
 Future<int> postTeamGameScoresheetRequest(String teamNumber, TeamGameScore scoresheet) async {
   try {
     var scoresheetRequest = TeamPostGameScoresheetRequest(authToken: await NetworkAuth.getToken(), teamNumber: teamNumber, scoresheet: scoresheet);

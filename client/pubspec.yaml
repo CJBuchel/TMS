@@ -47,6 +47,7 @@ dependencies:
   multiselect: ^0.1.0
   dropdown_search: ^5.0.6
   intl: ^0.18.1
+  accordion: ^2.6.0
 
 dev_dependencies:
   flutter_test:

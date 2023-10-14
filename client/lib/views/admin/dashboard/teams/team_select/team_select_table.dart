@@ -6,7 +6,7 @@ import 'package:tms/utils/checks/team_warning_checks.dart';
 class TeamSelectTable extends StatefulWidget {
   final Event? event;
   final List<Team> teams;
-  final Function(Team) onTeamSelected;
+  final Function(String) onTeamSelected;
 
   const TeamSelectTable({
     Key? key,
@@ -27,7 +27,7 @@ class _TeamSelectTableState extends State<TeamSelectTable> {
       setState(() {
         _selected = t;
       });
-      widget.onTeamSelected(t);
+      widget.onTeamSelected(t.teamNumber);
     }
   }
 
@@ -58,7 +58,7 @@ class _TeamSelectTableState extends State<TeamSelectTable> {
     return Tooltip(
       message: warnings.map((e) => "${e.teamNumber}: ${e.message}").join("\n"),
       child: const Icon(
-        Icons.info_outline,
+        Icons.error,
         color: Colors.orange,
       ),
     );
@@ -68,7 +68,7 @@ class _TeamSelectTableState extends State<TeamSelectTable> {
     return Tooltip(
       message: errors.map((e) => "${e.teamNumber}: ${e.message}").join("\n"),
       child: const Icon(
-        Icons.info_outline,
+        Icons.error,
         color: Colors.red,
       ),
     );

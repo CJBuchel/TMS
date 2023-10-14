@@ -28,7 +28,7 @@ class _DashboardState extends State<Dashboard> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // default view
       // switchView(const Overview());
-      switchView(const Teams());
+      switchView(Teams());
     });
   }
 

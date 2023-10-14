@@ -1,40 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/admin/dashboard/judging/judging.dart';
-import 'package:tms/views/admin/dashboard/matches/matches.dart';
+import 'package:tms/views/shared/dashboard/matches/matches.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
 import 'package:tms/views/admin/dashboard/teams/teams.dart';
 import 'package:tms/views/admin/dashboard/users/users.dart';
-
-class DrawerListTile extends StatelessWidget {
-  final String title, svgSrc;
-  final VoidCallback press;
-  const DrawerListTile({
-    Key? key,
-    required this.title,
-    required this.svgSrc,
-    required this.press,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: press,
-      horizontalTitleGap: 0.0,
-      leading: SvgPicture.asset(
-        svgSrc,
-        colorFilter: ColorFilter.mode(AppTheme.isDarkTheme ? Colors.white54 : Colors.black, BlendMode.srcIn),
-        height: 16,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(color: AppTheme.isDarkTheme ? Colors.white54 : Colors.black),
-      ),
-    );
-  }
-}
+import 'package:tms/views/shared/dashboard/side_menu_tile.dart';
 
 class SideMenu extends StatelessWidget {
   final Function(Widget view) onView;
@@ -84,7 +55,7 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: 'Teams',
             svgSrc: 'assets/icons/teams.svg',
-            press: () => _handleViewSwitch(const Teams(), context),
+            press: () => _handleViewSwitch(Teams(), context),
           ),
           // DrawerListTile(
           //   title: 'Documents',

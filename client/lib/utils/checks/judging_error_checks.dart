@@ -22,8 +22,21 @@ class JudgingErrorChecks {
     List<String> pods = _event?.pods ?? [];
     for (var session in _judgingSessions) {
       for (var pod in session.judgingPods) {
+        // check if pod exists
         if (pod.pod.isNotEmpty && !pods.contains(pod.pod)) {
           errors.add(JudgingError(message: "Pod ${pod.pod} does not exist in this event", sessionNumber: session.sessionNumber));
+        }
+
+        // check if team exists
+        bool teamExists = false;
+        for (var team in _teams) {
+          if (team.teamNumber == pod.teamNumber) {
+            teamExists = true;
+            break;
+          }
+        }
+        if (!teamExists) {
+          errors.add(JudgingError(message: "Team ${pod.teamNumber} does not exist in this event", sessionNumber: session.sessionNumber));
         }
       }
     }

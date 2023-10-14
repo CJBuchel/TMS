@@ -5,6 +5,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/utils/sorter_util.dart';
 import 'package:tms/views/admin/dashboard/teams/team_select/team_select_table.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
@@ -38,7 +39,7 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
   set _setTeams(List<Team> value) {
     if (mounted) {
       setState(() {
-        _teams = value;
+        _teams = sortTeamsByNumber(value);
       });
     }
   }

@@ -26,7 +26,7 @@ class DeleteTeamButton extends StatelessWidget {
           ),
         );
       }
-      onTeamDelete?.call();
+      onTeamDelete.call();
     });
   }
 

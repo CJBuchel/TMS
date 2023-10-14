@@ -57,7 +57,7 @@ class TeamEditor extends StatelessWidget {
                         AccordionSection(
                           isOpen: true,
                           headerBackgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                          contentBackgroundColor: Theme.of(context).canvasColor,
+                          contentBackgroundColor: Theme.of(context).cardColor,
                           header: const SizedBox(
                             height: 50,
                             child: Center(
@@ -76,7 +76,7 @@ class TeamEditor extends StatelessWidget {
                         AccordionSection(
                           isOpen: false,
                           headerBackgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                          contentBackgroundColor: Theme.of(context).canvasColor,
+                          contentBackgroundColor: Theme.of(context).cardColor,
                           header: const SizedBox(
                             height: 50,
                             child: Center(

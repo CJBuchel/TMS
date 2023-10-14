@@ -45,6 +45,19 @@ List<Team> sortTeamsByRank(List<Team> teams) {
   return teams;
 }
 
+List<Team> sortTeamsByNumber(List<Team> teams) {
+  final originalIndices = Map.fromEntries(teams.asMap().entries.map((e) => MapEntry(e.value, e.key)));
+
+  teams.sort((a, b) {
+    if (a.teamNumber == b.teamNumber) {
+      return originalIndices[a]!.compareTo(originalIndices[b]!);
+    }
+    return a.teamNumber.compareTo(b.teamNumber);
+  });
+
+  return teams;
+}
+
 List<JudgingSession> sortJudgingByTime(List<JudgingSession> judging) {
   final originalIndices = Map.fromEntries(judging.asMap().entries.map((e) => MapEntry(e.value, e.key)));
 

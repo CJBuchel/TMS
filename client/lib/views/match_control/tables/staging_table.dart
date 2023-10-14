@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/match_control/add_on_table.dart';
-import 'package:tms/views/match_control/delete_on_table.dart';
-import 'package:tms/views/match_control/edit_on_table.dart';
+import 'package:tms/views/match_control/tables/add_on_table.dart';
+import 'package:tms/views/match_control/tables/delete_on_table.dart';
+import 'package:tms/views/match_control/tables/edit_on_table.dart';
 
 class StagingTable extends StatefulWidget {
   final List<Team> teams;
@@ -102,7 +102,13 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
     }
 
     // get team
-    String teamName = teams.firstWhere((t) => t.teamNumber == table.teamNumber).teamName;
+    String teamName = "";
+    for (Team t in teams) {
+      if (t.teamNumber == table.teamNumber) {
+        teamName = t.teamName;
+        break;
+      }
+    }
 
     return DataRow2(cells: [
       // delete on table
@@ -188,7 +194,7 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
         }),
 
         // columns
-        columnSpacing: 10,
+        columnSpacing: 5,
         columns: [
           const DataColumn2(label: SizedBox.shrink(), size: ColumnSize.S), // no title for the delete button
           DataColumn2(label: styledHeader("#"), size: ColumnSize.S),

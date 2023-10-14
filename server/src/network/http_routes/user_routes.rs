@@ -8,7 +8,7 @@ use tms_utils::{TmsRouteResponse, with_clients_write, check_permissions};
 use tms_utils::network_schemas::{LoginResponse, LoginRequest, UsersRequest, UsersResponse, AddUserRequest, DeleteUserRequest, UpdateUserRequest};
 use tms_utils::{TmsClients, TmsRequest, security::Security, TmsRespond, security::encrypt};
 use uuid::Uuid;
-use crate::db::tree::UpdateTree;
+use crate::db::tree::{UpdateTree, UpdateError};
 
 use crate::db::db::TmsDB;
 
@@ -187,7 +187,19 @@ pub fn user_update_route(message: String) -> TmsRouteResponse<()> {
       // Check if user already exists
       match db.tms_data.users.get(username.as_bytes()).unwrap() {
         Some(_) => {
-          let _ = db.tms_data.users.update(username.as_bytes(), update_user_request.updated_user.username.as_bytes(), updated_user.clone());
+          match db.tms_data.users.update(username.as_bytes(), update_user_request.updated_user.username.as_bytes(), updated_user.clone()) {
+            Ok(_) => {},
+            Err(e) => {
+              match e {
+                UpdateError::KeyExists => {
+                  TmsRespond!(Status::Conflict, "User already exists".to_string());
+                },
+                _ => {
+                  TmsRespond!(Status::BadRequest, "Failed to update user".to_string());
+                }
+              }
+            }
+          }
           // Respond to client
           TmsRespond!(
             Status::Ok,

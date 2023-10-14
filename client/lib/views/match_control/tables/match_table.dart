@@ -181,7 +181,14 @@ class _MatchTableState extends State<MatchTable> {
       child: Container(
         height: 50, // default row size
         width: widget.con.maxWidth, // expand as much as possible
-        decoration: BoxDecoration(color: rowColor),
+        decoration: BoxDecoration(
+          color: rowColor,
+          border: const Border(
+            bottom: BorderSide(
+              color: Colors.grey,
+            ),
+          ),
+        ),
         child: Row(
           children: [
             // checkbox

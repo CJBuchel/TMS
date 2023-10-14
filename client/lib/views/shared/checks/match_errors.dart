@@ -45,9 +45,9 @@ class _MatchErrorsState extends State<MatchErrors> {
 
   String? getTooltips(MatchError e) {
     if (e.matchNumber != null && e.teamNumber != null) {
-      return "Session ${e.matchNumber} - Team ${e.teamNumber}: ${e.message}";
+      return "Match ${e.matchNumber} - Team ${e.teamNumber}: ${e.message}";
     } else if (e.matchNumber != null) {
-      return "Session ${e.matchNumber}: ${e.message}";
+      return "Match ${e.matchNumber}: ${e.message}";
     } else if (e.teamNumber != null) {
       return "Team ${e.teamNumber}: ${e.message}";
     } else {

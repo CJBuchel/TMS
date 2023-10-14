@@ -3,7 +3,7 @@ use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest, TeamDeleteRequest}, schemas::{Team, create_permissions, rank_teams}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
 
-use crate::{db::{db::TmsDB, tree::UpdateTree}, event_service::TmsEventServiceArc};
+use crate::{db::{db::TmsDB, tree::{UpdateTree, UpdateError}}, event_service::TmsEventServiceArc};
 
 #[get("/teams/get/<uuid>")]
 pub fn teams_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
@@ -50,8 +50,7 @@ pub fn team_get_route(security: &State<Security>, clients: &State<TmsClients>, d
       )
     },
     None => {
-      error!("Failed to get team");
-      TmsRespond!(Status::NotFound, "Failed to get team".to_string());
+      TmsRespond!(Status::NotFound, "Failed to find team".to_string());
     }
   };
 }
@@ -69,7 +68,26 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
       Some(t) => {
         let origin_team_number = t.team_number.clone();
         // update db
-        let _ = db.tms_data.teams.update(origin_team_number.as_bytes(), message.team_number.as_bytes(), message.team_data.clone());
+        match db.tms_data.teams.update(origin_team_number.as_bytes(), message.team_data.team_number.as_bytes(), message.team_data.clone()) {
+          Ok(_) => {},
+          Err(e) => {
+            match e {
+              UpdateError::KeyExists => {
+                TmsRespond!(Status::Conflict, "Team number already exists".to_string());
+              },
+              _ => {
+                error!("Failed to update team");
+                TmsRespond!(Status::BadRequest, "Failed to update team".to_string());
+              }
+            }
+          }
+        }
+
+
+        // update rankings
+        if !update_rankings(db) {
+          TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
+        }
         // send updates to clients
         tms_clients_ws_send(SocketMessage {
           from_id: None,
@@ -89,8 +107,7 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
 
       },
       None => {
-        error!("Failed to get team (update) {}", message.team_number);
-        TmsRespond!(Status::NotFound, "Failed to get team".to_string());
+        TmsRespond!(Status::NotFound, "Failed to find".to_string());
       }
     }
   }
@@ -106,7 +123,7 @@ fn update_rankings(db: &State<std::sync::Arc<TmsDB>>) -> bool {
     let team = match team_raw {
       Ok(team) => team.1,
       _ => {
-        error!("Failed to get team (rankings)");
+        error!("Failed to update team (rankings)");
         return false;
       }
     };
@@ -192,15 +209,13 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
             }
           },
           None => {
-            error!("Failed to get event");
-            TmsRespond!(Status::NotFound, "Failed to get event".to_string());
+            TmsRespond!(Status::NotFound, "Failed to find team".to_string());
           }
         }
 
       },
       None => {
-        error!("Failed to get team (scoresheet post) {}", message.team_number);
-        TmsRespond!(Status::NotFound, "Failed to get team".to_string());
+        TmsRespond!(Status::NotFound, "Failed to find team".to_string());
       }
     }
   }
@@ -221,6 +236,10 @@ pub fn team_delete_route(message: String, tms_event_service: &State<TmsEventServ
       Some(t) => {
         match tms_event_service.lock().unwrap().teams.remove_team(t.team_number.clone()) {
           Ok(_) => {
+            // update rankings
+            if !update_rankings(db) {
+              TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
+            }
             // send updates to clients
             tms_clients_ws_send(SocketMessage {
               from_id: None,
@@ -253,8 +272,7 @@ pub fn team_delete_route(message: String, tms_event_service: &State<TmsEventServ
         }
       },
       None => {
-        error!("Failed to get team (delete) {}", message.team_number);
-        TmsRespond!(Status::NotFound, "Failed to get team".to_string());
+        TmsRespond!(Status::NotFound, "Failed to find team".to_string());
       }
     }
   }

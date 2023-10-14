@@ -1,29 +1,74 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:tms/mixins/auto_subscribe.dart';
+import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/teams/team_select/team_select_table.dart';
+import 'package:tms/views/shared/network_error_popup.dart';
 
 class TeamSelect extends StatefulWidget {
-  final Event? event;
-  final List<Team> teams;
-  final Function(Team) onTeamSelected;
-  final Function() requestTeams;
+  final Function(String) onTeamSelected;
 
   const TeamSelect({
     Key? key,
-    required this.event,
-    required this.teams,
     required this.onTeamSelected,
-    required this.requestTeams,
   }) : super(key: key);
 
   @override
   State<TeamSelect> createState() => _TeamSelectState();
 }
 
-class _TeamSelectState extends State<TeamSelect> {
+class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+  Event? _event;
+  List<Team> _teams = [];
   List<Team> _filteredTeams = [];
   String _rankFilter = '';
   String _teamFilter = '';
+
+  set _setEvent(Event event) {
+    if (mounted) {
+      setState(() {
+        _event = event;
+      });
+    }
+  }
+
+  set _setTeams(List<Team> value) {
+    if (mounted) {
+      setState(() {
+        _teams = value;
+      });
+    }
+  }
+
+  set _setTeam(Team value) {
+    if (mounted) {
+      // find team if exists
+      final index = _teams.indexWhere((t) => t.teamNumber == value.teamNumber);
+      if (index != -1) {
+        setState(() {
+          _teams[index] = value;
+        });
+      } else {
+        setState(() {
+          _teams.add(value);
+        });
+      }
+    }
+  }
+
+  void _fetchTeams() {
+    getTeamsRequest().then((value) {
+      if (value.item1 != HttpStatus.ok) {
+        showNetworkError(value.item1, context, subMessage: "Failed to fetch teams");
+      } else {
+        _setTeams = value.item2;
+        _applyFilters();
+      }
+    });
+  }
 
   void setRankFilter(String r) {
     if (mounted) {
@@ -50,7 +95,7 @@ class _TeamSelectState extends State<TeamSelect> {
   }
 
   void _applyFilters() {
-    List<Team> filteredTeams = widget.teams;
+    List<Team> filteredTeams = _teams;
 
     if (_rankFilter.isNotEmpty) {
       filteredTeams = filteredTeams.where((element) => element.ranking.toString().contains(_rankFilter)).toList();
@@ -67,17 +112,21 @@ class _TeamSelectState extends State<TeamSelect> {
   }
 
   @override
-  void didUpdateWidget(covariant TeamSelect oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget != widget) {
-      _applyFilters();
-    }
-  }
-
-  @override
   void initState() {
     super.initState();
-    _applyFilters();
+    onTeamsUpdate((t) {
+      _setTeams = t;
+      _applyFilters();
+    });
+
+    onTeamUpdate((t) {
+      _setTeam = t;
+      _applyFilters();
+    });
+
+    onEventUpdate((e) {
+      _setEvent = e;
+    });
   }
 
   Widget _filterRank() {
@@ -114,7 +163,7 @@ class _TeamSelectState extends State<TeamSelect> {
           child: _filterRank(),
         ),
         Expanded(
-          flex: 2,
+          flex: 3,
           child: _filterTeam(),
         ),
       ],
@@ -127,7 +176,7 @@ class _TeamSelectState extends State<TeamSelect> {
       children: [
         IconButton(
           onPressed: () {
-            widget.requestTeams();
+            _fetchTeams();
           },
           icon: const Icon(Icons.refresh, color: Colors.orange),
         ),
@@ -160,7 +209,7 @@ class _TeamSelectState extends State<TeamSelect> {
             ),
             Expanded(
               child: TeamSelectTable(
-                event: widget.event,
+                event: _event,
                 teams: _filteredTeams,
                 onTeamSelected: (t) => widget.onTeamSelected(t),
               ),

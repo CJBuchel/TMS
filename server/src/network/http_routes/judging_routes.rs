@@ -4,7 +4,7 @@ use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{JudgingSession, create_permissions}, TmsRespond, network_schemas::{JudgingSessionsResponse, JudgingSessionRequest, JudgingSessionResponse, JudgingSessionUpdateRequest, SocketMessage, JudgingSessionDeleteRequest, JudgingSessionAddRequest}, TmsRequest, check_permissions, tms_clients_ws_send};
 
-use crate::db::{db::TmsDB, tree::UpdateTree};
+use crate::db::{db::TmsDB, tree::{UpdateTree, UpdateError}};
 
 #[tms_private_route]
 #[get("/judging_sessions/get/<uuid>")]
@@ -53,8 +53,7 @@ pub fn judging_session_get_route(message: String) -> TmsRouteResponse<()> {
       )
     },
     None => {
-      error!("Failed to get judging session {}", judging_session_request.session_number);
-      TmsRespond!(Status::NotFound, "Failed to get judging session".to_string());
+      TmsRespond!(Status::NotFound, "Failed to find session".to_string());
     }
   };
 }
@@ -72,7 +71,20 @@ pub fn judging_session_update_route(message: String) -> TmsRouteResponse<()> {
     match db.tms_data.judging_sessions.get(message.session_number.clone()).unwrap() {
       Some(s) => {
         let origin_session_number = s.session_number.clone();
-        let _ = db.tms_data.judging_sessions.update(origin_session_number.as_bytes(), message.judging_session.session_number.as_bytes(), message.judging_session.clone());
+        match db.tms_data.judging_sessions.update(origin_session_number.as_bytes(), message.judging_session.session_number.as_bytes(), message.judging_session.clone()) {
+          Ok(_) => {},
+          Err(e) => {
+            match e {
+              UpdateError::KeyExists => {
+                error!("Failed to update session, session number already exists");
+                TmsRespond!(Status::BadRequest, "Failed to update session, session number already exists".to_string());
+              },
+              _ => {
+                TmsRespond!(Status::BadRequest, "Failed to update session".to_string());
+              }
+            }
+          }
+        }
 
         // send updates to clients
         tms_clients_ws_send(SocketMessage {
@@ -93,8 +105,7 @@ pub fn judging_session_update_route(message: String) -> TmsRouteResponse<()> {
         TmsRespond!()
       },
       None => {
-        error!("Failed to get judging session {}", message.session_number);
-        TmsRespond!(Status::NotFound, "Failed to get judging session".to_string());
+        TmsRespond!(Status::NotFound, "Failed to find session".to_string());
       }
     }
   }
@@ -126,8 +137,7 @@ pub fn judging_session_delete_route(message: String) -> TmsRouteResponse<()> {
         TmsRespond!()
       },
       None => {
-        error!("Failed to get judging session {}", message.session_number);
-        TmsRespond!(Status::NotFound, "Failed to get judging session".to_string());
+        TmsRespond!(Status::NotFound, "Failed to find session".to_string());
       }
     }
   }

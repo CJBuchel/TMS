@@ -56,7 +56,13 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
           if (onTable.table == thisTable && !onTable.scoreSubmitted) {
             setState(() {
               _nextMatch = match;
-              _nextTeam = _teams.firstWhere((team) => team.teamNumber == onTable.teamNumber);
+              _nextTeam = null;
+              for (Team t in _teams) {
+                if (t.teamNumber == onTable.teamNumber) {
+                  _nextTeam = t;
+                  break;
+                }
+              }
               if (_nextMatch != null && _nextTeam != null) {
                 widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
               }

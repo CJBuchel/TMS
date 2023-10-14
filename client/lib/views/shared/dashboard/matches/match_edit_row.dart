@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/on_tables/edit_on_tables.dart';
-import 'package:tms/views/admin/dashboard/matches/match_edit/delete_match.dart';
-import 'package:tms/views/admin/dashboard/matches/match_edit/edit_match.dart';
+import 'package:tms/views/shared/dashboard/matches/on_tables/edit_on_tables.dart';
+import 'package:tms/views/shared/dashboard/matches/match_edit/delete_match.dart';
+import 'package:tms/views/shared/dashboard/matches/match_edit/edit_match.dart';
 
 class MatchEditRow extends StatelessWidget {
   final GameMatch match;

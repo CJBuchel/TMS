@@ -4,7 +4,7 @@ use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::Security, security::encrypt, TmsClients, TmsRouteResponse, schemas::{GameMatch, create_permissions}, TmsRespond, network_schemas::{MatchesResponse, MatchRequest, MatchResponse, MatchLoadRequest, MatchUpdateRequest, SocketMessage, MatchDeleteRequest, MatchAddRequest}, TmsRequest, check_permissions, tms_clients_ws_send};
 
-use crate::{db::{db::TmsDB, tree::UpdateTree}, event_service::TmsEventServiceArc};
+use crate::{db::{db::TmsDB, tree::{UpdateTree, UpdateError}}, event_service::TmsEventServiceArc};
 
 #[get("/matches/get/<uuid>")]
 pub fn matches_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
@@ -15,8 +15,7 @@ pub fn matches_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<
     let game_match = match match_raw {
       Ok(game_match) => game_match.1,
       _ => {
-        error!("Failed to get match (matches get) {}", match_raw.err().unwrap());
-        TmsRespond!(Status::BadRequest, "Failed to get match".to_string());
+        TmsRespond!(Status::BadRequest, "Failed to find match".to_string());
       }
     };
     
@@ -51,8 +50,7 @@ pub fn match_get_route(message: String) -> TmsRouteResponse<()> {
       )
     },
     None => {
-      error!("Failed to get match (match get) {}", match_request.match_number);
-      TmsRespond!(Status::NotFound, "Failed to get match".to_string());
+      TmsRespond!(Status::NotFound, "Failed to find match".to_string());
     }
   };
 }
@@ -69,7 +67,20 @@ pub fn match_update_route(message: String) -> TmsRouteResponse<()> {
     match db.tms_data.matches.get(message.match_number.clone()).unwrap() {
       Some(m) => {
         let origin_match_number = m.match_number.clone();
-        let _ = db.tms_data.matches.update(origin_match_number.as_bytes(), message.match_data.match_number.as_bytes(), message.match_data.clone());
+        match db.tms_data.matches.update(origin_match_number.as_bytes(), message.match_data.match_number.as_bytes(), message.match_data.clone()) {
+          Ok(_) => {},
+          Err(e) => {
+            match e {
+              UpdateError::KeyExists => {
+                error!("Failed to update match, match number already exists");
+                TmsRespond!(Status::BadRequest, "Failed to update match, match number already exists".to_string());
+              },
+              _ => {
+                TmsRespond!(Status::BadRequest, "Failed to update match".to_string());
+              }
+            }
+          }
+        }
         // send updates to clients
         tms_clients_ws_send(SocketMessage {
           from_id: None,
@@ -88,8 +99,7 @@ pub fn match_update_route(message: String) -> TmsRouteResponse<()> {
         TmsRespond!();
       },
       None => {
-        error!("Failed to get match (update) {}", message.match_number);
-        TmsRespond!(Status::NotFound, "Failed to get match".to_string());
+        TmsRespond!(Status::NotFound, "Failed to find match".to_string());
       }
     };
   }

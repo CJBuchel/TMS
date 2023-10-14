@@ -27,6 +27,18 @@ class MatchErrorChecks {
         if (onTable.table.isNotEmpty && !tables.contains(onTable.table)) {
           errors.add(MatchError(message: "Table ${onTable.table} does not exist in this event", matchNumber: match.matchNumber));
         }
+
+        // check if team exists
+        bool teamExists = false;
+        for (var team in _teams) {
+          if (team.teamNumber == onTable.teamNumber) {
+            teamExists = true;
+            break;
+          }
+        }
+        if (!teamExists) {
+          errors.add(MatchError(message: "Team ${onTable.teamNumber} does not exist in this event", matchNumber: match.matchNumber));
+        }
       }
     }
     return errors;

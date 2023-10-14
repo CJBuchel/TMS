@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/requests/match_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/matches/on_tables/on_tables.dart';
+import 'package:tms/views/shared/dashboard/matches/on_tables/on_tables.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class EditOnTables extends StatefulWidget {

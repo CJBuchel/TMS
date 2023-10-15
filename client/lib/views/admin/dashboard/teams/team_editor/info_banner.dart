@@ -109,7 +109,19 @@ class _TeamInfoBannerState extends State<TeamInfoBanner> with AutoUnsubScribeMix
   void initState() {
     super.initState();
     onEventUpdate((e) => _setEvent = e);
-    onTeamUpdate((t) => _setTeam = t);
+    onTeamUpdate((t) {
+      if (t.teamNumber == widget.teamNumber) {
+        _setTeam = t;
+      }
+    });
+    onTeamsUpdate((teams) {
+      for (Team t in teams) {
+        if (t.teamNumber == widget.teamNumber) {
+          _setTeam = t;
+          break;
+        }
+      }
+    });
     onMatchUpdate((m) => _setMatch = m);
     onMatchesUpdate((m) => _setMatches = m);
     onJudgingSessionUpdate((s) => _setSession = s);

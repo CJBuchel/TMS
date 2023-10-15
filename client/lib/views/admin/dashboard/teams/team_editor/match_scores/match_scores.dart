@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:tms/mixins/auto_subscribe.dart';
-import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/add_score.dart';
@@ -18,8 +19,8 @@ class MatchScores extends StatefulWidget {
   State<MatchScores> createState() => _MatchScoresState();
 }
 
-class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  Team _team = LocalDatabaseMixin.teamDefault();
+class _MatchScoresState extends State<MatchScores> {
+  Team? _team;
 
   set _setTeam(Team t) {
     if (mounted) {
@@ -29,22 +30,26 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
     }
   }
 
-  set _setTeams(List<Team> teams) {
-    if (mounted) {
-      for (Team t in teams) {
-        if (t.teamNumber == widget.teamNumber) {
-          _setTeam = t;
-          break;
-        }
+  Future<void> _fetchTeam() async {
+    await getTeamRequest(widget.teamNumber).then((res) {
+      if (res.item1 == HttpStatus.ok) {
+        if (res.item2 != null) _setTeam = res.item2!;
       }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant MatchScores oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.teamNumber != widget.teamNumber) {
+      _fetchTeam();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    onTeamsUpdate((t) => _setTeams = t);
-    onTeamUpdate((t) => _setTeam = t);
+    _fetchTeam();
   }
 
   Widget _styledCell(Widget inner) {
@@ -116,8 +121,9 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
           Expanded(
             flex: 1,
             child: DeleteScore(
-              team: _team,
+              team: _team!,
               index: index,
+              onDelete: () => _fetchTeam(),
             ),
           ),
 
@@ -160,8 +166,9 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
           Expanded(
             flex: 1,
             child: EditScore(
-              team: _team,
+              team: _team!,
               index: index,
+              onUpdate: () => _fetchTeam(),
             ),
           ),
         ],
@@ -227,7 +234,8 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
         Expanded(
           flex: 1,
           child: AddScore(
-            team: _team,
+            team: _team!,
+            onAdd: () => _fetchTeam(),
           ),
         ),
         ...List.generate(7, (index) => const Expanded(flex: 1, child: SizedBox.shrink())),
@@ -236,11 +244,11 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
   }
 
   Widget _table() {
-    final List<Widget> rows = List.generate(_team.gameScores.length, (index) {
+    final List<Widget> rows = List.generate(_team!.gameScores.length, (index) {
       return SizedBox(
         height: 50,
         child: _styledRow(
-          _team.gameScores[index],
+          _team!.gameScores[index],
           index,
         ),
       );
@@ -267,6 +275,10 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
 
   @override
   Widget build(BuildContext context) {
-    return _table();
+    if (_team == null) {
+      return const Center(child: CircularProgressIndicator());
+    } else {
+      return _table();
+    }
   }
 }

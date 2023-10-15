@@ -207,14 +207,13 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
               if !update_rankings(db, clients) {
                 TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
               } else {
-      
-                // send update to clients (we update all teams because the rankings may have changed)
+                // send updates to clients
                 tms_clients_ws_send(SocketMessage {
                   from_id: None,
-                  topic: String::from("teams"),
+                  topic: String::from("team"),
                   sub_topic: String::from("update"),
-                  message: String::from(""),
-                }, clients.inner().clone(), None);
+                  message: t.team_number.clone(),
+                }, clients.inner().to_owned(), None);
                 
                 // good response
                 TmsRespond!()

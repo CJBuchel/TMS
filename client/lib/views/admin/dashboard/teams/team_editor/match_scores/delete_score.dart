@@ -62,8 +62,8 @@ class DeleteScore extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                _deleteScore(context);
                 Navigator.of(context).pop();
+                _deleteScore(context);
               },
               child: const Text("Delete", style: TextStyle(color: Colors.red)),
             ),

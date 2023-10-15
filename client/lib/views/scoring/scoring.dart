@@ -4,8 +4,9 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/scoring/scoring_footer/floating_score.dart';
 import 'package:tms/views/scoring/scoring_footer/scoring_footer.dart';
-import 'package:tms/views/scoring/scoring_header.dart';
+import 'package:tms/views/scoring/scoring_header/scoring_header.dart';
 import 'package:tms/views/shared/scoring/game_scoring.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 import 'package:tms/views/timer/clock.dart';
@@ -130,7 +131,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
                   onErrors: (errors) => _setErrors = errors,
                   onPublicCommentChange: (pub) => _setPublicComment = pub,
                   onPrivateCommentChange: (priv) => _setPrivateComment = priv,
-                  defaultAnswers: _defaultAnswers,
+                  setDefaultAnswers: _defaultAnswers,
                   onDefaultAnswers: () {
                     _defaultAnswers.value = false; // set to false when default is triggered
                   },
@@ -169,35 +170,6 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
           ),
         )
       ],
-    );
-  }
-
-  Widget getFloatingScore(double footerHeight) {
-    return Positioned(
-      bottom: footerHeight,
-      left: 0,
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(10),
-            topLeft: Radius.zero,
-          ),
-          border: Border.all(color: AppTheme.isDarkTheme ? Colors.white : Colors.black),
-        ),
-        width: 120,
-        height: 60,
-        child: Center(
-          child: Text(
-            _score.toString(),
-            style: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -245,7 +217,7 @@ class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, Loca
               children: [
                 getScoringColumn(headerHeight, footerHeight, constraints),
                 // getFloatingTimer(headerHeight), // maybe make it only appear when timer is running
-                getFloatingScore(footerHeight),
+                FloatingScore(footerHeight: footerHeight, score: _score),
               ],
             );
           },

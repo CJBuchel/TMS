@@ -64,11 +64,14 @@ class TeamEditor extends StatelessWidget {
                               child: Text("General Settings"),
                             ),
                           ),
-                          content: TeamGeneralEdit(
-                            teamNumber: teamNumber,
-                            onTeamDelete: () {
-                              selectedTeamNumber.value = null;
-                            },
+                          content: Material(
+                            color: Colors.transparent,
+                            child: TeamGeneralEdit(
+                              teamNumber: teamNumber,
+                              onTeamDelete: () {
+                                selectedTeamNumber.value = null;
+                              },
+                            ),
                           ),
                         ),
 
@@ -83,7 +86,10 @@ class TeamEditor extends StatelessWidget {
                               child: Text("Match Scores"),
                             ),
                           ),
-                          content: MatchScores(teamNumber: teamNumber),
+                          content: Material(
+                            color: Colors.transparent,
+                            child: MatchScores(teamNumber: teamNumber),
+                          ),
                         ),
                       ],
                     ),

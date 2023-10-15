@@ -85,7 +85,7 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
 
 
         // update rankings
-        if !update_rankings(db) {
+        if !update_rankings(db, clients) {
           TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
         }
         // send updates to clients
@@ -116,7 +116,7 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
 }
 
 // returns true if success
-fn update_rankings(db: &State<std::sync::Arc<TmsDB>>) -> bool {
+fn update_rankings(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsClients>) -> bool {
   let mut teams:Vec<Team> = vec![];
 
   for team_raw in db.tms_data.teams.iter() {
@@ -131,14 +131,30 @@ fn update_rankings(db: &State<std::sync::Arc<TmsDB>>) -> bool {
     teams.push(team.clone());
   }
 
-  let ranked_teams = rank_teams(teams);
+  let ranked_teams = rank_teams(teams.clone());
 
+  // check if there was a ranking update between teams and ranked_teams
   for team in ranked_teams {
-    match db.tms_data.teams.update(team.team_number.as_bytes(), team.team_number.as_bytes(), team.clone()) {
-      Ok(_) => {},
-      Err(_) => {
-        error!("Failed to update team {}", team.team_number);
-        return false;
+    for old_team in teams.clone() {
+      if old_team.team_number == team.team_number {
+        if old_team.ranking != team.ranking {
+          // update the team in the database
+          match db.tms_data.teams.update(team.team_number.as_bytes(), team.team_number.as_bytes(), team.clone()) {
+            Ok(_) => {
+              // update clients about raking change
+              tms_clients_ws_send(SocketMessage {
+                from_id: None,
+                topic: String::from("teams"),
+                sub_topic: String::from("update"),
+                message: String::from(""),
+              }, clients.inner().clone(), None);
+            },
+            Err(_) => {
+              error!("Failed to update team {}", team.team_number);
+              return false;
+            }
+          }
+        }
       }
     }
   }
@@ -147,7 +163,7 @@ fn update_rankings(db: &State<std::sync::Arc<TmsDB>>) -> bool {
 
 #[get("/teams/update_ranking")]
 pub fn teams_update_ranking_route(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsClients>) -> TmsRouteResponse<()> {
-  match update_rankings(db) {
+  match update_rankings(db, clients) {
     true => {
       // send update to clients
       tms_clients_ws_send(SocketMessage {
@@ -188,7 +204,7 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
               let _ = db.tms_data.teams.update(t.team_number.as_bytes(), t.team_number.as_bytes(), t.clone());
       
               // update rankings
-              if !update_rankings(db) {
+              if !update_rankings(db, clients) {
                 TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
               } else {
       
@@ -237,7 +253,7 @@ pub fn team_delete_route(message: String, tms_event_service: &State<TmsEventServ
         match tms_event_service.lock().unwrap().teams.remove_team(t.team_number.clone()) {
           Ok(_) => {
             // update rankings
-            if !update_rankings(db) {
+            if !update_rankings(db, clients) {
               TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
             }
             // send updates to clients

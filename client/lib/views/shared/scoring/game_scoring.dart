@@ -16,6 +16,12 @@ import 'package:tms/views/shared/scoring/comments.dart';
 import 'package:tms/views/shared/scoring/mission.dart';
 
 class GameScoring extends StatefulWidget {
+  // initial values
+  final List<ScoreAnswer>? initialAnswers;
+  final String? initialPublicComment;
+  final String? initialPrivateComment;
+
+  // function callbacks
   final Function(int)? onScore;
   final Function(List<ScoreAnswer>)? onAnswers;
   final Function(List<ScoreError>)? onErrors;
@@ -23,17 +29,21 @@ class GameScoring extends StatefulWidget {
   final Function(String)? onPrivateCommentChange;
   final Function()? onDefaultAnswers;
 
-  final ValueNotifier<bool>? defaultAnswers;
+  // value notifiers
+  final ValueNotifier<bool>? setDefaultAnswers;
 
   const GameScoring({
     Key? key,
+    this.initialAnswers,
+    this.initialPublicComment,
+    this.initialPrivateComment,
     this.onScore,
     this.onAnswers,
     this.onErrors,
     this.onPublicCommentChange,
     this.onPrivateCommentChange,
     this.onDefaultAnswers,
-    this.defaultAnswers,
+    this.setDefaultAnswers,
   }) : super(key: key);
 
   @override
@@ -52,7 +62,12 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
       setState(() {
         _game = g;
       });
-      _setDefault();
+
+      if (widget.initialAnswers != null) {
+        _setAnswers = widget.initialAnswers!;
+      } else {
+        _setDefault();
+      }
     }
   }
 
@@ -114,6 +129,37 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     });
   }
 
+  set _setAnswers(List<ScoreAnswer> answers) {
+    List<ScoreAnswer> updatedAnswers = [];
+    for (var q in _game.questions) {
+      if (q.defaultValue.text != null) {
+        updatedAnswers.add(
+          ScoreAnswer(
+            id: q.id,
+            answer: q.defaultValue.text!,
+          ),
+        );
+      }
+    }
+
+    for (var answer in answers) {
+      var idx = updatedAnswers.indexWhere((a) => a.id == answer.id);
+      if (idx != -1) {
+        updatedAnswers[idx] = answer;
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _answers.clear();
+        _answers.addAll(updatedAnswers);
+      });
+
+      widget.onAnswers?.call(_answers);
+      _validateScores();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -129,8 +175,16 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     NetworkWebSocket.wsState.addListener(_validateScores);
     NetworkSecurity.securityState.addListener(_validateScores);
 
-    if (widget.defaultAnswers != null) {
-      widget.defaultAnswers!.addListener(_setDefault);
+    if (widget.initialPublicComment != null) {
+      _publicCommentController.text = widget.initialPublicComment!;
+    }
+
+    if (widget.initialPrivateComment != null) {
+      _privateCommentController.text = widget.initialPrivateComment!;
+    }
+
+    if (widget.setDefaultAnswers != null) {
+      widget.setDefaultAnswers!.addListener(_setDefault);
     }
   }
 
@@ -140,8 +194,8 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     NetworkWebSocket.wsState.removeListener(_validateScores);
     NetworkSecurity.securityState.removeListener(_validateScores);
 
-    if (widget.defaultAnswers != null) {
-      widget.defaultAnswers!.removeListener(_setDefault);
+    if (widget.setDefaultAnswers != null) {
+      widget.setDefaultAnswers!.removeListener(_setDefault);
     }
     super.dispose();
   }
@@ -175,12 +229,12 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
   Widget _scoringComments() {
     return ScoringComments(
       color: (AppTheme.isDarkTheme ? const Color.fromARGB(255, 69, 80, 100) : Colors.white),
+      publicCommentController: _publicCommentController,
+      privateCommentController: _privateCommentController,
       onPublicCommentChange: (pub) {
-        _publicCommentController.text = pub;
         widget.onPublicCommentChange?.call(pub);
       },
       onPrivateCommentChange: (priv) {
-        _privateCommentController.text = priv;
         widget.onPrivateCommentChange?.call(priv);
       },
     );

@@ -3,12 +3,16 @@ import 'package:tms/constants.dart';
 
 class ScoringComments extends StatelessWidget {
   final Color? color;
-  final Function(String) onPublicCommentChange;
-  final Function(String) onPrivateCommentChange;
+  final TextEditingController? publicCommentController;
+  final TextEditingController? privateCommentController;
+  final Function(String)? onPublicCommentChange;
+  final Function(String)? onPrivateCommentChange;
   const ScoringComments({
     Key? key,
-    required this.onPublicCommentChange,
-    required this.onPrivateCommentChange,
+    this.publicCommentController,
+    this.privateCommentController,
+    this.onPublicCommentChange,
+    this.onPrivateCommentChange,
     this.color,
   }) : super(key: key);
 
@@ -38,6 +42,7 @@ class ScoringComments extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: TextField(
+              controller: publicCommentController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Public Comment (optional)',
@@ -49,6 +54,7 @@ class ScoringComments extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
             child: TextField(
+              controller: privateCommentController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Private Comment (optional)',

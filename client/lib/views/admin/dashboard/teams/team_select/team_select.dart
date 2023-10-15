@@ -109,7 +109,7 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
       }).toList();
     }
 
-    _setFilteredTeams(filteredTeams);
+    _setFilteredTeams(sortTeamsByNumber(filteredTeams));
   }
 
   @override

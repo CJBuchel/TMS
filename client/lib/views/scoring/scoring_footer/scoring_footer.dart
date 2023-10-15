@@ -182,6 +182,13 @@ class ScoringFooter extends StatelessWidget {
   void submitScoresheet(BuildContext context) {
     if (nextMatch == null || nextTeam == null) return;
     RefereeTableUtil.getRefereeTable().then((refereeTable) {
+      String gp = "";
+      for (var answer in answers) {
+        if (answer.id == "gp") {
+          gp = answer.answer;
+        }
+      }
+
       // build scoresheet and send to server
       GameScoresheet innerScoresheet = GameScoresheet(
         answers: answers,
@@ -194,7 +201,7 @@ class ScoringFooter extends StatelessWidget {
 
       TeamGameScore scoresheet = TeamGameScore(
         cloudPublished: false,
-        gp: answers.firstWhere((element) => element.id == "gp").answer,
+        gp: gp,
         noShow: false,
         referee: refereeTable.referee,
         score: score,

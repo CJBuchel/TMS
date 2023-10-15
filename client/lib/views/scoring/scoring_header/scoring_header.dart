@@ -7,6 +7,8 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/publish_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/scoring/scoring_header/round_widget.dart';
+import 'package:tms/views/scoring/scoring_header/team_widget.dart';
 import 'package:tms/views/scoring/table_setup.dart';
 import 'package:tms/utils/sorter_util.dart';
 
@@ -30,7 +32,6 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   GameMatch? _nextMatch;
   GameMatch? _tableLoadedMatch;
   bool _locked = true; // locked to match controller
-  int _rounds = 0;
 
   List<GameMatch> _matches = [];
   List<Team> _teams = [];
@@ -126,11 +127,6 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   @override
   void initState() {
     super.initState();
-    onEventUpdate((event) {
-      setState(() {
-        _rounds = event.eventRounds;
-      });
-    });
     onMatchesUpdate((matches) => setMatches(matches));
     onTeamsUpdate((teams) => setTeams(teams));
 
@@ -207,84 +203,26 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   }
 
   Widget getTeamWidget() {
-    if (_locked) {
-      return Text(
-        "${_nextTeam?.teamNumber} | ${_nextTeam?.teamName}",
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      );
-    } else {
-      return DropdownButton<String>(
-        value: _nextTeam?.teamNumber.toString(),
-        dropdownColor: Colors.blueGrey[800],
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            final team = _teams.firstWhere((team) => team.teamNumber.toString() == newValue);
-            setState(() {
-              _nextTeam = team;
-              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
-            });
-          }
-        },
-        items: _teams.map<DropdownMenuItem<String>>((Team team) {
-          return DropdownMenuItem<String>(
-            value: team.teamNumber.toString(),
-            child: Text(
-              "${team.teamNumber} | ${team.teamName}",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          );
-        }).toList(),
-      );
-    }
+    return TeamDropdownWidget(
+      nextMatch: _nextMatch,
+      nextTeam: _nextTeam,
+      teams: _teams,
+      locked: _locked,
+      onTeamChange: (t, m) {
+        widget.onNextTeamMatch(t, m);
+      },
+    );
   }
 
   Widget getRoundWidget() {
-    if (_locked) {
-      return Text(
-        "Round: ${_nextMatch?.roundNumber}",
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      );
-    } else {
-      return DropdownButton<String>(
-        value: _nextMatch?.roundNumber.toString(),
-        dropdownColor: Colors.blueGrey[800],
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            GameMatch match = LocalDatabaseMixin.matchDefault(); // create blank match for unlocked mode
-            match.roundNumber = int.parse(newValue);
-            setState(() {
-              _nextMatch = match;
-              widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
-            });
-          }
-        },
-        items: List.generate(_rounds, (index) => index + 1).map<DropdownMenuItem<String>>((int round) {
-          return DropdownMenuItem<String>(
-            value: round.toString(),
-            child: Text(
-              "Round: $round",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          );
-        }).toList(),
-      );
-    }
+    return RoundDropdownWidget(
+      nextMatch: _nextMatch,
+      nextTeam: _nextTeam,
+      locked: _locked,
+      onRoundChange: (t, m) {
+        widget.onNextTeamMatch(t, m);
+      },
+    );
   }
 
   Widget getMatchWidget() {
@@ -303,11 +241,6 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     return Container(
       height: widget.height,
       decoration: BoxDecoration(
-        // color: AppTheme.isDarkTheme ? Colors.blueGrey[800] : Colors.white,
-        // color: AppTheme.isDarkTheme ? Colors.transparent : Colors.white,
-        // border: Border(
-        //   bottom: BorderSide(color: AppTheme.isDarkTheme ? Colors.white : Colors.black),
-        // ),
         color: Colors.blueGrey[800],
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(20),

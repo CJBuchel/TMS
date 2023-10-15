@@ -49,10 +49,21 @@ List<Team> sortTeamsByNumber(List<Team> teams) {
   final originalIndices = Map.fromEntries(teams.asMap().entries.map((e) => MapEntry(e.value, e.key)));
 
   teams.sort((a, b) {
-    if (a.teamNumber == b.teamNumber) {
-      return originalIndices[a]!.compareTo(originalIndices[b]!);
+    final aNumber = int.tryParse(a.teamNumber.replaceAll(RegExp(r'[^0-9]'), ''));
+    final bNumber = int.tryParse(b.teamNumber.replaceAll(RegExp(r'[^0-9]'), ''));
+    if (aNumber == null && bNumber == null) {
+      return 0;
+    } else if (aNumber == null) {
+      return 1;
+    } else if (bNumber == null) {
+      return -1;
+    } else {
+      final result = aNumber.compareTo(bNumber);
+      if (result == 0) {
+        return originalIndices[a]!.compareTo(originalIndices[b]!);
+      }
+      return result;
     }
-    return a.teamNumber.compareTo(b.teamNumber);
   });
 
   return teams;

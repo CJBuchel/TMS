@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
+import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/add_score.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/delete_score.dart';
+import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/edit_score.dart';
 
 class MatchScores extends StatefulWidget {
   final String teamNumber;
@@ -63,11 +64,40 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
   }
 
   Widget _tags(TeamGameScore score) {
+    List<Widget> tags = [];
+
+    // no show
     if (score.noShow) {
-      return const Text("No Show", style: TextStyle(color: Colors.orange));
-    } else {
-      return const SizedBox.shrink();
+      tags.add(
+        Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.orange),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+          ),
+          child: const Text("NS", style: TextStyle(color: Colors.orange)),
+        ),
+      );
     }
+
+    // cloud publish
+    if (score.cloudPublished) {
+      tags.add(
+        Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.cyan),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+          ),
+          child: const Text("CP", style: TextStyle(color: Colors.cyan)),
+        ),
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: tags,
+    );
   }
 
   Widget _styledRow(TeamGameScore score, int index) {
@@ -123,15 +153,15 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
 
           Expanded(
             flex: 1,
-            child: _tags(score),
+            child: _styledCell(_tags(score)),
           ),
 
           // edit button
           Expanded(
             flex: 1,
-            child: IconButton(
-              icon: const Icon(Icons.edit, color: Colors.blue),
-              onPressed: () {},
+            child: EditScore(
+              team: _team,
+              index: index,
             ),
           ),
         ],
@@ -196,9 +226,8 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
       children: [
         Expanded(
           flex: 1,
-          child: IconButton(
-            icon: const Icon(Icons.add, color: Colors.green),
-            onPressed: () {},
+          child: AddScore(
+            team: _team,
           ),
         ),
         ...List.generate(7, (index) => const Expanded(flex: 1, child: SizedBox.shrink())),
@@ -217,7 +246,7 @@ class _MatchScoresState extends State<MatchScores> with AutoUnsubScribeMixin, Lo
       );
     });
 
-    rows.add(_addRow());
+    rows.add(SizedBox(height: 70, child: _addRow()));
 
     return Column(
       children: [

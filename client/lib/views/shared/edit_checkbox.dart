@@ -7,10 +7,10 @@ class EditCheckbox extends StatefulWidget {
   const EditCheckbox({Key? key, required this.value, required this.onChanged}) : super(key: key);
 
   @override
-  State<EditCheckbox> createState() => _MatchCheckboxState();
+  State<EditCheckbox> createState() => _EditCheckboxState();
 }
 
-class _MatchCheckboxState extends State<EditCheckbox> {
+class _EditCheckboxState extends State<EditCheckbox> {
   bool _value = false;
 
   @override

@@ -23,6 +23,7 @@ void showNetworkError(int res, BuildContext context, {String subMessage = ""}) {
         title: const Row(
           children: [
             Icon(Icons.warning, color: Colors.red),
+            SizedBox(width: 10),
             Text(
               "Error",
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),

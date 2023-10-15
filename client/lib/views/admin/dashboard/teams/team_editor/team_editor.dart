@@ -71,6 +71,12 @@ class TeamEditor extends StatelessWidget {
                               onTeamDelete: () {
                                 selectedTeamNumber.value = null;
                               },
+                              onUpdate: (t) {
+                                // of there was a team number change, update the notifier
+                                if (selectedTeamNumber.value != t.teamNumber) {
+                                  selectedTeamNumber.value = t.teamNumber;
+                                }
+                              },
                             ),
                           ),
                         ),

@@ -160,16 +160,18 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     }
   }
 
+  Future<void> _fetchGame() async {
+    getGameRequest().then((res) {
+      if (res.item1 == HttpStatus.ok) {
+        _setGame = res.item2!;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     onGameEventUpdate((g) => _setGame = g);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!await Network.isConnected()) {
-        getGame().then((g) => _setGame = g);
-      }
-    });
 
     NetworkHttp.httpState.addListener(_validateScores);
     NetworkWebSocket.wsState.addListener(_validateScores);
@@ -200,7 +202,8 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     super.dispose();
   }
 
-  List<Widget> _getMissions() {
+  Future<List<Widget>> _getMissions() async {
+    if (_game.missions.isEmpty) await _fetchGame();
     return _game.missions.map((mission) {
       return MissionWidget(
         color: (AppTheme.isDarkTheme ? const Color.fromARGB(255, 69, 80, 100) : Colors.white),
@@ -242,11 +245,22 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ..._getMissions(),
-        _scoringComments(),
-      ],
+    return FutureBuilder<List<Widget>>(
+      future: _getMissions(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: [
+              ...snapshot.data!,
+              _scoringComments(),
+            ],
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }

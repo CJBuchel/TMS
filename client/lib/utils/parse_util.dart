@@ -30,7 +30,7 @@ TimeOfDay? parseStringTimeToTimeOfDay(String time) {
 }
 
 // convert date time to string (Time in the format of 15:00:00 PM)
-String parseDateTimeToStringTime(DateTime time) {
+String parseDateTimeToString(DateTime time) {
   final DateFormat formatter = DateFormat('HH:mm:ss a');
   final String formattedTime = formatter.format(time);
   return formattedTime;
@@ -40,7 +40,7 @@ String parseDateTimeToStringTime(DateTime time) {
 String parseTimeOfDayToString(TimeOfDay time) {
   final DateTime now = DateTime.now();
   final DateTime dateTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-  return parseDateTimeToStringTime(dateTime);
+  return parseDateTimeToString(dateTime);
 }
 
 String padTime(int value, int length) {

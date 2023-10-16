@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
+import 'package:tms/utils/score_tags.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/add_score.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/delete_score.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/edit_score.dart';
@@ -36,45 +34,18 @@ class _MatchScoresState extends State<MatchScores> {
     ));
   }
 
-  Widget _tags(TeamGameScore score) {
-    List<Widget> tags = [];
-
-    // no show
-    if (score.noShow) {
-      tags.add(
-        Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.orange),
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-          ),
-          child: const Text("NS", style: TextStyle(color: Colors.orange)),
-        ),
-      );
-    }
-
-    // cloud publish
-    if (score.cloudPublished) {
-      tags.add(
-        Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.cyan),
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-          ),
-          child: const Text("CP", style: TextStyle(color: Colors.cyan)),
-        ),
-      );
-    }
-
+  Widget _tags(TeamGameScore score, int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: tags,
+      children: GameScoreTags(
+        score: score,
+        scores: widget.team.gameScores,
+      ).get(),
     );
   }
 
   Widget _styledRow(TeamGameScore score, int index) {
-    String timeStamp = parseDateTimeToStringTime(parseServerTimestamp(score.timeStamp));
+    String timeStamp = parseDateTimeToString(parseServerTimestamp(score.timeStamp));
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -126,7 +97,7 @@ class _MatchScoresState extends State<MatchScores> {
 
           Expanded(
             flex: 1,
-            child: _styledCell(_tags(score)),
+            child: _styledCell(_tags(score, index)),
           ),
 
           // edit button

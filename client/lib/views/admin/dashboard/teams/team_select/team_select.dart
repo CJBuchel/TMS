@@ -1,20 +1,20 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
-import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/sorter_util.dart';
 import 'package:tms/views/admin/dashboard/teams/team_select/team_select_table.dart';
-import 'package:tms/views/shared/network_error_popup.dart';
 
 class TeamSelect extends StatefulWidget {
+  final ValueNotifier<List<Team>> teams;
   final Function(String) onTeamSelected;
+  final Function() onForceReload;
 
   const TeamSelect({
     Key? key,
+    required this.teams,
     required this.onTeamSelected,
+    required this.onForceReload,
   }) : super(key: key);
 
   @override
@@ -23,7 +23,6 @@ class TeamSelect extends StatefulWidget {
 
 class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   Event? _event;
-  List<Team> _teams = [];
   List<Team> _filteredTeams = [];
   String _rankFilter = '';
   String _teamFilter = '';
@@ -34,41 +33,6 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
         _event = event;
       });
     }
-  }
-
-  set _setTeams(List<Team> value) {
-    if (mounted) {
-      setState(() {
-        _teams = sortTeamsByNumber(value);
-      });
-    }
-  }
-
-  set _setTeam(Team value) {
-    if (mounted) {
-      // find team if exists
-      final index = _teams.indexWhere((t) => t.teamNumber == value.teamNumber);
-      if (index != -1) {
-        setState(() {
-          _teams[index] = value;
-        });
-      } else {
-        setState(() {
-          _teams.add(value);
-        });
-      }
-    }
-  }
-
-  void _fetchTeams() {
-    getTeamsRequest().then((value) {
-      if (value.item1 != HttpStatus.ok) {
-        showNetworkError(value.item1, context, subMessage: "Failed to fetch teams");
-      } else {
-        _setTeams = value.item2;
-        _applyFilters();
-      }
-    });
   }
 
   void setRankFilter(String r) {
@@ -96,7 +60,7 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
   }
 
   void _applyFilters() {
-    List<Team> filteredTeams = _teams;
+    List<Team> filteredTeams = widget.teams.value;
 
     if (_rankFilter.isNotEmpty) {
       filteredTeams = filteredTeams.where((element) => element.ranking.toString().contains(_rankFilter)).toList();
@@ -115,16 +79,9 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
   @override
   void initState() {
     super.initState();
-    onTeamsUpdate((t) {
-      _setTeams = t;
+    widget.teams.addListener(() {
       _applyFilters();
     });
-
-    onTeamUpdate((t) {
-      _setTeam = t;
-      _applyFilters();
-    });
-
     onEventUpdate((e) {
       _setEvent = e;
     });
@@ -176,9 +133,7 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         IconButton(
-          onPressed: () {
-            _fetchTeams();
-          },
+          onPressed: () => widget.onForceReload(),
           icon: const Icon(Icons.refresh, color: Colors.orange),
         ),
 
@@ -196,27 +151,34 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          children: [
-            SizedBox(
-              height: 50,
-              child: _topButtons(),
-            ),
-            SizedBox(
-              height: 30,
-              child: _getFilters(),
-            ),
-            Expanded(
-              child: TeamSelectTable(
-                event: _event,
-                teams: _filteredTeams,
-                onTeamSelected: (t) => widget.onTeamSelected(t),
+    return ValueListenableBuilder(
+      valueListenable: widget.teams,
+      builder: (context, teams, child) {
+        if (teams.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: _topButtons(),
               ),
-            ),
-          ],
-        );
+              SizedBox(
+                height: 30,
+                child: _getFilters(),
+              ),
+              Expanded(
+                child: TeamSelectTable(
+                  event: _event,
+                  teams: _filteredTeams,
+                  onTeamSelected: (t) => widget.onTeamSelected(t.teamNumber),
+                ),
+              ),
+            ],
+          );
+        }
       },
     );
   }

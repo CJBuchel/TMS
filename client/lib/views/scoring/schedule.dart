@@ -64,28 +64,6 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
       }
     });
 
-    onMatchUpdate((m) {
-      var index = _tableMatches.indexWhere((match) => match.matchNumber == m.matchNumber);
-      if (index != -1) {
-        if (mounted) {
-          setState(() {
-            _tableMatches[index] = m;
-          });
-        }
-      }
-    });
-
-    onTeamUpdate((t) {
-      var index = _teams.indexWhere((team) => team.teamNumber == t.teamNumber);
-      if (index != -1) {
-        if (mounted) {
-          setState(() {
-            _teams[index] = t;
-          });
-        }
-      }
-    });
-
     autoSubscribe("match", (m) {
       if (m.subTopic == "load") {
         if (m.message.isNotEmpty) {
@@ -119,7 +97,8 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
       }
     });
 
-    Future.delayed(const Duration(seconds: 1), () async {
+    // post frame callback
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Network.isConnected()) {
         getTeams().then((teams) => setTeams(teams));
         getMatches().then((matches) => setMatches(matches));

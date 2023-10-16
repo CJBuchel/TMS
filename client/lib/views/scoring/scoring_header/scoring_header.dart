@@ -130,29 +130,6 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     onMatchesUpdate((matches) => setMatches(matches));
     onTeamsUpdate((teams) => setTeams(teams));
 
-    // singular match update
-    onMatchUpdate((match) {
-      // find the first match that matches the match number and update it
-      final idx = _matches.indexWhere((m) => m.matchNumber == match.matchNumber);
-      if (idx != -1) {
-        setState(() {
-          _matches[idx] = match;
-          setNextTableMatch();
-        });
-      }
-    });
-
-    // singular team update
-    onTeamUpdate((team) {
-      final idx = _teams.indexWhere((t) => t.teamNumber == team.teamNumber);
-      if (idx != -1) {
-        setState(() {
-          _teams[idx] = team;
-          setNextTableMatch();
-        });
-      }
-    });
-
     autoSubscribe("match", (m) {
       if (m.subTopic == "load") {
         if (m.message.isNotEmpty) {

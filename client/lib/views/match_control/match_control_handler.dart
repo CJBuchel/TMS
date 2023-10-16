@@ -105,24 +105,6 @@ class _MatchControlHandlerState extends State<MatchControlHandler> with AutoUnsu
     NetworkHttp.httpState.addListener(unloadOnDisconnect);
     NetworkWebSocket.wsState.addListener(unloadOnDisconnect);
 
-    onTeamUpdate((team) {
-      int idx = _teams.indexWhere((t) => t.teamNumber == team.teamNumber);
-      if (idx != -1) {
-        setState(() {
-          _teams[idx] = team;
-        });
-      }
-    });
-
-    onMatchUpdate((match) {
-      int idx = _matches.indexWhere((m) => m.matchNumber == match.matchNumber);
-      if (idx != -1) {
-        setState(() {
-          _matches[idx] = match;
-        });
-      }
-    });
-
     autoSubscribe("clock", (m) {
       if (m.subTopic == "end") {
         setState(() {
@@ -168,7 +150,8 @@ class _MatchControlHandlerState extends State<MatchControlHandler> with AutoUnsu
       }
     });
 
-    Future.delayed(const Duration(seconds: 1), () async {
+    // post frame callback
+    WidgetsBinding.instance.scheduleFrameCallback((_) async {
       if (!await Network.isConnected()) {
         getTeams().then((teams) => setTeams(teams));
         getMatches().then((matches) => setMatches(matches));

@@ -56,7 +56,7 @@ class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDat
   void initState() {
     super.initState();
     _pdfViewerController = PdfViewerController();
-    onGameEventUpdate((game) {
+    onGameUpdate((game) {
       if (mounted) {
         setState(() {
           ruleBookUrl = game.ruleBookUrl;

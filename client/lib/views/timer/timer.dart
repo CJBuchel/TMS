@@ -100,24 +100,6 @@ class _TimerState extends State<Timer> with AutoUnsubScribeMixin, LocalDatabaseM
     onTeamsUpdate((teams) => setTeams(teams));
     onMatchesUpdate((matches) => setMatches(matches));
 
-    onMatchUpdate((m) async {
-      int idx = _matches.indexWhere((match) => match.matchNumber == m.matchNumber);
-      if (idx != -1) {
-        if (mounted) {
-          _matches[idx] = m;
-        }
-      }
-    });
-
-    onTeamUpdate((t) async {
-      int idx = _teams.indexWhere((team) => team.teamNumber == t.teamNumber);
-      if (idx != -1) {
-        if (mounted) {
-          _teams[idx] = t;
-        }
-      }
-    });
-
     autoSubscribe("match", (m) async {
       if (m.subTopic == "load") {
         if (m.message.isNotEmpty) {

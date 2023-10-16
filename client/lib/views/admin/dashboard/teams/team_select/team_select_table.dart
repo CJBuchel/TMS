@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/checks/team_error_checks.dart';
 import 'package:tms/utils/checks/team_warning_checks.dart';
@@ -7,7 +6,7 @@ import 'package:tms/utils/checks/team_warning_checks.dart';
 class TeamSelectTable extends StatefulWidget {
   final Event? event;
   final List<Team> teams;
-  final Function(String) onTeamSelected;
+  final Function(Team) onTeamSelected;
 
   const TeamSelectTable({
     Key? key,
@@ -28,7 +27,7 @@ class _TeamSelectTableState extends State<TeamSelectTable> {
       setState(() {
         _selected = t;
       });
-      widget.onTeamSelected(t.teamNumber);
+      widget.onTeamSelected(t);
     }
   }
 

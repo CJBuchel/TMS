@@ -32,43 +32,11 @@ class _JudgingState extends State<Judging> with AutoUnsubScribeMixin, LocalDatab
     }
   }
 
-  set setMatch(GameMatch match) {
-    if (mounted) {
-      // find match if exists
-      final index = _matches.indexWhere((m) => m.matchNumber == match.matchNumber);
-      if (index != -1) {
-        setState(() {
-          _matches[index] = match;
-        });
-      } else {
-        setState(() {
-          _matches.add(match);
-        });
-      }
-    }
-  }
-
   set setTeams(List<Team> teams) {
     if (mounted) {
       setState(() {
         _teams = teams;
       });
-    }
-  }
-
-  set setTeam(Team team) {
-    if (mounted) {
-      // find team if exists
-      final index = _teams.indexWhere((t) => t.teamNumber == team.teamNumber);
-      if (index != -1) {
-        setState(() {
-          _teams[index] = team;
-        });
-      } else {
-        setState(() {
-          _teams.add(team);
-        });
-      }
     }
   }
 
@@ -78,22 +46,6 @@ class _JudgingState extends State<Judging> with AutoUnsubScribeMixin, LocalDatab
       setState(() {
         _sessions = sessions;
       });
-    }
-  }
-
-  set setJudgingSession(JudgingSession session) {
-    if (mounted) {
-      // find session if exists
-      final index = _sessions.indexWhere((s) => s.sessionNumber == session.sessionNumber);
-      if (index != -1) {
-        setState(() {
-          _sessions[index] = session;
-        });
-      } else {
-        setState(() {
-          _sessions.add(session);
-        });
-      }
     }
   }
 
@@ -115,18 +67,21 @@ class _JudgingState extends State<Judging> with AutoUnsubScribeMixin, LocalDatab
     });
   }
 
+  void setData() {
+    getEvent().then((e) => setEvent = e);
+    getMatches().then((m) => setMatches = m);
+    getTeams().then((t) => setTeams = t);
+    getJudgingSessions().then((s) => setJudgingSessions = s);
+  }
+
   @override
   void initState() {
     super.initState();
-
-    onEventUpdate((e) => setEvent = e);
-
+    setData();
     // live setters
-    onMatchUpdate((m) => setMatch = m);
+    onEventUpdate((e) => setEvent = e);
     onMatchesUpdate((m) => setMatches = m);
-    onTeamUpdate((t) => setTeam = t);
     onTeamsUpdate((t) => setTeams = t);
-    onJudgingSessionUpdate((s) => setJudgingSession = s);
     onJudgingSessionsUpdate((s) => setJudgingSessions = s);
   }
 

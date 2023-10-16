@@ -120,7 +120,7 @@ class _OnTableAddState extends State<OnTableAdd> with AutoUnsubScribeMixin, Loca
     _setTableOptions();
     setSelectedMatch();
 
-    Future.delayed(const Duration(seconds: 1), () async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await Network.isConnected()) {
         getEvent().then((event) => setEvent(event));
         setSelectedMatch();

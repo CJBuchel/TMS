@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/mixins/matches_local_db.dart';
 import 'package:tms/schema/tms_schema.dart';
 
 class RoundDropdownWidget extends StatefulWidget {
@@ -51,7 +52,7 @@ class _RoundWidgetState extends State<RoundDropdownWidget> with AutoUnsubScribeM
         dropdownColor: Colors.blueGrey[800],
         onChanged: (String? newValue) {
           if (newValue != null) {
-            GameMatch m = LocalDatabaseMixin.matchDefault();
+            GameMatch m = MatchesLocalDB.singleDefault();
             m.roundNumber = int.parse(newValue);
             if (widget.nextTeam != null) widget.onRoundChange(widget.nextTeam!, m);
           }

@@ -1,126 +1,57 @@
-import 'dart:io';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
+import 'package:tms/mixins/event_local_db.dart';
+import 'package:tms/mixins/game_local_db.dart';
+import 'package:tms/mixins/judging_local_db.dart';
+import 'package:tms/mixins/matches_local_db.dart';
+import 'package:tms/mixins/teams_local_db.dart';
+import 'package:tms/network/auth.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
-import 'package:tms/requests/event_requests.dart';
-import 'package:tms/requests/game_requests.dart';
-import 'package:tms/requests/judging_requests.dart';
-import 'package:tms/requests/match_requests.dart';
-import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/utils/sorter_util.dart';
 
 // Database mixin for local database to update widget based on changes (update triggers only)
 mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
-  final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  // teams
+  final TeamsLocalDB _teamsLocalDB = TeamsLocalDB();
+  void onTeamUpdate(Function(Team) callback) => _teamsLocalDB.onSingleUpdate(callback);
+  void onTeamsUpdate(Function(List<Team>) callback) => _teamsLocalDB.onListUpdate(callback);
+  Future<List<Team>> getTeams() => _teamsLocalDB.getList();
+  Future<Team> getTeam(String teamNumber) => _teamsLocalDB.getSingle(teamNumber);
 
-  // trigger list
-  final List<Function(Event)> _eventTriggers = [];
-  final List<Function(Game)> _gameTriggers = [];
+  // matches
+  final MatchesLocalDB _matchesLocalDB = MatchesLocalDB();
+  void onMatchUpdate(Function(GameMatch) callback) => _matchesLocalDB.onSingleUpdate(callback);
+  void onMatchesUpdate(Function(List<GameMatch>) callback) => _matchesLocalDB.onListUpdate(callback);
+  Future<List<GameMatch>> getMatches() => _matchesLocalDB.getList();
+  Future<GameMatch> getMatch(String matchNumber) => _matchesLocalDB.getSingle(matchNumber);
 
-  final List<Function(List<Team>)> _teamListTriggers = [];
-  final List<Function(Team)> _teamTriggers = [];
+  // judging
+  final JudgingLocalDB _judgingLocalDB = JudgingLocalDB();
+  void onJudgingSessionUpdate(Function(JudgingSession) callback) => _judgingLocalDB.onSingleUpdate(callback);
+  void onJudgingSessionsUpdate(Function(List<JudgingSession>) callback) => _judgingLocalDB.onListUpdate(callback);
+  Future<List<JudgingSession>> getJudgingSessions() => _judgingLocalDB.getList();
+  Future<JudgingSession> getJudgingSession(String sessionNumber) => _judgingLocalDB.getSingle(sessionNumber);
 
-  final List<Function(List<GameMatch>)> _matchListTriggers = [];
-  final List<Function(GameMatch)> _matchTriggers = [];
+  // event
+  final EventLocalDB _eventLocalDB = EventLocalDB();
+  void onEventUpdate(Function(Event) callback) => _eventLocalDB.onSingleUpdate(callback);
+  Future<Event> getEvent() => _eventLocalDB.getSingle();
 
-  final List<Function(List<JudgingSession>)> _judgingSessionListTriggers = [];
-  final List<Function(JudgingSession)> _judgingSessionTriggers = [];
-
-  bool _registeredEventListener = false;
-  bool _registeredGameListener = false;
-  bool _registeredTeamListener = false;
-  bool _registeredMatchListener = false;
-  bool _registeredJudgingSessionListener = false;
-
-  void onEventUpdate(Function(Event) callback) {
-    _registeredEventListener = true;
-    _eventTriggers.add(callback);
-  }
-
-  void onGameEventUpdate(Function(Game) callback) {
-    _registeredGameListener = true;
-    _gameTriggers.add(callback);
-  }
-
-  void onTeamsUpdate(Function(List<Team>) callback) {
-    _registeredTeamListener = true;
-    _teamListTriggers.add(callback);
-  }
-
-  void onTeamUpdate(Function(Team) callback) {
-    _registeredTeamListener = true;
-    _teamTriggers.add(callback);
-  }
-
-  void onMatchesUpdate(Function(List<GameMatch>) callback) {
-    _registeredMatchListener = true;
-    _matchListTriggers.add(callback);
-  }
-
-  void onMatchUpdate(Function(GameMatch) callback) {
-    _registeredMatchListener = true;
-    _matchTriggers.add(callback);
-  }
-
-  void onJudgingSessionsUpdate(Function(List<JudgingSession>) callback) {
-    _registeredJudgingSessionListener = true;
-    _judgingSessionListTriggers.add(callback);
-  }
-
-  void onJudgingSessionUpdate(Function(JudgingSession) callback) {
-    _registeredJudgingSessionListener = true;
-    _judgingSessionTriggers.add(callback);
-  }
+  // game
+  final GameLocalDB _gameLocalDB = GameLocalDB();
+  void onGameUpdate(Function(Game) callback) => _gameLocalDB.onSingleUpdate(callback);
+  Future<Game> getGame() => _gameLocalDB.getSingle();
 
   void syncDatabase() async {
     if (await Network.isConnected()) {
-      if (_registeredEventListener) {
-        getEventRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            await _setEvent(value.item2 ?? await getEvent()); // use previous data as default
-          }
-        });
-      }
-
-      if (_registeredGameListener) {
-        getGameRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            await _setGame(value.item2 ?? await getGame()); // use previous data as default
-          }
-        });
-      }
-
-      if (_registeredTeamListener) {
-        getTeamsRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            await _setTeams(value.item2.isNotEmpty ? value.item2 : await getTeams()); // use previous data as default
-          }
-        });
-      }
-
-      if (_registeredMatchListener) {
-        getMatchesRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            await _setMatches(value.item2.isNotEmpty ? value.item2 : await getMatches()); // use previous data as default
-          }
-        });
-      }
-
-      if (_registeredJudgingSessionListener) {
-        getJudgingSessionsRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            await _setJudgingSessions(value.item2.isNotEmpty ? value.item2 : await getJudgingSessions()); // use previous data as default
-          }
-        });
-      }
+      _teamsLocalDB.syncLocalList();
+      _matchesLocalDB.syncLocalList();
+      _judgingLocalDB.syncLocalList();
+      _eventLocalDB.syncLocalSingle();
+      _gameLocalDB.syncLocalSingle();
     }
   }
 
@@ -132,108 +63,55 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     NetworkHttp.httpState.addListener(syncDatabase);
     NetworkWebSocket.wsState.addListener(syncDatabase);
     NetworkSecurity.securityState.addListener(syncDatabase);
+    NetworkAuth.loginState.addListener(syncDatabase);
 
     autoSubscribe("event", (m) {
       if (m.subTopic == "update") {
-        getEventRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            _setEvent(value.item2 ?? await getEvent()); // use previous data as default
-          }
-        });
+        _eventLocalDB.syncLocalSingle();
       }
     });
 
     autoSubscribe("game", (m) {
       if (m.subTopic == "update") {
-        getGameRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            _setGame(value.item2 ?? await getGame()); // use previous data as default
-          }
-        });
+        _gameLocalDB.syncLocalSingle();
       }
     });
 
     autoSubscribe("teams", (m) {
       if (m.subTopic == "update") {
-        getTeamsRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            _setTeams(value.item2); // use previous data as default
-          }
-        });
+        _teamsLocalDB.syncLocalList();
       }
     });
 
     autoSubscribe("team", (m) {
       if (m.subTopic == "update") {
-        if (m.message.isNotEmpty) {
-          getTeamRequest(m.message).then((value) async {
-            if (value.item1 == HttpStatus.ok) {
-              _setTeam(value.item2 ?? await getTeam(m.message)); // use previous data as default
-            } else {
-              getTeamsRequest().then((value) async {
-                if (value.item1 == HttpStatus.ok) {
-                  _setTeams(value.item2); // use previous data as default
-                }
-              });
-            }
-          });
-        }
+        _teamsLocalDB.syncLocalSingle(m.message);
       }
     });
 
     autoSubscribe("matches", (m) {
       if (m.subTopic == "update") {
-        getMatchesRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            _setMatches(value.item2); // use previous data as default
-          }
-        });
+        _matchesLocalDB.syncLocalList();
       }
     });
 
     autoSubscribe("match", (m) {
       if (m.subTopic == "update") {
         if (m.message.isNotEmpty) {
-          getMatchRequest(m.message).then((value) async {
-            if (value.item1 == HttpStatus.ok) {
-              _setMatch(value.item2 ?? await getMatch(m.message)); // use previous data as default
-            } else {
-              getMatchesRequest().then((value) async {
-                if (value.item1 == HttpStatus.ok) {
-                  _setMatches(value.item2); // use previous data as default
-                }
-              });
-            }
-          });
+          _matchesLocalDB.syncLocalSingle(m.message);
         }
       }
     });
 
     autoSubscribe("judging_sessions", (m) {
       if (m.subTopic == "update") {
-        getJudgingSessionsRequest().then((value) async {
-          if (value.item1 == HttpStatus.ok) {
-            _setJudgingSessions(value.item2); // use previous data as default
-          }
-        });
+        _judgingLocalDB.syncLocalList();
       }
     });
 
     autoSubscribe("judging_session", (m) {
       if (m.subTopic == "update") {
-        if (m.message.isNotEmpty) {
-          getJudgingSessionRequest(m.message).then((value) async {
-            if (value.item1 == HttpStatus.ok) {
-              _setJudgingSession(value.item2 ?? await getJudgingSession(m.message)); // use previous data as default
-            } else {
-              getJudgingSessionsRequest().then((value) async {
-                if (value.item1 == HttpStatus.ok) {
-                  _setJudgingSessions(value.item2); // use previous data as default
-                }
-              });
-            }
-          });
-        }
+        _judgingLocalDB.syncLocalSingle(m.message);
       }
     });
   }
@@ -241,298 +119,15 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   @override
   void dispose() {
     super.dispose(); // dispose will auto unsubscribe for us
-    _eventTriggers.clear(); // clear all functions that were added
-  }
+    NetworkHttp.httpState.removeListener(syncDatabase);
+    NetworkWebSocket.wsState.removeListener(syncDatabase);
+    NetworkSecurity.securityState.removeListener(syncDatabase);
+    NetworkAuth.loginState.removeListener(syncDatabase);
 
-  //
-  // EVENT DATA
-  //
-  static Event eventDefault() {
-    return Event(
-      eventRounds: 3,
-      name: "",
-      pods: [],
-      season: "",
-      tables: [],
-      endGameTimerLength: 30,
-      timerLength: 150,
-    );
-  }
-
-  Future<void> _setEvent(Event event) async {
-    var eventJson = event.toJson();
-    await _localStorage.then((value) => value.setString(storeDbEvent, jsonEncode(eventJson)));
-    for (var trigger in _eventTriggers) {
-      trigger(event);
-    }
-  }
-
-  Future<Event> getEvent() async {
-    try {
-      var eventString = await _localStorage.then((value) => value.getString(storeDbEvent));
-      if (eventString != null) {
-        var event = Event.fromJson(jsonDecode(eventString));
-        return event;
-      } else {
-        return eventDefault();
-      }
-    } catch (e) {
-      return eventDefault();
-    }
-  }
-
-  //
-  // TEAM DATA
-  //
-  static List<Team> teamsDefault() {
-    return [];
-  }
-
-  static Team teamDefault() {
-    return Team(
-      coreValuesScores: [],
-      gameScores: [],
-      innovationProjectScores: [],
-      ranking: 0,
-      robotDesignScores: [],
-      teamAffiliation: "",
-      teamId: "",
-      teamName: "",
-      teamNumber: "",
-    );
-  }
-
-  Future<void> _setTeams(List<Team> teams) async {
-    teams = sortTeamsByRank(teams);
-    var teamJson = teams.map((e) => e.toJson()).toList();
-    await _localStorage.then((value) => value.setString(storeDbTeams, jsonEncode(teamJson)));
-    for (var trigger in _teamListTriggers) {
-      trigger(teams);
-    }
-  }
-
-  Future<void> _setTeam(Team team) async {
-    var teams = await getTeams();
-    var index = teams.indexWhere((t) => t.teamNumber == team.teamNumber);
-    if (index != -1) {
-      teams[index] = team;
-    } else {
-      teams.add(team);
-    }
-
-    var teamsJson = teams.map((e) => e.toJson()).toList();
-    await _localStorage.then((value) => value.setString(storeDbTeams, jsonEncode(teamsJson)));
-    for (var trigger in _teamTriggers) {
-      trigger(team);
-    }
-  }
-
-  Future<List<Team>> getTeams() async {
-    try {
-      var teamsString = await _localStorage.then((value) => value.getString(storeDbTeams));
-      if (teamsString != null) {
-        var teams = jsonDecode(teamsString).map<Team>((e) => Team.fromJson(e)).toList();
-        return sortTeamsByRank(teams);
-      } else {
-        return teamsDefault();
-      }
-    } catch (e) {
-      return teamsDefault();
-    }
-  }
-
-  Future<Team> getTeam(String teamNumber) async {
-    try {
-      // find team in list and return
-      var teams = await getTeams();
-      var index = teams.indexWhere((t) => t.teamNumber == teamNumber);
-      if (index != -1) {
-        return teams[index];
-      } else {
-        return teamDefault();
-      }
-    } catch (e) {
-      return teamDefault();
-    }
-  }
-
-  //
-  // MATCH DATA
-  //
-  static List<GameMatch> matchesDefault() {
-    return [];
-  }
-
-  static GameMatch matchDefault() {
-    return GameMatch(
-      complete: false,
-      exhibitionMatch: false,
-      gameMatchDeferred: false,
-      endTime: "",
-      matchNumber: "",
-      roundNumber: 0,
-      matchTables: [],
-      startTime: "",
-    );
-  }
-
-  Future<void> _setMatches(List<GameMatch> matches) async {
-    matches = sortMatchesByTime(matches);
-    var matchesJson = matches.map((e) => e.toJson()).toList();
-    await _localStorage.then((value) => value.setString(storeDbMatches, jsonEncode(matchesJson)));
-    for (var trigger in _matchListTriggers) {
-      trigger(matches);
-    }
-  }
-
-  Future<void> _setMatch(GameMatch match) async {
-    var matches = await getMatches();
-    var index = matches.indexWhere((m) => m.matchNumber == match.matchNumber);
-    if (index != -1) {
-      matches[index] = match;
-    } else {
-      matches.add(match);
-    }
-
-    var matchesJson = matches.map((e) => e.toJson()).toList();
-    await _localStorage.then((value) => value.setString(storeDbMatches, jsonEncode(matchesJson)));
-    for (var trigger in _matchTriggers) {
-      trigger(match);
-    }
-  }
-
-  Future<List<GameMatch>> getMatches() async {
-    try {
-      var matchesString = await _localStorage.then((value) => value.getString(storeDbMatches));
-      if (matchesString != null) {
-        var matches = jsonDecode(matchesString).map<GameMatch>((e) => GameMatch.fromJson(e)).toList();
-        return sortMatchesByTime(matches);
-      } else {
-        return matchesDefault();
-      }
-    } catch (e) {
-      return matchesDefault();
-    }
-  }
-
-  Future<GameMatch> getMatch(String matchNumber) async {
-    try {
-      // find match in list and return
-      var matches = await getMatches();
-      var index = matches.indexWhere((m) => m.matchNumber == matchNumber);
-      if (index != -1) {
-        return matches[index];
-      } else {
-        return matchDefault();
-      }
-    } catch (e) {
-      return matchDefault();
-    }
-  }
-
-  //
-  // JUDGING SESSION DATA
-  //
-  static List<JudgingSession> judgingSessionsDefault() {
-    return [];
-  }
-
-  static JudgingSession judgingSessionDefault() {
-    return JudgingSession(
-      sessionNumber: "",
-      complete: false,
-      judgingSessionDeferred: false,
-      startTime: "",
-      endTime: "",
-      judgingPods: [],
-    );
-  }
-
-  Future<void> _setJudgingSessions(List<JudgingSession> judgingSessions) async {
-    var judgingSessionsJson = judgingSessions.map((e) => e.toJson()).toList();
-    await _localStorage.then((value) => value.setString(storeDbJudgingSessions, jsonEncode(judgingSessionsJson)));
-    for (var trigger in _judgingSessionListTriggers) {
-      trigger(judgingSessions);
-    }
-  }
-
-  Future<void> _setJudgingSession(JudgingSession session) async {
-    var judgingSessions = await getJudgingSessions();
-    var index = judgingSessions.indexWhere((js) => js.sessionNumber == session.sessionNumber);
-    if (index != -1) {
-      judgingSessions[index] = session;
-    } else {
-      judgingSessions.add(session);
-    }
-
-    var judgingSessionsJson = judgingSessions.map((e) => e.toJson()).toList();
-    await _localStorage.then((value) => value.setString(storeDbJudgingSessions, jsonEncode(judgingSessionsJson)));
-    for (var trigger in _judgingSessionTriggers) {
-      trigger(session);
-    }
-  }
-
-  Future<List<JudgingSession>> getJudgingSessions() async {
-    try {
-      var judgingSessionsString = await _localStorage.then((value) => value.getString(storeDbJudgingSessions));
-      if (judgingSessionsString != null) {
-        var judgingSessions = jsonDecode(judgingSessionsString).map<JudgingSession>((e) => JudgingSession.fromJson(e)).toList();
-        return judgingSessions;
-      } else {
-        return judgingSessionsDefault();
-      }
-    } catch (e) {
-      return judgingSessionsDefault();
-    }
-  }
-
-  Future<JudgingSession> getJudgingSession(String sessionNumber) async {
-    try {
-      // find session in list and return
-      var judgingSessions = await getJudgingSessions();
-      var index = judgingSessions.indexWhere((js) => js.sessionNumber == sessionNumber);
-      if (index != -1) {
-        return judgingSessions[index];
-      } else {
-        return judgingSessionDefault();
-      }
-    } catch (e) {
-      return judgingSessionDefault();
-    }
-  }
-
-  //
-  // Game Data
-  //
-  static Game gameDefault() {
-    return Game(
-      name: "",
-      program: "",
-      ruleBookUrl: "",
-      missions: [],
-      questions: [],
-    );
-  }
-
-  Future<void> _setGame(Game game) async {
-    var gameJson = game.toJson();
-    await _localStorage.then((value) => value.setString(storeDbGame, jsonEncode(gameJson)));
-    for (var trigger in _gameTriggers) {
-      trigger(game);
-    }
-  }
-
-  Future<Game> getGame() async {
-    try {
-      var gameString = await _localStorage.then((value) => value.getString(storeDbGame));
-      if (gameString != null) {
-        var game = Game.fromJson(jsonDecode(gameString));
-        return game;
-      } else {
-        return gameDefault();
-      }
-    } catch (e) {
-      return gameDefault();
-    }
+    _teamsLocalDB.dispose();
+    _matchesLocalDB.dispose();
+    _judgingLocalDB.dispose();
+    _eventLocalDB.dispose();
+    _gameLocalDB.dispose();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/mixins/teams_local_db.dart';
 import 'package:tms/schema/tms_schema.dart';
 
 class TeamDropdownWidget extends StatelessWidget {
@@ -31,7 +32,7 @@ class TeamDropdownWidget extends StatelessWidget {
         dropdownColor: Colors.blueGrey[800],
         onChanged: (String? newValue) {
           if (newValue != null) {
-            Team t = LocalDatabaseMixin.teamDefault();
+            Team t = TeamsLocalDB.singleDefault();
             for (Team team in teams) {
               if (team.teamNumber == newValue) {
                 t = team;

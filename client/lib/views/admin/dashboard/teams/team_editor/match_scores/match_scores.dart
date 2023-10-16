@@ -9,10 +9,10 @@ import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/delete_
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/edit_score.dart';
 
 class MatchScores extends StatefulWidget {
-  final String teamNumber;
+  final Team team;
   const MatchScores({
     Key? key,
-    required this.teamNumber,
+    required this.team,
   }) : super(key: key);
 
   @override
@@ -20,38 +20,6 @@ class MatchScores extends StatefulWidget {
 }
 
 class _MatchScoresState extends State<MatchScores> {
-  Team? _team;
-
-  set _setTeam(Team t) {
-    if (mounted) {
-      setState(() {
-        _team = t;
-      });
-    }
-  }
-
-  Future<void> _fetchTeam() async {
-    await getTeamRequest(widget.teamNumber).then((res) {
-      if (res.item1 == HttpStatus.ok) {
-        if (res.item2 != null) _setTeam = res.item2!;
-      }
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant MatchScores oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.teamNumber != widget.teamNumber) {
-      _fetchTeam();
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchTeam();
-  }
-
   Widget _styledCell(Widget inner) {
     return Container(
       padding: const EdgeInsets.all(5),
@@ -121,9 +89,8 @@ class _MatchScoresState extends State<MatchScores> {
           Expanded(
             flex: 1,
             child: DeleteScore(
-              team: _team!,
+              team: widget.team,
               index: index,
-              onDelete: () => _fetchTeam(),
             ),
           ),
 
@@ -166,9 +133,8 @@ class _MatchScoresState extends State<MatchScores> {
           Expanded(
             flex: 1,
             child: EditScore(
-              team: _team!,
+              team: widget.team,
               index: index,
-              onUpdate: () => _fetchTeam(),
             ),
           ),
         ],
@@ -234,8 +200,7 @@ class _MatchScoresState extends State<MatchScores> {
         Expanded(
           flex: 1,
           child: AddScore(
-            team: _team!,
-            onAdd: () => _fetchTeam(),
+            team: widget.team,
           ),
         ),
         ...List.generate(7, (index) => const Expanded(flex: 1, child: SizedBox.shrink())),
@@ -244,11 +209,11 @@ class _MatchScoresState extends State<MatchScores> {
   }
 
   Widget _table() {
-    final List<Widget> rows = List.generate(_team!.gameScores.length, (index) {
+    final List<Widget> rows = List.generate(widget.team.gameScores.length, (index) {
       return SizedBox(
         height: 50,
         child: _styledRow(
-          _team!.gameScores[index],
+          widget.team.gameScores[index],
           index,
         ),
       );
@@ -275,10 +240,6 @@ class _MatchScoresState extends State<MatchScores> {
 
   @override
   Widget build(BuildContext context) {
-    if (_team == null) {
-      return const Center(child: CircularProgressIndicator());
-    } else {
-      return _table();
-    }
+    return _table();
   }
 }

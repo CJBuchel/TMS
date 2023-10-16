@@ -7,13 +7,13 @@ import 'package:tms/views/admin/dashboard/teams/team_editor/delete_team_button.d
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class TeamGeneralEdit extends StatefulWidget {
-  final String teamNumber;
+  final Team team;
   final Function() onTeamDelete;
   final Function(Team t) onUpdate;
 
   const TeamGeneralEdit({
     Key? key,
-    required this.teamNumber,
+    required this.team,
     required this.onTeamDelete,
     required this.onUpdate,
   }) : super(key: key);
@@ -28,35 +28,32 @@ class _TeamGeneralEditState extends State<TeamGeneralEdit> {
   final TextEditingController _teamAffiliationController = TextEditingController();
   final TextEditingController _teamIdController = TextEditingController();
 
-  Team? _team;
+  String _originTeamNumber = "";
 
   void _updateTeam() {
-    if (_team != null) {
-      _team!.teamNumber = _teamNumberController.text;
-      _team!.teamName = _teamNameController.text;
-      _team!.teamAffiliation = _teamAffiliationController.text;
-      _team!.teamId = _teamIdController.text;
+    widget.team.teamNumber = _teamNumberController.text;
+    widget.team.teamName = _teamNameController.text;
+    widget.team.teamAffiliation = _teamAffiliationController.text;
+    widget.team.teamId = _teamIdController.text;
 
-      updateTeamRequest(widget.teamNumber, _team!).then((res) {
-        if (res != HttpStatus.ok) {
-          showNetworkError(res, context, subMessage: "Failed to update team ${widget.teamNumber}");
-        } else {
-          ScaffoldMessenger.of(context).clearSnackBars();
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.green,
-            content: Text("Team ${widget.teamNumber} updated"),
-          ));
-        }
-        _fetchTeam();
-        widget.onUpdate(_team!);
-      });
-    }
+    updateTeamRequest(_originTeamNumber, widget.team).then((res) {
+      if (res != HttpStatus.ok) {
+        showNetworkError(res, context, subMessage: "Failed to update team ${widget.team.teamNumber}");
+      } else {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.green,
+          content: Text("Team ${widget.team.teamNumber} updated"),
+        ));
+      }
+      widget.onUpdate(widget.team);
+    });
   }
 
   set _setTeam(Team t) {
     if (mounted) {
       setState(() {
-        _team = t;
+        _originTeamNumber = t.teamNumber;
         _teamNumberController.text = t.teamNumber;
         _teamNameController.text = t.teamName;
         _teamAffiliationController.text = t.teamAffiliation;
@@ -65,26 +62,10 @@ class _TeamGeneralEditState extends State<TeamGeneralEdit> {
     }
   }
 
-  void _fetchTeam() {
-    getTeamRequest(widget.teamNumber).then((res) {
-      if (res.item1 == HttpStatus.ok) {
-        if (res.item2 != null) _setTeam = res.item2!;
-      }
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant TeamGeneralEdit oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.teamNumber != widget.teamNumber) {
-      _fetchTeam();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _fetchTeam();
+    _setTeam = widget.team;
   }
 
   Widget _paddedInner(Widget inner) {
@@ -140,9 +121,8 @@ class _TeamGeneralEditState extends State<TeamGeneralEdit> {
       children: [
         Expanded(
           child: DeleteTeamButton(
-            teamNumber: _team?.teamNumber ?? "",
+            teamNumber: widget.team.teamNumber,
             onTeamDelete: () {
-              _fetchTeam();
               widget.onTeamDelete();
             },
           ),
@@ -163,18 +143,14 @@ class _TeamGeneralEditState extends State<TeamGeneralEdit> {
 
   @override
   Widget build(BuildContext context) {
-    if (_team == null) {
-      return const Center(child: CircularProgressIndicator());
-    } else {
-      return Column(
-        children: [
-          _paddedInner(_teamNumber()),
-          _paddedInner(_teamName()),
-          _paddedInner(_teamAffiliation()),
-          _paddedInner(_teamId()),
-          _paddedInner(_updateButtons()),
-        ],
-      );
-    }
+    return Column(
+      children: [
+        _paddedInner(_teamNumber()),
+        _paddedInner(_teamName()),
+        _paddedInner(_teamAffiliation()),
+        _paddedInner(_teamId()),
+        _paddedInner(_updateButtons()),
+      ],
+    );
   }
 }

@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
-import 'package:tms/network/network.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/scoreboard/judge_info.dart';
@@ -107,51 +106,21 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
     }
   }
 
+  void setData() {
+    getEvent().then((event) => setEvent(event));
+    getTeams().then((teams) => setTeams(teams));
+    getMatches().then((matches) => setMatches(matches));
+  }
+
   @override
   void initState() {
     super.initState();
+    setData();
+
     onEventUpdate((event) async => setEvent(event));
     onTeamsUpdate((teams) async => setTeams(teams));
     onMatchesUpdate((matches) async => setMatches(matches));
     onJudgingSessionsUpdate((sessions) async => setJudgingSessions(sessions));
-
-    onJudgingSessionUpdate((j) async {
-      // find judging session and update it
-      int idx = _judgingData?.indexWhere((session) => session.sessionNumber == j.sessionNumber) ?? -1;
-      if (idx != -1) {
-        if (mounted) {
-          setState(() {
-            _judgingData?[idx] = j;
-          });
-        }
-      }
-    });
-
-    onMatchUpdate((m) async {
-      // find match and update it
-      int idx = _matchData?.indexWhere((match) => match.matchNumber == m.matchNumber) ?? -1;
-      if (idx != -1) {
-        if (mounted) {
-          setState(() {
-            _matchData?[idx] = m;
-          });
-        }
-      }
-    });
-
-    onTeamUpdate((t) async {
-      // find team and update it
-      int idx = _teamData?.indexWhere((team) => team.teamNumber == t.teamNumber) ?? -1;
-      if (idx != -1) {
-        if (mounted) {
-          var teams = _teamData;
-          teams?[idx] = t;
-          setState(() {
-            _teamData = sortTeamsByRank(teams ?? []);
-          });
-        }
-      }
-    });
 
     ScoreboardUtil.getAlwaysMatchSchedule().then((value) async {
       setState(() {
@@ -163,15 +132,6 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
       setState(() {
         _alwaysJudgeInfo = value;
       });
-    });
-
-    // delay and get event data
-    Future.delayed(const Duration(seconds: 1), () async {
-      if (!await Network.isConnected()) {
-        getEvent().then((event) => setEvent(event));
-        getTeams().then((teams) => setTeams(teams));
-        getMatches().then((matches) => setMatches(matches));
-      }
     });
   }
 

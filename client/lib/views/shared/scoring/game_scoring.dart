@@ -1,14 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
+import 'package:tms/mixins/game_local_db.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
-import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/network/security.dart';
-import 'package:tms/network/ws.dart';
 import 'package:tms/requests/game_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/network_image.dart';
@@ -28,6 +27,7 @@ class GameScoring extends StatefulWidget {
   final Function(String)? onPublicCommentChange;
   final Function(String)? onPrivateCommentChange;
   final Function()? onDefaultAnswers;
+  final Function()? onLoaded;
 
   // value notifiers
   final ValueNotifier<bool>? setDefaultAnswers;
@@ -44,6 +44,7 @@ class GameScoring extends StatefulWidget {
     this.onPrivateCommentChange,
     this.onDefaultAnswers,
     this.setDefaultAnswers,
+    this.onLoaded,
   }) : super(key: key);
 
   @override
@@ -51,7 +52,7 @@ class GameScoring extends StatefulWidget {
 }
 
 class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  Game _game = LocalDatabaseMixin.gameDefault();
+  Game _game = GameLocalDB.singleDefault();
   List<ScoreError> _errors = [];
   final List<ScoreAnswer> _answers = [];
   final TextEditingController _publicCommentController = TextEditingController();
@@ -59,19 +60,40 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
 
   set _setGame(Game g) {
     if (mounted) {
-      setState(() {
-        _game = g;
-      });
+      // check if the game is the same
+      bool same = false;
+      if (listEquals(g.missions, _game.missions)) {
+        same = true;
+      }
 
-      if (widget.initialAnswers != null) {
-        _setAnswers = widget.initialAnswers!;
-      } else {
-        _setDefault();
+      if (listEquals(g.questions, _game.questions)) {
+        same = true;
+      }
+
+      if (!same) {
+        setState(() {
+          _game = g;
+          _setInitialAnswers();
+        });
       }
     }
   }
 
-  void _setDefault() {
+  Future<void> _validateScores() async {
+    await getValidateQuestionsRequest(_answers).then((res) {
+      if (res.item1 == HttpStatus.ok) {
+        if (mounted) {
+          setState(() {
+            _errors = res.item2.item2;
+            widget.onScore?.call(res.item2.item1);
+            widget.onErrors?.call(_errors);
+          });
+        }
+      }
+    });
+  }
+
+  Future<void> _setDefault() async {
     List<ScoreAnswer> answers = [];
     for (var q in _game.questions) {
       if (q.defaultValue.text != null) {
@@ -91,22 +113,19 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
       });
     }
 
-    _validateScores();
+    await _validateScores();
     widget.onDefaultAnswers?.call();
   }
 
-  void _validateScores() {
-    getValidateQuestionsRequest(_answers).then((res) {
-      if (res.item1 == HttpStatus.ok) {
-        if (mounted) {
-          setState(() {
-            _errors = res.item2.item2;
-            widget.onScore?.call(res.item2.item1);
-            widget.onErrors?.call(_errors);
-          });
-        }
-      }
-    });
+  Future<void> _setInitialAnswers() async {
+    if (widget.initialAnswers != null) {
+      _setAnswers = widget.initialAnswers!;
+      await _validateScores();
+    } else {
+      await _setDefault();
+    }
+
+    widget.onAnswers?.call(_answers);
   }
 
   set _setAnswer(ScoreAnswer answer) {
@@ -160,22 +179,24 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     }
   }
 
-  Future<void> _fetchGame() async {
-    getGameRequest().then((res) {
-      if (res.item1 == HttpStatus.ok) {
-        _setGame = res.item2!;
+  Future<void> _getGame() async {
+    _setGame = await getGame();
+  }
+
+  Future<void> _setData() async {
+    await _getGame();
+    if (_answers.isNotEmpty) {
+      if (await Network.isConnected()) {
+        await _validateScores();
       }
-    });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    onGameEventUpdate((g) => _setGame = g);
-
-    NetworkHttp.httpState.addListener(_validateScores);
-    NetworkWebSocket.wsState.addListener(_validateScores);
-    NetworkSecurity.securityState.addListener(_validateScores);
+    // initial get game
+    onGameUpdate((g) => _setGame = g);
 
     if (widget.initialPublicComment != null) {
       _publicCommentController.text = widget.initialPublicComment!;
@@ -188,14 +209,14 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     if (widget.setDefaultAnswers != null) {
       widget.setDefaultAnswers!.addListener(_setDefault);
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setData();
+    });
   }
 
   @override
   void dispose() {
-    NetworkHttp.httpState.removeListener(_validateScores);
-    NetworkWebSocket.wsState.removeListener(_validateScores);
-    NetworkSecurity.securityState.removeListener(_validateScores);
-
     if (widget.setDefaultAnswers != null) {
       widget.setDefaultAnswers!.removeListener(_setDefault);
     }
@@ -203,7 +224,8 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
   }
 
   Future<List<Widget>> _getMissions() async {
-    if (_game.missions.isEmpty) await _fetchGame();
+    // wait for 2 seconds
+    await Future.delayed(const Duration(milliseconds: 200));
     return _game.missions.map((mission) {
       return MissionWidget(
         color: (AppTheme.isDarkTheme ? const Color.fromARGB(255, 69, 80, 100) : Colors.white),
@@ -248,7 +270,8 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     return FutureBuilder<List<Widget>>(
       future: _getMissions(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData && (snapshot.data?.isNotEmpty ?? false)) {
+          widget.onLoaded?.call();
           return Column(
             children: [
               ...snapshot.data!,
@@ -256,9 +279,7 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
             ],
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const SizedBox.shrink();
         }
       },
     );

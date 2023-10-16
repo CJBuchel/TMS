@@ -20,8 +20,8 @@ class Scoring extends StatefulWidget {
 
 class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   final ScrollController _scrollController = ScrollController();
-  List<ScoreAnswer> _answers = [];
   int _score = 0;
+  List<ScoreAnswer> _answers = [];
   String _publicComment = "";
   String _privateComment = "";
   List<ScoreError> _errors = [];

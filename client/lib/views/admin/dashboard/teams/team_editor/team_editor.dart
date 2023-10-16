@@ -1,15 +1,18 @@
 import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/info_banner.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/match_scores.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/team_general_edit.dart';
 
 class TeamEditor extends StatelessWidget {
-  final ValueNotifier<String?> selectedTeamNumber;
+  final ValueNotifier<String?> selectedTeamNumberNotifier;
+  final ValueNotifier<Team?> selectedTeamNotifier;
   const TeamEditor({
     Key? key,
-    required this.selectedTeamNumber,
+    required this.selectedTeamNumberNotifier,
+    required this.selectedTeamNotifier,
   }) : super(key: key);
 
   Widget _paddedInner(Widget child) {
@@ -19,10 +22,25 @@ class TeamEditor extends StatelessWidget {
     );
   }
 
+  Widget _selectedTeamAutoNotifier({required Function(Team) builder}) {
+    return ValueListenableBuilder(
+      valueListenable: selectedTeamNotifier,
+      builder: (context, Team? team, child) {
+        if (team == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return builder(team);
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: selectedTeamNumber,
+      valueListenable: selectedTeamNumberNotifier,
       builder: (context, String? teamNumber, child) {
         if (teamNumber == null) {
           return const Center(
@@ -41,9 +59,11 @@ class TeamEditor extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: TeamInfoBanner(
-                  teamNumber: teamNumber,
-                ),
+                child: _selectedTeamAutoNotifier(builder: (t) {
+                  return TeamInfoBanner(
+                    team: t,
+                  );
+                }),
               ),
 
               // team settings
@@ -66,18 +86,21 @@ class TeamEditor extends StatelessWidget {
                           ),
                           content: Material(
                             color: Colors.transparent,
-                            child: TeamGeneralEdit(
-                              teamNumber: teamNumber,
-                              onTeamDelete: () {
-                                selectedTeamNumber.value = null;
-                              },
-                              onUpdate: (t) {
-                                // of there was a team number change, update the notifier
-                                if (selectedTeamNumber.value != t.teamNumber) {
-                                  selectedTeamNumber.value = t.teamNumber;
-                                }
-                              },
-                            ),
+                            child: _selectedTeamAutoNotifier(builder: (t) {
+                              return TeamGeneralEdit(
+                                team: t,
+                                onTeamDelete: () {
+                                  selectedTeamNotifier.value = null;
+                                  selectedTeamNumberNotifier.value = null;
+                                },
+                                onUpdate: (t) {
+                                  // of there was a team number change, update the number notifier
+                                  if (selectedTeamNumberNotifier.value != t.teamNumber) {
+                                    selectedTeamNumberNotifier.value = t.teamNumber;
+                                  }
+                                },
+                              );
+                            }),
                           ),
                         ),
 
@@ -94,7 +117,9 @@ class TeamEditor extends StatelessWidget {
                           ),
                           content: Material(
                             color: Colors.transparent,
-                            child: MatchScores(teamNumber: teamNumber),
+                            child: _selectedTeamAutoNotifier(builder: (t) {
+                              return MatchScores(team: t);
+                            }),
                           ),
                         ),
                       ],

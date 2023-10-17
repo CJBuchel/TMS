@@ -81,7 +81,11 @@ class _OverviewState extends State<Overview> with AutoUnsubScribeMixin, LocalDat
           SizedBox(
             height: 50,
             width: constraints.maxWidth,
-            child: const OverviewInfoBanner(),
+            child: OverviewInfoBanner(
+              matchNotifier: _matchesNotifier,
+              judgingSessionsNotifier: _judgingSessionsNotifier,
+              teamsNotifier: _teamsNotifier,
+            ),
           ),
           SizedBox(
             height: constraints.maxHeight - 50,

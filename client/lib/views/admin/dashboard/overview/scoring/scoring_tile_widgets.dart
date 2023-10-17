@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
 import 'package:tms/utils/score_tags.dart';
+import 'package:tms/views/admin/dashboard/overview/scoring/edit_score.dart';
 
 class GameScoringTile extends StatelessWidget {
   final String teamNumber;
@@ -92,9 +91,12 @@ class GameScoringTile extends StatelessWidget {
           ],
         ),
       ),
-      trailing: const Icon(Icons.arrow_forward_ios),
+      trailing: const Icon(Icons.chevron_right),
       onTap: () {
-        Logger().i("I have been pressed");
+        EditOverviewScore(
+          teamNumber: teamNumber,
+          gameScore: gameScore,
+        ).show(context);
       },
     );
   }

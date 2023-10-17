@@ -22,8 +22,6 @@ class _OverviewState extends State<Overview> with AutoUnsubScribeMixin, LocalDat
   final ValueNotifier<List<GameMatch>> _matchesNotifier = ValueNotifier<List<GameMatch>>([]);
   final ValueNotifier<List<JudgingSession>> _judgingSessionsNotifier = ValueNotifier<List<JudgingSession>>([]);
 
-  Color _borderColor = AppTheme.isDarkTheme ? Colors.white : Colors.black;
-
   // set value notifiers
   set _setEvent(Event event) {
     _eventNotifier.value = event;
@@ -48,12 +46,6 @@ class _OverviewState extends State<Overview> with AutoUnsubScribeMixin, LocalDat
     getJudgingSessions().then((s) => _setJudgingSessions = s);
   }
 
-  void _setThemeColor() {
-    setState(() {
-      _borderColor = AppTheme.isDarkTheme ? Colors.white : Colors.black;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -62,54 +54,52 @@ class _OverviewState extends State<Overview> with AutoUnsubScribeMixin, LocalDat
     onTeamsUpdate((t) => _setTeams = t);
     onMatchesUpdate((m) => _setMatches = m);
     onJudgingSessionsUpdate((s) => _setJudgingSessions = s);
-    _setThemeColor();
-
-    AppTheme.isDarkThemeNotifier.addListener(_setThemeColor);
-  }
-
-  @override
-  void dispose() {
-    AppTheme.isDarkThemeNotifier.removeListener(_setThemeColor);
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        children: [
-          SizedBox(
-            height: 50,
-            width: constraints.maxWidth,
-            child: OverviewInfoBanner(
-              matchNotifier: _matchesNotifier,
-              judgingSessionsNotifier: _judgingSessionsNotifier,
-              teamsNotifier: _teamsNotifier,
-            ),
-          ),
-          SizedBox(
-            height: constraints.maxHeight - 50,
-            width: constraints.maxWidth,
-            child: Row(
+    return ValueListenableBuilder(
+      valueListenable: AppTheme.isDarkThemeNotifier,
+      builder: (context, v, _) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
               children: [
                 SizedBox(
-                  width: constraints.maxWidth * 0.65,
-                  child: EventOverview(
-                    eventNotifier: _eventNotifier,
-                    teamsNotifier: _teamsNotifier,
-                    matchesNotifier: _matchesNotifier,
+                  height: 50,
+                  width: constraints.maxWidth,
+                  child: OverviewInfoBanner(
+                    matchNotifier: _matchesNotifier,
                     judgingSessionsNotifier: _judgingSessionsNotifier,
+                    teamsNotifier: _teamsNotifier,
                   ),
                 ),
                 SizedBox(
-                  width: constraints.maxWidth * 0.35,
-                  child: ScoringOverview(teamsNotifier: _teamsNotifier),
+                  height: constraints.maxHeight - 50,
+                  width: constraints.maxWidth,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: constraints.maxWidth * 0.65,
+                        child: EventOverview(
+                          eventNotifier: _eventNotifier,
+                          teamsNotifier: _teamsNotifier,
+                          matchesNotifier: _matchesNotifier,
+                          judgingSessionsNotifier: _judgingSessionsNotifier,
+                        ),
+                      ),
+                      SizedBox(
+                        width: constraints.maxWidth * 0.35,
+                        child: ScoringOverview(teamsNotifier: _teamsNotifier),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-          ),
-        ],
-      );
-    });
+            );
+          },
+        );
+      },
+    );
   }
 }

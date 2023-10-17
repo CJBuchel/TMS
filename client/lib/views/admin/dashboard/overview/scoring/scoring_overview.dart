@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/mixins/teams_local_db.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
 import 'package:tms/views/admin/dashboard/overview/scoring/scoring_tile_widgets.dart';
+import 'package:tms/views/shared/dashboard/match_scores/edit_score_button.dart';
+import 'package:tms/views/shared/dashboard/match_scores/edit_score_dialog.dart';
 
 class TeamScoreWidget {
   final String teamNumber;
@@ -141,7 +145,7 @@ class _ScoringOverviewState extends State<ScoringOverview> {
     return TextField(
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        labelText: 'Session',
+        labelText: 'Round/Type',
       ),
       onChanged: (s) {
         _setSessionFilter = s;
@@ -208,6 +212,7 @@ class _ScoringOverviewState extends State<ScoringOverview> {
                 itemCount: _filteredScoreSheets.length,
                 itemBuilder: (context, index) {
                   return Card(
+                    margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                     child: _filteredScoreSheets[index].scoreWidget,
                   );
                 },

@@ -22,7 +22,7 @@ class _SingleTeamErrorsState extends State<SingleTeamErrors> {
   List<TeamError> _errors = [];
 
   void setErrors() {
-    _errors = SingleTeamErrorChecks.getWarnings(
+    _errors = SingleTeamErrorChecks.getErrors(
       team: widget.team,
     );
   }

@@ -52,10 +52,10 @@ class TeamEditor extends StatelessWidget {
               // info banner
               Container(
                 height: 50,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: AppTheme.isDarkTheme ? Colors.white : Colors.black,
+                      color: Colors.grey,
                     ),
                   ),
                 ),

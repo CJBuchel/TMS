@@ -55,7 +55,7 @@ class SingleTeamErrorChecks {
     return errors;
   }
 
-  static List<TeamError> getWarnings({
+  static List<TeamError> getErrors({
     required Team team,
   }) {
     _team = team;
@@ -69,13 +69,13 @@ class SingleTeamErrorChecks {
 }
 
 class TeamErrorChecks {
-  static List<TeamError> getWarnings({
+  static List<TeamError> getErrors({
     required List<Team> teams,
   }) {
     List<TeamError> warnings = [];
 
     for (var team in teams) {
-      warnings.addAll(SingleTeamErrorChecks.getWarnings(team: team));
+      warnings.addAll(SingleTeamErrorChecks.getErrors(team: team));
     }
 
     return warnings;

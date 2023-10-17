@@ -4,29 +4,36 @@ import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
+import 'package:tms/utils/sorter_util.dart';
 
-class MatchTTLClock extends StatefulWidget {
-  final List<GameMatch> matches;
+class JudgingTTLClock extends StatefulWidget {
+  final List<JudgingSession> sessions;
   final double? fontSize;
   final Color? textColor;
+  final Color? timerColor;
   final bool? showOnlyClock;
   final bool autoFontSize;
-  const MatchTTLClock({
+  final bool live;
+
+  const JudgingTTLClock({
     Key? key,
-    required this.matches,
+    required this.sessions,
+    required this.live,
     this.fontSize,
     this.textColor,
+    this.timerColor,
     this.showOnlyClock,
     this.autoFontSize = true,
   }) : super(key: key);
 
   @override
-  State<MatchTTLClock> createState() => _TTLClockState();
+  State<JudgingTTLClock> createState() => _TTLClockState();
 }
 
-class _TTLClockState extends State<MatchTTLClock> {
+class _TTLClockState extends State<JudgingTTLClock> {
   Timer? _timer;
   int _difference = 0;
+
   String padTime(int value, int length) {
     return value.toString().padLeft(length, '0');
   }
@@ -54,11 +61,43 @@ class _TTLClockState extends State<MatchTTLClock> {
           style: TextStyle(
             fontFamily: "lcdbold",
             fontSize: fontSize,
-            color: time >= 0 ? Colors.green : Colors.red,
+            color: widget.timerColor ?? (time >= 0 ? Colors.green : Colors.red),
           ),
         ),
       ],
     );
+  }
+
+  void _setLive(List<JudgingSession> sessions) {
+    String time = "";
+
+    for (var session in sessions) {
+      if (session.complete == false && session.judgingSessionDeferred == false) {
+        time = session.startTime;
+        break;
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _difference = getTimeDifference(time);
+      });
+    }
+  }
+
+  void _setNext(List<JudgingSession> sessions) {
+    for (final session in sessions) {
+      DateTime? startTime = parseStringTimeToDateTime(session.startTime);
+      if (startTime != null && startTime.isAfter(DateTime.now())) {
+        int diff = startTime.difference(DateTime.now()).inSeconds;
+        if (mounted) {
+          setState(() {
+            _difference = diff;
+          });
+        }
+        return;
+      }
+    }
   }
 
   @override
@@ -67,13 +106,11 @@ class _TTLClockState extends State<MatchTTLClock> {
 
     // every 1 second update the TTL clock
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (widget.matches.isNotEmpty) {
-        // find first match that hasn't been completed and use the start time
-        String time = widget.matches.firstWhere((m) => (m.complete == false && m.gameMatchDeferred == false)).startTime;
-        if (mounted) {
-          setState(() {
-            _difference = getTimeDifference(time);
-          });
+      if (widget.sessions.isNotEmpty) {
+        if (widget.live) {
+          _setLive(sortJudgingByTime(widget.sessions));
+        } else {
+          _setNext(sortJudgingByTime(widget.sessions));
         }
       }
     });

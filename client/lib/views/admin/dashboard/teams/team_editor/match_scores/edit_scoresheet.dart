@@ -17,6 +17,8 @@ class EditScoresheet extends StatefulWidget {
 
 class _EditScoresheetState extends State<EditScoresheet> {
   int _score = 0;
+  String _publicComment = "";
+  String _privateComment = "";
 
   set _setScore(int score) {
     if (mounted) {
@@ -26,14 +28,61 @@ class _EditScoresheetState extends State<EditScoresheet> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _setScore = widget.gameScore.score;
+  set _setPublicComment(String publicComment) {
+    if (mounted) {
+      setState(() {
+        _publicComment = publicComment;
+      });
+    }
+  }
+
+  set _setPrivateComment(String privateComment) {
+    if (mounted) {
+      setState(() {
+        _privateComment = privateComment;
+      });
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    _setPublicComment = widget.gameScore.scoresheet.publicComment;
+    _setPrivateComment = widget.gameScore.scoresheet.privateComment;
+    _setScore = widget.gameScore.score;
+  }
+
+  Widget _publicCommentDisplay() {
+    return Row(
+      children: [
+        const Text("Public Comment: "),
+        Text(
+          _publicComment,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _privateCommentDisplay() {
+    return Row(
+      children: [
+        const Text("Private Comment: "),
+        Text(
+          _privateComment,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _scoreEdit() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -57,6 +106,8 @@ class _EditScoresheetState extends State<EditScoresheet> {
               onGameScore: (gs) {
                 setState(() {
                   _setScore = gs.score;
+                  _setPublicComment = gs.scoresheet.publicComment;
+                  _setPrivateComment = gs.scoresheet.privateComment;
                 });
                 widget.onGameScore?.call(gs);
               },
@@ -67,6 +118,17 @@ class _EditScoresheetState extends State<EditScoresheet> {
             color: Colors.blue,
           ),
         ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _publicCommentDisplay(),
+        _privateCommentDisplay(),
+        _scoreEdit(),
       ],
     );
   }

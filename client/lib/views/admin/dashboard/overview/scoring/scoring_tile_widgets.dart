@@ -34,7 +34,7 @@ class GameScoringTile extends StatelessWidget {
         children: [
           Expanded(
             flex: 1,
-            child: _styledCell(Text("Team $teamNumber")),
+            child: _styledCell(Text(teamNumber)),
           ),
           Expanded(
             flex: 1,
@@ -76,23 +76,14 @@ class GameScoringTile extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Time: ",
-                      style: TextStyle(color: AppTheme.isDarkTheme ? Colors.white : Colors.black),
-                    ),
-                    Text(
-                      timestamp,
-                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                child: Text(
+                  timestamp,
+                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
             Expanded(
-              flex: 3,
+              flex: 1,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: GameScoreTags(score: gameScore, scores: scores).get(),
@@ -118,7 +109,7 @@ class GameScoringTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        // border: Border.all(color: Colors.cyan),
+        border: Border.all(color: Colors.black),
         gradient: const LinearGradient(begin: Alignment.centerLeft, end: Alignment.center, colors: [
           Colors.purple,
           Colors.purple,

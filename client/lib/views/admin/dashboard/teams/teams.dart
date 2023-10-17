@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/team_requests.dart';
@@ -81,18 +80,9 @@ class _TeamsState extends State<Teams> with AutoUnsubScribeMixin, LocalDatabaseM
         return Row(
           children: [
             // team selector list (left side)
-            Container(
+            SizedBox(
               height: constraints.maxHeight,
               width: constraints.maxWidth * 0.3, // 30%
-
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: AppTheme.isDarkTheme ? Colors.white : Colors.black,
-                    width: 1,
-                  ),
-                ),
-              ),
 
               child: TeamSelect(
                 teams: _teamsNotifier,

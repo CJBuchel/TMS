@@ -10,6 +10,7 @@ const bgColorDark = Color(0xFF212332);
 const bgSecondaryColorDark = Color(0xFF2A2D3E);
 const primaryRowColorDark = Color(0xFF355558);
 const secondaryRowColorDark = Color(0xFF707279);
+const secondaryCardColorDark = Color.fromARGB(255, 69, 80, 100);
 
 // Style constants (light)
 const primaryColorLight = Color(0xFF2697FF);
@@ -18,6 +19,7 @@ const bgColorLight = Color(0xFFFFFFFF);
 const bgSecondaryColorLight = Color(0xFFEEEEEE);
 const primaryRowColorLight = Color(0xFFCBE2F5);
 const secondaryRowColorLight = Color(0xFFD8D8D8);
+const secondaryCardColorLight = Color.fromRGBO(225, 245, 254, 1);
 
 class AppTheme {
   static final ValueNotifier<bool> isDarkThemeNotifier = ValueNotifier<bool>(true);
@@ -42,6 +44,7 @@ Color get bgSecondaryColor => AppTheme.isDarkThemeNotifier.value ? bgSecondaryCo
 Color get textColor => AppTheme.isDarkThemeNotifier.value ? Colors.white : Colors.black;
 Color get primaryRowColor => AppTheme.isDarkThemeNotifier.value ? primaryRowColorDark : primaryRowColorLight;
 Color get secondaryRowColor => AppTheme.isDarkThemeNotifier.value ? secondaryRowColorDark : secondaryRowColorLight;
+Color get secondaryCardColor => AppTheme.isDarkThemeNotifier.value ? secondaryCardColorDark : secondaryCardColorLight;
 Brightness get brightness => AppTheme.isDarkThemeNotifier.value ? Brightness.dark : Brightness.light;
 
 // class ChallengeRuleBook {

@@ -4,7 +4,7 @@ import 'package:tms/utils/parse_util.dart';
 import 'package:tms/utils/score_tags.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/add_score.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/delete_score.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/edit_score.dart';
+import 'package:tms/views/shared/dashboard/match_scores/edit_score_button.dart';
 
 class MatchScores extends StatefulWidget {
   final Team team;
@@ -103,7 +103,7 @@ class _MatchScoresState extends State<MatchScores> {
           // edit button
           Expanded(
             flex: 1,
-            child: EditScore(
+            child: EditScoreButton(
               team: widget.team,
               index: index,
             ),

@@ -76,7 +76,7 @@ class _TeamSelectTableState extends State<TeamSelectTable> {
 
   Widget _getRow(Team t, {Color? color}) {
     List<TeamWarning> warnings = SingleTeamWarningChecks.getWarnings(team: t, event: widget.event);
-    List<TeamError> errors = SingleTeamErrorChecks.getWarnings(team: t);
+    List<TeamError> errors = SingleTeamErrorChecks.getErrors(team: t);
 
     return InkWell(
       onTap: () => setSelected = t,

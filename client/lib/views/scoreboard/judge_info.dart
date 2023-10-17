@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/shared/judging_ttl_clock.dart';
 import 'package:tms/utils/parse_util.dart';
 import 'package:tms/utils/sorter_util.dart';
+import 'package:tms/views/shared/clocks/judging_ttl_clock.dart';
 
 enum JudgeInfoState {
   none,
@@ -334,7 +334,13 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text("Next: ", style: TextStyle(fontSize: fontSize, color: Colors.white)),
-                          JudgingTTLClock(sessions: widget.judgingSessions, fontSize: fontSize, textColor: Colors.white, showOnlyClock: true),
+                          JudgingTTLClock(
+                            sessions: widget.judgingSessions,
+                            fontSize: fontSize,
+                            textColor: Colors.white,
+                            showOnlyClock: true,
+                            live: true,
+                          ),
                         ],
                       ),
                     ),

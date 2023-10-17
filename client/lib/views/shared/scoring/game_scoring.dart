@@ -228,7 +228,7 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
     await Future.delayed(const Duration(milliseconds: 200));
     return _game.missions.map((mission) {
       return MissionWidget(
-        color: (AppTheme.isDarkTheme ? const Color.fromARGB(255, 69, 80, 100) : Colors.white),
+        color: (AppTheme.isDarkTheme ? secondaryCardColor : Colors.white),
         mission: mission,
         errors: _errors,
         answers: _answers,
@@ -253,7 +253,7 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
 
   Widget _scoringComments() {
     return ScoringComments(
-      color: (AppTheme.isDarkTheme ? const Color.fromARGB(255, 69, 80, 100) : Colors.white),
+      color: (AppTheme.isDarkTheme ? secondaryCardColor : Colors.white),
       publicCommentController: _publicCommentController,
       privateCommentController: _privateCommentController,
       onPublicCommentChange: (pub) {

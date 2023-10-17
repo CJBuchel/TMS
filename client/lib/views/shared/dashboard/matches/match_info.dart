@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/checks/match_errors.dart';
 import 'package:tms/views/shared/checks/match_warnings.dart';
-import 'package:tms/views/shared/match_ttl_clock.dart';
+import 'package:tms/views/shared/clocks/match_ttl_clock.dart';
 
 class MatchInfo extends StatelessWidget {
   final List<GameMatch> matches;
@@ -49,6 +49,7 @@ class MatchInfo extends StatelessWidget {
             matches: matches,
             showOnlyClock: true,
             autoFontSize: false,
+            live: true,
           ),
           matchProgress(),
 

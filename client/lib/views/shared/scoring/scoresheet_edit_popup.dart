@@ -11,7 +11,12 @@ class ScoresheetEditPopup {
     required this.context,
     required this.gameScore,
     this.onGameScore,
-  });
+  }) {
+    _answers = gameScore.scoresheet.answers;
+    _score = gameScore.score;
+    _publicComment = gameScore.scoresheet.publicComment;
+    _privateComment = gameScore.scoresheet.privateComment;
+  }
 
   List<ScoreAnswer> _answers = [];
   List<ScoreError> _errors = [];
@@ -20,8 +25,6 @@ class ScoresheetEditPopup {
   String _privateComment = "";
 
   Widget _scoresheetDisplay() {
-    // fill out the answers,comments etc...
-
     return GameScoring(
       initialAnswers: gameScore.scoresheet.answers,
       initialPublicComment: gameScore.scoresheet.publicComment,

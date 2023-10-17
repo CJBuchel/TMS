@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/shared/match_ttl_clock.dart';
+import 'package:tms/views/shared/clocks/match_ttl_clock.dart';
 import 'package:tms/views/scoreboard/match_info_table.dart';
 import 'package:tms/views/scoreboard/match_loaded_table.dart';
 import 'package:tms/utils/sorter_util.dart';
@@ -297,7 +297,13 @@ class _MatchInfoState extends State<MatchInfo> with AutoUnsubScribeMixin {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text("Next: ", style: TextStyle(fontSize: fontSize, color: Colors.white)),
-                            MatchTTLClock(matches: widget.matches, fontSize: fontSize, textColor: Colors.white, showOnlyClock: true),
+                            MatchTTLClock(
+                              matches: widget.matches,
+                              fontSize: fontSize,
+                              textColor: Colors.white,
+                              showOnlyClock: true,
+                              live: true,
+                            ),
                           ],
                         ),
                       ),

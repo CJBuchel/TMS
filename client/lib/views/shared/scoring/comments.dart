@@ -60,7 +60,7 @@ class ScoringComments extends StatelessWidget {
                 labelText: 'Private Comment (optional)',
                 hintText: "Enter private comment (only judges will see this)",
               ),
-              onChanged: onPublicCommentChange,
+              onChanged: onPrivateCommentChange,
             ),
           )
         ],

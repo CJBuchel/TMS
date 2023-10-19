@@ -94,7 +94,7 @@ class _ScoringOverviewState extends State<ScoringOverview> {
 
     if (_teamFilter.isNotEmpty) {
       String teamFilter = _teamFilter.toLowerCase();
-      filteredScoreSheets = filteredScoreSheets.where((element) => element.teamNumber.toLowerCase().contains(teamFilter)).toList();
+      filteredScoreSheets = filteredScoreSheets.where((element) => element.teamNumber.toLowerCase() == teamFilter).toList();
     }
 
     if (_sessionFilter.isNotEmpty) {

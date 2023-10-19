@@ -198,7 +198,7 @@ class _EditScoreDialogState extends State<EditScoreDialog> {
               Navigator.of(context).pop();
               _updateScore();
             },
-            child: const Text("Update", style: TextStyle(color: Colors.orange)),
+            child: const Text("Update", style: TextStyle(color: Colors.red)),
           ),
         ],
       );

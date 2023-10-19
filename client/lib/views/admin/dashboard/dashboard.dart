@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
 import 'package:tms/views/admin/dashboard/side_menu.dart';
+import 'package:tms/views/shared/error_handlers.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -31,12 +33,20 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  Widget? _displayView() {
+    if (Responsive.isMobile(context)) {
+      return const MobileNotImplemented();
+    } else {
+      return _view;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TmsToolBar(displayMenuButton: true),
       drawer: SideMenu(onView: (view) => switchView(view)),
-      body: _view,
+      body: _displayView(),
     );
   }
 }

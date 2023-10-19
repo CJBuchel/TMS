@@ -7,14 +7,14 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/publish_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/scoring/scoring_header/round_widget.dart';
-import 'package:tms/views/scoring/scoring_header/team_widget.dart';
-import 'package:tms/views/scoring/table_setup.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_header/round_widget.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_header/team_widget.dart';
+import 'package:tms/views/referee_scoring/table_setup.dart';
 import 'package:tms/utils/sorter_util.dart';
 
 class ScoringHeader extends StatefulWidget {
   final double height;
-  final Function(Team team, GameMatch match) onNextTeamMatch;
+  final Function(Team? team, GameMatch? match) onNextTeamMatch;
   final Function(bool locked) onLock;
   const ScoringHeader({
     Key? key,
@@ -99,6 +99,14 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
               if (checkSetNextMatch(thisTable, match)) return;
             }
           }
+
+          // fall through (if no next matches are found, nor any are loaded)
+          setState(() {
+            _nextMatch = null;
+            _nextTeam = null;
+            widget.onNextTeamMatch(null, null);
+            sendTableLoadedMatch(thisTable, forceNone: true);
+          });
         });
       }
     }

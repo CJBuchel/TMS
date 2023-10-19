@@ -41,9 +41,9 @@ class _OverviewState extends State<Overview> with AutoUnsubScribeMixin, LocalDat
 
   void _setData() {
     getEvent().then((e) => _setEvent = e);
-    getTeams().then((t) => _setTeams = t);
     getMatches().then((m) => _setMatches = m);
     getJudgingSessions().then((s) => _setJudgingSessions = s);
+    getTeams().then((t) => _setTeams = t);
   }
 
   @override
@@ -54,9 +54,9 @@ class _OverviewState extends State<Overview> with AutoUnsubScribeMixin, LocalDat
       _setData();
     });
     onEventUpdate((e) => _setEvent = e);
-    onTeamsUpdate((t) => _setTeams = t);
     onMatchesUpdate((m) => _setMatches = m);
     onJudgingSessionsUpdate((s) => _setJudgingSessions = s);
+    onTeamsUpdate((t) => _setTeams = t);
   }
 
   @override

@@ -160,7 +160,7 @@ class _EditSessionState extends State<EditSession> {
                 _updateSession();
                 Navigator.of(context).pop();
               },
-              child: const Text("Update", style: TextStyle(color: Colors.blue)),
+              child: const Text("Update", style: TextStyle(color: Colors.red)),
             ),
           ],
         );

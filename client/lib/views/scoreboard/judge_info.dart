@@ -98,6 +98,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
     super.didUpdateWidget(oldWidget);
     if (oldWidget != widget) {
       if (widget.event?.pods.length != oldWidget.event?.pods.length) {
+        setFutureJudgingSessions();
         if (!_animationHasBeenInitialized) {
           initializeInfiniteAnimation();
         }
@@ -339,7 +340,7 @@ class _JudgeInfoState extends State<JudgeInfo> with AutomaticKeepAliveClientMixi
                             fontSize: fontSize,
                             textColor: Colors.white,
                             showOnlyClock: true,
-                            live: true,
+                            live: false,
                           ),
                         ],
                       ),

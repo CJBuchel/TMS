@@ -107,15 +107,19 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
   }
 
   void setData() {
-    getEvent().then((event) => setEvent(event));
-    getTeams().then((teams) => setTeams(teams));
+    getJudgingSessions().then((sessions) => setJudgingSessions(sessions));
     getMatches().then((matches) => setMatches(matches));
+    getTeams().then((teams) => setTeams(teams));
+    getEvent().then((event) => setEvent(event));
   }
 
   @override
   void initState() {
     super.initState();
-    setData();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setData();
+    });
 
     onEventUpdate((event) async => setEvent(event));
     onTeamsUpdate((teams) async => setTeams(teams));

@@ -4,21 +4,21 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/scoring/scoring_footer/floating_score.dart';
-import 'package:tms/views/scoring/scoring_footer/scoring_footer.dart';
-import 'package:tms/views/scoring/scoring_header/scoring_header.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_footer/floating_score.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_footer/scoring_footer.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_header/scoring_header.dart';
 import 'package:tms/views/shared/scoring/game_scoring.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 import 'package:tms/views/timer/clock.dart';
 
-class Scoring extends StatefulWidget {
-  const Scoring({Key? key}) : super(key: key);
+class RefereeScoring extends StatefulWidget {
+  const RefereeScoring({Key? key}) : super(key: key);
 
   @override
-  State<Scoring> createState() => _ScoringScreenState();
+  State<RefereeScoring> createState() => _ScoringScreenState();
 }
 
-class _ScoringScreenState extends State<Scoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+class _ScoringScreenState extends State<RefereeScoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   final ScrollController _scrollController = ScrollController();
   int _score = 0;
   List<ScoreAnswer> _answers = [];

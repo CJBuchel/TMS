@@ -49,7 +49,10 @@ class _OverviewState extends State<Overview> with AutoUnsubScribeMixin, LocalDat
   @override
   void initState() {
     super.initState();
-    _setData();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      _setData();
+    });
     onEventUpdate((e) => _setEvent = e);
     onTeamsUpdate((t) => _setTeams = t);
     onMatchesUpdate((m) => _setMatches = m);

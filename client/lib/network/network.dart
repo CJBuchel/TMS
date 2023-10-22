@@ -122,12 +122,14 @@ class Network {
 
   // Find the server using the Multicast DNS name
   static Future<String> _findServerMDNS(String ip) async {
+    Logger().w("Finding Server...");
     const String name = mdnsName;
     final MDnsClient client = MDnsClient();
     await client.start();
     await for (final PtrResourceRecord ptr in client.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(name))) {
       await for (final SrvResourceRecord srv in client.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
         await for (final IPAddressResourceRecord addr in client.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(srv.target))) {
+          Logger().i("Found Match: ${addr.address.address}");
           ip = addr.address.address.isNotEmpty ? addr.address.address : '';
         }
       }

@@ -88,6 +88,7 @@ const requestPort = 2121; // 2121
 const watchDogTime = Duration(seconds: 5);
 const connectionRetries = 5;
 
+// Auth constants
 const rsaBitSize = 2048; // 2048
 const rsaBitSizeWeb = 1024; // 1024, the web is slower, lets be a tad lenient
 

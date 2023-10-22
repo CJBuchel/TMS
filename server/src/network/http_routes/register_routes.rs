@@ -36,7 +36,7 @@ pub fn register_route(clients: &State<TmsClients>, s_public_key: &State<Vec<u8>>
     key: String::from_utf8(s_public_key.to_vec()).unwrap(),
     url_scheme: String::from("ws://"),
     url_path: format!(":{}/ws/{}", ws_port, user_id),
-    version: std::env::var("VERSION").unwrap_or(String::from("0.0.0"))
+    version: option_env!("VERSION").unwrap_or("0.0.0").to_string()
   };
   
   if clients.read().unwrap().contains_key(&user_id) {

@@ -6,7 +6,7 @@ WORKDIR /tms
 COPY ./server/target/x86_64-unknown-linux-musl/release/tms_server .
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 
-# Setup web ap
+# Setup web app
 RUN rm -rf /usr/share/nginx/html/*
 COPY ./client/build/web ./tms_web
 RUN chmod -R 755 tms_web

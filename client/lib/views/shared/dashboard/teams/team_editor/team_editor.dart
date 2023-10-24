@@ -1,9 +1,9 @@
 import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/info_banner.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/match_scores.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/team_general_edit.dart';
+import 'package:tms/views/shared/dashboard/teams/team_editor/info_banner.dart';
+import 'package:tms/views/shared/dashboard/teams/team_editor/match_scores/match_scores.dart';
+import 'package:tms/views/shared/dashboard/teams/team_editor/team_general_edit.dart';
 
 class TeamEditor extends StatelessWidget {
   final ValueNotifier<String?> selectedTeamNumberNotifier;

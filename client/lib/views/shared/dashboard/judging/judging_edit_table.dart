@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/judging/add_session/add_session.dart';
-import 'package:tms/views/admin/dashboard/judging/judging_edit_row.dart';
+import 'package:tms/views/shared/dashboard/judging/add_session/add_session.dart';
+import 'package:tms/views/shared/dashboard/judging/judging_edit_row.dart';
 
 class JudgingEditTable extends StatefulWidget {
   final List<JudgingSession> sessions;

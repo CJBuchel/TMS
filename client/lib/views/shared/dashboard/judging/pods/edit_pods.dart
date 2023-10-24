@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/judging/pods/pods_table.dart';
+import 'package:tms/views/shared/dashboard/judging/pods/pods_table.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class EditPods extends StatefulWidget {

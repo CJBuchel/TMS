@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/admin/dashboard/judging/judging.dart';
+import 'package:tms/views/shared/dashboard/judging/judging.dart';
 import 'package:tms/views/shared/dashboard/matches/matches.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
-import 'package:tms/views/admin/dashboard/teams/teams.dart';
+import 'package:tms/views/shared/dashboard/teams/teams.dart';
 import 'package:tms/views/admin/dashboard/users/users.dart';
 import 'package:tms/views/shared/dashboard/side_menu_tile.dart';
 
@@ -56,6 +56,11 @@ class SideMenu extends StatelessWidget {
             title: 'Teams',
             svgSrc: 'assets/icons/teams.svg',
             press: () => _handleViewSwitch(const Teams(), context),
+          ),
+          DrawerListTile(
+            title: 'Team Data',
+            svgSrc: 'assets/icons/menu_tran.svg',
+            press: () => {},
           ),
           // DrawerListTile(
           //   title: 'Documents',

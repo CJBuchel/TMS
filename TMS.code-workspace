@@ -14,6 +14,7 @@
     }
   ],
   "settings": {
-    "rust-analyzer.showUnlinkedFileNotification": false
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "svg.preview.background": "transparent"
   }
 }

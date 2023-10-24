@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/network.dart';
@@ -219,7 +218,6 @@ class _OnTableAddState extends State<OnTableAdd> with AutoUnsubScribeMixin, Loca
 
   Future<int> sendUpdate() async {
     int statusCode = HttpStatus.ok;
-    Logger().i("sending update: $_onTable, $_selectedMatch");
     if (_onTable != null && _selectedMatch != null) {
       // update on table
       GameMatch updatedMatch = _selectedMatch!;

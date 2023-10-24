@@ -30,14 +30,14 @@ class MatchSideMenu extends StatelessWidget {
             ),
           ),
           DrawerListTile(
+            title: 'Match Control',
+            svgSrc: 'assets/icons/shuffle.svg',
+            press: () => _handleViewSwitch(const MatchControlHandler(), context),
+          ),
+          DrawerListTile(
             title: 'Match Edit',
             svgSrc: 'assets/icons/table.svg',
             press: () => _handleViewSwitch(const Matches(), context),
-          ),
-          DrawerListTile(
-            title: 'Matches Control',
-            svgSrc: 'assets/icons/shuffle.svg',
-            press: () => _handleViewSwitch(const MatchControlHandler(), context),
           ),
         ],
       ),

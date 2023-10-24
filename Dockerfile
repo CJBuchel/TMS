@@ -10,8 +10,6 @@ COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
 COPY ./client/build/web ./tms_web
 RUN chmod -R 755 tms_web
-RUN ls
-RUN ls ./tms_web
 
 # Setup entrypoint
 COPY ./docker/docker-start.sh .

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/delete_team_button.dart';
+import 'package:tms/views/shared/dashboard/teams/team_editor/delete_team_button.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class TeamGeneralEdit extends StatefulWidget {

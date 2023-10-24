@@ -3,7 +3,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/sorter_util.dart';
-import 'package:tms/views/admin/dashboard/teams/team_select/team_select_table.dart';
+import 'package:tms/views/shared/dashboard/teams/team_select/team_select_table.dart';
 
 class TeamSelect extends StatefulWidget {
   final ValueNotifier<List<Team>> teams;

@@ -1,7 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/judging/pods/pod_score_submitted_checkbox.dart';
+import 'package:tms/views/shared/dashboard/judging/pods/pod_score_submitted_checkbox.dart';
 import 'package:tms/views/shared/dropdowns/drop_down_pod.dart';
 import 'package:tms/views/shared/dropdowns/drop_down_team.dart';
 

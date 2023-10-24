@@ -32,7 +32,7 @@
   <!-- Styling for loading indicator -->
   <style>
   @import url(https://fonts.googleapis.com/css?family=Quattrocento+Sans);
-  .loading {
+  /* .loading {
     position: flex;
     top: 0;
     left: 0;
@@ -94,7 +94,7 @@
     100% {
       filter: blur(2px);
     }
-  }
+  } */
 
   </style>
 
@@ -102,7 +102,7 @@
 
 <body>
   <!-- Loading Indicator -->
-  <div class="loading">
+  <!-- <div class="loading">
     <div class="loading-text">
       <span class="loading-text-words">L</span>
       <span class="loading-text-words">O</span>
@@ -112,7 +112,7 @@
       <span class="loading-text-words">N</span>
       <span class="loading-text-words">G</span>
     </div>
-  </div>
+  </div> -->
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
@@ -129,7 +129,7 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = "//cdnjs.cloudflare.com/ajax/libs/pdf.js/2.4.456/pdf.worker.min.js";
   </script>
   <!-- Removes the loading indicator after 10 seconds -->
-  <script>
+  <!-- <script>
     window.onload = function () {
       setTimeout(function () {
         var loadingIndicator = document.getElementById("loading_container");
@@ -138,7 +138,7 @@
         }
       }, 10000)
     }
-  </script>
+  </script> -->
 </body>
 
 </html>

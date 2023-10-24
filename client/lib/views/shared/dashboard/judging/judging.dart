@@ -5,8 +5,8 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/judging_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/admin/dashboard/judging/judging_edit_table.dart';
-import 'package:tms/views/admin/dashboard/judging/judging_info.dart';
+import 'package:tms/views/shared/dashboard/judging/judging_edit_table.dart';
+import 'package:tms/views/shared/dashboard/judging/judging_info.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 import 'package:tms/utils/sorter_util.dart';
 

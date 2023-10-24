@@ -51,7 +51,7 @@ class JudgingInfo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Judging TTL: ",
+                    "Session TTL: ",
                     style: TextStyle(fontSize: fontSize),
                   ),
                   JudgingTTLClock(sessions: s, live: true, fontSize: fontSize, showOnlyClock: true),

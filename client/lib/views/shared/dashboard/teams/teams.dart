@@ -6,8 +6,8 @@ import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/sorter_util.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/team_editor.dart';
-import 'package:tms/views/admin/dashboard/teams/team_select/team_select.dart';
+import 'package:tms/views/shared/dashboard/teams/team_editor/team_editor.dart';
+import 'package:tms/views/shared/dashboard/teams/team_select/team_select.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class Teams extends StatefulWidget {

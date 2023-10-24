@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
 import 'package:tms/utils/score_tags.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/add_score.dart';
-import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/delete_score.dart';
+import 'package:tms/views/shared/dashboard/teams/team_editor/match_scores/add_score.dart';
+import 'package:tms/views/shared/dashboard/teams/team_editor/match_scores/delete_score.dart';
 import 'package:tms/views/shared/dashboard/match_scores/edit_score_button.dart';
 
 class MatchScores extends StatefulWidget {

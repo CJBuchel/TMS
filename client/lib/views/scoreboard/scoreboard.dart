@@ -117,9 +117,9 @@ class _ScoreboardState extends State<Scoreboard> with AutoUnsubScribeMixin, Loca
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 1), () {
-      setData();
-    });
+    // Future.delayed(const Duration(seconds: 1), () {
+    //   setData();
+    // });
 
     onEventUpdate((event) async => setEvent(event));
     onTeamsUpdate((teams) async => setTeams(teams));

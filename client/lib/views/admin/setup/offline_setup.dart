@@ -15,6 +15,7 @@ import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/setup/parse_schedule.dart';
 import 'package:tms/views/shared/list_util.dart';
+import 'package:tms/views/shared/network_error_popup.dart';
 import 'package:tuple/tuple.dart';
 
 class OfflineSetup extends StatefulWidget {
@@ -49,6 +50,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
           title: const Row(
             children: [
               Icon(Icons.warning, color: Colors.red),
+              SizedBox(width: 10),
               Text(
                 "Confirm Purge",
                 style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
@@ -86,6 +88,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
           title: Row(
             children: [
               Icon(Icons.warning, color: Colors.orange),
+              SizedBox(width: 10),
               Text(
                 "Error Parsing Schedule",
                 style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold),
@@ -132,15 +135,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
 
     setupEventRequest(request).then((res) {
       if (res != HttpStatus.ok) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text("Setup Error"),
-            content: SingleChildScrollView(
-              child: Text(res == HttpStatus.unauthorized ? "Invalid Authorization" : "Server Error"),
-            ),
-          ),
-        );
+        showNetworkError(res, context);
       } else {
         showDialog(
           context: context,
@@ -166,15 +161,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
     if (shouldPurge == true) {
       purgeEventRequest().then((res) {
         if (res != HttpStatus.ok) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Text("Purge Error"),
-              content: SingleChildScrollView(
-                child: Text(res == HttpStatus.unauthorized ? "Invalid Authorization" : "Server Error"),
-              ),
-            ),
-          );
+          showNetworkError(res, context);
         } else {
           showDialog(
             context: context,

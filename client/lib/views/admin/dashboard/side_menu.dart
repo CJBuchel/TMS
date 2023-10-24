@@ -55,7 +55,7 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: 'Teams',
             svgSrc: 'assets/icons/teams.svg',
-            press: () => _handleViewSwitch(Teams(), context),
+            press: () => _handleViewSwitch(const Teams(), context),
           ),
           // DrawerListTile(
           //   title: 'Documents',

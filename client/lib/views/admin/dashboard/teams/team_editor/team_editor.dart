@@ -1,6 +1,5 @@
 import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/info_banner.dart';
 import 'package:tms/views/admin/dashboard/teams/team_editor/match_scores/match_scores.dart';

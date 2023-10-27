@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/referee_scoring/table_setup.dart';
 import 'package:tms/views/selector/admin_screens.dart';
 import 'package:tms/views/selector/judging_screens.dart';
 import 'package:tms/views/selector/public_screens.dart';
 import 'package:tms/views/selector/referee_screens.dart';
-import 'package:tms/views/selector/screen_card.dart';
-import 'package:tms/utils/permissions_utils.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
 class ScreenSelector extends StatefulWidget {

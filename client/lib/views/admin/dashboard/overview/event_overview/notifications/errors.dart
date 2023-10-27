@@ -121,6 +121,7 @@ class ErrorNotifications extends StatelessWidget {
         margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
         decoration: BoxDecoration(
           color: secondaryCardColor,
+          border: Border.all(color: Colors.red),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),
@@ -150,8 +151,7 @@ class ErrorNotifications extends StatelessWidget {
             ),
 
             // warnings
-            SizedBox(
-              height: constraints.maxHeight - 60, // margin + header
+            Expanded(
               child: _errors(),
             ),
           ],

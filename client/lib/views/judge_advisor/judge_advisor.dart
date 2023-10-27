@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/judge_advisor/ja_handler.dart';
 import 'package:tms/views/judge_advisor/side_menu.dart';
+import 'package:tms/views/shared/dashboard/team_data/team_data.dart';
 import 'package:tms/views/shared/error_handlers.dart';
 import 'package:tms/views/shared/tool_bar.dart';
 
@@ -26,7 +27,8 @@ class _JudgeAdvisorState extends State<JudgeAdvisor> {
   @override
   void initState() {
     super.initState();
-    _view = const JAHandler();
+    // _view = const JAHandler(); // default view
+    _view = const TeamData();
   }
 
   Widget? _displayView() {

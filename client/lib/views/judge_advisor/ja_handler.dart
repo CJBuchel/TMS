@@ -23,14 +23,7 @@ class _JAHandlerState extends State<JAHandler> with AutoUnsubScribeMixin, LocalD
   }
 
   set _setTeams(List<Team> teams) {
-    teams = sortTeamsByNumber(teams);
-    if (_teams.value.length != teams.length) {
-      setState(() {
-        _teams.value = teams;
-      });
-    } else {
-      _teams.value = teams;
-    }
+    _teams.value = teams;
   }
 
   set _setSessions(List<JudgingSession> sessions) {
@@ -40,28 +33,20 @@ class _JAHandlerState extends State<JAHandler> with AutoUnsubScribeMixin, LocalD
         _sessions.value = sessions;
       });
     } else {
-      // check if any of the sessions are complete
-      bool changedCompletions = false;
-
+      // check if any of the sessions have changed
       for (JudgingSession session in sessions) {
-        for (JudgingSession current in _sessions.value) {
-          if (current.sessionNumber == session.sessionNumber) {
-            if (current.complete != session.complete) {
-              changedCompletions = true;
-              break;
+        for (JudgingSession currentSession in _sessions.value) {
+          if (session.sessionNumber == currentSession.sessionNumber) {
+            if (session.complete != currentSession.complete) {
+              setState(() {
+                _sessions.value = sessions;
+              });
             }
           }
         }
       }
 
-      // perform a set state change if any of the sessions are newly marked complete
-      if (changedCompletions) {
-        setState(() {
-          _sessions.value = sessions;
-        });
-      } else {
-        _sessions.value = sessions;
-      }
+      _sessions.value = sessions;
     }
   }
 

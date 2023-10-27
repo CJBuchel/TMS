@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/dashboard/match_scores/edit_score_dialog.dart';
-import 'package:tms/views/shared/network_error_popup.dart';
 
 class EditOverviewScore {
   final String teamNumber;
@@ -75,36 +74,5 @@ class EditOverviewScore {
         );
       },
     );
-    // display loading while waiting for the scoresheet
-    // getTeamRequest(teamNumber).then((res) {
-    //   if (res.item1 == HttpStatus.ok) {
-    //     if (res.item2 != null) {
-    //       Team t = res.item2!;
-    //       // find the index of the scoresheet
-    //       int index = t.gameScores.indexWhere((element) {
-    //         if (element.timeStamp == gameScore.timeStamp) {
-    //           if (element.scoresheet.round == gameScore.scoresheet.round) {
-    //             if (element.score == gameScore.score) {
-    //               return true;
-    //             }
-    //           }
-    //         }
-
-    //         return false;
-    //       });
-
-    //       if (index != -1) {
-    //         showDialog(
-    //           context: context,
-    //           builder: (context) {
-    //             return EditScoreDialog(team: t, index: index);
-    //           },
-    //         );
-    //       }
-    //     } else {
-    //       showNetworkError(res.item1, context);
-    //     }
-    //   }
-    // });
   }
 }

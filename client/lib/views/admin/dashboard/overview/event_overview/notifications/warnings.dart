@@ -114,9 +114,11 @@ class WarningNotifications extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
+        height: constraints.maxHeight,
         margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
         decoration: BoxDecoration(
           color: secondaryCardColor,
+          border: Border.all(color: Colors.orange),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),
@@ -146,8 +148,7 @@ class WarningNotifications extends StatelessWidget {
             ),
 
             // warnings
-            SizedBox(
-              height: constraints.maxHeight - 60, // margin + header
+            Expanded(
               child: _warnings(),
             ),
           ],

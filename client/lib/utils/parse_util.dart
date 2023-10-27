@@ -73,3 +73,23 @@ String parseServerTimestampToString(int timestamp) {
 int parseTimeOfDayToMinutes(TimeOfDay time) {
   return time.hour * 60 + time.minute;
 }
+
+String parseGP(String gp) {
+  switch (gp) {
+    case "2 - Developing":
+      return "2";
+
+    case "3 - Accomplished":
+      return "3";
+
+    case "4 - Exceeds":
+      return "4";
+
+    default:
+      return "2";
+  }
+}
+
+int parseGPtoInt(String gp) {
+  return int.tryParse(parseGP(gp)) ?? 2;
+}

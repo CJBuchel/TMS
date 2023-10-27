@@ -3,6 +3,7 @@ import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/dashboard/judging/judging.dart';
 import 'package:tms/views/shared/dashboard/matches/matches.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
+import 'package:tms/views/shared/dashboard/team_data/team_data.dart';
 import 'package:tms/views/shared/dashboard/teams/teams.dart';
 import 'package:tms/views/admin/dashboard/users/users.dart';
 import 'package:tms/views/shared/dashboard/side_menu_tile.dart';
@@ -60,28 +61,8 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: 'Team Data',
             svgSrc: 'assets/icons/menu_tran.svg',
-            press: () => {},
+            press: () => _handleViewSwitch(const TeamData(), context),
           ),
-          // DrawerListTile(
-          //   title: 'Documents',
-          //   svgSrc: 'assets/icons/menu_doc.svg',
-          //   press: () {},
-          // ),
-          // DrawerListTile(
-          //   title: 'Store',
-          //   svgSrc: 'assets/icons/menu_store.svg',
-          //   press: () {},
-          // ),
-          // DrawerListTile(
-          //   title: 'Notification',
-          //   svgSrc: 'assets/icons/menu_notification.svg',
-          //   press: () {},
-          // ),
-          // DrawerListTile(
-          //   title: 'Settings',
-          //   svgSrc: 'assets/icons/menu_setting.svg',
-          //   press: () {},
-          // ),
         ],
       ),
     );

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/mixins/teams_local_db.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
 import 'package:tms/views/admin/dashboard/overview/scoring/scoring_tile_widgets.dart';
-import 'package:tms/views/shared/dashboard/match_scores/edit_score_button.dart';
-import 'package:tms/views/shared/dashboard/match_scores/edit_score_dialog.dart';
 
 class TeamScoreWidget {
   final String teamNumber;
@@ -189,6 +185,7 @@ class _ScoringOverviewState extends State<ScoringOverview> {
         margin: EdgeInsets.fromLTRB(margin, margin, margin, 0),
         decoration: BoxDecoration(
           color: secondaryCardColor,
+          border: Border.all(color: Colors.green),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),
@@ -206,8 +203,7 @@ class _ScoringOverviewState extends State<ScoringOverview> {
             ),
 
             // list
-            SizedBox(
-              height: constraints.maxHeight - 80,
+            Expanded(
               child: ListView.builder(
                 itemCount: _filteredScoreSheets.length,
                 itemBuilder: (context, index) {

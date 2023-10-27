@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   fast_rsa
+  file_saver
   syncfusion_pdfviewer_windows
   url_launcher_windows
 )

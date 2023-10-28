@@ -46,11 +46,11 @@ steps:
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
       provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
-      # workingDirectory: './client/ios'
+      workingDirectory: './client/ios'
 
-      # archivePath: './client/ios/Runner.xcarchive'
-      # exportPath: './client/ios/build'
-      # teamId: 'B2B876ZH94'
+      archivePath: 'client/ios/Runner.xcarchive'
+      exportPath: 'client/ios/build'
+      teamId: 'B2B876ZH94'
       args: '-verbose'
 
   - task: CopyFiles@2

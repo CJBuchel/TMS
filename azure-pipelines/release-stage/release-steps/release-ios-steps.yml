@@ -11,6 +11,6 @@ steps:
   - task: AppStoreRelease@1
     inputs:
       serviceEndpoint: 'App Store Connect'
-      releaseTrack: 'Production'
+      releaseTrack: 'TestFlight'
       appType: 'iOS'
-      ipaPath: '$(Pipeline.Workspace)/client-ios/**/*.ipa'
+      ipaPath: '$(Pipeline.Workspace)/**/*.ipa'

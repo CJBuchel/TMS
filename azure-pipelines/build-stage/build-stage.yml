@@ -1,49 +1,18 @@
 
 jobs:
-- job: Build_AIO_Docker
+- job: Docker
   pool:
     vmImage: 'ubuntu-latest'
   steps:
     - template: ./build-steps/env-setup-steps.yml
     - template: ./build-steps/setup-rust-steps.yml
     - template: ./build-steps/setup-flutter-steps.yml
+    - template: ./build-steps/build-docker-steps.yml
 
-    - task: Cargo@1
-      displayName: 'Build Rust Server'
-      inputs:
-        cargoCommand: 'build --target x86_64-unknown-linux-musl --release'
-        cargoWorkingDir: './server'
-        verbose: true
-    
-    - task: FlutterBuild@0
-      displayName: 'Build Flutter Client for Web'
-      inputs:
-        target: 'web'
-        projectDirectory: './client'
-
-    #  Build the docker image
-    - task: Docker@2
-      displayName: 'Build Docker Image'
-      inputs:
-        command: build
-        Dockerfile: $(dockerfilePath)
-        repository: $(dockerRepository)
-        tags: latest
-
-    # list the images
-    - script: docker images
-      displayName: 'List Docker Images'
-    
-    # save the image to the artifact staging directory
-    - script: docker save -o $(Build.ArtifactStagingDirectory)/docker_image.tar $(dockerRepository):latest
-      displayName: 'Save Docker Image as Tarball'
-
-    - script: ls -la $(Build.ArtifactStagingDirectory)
-      displayName: 'List Staging Directory'
-
-    # publish the artifact
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Artifact: docker_image'
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/docker_image.tar'
-        artifact: 'docker_image'
+- job: IOS
+  pool:
+    vmImage: 'macOs-12'
+  steps:
+    - template: ./build-steps/env-setup-steps.yml
+    - template: ./build-steps/setup-flutter-steps.yml
+    - template: ./build-steps/build-ios-steps.yml

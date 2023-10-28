@@ -1,0 +1,16 @@
+
+steps:
+  # download the artifact
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download IPA Artifact'
+    inputs:
+      artifact: 'client-ios'
+      targetPath: '$(Pipeline.Workspace)/client-ios'
+
+  # release to the appstore
+  - task: AppStoreRelease@1
+    inputs:
+      serviceEndpoint: 'App Store Connect'
+      releaseTrack: 'TestFlight'
+      appType: 'iOS'
+      ipaPath: '$(Pipeline.Workspace)/client-ios/**/*.ipa'

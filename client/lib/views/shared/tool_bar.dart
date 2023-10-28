@@ -378,12 +378,19 @@ class _TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateM
     }
   }
 
+  void _pop() {
+    if (Navigator.canPop(context) && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  }
+
   Widget leading() {
-    if (Navigator.canPop(context)) {
-      return IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: widget.onBackButtonPressed ?? () => Navigator.pop(context),
-      );
+    // get current route
+    // var route = ModalRoute.of(context)?.settings.name;
+
+    // check if the button should be displayed
+    if (Navigator.canPop(context) && Navigator.of(context).canPop()) {
+      return IconButton(icon: const Icon(Icons.arrow_back), onPressed: widget.onBackButtonPressed ?? () => _pop());
     } else {
       return const SizedBox.shrink();
     }

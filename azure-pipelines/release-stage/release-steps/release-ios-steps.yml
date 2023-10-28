@@ -30,3 +30,4 @@ steps:
       appType: 'iOS'
       shouldSubmitForReview: true
       shouldAutoRelease: true
+      ipaPath: '$(Pipeline.Workspace)/**/*.ipa'

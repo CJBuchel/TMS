@@ -31,12 +31,15 @@ jobs:
         tags: |
           $(version)
           latest
+    
+    # save the image to the artifact staging directory
+    - script: docker save -o $(Build.ArtifactStagingDirectory)/docker_image.tar $(dockerRepository):$(version)
+      displayName: 'Save Docker Image as Tarball'
 
-    # - task: DockerCompose@0
-    #   inputs:
-    #     containerregistrytype: 'Container Registry'
-    #     dockerRegistryEndpoint: null
-    #     # dockerRegistryEndpoint: 'CJBuchel-Dockerhub1'
-    #     dockerComposeFile: '**/docker-compose.yml'
-    #     action: 'Run a Docker Compose command'
-    #     dockerComposeCommand: 'build'
+    # publish the artifact
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifact: docker_image'
+      inputs:
+        PathtoPublish: $(Build.ArtifactStagingDirectory)/docker_image.tar
+        ArtifactName: docker_image
+        publishLocation: container

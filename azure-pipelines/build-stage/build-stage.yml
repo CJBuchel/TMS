@@ -28,18 +28,22 @@ jobs:
         command: build
         Dockerfile: $(dockerfilePath)
         repository: $(dockerRepository)
-        tags: |
-          $(version)
-          latest
+        tags: latest
+
+    # list the images
+    - script: docker images
+      displayName: 'List Docker Images'
     
     # save the image to the artifact staging directory
-    - script: docker save -o $(Build.ArtifactStagingDirectory)/docker_image.tar $(dockerRepository):$(version)
+    - script: docker save -o $(Build.ArtifactStagingDirectory)/docker_image.tar $(dockerRepository):latest
       displayName: 'Save Docker Image as Tarball'
+
+    - script: ls -la $(Build.ArtifactStagingDirectory)
+      displayName: 'List Staging Directory'
 
     # publish the artifact
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Artifact: docker_image'
       inputs:
-        PathtoPublish: $(Build.ArtifactStagingDirectory)/docker_image.tar
-        ArtifactName: docker_image
-        publishLocation: container
+        targetPath: '$(Build.ArtifactStagingDirectory)/docker_image.tar'
+        artifact: 'docker_image'

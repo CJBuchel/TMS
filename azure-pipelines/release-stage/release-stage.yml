@@ -8,8 +8,8 @@ jobs:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Pipeline Artifact'
       inputs:
+        targetPath: '$(Pipeline.Workspace)/docker_image'
         artifact: 'docker_image'
-        path: '$(Pipeline.Workspace)'
     
     # Load the Docker image from the tarball
     - script: docker load -i $(Pipeline.Workspace)/dockerImageArtifact/docker_image.tar

@@ -27,6 +27,7 @@ jobs:
       inputs:
         command: build
         Dockerfile: $(dockerfilePath)
+        repository: $(dockerRepository)
         tags: |
           $(version)
           latest

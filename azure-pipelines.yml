@@ -17,7 +17,7 @@ variables:
 
   # docker variables
 - name: dockerRepository
-  value: 'tms'
+  value: 'cjbuchel/tms'
 - name: dockerfilePath
   value: '**/Dockerfile'
 - name: dockerRegistryServiceConnection

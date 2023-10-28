@@ -15,7 +15,6 @@ jobs:
     inputs:
       command: push
       repository: $(dockerRepository)
-      Dockerfile: $(dockerfilePath)
       containerRegistry: $(dockerRegistryServiceConnection)
       tags: |
         $(version)

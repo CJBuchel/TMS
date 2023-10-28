@@ -11,7 +11,7 @@ resources:
 
 variables: 
 - group: apple-variables
-- template: './azure/vars.yml'
+- template: './azure-pipelines/vars.yml'
 - name: isPublishable
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
 
@@ -19,4 +19,4 @@ variables:
 stages:
 - stage: Build
   jobs:
-  - template: './azure/build-stage.yml'
+  - template: './azure-pipelines/build-stage.yml'

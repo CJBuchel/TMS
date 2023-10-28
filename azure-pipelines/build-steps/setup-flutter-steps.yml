@@ -24,11 +24,11 @@ steps:
   # perform the doctor check
   - task: FlutterCommand@0
     inputs:
-      projectDirectory: './tms'
+      projectDirectory: './client'
       arguments: 'doctor -v'
 
   # get the flutter dependencies
   - task: FlutterCommand@0
     inputs:
-      projectDirectory: './tms'
+      projectDirectory: './client'
       arguments: 'pub get'

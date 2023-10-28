@@ -56,7 +56,8 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_launcher_icons: ^0.13.1
 
-flutter_icons:
+# run -> `flutter pub run flutter_launcher_icons` to generate icons
+flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/logos/TMS_LOGO_ICON_SQUARE.png"

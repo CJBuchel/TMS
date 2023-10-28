@@ -15,6 +15,13 @@ steps:
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
 
+  - task: Cargo@1
+    displayName: 'Build Rust Server (Debug) used for env generator'
+    inputs:
+      cargoCommand: 'build'
+      cargoWorkingDir: './server'
+      verbose: true
+
   # Build the flutter app
   - task: FlutterBuild@0
     displayName: "Build Flutter App for IOS"

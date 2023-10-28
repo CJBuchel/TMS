@@ -2,12 +2,14 @@
 steps:
   # install npm for flutter prep
   - task: Npm@1
+    displayName: 'Install npm for client'
     inputs:
       command: 'install'
       workingDir: './client'
 
   # generate client side structures from server
   - task: Npm@1
+    displayName: 'Generate Client Side Network Structures'
     inputs:
       command: 'custom'
       workingDir: './client'
@@ -15,6 +17,7 @@ steps:
 
   # install flutter
   - task: FlutterInstall@0
+    displayName: 'Install Flutter'
     inputs:
       mode: 'auto'
       channel: 'stable'
@@ -23,12 +26,14 @@ steps:
 
   # perform the doctor check
   - task: FlutterCommand@0
+    displayName: 'Check Flutter Client'
     inputs:
       projectDirectory: './client'
       arguments: 'doctor -v'
 
   # get the flutter dependencies
   - task: FlutterCommand@0
+    displayName: 'Get Dependencies for Flutter Client'
     inputs:
       projectDirectory: './client'
       arguments: 'pub get'

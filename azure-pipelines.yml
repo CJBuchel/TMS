@@ -14,9 +14,19 @@ variables:
 - template: './azure-pipelines/vars.yml'
 - name: isPublishable
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
-
+# docker variables
+- name: dockerRepository
+  value: 'cjbuchel/tms'
+- name: dockerfilePath
+  value: '**/Dockerfile'
 
 stages:
 - stage: Build
   jobs:
-  - template: './azure-pipelines/build-stage.yml'
+  - template: './azure-pipelines/build-stage/build-stage.yml'
+
+- stage: Release
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['isPublishable'], true))
+  jobs:
+  - template: './azure-pipelines/release-stage/release-stage.yml'

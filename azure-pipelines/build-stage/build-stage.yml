@@ -1,0 +1,41 @@
+
+jobs:
+- job: Build_AIO_Docker
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - template: ./build-steps/env-setup-steps.yml
+    - template: ./build-steps/setup-rust-steps.yml
+    - template: ./build-steps/setup-flutter-steps.yml
+
+    - task: Cargo@1
+      displayName: 'Build Rust Server'
+      inputs:
+        cargoCommand: 'build --target x86_64-unknown-linux-musl --release'
+        cargoWorkingDir: './server'
+        verbose: true
+    
+    - task: FlutterBuild@0
+      displayName: 'Build Flutter Client for Web'
+      inputs:
+        target: 'web'
+        projectDirectory: './client'
+
+    #  Build the docker image
+    - task: Docker@2
+      displayName: 'Build Docker Image'
+      inputs:
+        command: build
+        Dockerfile: $(dockerfilePath)
+        tags: |
+          $(version)
+          latest
+
+    # - task: DockerCompose@0
+    #   inputs:
+    #     containerregistrytype: 'Container Registry'
+    #     dockerRegistryEndpoint: null
+    #     # dockerRegistryEndpoint: 'CJBuchel-Dockerhub1'
+    #     dockerComposeFile: '**/docker-compose.yml'
+    #     action: 'Run a Docker Compose command'
+    #     dockerComposeCommand: 'build'

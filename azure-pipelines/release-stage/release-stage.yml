@@ -1,0 +1,22 @@
+
+jobs:
+- job: Release_AIO_Docker
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: Docker@2
+    displayName: 'Login to Docker Hub'
+    inputs:
+      command: login
+      containerRegistry: $(dockerRegistryServiceConnection)
+
+  - task: Docker@2
+    displayName: 'Push Image to Docker Hub'
+    inputs:
+      command: push
+      repository: $(dockerRepository)
+      Dockerfile: $(dockerfilePath)
+      containerRegistry: $(dockerRegistryServiceConnection)
+      tags: |
+        $(version)
+        latest

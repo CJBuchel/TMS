@@ -37,3 +37,10 @@ steps:
     inputs:
       projectDirectory: './client'
       arguments: 'pub get'
+
+  # generate icons for platforms
+  - task: FlutterCommand@0
+    displayName: 'Generate Icons for Flutter Client'
+    inputs:
+      projectDirectory: './client'
+      arguments: 'flutter pub run flutter_launcher_icons'

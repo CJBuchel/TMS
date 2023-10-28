@@ -5,7 +5,7 @@ jobs:
     vmImage: 'ubuntu-latest'
   steps:
     - template: ./build-steps/env-setup-steps.yml
-    # - template: ./build-steps/setup-rust-steps.yml
+    - template: ./build-steps/setup-rust-steps.yml
     - template: ./build-steps/setup-flutter-steps.yml
 
     - task: Cargo@1

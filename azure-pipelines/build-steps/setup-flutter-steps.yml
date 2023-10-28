@@ -19,7 +19,7 @@ steps:
       mode: 'auto'
       channel: 'stable'
       version: 'custom'
-      customVersion: '3.7.9'
+      customVersion: '3.13.4'
 
   # perform the doctor check
   - task: FlutterCommand@0

@@ -1,0 +1,34 @@
+
+steps:
+  # install npm for flutter prep
+  - task: Npm@1
+    inputs:
+      command: 'install'
+      workingDir: './client'
+
+  # generate client side structures from server
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      workingDir: './client'
+      customCommand: 'run prepare'
+
+  # install flutter
+  - task: FlutterInstall@0
+    inputs:
+      mode: 'auto'
+      channel: 'stable'
+      version: 'custom'
+      customVersion: '3.14.4'
+
+  # perform the doctor check
+  - task: FlutterCommand@0
+    inputs:
+      projectDirectory: './tms'
+      arguments: 'doctor -v'
+
+  # get the flutter dependencies
+  - task: FlutterCommand@0
+    inputs:
+      projectDirectory: './tms'
+      arguments: 'pub get'

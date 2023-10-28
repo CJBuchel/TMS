@@ -12,15 +12,15 @@ services:
       - '2122:2122'
       - '5353:5353'
 
-  # tms-version:
-  #   container_name: tms-v
-  #   image: 'cjbuchel/tms:${DOCKER_TAG}'
-  #   restart: always
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - '8080:8080'
-  #     - '2121:2121'
-  #     - '2122:2122'
-  #     - '5353:5353'
+  tms-version:
+    container_name: tms-v
+    image: 'cjbuchel/tms:${DOCKER_TAG}'
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+      - '2121:2121'
+      - '2122:2122'
+      - '5353:5353'

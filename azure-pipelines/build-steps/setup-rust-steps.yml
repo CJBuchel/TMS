@@ -1,0 +1,22 @@
+steps:
+  # install musl and openssl for linux
+  - script: |
+        sudo apt-get install -qq -y musl-tools musl-dev openssl
+    condition: eq( variables['Agent.OS'], 'Linux' )
+
+  # update openssl certificates for linux
+  - script: |
+        sudo update-ca-certificates
+    condition: eq( variables['Agent.OS'], 'Linux' )
+
+  # # Get nightly releases (needed for rust rocket version (v0.5.0-rc.3))
+  # - task: Rustup@1
+  #   inputs:
+  #     rustupCommand: 'default nightly'
+  #     verbose: false
+
+  # Rust install
+  - task: Rustup@1
+    inputs:
+      rustupCommand: 'target install x86_64-unknown-linux-musl'
+      verbose: false

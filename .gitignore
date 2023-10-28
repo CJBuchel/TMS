@@ -1,3 +1,7 @@
+# azure pipelines
+!azure-pipelines.yml
+!azure-pipelines/**
+
 # Keys
 *.key
 

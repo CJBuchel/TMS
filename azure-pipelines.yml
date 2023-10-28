@@ -20,15 +20,3 @@ stages:
 - stage: Build
   jobs:
   - template: './azure/build-stage.yml'
-
-- stage: Release
-  dependsOn: Build
-  condition: and(succeeded('Build'), eq(variables.isPublishable, 'true'))
-  jobs:
-  - job: PublishReleases
-    pool:
-      vmImage: 'macOs-latest'
-    steps:
-      - template: './azure/release.yml'
-        parameters:
-          version: ${{variables.version}}

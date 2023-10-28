@@ -1,0 +1,20 @@
+{
+	"folders": [
+    {
+      "name": "server",
+      "path": "server"
+    },
+    {
+      "name": "client",
+      "path": "client"
+    },
+    {
+      "name": "TMS",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "svg.preview.background": "transparent"
+  }
+}

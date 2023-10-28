@@ -43,4 +43,4 @@ steps:
     displayName: 'Generate Icons for Flutter Client'
     inputs:
       projectDirectory: './client'
-      arguments: 'flutter pub run flutter_launcher_icons'
+      arguments: 'pub run flutter_launcher_icons'

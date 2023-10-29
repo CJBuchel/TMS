@@ -41,7 +41,7 @@ steps:
   - task: Xcode@5
     displayName: "Code sign ipa for Distribution"
     inputs:
-      args: '-keychain temp -verbose'
+      args: '-verbose'
       actions: 'build' # build
       xcWorkspacePath: './client/ios/Runner.xcworkspace'
       scheme: 'Runner'

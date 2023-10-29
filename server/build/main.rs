@@ -40,7 +40,7 @@ fn main() -> anyhow::Result<()> {
   generate_env(&env_rust_dir.clone().join("../client").into_os_string()); // generate flutter env
 
   // Generate azure env yaml
-  generate_env_yaml(&env_rust_dir.clone().join("../azure").into_os_string());
+  generate_env_yaml(&env_rust_dir.clone().join("../azure-pipelines").into_os_string());
 
   // Generate Schema file
   let schema_dir = get_project_root().unwrap();

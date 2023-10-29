@@ -8,10 +8,10 @@
 	<true/>
 	<key>UIFileSharingEnabled</key>
 	<true/>
-	<key>NSPhotoLibraryAddUsageDescription</key>
+	<!-- <key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Describe why your app uses photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Describe why your app uses photo library</string>
+	<string>Describe why your app uses photo library</string> -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

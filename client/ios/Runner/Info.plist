@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
-	<key>UIFileSharingEnabled</key>
-	<true/>
+  <false/>
+  <key>LSSupportsOpeningDocumentsInPlace</key>
+  <true/>
+  <key>UIFileSharingEnabled</key>
+  <true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Describe why your app uses photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>

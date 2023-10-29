@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# run with --no-server or --no-client to skip that startup in docker
+# run with --no-server or --no-client to skip the startup in docker
 
 # rustup target add x86_64-unknown-linux-musl
 # sudo apt update && apt install -y musl-tools musl-dev openssl

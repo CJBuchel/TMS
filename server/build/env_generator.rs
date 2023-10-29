@@ -1,5 +1,5 @@
 use std::ffi::OsString;
-use std::fs::{File};
+use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path::Path;
 

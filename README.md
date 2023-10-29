@@ -31,7 +31,7 @@
 - Both applications can be installed separately in their own native platforms.
 - The server can be run in [Debian linux](https://ubuntu.com/), [Windows](https://www.microsoft.com/en-au/windows?r=1) ^8 and [MacOs](https://support.apple.com/en-au/macos)
 - The client is built in flutter and officially supports [iOS](https://support.apple.com/downloads/ios), [Android](https://www.android.com/), [Debian linux](https://ubuntu.com/), [Windows](https://www.microsoft.com/en-au/windows?r=1) ^8 and [MacOs](https://support.apple.com/en-au/macos)
-- The project is also bundled into docker image which contains the linux variant of the server & web compiled variant of the client.
+- The project is also bundled into a docker image which contains the linux variant of the server & web compiled variant of the client.
 
 ### Docker Install
 
@@ -45,7 +45,7 @@
 3. Running the image in a container
     - For an AIO (all in one) container run `docker run -d -it --network host -p 8080:8080 -p 2121:2121 -p 2122:2122 -p 5353:5353 --name tms cjbuchel/tms`
     - Breaking down the command
-      - The following command runs the container in the background using the `-d` flag
+      - The prior command runs the container in the background using the `-d` flag
       - The command also exposes the following ports `8080`, `2121`, `2122` & `5353`
         - `8080` is the Web Server port and is the port used when navigating to the web client. I.e `http://10.0.100.15:8080`. The port is not specialized and can be switched to another if desired. I.e `-p 8080:3000`
         - Ports `2121` & `2122` are for the server connections and shouldn't be changed, `2121` is for http and mainline data requests, and `2122` is for quick information bursts and pub sub updates (like the timer)

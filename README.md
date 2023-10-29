@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="./images/TMS_LOGO.png"/>
+  <img src="https://raw.githubusercontent.com/CJBuchel/TMS/master/images/TMS_LOGO.png"/>
 </p>
 
 ## Tournament Management System
 
 
-- FLL management for scoring, displaying and simplifying events. Built in Rust & Flutter, distributed in Docker, IOS, Android and Desktop applications
+- FLL management system for scoring, displaying and simplifying events. Built in Rust & Flutter, distributed in Docker, IOS, Android and Desktop applications
 
 [![Build Status](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_apis/build/status%2FCJBuchel.TMS?branchName=master)](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_build/latest?definitionId=24&branchName=master)
 ![Docker Pulls](https://img.shields.io/docker/pulls/cjbuchel/tms)
@@ -13,14 +13,14 @@
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cjbuchel/tms)
 
 <p align="center">
-  <img src="./images/prom1.png" width="400" style="margin-right: 10px"/>
-  <img src="./images/prom3.png" width="400"/>
+  <img src="https://raw.githubusercontent.com/CJBuchel/TMS/master/images/prom1.png" width="400" style="margin-right: 10px"/>
+  <img src="https://raw.githubusercontent.com/CJBuchel/TMS/master/images/prom3.png" width="400"/>
 </p>
 
 
 <p align="center">
-  <img src="./images/prom2.png" width="400" height="550" style="margin-right: 10px"/>
-  <img src="./images/prom4.png" width="400" height="550"/>
+  <img src="https://raw.githubusercontent.com/CJBuchel/TMS/master/images/prom2.png" width="400" height="550" style="margin-right: 10px"/>
+  <img src="https://raw.githubusercontent.com/CJBuchel/TMS/master/images/prom4.png" width="400" height="550"/>
 </p>
 
 

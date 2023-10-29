@@ -1,3 +1,6 @@
+# don't remove the generated .env file
+!.env
+
 # Miscellaneous
 *.class
 *.log

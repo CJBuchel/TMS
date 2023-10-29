@@ -43,7 +43,7 @@ steps:
     inputs:
       args: '-keychain temp -verbose'
       actions: 'build' # build
-      xcWorkspacePath: '*/**/Runner.xcworkspace'
+      xcWorkspacePath: './client/ios/Runner.xcworkspace'
       scheme: 'Runner'
       sdk: 'iphoneos'
       configuration: 'release'

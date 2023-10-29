@@ -1,0 +1,76 @@
+
+steps:
+  - task: InstallAppleCertificate@2
+    displayName: "Install Apple Certificate"
+    inputs:
+      certSecureFile: '$(p12_alias)'
+      certPwd: '$(cert_pass)'
+      keychain: 'temp'
+      deleteCert: true
+
+  - task: InstallAppleProvisioningProfile@1
+    displayName: "Install Provisioning Profile"
+    inputs:
+      provisioningProfileLocation: 'secureFiles'
+      provProfileSecureFile: '$(pp_alias)'
+      removeProfile: true
+
+  # - task: Cargo@1
+  #   displayName: 'Build Rust Server (Debug) used for env generator'
+  #   inputs:
+  #     cargoCommand: 'build'
+  #     cargoWorkingDir: './server'
+  #     verbose: true
+
+  - script: |
+      echo 'Deleting DerivedData...'
+      rm -rf ~/Library/Developer/Xcode/DerivedData
+    displayName: 'Delete any lingering DerivedData'
+
+  # Build the flutter app
+  - task: FlutterBuild@0
+    displayName: "Build Flutter App for IOS"
+    inputs:
+      target: 'ios'
+      projectDirectory: './client'
+      debugMode: false
+      profileMode: false
+      iosCodesign: false
+      extraArgs: '--release'
+
+  - task: Xcode@5
+    displayName: "Code sign ipa for Distribution"
+    inputs:
+      args: '-verbose'
+      actions: 'build' # build
+      xcWorkspacePath: './client/ios/Runner.xcworkspace'
+      scheme: 'Runner'
+      sdk: 'iphoneos'
+      configuration: 'release'
+      xcodeVersion: 'default'
+      packageApp: true
+      signingOption: 'manual'
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
+      workingDirectory: './client/ios'
+
+      # platform for xcode test
+      destinationPlatformOption: 'iOS'
+      destinationTypeOption: 'simulators'
+      destinationSimulators: 'iPhone 14'
+
+      # archivePath: 'client/ios/Runner.xcarchive'
+      # exportPath: 'client/ios/build'
+      teamId: 'B2B876ZH94'
+
+  - task: CopyFiles@2
+    inputs:
+      contents: '**/*.ipa'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: "Publish IPA Artifact"
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'client-ios'

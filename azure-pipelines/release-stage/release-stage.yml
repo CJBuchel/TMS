@@ -1,22 +1,13 @@
 
 jobs:
-- job: Release_AIO_Docker
+- job: Docker
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-  - task: Docker@2
-    displayName: 'Login to Docker Hub'
-    inputs:
-      command: login
-      containerRegistry: $(dockerRegistryServiceConnection)
+    - template: './release-steps/release-docker-steps.yml'
 
-  - task: Docker@2
-    displayName: 'Push Image to Docker Hub'
-    inputs:
-      command: push
-      repository: $(dockerRepository)
-      Dockerfile: $(dockerfilePath)
-      containerRegistry: $(dockerRegistryServiceConnection)
-      tags: |
-        $(version)
-        latest
+# - job: IOS
+#   pool:
+#     vmImage: 'macos-latest'
+#   steps:
+#     - template: './release-steps/release-ios-steps.yml'

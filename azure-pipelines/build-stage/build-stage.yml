@@ -14,6 +14,6 @@ jobs:
     vmImage: 'macOs-12'
   steps:
     - template: ./build-steps/env-setup-steps.yml
-    # - template: ./build-steps/setup-rust-steps.yml
+    - template: ./build-steps/setup-rust-steps.yml
     - template: ./build-steps/setup-flutter-steps.yml
     - template: ./build-steps/build-ios-steps.yml

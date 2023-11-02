@@ -17,3 +17,12 @@ jobs:
 #     # - template: ./build-steps/setup-rust-steps.yml
 #     - template: ./build-steps/setup-flutter-steps.yml
 #     - template: ./build-steps/build-ios-steps.yml
+
+
+- job: Android
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - template: ./build-steps/env-setup-steps.yml
+    - template: ./build-steps/setup-flutter-steps.yml
+    - template: ./build-steps/build-android-steps.yml

@@ -1,0 +1,22 @@
+
+steps:
+  - task: FlutterBuild@0
+    displayName: "Build Flutter App for Android"
+    inputs:
+      target: 'apk'
+      projectDirectory: './client'
+      debugMode: false
+      extraArgs: '--release'
+  
+  - task: CopyFiles@2
+    displayName: "Copy APK to Artifact Staging Directory"
+    inputs:
+      contents: '**/flutter-apk/**/*.apk'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: "Publish APK Artifact"
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/flutter-apk'
+      ArtifactName: 'client-apk'

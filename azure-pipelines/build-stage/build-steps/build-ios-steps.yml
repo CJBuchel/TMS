@@ -15,11 +15,6 @@ steps:
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
 
-  - script: |
-      echo 'Deleting DerivedData...'
-      rm -rf ~/Library/Developer/Xcode/DerivedData
-    displayName: 'Delete any lingering DerivedData'
-
   # Build the flutter app
   - task: FlutterBuild@0
     displayName: "Build Flutter App for IOS"
@@ -30,14 +25,6 @@ steps:
       profileMode: false
       iosCodesign: false
       extraArgs: '--release'
-
-  # uninstall and reinstall pods
-  - script: |
-      echo "uninstalling all cocoapods versions"
-      sudo gem uninstall cocoapods -ax
-      echo "installing cocoapods version latest"
-      sudo gem install cocoapods --pre
-    displayName: 'Uninstall and Reinstall Pods'
 
   # AIO build and sign
   # - task: Xcode@5
@@ -91,13 +78,10 @@ steps:
       configuration: 'release'
       xcodeVersion: 'default'
       signingOption: 'nosign'
-      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
-      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
 
       # export archive path
       exportOptions: 'specify'
       exportMethod: 'app-store'
-      teamId: 'B2B876ZH94'
       exportTeamId: 'B2B876ZH94'
       archivePath: 'client/ios/Runner.xcarchive'
 

@@ -19,4 +19,4 @@ steps:
     displayName: "Publish APK Artifact"
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'client-apk'
+      ArtifactName: 'client-android'

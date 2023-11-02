@@ -1,0 +1,26 @@
+steps:
+  # Download all the artifacts
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      downloadPath: '$(System.ArtifactsDirectory)'
+      buildType: 'current'
+      downloadType: 'all'
+
+  - task: GitHubRelease@1
+    inputs:
+      gitHubConnection: 'github.com_CJBuchel'
+      repositoryName: '$(Build.Repository.Name)'
+      action: 'create'
+      target: '$(Build.SourceVersion)'
+      tagSource: 'userSpecifiedTag'
+      tag: "$(version)"
+      title: '$(version) TMS Release'
+      isDraft: true # might change this
+      isPreRelease: false
+      changeLogCompareToRelease: 'lastFullRelease'
+      changeLogType: 'issueBased'
+      assets: |
+        $(System.ArtifactsDirectory)/**/*.zip
+        $(System.ArtifactsDirectory)/**/*.apk
+        $(System.ArtifactsDirectory)/**/*.ipa
+        $(System.ArtifactsDirectory)/**/*(tms_server|tms_server.exe)

@@ -1,0 +1,20 @@
+steps:
+  - task: Cargo@1
+    displayName: 'Build Rust Server'
+    inputs:
+      cargoCommand: 'build --target x86_64-unknown-linux-gnu --release'
+      cargoWorkingDir: './server'
+      verbose: true
+
+  - task: CopyFiles@2
+    displayName: 'Copy Server to Artifact Staging Directory'
+    inputs:
+      contents: '**/tms_server'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: server'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'server-linux'

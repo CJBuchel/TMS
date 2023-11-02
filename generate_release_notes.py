@@ -1,4 +1,5 @@
 import requests
+import argparse
 from datetime import datetime
 
 # Configuration
@@ -16,13 +17,20 @@ def get_items(url, params=None):
         url = response.links.get('next', {}).get('url')  # Get next page if available
     return items
 
-def get_latest_release_date():
-    """Get the date of the latest full release"""
+def get_latest_release():
+    """Get the latest full release data including tag name and publish date"""
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
     response = requests.get(url)
     response.raise_for_status()
     latest_release = response.json()
-    return datetime.strptime(latest_release['published_at'], '%Y-%m-%dT%H:%M:%SZ')
+    latest_release_date = datetime.strptime(latest_release['published_at'], '%Y-%m-%dT%H:%M:%SZ')
+    latest_release_tag = latest_release['tag_name']
+    return latest_release_date, latest_release_tag
+
+def generate_comparison_link(old_tag, new_tag):
+    """Generate a GitHub comparison link between two releases"""
+    return f"https://github.com/{repo_owner}/{repo_name}/compare/{old_tag}...{new_tag}"
+
 
 def generate_release_notes(issues, pull_requests, latest_release_date):
     """Generate markdown formatted release notes"""
@@ -39,8 +47,8 @@ def generate_release_notes(issues, pull_requests, latest_release_date):
     
     return release_notes
 
-def main():
-    latest_release_date = get_latest_release_date()
+def main(latest_tag):
+    latest_release_date, latest_release_tag = get_latest_release()
 
     params = {
         'state': 'closed',
@@ -61,10 +69,17 @@ def main():
 
     release_notes = generate_release_notes(issues, pull_requests, latest_release_date)
     
+    comparison_link = generate_comparison_link(latest_release_tag, latest_tag)
+    release_notes += f"\n## Full Changes\n[View the full changes between {latest_release_tag} and {latest_tag}]({comparison_link})\n"
+
     with open(release_notes_file, 'w') as file:
         file.write(release_notes)
     
     print(f"Release notes generated successfully and saved to {release_notes_file}.")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Generate release notes for a GitHub project.')
+    parser.add_argument('latest_tag', type=str, help='The tag for the current release')
+    args = parser.parse_args()
+    
+    main(args.latest_tag)

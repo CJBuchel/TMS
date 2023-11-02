@@ -7,7 +7,7 @@ steps:
       downloadType: 'all'
 
   - script: |
-      python generate_release_notes.py
+      python generate_release_notes.py $(version)
     displayName: 'Generate Release Notes'
 
   - task: GitHubRelease@1

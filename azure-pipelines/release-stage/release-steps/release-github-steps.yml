@@ -17,8 +17,11 @@ steps:
       title: '$(version) TMS Release'
       isDraft: true # might change this
       isPreRelease: false
+
+      # change logs
+      addChangeLog: true
       changeLogCompareToRelease: 'lastFullRelease'
-      changeLogType: 'issueBased'
+      changeLogType: 'commitBased' # 'commitBased' or 'issueBased'
       assets: |
         $(System.ArtifactsDirectory)/**/*.zip
         $(System.ArtifactsDirectory)/**/*.apk

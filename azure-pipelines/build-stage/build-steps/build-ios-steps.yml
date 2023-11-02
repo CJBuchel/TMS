@@ -38,6 +38,14 @@ steps:
       iosCodesign: false
       extraArgs: '--release'
 
+  # uninstall and reinstall pods
+  - script: |
+      echo "uninstalling all cocoapods versions"
+      sudo gem uninstall cocoapods -ax
+      echo "installing cocoapods version latest"
+      sudo gem install cocoapods --pre
+    displayName: 'Uninstall and Reinstall Pods'
+
   - task: Xcode@5
     displayName: "Code sign ipa for Distribution"
     inputs:

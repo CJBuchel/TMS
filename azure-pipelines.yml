@@ -24,12 +24,12 @@ variables:
   value: 'CJBuchel-Dockerhub1'
 
 stages:
-# - stage: Build
-#   jobs:
-#   - template: './azure-pipelines/build-stage/build-stage.yml'
+- stage: Build
+  jobs:
+  - template: './azure-pipelines/build-stage/build-stage.yml'
 
 - stage: Release
-  # dependsOn: Build
+  dependsOn: Build
   condition: and(succeeded(), eq(variables['isPublishable'], true))
   jobs:
   - template: './azure-pipelines/release-stage/release-stage.yml'

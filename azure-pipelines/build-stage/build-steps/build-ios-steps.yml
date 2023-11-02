@@ -64,6 +64,7 @@ steps:
       teamId: 'B2B876ZH94'
 
   - task: CopyFiles@2
+    displayName: "Copy IPA to Artifact Staging Directory"
     inputs:
       contents: '**/*.ipa'
       targetFolder: $(Build.ArtifactStagingDirectory)

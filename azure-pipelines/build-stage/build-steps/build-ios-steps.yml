@@ -93,7 +93,10 @@ steps:
       signingOption: 'nosign'
 
       # export archive path
+      exportOptions: 'specify'
+      exportMethod: 'app-store'
       teamId: 'B2B876ZH94'
+      exportTeamId: 'B2B876ZH94'
       archivePath: 'client/ios/Runner.xcarchive'
 
   - script: |

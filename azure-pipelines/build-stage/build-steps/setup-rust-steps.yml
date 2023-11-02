@@ -33,6 +33,14 @@ steps:
       rustupCommand: 'target install x86_64-unknown-linux-gnu'
       verbose: false
 
+  # Rust install for macos target
+  - task: Rustup@1
+    displayName: 'Install Rust for macos'
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+    inputs:
+      rustupCommand: 'target install x86_64-apple-darwin'
+      verbose: false
+
   # Rust install for windows target
   - task: Rustup@1
     displayName: 'Install Rust for windows'
@@ -40,4 +48,3 @@ steps:
     inputs:
       rustupCommand: 'target install x86_64-pc-windows-msvc'
       verbose: false
-

@@ -15,13 +15,6 @@ steps:
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
 
-  # - task: Cargo@1
-  #   displayName: 'Build Rust Server (Debug) used for env generator'
-  #   inputs:
-  #     cargoCommand: 'build'
-  #     cargoWorkingDir: './server'
-  #     verbose: true
-
   - script: |
       echo 'Deleting DerivedData...'
       rm -rf ~/Library/Developer/Xcode/DerivedData
@@ -46,31 +39,97 @@ steps:
       sudo gem install cocoapods --pre
     displayName: 'Uninstall and Reinstall Pods'
 
+  # AIO build and sign
+  # - task: Xcode@5
+  #   displayName: "Build & Code sign IPA for Distribution"
+  #   inputs:
+  #     # general
+  #     args: '-verbose'
+  #     actions: 'archive' # build or archive
+  #     xcWorkspacePath: './client/ios/Runner.xcworkspace'
+  #     workingDirectory: './client/ios'
+      
+  #     # configuration
+  #     scheme: 'Runner'
+  #     sdk: 'iphoneos'
+  #     configuration: 'release'
+  #     xcodeVersion: 'default'
+
+  #     # code signing
+  #     packageApp: true
+  #     signingOption: 'manual'
+  #     signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+  #     provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
+
+  #     # platform for xcode test
+  #     destinationPlatformOption: 'iOS'
+  #     destinationTypeOption: 'simulators'
+  #     destinationSimulators: 'iPhone 14'
+
+  #     # exporting
+  #     # archivePath: 'client/ios/Runner.xcarchive'
+  #     # exportPath: 'client/ios/build'
+  #     exportOptions: 'specify'
+  #     exportMethod: 'app-store'
+  #     exportTeamId: 'B2B876ZH94'
+  #     teamId: 'B2B876ZH94'
+
+  # Generate the IPA
   - task: Xcode@5
-    displayName: "Build & Code sign IPA for Distribution"
+    displayName: "Build & Generate IPA for Distribution"
     inputs:
+      # general
       args: '-verbose'
       actions: 'archive' # build or archive
       xcWorkspacePath: './client/ios/Runner.xcworkspace'
+      workingDirectory: './client/ios'
+      
+      # configuration
       scheme: 'Runner'
       sdk: 'iphoneos'
       configuration: 'release'
       xcodeVersion: 'default'
-      packageApp: true
-      signingOption: 'manual'
-      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
-      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
-      workingDirectory: './client/ios'
 
-      # platform for xcode test
-      destinationPlatformOption: 'iOS'
-      destinationTypeOption: 'simulators'
-      destinationSimulators: 'iPhone 14'
+      # export archive path
+      archivePath: '$(Build.ArtifactStagingDirectory)/Runner.xcarchive'
 
-      # archivePath: 'client/ios/Runner.xcarchive'
-      # exportPath: 'client/ios/build'
-      exportMethod: 'app-store'
-      teamId: 'B2B876ZH94'
+  - script: |
+      # Define variables
+      ARCHIVE_PATH="$(Build.ArtifactStagingDirectory)/Runner.xcarchive"
+      EXPORT_PATH="$(Build.ArtifactStagingDirectory)/ExportedApp"
+      EXPORT_OPTIONS_PLIST="$(Build.ArtifactStagingDirectory)/exportOptions.plist"
+      SIGNING_IDENTITY="$(APPLE_CERTIFICATE_SIGNING_IDENTITY)"
+      PROVISIONING_PROFILE="$(APPLE_PROV_PROFILE_UUID)"
+
+      # Create the exportOptions.plist for signing
+      cat > $EXPORT_OPTIONS_PLIST <<EOF
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+          <key>method</key>
+          <string>app-store</string>
+          <key>teamID</key>
+          <string>B2B876ZH94</string>
+          <key>signingCertificate</key>
+          <string>$SIGNING_IDENTITY</string>
+          <key>provisioningProfiles</key>
+          <dict>
+              <key>a.loose.screw.tms</key>
+              <string>$PROVISIONING_PROFILE</string>
+          </dict>
+      </dict>
+      </plist>
+      EOF
+
+      # Export the IPA using the specified signing identity and provisioning profile
+      xcodebuild -exportArchive -archivePath "$ARCHIVE_PATH" -exportOptionsPlist "$EXPORT_OPTIONS_PLIST" -exportPath "$EXPORT_PATH"
+    displayName: 'Sign and Export IPA'
+    env:
+      APPLE_CERTIFICATE_SIGNING_IDENTITY: $(APPLE_CERTIFICATE_SIGNING_IDENTITY)
+      APPLE_PROV_PROFILE_UUID: $(APPLE_PROV_PROFILE_UUID)
+
+
 
   - task: CopyFiles@2
     displayName: "Copy IPA to Artifact Staging Directory"

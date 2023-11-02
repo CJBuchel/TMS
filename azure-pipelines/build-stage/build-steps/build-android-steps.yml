@@ -18,5 +18,5 @@ steps:
   - task: PublishPipelineArtifact@1
     displayName: "Publish APK Artifact"
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/flutter-apk'
+      targetPath: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'client-apk'

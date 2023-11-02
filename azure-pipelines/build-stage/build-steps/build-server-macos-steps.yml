@@ -13,10 +13,14 @@ steps:
       targetFolder: $(Build.ArtifactStagingDirectory)
       flattenFolders: true
 
-  - script: |
-      mv $(Build.ArtifactStagingDirectory)/tms_server $(Build.ArtifactStagingDirectory)/tms_server_macos
-    displayName: 'Rename tms_server to tms_server_macos'
-
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+      includeRootFolder: false
+      archiveType: 'tar'
+      tarCompression: 'gz'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms_server_macos.tar.gz'
+      replaceExistingArchive: true
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifact: server'

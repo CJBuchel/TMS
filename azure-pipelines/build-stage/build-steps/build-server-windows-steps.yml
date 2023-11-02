@@ -13,6 +13,14 @@ steps:
       targetFolder: $(Build.ArtifactStagingDirectory)
       flattenFolders: true
 
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms_server_windows.zip'
+      replaceExistingArchive: true
+
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifact: server'
     inputs:

@@ -6,6 +6,10 @@ steps:
       buildType: 'current'
       downloadType: 'all'
 
+  - script: |
+      python generate_release_notes.py
+    displayName: 'Generate Release Notes'
+
   - task: GitHubRelease@1
     inputs:
       gitHubConnection: 'github.com_CJBuchel'
@@ -19,9 +23,8 @@ steps:
       isPreRelease: false
 
       # change logs
-      addChangeLog: true
-      changeLogCompareToRelease: 'lastFullRelease'
-      changeLogType: 'issueBased' # 'commitBased' or 'issueBased'
+      addChangeLog: false
+      releaseNotesSource: 'RELEASE_NOTES.md'
       assets: |
         $(System.ArtifactsDirectory)/**/*.zip
         $(System.ArtifactsDirectory)/**/*.tar.gz

@@ -91,6 +91,8 @@ steps:
       configuration: 'release'
       xcodeVersion: 'default'
       signingOption: 'nosign'
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
 
       # export archive path
       exportOptions: 'specify'

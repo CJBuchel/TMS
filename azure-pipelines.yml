@@ -24,9 +24,9 @@ variables:
   value: 'CJBuchel-Dockerhub1'
 
 stages:
-- stage: Build
-  jobs:
-  - template: './azure-pipelines/build-stage/build-stage.yml'
+# - stage: Build
+#   jobs:
+#   - template: './azure-pipelines/build-stage/build-stage.yml'
 
 - stage: Release
   dependsOn: Build

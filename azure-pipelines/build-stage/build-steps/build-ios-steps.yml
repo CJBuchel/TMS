@@ -47,10 +47,10 @@ steps:
     displayName: 'Uninstall and Reinstall Pods'
 
   - task: Xcode@5
-    displayName: "Code sign ipa for Distribution"
+    displayName: "Build & Code sign IPA for Distribution"
     inputs:
       args: '-verbose'
-      actions: 'build' # build
+      actions: 'archive' # build or archive
       xcWorkspacePath: './client/ios/Runner.xcworkspace'
       scheme: 'Runner'
       sdk: 'iphoneos'
@@ -69,6 +69,7 @@ steps:
 
       # archivePath: 'client/ios/Runner.xcarchive'
       # exportPath: 'client/ios/build'
+      exportMethod: 'app-store'
       teamId: 'B2B876ZH94'
 
   - task: CopyFiles@2

@@ -33,11 +33,11 @@ steps:
 
 
   # perform the doctor check
-  - task: FlutterCommand@0
-    displayName: 'Check Flutter Client'
-    inputs:
-      projectDirectory: './client'
-      arguments: 'doctor -v'
+  # - task: FlutterCommand@0
+  #   displayName: 'Check Flutter Client'
+  #   inputs:
+  #     projectDirectory: './client'
+  #     arguments: 'doctor -v'
 
   # get the flutter dependencies
   - task: FlutterCommand@0

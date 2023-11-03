@@ -29,18 +29,15 @@ steps:
     displayName: "Generate IPA"
     inputs:
       actions: 'archive'
-      configuration: 'Release'
       xcWorkspacePath: '$(Build.SourcesDirectory)/client/ios/Runner.xcworkspace'
       scheme: 'Runner'
       sdk: 'iphoneos'
+      configuration: 'Release'
 
       # package options
       packageApp: true
-      archivePath: '$(Build.ArtifactStagingDirectory)/Runner.xcarchive'
-      exportPath: '$(Build.ArtifactStagingDirectory)'
-      exportOptions: 'specify'
-      exportMethod: 'app-store'
-      exportTeamId: 'B2N2X3X4X5'
+      exportOptions: 'plist'
+      exportOptionPlist: '$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist'
 
       # platform
       destinationPlatformOption: 'iOS'

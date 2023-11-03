@@ -29,36 +29,39 @@ steps:
     displayName: "Generate IPA"
     inputs:
       actions: 'archive'
+      configuration: 'Release'
       xcWorkspacePath: '$(Build.SourcesDirectory)/client/ios/Runner.xcworkspace'
       scheme: 'Runner'
       sdk: 'iphoneos'
-      configuration: 'Release'
 
       # package options
       packageApp: true
-      exportOptions: 'plist'
-      exportOptionPlist: '$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist'
+      archivePath: '$(Build.ArtifactStagingDirectory)/Runner.xcarchive'
+      exportPath: '$(Build.ArtifactStagingDirectory)'
+      exportOptions: 'specify'
+      exportMethod: 'app-store'
+      exportTeamId: 'B2N2X3X4X5'
 
       # platform
       destinationPlatformOption: 'iOS'
-      destinationTypeOption: 'simulators'
+      destinationTypeOption: 'simulator'
       destinationSimulators: 'iPhone 14'
 
       # signing
       signingOption: 'manual'
-      signingIdentity: $(APPLE_CERTIFICATE_SIGNING_IDENTITY)
-      provisioningProfileUuid: $(APPLE_PROVISIONING_PROFILE_UUID)
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROVISIONING_PROFILE_UUID)'
 
       # advanced
       useXcpretty: false
 
   
-  # - task: CopyFiles@2
-  #   displayName: "Copy IPA to Artifact Staging Directory"
-  #   inputs:
-  #     contents: '**/*.ipa'
-  #     targetFolder: $(Build.ArtifactStagingDirectory)
-  #     flattenFolders: true
+  - task: CopyFiles@2
+    displayName: "Copy IPA to Artifact Staging Directory"
+    inputs:
+      contents: '**/*.ipa'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: true
 
   - task: PublishPipelineArtifact@1
     displayName: "Publish IPA Artifact"

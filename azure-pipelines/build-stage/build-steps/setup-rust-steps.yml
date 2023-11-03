@@ -1,7 +1,3 @@
-variables:
-  CARGO_HOME: $(Pipeline.Workspace)/.cargo
-  RUSTC_WRAPPER: sccache # if you're using sccache to cache compilation
-
 steps:
   # Cache cargo registry, index, and built dependencies
   - task: Cache@2

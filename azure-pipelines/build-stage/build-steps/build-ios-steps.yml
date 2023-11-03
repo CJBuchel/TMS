@@ -49,19 +49,19 @@ steps:
 
       # signing
       signingOption: 'manual'
-      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
-      provisioningProfileUuid: '$(APPLE_PROVISIONING_PROFILE_UUID)'
+      signingIdentity: $(APPLE_CERTIFICATE_SIGNING_IDENTITY)
+      provisioningProfileUuid: $(APPLE_PROVISIONING_PROFILE_UUID)
 
       # advanced
       useXcpretty: false
 
   
-  - task: CopyFiles@2
-    displayName: "Copy IPA to Artifact Staging Directory"
-    inputs:
-      contents: '**/*.ipa'
-      targetFolder: $(Build.ArtifactStagingDirectory)
-      flattenFolders: true
+  # - task: CopyFiles@2
+  #   displayName: "Copy IPA to Artifact Staging Directory"
+  #   inputs:
+  #     contents: '**/*.ipa'
+  #     targetFolder: $(Build.ArtifactStagingDirectory)
+  #     flattenFolders: true
 
   - task: PublishPipelineArtifact@1
     displayName: "Publish IPA Artifact"

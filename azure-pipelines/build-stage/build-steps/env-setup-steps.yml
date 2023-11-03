@@ -1,4 +1,3 @@
-
 steps:
   # initialize the build environment (grab any submodules if applicable)
   - script: git submodule update --init --recursive

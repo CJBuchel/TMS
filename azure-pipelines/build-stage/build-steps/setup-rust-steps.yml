@@ -1,4 +1,26 @@
+variables:
+  CARGO_HOME: $(Pipeline.Workspace)/.cargo
+  RUSTC_WRAPPER: sccache # if you're using sccache to cache compilation
+
 steps:
+  # Cache cargo registry, index, and built dependencies
+  - task: Cache@2
+    inputs:
+      key: 'rust | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
+      restoreKeys: |
+         rust | "$(Agent.OS)"
+      path: $(CARGO_HOME)
+    displayName: Cache Rust Cargo dependencies
+
+  # Cache target directory to reuse the compiled outputs
+  - task: Cache@2
+    inputs:
+      key: 'rust | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
+      restoreKeys: |
+         rust | "$(Agent.OS)"
+      path: $(Build.SourcesDirectory)/server/target
+    displayName: Cache Rust build outputs
+
   # install musl and openssl for linux
   - script: |
         sudo apt-get install -qq -y musl-tools musl-dev openssl
@@ -10,12 +32,6 @@ steps:
         sudo update-ca-certificates
     condition: eq( variables['Agent.OS'], 'Linux' )
     displayName: 'Update openssl certificates'
-
-  # # Get nightly releases (needed for rust rocket version (v0.5.0-rc.3))
-  # - task: Rustup@1
-  #   inputs:
-  #     rustupCommand: 'default nightly'
-  #     verbose: false
 
   # Rust install for linux MUSL target
   - task: Rustup@1

@@ -37,38 +37,7 @@ steps:
       scheme: 'Runner'
       packageApp: false # just build don't generate ipa
       archivePath: 'client/ios/Runner.xcarchive'
-      args: '-UseModernBuildSystem=YES'
-
-  # Generate options.plist
-
-
-  # Generate the IPA
-  - task: Xcode@5
-    displayName: "Build & Generate IPA for Distribution"
-    inputs:
-      # general
-      args: '-verbose'
-      packageApp: true
-      actions: 'archive' # build or archive
-      workingDirectory: './client/ios'
-      xcWorkspacePath: './client/ios/Runner.xcworkspace'
-      
-      # configuration
-      scheme: 'Runner'
-      sdk: 'iphoneos'
-      configuration: 'release'
-      xcodeVersion: 'default'
-
-      # code signing (don't sign, just build)
-      signingOption: 'nosign'
-      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
-      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
-
-      # export archive path
-      exportOptions: 'specify'
-      exportMethod: 'app-store'
-      exportTeamId: 'B2B876ZH94'
-      archivePath: '$(Build.ArtifactStagingDirectory)/Runner.xcarchive'
+      # args: '-UseModernBuildSystem=YES'
 
   # Generate the exportOptions.plist
   - script: |

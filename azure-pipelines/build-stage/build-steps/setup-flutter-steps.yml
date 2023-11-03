@@ -1,7 +1,3 @@
-variables:
-  FLUTTER_ROOT: $(Agent.ToolsDirectory)/flutter # or the path to your flutter sdk
-  PUB_CACHE: $(Pipeline.Workspace)/.pub-cache
-
 steps:
   # install npm for flutter prep
   - task: Npm@1

@@ -11,7 +11,7 @@
       <key>provisioningProfiles</key>
       <dict>
          <key>a.loose.screw.tms</key>
-         <string>Connor Buchel</string>
+         <string>TMS Distribution Profile</string>
       </dict>
       <key>signingCertificate</key>
       <string>Apple Distribution</string>

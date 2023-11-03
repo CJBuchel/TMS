@@ -14,6 +14,12 @@ steps:
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
 
+  # Prepare exportOptions.plist by injecting the provisioning profile UUID and signing identity
+  - script: |
+      /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:a.loose.screw.tms $(APPLE_PROVISIONING_PROFILE_UUID)" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
+      /usr/libexec/PlistBuddy -c "Set :signingCertificate $(APPLE_CERTIFICATE_SIGNING_IDENTITY)" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
+    displayName: 'Configure exportOptions.plist'
+
   # Build the flutter app
   - task: FlutterBuild@0
     displayName: "Build Flutter App for IOS"
@@ -38,19 +44,11 @@ steps:
       packageApp: true
       archivePath: '$(Build.ArtifactStagingDirectory)/Runner.xcarchive'
       exportPath: '$(Build.ArtifactStagingDirectory)'
-      exportOptions: 'specify'
-      exportMethod: 'app-store'
-      exportTeamId: 'B2N2X3X4X5'
-
-      # platform
-      destinationPlatformOption: 'iOS'
-      destinationTypeOption: 'simulator'
-      destinationSimulators: 'iPhone 14'
+      exportOptions: 'plist'
+      exportOptionsPlist: '$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist'
 
       # signing
       signingOption: 'manual'
-      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
-      provisioningProfileUuid: '$(APPLE_PROVISIONING_PROFILE_UUID)'
 
       # advanced
       useXcpretty: false

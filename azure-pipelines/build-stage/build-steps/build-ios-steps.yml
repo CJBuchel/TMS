@@ -25,58 +25,31 @@ steps:
       iosCodesign: false
       extraArgs: '--release'
 
-
-  # build the xcode project
   - task: Xcode@5
-    displayName: "Build the IOS app"
+    displayName: "Generate IPA"
     inputs:
       actions: 'archive'
-      configuration: 'release'
-      sdk: 'iphoneos'
-      xcWorkspacePath: './client/ios/Runner.xcworkspace'
+      configuration: 'Release'
+      xcWorkspacePath: '$(Build.SourcesDirectory)/client/ios/Runner.xcworkspace'
       scheme: 'Runner'
-      packageApp: false # just build don't generate ipa
-      archivePath: 'client/ios/Runner.xcarchive'
-      # args: '-UseModernBuildSystem=YES'
 
-  # Generate the exportOptions.plist
-  - script: |
-      # Define paths
-      ARCHIVE_PATH="$(Build.ArtifactStagingDirectory)/Runner.xcarchive"
-      EXPORT_PATH="$(Build.ArtifactStagingDirectory)/ExportedApp"
-      EXPORT_OPTIONS_PLIST="$(Build.ArtifactStagingDirectory)/exportOptions.plist"
-
-      # Create the exportOptions.plist for signing
-      cat > $EXPORT_OPTIONS_PLIST <<EOF
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-      <dict>
-          <key>method</key>
-          <string>app-store</string>
-          <key>teamID</key>
-          <string>B2B876ZH94</string>
-          <key>signingCertificate</key>
-          <string>$(APPLE_CERTIFICATE_SIGNING_IDENTITY)</string>
-          <key>provisioningProfiles</key>
-          <dict>
-              <key>a.loose.screw.tms</key>
-              <string>$(APPLE_PROV_PROFILE_UUID)</string>
-          </dict>
-      </dict>
-      </plist>
-      EOF
-    displayName: 'Generate the exportOptions.plist'
-
-  - task: Xcode@5
-    displayName: "Generate the IPA"
-    inputs:
-      actions: 'exportArchive'
+      # package options
+      packageApp: true
       archivePath: '$(Build.ArtifactStagingDirectory)/Runner.xcarchive'
-      exportPath: '$(Build.ArtifactStagingDirectory)/ExportedApp'
-      exportOptionsPlist: '$(Build.ArtifactStagingDirectory)/exportOptions.plist'
-      # args: '-UseModernBuildSystem=YES'
+      exportPath: '$(Build.ArtifactStagingDirectory)'
+      exportOptions: 'specify'
+      exportMethod: 'app-store'
+      exportTeamId: 'B2N2X3X4X5'
 
+      # signing
+      signingOption: 'manual'
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROVISIONING_PROFILE_UUID)'
+
+      # advanced
+      useXcpretty: false
+
+  
   - task: CopyFiles@2
     displayName: "Copy IPA to Artifact Staging Directory"
     inputs:

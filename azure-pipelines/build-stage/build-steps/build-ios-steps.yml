@@ -42,6 +42,11 @@ steps:
       exportMethod: 'app-store'
       exportTeamId: 'B2N2X3X4X5'
 
+      # platform
+      destinationPlatformOption: 'iOS'
+      destinationTypeOption: 'simulators'
+      destinationSimulators: 'iPhone 14'
+
       # signing
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'

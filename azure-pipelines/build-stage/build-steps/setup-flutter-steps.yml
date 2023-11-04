@@ -31,7 +31,6 @@ steps:
       restoreKeys: 'flutter | "$(Agent.OS)"'
       path: $(PUB_CACHE)
 
-
   # perform the doctor check
   # - task: FlutterCommand@0
   #   displayName: 'Check Flutter Client'

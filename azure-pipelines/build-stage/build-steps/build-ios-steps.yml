@@ -1,4 +1,3 @@
-
 steps:
   - task: InstallAppleCertificate@2
     displayName: "Install Apple Certificate"
@@ -15,55 +14,45 @@ steps:
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
 
-  # - task: Cargo@1
-  #   displayName: 'Build Rust Server (Debug) used for env generator'
-  #   inputs:
-  #     cargoCommand: 'build'
-  #     cargoWorkingDir: './server'
-  #     verbose: true
+  - template: build-flutter-steps.yml
+    parameters:
+      target: ios
 
   - script: |
-      echo 'Deleting DerivedData...'
-      rm -rf ~/Library/Developer/Xcode/DerivedData
-    displayName: 'Delete any lingering DerivedData'
-
-  # Build the flutter app
-  - task: FlutterBuild@0
-    displayName: "Build Flutter App for IOS"
-    inputs:
-      target: 'ios'
-      projectDirectory: './client'
-      debugMode: false
-      profileMode: false
-      iosCodesign: false
-      extraArgs: '--release'
+      xcrun simctl list
+    displayName: "List Simulators"
 
   - task: Xcode@5
-    displayName: "Code sign ipa for Distribution"
+    displayName: "Generate IPA"
     inputs:
-      args: '-verbose'
-      actions: 'build' # build
-      xcWorkspacePath: './client/ios/Runner.xcworkspace'
+      # build options
+      actions: 'build'
+      xcWorkspacePath: '$(Build.SourcesDirectory)/client/ios/Runner.xcworkspace'
       scheme: 'Runner'
       sdk: 'iphoneos'
       configuration: 'release'
-      xcodeVersion: 'default'
+
+      # package options
       packageApp: true
+
+      # signing
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
-      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
-      workingDirectory: './client/ios'
+      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'  
 
-      # platform for xcode test
-      destinationPlatformOption: 'iOS'
-      destinationTypeOption: 'simulators'
-      destinationSimulators: 'iPhone 14'
+      # advanced
+      useXcpretty: false
 
-      # archivePath: 'client/ios/Runner.xcarchive'
-      # exportPath: 'client/ios/build'
-      teamId: 'B2B876ZH94'
+  # Add a bash script to rename the IPA
+  - script: |
+      for ipa in $(find $(Build.SourcesDirectory) -name '*.ipa'); do
+        mv "$ipa" "$(dirname "$ipa")/tms_client.ipa"
+      done
+    displayName: "Rename APK"
 
+  
   - task: CopyFiles@2
+    displayName: "Copy IPA to Artifact Staging Directory"
     inputs:
       contents: '**/*.ipa'
       targetFolder: $(Build.ArtifactStagingDirectory)

@@ -45,16 +45,6 @@ post_install do |installer|
         'AUDIO_SESSION_MICROPHONE=0'
       ]
     end
-
-    # Attempt to remove push notifications entitlement
-    # if config.build_settings['CODE_SIGN_ENTITLEMENTS']
-    #   entitlements_path = config.build_settings['CODE_SIGN_ENTITLEMENTS']
-    #   entitlements = File.read(entitlements_path)
-    #   if entitlements.include?('<key>aps-environment</key>')
-    #     entitlements.gsub!(/<key>aps-environment<\/key>\s*<string>[^<]*<\/string>/, '')
-    #     File.write(entitlements_path, entitlements)
-    #   end
-    # end
   end
   # signing config
   installer.pods_project.build_configurations.each do |config|

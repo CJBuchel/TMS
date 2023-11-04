@@ -11,3 +11,9 @@ jobs:
 #     vmImage: 'macos-latest'
 #   steps:
 #     - template: './release-steps/release-ios-steps.yml'
+
+- job: Github
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - template: './release-steps/release-github-steps.yml'

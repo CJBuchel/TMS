@@ -57,17 +57,22 @@
         - `--no-client`
         - `--no-server`
 
-### Client iOS Install
-- Coming soon
+## Binary Installs
+- Most TMS Server and Client binaries can be found on the [release](https://github.com/CJBuchel/TMS/releases) page. However, some signed binaries are not available such as windows msix installers or iOS ipa binaries. View below for specific installs.
 
-### Client Android Install
-- Coming soon
+<!-- https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker
+ -->
 
-### Client Windows Install
-- Coming soon
+| Binary | Link | Status |
+|--|--|--|
+| Client IOS | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
+| Client Android | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
+| Client Windows | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
+| Client Linux | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
+| Server Windows | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
+| Server Linux | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
+| Server MacOs | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
 
-### Client MacOs Install
-- Coming soon
 
 ## Quick Start
 1. Once the server has been started navigate to the client (either through the hosted web address) or through the application

@@ -16,7 +16,7 @@ steps:
   - bash: |
       version_number=$(echo "$(version)")
       build_number=$(echo "$(Build.BuildNumber)" | awk -F. '{print $NF}') # Extracts the last number after the dot
-      sed -i "s/version: \([0-9]\+\.[0-9]\+\.[0-9]\+\)\+\([0-9]\+\)/version: $version_number+$build_number/" client/pubspec.yaml
+      sed -i "s/version: 0.0.0+0)/version: $version_number+$build_number/" client/pubspec.yaml
       cat client/pubspec.yaml
     displayName: 'Update version in pubspec.yaml and print it'
     condition: ne(variables['Agent.OS'], 'Windows_NT')

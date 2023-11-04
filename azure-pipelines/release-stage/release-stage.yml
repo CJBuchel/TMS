@@ -12,6 +12,12 @@ jobs:
 #   steps:
 #     - template: './release-steps/release-ios-steps.yml'
 
+- job: Windows
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+    - template: './release-steps/release-windows-steps.yml'
+
 - job: Github
   pool:
     vmImage: 'ubuntu-latest'

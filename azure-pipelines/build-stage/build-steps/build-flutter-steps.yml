@@ -11,3 +11,7 @@ steps:
       profileMode: false
       iosCodesign: false
       extraArgs: '--release'
+
+      # build
+      buildName: $(version)
+      buildNumber: $(Build.BuildNumber) # auto increment

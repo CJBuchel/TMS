@@ -2,7 +2,7 @@ name: tms
 description: Team Management System for FLL
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+8
+version: 0.0.0+0 # this is replaced in azure pipelines during release
 
 # First submission required before we can begin publishing to the windows store
 msix_config:
@@ -10,7 +10,7 @@ msix_config:
   publisher_display_name: A Loose Screw
   identity_name: 20448ALooseScrew.TMSClient
   publisher: CN=E961EDDD-C8AE-489C-8DEE-15C89A72602A
-  msix_version: 1.0.0.0
+  msix_version: 0.0.0.0 # this is replaced in azure pipelines during release
   store: true
 
 environment:

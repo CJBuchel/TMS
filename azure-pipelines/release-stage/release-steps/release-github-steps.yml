@@ -31,3 +31,4 @@ steps:
         $(System.ArtifactsDirectory)/**/*.tar.gz
         $(System.ArtifactsDirectory)/**/*.apk
         $(System.ArtifactsDirectory)/**/*.ipa
+        $(System.ArtifactsDirectory)/**/*.msix

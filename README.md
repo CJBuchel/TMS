@@ -42,11 +42,11 @@
 |--|--|--|
 | Client IOS | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=IOS) |
 | Client Android | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Android) |
-| Client Windows | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Client_Windows) |
+| Client Windows | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Client_Windows) |
 | Client Linux | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Client_Linux) |
 | Server Windows | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_Windows) |
 | Server Linux | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_Linux) |
-| Server MacOs | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=MacOs) |
+| Server MacOs | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_MacOs) |
 
 
 ### Docker Install

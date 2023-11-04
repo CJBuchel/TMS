@@ -15,12 +15,12 @@ steps:
       removeProfile: true
 
   # Prepare exportOptions.plist by injecting the provisioning profile UUID and signing identity
-  - script: |
-      echo "Preparing exportOptions.plist, uuid: $APPLE_PROVISIONING_PROFILE_UUID, signing identity: $(APPLE_CERTIFICATE_SIGNING_IDENTITY)"
-      /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:a.loose.screw.tms $APPLE_PROVISIONING_PROFILE_UUID" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
-    displayName: 'Configure exportOptions.plist profile'
-    env: 
-      APPLE_PROVISIONING_PROFILE_UUID: $(APPLE_PROVISIONING_PROFILE_UUID)
+  # - script: |
+  #     echo "Preparing exportOptions.plist, uuid: $APPLE_PROVISIONING_PROFILE_UUID, signing identity: $(APPLE_CERTIFICATE_SIGNING_IDENTITY)"
+  #     /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:a.loose.screw.tms $APPLE_PROVISIONING_PROFILE_UUID" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
+  #   displayName: 'Configure exportOptions.plist profile'
+  #   env: 
+  #     APPLE_PROVISIONING_PROFILE_UUID: $(APPLE_PROVISIONING_PROFILE_UUID)
   # - script: |
   #     /usr/libexec/PlistBuddy -c "Set :signingCertificate $(APPLE_CERTIFICATE_SIGNING_IDENTITY)" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
   #   displayName: 'Configure exportOptions.plist signing identity'
@@ -40,21 +40,20 @@ steps:
   - task: Xcode@5
     displayName: "Generate IPA"
     inputs:
-      actions: 'archive'
-      configuration: 'Release'
+      # build options
+      actions: 'build'
       xcWorkspacePath: '$(Build.SourcesDirectory)/client/ios/Runner.xcworkspace'
       scheme: 'Runner'
       sdk: 'iphoneos'
+      configuration: 'release'
 
       # package options
       packageApp: true
-      archivePath: '$(Build.ArtifactStagingDirectory)/Runner.xcarchive'
-      exportPath: '$(Build.ArtifactStagingDirectory)'
-      exportOptions: 'plist'
-      exportOptionsPlist: '$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist'
 
       # signing
       signingOption: 'manual'
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'  
 
       # advanced
       useXcpretty: false

@@ -48,7 +48,7 @@ steps:
       for ipa in $(find $(Build.SourcesDirectory) -name '*.ipa'); do
         mv "$ipa" "$(dirname "$ipa")/tms_client.ipa"
       done
-    displayName: "Rename APK"
+    displayName: "Rename IPA"
 
   
   - task: CopyFiles@2

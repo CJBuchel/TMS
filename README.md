@@ -7,10 +7,9 @@
 
 - FLL management system for scoring, displaying and simplifying events. Built in Rust & Flutter, distributed in Docker, IOS, Android and Desktop applications
 
-[![Build Status](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_apis/build/status%2FCJBuchel.TMS?branchName=master)](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_build/latest?definitionId=24&branchName=master)
-![Docker Pulls](https://img.shields.io/docker/pulls/cjbuchel/tms)
-![Docker Image Version (latest by date)](https://img.shields.io/docker/v/cjbuchel/tms)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cjbuchel/tms)
+| Project Status | Pulls | Version | Size |
+|--|--|--|--|
+| [![Build Status](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_apis/build/status%2FCJBuchel.TMS?branchName=master)](https://dev.azure.com/ConnorBuchel0890/ConnorBuchel/_build/latest?definitionId=24&branchName=master) | ![Docker Pulls](https://img.shields.io/docker/pulls/cjbuchel/tms) | ![Docker Image Version (latest by date)](https://img.shields.io/docker/v/cjbuchel/tms) | ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/cjbuchel/tms) |
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/CJBuchel/TMS/master/images/prom1.png" width="400" style="margin-right: 10px"/>
@@ -27,14 +26,35 @@
 
 ## Install
 
-- This project is split into two distinct application, the [Server](./server/) and the [Client](./client/)
+- This project is split into two distinct application, [Server](./server/) and [Client](./client/)
 - Both applications can be installed separately in their own native platforms.
 - The server can be run in [Debian linux](https://ubuntu.com/), [Windows](https://www.microsoft.com/en-au/windows?r=1) ^8 and [MacOs](https://support.apple.com/en-au/macos)
 - The client is built in flutter and officially supports [iOS](https://support.apple.com/downloads/ios), [Android](https://www.android.com/), [Debian linux](https://ubuntu.com/), [Windows](https://www.microsoft.com/en-au/windows?r=1) ^8 and [MacOs](https://support.apple.com/en-au/macos)
 - The project is also bundled into a docker image which contains the linux variant of the server & web compiled variant of the client.
 
-### Docker Install
+## Binary Installs
+- Most TMS Server and Client binaries can be found on the [release](https://github.com/CJBuchel/TMS/releases) page. However, some signed binaries are not available such as windows msix installers or iOS ipa binaries. View below for specific installs.
 
+<!-- https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker
+ -->
+
+| Binary | Link | Status |
+|--|--|--|
+| Client IOS | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=IOS) |
+| Client Android | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Android) |
+| Client Windows | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Client_Windows) |
+| Client Linux | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Client_Linux) |
+| Server Windows | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_Windows) |
+| Server Linux | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_Linux) |
+| Server MacOs | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=MacOs) |
+
+
+### Docker Install
+| Binary | Status |
+|--|--|
+| Docker Image | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
+
+#### Info
 - The docker image is the most recommended method for installing the project as it provides a stable up to date version that is simple to use and deploy.
 
 #### Steps
@@ -56,23 +76,6 @@
       - Pass in any of the following by appending the command i.e `docker run ... cjbuchel/tms --no-client`
         - `--no-client`
         - `--no-server`
-
-## Binary Installs
-- Most TMS Server and Client binaries can be found on the [release](https://github.com/CJBuchel/TMS/releases) page. However, some signed binaries are not available such as windows msix installers or iOS ipa binaries. View below for specific installs.
-
-<!-- https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker
- -->
-
-| Binary | Link | Status |
-|--|--|--|
-| Client IOS | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-| Client Android | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-| Client Windows | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-| Client Linux | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-| Server Windows | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-| Server Linux | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-| Server MacOs | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-
 
 ## Quick Start
 1. Once the server has been started navigate to the client (either through the hosted web address) or through the application

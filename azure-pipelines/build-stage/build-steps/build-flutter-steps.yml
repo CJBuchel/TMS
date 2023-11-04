@@ -6,10 +6,9 @@ steps:
   # file: ./client/pubspec.yaml
 
   - powershell: |
-      $buildNumberParts = "$(Build.BuildNumber)".Split('.')
-      $buildCounter = $buildNumberParts[-1] # Gets the last part of the build number
-      $newMsixVersion = "$(version).$buildCounter"
-      (Get-Content -Path 'client\pubspec.yaml') -replace 'msix_version: 0.0.0.0', "msix_version: $newMsixVersion" | Set-Content -Path 'client\pubspec.yaml'
+      $buildNumber = "$(Build.BuildNumber)".Replace('.', '') # Merges the numbers by removing the dot
+      $newMsixVersion = "$(version).$buildNumber"
+      (Get-Content -Path 'client\pubspec.yaml') -replace 'msix_version: (\d+\.)\d+\.\d+\.\d+', "msix_version: $newMsixVersion" | Set-Content -Path 'client\pubspec.yaml'
       Get-Content -Path 'client\pubspec.yaml' | ForEach-Object { Write-Host $_ }
     displayName: 'Update MSIX Version in pubspec.yaml and print it'
     condition: eq(variables['Agent.OS'], 'Windows_NT')
@@ -21,14 +20,6 @@ steps:
     inputs:
       projectDirectory: './client'
       arguments: 'pub add --dev msix'
-
-  # create the msix package for windows
-  - task: FlutterCommand@0
-    displayName: 'Create MSIX Package'
-    condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    inputs:
-      projectDirectory: './client'
-      arguments: 'pub run msix:create --build-windows false'
 
   # Build flutter app
   - task: FlutterBuild@0
@@ -44,3 +35,11 @@ steps:
       # build
       buildName: $(version) # replace with actual version
       buildNumber: $(Build.BuildNumber) # auto increment
+
+  # create the msix package for windows
+  - task: FlutterCommand@0
+    displayName: 'Create MSIX Package'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      projectDirectory: './client'
+      arguments: 'pub run msix:create --build-windows false'

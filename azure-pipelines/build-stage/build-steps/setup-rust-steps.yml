@@ -15,14 +15,14 @@ steps:
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
     displayName: 'Cache Cargo Registry'
 
-  # windows has a different 
+  # windows has a different home directory
   - task: Cache@2
     inputs:
       key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
       restoreKeys: 'cargo | "$(Agent.OS)"'
       path: $(UserProfile)/.cargo/registry
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    displayName: 'Cache Cargo registry'
+    displayName: 'Cache Cargo Registry'
 
   # install musl and openssl for linux
   - script: |

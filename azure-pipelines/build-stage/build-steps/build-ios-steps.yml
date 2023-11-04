@@ -14,16 +14,9 @@ steps:
       provProfileSecureFile: '$(pp_alias)'
       removeProfile: true
 
-  # Build the flutter app
-  - task: FlutterBuild@0
-    displayName: "Build Flutter App for IOS"
-    inputs:
-      target: 'ios'
-      projectDirectory: './client'
-      debugMode: false
-      profileMode: false
-      iosCodesign: false
-      extraArgs: '--release'
+  - template: build-flutter-steps.yml
+    parameters:
+      target: ios
 
   - task: Xcode@5
     displayName: "Generate IPA"
@@ -50,6 +43,13 @@ steps:
 
       # advanced
       useXcpretty: false
+
+  # Add a bash script to rename the IPA
+  - script: |
+      for ipa in $(find $(Build.SourcesDirectory) -name '*.ipa'); do
+        mv "$ipa" "$(dirname "$ipa")/tms_client.ipa"
+      done
+    displayName: "Rename APK"
 
   
   - task: CopyFiles@2

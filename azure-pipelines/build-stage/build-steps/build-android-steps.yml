@@ -1,12 +1,15 @@
 
 steps:
-  - task: FlutterBuild@0
-    displayName: "Build Flutter App for Android"
-    inputs:
-      target: 'apk'
-      projectDirectory: './client'
-      debugMode: false
-      extraArgs: '--release'
+  - template: build-flutter-steps.yml
+    parameters:
+      target: apk
+
+  # Add a bash script to rename the APK
+  - script: |
+      for apk in $(find $(Build.SourcesDirectory) -name '*.apk'); do
+        mv "$apk" "$(dirname "$apk")/tms_client.apk"
+      done
+    displayName: "Rename APK"
   
   - task: CopyFiles@2
     displayName: "Copy APK to Artifact Staging Directory"

@@ -7,12 +7,9 @@ steps:
       cargoWorkingDir: './server'
       verbose: true
   
-  - task: FlutterBuild@0
-    displayName: 'Build Flutter Client for Web'
-    inputs:
+  - template: build-flutter-steps.yml
+    parameters:
       target: 'web'
-      projectDirectory: './client'
-      extraArgs: '--release'
 
   #  Build the docker image
   - task: Docker@2

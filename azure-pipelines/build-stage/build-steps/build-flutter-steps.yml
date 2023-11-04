@@ -1,0 +1,13 @@
+parameters:
+- name: target
+
+steps:
+  - task: FlutterBuild@0
+    displayName: "Build Flutter App: ${{parameters.target}}"
+    inputs:
+      target: '${{parameters.target}}'
+      projectDirectory: './client'
+      debugMode: false
+      profileMode: false
+      iosCodesign: false
+      extraArgs: '--release'

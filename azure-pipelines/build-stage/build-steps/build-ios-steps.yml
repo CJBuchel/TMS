@@ -34,7 +34,7 @@ steps:
       # platform
       destinationPlatformOption: 'iOS'
       destinationTypeOption: 'simulators'
-      destinationSimulators: 'iPad Air (11.4)'
+      destinationSimulators: 'iPhone 14'
 
       # signing
       signingOption: 'manual'

@@ -2,13 +2,11 @@ parameters:
 - name: target
 
 steps:
-  # replace the version in pubspec.yaml for the msix version
+  # replace msix_version: 0.0.0.0 with msix_version: $(version).$(Build.BuildNumber) in pubspec.yaml
+  # file: ./client/pubspec.yaml
+
   - script: |
-      # PowerShell script to update msix_version in pubspec.yaml
-      $version = "$(version).$(Build.BuildNumber)" # Combine version with build number
-      $pubspec = Get-Content -Path "./client/pubspec.yaml" -Raw
-      # The regex now looks for 'msix_version' with any indentation before it
-      $pubspec -replace '(msix_version: )[\d\.]+', "`$1$version" | Set-Content -Path "./client/pubspec.yaml"
+      (Get-Content -Path 'client\pubspec.yaml') -replace 'msix_version: (\d+\.)\d+\.\d+\.\d+', "msix_version: $(version).$(Build.BuildNumber)" | Set-Content -Path 'client\pubspec.yaml'
     displayName: 'Update MSIX Version in pubspec.yaml'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
 

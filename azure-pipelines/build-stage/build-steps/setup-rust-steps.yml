@@ -12,7 +12,17 @@ steps:
       key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
       restoreKeys: 'cargo | "$(Agent.OS)"'
       path: $(HOME)/.cargo/registry
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
     displayName: 'Cache Cargo Registry'
+
+  # windows has a different 
+  - task: Cache@2
+    inputs:
+      key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
+      restoreKeys: 'cargo | "$(Agent.OS)"'
+      path: $(UserProfile)/.cargo/registry
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    displayName: 'Cache Cargo registry'
 
   # install musl and openssl for linux
   - script: |

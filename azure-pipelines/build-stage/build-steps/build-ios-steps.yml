@@ -35,11 +35,6 @@ steps:
       # package options
       packageApp: true
 
-      # platform
-      destinationPlatformOption: 'iOS'
-      destinationTypeOption: 'simulators'
-      destinationSimulators: 'iPhone 14'
-
       # signing
       signingOption: 'manual'
       signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'

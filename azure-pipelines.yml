@@ -23,6 +23,18 @@ variables:
 - name: dockerRegistryServiceConnection
   value: 'CJBuchel-Dockerhub1'
 
+# Flutter cache variables
+- name: FLUTTER_ROOT
+  value: $(Agent.ToolsDirectory)/flutter # or the path to your flutter sdk
+- name: PUB_CACHE
+  value: $(Pipeline.Workspace)/.pub-cache
+
+# Rust cache variables
+# - name: CARGO_HOME
+#   value: $(Pipeline.Workspace)/.cargo
+# - name: RUSTC_WRAPPER
+#   value: sccache # if you're using sccache to cache compilation
+
 stages:
 - stage: Build
   jobs:

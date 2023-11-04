@@ -1,4 +1,29 @@
 steps:
+
+  - task: Cache@2
+    inputs:
+      key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
+      restoreKeys: 'cargo | "$(Agent.OS)"'
+      path: $(Build.SourcesDirectory)/server/target
+    displayName: 'Cache Cargo Build'
+
+  - task: Cache@2
+    inputs:
+      key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
+      restoreKeys: 'cargo | "$(Agent.OS)"'
+      path: $(HOME)/.cargo/registry
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+    displayName: 'Cache Cargo Registry'
+
+  # windows has a different 
+  - task: Cache@2
+    inputs:
+      key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
+      restoreKeys: 'cargo | "$(Agent.OS)"'
+      path: $(UserProfile)/.cargo/registry
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    displayName: 'Cache Cargo registry'
+
   # install musl and openssl for linux
   - script: |
         sudo apt-get install -qq -y musl-tools musl-dev openssl
@@ -11,15 +36,34 @@ steps:
     condition: eq( variables['Agent.OS'], 'Linux' )
     displayName: 'Update openssl certificates'
 
-  # # Get nightly releases (needed for rust rocket version (v0.5.0-rc.3))
-  # - task: Rustup@1
-  #   inputs:
-  #     rustupCommand: 'default nightly'
-  #     verbose: false
-
-  # Rust install
+  # Rust install for linux MUSL target
   - task: Rustup@1
     displayName: 'Install Rust for musl linux (required for docker)'
+    condition: eq( variables['Agent.OS'], 'Linux' )
     inputs:
       rustupCommand: 'target install x86_64-unknown-linux-musl'
+      verbose: false
+
+  # Rust install for linux gnu target
+  - task: Rustup@1
+    displayName: 'Install Rust for gnu linux'
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    inputs:
+      rustupCommand: 'target install x86_64-unknown-linux-gnu'
+      verbose: false
+
+  # Rust install for macos target
+  - task: Rustup@1
+    displayName: 'Install Rust for macos'
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+    inputs:
+      rustupCommand: 'target install x86_64-apple-darwin'
+      verbose: false
+
+  # Rust install for windows target
+  - task: Rustup@1
+    displayName: 'Install Rust for windows'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      rustupCommand: 'target install x86_64-pc-windows-msvc'
       verbose: false

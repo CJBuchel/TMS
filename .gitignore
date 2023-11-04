@@ -1,6 +1,7 @@
 # azure pipelines
 !azure-pipelines.yml
 !azure-pipelines/**
+RELEASE_NOTES.md
 
 # Keys
 *.key

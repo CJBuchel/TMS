@@ -1,0 +1,29 @@
+steps:
+  - task: Cargo@1
+    displayName: 'Build Rust Server'
+    inputs:
+      cargoCommand: 'build --target x86_64-apple-darwin --release'
+      cargoWorkingDir: './server'
+      verbose: true
+
+  - task: CopyFiles@2
+    displayName: 'Copy Server to Artifact Staging Directory'
+    inputs:
+      contents: '**/tms_server'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: true
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/tms_server'
+      includeRootFolder: false
+      archiveType: 'tar'
+      tarCompression: 'gz'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/tms_server_macos.tar.gz'
+      replaceExistingArchive: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: server'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'server-macos'

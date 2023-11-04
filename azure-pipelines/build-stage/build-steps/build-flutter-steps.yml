@@ -2,6 +2,33 @@ parameters:
 - name: target
 
 steps:
+  # replace the version in pubspec.yaml for the msix version
+  - script: |
+      # PowerShell script to update msix_version in pubspec.yaml
+      $version = "$(version).$(Build.BuildNumber)" # Combine version with build number
+      $pubspec = Get-Content -Path "./client/pubspec.yaml" -Raw
+      # The regex now looks for 'msix_version' with any indentation before it
+      $pubspec -replace '(msix_version: )[\d\.]+', "`$1$version" | Set-Content -Path "./client/pubspec.yaml"
+    displayName: 'Update MSIX Version in pubspec.yaml'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+  # install the msix package for windows
+  - task: FlutterCommand@0
+    displayName: 'Install MSIX Package'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      projectDirectory: './client'
+      arguments: 'pub add --dev msix'
+
+  # create the msix package for windows
+  - task: FlutterCommand@0
+    displayName: 'Create MSIX Package'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    inputs:
+      projectDirectory: './client'
+      arguments: 'pub run msix:create --build-windows false'
+
+  # Build flutter app
   - task: FlutterBuild@0
     displayName: "Build Flutter App: ${{parameters.target}}"
     inputs:
@@ -13,5 +40,5 @@ steps:
       extraArgs: '--release'
 
       # build
-      buildName: $(version)
+      buildName: $(version) # replace with actual version
       buildNumber: $(Build.BuildNumber) # auto increment

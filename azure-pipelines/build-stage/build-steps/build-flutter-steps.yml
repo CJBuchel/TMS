@@ -3,15 +3,23 @@ parameters:
 
 steps:
   # replace msix_version: 0.0.0.0 with msix_version: $(version).$(Build.BuildNumber) in pubspec.yaml
-  # file: ./client/pubspec.yaml
-
   - powershell: |
-      $buildNumber = "$(Build.BuildNumber)".Replace('.', '') # Merges the numbers by removing the dot
-      $newMsixVersion = "$(version).$buildNumber"
+      $buildNumberParts = "$(Build.BuildNumber)".Split('.')
+      $buildCounter = $buildNumberParts[-1] # Gets the last part of the build number
+      $newMsixVersion = "$(version).$buildCounter"
       (Get-Content -Path 'client\pubspec.yaml') -replace 'msix_version: (\d+\.)\d+\.\d+\.\d+', "msix_version: $newMsixVersion" | Set-Content -Path 'client\pubspec.yaml'
       Get-Content -Path 'client\pubspec.yaml' | ForEach-Object { Write-Host $_ }
     displayName: 'Update MSIX Version in pubspec.yaml and print it'
     condition: eq(variables['Agent.OS'], 'Windows_NT')
+
+  # replace version for regular flutter apps
+  - bash: |
+      version_number=$(echo "$(version)")
+      build_number=$(echo "$(Build.BuildNumber)" | awk -F. '{print $NF}') # Extracts the last number after the dot
+      sed -i "s/version: \([0-9]\+\.[0-9]\+\.[0-9]\+\)\+\([0-9]\+\)/version: $version_number+$build_number/" client/pubspec.yaml
+      cat client/pubspec.yaml
+    displayName: 'Update version in pubspec.yaml and print it'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
 
   # install the msix package for windows
   - task: FlutterCommand@0

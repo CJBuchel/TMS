@@ -42,12 +42,11 @@ def generate_release_notes(issues, pull_requests, latest_release_date):
         if pr['merged_at'] and datetime.strptime(pr['merged_at'], '%Y-%m-%dT%H:%M:%SZ') > latest_release_date:
             release_notes += f"- PR #{pr['number']}: {pr['title']} (by @{pr['user']['login']})\n"
     
-    # resolved issues
     release_notes += "## Resolved Issues\n"
     for issue in issues:
         if issue['closed_at'] and datetime.strptime(issue['closed_at'], '%Y-%m-%dT%H:%M:%SZ') > latest_release_date:
             release_notes += f"- Issue #{issue['number']}: {issue['title']} (by @{issue['user']['login']})\n"
-    
+ 
     return release_notes
 
 def main(latest_tag):

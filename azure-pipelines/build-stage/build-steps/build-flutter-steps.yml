@@ -6,10 +6,13 @@ steps:
   # file: ./client/pubspec.yaml
 
   - powershell: |
-      (Get-Content -Path 'client\pubspec.yaml') -replace 'msix_version: 0.0.0.0', "msix_version: $(version).$(Build.BuildNumber)" | Set-Content -Path 'client\pubspec.yaml'
+      $buildNumberParts = "$(Build.BuildNumber)".Split('.')
+      $buildCounter = $buildNumberParts[-1] # Gets the last part of the build number
+      $newMsixVersion = "$(version).$buildCounter"
+      (Get-Content -Path 'client\pubspec.yaml') -replace 'msix_version: 0.0.0.0', "msix_version: $newMsixVersion" | Set-Content -Path 'client\pubspec.yaml'
       Get-Content -Path 'client\pubspec.yaml' | ForEach-Object { Write-Host $_ }
-    displayName: 'Update MSIX Version in pubspec.yaml'
-    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    displayName: 'Update MSIX Version in pubspec.yaml and print it'
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
 
   # install the msix package for windows
   - task: FlutterCommand@0

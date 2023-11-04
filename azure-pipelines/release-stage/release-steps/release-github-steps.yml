@@ -31,4 +31,3 @@ steps:
         $(System.ArtifactsDirectory)/**/*.tar.gz
         $(System.ArtifactsDirectory)/**/*.apk
         $(System.ArtifactsDirectory)/**/*.ipa
-        $(System.ArtifactsDirectory)/**/*(tms_server|tms_server.exe)

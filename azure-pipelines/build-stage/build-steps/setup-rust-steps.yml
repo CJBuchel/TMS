@@ -11,7 +11,7 @@ steps:
     inputs:
       key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
       restoreKeys: 'cargo | "$(Agent.OS)"'
-      path: $(UserProfile)/.cargo/registry
+      path: $(HOME)/.cargo/registry
     displayName: 'Cache Cargo Registry'
 
   # install musl and openssl for linux

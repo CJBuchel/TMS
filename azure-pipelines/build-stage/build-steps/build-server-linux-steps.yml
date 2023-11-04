@@ -6,16 +6,16 @@ steps:
       cargoWorkingDir: './server'
       verbose: true
 
-  # - task: CopyFiles@2
-  #   displayName: 'Copy Server to Artifact Staging Directory'
-  #   inputs:
-  #     contents: '**/tms_server'
-  #     targetFolder: $(Build.ArtifactStagingDirectory)
-  #     flattenFolders: true
+  - task: CopyFiles@2
+    displayName: 'Copy Server to Artifact Staging Directory'
+    inputs:
+      contents: '**/tms_server'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: true
 
   - task: ArchiveFiles@2
     inputs:
-      rootFolderOrFile: '**/tms_server'
+      rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/tms_server'
       includeRootFolder: false
       archiveType: 'tar'
       tarCompression: 'gz'

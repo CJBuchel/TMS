@@ -16,10 +16,15 @@ steps:
 
   # Prepare exportOptions.plist by injecting the provisioning profile UUID and signing identity
   - script: |
+      echo "Preparing exportOptions.plist, uuid: $(APPLE_PROVISIONING_PROFILE_UUID), signing identity: $(APPLE_CERTIFICATE_SIGNING_IDENTITY)"
       /usr/libexec/PlistBuddy -c "Set :provisioningProfiles:a.loose.screw.tms $(APPLE_PROVISIONING_PROFILE_UUID)" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
-      /usr/libexec/PlistBuddy -c "Set :signingCertificate $(APPLE_CERTIFICATE_SIGNING_IDENTITY)" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
-    displayName: 'Configure exportOptions.plist'
+    displayName: 'Configure exportOptions.plist profile'
 
+  # - script: |
+  #     /usr/libexec/PlistBuddy -c "Set :signingCertificate $(APPLE_CERTIFICATE_SIGNING_IDENTITY)" "$(Build.SourcesDirectory)/client/ios/Runner/exportOptions.plist"
+  #   displayName: 'Configure exportOptions.plist signing identity'
+
+  
   # Build the flutter app
   - task: FlutterBuild@0
     displayName: "Build Flutter App for IOS"

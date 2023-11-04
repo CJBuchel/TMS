@@ -5,14 +5,14 @@
   <key>method</key>
   <string>app-store</string>
   <key>teamID</key>
-  <string>B2N2X3X4X5</string>
+  <string>B2B876ZH94</string>
   <key>provisioningProfiles</key>
   <dict>
     <key>a.loose.screw.tms</key>
     <string>$(APPLE_PROVISIONING_PROFILE_UUID)</string>
   </dict>
   <key>signingCertificate</key>
-  <string>$(APPLE_CERTIFICATE_SIGNING_IDENTITY)</string>
+  <string>Apple Distribution</string>
   <key>signingStyle</key>
   <string>manual</string>
   <key>stripSwiftSymbols</key>

@@ -2,14 +2,14 @@ steps:
 
   - task: Cache@2
     inputs:
-      key: '"cargo" | "$(Agent.OS)" | Cargo.lock'
+      key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
       restoreKeys: 'cargo | "$(Agent.OS)"'
       path: $(Build.SourcesDirectory)/server/target
     displayName: 'Cache Cargo Build'
 
   - task: Cache@2
     inputs:
-      key: '"cargo" | "$(Agent.OS)" | Cargo.lock'
+      key: '"cargo" | "$(Agent.OS)" | $(Build.SourcesDirectory)/server/Cargo.lock'
       restoreKeys: 'cargo | "$(Agent.OS)"'
       path: $(UserProfile)/.cargo/registry
     displayName: 'Cache Cargo Registry'

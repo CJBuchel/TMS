@@ -37,7 +37,7 @@ steps:
       debugMode: false
       profileMode: false
       iosCodesign: false
-      extraArgs: '--release'
+      extraArgs: '--release --no-web-resources-cdn'
 
       # build
       buildName: $(version) # replace with actual version

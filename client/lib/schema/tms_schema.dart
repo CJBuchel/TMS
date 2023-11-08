@@ -49,6 +49,7 @@ class TmsSchema {
         required this.socketMatchLoadedMessage,
         required this.startTimerRequest,
         required this.team,
+        required this.teamAddRequest,
         required this.teamDeleteRequest,
         required this.teamGetRequest,
         required this.teamGetResponse,
@@ -100,6 +101,7 @@ class TmsSchema {
     SocketMatchLoadedMessage socketMatchLoadedMessage;
     TimerRequest startTimerRequest;
     Team team;
+    TeamAddRequest teamAddRequest;
     TeamDeleteRequest teamDeleteRequest;
     TeamRequest teamGetRequest;
     TeamResponse teamGetResponse;
@@ -151,6 +153,7 @@ class TmsSchema {
         socketMatchLoadedMessage: SocketMatchLoadedMessage.fromJson(json["socket_match_loaded_message"]),
         startTimerRequest: TimerRequest.fromJson(json["start_timer_request"]),
         team: Team.fromJson(json["team"]),
+        teamAddRequest: TeamAddRequest.fromJson(json["team_add_request"]),
         teamDeleteRequest: TeamDeleteRequest.fromJson(json["team_delete_request"]),
         teamGetRequest: TeamRequest.fromJson(json["team_get_request"]),
         teamGetResponse: TeamResponse.fromJson(json["team_get_response"]),
@@ -203,6 +206,7 @@ class TmsSchema {
         "socket_match_loaded_message": socketMatchLoadedMessage.toJson(),
         "start_timer_request": startTimerRequest.toJson(),
         "team": team.toJson(),
+        "team_add_request": teamAddRequest.toJson(),
         "team_delete_request": teamDeleteRequest.toJson(),
         "team_get_request": teamGetRequest.toJson(),
         "team_get_response": teamGetResponse.toJson(),
@@ -1529,6 +1533,34 @@ class TimerRequest {
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+    };
+}
+
+class TeamAddRequest {
+    TeamAddRequest({
+        required this.authToken,
+        required this.teamAffiliation,
+        required this.teamName,
+        required this.teamNumber,
+    });
+
+    String authToken;
+    String teamAffiliation;
+    String teamName;
+    String teamNumber;
+
+    factory TeamAddRequest.fromJson(Map<String, dynamic> json) => TeamAddRequest(
+        authToken: json["auth_token"],
+        teamAffiliation: json["team_affiliation"],
+        teamName: json["team_name"],
+        teamNumber: json["team_number"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "team_affiliation": teamAffiliation,
+        "team_name": teamName,
+        "team_number": teamNumber,
     };
 }
 

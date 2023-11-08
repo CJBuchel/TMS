@@ -95,6 +95,16 @@
     - By default all generated users will have the password `password` and should be changed to suite the event if needed.
 11. Once complete the system should be ready for event use.
 
+## Sound Notice
+- Chrome added an update in 2021 which stopped the use of auto play sounds without manual input of some kind. View [Auto Play Policy C66](https://developer.chrome.com/blog/autoplay/) for more information.
+- This causes sound to work briefly but when left alone may cut out as it can't be done without user input.
+- To bypass this on a chromium browser you must whitelist the website and allow sound. Click the info icon/lock symbol left of the site url, and then navigate to site settings -> sound, and then change to allow.
+- You should be able to reload and save. For every new ip address you will need to re-complete this action.
+- TMS has sound on any view which has the timer clock
+- Similar actions may need to be taken in safari and/or other untested browsers.
 
 ### Extra Information and guides
 - Refer to the [WIKI](https://github.com/CJBuchel/TMS/wiki) for detailed use
+
+### Privacy Policy
+- [Client Policy](https://github.com/CJBuchel/TMS/blob/master/client/privacy_policy/067e7bb7-4ac3-4226-ad84-52c27dad78d0_en.md)

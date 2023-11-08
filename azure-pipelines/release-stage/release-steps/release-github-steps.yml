@@ -19,7 +19,7 @@ steps:
       tagSource: 'userSpecifiedTag'
       tag: "$(version)"
       title: '$(version) TMS Release'
-      isDraft: true # might change this
+      isDraft: false # might change this
       isPreRelease: false
 
       # change logs

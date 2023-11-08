@@ -14,18 +14,23 @@ class DrawerListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: press,
-      horizontalTitleGap: 0.0,
-      leading: SvgPicture.asset(
-        svgSrc,
-        colorFilter: ColorFilter.mode(AppTheme.isDarkTheme ? Colors.white54 : Colors.black, BlendMode.srcIn),
-        height: 16,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(color: AppTheme.isDarkTheme ? Colors.white54 : Colors.black),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: AppTheme.isDarkThemeNotifier,
+      builder: (context, dark, child) {
+        return ListTile(
+          onTap: press,
+          horizontalTitleGap: 0.0,
+          leading: SvgPicture.asset(
+            svgSrc,
+            colorFilter: ColorFilter.mode(dark ? Colors.white : Colors.black, BlendMode.srcIn),
+            height: 16,
+          ),
+          title: Text(
+            title,
+            style: TextStyle(color: dark ? Colors.white : Colors.black),
+          ),
+        );
+      },
     );
   }
 }

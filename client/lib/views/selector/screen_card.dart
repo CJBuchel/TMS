@@ -50,14 +50,14 @@ class ScreenCard extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(18, 110, 0, 0),
                       child: Text(
                         type,
-                        style: TextStyle(fontSize: 14, color: textColor, fontFamily: defaultFontFamilyBold),
+                        style: TextStyle(fontSize: 14, color: textColor),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(15, 130, 0, 0),
                       child: Text(
                         title,
-                        style: TextStyle(fontSize: 28, color: textColor, fontFamily: defaultFontFamily),
+                        style: TextStyle(fontSize: 28, color: textColor),
                       ),
                     ),
                   ],

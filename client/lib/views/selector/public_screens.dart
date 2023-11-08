@@ -21,7 +21,6 @@ class PublicScreens extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28,
                     color: Colors.blueGrey[800],
-                    fontFamily: defaultFontFamilyBold,
                   ),
                 ),
               ),

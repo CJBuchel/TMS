@@ -185,6 +185,7 @@ impl TmsHttpServer {
         team_get_route,
         team_update_route,
         team_delete_route,
+        team_add_route,
         teams_update_ranking_route,
         team_post_game_scoresheet_route,
 

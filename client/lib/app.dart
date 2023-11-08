@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/views/admin/dashboard/dashboard.dart';
 import 'package:tms/views/admin/dashboard/users/users.dart';
@@ -36,10 +35,8 @@ class TMSApp extends StatelessWidget {
             primaryColor: primaryColor,
             scaffoldBackgroundColor: bgColor,
             secondaryHeaderColor: bgSecondaryColor,
-            textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(
-              bodyColor: textColor,
-              fontFamily: defaultFontFamily,
-            ),
+            fontFamily: "Poppins", // our default
+            // textTheme: Theme.of(context).textTheme.apply(fontFamily: "Poppins"),
             canvasColor: bgSecondaryColor,
           ),
 

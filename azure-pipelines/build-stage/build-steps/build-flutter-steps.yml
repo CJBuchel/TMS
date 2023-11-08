@@ -30,10 +30,10 @@ steps:
 
   # Build flutter app (for web)
   - task: FlutterBuild@0
-    displayName: "Build Flutter App for Web (no CDN)"
-    condition: 
+    displayName: "Build Flutter Web (NO CDN)"
+    condition: eq( ${{parameters.target}}, 'web' )
     inputs:
-      target: eq( '${{parameters.target}}', 'web' )
+      target: '${{parameters.target}}'
       projectDirectory: './client'
       debugMode: false
       profileMode: false
@@ -44,12 +44,12 @@ steps:
       buildName: $(version) # replace with actual version
       buildNumber: $(Build.BuildNumber) # auto increment
 
-  # Build flutter app (not for web)
+   # Build flutter app (for app)
   - task: FlutterBuild@0
     displayName: "Build Flutter App: ${{parameters.target}}"
-    condition: 
+    condition: ne( ${{parameters.target}}, 'web' )
     inputs:
-      target: ne( '${{parameters.target}}', 'web' )
+      target: '${{parameters.target}}'
       projectDirectory: './client'
       debugMode: false
       profileMode: false

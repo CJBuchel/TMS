@@ -28,11 +28,28 @@ steps:
       projectDirectory: './client'
       arguments: 'pub add --dev msix'
 
-  # Build flutter app
+  # Build flutter app (for web)
+  - task: FlutterBuild@0
+    displayName: "Build Flutter App for Web (no CDN)"
+    condition: 
+    inputs:
+      target: eq( '${{parameters.target}}', 'web' )
+      projectDirectory: './client'
+      debugMode: false
+      profileMode: false
+      iosCodesign: false
+      extraArgs: '--release --no-web-resources-cdn'
+
+      # build
+      buildName: $(version) # replace with actual version
+      buildNumber: $(Build.BuildNumber) # auto increment
+
+  # Build flutter app (not for web)
   - task: FlutterBuild@0
     displayName: "Build Flutter App: ${{parameters.target}}"
+    condition: 
     inputs:
-      target: '${{parameters.target}}'
+      target: ne( '${{parameters.target}}', 'web' )
       projectDirectory: './client'
       debugMode: false
       profileMode: false

@@ -31,7 +31,7 @@ steps:
   # Build flutter app (for web)
   - task: FlutterBuild@0
     displayName: "Build Flutter Web (NO CDN)"
-    condition: eq( '${{parameters.target}}'', 'web' )
+    condition: eq( '${{parameters.target}}', 'web' )
     inputs:
       target: '${{parameters.target}}'
       projectDirectory: './client'
@@ -47,7 +47,7 @@ steps:
    # Build flutter app (for app)
   - task: FlutterBuild@0
     displayName: "Build Flutter App: ${{parameters.target}}"
-    condition: ne( '${{parameters.target}}'', 'web' )
+    condition: ne( '${{parameters.target}}', 'web' )
     inputs:
       target: '${{parameters.target}}'
       projectDirectory: './client'

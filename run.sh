@@ -3,10 +3,10 @@
 # run with --no-server or --no-client to skip the startup in docker
 
 # rustup target add x86_64-unknown-linux-musl
-# sudo apt update && apt install -y musl-tools musl-dev openssl
+# sudo apt update; sudo apt install -y musl-tools musl-dev openssl
 # sudo update-ca-certificates
 
-sudo docker stop tmsgraceful break out of loops rusdock
+sudo docker stop tms # graceful break out of loops rusdock
 sudo docker rm tms
 sudo docker image rm cjbuchel/tms
 
@@ -33,9 +33,9 @@ done
 
 
 (cd ./server; cargo build --target x86_64-unknown-linux-musl --release)
-(cd ./client; npm run prepare; flutter build web --release)
+(cd ./client; npm run prepare; flutter build web --release --no-web-resources-cdn)
 
-sudo docker-compose build
+sudo docker compose build
 
 
 if [ "$RUN_SERVER" = false ] ; then

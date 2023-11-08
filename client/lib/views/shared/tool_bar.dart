@@ -412,7 +412,7 @@ class _TmsToolBarState extends State<TmsToolBar> with SingleTickerProviderStateM
 
     return AppBar(
       backgroundColor: Colors.blueGrey[800],
-      titleTextStyle: TextStyle(fontSize: _scaledFontSize, color: Colors.white, fontFamily: defaultFontFamilyBold),
+      // titleTextStyle: TextStyle(fontSize: _scaledFontSize, color: Colors.white),
       iconTheme: IconThemeData(size: _scaledFontSize, color: Colors.white),
 
       // back button if applicable

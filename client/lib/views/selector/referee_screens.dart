@@ -36,7 +36,6 @@ class _RefereeScreensState extends State<RefereeScreens> with AutoUnsubScribeMix
                     style: TextStyle(
                       fontSize: 28,
                       color: Colors.blueGrey[800],
-                      fontFamily: defaultFontFamilyBold,
                     ),
                   ),
                 ),

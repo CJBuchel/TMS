@@ -79,8 +79,8 @@ Brightness get brightness => AppTheme.isDarkThemeNotifier.value ? Brightness.dar
 // }
 
 const defaultPadding = 16.0;
-const defaultFontFamily = "MontserratLight";
-const defaultFontFamilyBold = "MontserratBold";
+// const defaultFontFamily = "MontserratLight";
+// const defaultFontFamilyBold = "MontserratBold";
 
 // Variable constants
 const mdnsName = '_mdns-tms-server._udp.local';

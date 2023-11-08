@@ -61,6 +61,7 @@ pub struct TmsSchema {
   team_get_response: TeamResponse,
   team_update_request: TeamUpdateRequest,
   team_delete_request: TeamDeleteRequest,
+  team_add_request: TeamAddRequest,
   team_post_game_scoresheet_request: TeamPostGameScoresheetRequest,
   // matches
   matches_get_response: MatchesResponse,

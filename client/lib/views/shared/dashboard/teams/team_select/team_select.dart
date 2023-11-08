@@ -3,6 +3,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/sorter_util.dart';
+import 'package:tms/views/shared/dashboard/teams/team_select/add_team.dart';
 import 'package:tms/views/shared/dashboard/teams/team_select/team_select_table.dart';
 
 class TeamSelect extends StatefulWidget {
@@ -137,14 +138,8 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
           icon: const Icon(Icons.refresh, color: Colors.orange),
         ),
 
-        // add match
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.add,
-            color: Colors.green,
-          ),
-        ),
+        // add team
+        AddTeamButton(),
       ],
     );
   }

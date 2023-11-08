@@ -33,7 +33,6 @@ class _JudgingScreensState extends State<JudgingScreens> {
                     style: TextStyle(
                       fontSize: 28,
                       color: Colors.blueGrey[800],
-                      fontFamily: defaultFontFamilyBold,
                     ),
                   ),
                 ),

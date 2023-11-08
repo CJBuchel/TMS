@@ -42,6 +42,7 @@
     "socket_match_loaded_message",
     "start_timer_request",
     "team",
+    "team_add_request",
     "team_delete_request",
     "team_get_request",
     "team_get_response",
@@ -170,6 +171,9 @@
     },
     "team": {
       "$ref": "#/definitions/Team"
+    },
+    "team_add_request": {
+      "$ref": "#/definitions/TeamAddRequest"
     },
     "team_delete_request": {
       "$ref": "#/definitions/TeamDeleteRequest"
@@ -1259,6 +1263,29 @@
           "type": "string"
         },
         "team_id": {
+          "type": "string"
+        },
+        "team_name": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
+    "TeamAddRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "team_affiliation",
+        "team_name",
+        "team_number"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "team_affiliation": {
           "type": "string"
         },
         "team_name": {

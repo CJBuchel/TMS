@@ -1,7 +1,7 @@
 use log::{error, warn};
 use rocket::{State, get, http::Status, post};
 use tms_macros::tms_private_route;
-use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest, TeamDeleteRequest}, schemas::{Team, create_permissions, rank_teams}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
+use tms_utils::{security::Security, security::encrypt, TmsClients, network_schemas::{TeamsResponse, TeamRequest, TeamResponse, TeamUpdateRequest, SocketMessage, TeamPostGameScoresheetRequest, TeamDeleteRequest, TeamAddRequest}, schemas::{Team, create_permissions, rank_teams}, TmsRespond, TmsRouteResponse, TmsRequest, check_permissions, tms_clients_ws_send};
 
 use crate::{db::{db::TmsDB, tree::{UpdateTree, UpdateError}}, event_service::TmsEventServiceArc};
 
@@ -110,6 +110,79 @@ pub fn team_update_route(message: String) -> TmsRouteResponse<()> {
         TmsRespond!(Status::NotFound, "Failed to find".to_string());
       }
     }
+  }
+
+  TmsRespond!(Status::Unauthorized)
+}
+
+#[tms_private_route]
+#[post("/team/add/<uuid>", data = "<message>")]
+pub fn team_add_route(message: String) -> TmsRouteResponse<()> {
+  let message: TeamAddRequest = TmsRequest!(message.clone(), security);
+
+  let mut perms = create_permissions();
+  perms.judge_advisor = Some(true);
+
+  if check_permissions(clients, uuid, message.auth_token, perms) {
+    match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
+      Some(_) => {
+        TmsRespond!(Status::Conflict, "Team already exists".to_string());
+      },
+
+      None => {
+        let team = Team {
+          team_number: message.team_number.clone(),
+          team_name: message.team_name.clone(),
+          team_affiliation: message.team_affiliation.clone(),
+
+          team_id: String::from(""),
+          game_scores: vec![],
+          core_values_scores: vec![],
+          innovation_project_scores: vec![],
+          robot_design_scores: vec![],
+          ranking: 0
+        };
+
+
+        // add team to db
+        match db.tms_data.teams.insert(message.team_number.clone().as_bytes(), team) {
+          Ok(_) => {
+            // update rankings
+            if !update_rankings(db, clients) {
+              TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string());
+            }
+            // send updates to clients
+            tms_clients_ws_send(SocketMessage {
+              from_id: None,
+              topic: String::from("teams"),
+              sub_topic: String::from("update"),
+              message: "".to_string(),
+            }, clients.inner().to_owned(), None);
+
+            tms_clients_ws_send(SocketMessage {
+              from_id: None,
+              topic: String::from("matches"),
+              sub_topic: String::from("update"),
+              message: "".to_string(),
+            }, clients.inner().to_owned(), None);
+
+            tms_clients_ws_send(SocketMessage {
+              from_id: None,
+              topic: String::from("judging_sessions"),
+              sub_topic: String::from("update"),
+              message: "".to_string(),
+            }, clients.inner().to_owned(), None);
+
+            // good response
+            TmsRespond!();
+          },
+          Err(_) => {
+            error!("Failed to add team");
+            TmsRespond!(Status::BadRequest, "Failed to add team".to_string());
+          }
+        }
+      }
+    } 
   }
 
   TmsRespond!(Status::Unauthorized)

@@ -260,6 +260,7 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
   perms.head_referee = Some(true);
   perms.referee = Some(true);
   if check_permissions(clients, uuid, message.auth_token, perms) {
+    warn!("Scoresheet post request: {}, {}, {}", message.scoresheet.referee, message.team_number.clone(), message.scoresheet.score);
     match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
       Some(mut t) => {
         // validate scoresheet, make sure there are no errors and update the score.

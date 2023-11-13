@@ -6,7 +6,9 @@ import 'package:tms/requests/match_requests.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_footer/submission_dialog.dart';
 import 'package:tms/views/referee_scoring/table_setup.dart';
+import 'package:tuple/tuple.dart';
 
 class ScoringFooter extends StatelessWidget {
   final double height;
@@ -37,80 +39,6 @@ class ScoringFooter extends StatelessWidget {
     this.nextMatch,
     this.nextTeam,
   }) : super(key: key);
-
-  void showSubmitErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: ((context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.warning, color: Colors.red),
-              SizedBox(width: 10),
-              Text(
-                "Submit Error",
-                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      }),
-    );
-  }
-
-  void showSubmitSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: ((context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.check, color: Colors.green),
-              SizedBox(width: 10),
-              Text(
-                "Submit Success",
-                style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Team ${nextTeam?.teamNumber}"),
-              const Text("Scoresheet successfully submitted"),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      }),
-    );
-  }
-
-  void showStatusError(BuildContext context, int status) {
-    if (status == HttpStatus.badRequest) {
-      showSubmitErrorDialog(context, "Server Error (400): Bad Request");
-    } else if (status == HttpStatus.unauthorized) {
-      showSubmitErrorDialog(context, "Server Error (401): Unauthorized");
-    } else {
-      showSubmitErrorDialog(context, "Server Error ($status)");
-    }
-  }
 
   Future<bool?> showConfirmNoShow(BuildContext context) {
     return showDialog(
@@ -150,45 +78,21 @@ class ScoringFooter extends StatelessWidget {
   }
 
   void postScoresheet(TeamGameScore scoresheet, BuildContext context) {
-    RefereeTableUtil.getRefereeTable().then((refereeTable) {
-      GameMatch updatedGameMatch = nextMatch!;
-      if (locked) {
-        bool found = false;
-        for (var onTable in updatedGameMatch.matchTables) {
-          if (onTable.table == refereeTable.table) {
-            onTable.scoreSubmitted = true;
-            found = true;
-          }
-        }
-
-        if (!found) {
-          showSubmitErrorDialog(context, "This table does not match the expected table for this match");
-          return;
-        }
-      }
-
-      // send to server
-      postTeamGameScoresheetRequest(nextTeam!.teamNumber, scoresheet).then((teamSubmitStatus) {
-        if (teamSubmitStatus == HttpStatus.ok) {
-          // update match
-          if (locked) {
-            updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
-              if (matchUpdateStatus == HttpStatus.ok) {
-                showSubmitSuccessDialog(context);
-                onSubmit();
-              } else {
-                showStatusError(context, matchUpdateStatus);
-              }
-            });
-          } else {
-            showSubmitSuccessDialog(context);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return SubmissionDialog(
+          nextMatch: nextMatch,
+          nextTeam: nextTeam,
+          locked: locked,
+          scoresheet: scoresheet,
+          onSubmit: () {
             onSubmit();
-          }
-        } else {
-          showStatusError(context, teamSubmitStatus);
-        }
-      });
-    });
+          },
+        );
+      },
+    );
   }
 
   void submitScoresheet(BuildContext context) {

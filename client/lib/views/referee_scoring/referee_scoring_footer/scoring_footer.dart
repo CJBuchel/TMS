@@ -46,6 +46,7 @@ class ScoringFooter extends StatelessWidget {
           title: const Row(
             children: [
               Icon(Icons.warning, color: Colors.red),
+              SizedBox(width: 10),
               Text(
                 "Submit Error",
                 style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
@@ -53,6 +54,41 @@ class ScoringFooter extends StatelessWidget {
             ],
           ),
           content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  void showSubmitSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.check, color: Colors.green),
+              SizedBox(width: 10),
+              Text(
+                "Submit Success",
+                style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Team ${nextTeam?.teamNumber}"),
+              const Text("Scoresheet successfully submitted"),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -138,38 +174,14 @@ class ScoringFooter extends StatelessWidget {
           if (locked) {
             updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
               if (matchUpdateStatus == HttpStatus.ok) {
-                ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Row(
-                      children: [
-                        Icon(Icons.check, color: Colors.green),
-                        SizedBox(width: 16),
-                        Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                    backgroundColor: Colors.blueGrey[800],
-                  ),
-                );
+                showSubmitSuccessDialog(context);
                 onSubmit();
               } else {
                 showStatusError(context, matchUpdateStatus);
               }
             });
           } else {
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Row(
-                  children: [
-                    Icon(Icons.check, color: Colors.green),
-                    SizedBox(width: 16),
-                    Text("Scoresheet Successfully submitted", style: TextStyle(color: Colors.white)),
-                  ],
-                ),
-                backgroundColor: Colors.blueGrey[800],
-              ),
-            );
+            showSubmitSuccessDialog(context);
             onSubmit();
           }
         } else {

@@ -9,7 +9,7 @@ import 'package:tms/views/referee_scoring/referee_scoring_footer/scoring_footer.
 import 'package:tms/views/referee_scoring/referee_scoring_header/scoring_header.dart';
 import 'package:tms/views/shared/scoring/game_scoring.dart';
 import 'package:tms/views/shared/tool_bar.dart';
-import 'package:tms/views/timer/clock.dart';
+// import 'package:tms/views/timer/clock.dart';
 
 class RefereeScoring extends StatefulWidget {
   const RefereeScoring({Key? key}) : super(key: key);
@@ -173,27 +173,6 @@ class _ScoringScreenState extends State<RefereeScoring> with AutoUnsubScribeMixi
     );
   }
 
-  Widget getFloatingTimer(double headerHeight) {
-    return Positioned(
-      top: headerHeight,
-      right: 0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-          ),
-          border: Border.all(color: AppTheme.isDarkTheme ? Colors.white : Colors.black),
-        ),
-        width: 120,
-        height: 60,
-        child: const Center(
-          child: Clock(fontSize: 30),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     double headerHeight = Responsive.isMobile(context)
@@ -216,7 +195,6 @@ class _ScoringScreenState extends State<RefereeScoring> with AutoUnsubScribeMixi
             return Stack(
               children: [
                 getScoringColumn(headerHeight, footerHeight, constraints),
-                // getFloatingTimer(headerHeight), // maybe make it only appear when timer is running
                 FloatingScore(footerHeight: footerHeight, score: _score),
               ],
             );

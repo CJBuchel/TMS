@@ -5,10 +5,13 @@ class FloatingScore extends StatelessWidget {
   final double footerHeight;
   final int score;
 
+  final Function()? onRecalculateScore;
+
   const FloatingScore({
     Key? key,
     required this.footerHeight,
     required this.score,
+    this.onRecalculateScore,
   }) : super(key: key);
 
   @override

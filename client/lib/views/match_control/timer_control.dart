@@ -31,7 +31,7 @@ enum TimerState {
 class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
   TimerState _currentTimerState = TimerState.idle;
   double desktopButtonHeight = 40;
-  double tabletButtonHeight = 24;
+  double tabletButtonHeight = 35;
   double desktopButtonTextSize = 18;
   double tabletButtonTextSize = 14;
   void displayErrorDialog(int serverRes) {

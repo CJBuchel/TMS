@@ -1,14 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/requests/match_requests.dart';
-import 'package:tms/requests/team_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/submission_dialog.dart';
 import 'package:tms/views/referee_scoring/table_setup.dart';
-import 'package:tuple/tuple.dart';
 
 class ScoringFooter extends StatelessWidget {
   final double height;

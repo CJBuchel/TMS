@@ -99,40 +99,24 @@ class SubmissionDialog extends StatelessWidget {
     );
   }
 
-  Future<Tuple2<bool, int>> _postScoresheet(TeamGameScore scoresheet, BuildContext context) async {
-    bool found = false;
+  Future<int> _postScoresheet(TeamGameScore scoresheet, BuildContext context) async {
+    bool updateMatch = locked ? true : false;
     int status = HttpStatus.badRequest;
 
     await RefereeTableUtil.getRefereeTable().then((refereeTable) async {
-      GameMatch updatedGameMatch = nextMatch!;
-      if (locked) {
-        found = false;
-        for (var onTable in updatedGameMatch.matchTables) {
-          if (onTable.table == refereeTable.table) {
-            onTable.scoreSubmitted = true;
-            found = true;
-          }
-        }
-      }
-
       // send to server
-      await postTeamGameScoresheetRequest(nextTeam!.teamNumber, scoresheet).then((teamSubmitStatus) async {
-        if (teamSubmitStatus == HttpStatus.ok) {
-          // update match
-          if (locked) {
-            await updateMatchRequest(updatedGameMatch.matchNumber, updatedGameMatch).then((matchUpdateStatus) {
-              status = matchUpdateStatus;
-            });
-          } else {
-            status = teamSubmitStatus;
-          }
-        } else {
-          status = teamSubmitStatus;
-        }
+      await postTeamGameScoresheetRequest(
+        nextTeam!.teamNumber,
+        scoresheet,
+        updateMatch: updateMatch,
+        matchNumber: nextMatch?.matchNumber,
+        table: refereeTable.table,
+      ).then((teamSubmitStatus) async {
+        status = teamSubmitStatus;
       });
     });
 
-    return Tuple2(found, status);
+    return status;
   }
 
   @override
@@ -144,27 +128,22 @@ class SubmissionDialog extends StatelessWidget {
           // loading
           return loadingDialog(context);
         } else if (snapshot.hasData && snapshot.data != null) {
-          if (!snapshot.data!.item1) {
-            // if not found
-            return submitErrorDialog(context, "This table does not match the expected table for this match");
+          // if found and status is not ok (error)
+          if (snapshot.data! != HttpStatus.ok) {
+            // if not ok
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pop(); // Close loading dialog
+              int res = snapshot.data!;
+              showNetworkError(
+                res,
+                context,
+                subMessage: "Submission Error",
+              );
+            });
+            return Container();
           } else {
-            // if found and status is not ok (error)
-            if (snapshot.data!.item2 != HttpStatus.ok) {
-              // if not ok
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pop(); // Close loading dialog
-                int res = snapshot.data!.item2;
-                showNetworkError(
-                  res,
-                  context,
-                  subMessage: "Submission Error",
-                );
-              });
-              return Container();
-            } else {
-              // if ok
-              return submitSuccessDialog(context);
-            }
+            // if ok
+            return submitSuccessDialog(context);
           }
         } else {
           return submitErrorDialog(context, "An error occurred");

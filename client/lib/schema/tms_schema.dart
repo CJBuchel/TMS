@@ -1619,24 +1619,36 @@ class TeamResponse {
 class TeamPostGameScoresheetRequest {
     TeamPostGameScoresheetRequest({
         required this.authToken,
+        this.matchNumber,
         required this.scoresheet,
+        this.table,
         required this.teamNumber,
+        required this.updateMatch,
     });
 
     String authToken;
+    String? matchNumber;
     TeamGameScore scoresheet;
+    String? table;
     String teamNumber;
+    bool updateMatch;
 
     factory TeamPostGameScoresheetRequest.fromJson(Map<String, dynamic> json) => TeamPostGameScoresheetRequest(
         authToken: json["auth_token"],
+        matchNumber: json["match_number"],
         scoresheet: TeamGameScore.fromJson(json["scoresheet"]),
+        table: json["table"],
         teamNumber: json["team_number"],
+        updateMatch: json["update_match"],
     );
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+        "match_number": matchNumber,
         "scoresheet": scoresheet.toJson(),
+        "table": table,
         "team_number": teamNumber,
+        "update_match": updateMatch,
     };
 }
 

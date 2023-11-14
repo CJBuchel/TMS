@@ -532,7 +532,7 @@ impl AusFLLGame for Masterpiece {
   fn score(&self, answers: Vec<ScoreAnswer>) -> i32 {
     let mut score = 0;
     // M00
-    if self.s_answer(answers.clone(), "m00a") == "Yes" { score += 25; }
+    if self.s_answer(answers.clone(), "m00a") == "Yes" { score += 20; }
 
     // M01 - 20 points if achieved
     if self.s_answer(answers.clone(), "m01a") == "Yes" { score += 20; }

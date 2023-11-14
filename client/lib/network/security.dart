@@ -5,6 +5,7 @@ import 'package:fast_rsa/fast_rsa.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/network/encryption_queue.dart';
 
 enum SecurityState { noSecurity, encrypting, secure }
 
@@ -90,7 +91,8 @@ class NetworkSecurity {
     try {
       key = key.isEmpty ? await getServerKey() : key;
       setState(key.isEmpty ? SecurityState.noSecurity : await getState());
-      return RSA.encryptPKCS1v15(jsonEncode(json), key);
+      String enc = await Encryption.encrypt(jsonEncode(json), key); // using stream queue
+      return enc;
     } catch (e) {
       return "";
     }
@@ -100,7 +102,8 @@ class NetworkSecurity {
     try {
       key = key.isEmpty ? (await getKeys()).privateKey : key;
       setState(key.isEmpty ? SecurityState.noSecurity : await getState());
-      return jsonDecode(await RSA.decryptPKCS1v15(message, key));
+      String dec = await Encryption.decrypt(message, key); // using stream queue
+      return jsonDecode(dec);
     } catch (e) {
       return {};
     }

@@ -241,7 +241,6 @@ class Network {
 
   static Future<Tuple3<bool, int, Map<String, dynamic>>> serverGet(String route) async {
     return await _serverGet(route).timeout(const Duration(seconds: 15), onTimeout: () {
-      Logger().e("Request Function Timeout: $route");
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }
@@ -277,7 +276,6 @@ class Network {
 
   static Future<Tuple3<bool, int, Map<String, dynamic>>> serverPost(String route, dynamic json) async {
     return await _serverPost(route, json).timeout(const Duration(seconds: 15), onTimeout: () {
-      Logger().e("Request Function Timeout: $route");
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }
@@ -291,10 +289,10 @@ class Network {
       final serverIp = await getServerIP();
       final uuid = await _http.getUuid();
       try {
+        var encryptedM = await NetworkSecurity.encryptMessage(json);
         if (timeout.isTimedOut) {
           return const Tuple3(false, HttpStatus.requestTimeout, {});
         }
-        var encryptedM = await NetworkSecurity.encryptMessage(json);
         final serverRes = await http.delete(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'), body: encryptedM);
         if (serverRes.body.isNotEmpty) {
           var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
@@ -312,7 +310,6 @@ class Network {
 
   static Future<Tuple3<bool, int, Map<String, dynamic>>> serverDelete(String route, dynamic json) async {
     return await _serverDelete(route, json).timeout(const Duration(seconds: 15), onTimeout: () {
-      Logger().e("Request Function Timeout: $route");
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }

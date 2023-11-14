@@ -25,7 +25,7 @@ steps:
   - task: AppStoreRelease@1
     inputs:
       serviceEndpoint: 'App Store Connect'
-      releaseTrack: 'Production'
+      releaseTrack: 'TestFlight'
       appIdentifier: 'a.loose.screw.tms'
       appType: 'iOS'
       shouldSubmitForReview: true

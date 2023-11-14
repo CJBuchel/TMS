@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/permissions_utils.dart';
 import 'package:tms/views/selector/screen_card.dart';

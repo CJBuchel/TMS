@@ -12,18 +12,8 @@ class EncryptionQueue {
     });
   }
 
-  Future<String> addTask(Future<String> Function() task) {
-    Completer<String> completer = Completer();
-    _queue.sink.add(() async {
-      try {
-        var result = await task();
-        completer.complete(result);
-      } catch (e) {
-        completer.completeError(e);
-      }
-    });
-
-    return completer.future;
+  void addTask(Future<String> Function() task) {
+    _queue.sink.add(task);
   }
 
   void dispose() {
@@ -34,47 +24,37 @@ class EncryptionQueue {
 class Encryption {
   static final EncryptionQueue _queue = EncryptionQueue();
 
-  static Future<String> _encryptWithTimeout(String rawMessage, String publicKey) async {
-    return await RSA.encryptPKCS1v15(rawMessage, publicKey).timeout(const Duration(seconds: 3));
-  }
-
   // encrypt using a stream queue which monitors and allows only one encryption at a time
-  static Future<String> encrypt(String rawMessage, String publicKey, {int retries = 3}) async {
-    int attempt = 0;
-    while (attempt < retries) {
+  static Future<String> encrypt(String rawMessage, String publicKey) async {
+    Completer<String> completer = Completer();
+
+    _queue.addTask(() async {
       try {
-        return await _queue.addTask(() => _encryptWithTimeout(rawMessage, publicKey));
+        String enc = await RSA.encryptPKCS1v15(rawMessage, publicKey).timeout(const Duration(seconds: 5));
+        completer.complete(enc);
       } catch (e) {
-        Logger().e("Encryption attempt $attempt failed: $e");
-        attempt++;
-        if (attempt >= retries) {
-          rethrow;
-        }
+        completer.completeError(e);
       }
-    }
+      return completer.future;
+    });
 
-    throw Exception("Encryption failed after $retries attempts");
-  }
-
-  static Future<String> _decryptWithTimeout(String message, String privateKey) async {
-    return await RSA.decryptPKCS1v15(message, privateKey).timeout(const Duration(seconds: 3));
+    return completer.future;
   }
 
   // decrypt using a stream queue which monitors and allows only one decryption at a time
-  static Future<String> decrypt(String message, String privateKey, {int retries = 3}) async {
-    int attempt = 0;
-    while (attempt < retries) {
-      try {
-        return await _queue.addTask(() => _decryptWithTimeout(message, privateKey));
-      } catch (e) {
-        Logger().e("Decryption attempt $attempt failed: $e");
-        attempt++;
-        if (attempt >= retries) {
-          rethrow;
-        }
-      }
-    }
+  static Future<String> decrypt(String message, String privateKey) async {
+    Completer<String> completer = Completer();
 
-    throw Exception("Decryption failed after 3 attempts");
+    _queue.addTask(() async {
+      try {
+        String dec = await RSA.decryptPKCS1v15(message, privateKey).timeout(const Duration(seconds: 5));
+        completer.complete(dec);
+      } catch (e) {
+        completer.completeError(e);
+      }
+      return completer.future;
+    });
+
+    return completer.future;
   }
 }

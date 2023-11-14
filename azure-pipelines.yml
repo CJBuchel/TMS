@@ -3,7 +3,6 @@
 
 trigger:
 - master 
-- docker-publish
 - publish
 
 resources: 
@@ -14,6 +13,8 @@ variables:
 - template: './azure-pipelines/vars.yml'
 - name: isPublishable
   value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
+- name: isIosPublishable
+  value: $[eq(variables['Build.SourceBranch'], 'refs/heads/publish')]
 
   # docker variables
 - name: dockerRepository

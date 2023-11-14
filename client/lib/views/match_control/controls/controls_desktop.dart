@@ -28,7 +28,7 @@ class MatchControlDesktopControls extends StatelessWidget {
   }) : super(key: key);
 
   final double desktopButtonHeight = 40;
-  final double tabletButtonHeight = 24;
+  final double tabletButtonHeight = 35;
   final double desktopButtonTextSize = 18;
   final double tabletButtonTextSize = 14;
 
@@ -172,7 +172,7 @@ class MatchControlDesktopControls extends StatelessWidget {
                                 }
                               },
                               icon: Icon(Icons.clear, size: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize),
-                              label: Text("Set Match Incomplete",
+                              label: Text("Set Incomplete",
                                   style: TextStyle(fontSize: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize)),
                             ),
                           ),
@@ -197,7 +197,7 @@ class MatchControlDesktopControls extends StatelessWidget {
                                 }
                               },
                               icon: Icon(Icons.check, size: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize),
-                              label: Text("Set Match Complete",
+                              label: Text("Set Complete",
                                   style: TextStyle(fontSize: Responsive.isDesktop(context) ? desktopButtonTextSize : tabletButtonTextSize)),
                             ),
                           ),

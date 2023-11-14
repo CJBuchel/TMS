@@ -31,7 +31,7 @@ enum TimerState {
 class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
   TimerState _currentTimerState = TimerState.idle;
   double desktopButtonHeight = 40;
-  double tabletButtonHeight = 24;
+  double tabletButtonHeight = 35;
   double desktopButtonTextSize = 18;
   double tabletButtonTextSize = 14;
   void displayErrorDialog(int serverRes) {
@@ -46,36 +46,29 @@ class _TimerControlState extends State<TimerControl> with AutoUnsubScribeMixin {
     );
   }
 
-  void sendTimerStatus(TimerSendStatus status) {
+  Future<int> _sendTimerStatus(TimerSendStatus status) async {
+    int statusCode = HttpStatus.ok;
     switch (status) {
       case TimerSendStatus.preStart:
-        timerPreStartRequest().then((res) {
-          if (res != HttpStatus.ok) {
-            displayErrorDialog(res);
-          }
-        });
+        statusCode = await timerPreStartRequest();
         break;
       case TimerSendStatus.start:
-        timerStartRequest().then((res) {
-          if (res != HttpStatus.ok) {
-            displayErrorDialog(res);
-          }
-        });
+        statusCode = await timerStartRequest();
         break;
       case TimerSendStatus.stop:
-        timerStopRequest().then((res) {
-          if (res != HttpStatus.ok) {
-            displayErrorDialog(res);
-          }
-        });
+        statusCode = await timerStopRequest();
         break;
       case TimerSendStatus.reload:
-        timerReloadRequest().then((res) {
-          if (res != HttpStatus.ok) {
-            displayErrorDialog(res);
-          }
-        });
+        statusCode = await timerReloadRequest();
         break;
+    }
+    return statusCode;
+  }
+
+  void sendTimerStatus(TimerSendStatus status) async {
+    int statusCode = await _sendTimerStatus(status);
+    if (statusCode != HttpStatus.ok) {
+      displayErrorDialog(statusCode);
     }
   }
 

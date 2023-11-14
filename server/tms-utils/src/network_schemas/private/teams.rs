@@ -14,6 +14,9 @@ pub struct TeamUpdateRequest {
 pub struct TeamPostGameScoresheetRequest {
   pub auth_token: String,
   pub team_number: String,
+  pub update_match: bool, // only exists for table scoring
+  pub match_number: Option<String>, // only exists for table scoring
+  pub table: Option<String>, // only exists for table scoring
   pub scoresheet: TeamGameScore,
 }
 

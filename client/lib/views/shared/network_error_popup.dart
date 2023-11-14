@@ -3,13 +3,19 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 void showNetworkError(int res, BuildContext context, {String subMessage = ""}) {
-  String message = "";
+  String message = "N/A";
   switch (res) {
     case HttpStatus.badRequest:
       message = "(400) Bad request: $subMessage";
       break;
     case HttpStatus.unauthorized:
       message = "(401) Unauthorized: $subMessage";
+      break;
+    case HttpStatus.forbidden:
+      message = "(403) Forbidden: $subMessage";
+      break;
+    case HttpStatus.requestTimeout:
+      message = "(408) Request timeout: $subMessage";
       break;
 
     default:

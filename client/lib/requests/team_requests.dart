@@ -83,9 +83,22 @@ Future<int> addTeamRequest(String number, String name, String aff) async {
   }
 }
 
-Future<int> postTeamGameScoresheetRequest(String teamNumber, TeamGameScore scoresheet) async {
+Future<int> postTeamGameScoresheetRequest(
+  String teamNumber,
+  TeamGameScore scoresheet, {
+  bool updateMatch = false,
+  String? matchNumber,
+  String? table,
+}) async {
   try {
-    var scoresheetRequest = TeamPostGameScoresheetRequest(authToken: await NetworkAuth.getToken(), teamNumber: teamNumber, scoresheet: scoresheet);
+    var scoresheetRequest = TeamPostGameScoresheetRequest(
+      authToken: await NetworkAuth.getToken(),
+      teamNumber: teamNumber,
+      scoresheet: scoresheet,
+      updateMatch: updateMatch,
+      matchNumber: matchNumber,
+      table: table,
+    );
     var res = await Network.serverPost("team/post/game_scoresheet", scoresheetRequest.toJson());
     if (res.item1) {
       return res.item2;

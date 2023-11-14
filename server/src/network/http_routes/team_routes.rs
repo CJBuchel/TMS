@@ -251,6 +251,52 @@ pub fn teams_update_ranking_route(db: &State<std::sync::Arc<TmsDB>>, clients: &S
   }
 }
 
+fn scoresheet_update_match(res: TeamPostGameScoresheetRequest, db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsClients>) -> bool {
+  match res.match_number {
+    Some(m) => {
+      match res.table {
+        Some(tb) => {
+          // update match
+          match db.tms_data.matches.get(m.clone()).unwrap() {
+            Some(game_match) => {
+              let mut updated_match = game_match.clone();
+              for on_table in &mut updated_match.match_tables {
+                if on_table.table == tb {
+                  // update the match
+                  on_table.score_submitted = true;
+
+                  // update the match in the database
+                  match db.tms_data.matches.update(m.as_bytes(), m.as_bytes(), updated_match.clone()) {
+                    Ok(_) => {
+                      // send updates to clients
+                      tms_clients_ws_send(SocketMessage {
+                        from_id: None,
+                        topic: String::from("match"),
+                        sub_topic: String::from("update"),
+                        message: m.clone(),
+                      }, clients.inner().clone(), None);
+                    },
+                    Err(_) => {
+                      error!("Failed to update match {}", m);
+                      return false;
+                    }
+                  }
+                  return true;
+                }
+              }
+            },
+            None => {},
+          }
+        },
+        None => {},
+      }
+    },
+    None => {},
+  }
+
+  false
+}
+
 #[tms_private_route]
 #[post("/team/post/game_scoresheet/<uuid>", data = "<message>")]
 pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
@@ -259,7 +305,8 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
   let mut perms = create_permissions();
   perms.head_referee = Some(true);
   perms.referee = Some(true);
-  if check_permissions(clients, uuid, message.auth_token, perms) {
+  if check_permissions(clients, uuid, message.auth_token.clone(), perms) {
+    warn!("Scoresheet post request: {}, {}, {}", message.scoresheet.referee, message.team_number.clone(), message.scoresheet.score);
     match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
       Some(mut t) => {
         // validate scoresheet, make sure there are no errors and update the score.
@@ -270,11 +317,19 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
               let mut scoresheet = message.scoresheet.clone();
               scoresheet.score = validation.score;
               scoresheet.time_stamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs();
-              warn!("Scoresheet post {}", scoresheet.score);
 
               t.game_scores.push(scoresheet.clone());
               // update the team in the database
               let _ = db.tms_data.teams.update(t.team_number.as_bytes(), t.team_number.as_bytes(), t.clone());
+
+              // check if we need to update the match too
+              if message.update_match {
+                // update match
+                if !scoresheet_update_match(message.clone(), db, clients) {
+                  error!("Failed to update match");
+                  TmsRespond!(Status::BadRequest, "Failed to update match".to_string());
+                }
+              }
       
               // update rankings
               if !update_rankings(db, clients) {

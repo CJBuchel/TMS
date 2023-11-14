@@ -58,6 +58,18 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
   final TextEditingController _publicCommentController = TextEditingController();
   final TextEditingController _privateCommentController = TextEditingController();
 
+  bool _currentlyValidating = false;
+
+  set _setCurrentlyValidating(bool val) {
+    if (mounted) {
+      setState(() {
+        _currentlyValidating = val;
+      });
+    }
+  }
+
+  get _getCurrentlyValidating => _currentlyValidating;
+
   set _setGame(Game g) {
     if (mounted) {
       // check if the game is the same
@@ -80,17 +92,21 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
   }
 
   Future<void> _validateScores() async {
-    await getValidateQuestionsRequest(_answers).then((res) {
-      if (res.item1 == HttpStatus.ok) {
-        if (mounted) {
-          setState(() {
-            _errors = res.item2.item2;
-            widget.onScore?.call(res.item2.item1);
-            widget.onErrors?.call(_errors);
-          });
+    if (!_getCurrentlyValidating) {
+      _setCurrentlyValidating = true;
+      await getValidateQuestionsRequest(_answers).then((res) {
+        if (res.item1 == HttpStatus.ok) {
+          if (mounted) {
+            setState(() {
+              _errors = res.item2.item2;
+              widget.onScore?.call(res.item2.item1);
+              widget.onErrors?.call(_errors);
+            });
+          }
         }
-      }
-    });
+      });
+      _setCurrentlyValidating = false;
+    }
   }
 
   Future<void> _setDefault() async {

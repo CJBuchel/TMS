@@ -1388,17 +1388,33 @@
       "required": [
         "auth_token",
         "scoresheet",
-        "team_number"
+        "team_number",
+        "update_match"
       ],
       "properties": {
         "auth_token": {
           "type": "string"
         },
+        "match_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "scoresheet": {
           "$ref": "#/definitions/TeamGameScore"
         },
+        "table": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "team_number": {
           "type": "string"
+        },
+        "update_match": {
+          "type": "boolean"
         }
       }
     },

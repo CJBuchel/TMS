@@ -33,16 +33,16 @@ done
 
 
 (cd ./server; cargo build --target x86_64-unknown-linux-musl --release)
-(cd ./client; npm run prepare; flutter build web --release --no-web-resources-cdn)
+(cd ./client; npm run prepare; flutter build web --release --no-web-resources-cdn --web-renderer canvaskit)
 
 sudo docker compose build
 
 
 if [ "$RUN_SERVER" = false ] ; then
   echo "NO SERVER MODE"
-  sudo docker run --network host -it -p 8080:8080 --name tms cjbuchel/tms --no-server
+  sudo docker run --network host -it --name tms cjbuchel/tms --no-server
 elif [ "$RUN_CLIENT" = false ] ; then
-  sudo docker run --network host -it -p 2121:2121 -p 2122:2122 -p 5353:5353 --name tms cjbuchel/tms --no-client
+  sudo docker run --network host -it --name tms cjbuchel/tms --no-client
 else
-  sudo docker run --network host -it -p 8080:8080 -p 2121:2121 -p 2122:2122 -p 5353:5353 --name tms cjbuchel/tms "$@"
+  sudo docker run --network host -it --name tms cjbuchel/tms "$@"
 fi

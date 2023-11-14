@@ -1,1 +1,2 @@
-*.generated.js linguist-generated=true
+**/*.js linguist-generated=true
+**/*.mjs linguist-generated=true

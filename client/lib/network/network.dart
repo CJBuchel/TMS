@@ -213,16 +213,12 @@ class Network {
 
   // Tuple3 (good access, res status code, res message)
   static Future<Tuple3<bool, int, Map<String, dynamic>>> _serverGet(String route) async {
-    var timeout = OperationTimeoutTracker(const Duration(seconds: 10));
     Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
     var st = await getStates();
     if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
       final serverIp = await getServerIP();
       final uuid = await _http.getUuid();
       try {
-        if (timeout.isTimedOut) {
-          return const Tuple3(false, HttpStatus.requestTimeout, {});
-        }
         final serverRes = await http.get(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'));
         if (serverRes.body.isNotEmpty) {
           var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
@@ -241,14 +237,12 @@ class Network {
 
   static Future<Tuple3<bool, int, Map<String, dynamic>>> serverGet(String route) async {
     return await _serverGet(route).timeout(const Duration(seconds: 15), onTimeout: () {
-      Logger().e("Request Function Timeout: $route");
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }
 
   // Tuple3 (good access, res status code, res message in json)
   static Future<Tuple3<bool, int, Map<String, dynamic>>> _serverPost(String route, dynamic json) async {
-    var timeout = OperationTimeoutTracker(const Duration(seconds: 10));
     Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
     var st = await getStates();
     if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
@@ -256,9 +250,6 @@ class Network {
       final uuid = await _http.getUuid();
       try {
         var encryptedM = await NetworkSecurity.encryptMessage(json);
-        if (timeout.isTimedOut) {
-          return const Tuple3(false, HttpStatus.requestTimeout, {});
-        }
         final serverRes = await http.post(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'), body: encryptedM);
         if (serverRes.body.isNotEmpty) {
           var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
@@ -277,23 +268,18 @@ class Network {
 
   static Future<Tuple3<bool, int, Map<String, dynamic>>> serverPost(String route, dynamic json) async {
     return await _serverPost(route, json).timeout(const Duration(seconds: 15), onTimeout: () {
-      Logger().e("Request Function Timeout: $route");
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }
 
   // Tuple3 (good access, res status code, res message)
   static Future<Tuple3<bool, int, Map<String, dynamic>>> _serverDelete(String route, dynamic json) async {
-    var timeout = OperationTimeoutTracker(const Duration(seconds: 10));
     Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
     var st = await getStates();
     if (st.item1 == NetworkHttpConnectionState.connected && st.item3 == SecurityState.secure) {
       final serverIp = await getServerIP();
       final uuid = await _http.getUuid();
       try {
-        if (timeout.isTimedOut) {
-          return const Tuple3(false, HttpStatus.requestTimeout, {});
-        }
         var encryptedM = await NetworkSecurity.encryptMessage(json);
         final serverRes = await http.delete(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'), body: encryptedM);
         if (serverRes.body.isNotEmpty) {
@@ -312,7 +298,7 @@ class Network {
 
   static Future<Tuple3<bool, int, Map<String, dynamic>>> serverDelete(String route, dynamic json) async {
     return await _serverDelete(route, json).timeout(const Duration(seconds: 15), onTimeout: () {
-      Logger().e("Request Function Timeout: $route");
+      // Logger().e("Request Function Timeout: $route");
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }

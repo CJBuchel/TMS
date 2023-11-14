@@ -176,6 +176,12 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
       }
     });
 
+    // delayed
+    Future.delayed(const Duration(milliseconds: 500), () {
+      getMatches().then((matches) => setMatches(matches));
+      getTeams().then((teams) => setTeams(teams));
+    });
+
     setNextTableMatch();
   }
 

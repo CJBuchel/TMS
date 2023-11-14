@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tms/constants.dart';
 import 'package:tms/views/selector/screen_card.dart';
 
 class PublicScreens extends StatelessWidget {

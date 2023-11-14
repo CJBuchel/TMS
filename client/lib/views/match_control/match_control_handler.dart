@@ -150,13 +150,11 @@ class _MatchControlHandlerState extends State<MatchControlHandler> with AutoUnsu
       }
     });
 
-    // post frame callback
-    WidgetsBinding.instance.scheduleFrameCallback((_) async {
-      if (!await Network.isConnected()) {
-        getTeams().then((teams) => setTeams(teams));
-        getMatches().then((matches) => setMatches(matches));
-        getEvent().then((event) => setEvent(event));
-      }
+    // delayed callback
+    Future.delayed(const Duration(milliseconds: 500), () {
+      getTeams().then((teams) => setTeams(teams));
+      getMatches().then((matches) => setMatches(matches));
+      getEvent().then((event) => setEvent(event));
     });
   }
 

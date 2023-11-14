@@ -18,3 +18,12 @@ steps:
       versionSpec: '17'
       jdkArchitectureOption: 'x64'
       jdkSourceOption: 'PreInstalled'
+
+  # build server in debug to generate env (only if publishable)
+  - task: Cargo@1
+    condition: eq( variables['Build.Publishable'], 'true' )
+    displayName: 'Build Rust Server (debug)'
+    inputs:
+      cargoCommand: 'build'
+      cargoWorkingDir: './server'
+      verbose: true

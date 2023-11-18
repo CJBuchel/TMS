@@ -33,7 +33,7 @@ done
 
 
 (cd ./server; cargo build --target x86_64-unknown-linux-musl --release)
-(cd ./client; npm run prepare; flutter build web --release --no-web-resources-cdn --web-renderer canvaskit)
+(cd ./client; npm run prepare; flutter build web --release --no-web-resources-cdn)
 
 sudo docker compose build
 

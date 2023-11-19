@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/utils/value_listenables.dart';
 import 'package:tms/views/match_control/controls/controls_shared.dart';
 import 'package:tms/views/match_control/controls/match_status.dart';
 import 'package:tms/views/match_control/tables/staging_table.dart';
@@ -12,19 +13,20 @@ import 'package:tms/views/timer/clock.dart';
 
 class MatchControlDesktopControls extends StatelessWidget {
   final BoxConstraints con;
-  final List<Team> teams;
-  final List<GameMatch> matches;
-  final List<GameMatch> loadedMatches;
-  final List<GameMatch> selectedMatches;
+
+  final ValueNotifier<List<Team>> teamsNotifier;
+  final ValueNotifier<List<GameMatch>> matchesNotifier;
+  final ValueNotifier<List<GameMatch>> loadedMatchesNotifier;
+  final ValueNotifier<List<GameMatch>> selectedMatchesNotifier;
 
   // constructor
   const MatchControlDesktopControls({
     Key? key,
     required this.con,
-    required this.teams,
-    required this.selectedMatches,
-    required this.matches,
-    required this.loadedMatches,
+    required this.teamsNotifier,
+    required this.matchesNotifier,
+    required this.loadedMatchesNotifier,
+    required this.selectedMatchesNotifier,
   }) : super(key: key);
 
   final double desktopButtonHeight = 40;
@@ -32,7 +34,7 @@ class MatchControlDesktopControls extends StatelessWidget {
   final double desktopButtonTextSize = 18;
   final double tabletButtonTextSize = 14;
 
-  getControls(double maxHeight, BuildContext context) {
+  getControls(double maxHeight, BuildContext context, List<GameMatch> matches, List<GameMatch> loadedMatches, List<GameMatch> selectedMatches) {
     bool isLoadable = selectedMatches.isNotEmpty && loadedMatches.isEmpty && selectedMatches.every((element) => !element.complete);
 
     isLoadable = checkCompletedMatchesHaveScores(selectedMatches, matches) ? isLoadable : false;
@@ -273,21 +275,46 @@ class MatchControlDesktopControls extends StatelessWidget {
   @override
   build(BuildContext context) {
     double controlMaxHeight = (con.maxHeight / 3) * 2; // 2/3 of the screen
-    return Column(
-      children: [
-        SizedBox(
-          height: con.maxHeight / 3, // 1/3 of the screen
-          child: StagingTable(
-            teams: teams,
-            loadedMatches: loadedMatches,
-            selectedMatches: selectedMatches,
-          ),
-        ),
-        SizedBox(
-          height: controlMaxHeight,
-          child: getControls(controlMaxHeight, context),
-        )
-      ],
+    return ValueListenableBuilder(
+      valueListenable: matchesNotifier,
+      builder: (context, matches, _) {
+        return Column(
+          children: [
+            SizedBox(
+              height: con.maxHeight / 3, // 1/3 of the screen
+              child: ValueListenableBuilder3(
+                first: teamsNotifier,
+                second: loadedMatchesNotifier,
+                third: selectedMatchesNotifier,
+                builder: (context, teams, loadedMatches, selectedMatches, _) {
+                  return StagingTable(
+                    teams: teams,
+                    loadedMatches: loadedMatches,
+                    selectedMatches: selectedMatches,
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              height: controlMaxHeight,
+              child: ValueListenableBuilder3(
+                first: matchesNotifier,
+                second: loadedMatchesNotifier,
+                third: selectedMatchesNotifier,
+                builder: (context, matches, loadedMatches, selectedMatches, _) {
+                  return getControls(
+                    controlMaxHeight,
+                    context,
+                    matches,
+                    loadedMatches,
+                    selectedMatches,
+                  );
+                },
+              ),
+            )
+          ],
+        );
+      },
     );
   }
 }

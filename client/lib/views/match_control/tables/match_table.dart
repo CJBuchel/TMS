@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/utils/value_listenables.dart';
 
-class MatchTable extends StatefulWidget {
+class MatchTable extends StatelessWidget {
   final BoxConstraints con;
-  final Event? event;
-  final List<GameMatch> matches;
-  final List<GameMatch> selectedMatches;
+  final ValueNotifier<Event?> event;
+  final ValueNotifier<List<GameMatch>> matches;
+  final ValueNotifier<List<GameMatch>> selectedMatches;
+  final ValueNotifier<List<GameMatch>> loadedMatches;
   final Function(List<GameMatch> selectedMatches) onSelected;
-  final List<GameMatch> loadedMatches;
 
-  const MatchTable({
+  MatchTable({
     Key? key,
     required this.con,
     required this.event,
@@ -20,63 +21,55 @@ class MatchTable extends StatefulWidget {
     required this.loadedMatches,
   }) : super(key: key);
 
-  @override
-  State<MatchTable> createState() => _MatchTableState();
-}
-
-class _MatchTableState extends State<MatchTable> {
-  bool _multiMatch = false;
+  final ValueNotifier<bool> _multiMatchNotifier = ValueNotifier<bool>(false);
 
   void setMultiMatch(bool value) {
-    if (mounted) {
-      setState(() {
-        _multiMatch = value;
-        widget.onSelected([]);
-      });
-    }
+    onSelected([]);
+    _multiMatchNotifier.value = value;
   }
 
   void setSelected(GameMatch match) {
-    if (mounted) {
-      setState(() {
-        widget.onSelected([match]);
-      });
-    }
+    onSelected([match]);
   }
 
   Widget _radioButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Row(
+    return ValueListenableBuilder(
+      valueListenable: _multiMatchNotifier,
+      builder: (context, multiMatch, _) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Radio<bool>(
-              value: false,
-              groupValue: _multiMatch,
-              onChanged: (bool? value) {
-                if (value != null) {
-                  setMultiMatch(value);
-                }
-              },
+            Row(
+              children: [
+                Radio<bool>(
+                  value: false,
+                  groupValue: multiMatch,
+                  onChanged: (bool? value) {
+                    if (value != null) {
+                      setMultiMatch(value);
+                    }
+                  },
+                ),
+                const Text("Single Match"),
+              ],
             ),
-            const Text("Single Match"),
+            Row(
+              children: [
+                Radio<bool>(
+                  value: true,
+                  groupValue: multiMatch,
+                  onChanged: (bool? value) {
+                    if (value != null) {
+                      setMultiMatch(value);
+                    }
+                  },
+                ),
+                const Text("Multi Match"),
+              ],
+            )
           ],
-        ),
-        Row(
-          children: [
-            Radio<bool>(
-              value: true,
-              groupValue: _multiMatch,
-              onChanged: (bool? value) {
-                if (value != null) {
-                  setMultiMatch(value);
-                }
-              },
-            ),
-            const Text("Multi Match"),
-          ],
-        )
-      ],
+        );
+      },
     );
   }
 
@@ -109,14 +102,14 @@ class _MatchTableState extends State<MatchTable> {
     );
   }
 
-  Widget _styledRow(GameMatch match, int idx) {
-    bool isLoaded = widget.loadedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
+  Widget _styledRow(BuildContext context, GameMatch match, int idx, List<GameMatch> loadedMatches, List<GameMatch> selectedMatches) {
+    bool isLoaded = loadedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
     bool isDeferred = match.gameMatchDeferred;
-    bool isSelected = widget.selectedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
+    bool isSelected = selectedMatches.map((e) => e.matchNumber).contains(match.matchNumber) ? true : false;
     bool isSelectable = true; // default
 
     // check if match with the same table is already checked (only useful during multimatch)
-    for (var selectedMatch in widget.selectedMatches) {
+    for (var selectedMatch in selectedMatches) {
       for (var selectedOnTable in selectedMatch.matchTables) {
         for (var onTable in match.matchTables) {
           if (selectedOnTable.table == onTable.table) {
@@ -160,9 +153,9 @@ class _MatchTableState extends State<MatchTable> {
           onChanged: (bool? value) {
             if (value != null) {
               if (value) {
-                widget.onSelected([...widget.selectedMatches, match]);
+                onSelected([...selectedMatches, match]);
               } else {
-                widget.onSelected(widget.selectedMatches.where((element) => element.matchNumber != match.matchNumber).toList());
+                onSelected(selectedMatches.where((element) => element.matchNumber != match.matchNumber).toList());
               }
             }
           },
@@ -172,119 +165,137 @@ class _MatchTableState extends State<MatchTable> {
       checkbox = const SizedBox.shrink();
     }
 
-    return InkWell(
-      onTap: () {
-        if (!_multiMatch && widget.loadedMatches.isEmpty) {
-          setSelected(match);
-        }
-      },
-      child: Container(
-        height: 50, // default row size
-        width: widget.con.maxWidth, // expand as much as possible
-        decoration: BoxDecoration(
-          color: rowColor,
-          border: const Border(
-            bottom: BorderSide(
-              color: Colors.grey,
+    return ValueListenableBuilder(
+      valueListenable: _multiMatchNotifier,
+      builder: (context, multiMatch, _) {
+        return InkWell(
+          onTap: () {
+            if (!multiMatch && loadedMatches.isEmpty) {
+              setSelected(match);
+            }
+          },
+          child: Container(
+            height: 50, // default row size
+            width: con.maxWidth, // expand as much as possible
+            decoration: BoxDecoration(
+              color: rowColor,
+              border: const Border(
+                bottom: BorderSide(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            child: Row(
+              children: [
+                // checkbox
+                if (multiMatch) SizedBox(width: 50, child: checkbox),
+
+                // match number
+                SizedBox(
+                  width: 50,
+                  child: _styledTextCell(match.matchNumber, deferred: isDeferred),
+                ),
+
+                // start time
+                Expanded(
+                  flex: 100,
+                  child: _styledTextCell(match.startTime, deferred: isDeferred),
+                ),
+
+                ...match.matchTables.expand(
+                  (table) {
+                    return [
+                      // table cell
+                      Expanded(
+                        flex: 100,
+                        child: _styledTextCell(
+                          table.table,
+                          color: match.complete && !table.scoreSubmitted
+                              ? Colors.red
+                              : table.scoreSubmitted
+                                  ? Colors.green
+                                  : null,
+                          deferred: isDeferred,
+                        ),
+                      ),
+
+                      // team cell
+                      Expanded(
+                        flex: 60,
+                        child: _styledTextCell(
+                          table.teamNumber,
+                          color: match.complete && !table.scoreSubmitted
+                              ? Colors.red
+                              : table.scoreSubmitted
+                                  ? Colors.green
+                                  : null,
+                          deferred: isDeferred,
+                        ),
+                      ),
+                    ];
+                  },
+                ).toList(),
+              ],
             ),
           ),
-        ),
-        child: Row(
-          children: [
-            // checkbox
-            if (_multiMatch) SizedBox(width: 50, child: checkbox),
-
-            // match number
-            SizedBox(
-              width: 50,
-              child: _styledTextCell(match.matchNumber, deferred: isDeferred),
-            ),
-
-            // start time
-            Expanded(
-              flex: 100,
-              child: _styledTextCell(match.startTime, deferred: isDeferred),
-            ),
-
-            ...match.matchTables.expand(
-              (table) {
-                return [
-                  // table cell
-                  Expanded(
-                    flex: 100,
-                    child: _styledTextCell(
-                      table.table,
-                      color: match.complete && !table.scoreSubmitted
-                          ? Colors.red
-                          : table.scoreSubmitted
-                              ? Colors.green
-                              : null,
-                      deferred: isDeferred,
-                    ),
-                  ),
-
-                  // team cell
-                  Expanded(
-                    flex: 60,
-                    child: _styledTextCell(
-                      table.teamNumber,
-                      color: match.complete && !table.scoreSubmitted
-                          ? Colors.red
-                          : table.scoreSubmitted
-                              ? Colors.green
-                              : null,
-                      deferred: isDeferred,
-                    ),
-                  ),
-                ];
-              },
-            ).toList(),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget _table() {
-    if (widget.matches.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      // create list view of match rows
-      return ListView(
-        children: widget.matches.map((match) {
-          int idx = widget.matches.indexOf(match);
-          return _styledRow(match, idx);
-        }).toList(),
-      );
-    }
+  Widget _table(BuildContext context) {
+    return ValueListenableBuilder3(
+      first: matches,
+      second: selectedMatches,
+      third: loadedMatches,
+      builder: (context, matches, selected, loaded, _) {
+        if (matches.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          // create list view of match rows
+          return ListView(
+            children: matches.map((match) {
+              int idx = matches.indexOf(match);
+              return _styledRow(context, match, idx, loaded, selected);
+            }).toList(),
+          );
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     double radioHeight = 50;
-    if (widget.event?.tables.isEmpty ?? true) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Radio Buttons
-          SizedBox(
-            height: radioHeight,
-            child: _radioButtons(),
-          ),
 
-          // Table
-          SizedBox(
-            height: widget.con.maxHeight - radioHeight,
-            child: _table(),
-          )
-        ],
-      );
-    }
+    return ValueListenableBuilder(
+      valueListenable: event,
+      builder: (context, Event? event, child) {
+        if (event?.tables.isEmpty ?? true) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Radio Buttons
+              SizedBox(
+                height: radioHeight,
+                child: _radioButtons(),
+              ),
+
+              // Table
+              SizedBox(
+                height: con.maxHeight - radioHeight,
+                child: _table(context),
+              )
+            ],
+          );
+        }
+      },
+    );
   }
 }

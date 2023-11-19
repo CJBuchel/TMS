@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class Logout extends StatefulWidget {
   const Logout({super.key});
@@ -46,7 +46,7 @@ class LogoutState extends State<Logout> {
     }
 
     return Scaffold(
-      appBar: const TmsToolBar(displayActions: false),
+      appBar: const TmsToolBar(displayLogicActions: false),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

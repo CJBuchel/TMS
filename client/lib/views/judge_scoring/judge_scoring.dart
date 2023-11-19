@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/error_handlers.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class JudgeScoring extends StatelessWidget {
   const JudgeScoring({Key? key}) : super(key: key);

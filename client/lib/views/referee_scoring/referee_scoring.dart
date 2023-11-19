@@ -8,7 +8,7 @@ import 'package:tms/views/referee_scoring/referee_scoring_footer/floating_score.
 import 'package:tms/views/referee_scoring/referee_scoring_footer/scoring_footer.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/scoring_header.dart';
 import 'package:tms/views/shared/scoring/game_scoring.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 // import 'package:tms/views/timer/clock.dart';
 
 class RefereeScoring extends StatefulWidget {

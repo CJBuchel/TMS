@@ -5,7 +5,7 @@ import 'package:tms/views/selector/admin_screens.dart';
 import 'package:tms/views/selector/judging_screens.dart';
 import 'package:tms/views/selector/public_screens.dart';
 import 'package:tms/views/selector/referee_screens.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 /**
  * Pastel colors

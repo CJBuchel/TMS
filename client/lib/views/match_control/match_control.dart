@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tms/views/match_control/match_control_handler.dart';
 import 'package:tms/views/match_control/side_menu.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class MatchControl extends StatefulWidget {
   const MatchControl({Key? key}) : super(key: key);

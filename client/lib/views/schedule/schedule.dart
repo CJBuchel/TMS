@@ -4,7 +4,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/schedule/schedule_handler.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class Schedule extends StatefulWidget {
   const Schedule({Key? key}) : super(key: key);

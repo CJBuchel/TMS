@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/requests/user_requests.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -33,7 +33,7 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TmsToolBar(displayActions: false),
+      appBar: const TmsToolBar(displayLogicActions: false),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

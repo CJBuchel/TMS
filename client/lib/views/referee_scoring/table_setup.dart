@@ -4,7 +4,7 @@ import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class RefereeTable {
   final String referee;
@@ -103,7 +103,7 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

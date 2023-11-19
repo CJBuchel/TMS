@@ -7,7 +7,7 @@ import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/match_control/controls/controls_shared.dart';
 import 'package:tms/views/match_control/tables/staging_table.dart';
 import 'package:tms/views/match_control/timer_control.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 import 'package:tms/views/timer/clock.dart';
 
 class MatchControlMobileControls extends StatefulWidget {
@@ -194,7 +194,7 @@ class _MatchControlMobileControlsState extends State<MatchControlMobileControls>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TmsToolBar(),
+      appBar: const TmsToolBar(displayMenuButton: true),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Column(

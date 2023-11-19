@@ -4,31 +4,14 @@ import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
-class Logout extends StatefulWidget {
-  const Logout({super.key});
+class Logout extends StatelessWidget {
+  const Logout({Key? key}) : super(key: key);
 
-  @override
-  State<Logout> createState() => LogoutState();
-}
-
-class LogoutState extends State<Logout> {
   void logoutController(BuildContext context) async {
     NetworkAuth.setUser(User(password: "", username: "", permissions: Permissions(admin: false)));
     NetworkAuth.setToken("");
     NetworkAuth.setLoginState(false);
     Navigator.popAndPushNamed(context, "/login");
-  }
-
-  User _user = User(password: "", permissions: Permissions(admin: false), username: "");
-
-  @override
-  void initState() {
-    super.initState();
-    NetworkAuth.getUser().then((user) {
-      setState(() {
-        _user = user;
-      });
-    });
   }
 
   @override
@@ -74,9 +57,18 @@ class LogoutState extends State<Logout> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
-                child: Text(
-                  _user.username,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                child: FutureBuilder(
+                  future: NetworkAuth.getUser(),
+                  builder: (context, user) {
+                    if (user.hasData) {
+                      return Text(
+                        user.data?.username ?? "",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      );
+                    } else {
+                      return const Text("Loading...");
+                    }
+                  },
                 ),
               ),
             ],

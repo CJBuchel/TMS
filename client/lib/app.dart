@@ -42,7 +42,7 @@ class TMSApp extends StatelessWidget {
 
           // Main Router
           routes: {
-            '/': (context) => const ScreenSelector(),
+            '/': (context) => ScreenSelector(),
 
             // Utility screens
             '/server_connection': (context) => const Connection(),

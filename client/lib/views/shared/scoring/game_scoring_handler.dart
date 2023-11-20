@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/network/auth.dart';
 import 'package:tms/requests/game_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/network_image.dart';
@@ -164,31 +163,37 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
     super.dispose();
   }
 
-  List<Widget> _getMissions(Game game) {
+  Widget _getMissions(Game game) {
     // wait for 2 seconds
-    return game.missions.map((mission) {
-      return MissionWidget(
-        color: (AppTheme.isDarkTheme ? secondaryCardColor : Colors.white),
-        mission: mission,
-        questions: game.questions.where((q) {
-          return q.id.startsWith(mission.prefix);
-        }).toList(),
-        errorsNotifier: _errorsNotifier,
-        answerNotifiers: _answerNotifiers,
-        onAnswers: (answers) {
-          for (var answer in answers) {
-            _setAnswer = answer;
-          }
-        },
-        image: NetworkImageWidget(
-          src: mission.image ?? "",
-          width: 160,
-          height: 90,
-          borderRadius: 10,
-          defaultImage: const AssetImage('assets/images/FIRST_LOGO.png'),
-        ),
-      );
-    }).toList();
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: game.missions.length,
+      itemBuilder: (context, index) {
+        Mission mission = game.missions[index];
+        return MissionWidget(
+          color: (AppTheme.isDarkTheme ? secondaryCardColor : Colors.white),
+          mission: mission,
+          questions: game.questions.where((q) {
+            return q.id.startsWith(mission.prefix);
+          }).toList(),
+          errorsNotifier: _errorsNotifier,
+          answerNotifiers: _answerNotifiers,
+          onAnswers: (answers) {
+            for (var answer in answers) {
+              _setAnswer = answer;
+            }
+          },
+          image: NetworkImageWidget(
+            src: mission.image ?? "",
+            width: 160,
+            height: 90,
+            borderRadius: 10,
+            defaultImage: const AssetImage('assets/images/FIRST_LOGO.png'),
+          ),
+        );
+      },
+    );
   }
 
   Widget _scoringComments() {
@@ -209,7 +214,7 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ..._getMissions(widget.game),
+        _getMissions(widget.game),
         _scoringComments(),
       ],
     );

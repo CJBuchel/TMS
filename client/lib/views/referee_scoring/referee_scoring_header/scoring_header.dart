@@ -33,7 +33,25 @@ class ScoringHeader extends StatefulWidget {
 class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   // controllers from header
   final ValueNotifier<Team?> _nextTeamNotifier = ValueNotifier<Team?>(null);
+  set _setNextTeamNotifier(Team? team) {
+    if (_nextTeamNotifier.value != team) {
+      _nextTeamNotifier.value = team;
+    }
+  }
+
   final ValueNotifier<GameMatch?> _nextMatchNotifier = ValueNotifier<GameMatch?>(null);
+  set _setNextMatchNotifier(GameMatch? match) {
+    if (_nextMatchNotifier.value != match) {
+      _nextMatchNotifier.value = match;
+    }
+  }
+
+  void setNextTeamMatch(Team? team, GameMatch? match) {
+    _setNextTeamNotifier = team;
+    _setNextMatchNotifier = match;
+    widget.onNextTeamMatch(team, match);
+  }
+
   final ValueNotifier<GameMatch?> _tableLoadedMatchNotifier = ValueNotifier<GameMatch?>(null);
   final ValueNotifier<bool> _lockedNotifier = ValueNotifier<bool>(true);
 
@@ -61,14 +79,14 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
         for (var onTable in match.matchTables) {
           if (onTable.table == thisTable && !onTable.scoreSubmitted) {
             if (_nextMatchNotifier.value != match) {
-              _nextMatchNotifier.value = match;
+              _setNextMatchNotifier = match;
             }
 
-            _nextTeamNotifier.value = null;
+            _setNextTeamNotifier = null;
 
             for (Team t in _teamsNotifier.value) {
               if (t.teamNumber == onTable.teamNumber) {
-                _nextTeamNotifier.value = t;
+                _setNextTeamNotifier = t;
                 break;
               }
             }
@@ -109,9 +127,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
           }
 
           // fall through (if no next matches are found, nor any are loaded)
-          _nextMatchNotifier.value = null;
-          _nextTeamNotifier.value = null;
-          widget.onNextTeamMatch(null, null);
+          setNextTeamMatch(null, null);
           sendTableLoadedMatch(thisTable, forceNone: true);
         });
       }
@@ -204,7 +220,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
       teamsNotifier: _teamsNotifier,
       lockedNotifier: _lockedNotifier,
       onTeamChange: (t, m) {
-        widget.onNextTeamMatch(t, m);
+        setNextTeamMatch(t, m);
       },
     );
   }
@@ -215,7 +231,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
       nextTeamNotifier: _nextTeamNotifier,
       lockedNotifier: _lockedNotifier,
       onRoundChange: (t, m) {
-        widget.onNextTeamMatch(t, m);
+        setNextTeamMatch(t, m);
       },
     );
   }

@@ -7,20 +7,21 @@ import 'package:tms/views/shared/scoring/question.dart';
 
 class MissionWidget extends StatelessWidget {
   final Mission mission;
-  final List<Score> scores;
-  final List<ScoreError> errors;
+  final List<Score> questions;
+
+  final ValueNotifier<List<ScoreError>> errorsNotifier;
+  final List<ValueNotifier<ScoreAnswer>> answerNotifiers;
   final Function(List<ScoreAnswer>) onAnswers;
-  final List<ScoreAnswer> answers;
   final Color? color;
   final NetworkImageWidget? image;
 
   const MissionWidget({
     Key? key,
     required this.mission,
-    required this.scores,
-    required this.errors,
+    required this.questions,
+    required this.errorsNotifier,
+    required this.answerNotifiers,
     required this.onAnswers,
-    required this.answers,
     required this.image,
     this.color,
   }) : super(key: key);
@@ -89,16 +90,20 @@ class MissionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           getMissionHeader(context),
-          ...scores.map(
-            (score) => QuestionWidget(
-              score: score,
+          ...questions.map((question) {
+            var answerN = answerNotifiers.firstWhere((a) => a.value.id == question.id, orElse: () {
+              return ValueNotifier(ScoreAnswer(id: question.id, answer: ""));
+            });
+
+            return QuestionWidget(
+              question: question,
               onAnswer: (answer) {
                 onAnswers([answer]);
               },
-              errors: errors,
-              answers: answers,
-            ),
-          ),
+              errorsNotifier: errorsNotifier,
+              answerNotifier: answerN,
+            );
+          }),
         ],
       ),
     );

@@ -119,14 +119,18 @@ class RefereeScoring extends StatelessWidget {
           child: Center(
             child: ScoringFooter(
               height: footerHeight,
-              errors: _errors,
-              nextMatch: _nextMatch,
-              nextTeam: _nextTeam,
-              locked: _locked,
-              score: _score,
-              answers: _answers,
-              publicComment: _publicComment,
-              privateComment: _privateComment,
+
+              // score info
+              errorsNotifier: _errorsNotifier,
+              answersNotifier: _answersNotifier,
+              scoreNotifier: _scoreNotifier,
+              nextTeamNotifier: _nextTeamNotifier,
+              nextMatchNotifier: _nextMatchNotifier,
+              lockedNotifier: _lockedNotifier,
+              publicCommentNotifier: _publicCommentNotifier,
+              privateCommentNotifier: _privateCommentNotifier,
+
+              // callbacks
               onClear: () {
                 _defaultAnswers.value = true;
                 scrollToTop();

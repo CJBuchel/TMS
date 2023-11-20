@@ -9,7 +9,7 @@ import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/utils/value_listenables.dart';
+import 'package:tms/utils/value_listenable_utils.dart';
 import 'package:tms/views/match_control/controls/controls_desktop.dart';
 import 'package:tms/views/match_control/match_control_floating_buttons.dart';
 import 'package:tms/views/match_control/tables/match_table.dart';

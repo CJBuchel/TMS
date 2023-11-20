@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/utils/value_listenables.dart';
+import 'package:tms/utils/value_listenable_utils.dart';
 
 class MatchTable extends StatelessWidget {
   final BoxConstraints con;

@@ -8,7 +8,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/publish_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/utils/value_listenables.dart';
+import 'package:tms/utils/value_listenable_utils.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/popup_menu_widget.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/round_widget.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/team_widget.dart';
@@ -198,36 +198,24 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   }
 
   Widget getTeamWidget() {
-    return ValueListenableBuilder2(
-      first: _nextMatchNotifier,
-      second: _nextTeamNotifier,
-      builder: (context, nextMatch, nextTeam, _) {
-        return TeamDropdownWidget(
-          nextMatch: nextMatch,
-          nextTeam: nextTeam,
-          teamsNotifier: _teamsNotifier,
-          lockedNotifier: _lockedNotifier,
-          onTeamChange: (t, m) {
-            widget.onNextTeamMatch(t, m);
-          },
-        );
+    return TeamDropdownWidget(
+      nextMatchNotifier: _nextMatchNotifier,
+      nextTeamNotifier: _nextTeamNotifier,
+      teamsNotifier: _teamsNotifier,
+      lockedNotifier: _lockedNotifier,
+      onTeamChange: (t, m) {
+        widget.onNextTeamMatch(t, m);
       },
     );
   }
 
   Widget getRoundWidget() {
-    return ValueListenableBuilder2(
-      first: _nextMatchNotifier,
-      second: _nextTeamNotifier,
-      builder: (context, nextMatch, nextTeam, _) {
-        return RoundDropdownWidget(
-          nextMatch: nextMatch,
-          nextTeam: nextTeam,
-          lockedNotifier: _lockedNotifier,
-          onRoundChange: (t, m) {
-            widget.onNextTeamMatch(t, m);
-          },
-        );
+    return RoundDropdownWidget(
+      nextMatchNotifier: _nextMatchNotifier,
+      nextTeamNotifier: _nextTeamNotifier,
+      lockedNotifier: _lockedNotifier,
+      onRoundChange: (t, m) {
+        widget.onNextTeamMatch(t, m);
       },
     );
   }

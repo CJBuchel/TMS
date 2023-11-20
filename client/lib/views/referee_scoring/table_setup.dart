@@ -170,14 +170,15 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
             width: Responsive.imageSize(context, 1).item2,
             child: Padding(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
-              child: ValueListenableBuilder(
-                valueListenable: _eventTablesNotifier,
-                builder: (context, eventTables, _) {
+              child: ValueListenableBuilder2(
+                first: _eventTablesNotifier,
+                second: _selectedTableNotifier,
+                builder: (context, eventTables, selectedTable, _) {
                   return DropdownButton<String>(
-                    value: _selectedTableNotifier.value,
+                    value: selectedTable,
                     hint: const Text('Select Table'),
                     onChanged: (String? value) {
-                      if (_selectedTableNotifier.value != value) {
+                      if (selectedTable != value) {
                         _selectedTableNotifier.value = value;
                       }
                     },

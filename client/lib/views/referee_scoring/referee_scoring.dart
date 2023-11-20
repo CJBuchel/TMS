@@ -1,7 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/mixins/auto_subscribe.dart';
-import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/floating_score.dart';
@@ -9,70 +8,53 @@ import 'package:tms/views/referee_scoring/referee_scoring_footer/scoring_footer.
 import 'package:tms/views/referee_scoring/referee_scoring_header/scoring_header.dart';
 import 'package:tms/views/shared/scoring/game_scoring.dart';
 import 'package:tms/views/shared/toolbar/tool_bar.dart';
-// import 'package:tms/views/timer/clock.dart';
 
-class RefereeScoring extends StatefulWidget {
-  const RefereeScoring({Key? key}) : super(key: key);
+class RefereeScoring extends StatelessWidget {
+  RefereeScoring({Key? key}) : super(key: key);
 
-  @override
-  State<RefereeScoring> createState() => _ScoringScreenState();
-}
-
-class _ScoringScreenState extends State<RefereeScoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   final ScrollController _scrollController = ScrollController();
-  int _score = 0;
-  List<ScoreAnswer> _answers = [];
-  String _publicComment = "";
-  String _privateComment = "";
-  List<ScoreError> _errors = [];
 
+  // score notifiers
+  final ValueNotifier<int> _scoreNotifier = ValueNotifier<int>(0);
+  final ValueNotifier<List<ScoreAnswer>> _answersNotifier = ValueNotifier<List<ScoreAnswer>>([]);
+  final ValueNotifier<List<ScoreError>> _errorsNotifier = ValueNotifier<List<ScoreError>>([]);
+  final ValueNotifier<String> _publicCommentNotifier = ValueNotifier<String>("");
+  final ValueNotifier<String> _privateCommentNotifier = ValueNotifier<String>("");
   final ValueNotifier<bool> _defaultAnswers = ValueNotifier<bool>(false);
-  bool _locked = true;
-  GameMatch? _nextMatch;
-  Team? _nextTeam;
+
+  // team, match and mode notifiers
+  final ValueNotifier<bool> _lockedNotifier = ValueNotifier<bool>(true);
+  final ValueNotifier<GameMatch?> _nextMatchNotifier = ValueNotifier<GameMatch?>(null);
+  final ValueNotifier<Team?> _nextTeamNotifier = ValueNotifier<Team?>(null);
 
   set _setPublicComment(String publicComment) {
-    if (mounted) {
-      setState(() {
-        _publicComment = publicComment;
-      });
+    if (_publicCommentNotifier.value != publicComment) {
+      _publicCommentNotifier.value = publicComment;
     }
   }
 
   set _setPrivateComment(String privateComment) {
-    if (mounted) {
-      setState(() {
-        _privateComment = privateComment;
-      });
+    if (_privateCommentNotifier.value != privateComment) {
+      _privateCommentNotifier.value = privateComment;
     }
   }
 
   set _setErrors(List<ScoreError> errors) {
-    if (mounted) {
-      setState(() {
-        _errors = errors;
-      });
+    if (!listEquals(_errorsNotifier.value, errors)) {
+      _errorsNotifier.value = errors;
     }
   }
 
   set _setAnswers(List<ScoreAnswer> answers) {
-    if (mounted) {
-      setState(() {
-        _answers = answers;
-      });
+    if (!listEquals(_answersNotifier.value, answers)) {
+      _answersNotifier.value = answers;
     }
   }
 
   set _setScore(int score) {
-    if (mounted) {
-      setState(() {
-        _score = score;
-      });
+    if (_scoreNotifier.value != score) {
+      _scoreNotifier.value = score;
     }
-  }
-
-  void colorChange() {
-    setState(() {});
   }
 
   void scrollToTop() {
@@ -81,18 +63,6 @@ class _ScoringScreenState extends State<RefereeScoring> with AutoUnsubScribeMixi
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeOut,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    AppTheme.isDarkThemeNotifier.addListener(colorChange);
-  }
-
-  @override
-  void dispose() {
-    AppTheme.isDarkThemeNotifier.removeListener(colorChange);
-    super.dispose();
   }
 
   Widget getScoringColumn(double headerHeight, double footerHeight, BoxConstraints constraints) {
@@ -105,15 +75,18 @@ class _ScoringScreenState extends State<RefereeScoring> with AutoUnsubScribeMixi
             child: ScoringHeader(
               height: headerHeight,
               onLock: (locked) {
-                setState(() {
-                  _locked = locked;
-                });
+                if (_lockedNotifier.value != locked) {
+                  _lockedNotifier.value = locked;
+                }
               },
               onNextTeamMatch: (team, match) {
-                setState(() {
-                  _nextTeam = team;
-                  _nextMatch = match;
-                });
+                if (_nextTeamNotifier.value != team) {
+                  _nextTeamNotifier.value = team;
+                }
+
+                if (_nextMatchNotifier.value != match) {
+                  _nextMatchNotifier.value = match;
+                }
               },
             ),
           ),
@@ -195,7 +168,12 @@ class _ScoringScreenState extends State<RefereeScoring> with AutoUnsubScribeMixi
             return Stack(
               children: [
                 getScoringColumn(headerHeight, footerHeight, constraints),
-                FloatingScore(footerHeight: footerHeight, score: _score),
+                ValueListenableBuilder(
+                  valueListenable: _scoreNotifier,
+                  builder: (context, score, _) {
+                    return FloatingScore(footerHeight: footerHeight, score: score);
+                  },
+                ),
               ],
             );
           },

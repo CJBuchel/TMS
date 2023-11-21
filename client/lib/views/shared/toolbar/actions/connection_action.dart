@@ -40,7 +40,10 @@ class TmsToolBarConnectionAction extends StatelessWidget {
           return ListTile(
             leading: getIcon(a, b),
             title: const Text("Connection"),
-            onTap: () => pushTo(context, "/server_connection"),
+            onTap: () {
+              Navigator.pop(context);
+              pushTo(context, "/server_connection");
+            },
           );
         } else {
           return IconButton(

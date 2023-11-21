@@ -5,7 +5,15 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::{ws::Message, Reply, ws::WebSocket};
 use tokio::sync::mpsc;
 
-async fn client_msg(_user_id: String, msg: Message, _clients: TmsClients, security: Security) {
+use crate::{network::ws_routes::game_routes::validate_questions_route, event_service::TmsEventServiceArc};
+
+async fn client_msg(
+  user_id: String, 
+  msg: Message, 
+  clients: TmsClients, 
+  security: Security,
+  tms_event_service: TmsEventServiceArc,
+) {
   let message = match msg.to_str() {
     Ok(v) => v,
     Err(_) => return
@@ -22,10 +30,23 @@ async fn client_msg(_user_id: String, msg: Message, _clients: TmsClients, securi
   if _socket_message.message == "ping".to_string() || _socket_message.message == "ping\n".to_string() {
     return;
   }
+
+  // validation system
+  if _socket_message.topic == "validation" {
+    validate_questions_route(_socket_message.message, tms_event_service, clients, user_id.clone());
+  }
+
   // @todo use socket message for something. (Off chance that the client sends a socket message instead of the server)
 }
 
-async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, mut client: TmsClient, security: Security) {
+async fn client_connection(
+  ws: WebSocket, 
+  user_id: String, 
+  clients: TmsClients, 
+  mut client: TmsClient, 
+  security: Security,
+  tms_event_service: TmsEventServiceArc,
+) {
   let (client_ws_sender, mut client_ws_rcv) = ws.split();
   let (client_sender, client_recv) = mpsc::unbounded_channel();
 
@@ -62,7 +83,7 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
         break;
       }
     };
-    client_msg(user_id.clone(), msg, clients.to_owned(), security.clone()).await;
+    client_msg(user_id.clone(), msg, clients.to_owned(), security.clone(), tms_event_service.clone()).await;
   }
 
   with_clients_write(&clients, |client_map| {
@@ -72,10 +93,16 @@ async fn client_connection(ws: WebSocket, user_id: String, clients: TmsClients, 
   tms_clients_ws_send(client_list_update.clone(), clients.clone(), Some(String::from("")));
 }
 
-pub async fn ws_handler(ws: warp::ws::Ws, user_id: String, clients: TmsClients, security: Security) -> TmsClientResult<impl Reply> {
+pub async fn ws_handler(
+  ws: warp::ws::Ws, 
+  user_id: String, 
+  clients: TmsClients, 
+  security: Security, 
+  tms_event_service: TmsEventServiceArc,
+) -> TmsClientResult<impl Reply> {
   let client = clients.read().unwrap().get(&user_id).cloned();
   match client {
-    Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, user_id, clients.to_owned(), c, security))),
+    Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, user_id, clients.to_owned(), c, security, tms_event_service))),
     None => Err(warp::reject::not_found()),
   }
 }

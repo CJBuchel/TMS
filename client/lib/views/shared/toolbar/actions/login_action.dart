@@ -21,7 +21,10 @@ class TmsToolBarLoginAction extends StatelessWidget {
               color: loggedIn ? Colors.white : Colors.red,
             ),
             title: Text(loggedIn ? "Logout" : "Login"),
-            onTap: () => pushTo(context, loggedIn ? "/logout" : "/login"),
+            onTap: () {
+              Navigator.pop(context);
+              pushTo(context, loggedIn ? "/logout" : "/login");
+            },
           );
         } else {
           return IconButton(

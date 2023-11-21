@@ -65,6 +65,30 @@ pub fn tms_clients_ws_send<T: Serialize>(message: T, clients: TmsClients, origin
       }
     });
 }
+/// sends message to a single client, optionally with an origin id
+pub fn tms_client_ws_send<T: Serialize>(message: T, clients: TmsClients, target_id: String, origin_id: Option<String>) {
+  clients
+    .read()
+    .unwrap()
+    .iter()
+    // filter for origin id
+    .filter(|(_, client)| match origin_id.clone() {
+      Some(v) => client.user_id != v, // if origin id is supplied, check for it and don't match the origin
+      None => true // if no origin id is supplied, just match all
+    })
+    // find the target client
+    .filter(|(_, client)| match target_id.clone() {
+      v if v == client.user_id => true,
+      _ => false,
+    })
+    .for_each(|(_, client)| {
+      if let Some(sender) = &client.ws_sender {
+        let m = serde_json::to_string(&message).unwrap();
+        let encrypted_m = encrypt(client.key.clone(), m);
+        let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
+      }
+    });
+}
 
 pub fn check_auth(clients: &State<TmsClients>, uuid: String, auth_token: String) -> (bool, Option<TmsClient>) {
   if clients.read().unwrap().contains_key(&uuid) {
@@ -114,6 +138,17 @@ macro_rules! TmsRequest {
   };
 }
 
+#[macro_export]
+macro_rules! TmsSocketRequest {
+  ($message:expr) => {
+    serde_json::from_str($message.as_str())
+  };
+
+  ($message:expr, $security:expr) => {
+    serde_json::from_str($security.decrypt($message).as_str())
+  };
+
+}
 
 /// Provides returner for OK, either in json format or in string for encrypted
 /// # Example

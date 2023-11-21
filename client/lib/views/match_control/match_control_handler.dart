@@ -68,7 +68,7 @@ class _MatchControlHandlerState extends State<MatchControlHandler> with AutoUnsu
 
   void unloadOnDisconnect() async {
     if (mounted) {
-      var states = await Network.getStates();
+      var states = await Network().getStates();
       if (states.item1 != NetworkHttpConnectionState.connected || states.item2 != NetworkWebSocketState.connected) {
         _loadedMatchesNotifier.value = [];
       }
@@ -83,8 +83,8 @@ class _MatchControlHandlerState extends State<MatchControlHandler> with AutoUnsu
     onEventUpdate((event) => setEvent(event));
 
     // add notifier for disconnect (remove loaded matches if we're disconnected)
-    NetworkHttp.httpState.addListener(unloadOnDisconnect);
-    NetworkWebSocket.wsState.addListener(unloadOnDisconnect);
+    NetworkHttp().httpState.addListener(unloadOnDisconnect);
+    NetworkWebSocket().wsState.addListener(unloadOnDisconnect);
 
     autoSubscribe("clock", (m) {
       if (m.subTopic == "end") {
@@ -134,8 +134,8 @@ class _MatchControlHandlerState extends State<MatchControlHandler> with AutoUnsu
 
   @override
   void dispose() {
-    NetworkHttp.httpState.removeListener(unloadOnDisconnect);
-    NetworkWebSocket.wsState.removeListener(unloadOnDisconnect);
+    NetworkHttp().httpState.removeListener(unloadOnDisconnect);
+    NetworkWebSocket().wsState.removeListener(unloadOnDisconnect);
     super.dispose();
   }
 

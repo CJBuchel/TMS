@@ -8,7 +8,7 @@ import 'package:tuple/tuple.dart';
 
 Future<Tuple2<int, List<Team>>> getTeamsRequest() async {
   try {
-    var res = await Network.serverGet("teams/get");
+    var res = await Network().serverGet("teams/get");
 
     if (res.item1 && res.item3.isNotEmpty) {
       return Tuple2(res.item2, TeamsResponse.fromJson(res.item3).teams);
@@ -24,7 +24,7 @@ Future<Tuple2<int, List<Team>>> getTeamsRequest() async {
 Future<Tuple2<int, Team?>> getTeamRequest(String teamNumber) async {
   try {
     var message = TeamRequest(teamNumber: teamNumber).toJson();
-    var res = await Network.serverPost("team/get", message);
+    var res = await Network().serverPost("team/get", message);
 
     if (res.item1 && res.item3.isNotEmpty) {
       Team team = TeamResponse.fromJson(res.item3).team;
@@ -40,8 +40,8 @@ Future<Tuple2<int, Team?>> getTeamRequest(String teamNumber) async {
 
 Future<int> updateTeamRequest(String originTeamNumber, Team team) async {
   try {
-    var message = TeamUpdateRequest(authToken: await NetworkAuth.getToken(), teamNumber: originTeamNumber, teamData: team);
-    var res = await Network.serverPost("team/update", message.toJson());
+    var message = TeamUpdateRequest(authToken: await NetworkAuth().getToken(), teamNumber: originTeamNumber, teamData: team);
+    var res = await Network().serverPost("team/update", message.toJson());
     if (res.item1) {
       return res.item2;
     } else {
@@ -55,8 +55,8 @@ Future<int> updateTeamRequest(String originTeamNumber, Team team) async {
 
 Future<int> deleteTeamRequest(String teamNumber) async {
   try {
-    var message = TeamDeleteRequest(authToken: await NetworkAuth.getToken(), teamNumber: teamNumber);
-    var res = await Network.serverPost("team/delete", message.toJson());
+    var message = TeamDeleteRequest(authToken: await NetworkAuth().getToken(), teamNumber: teamNumber);
+    var res = await Network().serverPost("team/delete", message.toJson());
     if (res.item1) {
       return res.item2;
     } else {
@@ -70,8 +70,8 @@ Future<int> deleteTeamRequest(String teamNumber) async {
 
 Future<int> addTeamRequest(String number, String name, String aff) async {
   try {
-    var message = TeamAddRequest(authToken: await NetworkAuth.getToken(), teamNumber: number, teamName: name, teamAffiliation: aff);
-    var res = await Network.serverPost("team/add", message.toJson());
+    var message = TeamAddRequest(authToken: await NetworkAuth().getToken(), teamNumber: number, teamName: name, teamAffiliation: aff);
+    var res = await Network().serverPost("team/add", message.toJson());
     if (res.item1) {
       return res.item2;
     } else {
@@ -92,14 +92,14 @@ Future<int> postTeamGameScoresheetRequest(
 }) async {
   try {
     var scoresheetRequest = TeamPostGameScoresheetRequest(
-      authToken: await NetworkAuth.getToken(),
+      authToken: await NetworkAuth().getToken(),
       teamNumber: teamNumber,
       scoresheet: scoresheet,
       updateMatch: updateMatch,
       matchNumber: matchNumber,
       table: table,
     );
-    var res = await Network.serverPost("team/post/game_scoresheet", scoresheetRequest.toJson());
+    var res = await Network().serverPost("team/post/game_scoresheet", scoresheetRequest.toJson());
     if (res.item1) {
       return res.item2;
     } else {

@@ -10,7 +10,7 @@ import 'package:tuple/tuple.dart';
 
 Future<Tuple2<int, Uint8List>> getProxyBytes(String url) async {
   try {
-    var address = await Network.getServerIP();
+    var address = await Network().getServerIP();
     var encodedUrl = Uri.encodeComponent(url);
     var res = await http.get(Uri.parse("http://$address:$requestPort/requests/proxy_bytes/get?url=$encodedUrl"));
 

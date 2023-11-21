@@ -184,7 +184,7 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
   }
 
   void checkAvailableSeasons() async {
-    if (await Network.isConnected()) {
+    if (await Network().isConnected()) {
       getSeasonsRequest().then((res) {
         if (res.item1 == HttpStatus.ok) {
           setState(() {
@@ -222,17 +222,17 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
     });
 
     // get available seasons
-    NetworkHttp.httpState.addListener(checkAvailableSeasons);
-    NetworkWebSocket.wsState.addListener(checkAvailableSeasons);
-    NetworkAuth.loginState.addListener(checkAvailableSeasons);
+    NetworkHttp().httpState.addListener(checkAvailableSeasons);
+    NetworkWebSocket().wsState.addListener(checkAvailableSeasons);
+    NetworkAuth().loginState.addListener(checkAvailableSeasons);
   }
 
   @override
   void dispose() {
     // remove listeners
-    NetworkHttp.httpState.removeListener(checkAvailableSeasons);
-    NetworkWebSocket.wsState.removeListener(checkAvailableSeasons);
-    NetworkAuth.loginState.removeListener(checkAvailableSeasons);
+    NetworkHttp().httpState.removeListener(checkAvailableSeasons);
+    NetworkWebSocket().wsState.removeListener(checkAvailableSeasons);
+    NetworkAuth().loginState.removeListener(checkAvailableSeasons);
     super.dispose();
   }
 

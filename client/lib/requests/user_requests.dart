@@ -10,18 +10,18 @@ import 'package:tuple/tuple.dart';
 Future<int> loginRequest(String username, String password) async {
   try {
     var message = LoginRequest(username: username, password: password).toJson();
-    var res = await Network.serverPost("login", message);
+    var res = await Network().serverPost("login", message);
 
     if (res.item1) {
       if (res.item3.isNotEmpty) {
-        var user = await NetworkAuth.getUser();
+        var user = await NetworkAuth().getUser();
         var loginResponse = LoginResponse.fromJson(res.item3);
         user.username = username;
         user.password = password;
         user.permissions = loginResponse.permissions;
-        NetworkAuth.setToken(loginResponse.authToken);
-        NetworkAuth.setUser(user);
-        NetworkAuth.setLoginState(true);
+        NetworkAuth().setToken(loginResponse.authToken);
+        NetworkAuth().setUser(user);
+        NetworkAuth().setLoginState(true);
         return res.item2;
       } else {
         return res.item2;
@@ -37,8 +37,8 @@ Future<int> loginRequest(String username, String password) async {
 
 Future<Tuple2<int, List<User>>> getUsersRequest() async {
   try {
-    var usersRequest = UsersRequest(authToken: await NetworkAuth.getToken());
-    var res = await Network.serverPost("users/get", usersRequest.toJson());
+    var usersRequest = UsersRequest(authToken: await NetworkAuth().getToken());
+    var res = await Network().serverPost("users/get", usersRequest.toJson());
     if (res.item1) {
       if (res.item3.isNotEmpty) {
         var usersResponse = UsersResponse.fromJson(res.item3);
@@ -58,10 +58,10 @@ Future<Tuple2<int, List<User>>> getUsersRequest() async {
 Future<int> addUserRequest(User user) async {
   try {
     var addUserRequest = AddUserRequest(
-      authToken: await NetworkAuth.getToken(),
+      authToken: await NetworkAuth().getToken(),
       user: user,
     );
-    var res = await Network.serverPost("user/add", addUserRequest.toJson());
+    var res = await Network().serverPost("user/add", addUserRequest.toJson());
     if (res.item1) {
       return res.item2;
     } else {
@@ -76,10 +76,10 @@ Future<int> addUserRequest(User user) async {
 Future<int> deleteUserRequest(String username) async {
   try {
     var deleteUserRequest = DeleteUserRequest(
-      authToken: await NetworkAuth.getToken(),
+      authToken: await NetworkAuth().getToken(),
       username: username,
     );
-    var res = await Network.serverPost("user/delete", deleteUserRequest.toJson());
+    var res = await Network().serverPost("user/delete", deleteUserRequest.toJson());
     if (res.item1) {
       return res.item2;
     } else {
@@ -94,11 +94,11 @@ Future<int> deleteUserRequest(String username) async {
 Future<int> updateUserRequest(String username, User user) async {
   try {
     var updateUserRequest = UpdateUserRequest(
-      authToken: await NetworkAuth.getToken(),
+      authToken: await NetworkAuth().getToken(),
       username: username,
       updatedUser: user,
     );
-    var res = await Network.serverPost("user/update", updateUserRequest.toJson());
+    var res = await Network().serverPost("user/update", updateUserRequest.toJson());
     if (res.item1) {
       return res.item2;
     } else {

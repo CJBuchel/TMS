@@ -11,14 +11,14 @@ import 'package:tms/network/network.dart';
 Future<bool> checkConnection() async {
   bool ok = false;
   try {
-    ok = await Network.checkConnection();
+    ok = await Network().checkConnection();
   } catch (e) {
     ok = false;
   }
 
   if (!ok) {
-    if (await Network.getAutoConfig()) {
-      await Network.findServer();
+    if (await Network().getAutoConfig()) {
+      await Network().findServer();
     }
 
     return false;
@@ -34,17 +34,17 @@ void watchDog() async {
   if (!watchdogFeeding) {
     watchdogFeeding = true;
     bool ok = await checkConnection();
-    if (!ok && await Network.getAutoConfig()) {
-      await Network.findServer();
+    if (!ok && await Network().getAutoConfig()) {
+      await Network().findServer();
     }
     watchdogFeeding = false;
   }
 }
 
 void networkStartup() async {
-  Network.getAutoConfig().then((autoConfig) {
+  Network().getAutoConfig().then((autoConfig) {
     if (autoConfig) {
-      Network.findServer().then((found) {
+      Network().findServer().then((found) {
         // Start watchdog
         watchDog();
         Timer.periodic(watchDogTime, (timer) => watchDog());
@@ -63,7 +63,7 @@ class NetworkObserver extends WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
       active = false;
-      Network.disconnect();
+      Network().disconnect();
     } else if (state == AppLifecycleState.resumed) {
       active = true;
       watchDog();

@@ -112,7 +112,7 @@ class _OnTableEditState extends State<OnTableEdit> with AutoUnsubScribeMixin, Lo
     _setTableOptions();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!await Network.isConnected()) {
+      if (!await Network().isConnected()) {
         getEvent().then((event) => setEvent(event));
         setTeamOptions();
       }

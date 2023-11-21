@@ -21,14 +21,14 @@ class ScreenSelector extends StatelessWidget {
   final ValueNotifier<User> _userNotifier = ValueNotifier<User>(User(password: "", permissions: Permissions(admin: false), username: ""));
 
   ScreenSelector({Key? key}) : super(key: key) {
-    NetworkAuth.loginState.addListener(() {
+    NetworkAuth().loginState.addListener(() {
       checkUser();
     });
     checkUser();
   }
 
   void checkUser() {
-    NetworkAuth.getUser().then((value) {
+    NetworkAuth().getUser().then((value) {
       _userNotifier.value = value;
     });
   }

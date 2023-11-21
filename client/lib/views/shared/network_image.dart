@@ -43,16 +43,16 @@ class _NetworkImageState extends State<NetworkImageWidget> {
       height: widget.height,
     );
 
-    NetworkHttp.httpState.addListener(onConnected);
-    NetworkWebSocket.wsState.addListener(onConnected);
-    NetworkAuth.loginState.addListener(onConnected);
+    NetworkHttp().httpState.addListener(onConnected);
+    NetworkWebSocket().wsState.addListener(onConnected);
+    NetworkAuth().loginState.addListener(onConnected);
   }
 
   @override
   void dispose() {
-    NetworkHttp.httpState.removeListener(onConnected);
-    NetworkWebSocket.wsState.removeListener(onConnected);
-    NetworkAuth.loginState.removeListener(onConnected);
+    NetworkHttp().httpState.removeListener(onConnected);
+    NetworkWebSocket().wsState.removeListener(onConnected);
+    NetworkAuth().loginState.removeListener(onConnected);
     super.dispose();
   }
 

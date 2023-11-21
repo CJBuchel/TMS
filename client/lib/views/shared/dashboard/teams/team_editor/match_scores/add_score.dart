@@ -53,7 +53,7 @@ class _AddScoreState extends State<AddScore> {
 
   void _setInitial() {
     // create default game score
-    NetworkAuth.getUser().then((user) {
+    NetworkAuth().getUser().then((user) {
       final scoresheet = GameScoresheet(
         answers: [],
         privateComment: "",

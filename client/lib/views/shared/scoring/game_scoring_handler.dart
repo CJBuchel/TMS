@@ -1,10 +1,11 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/requests/game_requests.dart';
+import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/senders/validation_sender.dart';
 import 'package:tms/views/shared/network_image.dart';
 import 'package:tms/views/shared/scoring/comments.dart';
 import 'package:tms/views/shared/scoring/mission.dart';
@@ -51,14 +52,22 @@ class GameScoringHandler extends StatefulWidget {
   State<GameScoringHandler> createState() => _GameScoringHandlerState();
 }
 
-class _GameScoringHandlerState extends State<GameScoringHandler> {
+class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubScribeMixin {
   final TextEditingController _publicCommentController = TextEditingController();
   final TextEditingController _privateCommentController = TextEditingController();
 
   final List<ValueNotifier<ScoreAnswer>> _answerNotifiers = [];
   final ValueNotifier<List<ScoreError>> _errorsNotifier = ValueNotifier<List<ScoreError>>([]);
 
-  void _validateScores() {
+  // error setters/getters
+  get _getErrors => _errorsNotifier.value;
+  set _setErrors(List<ScoreError> errors) {
+    if (!listEquals(_getErrors, errors)) {
+      _errorsNotifier.value = errors;
+    }
+  }
+
+  void _validateScores() async {
     // check if any of the answers are empty
     for (ScoreAnswer answer in _getAnswers) {
       if (answer.answer.isEmpty) {
@@ -67,28 +76,17 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
     }
 
     ValidationQueue().addValidation(() async {
-      // time it takes to validate
-      var startTime = DateTime.now();
-      await getValidateQuestionsRequest(_getAnswers).then((res) {
-        if (res.item1 == HttpStatus.ok) {
-          _setErrors = res.item2.item2;
-          widget.onScore?.call(res.item2.item1);
-          widget.onErrors?.call(_getErrors);
-        }
-      });
-      var endTime = DateTime.now();
-      if (endTime.difference(startTime).inMilliseconds > 500) {
-        print("Validation took ${endTime.difference(startTime).inMilliseconds}ms");
-      }
+      senderValidation(_getAnswers);
     });
   }
 
-  // error setters/getters
-  get _getErrors => _errorsNotifier.value;
-  set _setErrors(List<ScoreError> errors) {
-    if (!listEquals(_getErrors, errors)) {
-      _errorsNotifier.value = errors;
-    }
+  void _onValidationResponse(String message) async {
+    ValidationQueue().addValidation(() async {
+      var response = QuestionsValidateResponse.fromJson(jsonDecode(message));
+      _setErrors = response.errors;
+      widget.onScore?.call(response.score);
+      widget.onErrors?.call(_getErrors);
+    });
   }
 
   // answer setters/getters
@@ -125,7 +123,7 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
     });
   }
 
-  void _setDefault() {
+  void _setDefault() async {
     List<ScoreAnswer> answers = [];
     for (var q in widget.game.questions) {
       answers.add(ScoreAnswer(
@@ -159,6 +157,11 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
     if (widget.setDefaultAnswers != null) {
       widget.setDefaultAnswers?.addListener(_setDefault);
     }
+
+    // check validation messages
+    autoSubscribe("validation", (s) {
+      _onValidationResponse(s.message);
+    });
   }
 
   @override

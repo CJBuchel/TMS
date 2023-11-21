@@ -8,9 +8,9 @@ class Logout extends StatelessWidget {
   const Logout({Key? key}) : super(key: key);
 
   void logoutController(BuildContext context) async {
-    NetworkAuth.setUser(User(password: "", username: "", permissions: Permissions(admin: false)));
-    NetworkAuth.setToken("");
-    NetworkAuth.setLoginState(false);
+    NetworkAuth().setUser(User(password: "", username: "", permissions: Permissions(admin: false)));
+    NetworkAuth().setToken("");
+    NetworkAuth().setLoginState(false);
     Navigator.popAndPushNamed(context, "/login");
   }
 
@@ -58,7 +58,7 @@ class Logout extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
                 child: FutureBuilder(
-                  future: NetworkAuth.getUser(),
+                  future: NetworkAuth().getUser(),
                   builder: (context, user) {
                     if (user.hasData) {
                       return Text(

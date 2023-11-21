@@ -60,7 +60,6 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   final ValueNotifier<List<Team>> _teamsNotifier = ValueNotifier<List<Team>>([]);
 
   void sendTableLoadedMatch(String thisTable, {bool forceNone = false}) async {
-    Logger().i("Sending table loaded match");
     if (_tableLoadedMatchNotifier.value != null) {
       publishRequest(SocketMessage(
         topic: "table",

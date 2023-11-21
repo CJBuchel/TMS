@@ -65,7 +65,7 @@ class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDat
       }
     });
 
-    Network.isConnected().then((connected) {
+    Network().isConnected().then((connected) {
       if (connected) onConnect();
     });
   }

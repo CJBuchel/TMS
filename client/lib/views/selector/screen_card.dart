@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/color_utils.dart';
 
 class ScreenCard extends StatelessWidget {
@@ -56,7 +57,13 @@ class ScreenCard extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(15, 130, 0, 0),
                       child: Text(
                         title,
-                        style: TextStyle(fontSize: 28, color: textColor),
+                        style: TextStyle(
+                            fontSize: Responsive.isDesktop(context)
+                                ? 28
+                                : Responsive.isTablet(context)
+                                    ? 24
+                                    : 20,
+                            color: textColor),
                       ),
                     ),
                   ],

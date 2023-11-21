@@ -8,7 +8,7 @@ import 'package:tuple/tuple.dart';
 
 Future<Tuple2<int, List<GameMatch>>> getMatchesRequest() async {
   try {
-    var res = await Network.serverGet("matches/get");
+    var res = await Network().serverGet("matches/get");
 
     if (res.item1 && res.item3.isNotEmpty) {
       return Tuple2(res.item2, MatchesResponse.fromJson(res.item3).matches);
@@ -24,7 +24,7 @@ Future<Tuple2<int, List<GameMatch>>> getMatchesRequest() async {
 Future<Tuple2<int, GameMatch?>> getMatchRequest(String matchNumber) async {
   try {
     var message = MatchRequest(matchNumber: matchNumber).toJson();
-    var res = await Network.serverPost("match/get", message);
+    var res = await Network().serverPost("match/get", message);
 
     if (res.item1 && res.item3.isNotEmpty) {
       try {
@@ -45,8 +45,8 @@ Future<Tuple2<int, GameMatch?>> getMatchRequest(String matchNumber) async {
 
 Future<int> updateMatchRequest(String originMatchNumber, GameMatch match) async {
   try {
-    var message = MatchUpdateRequest(authToken: await NetworkAuth.getToken(), matchNumber: originMatchNumber, matchData: match);
-    var res = await Network.serverPost("match/update", message.toJson());
+    var message = MatchUpdateRequest(authToken: await NetworkAuth().getToken(), matchNumber: originMatchNumber, matchData: match);
+    var res = await Network().serverPost("match/update", message.toJson());
     if (res.item1) {
       return res.item2;
     } else {
@@ -60,8 +60,8 @@ Future<int> updateMatchRequest(String originMatchNumber, GameMatch match) async 
 
 Future<int> loadMatchRequest(List<String> matchNumbers) async {
   try {
-    var message = MatchLoadRequest(authToken: await NetworkAuth.getToken(), matchNumbers: matchNumbers);
-    var res = await Network.serverPost("match/load", message.toJson());
+    var message = MatchLoadRequest(authToken: await NetworkAuth().getToken(), matchNumbers: matchNumbers);
+    var res = await Network().serverPost("match/load", message.toJson());
 
     if (res.item1) {
       return res.item2;
@@ -76,8 +76,8 @@ Future<int> loadMatchRequest(List<String> matchNumbers) async {
 
 Future<int> unloadMatchRequest() async {
   try {
-    var message = MatchLoadRequest(authToken: await NetworkAuth.getToken(), matchNumbers: []);
-    var res = await Network.serverPost("match/unload", message.toJson());
+    var message = MatchLoadRequest(authToken: await NetworkAuth().getToken(), matchNumbers: []);
+    var res = await Network().serverPost("match/unload", message.toJson());
 
     if (res.item1) {
       return res.item2;
@@ -92,8 +92,8 @@ Future<int> unloadMatchRequest() async {
 
 Future<int> deleteMatchRequest(String matchNumber) async {
   try {
-    var message = MatchDeleteRequest(authToken: await NetworkAuth.getToken(), matchNumber: matchNumber);
-    var res = await Network.serverPost("match/delete", message.toJson());
+    var message = MatchDeleteRequest(authToken: await NetworkAuth().getToken(), matchNumber: matchNumber);
+    var res = await Network().serverPost("match/delete", message.toJson());
 
     if (res.item1) {
       return res.item2;
@@ -108,8 +108,8 @@ Future<int> deleteMatchRequest(String matchNumber) async {
 
 Future<int> addMatchRequest(GameMatch match) async {
   try {
-    var message = MatchAddRequest(authToken: await NetworkAuth.getToken(), matchData: match);
-    var res = await Network.serverPost("match/add", message.toJson());
+    var message = MatchAddRequest(authToken: await NetworkAuth().getToken(), matchData: match);
+    var res = await Network().serverPost("match/add", message.toJson());
 
     if (res.item1) {
       return res.item2;

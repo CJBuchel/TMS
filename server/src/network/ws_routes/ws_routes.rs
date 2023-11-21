@@ -7,7 +7,7 @@ use tokio::sync::mpsc;
 
 use crate::{network::ws_routes::game_routes::validate_questions_route, event_service::TmsEventServiceArc};
 
-async fn client_msg(
+fn client_msg(
   user_id: String, 
   msg: Message, 
   clients: TmsClients, 
@@ -83,7 +83,9 @@ async fn client_connection(
         break;
       }
     };
-    client_msg(user_id.clone(), msg, clients.to_owned(), security.clone(), tms_event_service.clone()).await;
+
+    // async message handling (each client message is handled in a new task)
+    client_msg(user_id.clone(), msg, clients.to_owned(), security.clone(), tms_event_service.clone());
   }
 
   with_clients_write(&clients, |client_map| {

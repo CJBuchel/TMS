@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/senders/validation_sender.dart';
 import 'package:tms/views/shared/network_image.dart';
 import 'package:tms/views/shared/scoring/comments.dart';
 import 'package:tms/views/shared/scoring/mission.dart';
@@ -27,7 +27,7 @@ class GameScoringHandler extends StatefulWidget {
   final Function()? onDefaultAnswers;
 
   // notifiers
-  final ValueNotifier<bool>? setDefaultAnswers;
+  final ValueNotifier<bool> setDefaultAnswers;
   const GameScoringHandler({
     Key? key,
     // initials
@@ -69,29 +69,29 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
 
   void _validateScores() async {
     // check if any of the answers are empty
-    for (ScoreAnswer answer in _getAnswers) {
-      if (answer.answer.isEmpty) {
-        return;
+    if (mounted) {
+      for (ScoreAnswer answer in _getAnswers) {
+        if (answer.answer.isEmpty) {
+          return;
+        }
       }
+      ValidationQueue().validate(_getAnswers);
     }
-
-    ValidationQueue().addValidation(() async {
-      senderValidation(_getAnswers);
-    });
   }
 
   void _onValidationResponse(String message) async {
-    ValidationQueue().addValidation(() async {
+    if (mounted) {
       var response = QuestionsValidateResponse.fromJson(jsonDecode(message));
       _setErrors = response.errors;
       widget.onScore?.call(response.score);
       widget.onErrors?.call(_getErrors);
-    });
+    }
   }
 
   // answer setters/getters
   get _getAnswers => _answerNotifiers.map((e) => e.value).toList();
   set _setAnswers(List<ScoreAnswer> answers) {
+    // set answers as needed
     for (var answer in answers) {
       var idx = _answerNotifiers.indexWhere((a) => a.value.id == answer.id);
       if (idx != -1) {
@@ -102,10 +102,9 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
         _answerNotifiers.add(ValueNotifier<ScoreAnswer>(answer));
       }
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _validateScores();
-      widget.onAnswers?.call(_getAnswers);
-    });
+
+    _validateScores();
+    widget.onAnswers?.call(_getAnswers);
   }
 
   set _setAnswer(ScoreAnswer answer) {
@@ -117,13 +116,11 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
     } else {
       _answerNotifiers.add(ValueNotifier<ScoreAnswer>(answer));
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _validateScores();
-      widget.onAnswers?.call(_getAnswers);
-    });
+    _validateScores();
+    widget.onAnswers?.call(_getAnswers);
   }
 
-  void _setDefault() async {
+  void _setDefault() {
     List<ScoreAnswer> answers = [];
     for (var q in widget.game.questions) {
       answers.add(ScoreAnswer(
@@ -133,7 +130,15 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
     }
 
     _setAnswers = answers;
-    widget.onDefaultAnswers?.call();
+  }
+
+  void _defaultHandler() {
+    if (mounted) {
+      if (widget.setDefaultAnswers.value == true) {
+        _setDefault();
+      }
+    }
+    widget.setDefaultAnswers.value = false;
   }
 
   @override
@@ -150,13 +155,13 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
     if (widget.initialAnswers != null) {
       _setAnswers = widget.initialAnswers!;
     } else {
+      Logger().w("No initial answers, setting default");
       _setDefault();
     }
 
     // check for default answers
-    if (widget.setDefaultAnswers != null) {
-      widget.setDefaultAnswers?.addListener(_setDefault);
-    }
+    widget.setDefaultAnswers.value = false;
+    widget.setDefaultAnswers.addListener(_defaultHandler);
 
     // check validation messages
     autoSubscribe("validation", (s) {
@@ -166,9 +171,7 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
 
   @override
   void dispose() {
-    if (widget.setDefaultAnswers != null) {
-      widget.setDefaultAnswers?.removeListener(_setDefault);
-    }
+    widget.setDefaultAnswers.removeListener(_defaultHandler);
     super.dispose();
   }
 

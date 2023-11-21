@@ -16,8 +16,16 @@ import 'package:http/http.dart' as http;
 enum NetworkHttpConnectionState { disconnected, connectedNoPulse, connected }
 
 class NetworkHttp {
+  static final NetworkHttp _instance = NetworkHttp._internal();
+
+  factory NetworkHttp() {
+    return _instance;
+  }
+
+  NetworkHttp._internal();
+
   final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
-  static ValueNotifier<NetworkHttpConnectionState> httpState = ValueNotifier<NetworkHttpConnectionState>(NetworkHttpConnectionState.disconnected);
+  final ValueNotifier<NetworkHttpConnectionState> httpState = ValueNotifier<NetworkHttpConnectionState>(NetworkHttpConnectionState.disconnected);
 
   Future<void> setState(NetworkHttpConnectionState state) async {
     httpState.value = state;
@@ -110,7 +118,7 @@ class NetworkHttp {
         var message = IntegrityMessage(message: randomUuid);
 
         // Encrypt and send
-        var encryptedM = await NetworkSecurity.encryptMessage(message.toJson());
+        var encryptedM = await NetworkSecurity().encryptMessage(message.toJson());
         final response = await http.post(
           Uri.parse('http://$addr:$requestPort/requests/pulse_integrity/$uuid'),
           body: encryptedM,
@@ -118,7 +126,7 @@ class NetworkHttp {
 
         // If the response is good (200) then decrypt the message and check if it's the same as the one sent before
         if (response.statusCode == HttpStatus.ok) {
-          var decryptedM = IntegrityMessage.fromJson(await NetworkSecurity.decryptMessage(response.body));
+          var decryptedM = IntegrityMessage.fromJson(await NetworkSecurity().decryptMessage(response.body));
           if (decryptedM.message == randomUuid) {
             return true;
           }
@@ -141,7 +149,7 @@ class NetworkHttp {
 
   // Register with the server, provides uuid and key. Server returns the url and it's own key
   Future<Tuple2<String, String>> register(String addr) async {
-    var keyPair = await NetworkSecurity.generateKeyPair();
+    var keyPair = await NetworkSecurity().generateKeyPair();
     var uuid = await getUuid();
 
     // If we're on the web always generate a new uuid
@@ -163,16 +171,16 @@ class NetworkHttp {
         Uri.parse('http://$addr:$requestPort/requests/register'),
         body: jsonEncode(request.toJson()),
       );
-      var message = RegisterResponse.fromJson(await NetworkSecurity.decryptMessage(response.body, key: keyPair.privateKey));
+      var message = RegisterResponse.fromJson(await NetworkSecurity().decryptMessage(response.body, key: keyPair.privateKey));
       String url = "${message.urlScheme}$addr${message.urlPath}";
 
       switch (response.statusCode) {
         case HttpStatus.ok: // Status OK
-          NetworkSecurity.setKeys(keyPair);
-          NetworkSecurity.setServerKey(message.key);
+          NetworkSecurity().setKeys(keyPair);
+          NetworkSecurity().setServerKey(message.key);
           setState(NetworkHttpConnectionState.connected);
           setConnectUrl(url);
-          NetworkAuth.login(addr, uuid);
+          NetworkAuth().login(addr, uuid);
           return Tuple2(url, message.version);
 
         case HttpStatus.alreadyReported: // Status Already Reported/ID Already Registered
@@ -182,7 +190,7 @@ class NetworkHttp {
               // Pulse is good, integrity is good. Use existing settings (don't set keys)
               setState(NetworkHttpConnectionState.connected);
               setConnectUrl(url);
-              NetworkAuth.login(addr, uuid);
+              NetworkAuth().login(addr, uuid);
               Logger().i("Already Registered, Keeping Settings");
               return Tuple2(url, message.version);
             case false:

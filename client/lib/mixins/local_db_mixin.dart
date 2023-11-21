@@ -46,7 +46,7 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   Future<Game> getGame() => _gameLocalDB.getSingle();
 
   void syncDatabase() async {
-    if (await Network.isConnected()) {
+    if (await Network().isConnected()) {
       _teamsLocalDB.syncLocalList();
       _matchesLocalDB.syncLocalList();
       _judgingLocalDB.syncLocalList();
@@ -60,10 +60,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
     super.initState();
 
     syncDatabase();
-    NetworkHttp.httpState.addListener(syncDatabase);
-    NetworkWebSocket.wsState.addListener(syncDatabase);
-    NetworkSecurity.securityState.addListener(syncDatabase);
-    NetworkAuth.loginState.addListener(syncDatabase);
+    NetworkHttp().httpState.addListener(syncDatabase);
+    NetworkWebSocket().wsState.addListener(syncDatabase);
+    NetworkSecurity().securityState.addListener(syncDatabase);
+    NetworkAuth().loginState.addListener(syncDatabase);
 
     autoSubscribe("event", (m) {
       if (m.subTopic == "update") {
@@ -119,10 +119,10 @@ mixin LocalDatabaseMixin<T extends StatefulWidget> on AutoUnsubScribeMixin<T> {
   @override
   void dispose() {
     super.dispose(); // dispose will auto unsubscribe for us
-    NetworkHttp.httpState.removeListener(syncDatabase);
-    NetworkWebSocket.wsState.removeListener(syncDatabase);
-    NetworkSecurity.securityState.removeListener(syncDatabase);
-    NetworkAuth.loginState.removeListener(syncDatabase);
+    NetworkHttp().httpState.removeListener(syncDatabase);
+    NetworkWebSocket().wsState.removeListener(syncDatabase);
+    NetworkSecurity().securityState.removeListener(syncDatabase);
+    NetworkAuth().loginState.removeListener(syncDatabase);
 
     _teamsLocalDB.dispose();
     _matchesLocalDB.dispose();

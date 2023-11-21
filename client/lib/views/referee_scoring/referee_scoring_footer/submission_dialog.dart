@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/requests/team_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/referee_scoring/table_setup.dart';
@@ -45,6 +46,7 @@ class SubmissionDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
+            Logger().i("submitted, about to call on submit");
             onSubmit();
           },
           child: const Text("OK"),

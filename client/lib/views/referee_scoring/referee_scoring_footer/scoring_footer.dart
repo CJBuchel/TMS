@@ -77,32 +77,33 @@ class ScoringFooter extends StatelessWidget {
     );
   }
 
-  void postScoresheet(TeamGameScore scoresheet, BuildContext context) {
+  void postScoresheet({
+    required TeamGameScore scoresheet,
+    required BuildContext context,
+    required GameMatch? nextMatch,
+    required Team? nextTeam,
+    required bool locked,
+  }) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return ValueListenableBuilder3(
-          first: nextMatchNotifier,
-          second: nextTeamNotifier,
-          third: lockedNotifier,
-          builder: (context, nextMatch, nextTeam, locked, _) {
-            return SubmissionDialog(
-              nextMatch: nextMatch,
-              nextTeam: nextTeam,
-              locked: locked,
-              scoresheet: scoresheet,
-              onSubmit: () {
-                onSubmit();
-              },
-            );
-          },
+        return SubmissionDialog(
+          nextMatch: nextMatch,
+          nextTeam: nextTeam,
+          locked: locked,
+          scoresheet: scoresheet,
+          onSubmit: onSubmit,
         );
       },
     );
   }
 
-  void submitScoresheet(BuildContext context) {
+  void submitScoresheet({
+    required BuildContext context,
+    required GameMatch? nextMatch,
+    required Team? nextTeam,
+  }) {
     if (nextMatchNotifier.value == null || nextTeamNotifier.value == null) return;
     RefereeTableUtil.getRefereeTable().then((refereeTable) {
       String gp = "";
@@ -132,11 +133,22 @@ class ScoringFooter extends StatelessWidget {
         timeStamp: 0,
       );
 
-      postScoresheet(scoresheet, context);
+      postScoresheet(
+        scoresheet: scoresheet,
+        context: context,
+        nextMatch: nextMatch,
+        nextTeam: nextTeam,
+        locked: lockedNotifier.value,
+      );
     });
   }
 
-  void submitNoShow(BuildContext context) {
+  void submitNoShow({
+    required BuildContext context,
+    required GameMatch? nextMatch,
+    required Team? nextTeam,
+    required bool locked,
+  }) {
     // build scoresheet and send to server
     if (nextMatchNotifier.value == null || nextTeamNotifier.value == null) return;
     RefereeTableUtil.getRefereeTable().then((refereeTable) {
@@ -159,7 +171,13 @@ class ScoringFooter extends StatelessWidget {
         timeStamp: 0,
       );
 
-      postScoresheet(scoresheet, context);
+      postScoresheet(
+        scoresheet: scoresheet,
+        context: context,
+        nextMatch: nextMatch,
+        nextTeam: nextTeam,
+        locked: locked,
+      );
     });
   }
 
@@ -208,7 +226,12 @@ class ScoringFooter extends StatelessWidget {
                             if (isValidNoShow) {
                               showConfirmNoShow(context).then((confirmed) {
                                 if (confirmed != null && confirmed) {
-                                  submitNoShow(context);
+                                  submitNoShow(
+                                    context: context,
+                                    nextMatch: nextMatch,
+                                    nextTeam: nextTeam,
+                                    locked: lockedNotifier.value,
+                                  );
                                 }
                               });
                             }
@@ -251,7 +274,11 @@ class ScoringFooter extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             if (isValidSubmit) {
-                              submitScoresheet(context);
+                              submitScoresheet(
+                                context: context,
+                                nextMatch: nextMatch,
+                                nextTeam: nextTeam,
+                              );
                             }
                           },
                           style: ButtonStyle(

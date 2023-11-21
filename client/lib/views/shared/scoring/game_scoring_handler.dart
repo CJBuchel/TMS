@@ -8,6 +8,7 @@ import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/network_image.dart';
 import 'package:tms/views/shared/scoring/comments.dart';
 import 'package:tms/views/shared/scoring/mission.dart';
+import 'package:tms/views/shared/scoring/validation_queue.dart';
 
 class GameScoringHandler extends StatefulWidget {
   // initial values
@@ -54,22 +55,20 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
   final TextEditingController _publicCommentController = TextEditingController();
   final TextEditingController _privateCommentController = TextEditingController();
 
-  final ValueNotifier<bool> _currentlyValidatingNotifier = ValueNotifier<bool>(false);
-
   final List<ValueNotifier<ScoreAnswer>> _answerNotifiers = [];
   final ValueNotifier<List<ScoreError>> _errorsNotifier = ValueNotifier<List<ScoreError>>([]);
 
-  // currently validating setters/getters
-  get _getCurrentlyValidating => _currentlyValidatingNotifier.value;
-  set _setCurrentlyValidating(bool val) {
-    if (_currentlyValidatingNotifier.value != val) {
-      _currentlyValidatingNotifier.value = val;
+  void _validateScores() {
+    // check if any of the answers are empty
+    for (ScoreAnswer answer in _getAnswers) {
+      if (answer.answer.isEmpty) {
+        return;
+      }
     }
-  }
 
-  Future<void> _validateScores() async {
-    if (!_getCurrentlyValidating) {
-      _setCurrentlyValidating = true;
+    ValidationQueue().addValidation(() async {
+      // time it takes to validate
+      var startTime = DateTime.now();
       await getValidateQuestionsRequest(_getAnswers).then((res) {
         if (res.item1 == HttpStatus.ok) {
           _setErrors = res.item2.item2;
@@ -77,8 +76,11 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
           widget.onErrors?.call(_getErrors);
         }
       });
-      _setCurrentlyValidating = false;
-    }
+      var endTime = DateTime.now();
+      if (endTime.difference(startTime).inMilliseconds > 500) {
+        print("Validation took ${endTime.difference(startTime).inMilliseconds}ms");
+      }
+    });
   }
 
   // error setters/getters
@@ -95,31 +97,35 @@ class _GameScoringHandlerState extends State<GameScoringHandler> {
     for (var answer in answers) {
       var idx = _answerNotifiers.indexWhere((a) => a.value.id == answer.id);
       if (idx != -1) {
-        if (_answerNotifiers[idx].value != answer) {
+        if (_answerNotifiers[idx].value != answer && mounted) {
           _answerNotifiers[idx].value = answer;
         }
       } else {
         _answerNotifiers.add(ValueNotifier<ScoreAnswer>(answer));
       }
     }
-    _validateScores();
-    widget.onAnswers?.call(_getAnswers);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateScores();
+      widget.onAnswers?.call(_getAnswers);
+    });
   }
 
   set _setAnswer(ScoreAnswer answer) {
     var idx = _answerNotifiers.indexWhere((a) => a.value.id == answer.id);
     if (idx != -1) {
-      if (_answerNotifiers[idx].value != answer) {
+      if (_answerNotifiers[idx].value != answer && mounted) {
         _answerNotifiers[idx].value = answer;
       }
     } else {
       _answerNotifiers.add(ValueNotifier<ScoreAnswer>(answer));
     }
-    widget.onAnswers?.call(_getAnswers);
-    _validateScores();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _validateScores();
+      widget.onAnswers?.call(_getAnswers);
+    });
   }
 
-  void _setDefault() async {
+  void _setDefault() {
     List<ScoreAnswer> answers = [];
     for (var q in widget.game.questions) {
       answers.add(ScoreAnswer(

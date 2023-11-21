@@ -125,21 +125,17 @@ class MatchTable extends StatelessWidget {
     isSelectable = isLoaded ? false : isSelectable;
 
     Color? rowColor;
+    Color? completeColor = idx.isEven ? Colors.green : Colors.green[300];
+    Color? normalColor = idx.isEven ? Theme.of(context).splashColor : Theme.of(context).colorScheme.secondary.withOpacity(0.1);
     if (isLoaded) {
       rowColor = Colors.orange;
     } else if (isSelected) {
       rowColor = Colors.blue[300];
-    } else if (idx.isEven) {
-      if (match.complete) {
-        rowColor = Colors.green;
-      } else {
-        rowColor = Theme.of(context).splashColor;
-      }
     } else {
       if (match.complete) {
-        rowColor = Colors.green[300];
+        rowColor = completeColor;
       } else {
-        rowColor = Theme.of(context).colorScheme.secondary.withOpacity(0.1);
+        rowColor = normalColor;
       }
     }
 
@@ -213,7 +209,7 @@ class MatchTable extends StatelessWidget {
                           color: match.complete && !table.scoreSubmitted
                               ? Colors.red
                               : table.scoreSubmitted
-                                  ? Colors.green
+                                  ? completeColor
                                   : null,
                           deferred: isDeferred,
                         ),
@@ -227,7 +223,7 @@ class MatchTable extends StatelessWidget {
                           color: match.complete && !table.scoreSubmitted
                               ? Colors.red
                               : table.scoreSubmitted
-                                  ? Colors.green
+                                  ? completeColor
                                   : null,
                           deferred: isDeferred,
                         ),

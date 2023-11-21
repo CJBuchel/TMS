@@ -46,7 +46,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     }
   }
 
-  void setNextTeamMatch(Team? team, GameMatch? match) {
+  void setNextTeamMatch(Team? team, GameMatch? match) async {
     _setNextTeamNotifier = team;
     _setNextMatchNotifier = match;
     widget.onNextTeamMatch(team, match);
@@ -59,7 +59,8 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   final ValueNotifier<List<GameMatch>> _matchesNotifier = ValueNotifier<List<GameMatch>>([]);
   final ValueNotifier<List<Team>> _teamsNotifier = ValueNotifier<List<Team>>([]);
 
-  void sendTableLoadedMatch(String thisTable, {bool forceNone = false}) {
+  void sendTableLoadedMatch(String thisTable, {bool forceNone = false}) async {
+    Logger().i("Sending table loaded match");
     if (_tableLoadedMatchNotifier.value != null) {
       publishRequest(SocketMessage(
         topic: "table",
@@ -73,7 +74,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     }
   }
 
-  bool checkSetNextMatch(String thisTable, GameMatch match) {
+  Future<bool> checkSetNextMatch(String thisTable, GameMatch match) async {
     if (_lockedNotifier.value) {
       if (_matchesNotifier.value.isNotEmpty && _teamsNotifier.value.isNotEmpty) {
         for (var onTable in match.matchTables) {
@@ -111,18 +112,18 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
       });
     } else {
       if (_matchesNotifier.value.isNotEmpty && _teamsNotifier.value.isNotEmpty) {
-        RefereeTableUtil.getTable().then((thisTable) {
+        RefereeTableUtil.getTable().then((thisTable) async {
           // first check matches that have been completed
           for (var match in _matchesNotifier.value) {
             if (match.complete && !match.gameMatchDeferred) {
-              if (checkSetNextMatch(thisTable, match)) return;
+              if (await checkSetNextMatch(thisTable, match)) return;
             }
           }
 
           // then check matches that are not complete (i.e, default)
           for (var match in _matchesNotifier.value) {
             if (!match.complete && !match.gameMatchDeferred) {
-              if (checkSetNextMatch(thisTable, match)) return;
+              if (await checkSetNextMatch(thisTable, match)) return;
             }
           }
 
@@ -134,8 +135,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     }
   }
 
-  void setTeams(List<Team> teams) {
-    teams.sort((a, b) => a.teamNumber.compareTo(b.teamNumber));
+  void _setTeams(List<Team> teams) async {
     if (mounted) {
       if (!listEquals(_teamsNotifier.value, teams)) {
         _teamsNotifier.value = teams;
@@ -144,7 +144,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     }
   }
 
-  void setMatches(List<GameMatch> matches) {
+  void _setMatches(List<GameMatch> matches) async {
     matches = sortMatchesByTime(matches);
     if (mounted) {
       if (!listEquals(_matchesNotifier.value, matches)) {
@@ -157,8 +157,8 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   @override
   void initState() {
     super.initState();
-    onMatchesUpdate((matches) => setMatches(matches));
-    onTeamsUpdate((teams) => setTeams(teams));
+    onMatchesUpdate((matches) => _setMatches(matches));
+    onTeamsUpdate((teams) => _setTeams(teams));
 
     autoSubscribe("match", (m) {
       if (m.subTopic == "load") {
@@ -182,8 +182,8 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
                 if (onTable.table == thisTable) {
                   if (_tableLoadedMatchNotifier.value != match) {
                     _tableLoadedMatchNotifier.value = match;
-                    setNextTableMatch();
                   }
+                  setNextTableMatch();
                   break;
                 }
               }
@@ -198,8 +198,8 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
 
     // delayed
     Future.delayed(const Duration(milliseconds: 500), () {
-      getMatches().then((matches) => setMatches(matches));
-      getTeams().then((teams) => setTeams(teams));
+      getMatches().then((matches) => _setMatches(matches));
+      getTeams().then((teams) => _setTeams(teams));
     });
 
     setNextTableMatch();

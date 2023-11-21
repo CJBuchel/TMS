@@ -3,7 +3,7 @@ import 'package:tms/responsive.dart';
 import 'package:tms/views/judge_advisor/ja_handler.dart';
 import 'package:tms/views/judge_advisor/side_menu.dart';
 import 'package:tms/views/shared/error_handlers.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class JudgeAdvisor extends StatefulWidget {
   const JudgeAdvisor({Key? key}) : super(key: key);

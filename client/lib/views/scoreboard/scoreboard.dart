@@ -10,7 +10,7 @@ import 'package:tms/views/scoreboard/judge_info.dart';
 import 'package:tms/views/scoreboard/match_info.dart';
 import 'package:tms/views/scoreboard/team_table.dart';
 import 'package:tms/utils/sorter_util.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class ScoreboardUtil {
   static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();

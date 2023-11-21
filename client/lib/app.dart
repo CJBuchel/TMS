@@ -42,7 +42,7 @@ class TMSApp extends StatelessWidget {
 
           // Main Router
           routes: {
-            '/': (context) => const ScreenSelector(),
+            '/': (context) => ScreenSelector(),
 
             // Utility screens
             '/server_connection': (context) => const Connection(),
@@ -61,7 +61,7 @@ class TMSApp extends StatelessWidget {
 
             // Referee screens
             '/referee/match_control': (context) => const MatchControl(),
-            '/referee/scoring': ((context) => const RefereeScoring()),
+            '/referee/scoring': ((context) => RefereeScoring()),
             '/referee/table_setup': (context) => const TableSetup(),
             '/referee/schedule': (context) => const RefereeSchedule(),
             '/referee/rule_book': (context) => const RuleBook(), // no good cross compatible pdf viewer

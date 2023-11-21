@@ -9,7 +9,7 @@ import 'package:tms/network/network.dart';
 import 'package:tms/requests/game_requests.dart';
 import 'package:tms/requests/proxy_requests.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class RuleBook extends StatefulWidget {
   const RuleBook({Key? key}) : super(key: key);
@@ -86,7 +86,7 @@ class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDat
     double controlBarHeight = Responsive.isMobile(context) ? 60 : 80;
     double iconSize = Responsive.isMobile(context) ? 25 : 45;
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           return Column(

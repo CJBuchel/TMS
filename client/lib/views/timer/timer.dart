@@ -6,7 +6,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 import 'package:tms/views/timer/clock.dart';
 import 'package:tms/views/timer/header.dart';
 import 'package:tms/views/timer/match_info.dart';

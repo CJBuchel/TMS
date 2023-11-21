@@ -1,6 +1,6 @@
 [package]
 name = "tms_server"
-version = "2023.0.0"
+version = "1.0.0"
 edition = "2021"
 authors = ["Connor J Buchel <connorbuchel@gmail.com>"]
 build = "build/main.rs"

@@ -21,6 +21,7 @@ class TmsToolBarThemeAction extends StatelessWidget {
             ),
             title: const Text("Theme"),
             onTap: () {
+              Navigator.pop(context);
               AppTheme.setDarkTheme = !isDarkTheme;
             },
           );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
+import 'package:tms/utils/value_listenable_utils.dart';
 import 'package:tms/views/shared/toolbar/event_title.dart';
 
 class TmsToolBarTitleBar extends StatelessWidget {
@@ -181,7 +182,16 @@ class TmsToolBarTitleBar extends StatelessWidget {
       valueListenable: _networkState,
       builder: (context, connected, child) {
         if (connected) {
-          return const TmsToolBarEventTitle();
+          // make another listener dedicated for if the network changes after the initial connection
+          return ValueListenableBuilder3(
+            first: NetworkHttp.httpState,
+            second: NetworkWebSocket.wsState,
+            third: NetworkSecurity.securityState,
+            builder: (context, http, ws, sec, _) {
+              checkNetwork();
+              return const TmsToolBarEventTitle();
+            },
+          );
         } else {
           return networkTitle();
         }

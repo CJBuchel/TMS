@@ -4,7 +4,7 @@ use tms_utils::{TmsClients, network_schemas::{QuestionsValidateRequest, Question
 use crate::event_service::TmsEventServiceArc;
 
 
-pub async fn validate_questions_route(
+pub fn validate_questions_route(
   message: String, 
   tms_event_service: TmsEventServiceArc,
   clients: TmsClients,

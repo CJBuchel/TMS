@@ -33,7 +33,7 @@ async fn client_msg(
 
   // validation system
   if _socket_message.topic == "validation" {
-    let _ = validate_questions_route(_socket_message.message, tms_event_service, clients, user_id.clone());
+    validate_questions_route(_socket_message.message, tms_event_service, clients, user_id.clone());
   }
 
   // @todo use socket message for something. (Off chance that the client sends a socket message instead of the server)

@@ -7,13 +7,13 @@ mixin AutoUnsubScribeMixin<T extends StatefulWidget> on State<T> {
   List<Tuple2<String, Function(SocketMessage)>> _subscriptions = [];
 
   void autoSubscribe(String channel, Function(SocketMessage) callback) {
-    Network.subscribe(channel, callback);
+    Network().subscribe(channel, callback);
     _subscriptions.add(Tuple2(channel, callback));
   }
 
   void autoUnsubscribe() {
     for (var sub in _subscriptions) {
-      Network.unsubscribe(
+      Network().unsubscribe(
         sub.item1,
         sub.item2,
       );

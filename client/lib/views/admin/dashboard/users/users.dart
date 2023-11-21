@@ -56,18 +56,18 @@ class _UsersState extends State<Users> {
       fetchUsers(displayError: false); // don't display error on first fetch
     });
 
-    NetworkHttp.httpState.addListener(_fetchUsersBinding);
-    NetworkWebSocket.wsState.addListener(_fetchUsersBinding);
-    NetworkSecurity.securityState.addListener(_fetchUsersBinding);
-    NetworkAuth.loginState.addListener(_fetchUsersBinding);
+    NetworkHttp().httpState.addListener(_fetchUsersBinding);
+    NetworkWebSocket().wsState.addListener(_fetchUsersBinding);
+    NetworkSecurity().securityState.addListener(_fetchUsersBinding);
+    NetworkAuth().loginState.addListener(_fetchUsersBinding);
   }
 
   @override
   void dispose() {
-    NetworkHttp.httpState.removeListener(_fetchUsersBinding);
-    NetworkWebSocket.wsState.removeListener(_fetchUsersBinding);
-    NetworkSecurity.securityState.removeListener(_fetchUsersBinding);
-    NetworkAuth.loginState.removeListener(_fetchUsersBinding);
+    NetworkHttp().httpState.removeListener(_fetchUsersBinding);
+    NetworkWebSocket().wsState.removeListener(_fetchUsersBinding);
+    NetworkSecurity().securityState.removeListener(_fetchUsersBinding);
+    NetworkAuth().loginState.removeListener(_fetchUsersBinding);
     super.dispose();
   }
 

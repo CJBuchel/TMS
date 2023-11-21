@@ -11,32 +11,40 @@ import 'package:http/http.dart' as http;
 
 // Controls the login and permissions for the application
 class NetworkAuth {
-  static ValueNotifier<bool> loginState = ValueNotifier<bool>(false);
-  static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
-  static String _authToken = "";
+  static final NetworkAuth _instance = NetworkAuth._internal();
 
-  static Future<void> setLoginState(bool state) async {
+  factory NetworkAuth() {
+    return _instance;
+  }
+
+  NetworkAuth._internal();
+
+  final ValueNotifier<bool> loginState = ValueNotifier<bool>(false);
+  final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  String _authToken = "";
+
+  Future<void> setLoginState(bool state) async {
     loginState.value = state;
   }
 
-  static Future<bool> getLoginState() async {
+  Future<bool> getLoginState() async {
     return loginState.value;
   }
 
-  static Future<void> setToken(String token) async {
+  Future<void> setToken(String token) async {
     _authToken = token;
   }
 
-  static Future<String> getToken() async {
+  Future<String> getToken() async {
     return _authToken;
   }
 
-  static Future<void> setUser(User user) async {
+  Future<void> setUser(User user) async {
     var userJson = jsonEncode(user.toJson());
     await _localStorage.then((value) => value.setString(storeNtAuthUser, userJson));
   }
 
-  static Future<User> getUser() async {
+  Future<User> getUser() async {
     try {
       var userString = await _localStorage.then((value) => value.getString(storeNtAuthUser));
       if (userString != null) {
@@ -59,18 +67,18 @@ class NetworkAuth {
   }
 
   // Returns true if the login was successful
-  static Future<bool> login(String addr, String uuid) async {
+  Future<bool> login(String addr, String uuid) async {
     try {
       var user = await getUser();
       var message = LoginRequest(password: user.password, username: user.username);
-      var encryptedM = await NetworkSecurity.encryptMessage(message.toJson());
+      var encryptedM = await NetworkSecurity().encryptMessage(message.toJson());
       final res = await http.post(
         Uri.parse("http://$addr:$requestPort/requests/login/$uuid"),
         body: encryptedM,
       );
 
       if (res.body.isNotEmpty && res.statusCode == HttpStatus.ok) {
-        var decryptedM = await NetworkSecurity.decryptMessage(res.body);
+        var decryptedM = await NetworkSecurity().decryptMessage(res.body);
         var loginResponse = LoginResponse.fromJson(decryptedM);
         user.permissions = loginResponse.permissions;
         setToken(loginResponse.authToken);

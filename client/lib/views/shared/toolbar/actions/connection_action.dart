@@ -33,8 +33,8 @@ class TmsToolBarConnectionAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder2(
-      first: NetworkHttp.httpState,
-      second: NetworkWebSocket.wsState,
+      first: NetworkHttp().httpState,
+      second: NetworkWebSocket().wsState,
       builder: ((_, a, b, __) {
         if (listTile ?? false) {
           return ListTile(

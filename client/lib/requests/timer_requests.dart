@@ -7,8 +7,8 @@ import 'package:tms/schema/tms_schema.dart';
 
 Future<int> timerStartRequest() async {
   try {
-    var message = TimerRequest(authToken: await NetworkAuth.getToken());
-    var res = await Network.serverPost("timer/start", message.toJson());
+    var message = TimerRequest(authToken: await NetworkAuth().getToken());
+    var res = await Network().serverPost("timer/start", message.toJson());
 
     if (res.item1) {
       return res.item2;
@@ -23,8 +23,8 @@ Future<int> timerStartRequest() async {
 
 Future<int> timerPreStartRequest() async {
   try {
-    var message = TimerRequest(authToken: await NetworkAuth.getToken());
-    var res = await Network.serverPost("timer/pre_start", message.toJson());
+    var message = TimerRequest(authToken: await NetworkAuth().getToken());
+    var res = await Network().serverPost("timer/pre_start", message.toJson());
 
     if (res.item1) {
       return res.item2;
@@ -39,8 +39,8 @@ Future<int> timerPreStartRequest() async {
 
 Future<int> timerStopRequest() async {
   try {
-    var message = TimerRequest(authToken: await NetworkAuth.getToken());
-    var res = await Network.serverPost("timer/stop", message.toJson());
+    var message = TimerRequest(authToken: await NetworkAuth().getToken());
+    var res = await Network().serverPost("timer/stop", message.toJson());
 
     if (res.item1) {
       return res.item2;
@@ -55,8 +55,8 @@ Future<int> timerStopRequest() async {
 
 Future<int> timerReloadRequest() async {
   try {
-    var message = TimerRequest(authToken: await NetworkAuth.getToken());
-    var res = await Network.serverPost("timer/reload", message.toJson());
+    var message = TimerRequest(authToken: await NetworkAuth().getToken());
+    var res = await Network().serverPost("timer/reload", message.toJson());
 
     if (res.item1) {
       return res.item2;

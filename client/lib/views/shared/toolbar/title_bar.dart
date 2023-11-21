@@ -17,15 +17,15 @@ class TmsToolBarTitleBar extends StatelessWidget {
   void checkNetwork() async {
     bool connected = true;
 
-    if (NetworkHttp.httpState.value != NetworkHttpConnectionState.connected) {
+    if (NetworkHttp().httpState.value != NetworkHttpConnectionState.connected) {
       connected = false;
     }
 
-    if (NetworkWebSocket.wsState.value != NetworkWebSocketState.connected) {
+    if (NetworkWebSocket().wsState.value != NetworkWebSocketState.connected) {
       connected = false;
     }
 
-    if (NetworkSecurity.securityState.value != SecurityState.secure) {
+    if (NetworkSecurity().securityState.value != SecurityState.secure) {
       connected = false;
     }
 
@@ -38,7 +38,7 @@ class TmsToolBarTitleBar extends StatelessWidget {
 
   Widget httpStatus() {
     return ValueListenableBuilder(
-      valueListenable: NetworkHttp.httpState,
+      valueListenable: NetworkHttp().httpState,
       builder: (context, state, _) {
         checkNetwork();
         switch (state) {
@@ -84,7 +84,7 @@ class TmsToolBarTitleBar extends StatelessWidget {
 
   Widget wsStatus() {
     return ValueListenableBuilder(
-      valueListenable: NetworkWebSocket.wsState,
+      valueListenable: NetworkWebSocket().wsState,
       builder: (context, state, _) {
         checkNetwork();
         switch (state) {
@@ -119,7 +119,7 @@ class TmsToolBarTitleBar extends StatelessWidget {
 
   Widget secState() {
     return ValueListenableBuilder(
-      valueListenable: NetworkSecurity.securityState,
+      valueListenable: NetworkSecurity().securityState,
       builder: (context, state, _) {
         checkNetwork();
         switch (state) {
@@ -184,9 +184,9 @@ class TmsToolBarTitleBar extends StatelessWidget {
         if (connected) {
           // make another listener dedicated for if the network changes after the initial connection
           return ValueListenableBuilder3(
-            first: NetworkHttp.httpState,
-            second: NetworkWebSocket.wsState,
-            third: NetworkSecurity.securityState,
+            first: NetworkHttp().httpState,
+            second: NetworkWebSocket().wsState,
+            third: NetworkSecurity().securityState,
             builder: (context, http, ws, sec, _) {
               checkNetwork();
               return const TmsToolBarEventTitle();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -6,8 +7,15 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 enum NetworkWebSocketState { disconnected, connected }
 
 class NetworkWebSocket {
-  // final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
-  static ValueNotifier<NetworkWebSocketState> wsState = ValueNotifier<NetworkWebSocketState>(NetworkWebSocketState.disconnected);
+  static final NetworkWebSocket _instance = NetworkWebSocket._internal();
+
+  factory NetworkWebSocket() {
+    return _instance;
+  }
+
+  NetworkWebSocket._internal();
+
+  final ValueNotifier<NetworkWebSocketState> wsState = ValueNotifier<NetworkWebSocketState>(NetworkWebSocketState.disconnected);
   late WebSocketChannel _channel;
   final Map<String, List<void Function(SocketMessage message)>> _subscribers = {}; // Topic and function/s
 
@@ -33,12 +41,12 @@ class NetworkWebSocket {
   Future<void> publish(SocketMessage message) async {
     if (getState() == NetworkWebSocketState.connected) {
       try {
-        _channel.ready.then((v) {
-          NetworkSecurity.encryptMessage(message).then((data) {
-            _channel.sink.add(data);
-          });
-        });
+        // encrypt the message
+        String encM = await NetworkSecurity().encryptMessage(message.toJson());
+        _channel.sink.add(encM);
+        await _channel.sink.done; // wait until complete
       } catch (e) {
+        Logger().e("Error sending message: $e");
         setState(NetworkWebSocketState.disconnected);
       }
     }
@@ -51,7 +59,7 @@ class NetworkWebSocket {
         // Listen to the socket
         _channel.stream.listen((event) {
           // On a regular data message decrypt the message
-          NetworkSecurity.decryptMessage(event).then((value) {
+          NetworkSecurity().decryptMessage(event).then((value) {
             // Convert the message to a socket message type
             SocketMessage m;
             try {
@@ -88,12 +96,9 @@ class NetworkWebSocket {
     if (getState() != NetworkWebSocketState.connected) {
       try {
         _channel = WebSocketChannel.connect(Uri.parse(url));
-
-        _channel.ready.then((v) {
-          setState(NetworkWebSocketState.connected);
-          // Logger().i("Connecting using url $url");
-          _listen();
-        });
+        await _channel.ready;
+        setState(NetworkWebSocketState.connected);
+        _listen();
       } catch (e) {
         setState(NetworkWebSocketState.disconnected);
       }

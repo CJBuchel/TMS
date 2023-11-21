@@ -30,7 +30,7 @@ class _ConnectionState extends State<Connection> {
   }
 
   void checkVersion() async {
-    Network.getServerVersion().then((value) {
+    Network().getServerVersion().then((value) {
       setState(() {
         if (versionToNumber(value) == versionToNumber("${dotenv.env['TMS_TAG']}")) {
           _serverVersionText = Text("Server-$value", style: const TextStyle(color: Colors.green));
@@ -50,33 +50,33 @@ class _ConnectionState extends State<Connection> {
   void initState() {
     super.initState();
 
-    Network.getServerIP().then((value) {
+    Network().getServerIP().then((value) {
       setState(() {
         _controller.text = value;
       });
     });
 
-    Network.getAutoConfig().then((value) {
+    Network().getAutoConfig().then((value) {
       setState(() {
         _autoConfigureNetwork = value;
       });
     });
 
     checkVersion();
-    Network.serverVersion.addListener(checkVersion);
+    Network().serverVersion.addListener(checkVersion);
   }
 
   @override
   void dispose() {
     super.dispose();
-    Network.serverVersion.removeListener(checkVersion);
+    Network().serverVersion.removeListener(checkVersion);
   }
 
   void findServer() async {
-    var found = await Network.findServer();
+    var found = await Network().findServer();
     if (found) {
       Logger().i("found");
-      Network.getServerIP().then((value) {
+      Network().getServerIP().then((value) {
         setState(() {
           _controller.text = value;
         });
@@ -87,10 +87,10 @@ class _ConnectionState extends State<Connection> {
   }
 
   void connectToServer() async {
-    Network.reset().then((v) {
-      Network.setServerIP(_controller.text).then((v) async {
-        Logger().i(await Network.getServerIP());
-        await Network.connect();
+    Network().reset().then((v) {
+      Network().setServerIP(_controller.text).then((v) async {
+        Logger().i(await Network().getServerIP());
+        await Network().connect();
       });
     });
   }
@@ -147,7 +147,7 @@ class _ConnectionState extends State<Connection> {
                         if (value != null) {
                           setState(() {
                             _autoConfigureNetwork = value;
-                            Network.setAutoConfig(value);
+                            Network().setAutoConfig(value);
                           });
                         }
                       }),
@@ -169,7 +169,7 @@ class _ConnectionState extends State<Connection> {
                         if (value != null) {
                           setState(() {
                             _autoConfigureNetwork = value;
-                            Network.setAutoConfig(value);
+                            Network().setAutoConfig(value);
                           });
                         }
                       }),

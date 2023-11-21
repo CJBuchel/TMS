@@ -21,7 +21,7 @@ class GameScoring extends StatefulWidget {
   final Function()? onDefaultAnswers;
 
   // value notifiers
-  final ValueNotifier<bool>? setDefaultAnswers;
+  final ValueNotifier<bool> setDefaultAnswers;
 
   const GameScoring({
     Key? key,
@@ -34,7 +34,7 @@ class GameScoring extends StatefulWidget {
     this.onPublicCommentChange,
     this.onPrivateCommentChange,
     this.onDefaultAnswers,
-    this.setDefaultAnswers,
+    required this.setDefaultAnswers,
   }) : super(key: key);
 
   @override

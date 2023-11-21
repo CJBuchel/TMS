@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/utils/value_listenable_utils.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class RefereeTable {
   final String referee;
@@ -70,27 +72,16 @@ class TableSetup extends StatefulWidget {
 }
 
 class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  List<String> _eventTables = [];
-  String? _selectedTable;
-  String? _selectedReferee;
-  Color _buttonColor = Colors.grey;
+  final ValueNotifier<List<String>> _eventTablesNotifier = ValueNotifier<List<String>>([]);
+  final ValueNotifier<String?> _selectedTableNotifier = ValueNotifier<String?>(null);
+  final ValueNotifier<String?> _selectedRefereeNotifier = ValueNotifier<String?>(null);
+
+  // Color _buttonColor = Colors.grey;
   final TextEditingController _refereeNameController = TextEditingController();
 
   void setEventTables(List<String> tables) {
-    setState(() {
-      _eventTables = tables;
-    });
-  }
-
-  void checkIfValid() {
-    if (_refereeNameController.value.text.isNotEmpty && _selectedTable != null) {
-      setState(() {
-        _buttonColor = Colors.blue;
-      });
-    } else {
-      setState(() {
-        _buttonColor = Colors.grey;
-      });
+    if (!listEquals(_eventTablesNotifier.value, tables)) {
+      _eventTablesNotifier.value = tables;
     }
   }
 
@@ -100,10 +91,43 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
     onEventUpdate((event) => setEventTables(event.tables));
   }
 
+  Widget getButton() {
+    return ValueListenableBuilder2(
+      first: _selectedRefereeNotifier,
+      second: _selectedTableNotifier,
+      builder: (context, selectedReferee, selectedTable, _) {
+        Color buttonColor = Colors.grey;
+
+        if (selectedReferee != null && selectedTable != null) {
+          if (selectedReferee.isNotEmpty && selectedTable.isNotEmpty) {
+            buttonColor = Colors.blue;
+          }
+        }
+
+        return ElevatedButton.icon(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
+          ),
+          onPressed: () {
+            if (selectedTable != null && selectedReferee != null) {
+              RefereeTableUtil.setTable(selectedTable).then((tableVoid) {
+                RefereeTableUtil.setRefereeName(selectedReferee).then((refereeVoid) {
+                  Navigator.pushReplacementNamed(context, '/referee/scoring');
+                });
+              });
+            }
+          },
+          icon: const Icon(Icons.arrow_forward),
+          label: const Text("Continue"),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -127,10 +151,9 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
                   padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
                   child: TextField(
                     onChanged: (value) {
-                      setState(() {
-                        _selectedReferee = value;
-                        checkIfValid();
-                      });
+                      if (_selectedRefereeNotifier.value != value) {
+                        _selectedRefereeNotifier.value = value;
+                      }
                     },
                     controller: _refereeNameController,
                     decoration: const InputDecoration(
@@ -147,21 +170,26 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
             width: Responsive.imageSize(context, 1).item2,
             child: Padding(
               padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
-              child: DropdownButton<String>(
-                value: _selectedTable,
-                hint: const Text('Select Table'),
-                onChanged: (String? value) {
-                  setState(() {
-                    _selectedTable = value;
-                    checkIfValid();
-                  });
-                },
-                items: _eventTables.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
+              child: ValueListenableBuilder2(
+                first: _eventTablesNotifier,
+                second: _selectedTableNotifier,
+                builder: (context, eventTables, selectedTable, _) {
+                  return DropdownButton<String>(
+                    value: selectedTable,
+                    hint: const Text('Select Table'),
+                    onChanged: (String? value) {
+                      if (selectedTable != value) {
+                        _selectedTableNotifier.value = value;
+                      }
+                    },
+                    items: eventTables.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
+                },
               ),
             ),
           ),
@@ -171,22 +199,7 @@ class _TableSetupState extends State<TableSetup> with AutoUnsubScribeMixin, Loca
               SizedBox(
                 width: Responsive.buttonWidth(context, 1),
                 height: Responsive.buttonHeight(context, 1),
-                child: ElevatedButton.icon(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(_buttonColor),
-                  ),
-                  onPressed: () {
-                    if (_selectedTable != null && _selectedReferee != null) {
-                      RefereeTableUtil.setTable(_selectedTable!).then((tableVoid) {
-                        RefereeTableUtil.setRefereeName(_selectedReferee!).then((refereeVoid) {
-                          Navigator.pushReplacementNamed(context, '/referee/scoring');
-                        });
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text("Continue"),
-                ),
+                child: getButton(),
               )
             ],
           )

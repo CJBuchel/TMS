@@ -9,7 +9,7 @@ import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/referee_scoring/table_setup.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class RefereeSchedule extends StatefulWidget {
   const RefereeSchedule({Key? key}) : super(key: key);
@@ -209,7 +209,7 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TmsToolBar(),
+      appBar: const TmsToolBar(),
       body: getTable(),
     );
   }

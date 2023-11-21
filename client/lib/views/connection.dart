@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/shared/tool_bar.dart';
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class Connection extends StatefulWidget {
   const Connection({super.key});
@@ -112,7 +112,7 @@ class _ConnectionState extends State<Connection> {
       buttonHeight = 40;
     }
     return Scaffold(
-      appBar: const TmsToolBar(displayActions: false),
+      appBar: const TmsToolBar(displayLogicActions: false),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // y axis
         children: <Widget>[

@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tms/mixins/auto_subscribe.dart';
-import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/network/auth.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/selector/admin_screens.dart';
 import 'package:tms/views/selector/judging_screens.dart';
 import 'package:tms/views/selector/public_screens.dart';
 import 'package:tms/views/selector/referee_screens.dart';
-import 'package:tms/views/shared/tool_bar.dart';
-
-class ScreenSelector extends StatefulWidget {
-  const ScreenSelector({super.key});
-
-  @override
-  State<ScreenSelector> createState() => _ScreenSelectorState();
-}
+import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 /**
  * Pastel colors
@@ -26,47 +17,39 @@ class ScreenSelector extends StatefulWidget {
  */
 ///
 
-class _ScreenSelectorState extends State<ScreenSelector> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  User _user = User(password: "", permissions: Permissions(admin: false), username: "");
+class ScreenSelector extends StatelessWidget {
+  final ValueNotifier<User> _userNotifier = ValueNotifier<User>(User(password: "", permissions: Permissions(admin: false), username: ""));
+
+  ScreenSelector({Key? key}) : super(key: key) {
+    NetworkAuth.loginState.addListener(() {
+      checkUser();
+    });
+    checkUser();
+  }
 
   void checkUser() {
     NetworkAuth.getUser().then((value) {
-      setState(() {
-        _user = value;
-      });
+      _userNotifier.value = value;
     });
   }
 
   @override
-  void initState() {
-    super.initState();
-    checkUser();
-    NetworkAuth.loginState.addListener(checkUser);
-  }
-
-  @override
-  void dispose() {
-    NetworkAuth.loginState.removeListener(checkUser);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return (Scaffold(
+    return Scaffold(
       appBar: const TmsToolBar(),
-      body: ValueListenableBuilder<bool>(
-        valueListenable: NetworkAuth.loginState,
-        builder: (context, isLoggedIn, child) {
+      body: ValueListenableBuilder<User>(
+        valueListenable: _userNotifier,
+        builder: (context, u, child) {
           return (ListView(
             children: <Widget>[
               const PublicScreens(),
-              AdminScreens(user: _user),
-              RefereeScreens(user: _user),
-              JudgingScreens(user: _user),
+              AdminScreens(user: u),
+              RefereeScreens(user: u),
+              JudgingScreens(user: u),
             ],
           ));
         },
       ),
-    ));
+    );
   }
 }

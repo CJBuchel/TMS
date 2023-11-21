@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/requests/publish_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/utils/value_listenable_utils.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_header/popup_menu_widget.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/round_widget.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/team_widget.dart';
 import 'package:tms/views/referee_scoring/table_setup.dart';
@@ -28,20 +31,41 @@ class ScoringHeader extends StatefulWidget {
 }
 
 class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin, LocalDatabaseMixin {
-  Team? _nextTeam;
-  GameMatch? _nextMatch;
-  GameMatch? _tableLoadedMatch;
-  bool _locked = true; // locked to match controller
+  // controllers from header
+  final ValueNotifier<Team?> _nextTeamNotifier = ValueNotifier<Team?>(null);
+  set _setNextTeamNotifier(Team? team) {
+    if (_nextTeamNotifier.value != team) {
+      _nextTeamNotifier.value = team;
+    }
+  }
 
-  List<GameMatch> _matches = [];
-  List<Team> _teams = [];
+  final ValueNotifier<GameMatch?> _nextMatchNotifier = ValueNotifier<GameMatch?>(null);
+  set _setNextMatchNotifier(GameMatch? match) {
+    if (_nextMatchNotifier.value != match) {
+      _nextMatchNotifier.value = match;
+    }
+  }
 
-  void sendTableLoadedMatch(String thisTable, {bool forceNone = false}) {
-    if (_tableLoadedMatch != null) {
+  void setNextTeamMatch(Team? team, GameMatch? match) async {
+    _setNextTeamNotifier = team;
+    _setNextMatchNotifier = match;
+    widget.onNextTeamMatch(team, match);
+  }
+
+  final ValueNotifier<GameMatch?> _tableLoadedMatchNotifier = ValueNotifier<GameMatch?>(null);
+  final ValueNotifier<bool> _lockedNotifier = ValueNotifier<bool>(true);
+
+  // matches and teams
+  final ValueNotifier<List<GameMatch>> _matchesNotifier = ValueNotifier<List<GameMatch>>([]);
+  final ValueNotifier<List<Team>> _teamsNotifier = ValueNotifier<List<Team>>([]);
+
+  void sendTableLoadedMatch(String thisTable, {bool forceNone = false}) async {
+    Logger().i("Sending table loaded match");
+    if (_tableLoadedMatchNotifier.value != null) {
       publishRequest(SocketMessage(
         topic: "table",
         subTopic: thisTable,
-        message: forceNone ? "" : _tableLoadedMatch?.matchNumber ?? "",
+        message: forceNone ? "" : _tableLoadedMatchNotifier.value?.matchNumber ?? "",
       )).then((res) {
         if (res != HttpStatus.ok) {
           Logger().e("Failed to send table loaded match, status code: $res");
@@ -50,25 +74,28 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
     }
   }
 
-  bool checkSetNextMatch(String thisTable, GameMatch match) {
-    if (_locked) {
-      if (_matches.isNotEmpty && _teams.isNotEmpty) {
+  Future<bool> checkSetNextMatch(String thisTable, GameMatch match) async {
+    if (_lockedNotifier.value) {
+      if (_matchesNotifier.value.isNotEmpty && _teamsNotifier.value.isNotEmpty) {
         for (var onTable in match.matchTables) {
           if (onTable.table == thisTable && !onTable.scoreSubmitted) {
-            setState(() {
-              _nextMatch = match;
-              _nextTeam = null;
-              for (Team t in _teams) {
-                if (t.teamNumber == onTable.teamNumber) {
-                  _nextTeam = t;
-                  break;
-                }
+            if (_nextMatchNotifier.value != match) {
+              _setNextMatchNotifier = match;
+            }
+
+            _setNextTeamNotifier = null;
+
+            for (Team t in _teamsNotifier.value) {
+              if (t.teamNumber == onTable.teamNumber) {
+                _setNextTeamNotifier = t;
+                break;
               }
-              if (_nextMatch != null && _nextTeam != null) {
-                widget.onNextTeamMatch(_nextTeam!, _nextMatch!);
-              }
-              sendTableLoadedMatch(thisTable);
-            });
+            }
+            if (_nextMatchNotifier.value != null && _nextTeamNotifier.value != null) {
+              widget.onNextTeamMatch(_nextTeamNotifier.value!, _nextMatchNotifier.value!);
+            }
+            sendTableLoadedMatch(thisTable);
+
             return true;
           }
         }
@@ -78,65 +105,60 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
   }
 
   void setNextTableMatch() {
-    if (_tableLoadedMatch != null) {
+    if (_tableLoadedMatchNotifier.value != null) {
       // override and set next match to the table loaded match
       RefereeTableUtil.getTable().then((thisTable) {
-        checkSetNextMatch(thisTable, _tableLoadedMatch!);
+        checkSetNextMatch(thisTable, _tableLoadedMatchNotifier.value!);
       });
     } else {
-      if (_matches.isNotEmpty && _teams.isNotEmpty) {
-        RefereeTableUtil.getTable().then((thisTable) {
+      if (_matchesNotifier.value.isNotEmpty && _teamsNotifier.value.isNotEmpty) {
+        RefereeTableUtil.getTable().then((thisTable) async {
           // first check matches that have been completed
-          for (var match in _matches) {
+          for (var match in _matchesNotifier.value) {
             if (match.complete && !match.gameMatchDeferred) {
-              if (checkSetNextMatch(thisTable, match)) return;
+              if (await checkSetNextMatch(thisTable, match)) return;
             }
           }
 
           // then check matches that are not complete (i.e, default)
-          for (var match in _matches) {
+          for (var match in _matchesNotifier.value) {
             if (!match.complete && !match.gameMatchDeferred) {
-              if (checkSetNextMatch(thisTable, match)) return;
+              if (await checkSetNextMatch(thisTable, match)) return;
             }
           }
 
           // fall through (if no next matches are found, nor any are loaded)
-          setState(() {
-            _nextMatch = null;
-            _nextTeam = null;
-            widget.onNextTeamMatch(null, null);
-            sendTableLoadedMatch(thisTable, forceNone: true);
-          });
+          setNextTeamMatch(null, null);
+          sendTableLoadedMatch(thisTable, forceNone: true);
         });
       }
     }
   }
 
-  void setTeams(List<Team> teams) {
-    teams.sort((a, b) => a.teamNumber.compareTo(b.teamNumber));
+  void _setTeams(List<Team> teams) async {
     if (mounted) {
-      setState(() {
-        _teams = teams;
+      if (!listEquals(_teamsNotifier.value, teams)) {
+        _teamsNotifier.value = teams;
         setNextTableMatch();
-      });
+      }
     }
   }
 
-  void setMatches(List<GameMatch> matches) {
+  void _setMatches(List<GameMatch> matches) async {
     matches = sortMatchesByTime(matches);
     if (mounted) {
-      setState(() {
-        _matches = matches;
+      if (!listEquals(_matchesNotifier.value, matches)) {
+        _matchesNotifier.value = matches;
         setNextTableMatch();
-      });
+      }
     }
   }
 
   @override
   void initState() {
     super.initState();
-    onMatchesUpdate((matches) => setMatches(matches));
-    onTeamsUpdate((teams) => setTeams(teams));
+    onMatchesUpdate((matches) => _setMatches(matches));
+    onTeamsUpdate((teams) => _setTeams(teams));
 
     autoSubscribe("match", (m) {
       if (m.subTopic == "load") {
@@ -146,7 +168,7 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
 
           List<GameMatch> loadedMatches = [];
           for (var loadedMatchNumber in message.matchNumbers) {
-            for (var match in _matches) {
+            for (var match in _matchesNotifier.value) {
               if (match.matchNumber == loadedMatchNumber) {
                 loadedMatches.add(match);
               }
@@ -158,10 +180,10 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
             for (var match in loadedMatches) {
               for (var onTable in match.matchTables) {
                 if (onTable.table == thisTable) {
-                  setState(() {
-                    _tableLoadedMatch = match;
-                    setNextTableMatch();
-                  });
+                  if (_tableLoadedMatchNotifier.value != match) {
+                    _tableLoadedMatchNotifier.value = match;
+                  }
+                  setNextTableMatch();
                   break;
                 }
               }
@@ -169,17 +191,15 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
           });
         }
       } else if (m.subTopic == "unload") {
-        setState(() {
-          _tableLoadedMatch = null;
-          setNextTableMatch();
-        });
+        _tableLoadedMatchNotifier.value = null;
+        setNextTableMatch();
       }
     });
 
     // delayed
     Future.delayed(const Duration(milliseconds: 500), () {
-      getMatches().then((matches) => setMatches(matches));
-      getTeams().then((teams) => setTeams(teams));
+      getMatches().then((matches) => _setMatches(matches));
+      getTeams().then((teams) => _setTeams(teams));
     });
 
     setNextTableMatch();
@@ -195,35 +215,42 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
 
   Widget getTeamWidget() {
     return TeamDropdownWidget(
-      nextMatch: _nextMatch,
-      nextTeam: _nextTeam,
-      teams: _teams,
-      locked: _locked,
+      nextMatchNotifier: _nextMatchNotifier,
+      nextTeamNotifier: _nextTeamNotifier,
+      teamsNotifier: _teamsNotifier,
+      lockedNotifier: _lockedNotifier,
       onTeamChange: (t, m) {
-        widget.onNextTeamMatch(t, m);
+        setNextTeamMatch(t, m);
       },
     );
   }
 
   Widget getRoundWidget() {
     return RoundDropdownWidget(
-      nextMatch: _nextMatch,
-      nextTeam: _nextTeam,
-      locked: _locked,
+      nextMatchNotifier: _nextMatchNotifier,
+      nextTeamNotifier: _nextTeamNotifier,
+      lockedNotifier: _lockedNotifier,
       onRoundChange: (t, m) {
-        widget.onNextTeamMatch(t, m);
+        setNextTeamMatch(t, m);
       },
     );
   }
 
   Widget getMatchWidget() {
-    return Text(
-      _locked ? "Match: ${_nextMatch?.matchNumber}/${_matches.length}" : "None",
-      style: const TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+    return ValueListenableBuilder3(
+      first: _nextMatchNotifier,
+      second: _matchesNotifier,
+      third: _lockedNotifier,
+      builder: (context, nextMatch, matches, locked, _) {
+        return Text(
+          locked ? "Match: ${nextMatch?.matchNumber}/${matches.length}" : "None",
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        );
+      },
     );
   }
 
@@ -244,61 +271,13 @@ class _ScoringHeaderState extends State<ScoringHeader> with AutoUnsubScribeMixin
           getTeamWidget(),
           getRoundWidget(),
           getMatchWidget(),
-          PopupMenuButton(
-            icon: const Icon(
-              Icons.more_horiz,
-              color: Colors.white,
-            ),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                  child: ListTile(
-                leading: const Icon(Icons.swap_horiz),
-                title: const Text("Switch Table"),
-                onTap: () {
-                  Logger().i("Switch Table");
-                  RefereeTableUtil.setTable("").then((v) {
-                    Navigator.pop(context);
-                    Navigator.popAndPushNamed(context, "/referee/table_setup");
-                  });
-                },
-              )),
-              PopupMenuItem(
-                child: ListTile(
-                  leading: _locked ? const Icon(Icons.lock_open) : const Icon(Icons.lock),
-                  title: _locked ? const Text("Unlock") : const Text("Lock"),
-                  onTap: () {
-                    RefereeTableUtil.getTable().then((thisTable) {
-                      sendTableLoadedMatch(thisTable, forceNone: true);
-                      setState(() {
-                        _locked = !_locked;
-                        widget.onLock(_locked);
-                        Navigator.pop(context);
-                      });
-                    });
-                  },
-                ),
-              ),
-              PopupMenuItem(
-                child: ListTile(
-                  leading: const Icon(Icons.schedule),
-                  title: const Text("Schedule"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, "/referee/schedule");
-                  },
-                ),
-              ),
-              PopupMenuItem(
-                child: ListTile(
-                  leading: const Icon(Icons.book),
-                  title: const Text("Rule Book"),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, "/referee/rule_book");
-                  },
-                ),
-              ),
-            ],
+          ScoringHeaderPopupMenu(
+            lockedNotifier: _lockedNotifier,
+            sendTableLoadedMatch: (thisTable, force) => sendTableLoadedMatch(thisTable, forceNone: force),
+            changeLocked: (locked) {
+              _lockedNotifier.value = locked;
+              widget.onLock(locked);
+            },
           ),
         ],
       ),

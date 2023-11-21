@@ -82,6 +82,7 @@ class RefereeScoring extends StatelessWidget {
               onNextTeamMatch: (team, match) {
                 if (_nextTeamNotifier.value != team) {
                   _nextTeamNotifier.value = team;
+                  _defaultAnswers.value = true; // set default value if team changes (don't really care about match)
                 }
 
                 if (_nextMatchNotifier.value != match) {

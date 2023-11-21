@@ -1,4 +1,4 @@
-// Static network class for the main application
+// network class for the main application
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -14,18 +14,26 @@ import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tuple/tuple.dart';
 
-// Static implementation and combined classes of both network protocols
+// implementation and combined classes of both network protocols
 class Network {
-  static final NetworkWebSocket _ws = NetworkWebSocket();
-  static final NetworkHttp _http = NetworkHttp();
-  static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
-  static ValueNotifier<String> serverVersion = ValueNotifier<String>("");
+  static final Network _instance = Network._internal();
 
-  static Future<void> setAutoConfig(bool auto) async {
+  factory Network() {
+    return _instance;
+  }
+
+  Network._internal();
+
+  final NetworkWebSocket _ws = NetworkWebSocket();
+  final NetworkHttp _http = NetworkHttp();
+  final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  ValueNotifier<String> serverVersion = ValueNotifier<String>("");
+
+  Future<void> setAutoConfig(bool auto) async {
     await _localStorage.then((value) => value.setBool(storeNtAutoConfigure, auto));
   }
 
-  static Future<bool> getAutoConfig() async {
+  Future<bool> getAutoConfig() async {
     try {
       var auto = await _localStorage.then((value) => value.getBool(storeNtAutoConfigure));
       if (auto != null) {
@@ -38,11 +46,11 @@ class Network {
     }
   }
 
-  static Future<void> setServerIP(String ip) async {
+  Future<void> setServerIP(String ip) async {
     await _localStorage.then((value) => value.setString(storeNtServerIP, ip));
   }
 
-  static Future<String> getServerIP() async {
+  Future<String> getServerIP() async {
     try {
       var ip = await _localStorage.then((value) => value.getString(storeNtServerIP));
       if (ip != null) {
@@ -55,12 +63,12 @@ class Network {
     }
   }
 
-  static Future<void> setServerVersion(String version) async {
+  Future<void> setServerVersion(String version) async {
     serverVersion.value = version;
     await _localStorage.then((value) => value.setString(storeNtServerVersion, version));
   }
 
-  static Future<String> getServerVersion() async {
+  Future<String> getServerVersion() async {
     try {
       var version = await _localStorage.then((value) => value.getString(storeNtServerVersion));
       if (version != null && version.isNotEmpty) {
@@ -77,17 +85,17 @@ class Network {
   }
 
   // Get the overall state of the network, combined tuple containing both the protocol states
-  static Future<Tuple3<NetworkHttpConnectionState, NetworkWebSocketState, SecurityState>> getStates() async {
-    return Tuple3(await _http.getState(), _ws.getState(), await NetworkSecurity.getState());
+  Future<Tuple3<NetworkHttpConnectionState, NetworkWebSocketState, SecurityState>> getStates() async {
+    return Tuple3(await _http.getState(), _ws.getState(), await NetworkSecurity().getState());
   }
 
-  static Future<bool> isConnected() async {
+  Future<bool> isConnected() async {
     var s = await getStates();
     return (s.item1 == NetworkHttpConnectionState.connected && s.item2 == NetworkWebSocketState.connected && s.item3 == SecurityState.secure);
   }
 
   // Try to connect to server and test endpoint
-  static Future<void> connect() async {
+  Future<void> connect() async {
     // Must register first before connecting to websocket
     String ip = await getServerIP();
     await _http.register(ip).then((res) async {
@@ -97,12 +105,12 @@ class Network {
   }
 
   // The opposite process of the connection
-  static Future<void> disconnect() async {
+  Future<void> disconnect() async {
     await _ws.disconnect();
     // await _ws.disconnect().then((v) async => {await _http.unregister(await getServerIP())});
   }
 
-  static Future<void> reset() async {
+  Future<void> reset() async {
     await _http.setState(NetworkHttpConnectionState.disconnected);
     _ws.setState(NetworkWebSocketState.disconnected);
     if (!kIsWeb) {
@@ -111,7 +119,7 @@ class Network {
   }
 
   // Find the server using web address. (The web does not support mDNS)
-  static Future<String> _findServerWeb(String ip) async {
+  Future<String> _findServerWeb(String ip) async {
     var host = Uri.base.origin;
     if (host.isNotEmpty) {
       var addr = host.split('http://')[1];
@@ -122,7 +130,7 @@ class Network {
   }
 
   // Find the server using the Multicast DNS name
-  static Future<String> _findServerMDNS(String ip) async {
+  Future<String> _findServerMDNS(String ip) async {
     Logger().w("Finding Server...");
     const String name = mdnsName;
     final MDnsClient client = MDnsClient();
@@ -142,7 +150,7 @@ class Network {
   }
 
   // Find the server and test the address
-  static Future<bool> findServer() async {
+  Future<bool> findServer() async {
     var states = await getStates();
     if (states.item1 != NetworkHttpConnectionState.connected && states.item2 != NetworkWebSocketState.connected) {
       String ip = await getServerIP();
@@ -171,7 +179,7 @@ class Network {
   }
 
   // Check the connection, reconnect on fail (returns false for bad check)
-  static Future<bool> checkConnection() async {
+  Future<bool> checkConnection() async {
     // Check the pulse of the server
     var httpState = await _http.getState();
     var wsState = _ws.getState();
@@ -212,7 +220,7 @@ class Network {
   }
 
   // Tuple3 (good access, res status code, res message)
-  static Future<Tuple3<bool, int, Map<String, dynamic>>> _serverGet(String route) async {
+  Future<Tuple3<bool, int, Map<String, dynamic>>> _serverGet(String route) async {
     var timeout = OperationTimeoutTracker(const Duration(seconds: 10));
     Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
     var st = await getStates();
@@ -225,7 +233,7 @@ class Network {
         }
         final serverRes = await http.get(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'));
         if (serverRes.body.isNotEmpty) {
-          var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+          var decryptedM = await NetworkSecurity().decryptMessage(serverRes.body);
           response = Tuple3(true, serverRes.statusCode, decryptedM);
         } else {
           response = Tuple3(true, serverRes.statusCode, {});
@@ -239,14 +247,14 @@ class Network {
     return response;
   }
 
-  static Future<Tuple3<bool, int, Map<String, dynamic>>> serverGet(String route) async {
+  Future<Tuple3<bool, int, Map<String, dynamic>>> serverGet(String route) async {
     return await _serverGet(route).timeout(const Duration(seconds: 15), onTimeout: () {
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }
 
   // Tuple3 (good access, res status code, res message in json)
-  static Future<Tuple3<bool, int, Map<String, dynamic>>> _serverPost(String route, dynamic json) async {
+  Future<Tuple3<bool, int, Map<String, dynamic>>> _serverPost(String route, dynamic json) async {
     var timeout = OperationTimeoutTracker(const Duration(seconds: 10));
     Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
     var st = await getStates();
@@ -254,13 +262,13 @@ class Network {
       final serverIp = await getServerIP();
       final uuid = await _http.getUuid();
       try {
-        var encryptedM = await NetworkSecurity.encryptMessage(json);
+        var encryptedM = await NetworkSecurity().encryptMessage(json);
         if (timeout.isTimedOut) {
           return const Tuple3(false, HttpStatus.requestTimeout, {});
         }
         final serverRes = await http.post(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'), body: encryptedM);
         if (serverRes.body.isNotEmpty) {
-          var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+          var decryptedM = await NetworkSecurity().decryptMessage(serverRes.body);
           response = Tuple3(true, serverRes.statusCode, decryptedM);
         } else {
           response = Tuple3(true, serverRes.statusCode, {});
@@ -274,14 +282,14 @@ class Network {
     return response;
   }
 
-  static Future<Tuple3<bool, int, Map<String, dynamic>>> serverPost(String route, dynamic json) async {
+  Future<Tuple3<bool, int, Map<String, dynamic>>> serverPost(String route, dynamic json) async {
     return await _serverPost(route, json).timeout(const Duration(seconds: 15), onTimeout: () {
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
   }
 
   // Tuple3 (good access, res status code, res message)
-  static Future<Tuple3<bool, int, Map<String, dynamic>>> _serverDelete(String route, dynamic json) async {
+  Future<Tuple3<bool, int, Map<String, dynamic>>> _serverDelete(String route, dynamic json) async {
     var timeout = OperationTimeoutTracker(const Duration(seconds: 10));
     Tuple3<bool, int, Map<String, dynamic>> response = const Tuple3(false, 0, {});
     var st = await getStates();
@@ -289,13 +297,13 @@ class Network {
       final serverIp = await getServerIP();
       final uuid = await _http.getUuid();
       try {
-        var encryptedM = await NetworkSecurity.encryptMessage(json);
+        var encryptedM = await NetworkSecurity().encryptMessage(json);
         if (timeout.isTimedOut) {
           return const Tuple3(false, HttpStatus.requestTimeout, {});
         }
         final serverRes = await http.delete(Uri.parse('http://$serverIp:$requestPort/requests/$route/$uuid'), body: encryptedM);
         if (serverRes.body.isNotEmpty) {
-          var decryptedM = await NetworkSecurity.decryptMessage(serverRes.body);
+          var decryptedM = await NetworkSecurity().decryptMessage(serverRes.body);
           response = Tuple3(true, serverRes.statusCode, decryptedM);
         } else {
           response = Tuple3(true, serverRes.statusCode, {});
@@ -308,15 +316,10 @@ class Network {
     return response;
   }
 
-  static Future<Tuple3<bool, int, Map<String, dynamic>>> serverDelete(String route, dynamic json) async {
+  Future<Tuple3<bool, int, Map<String, dynamic>>> serverDelete(String route, dynamic json) async {
     return await _serverDelete(route, json).timeout(const Duration(seconds: 15), onTimeout: () {
       return const Tuple3(false, HttpStatus.requestTimeout, {});
     });
-  }
-
-  // publish a message to the pub sub network
-  static Future<void> publish(SocketMessage message) async {
-    await _ws.publish(message);
   }
 
   // Subscribe to a topic and run the onEvent function when the topic is received.
@@ -324,12 +327,12 @@ class Network {
   // This can be problematic when dealing with topics that share the same name, keeping track of which function
   // to unsubscribe to is left to the user
   // Suggest using the auto subscribe mixin for stateful widgets
-  static Function(SocketMessage) subscribe(String topic, Function(SocketMessage) onEvent) {
+  Function(SocketMessage) subscribe(String topic, Function(SocketMessage) onEvent) {
     return _ws.subscribe(topic, onEvent);
   }
 
   // unsubscribe the function using the topic and the reference to the onEvent function returned from the subscribe method
-  static void unsubscribe(String topic, Function(SocketMessage) onEvent) {
+  void unsubscribe(String topic, Function(SocketMessage) onEvent) {
     _ws.unsubscribe(topic, onEvent);
   }
 }

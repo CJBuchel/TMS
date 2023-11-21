@@ -12,7 +12,7 @@ class TmsToolBarLoginAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: NetworkAuth.loginState,
+      valueListenable: NetworkAuth().loginState,
       builder: (context, loggedIn, _) {
         if (listTile ?? false) {
           return ListTile(

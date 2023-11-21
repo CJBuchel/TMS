@@ -10,15 +10,23 @@ import 'package:tms/network/encryption_queue.dart';
 enum SecurityState { noSecurity, encrypting, secure }
 
 class NetworkSecurity {
-  static final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
-  static ValueNotifier<SecurityState> securityState = ValueNotifier<SecurityState>(SecurityState.noSecurity);
+  static final NetworkSecurity _instance = NetworkSecurity._internal();
 
-  static Future<void> setState(SecurityState state) async {
+  factory NetworkSecurity() {
+    return _instance;
+  }
+
+  NetworkSecurity._internal();
+
+  final Future<SharedPreferences> _localStorage = SharedPreferences.getInstance();
+  final ValueNotifier<SecurityState> securityState = ValueNotifier<SecurityState>(SecurityState.noSecurity);
+
+  Future<void> setState(SecurityState state) async {
     securityState.value = state;
     await _localStorage.then((value) => value.setString(storeSecState, EnumToString.convertToString(state)));
   }
 
-  static Future<SecurityState> getState() async {
+  Future<SecurityState> getState() async {
     try {
       var stateString = await _localStorage.then((value) => value.getString(storeSecState));
       var state = EnumToString.fromString(SecurityState.values, stateString!);
@@ -35,11 +43,11 @@ class NetworkSecurity {
     }
   }
 
-  static Future<void> setServerKey(String key) async {
+  Future<void> setServerKey(String key) async {
     await _localStorage.then((value) => value.setString(storeNtServerKey, key));
   }
 
-  static Future<String> getServerKey() async {
+  Future<String> getServerKey() async {
     try {
       var key = await _localStorage.then((value) => value.getString(storeNtServerKey));
       if (key != null) {
@@ -52,12 +60,12 @@ class NetworkSecurity {
     }
   }
 
-  static Future<void> setKeys(KeyPair keys) async {
+  Future<void> setKeys(KeyPair keys) async {
     await _localStorage.then((value) => value.setString(storeNtPublicKey, keys.publicKey));
     await _localStorage.then((value) => value.setString(storeNtPrivateKey, keys.privateKey));
   }
 
-  static Future<KeyPair> getKeys() async {
+  Future<KeyPair> getKeys() async {
     try {
       var pubKey = await _localStorage.then((value) => value.getString(storeNtPublicKey));
       var privKey = await _localStorage.then((value) => value.getString(storeNtPrivateKey));
@@ -71,7 +79,7 @@ class NetworkSecurity {
     }
   }
 
-  static Future<KeyPair> generateKeyPair() async {
+  Future<KeyPair> generateKeyPair() async {
     try {
       setState(SecurityState.encrypting);
       KeyPair keyPair;
@@ -87,7 +95,7 @@ class NetworkSecurity {
     }
   }
 
-  static Future<String> encryptMessage(dynamic json, {String key = ''}) async {
+  Future<String> encryptMessage(dynamic json, {String key = ''}) async {
     try {
       key = key.isEmpty ? await getServerKey() : key;
       setState(key.isEmpty ? SecurityState.noSecurity : await getState());
@@ -98,7 +106,7 @@ class NetworkSecurity {
     }
   }
 
-  static Future<Map<String, dynamic>> decryptMessage(String message, {String key = ''}) async {
+  Future<Map<String, dynamic>> decryptMessage(String message, {String key = ''}) async {
     try {
       key = key.isEmpty ? (await getKeys()).privateKey : key;
       setState(key.isEmpty ? SecurityState.noSecurity : await getState());

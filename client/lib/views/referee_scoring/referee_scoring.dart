@@ -82,7 +82,7 @@ class RefereeScoring extends StatelessWidget {
               onNextTeamMatch: (team, match) {
                 if (_nextTeamNotifier.value != team) {
                   _nextTeamNotifier.value = team;
-                  _defaultAnswers.value = true; // set default value if team changes (don't really care about match)
+                  // _defaultAnswers.value = true; // set default value if team changes (don't really care about match)
                 }
 
                 if (_nextMatchNotifier.value != match) {
@@ -106,9 +106,9 @@ class RefereeScoring extends StatelessWidget {
                   onPublicCommentChange: (pub) => _setPublicComment = pub,
                   onPrivateCommentChange: (priv) => _setPrivateComment = priv,
                   setDefaultAnswers: _defaultAnswers,
-                  onDefaultAnswers: () {
-                    _defaultAnswers.value = false; // set to false when default is triggered
-                  },
+                  // onDefaultAnswers: () {
+                  //   _defaultAnswers.value = false; // set to false when default is triggered
+                  // },
                 ),
                 const SizedBox(height: 80),
               ],

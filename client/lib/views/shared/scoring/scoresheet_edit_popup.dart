@@ -29,6 +29,7 @@ class ScoresheetEditPopup {
       initialAnswers: gameScore.scoresheet.answers,
       initialPublicComment: gameScore.scoresheet.publicComment,
       initialPrivateComment: gameScore.scoresheet.privateComment,
+      setDefaultAnswers: ValueNotifier<bool>(false),
       onAnswers: (List<ScoreAnswer> answers) {
         _answers = answers;
       },

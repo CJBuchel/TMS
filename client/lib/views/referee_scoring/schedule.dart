@@ -99,7 +99,7 @@ class _RefereeScheduleState extends State<RefereeSchedule> with AutoUnsubScribeM
 
     // post frame callback
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!await Network.isConnected()) {
+      if (!await Network().isConnected()) {
         getTeams().then((teams) => setTeams(teams));
         getMatches().then((matches) => setMatches(matches));
       }

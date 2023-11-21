@@ -4,10 +4,10 @@ pub mod network_schemas;
 pub use fll_games::schemas::*;
 
 use log::warn;
+use network_schemas::SocketMessage;
 use rocket::{http::Status, serde::json::Json, State};
 use schemas::Permissions;
 use security::encrypt;
-use serde::Serialize;
 use std::{sync::{RwLock, Arc}, collections::HashMap, time::SystemTime};
 use tokio::sync::mpsc;
 use warp::{ws::Message, Rejection};
@@ -48,7 +48,7 @@ pub type TmsRouteResponse<E> = Result<(Status, String), E>; // always responds w
 pub type TmsRouteResponseNoEncryption<T,E> = Result<(Status, Json<T>), E>; // responds with a status, and an encrypted message
 
 /// Sends a message to every client, optionally with an origin id (stops a message to the original client)
-pub fn tms_clients_ws_send<T: Serialize>(message: T, clients: TmsClients, origin_id: Option<String>) {
+pub fn tms_clients_ws_send(message: SocketMessage, clients: TmsClients, origin_id: Option<String>) {
   clients
     .read()
     .unwrap()
@@ -66,7 +66,7 @@ pub fn tms_clients_ws_send<T: Serialize>(message: T, clients: TmsClients, origin
     });
 }
 /// sends message to a single client, optionally with an origin id
-pub fn tms_client_ws_send<T: Serialize>(message: T, clients: TmsClients, target_id: String, origin_id: Option<String>) {
+pub fn tms_client_ws_send(message: SocketMessage, clients: TmsClients, target_id: String, origin_id: Option<String>) {
   clients
     .read()
     .unwrap()

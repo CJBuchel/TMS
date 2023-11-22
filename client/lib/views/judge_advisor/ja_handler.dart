@@ -35,18 +35,22 @@ class _JAHandlerState extends State<JAHandler> with AutoUnsubScribeMixin, LocalD
     } else {
       // check if any of the sessions have changed
       for (JudgingSession session in sessions) {
-        for (JudgingSession currentSession in _sessions.value) {
-          if (session.sessionNumber == currentSession.sessionNumber) {
-            if (session.complete != currentSession.complete) {
-              setState(() {
-                _sessions.value = sessions;
-              });
-            }
+        Future(() {
+          for (JudgingSession currentSession in _sessions.value) {
+            Future(() {
+              if (session.sessionNumber == currentSession.sessionNumber) {
+                if (session.complete != currentSession.complete) {
+                  setState(() {
+                    _sessions.value = sessions;
+                  });
+                }
+              }
+            });
           }
-        }
+        });
       }
 
-      _sessions.value = sessions;
+      // _sessions.value = sessions;
     }
   }
 

@@ -1,6 +1,6 @@
 use futures::{FutureExt, StreamExt};
 use log::{error, warn};
-use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send, network_schemas::SocketMessage, with_clients_write};
+use tms_utils::{security::Security, TmsClients, TmsClient, TmsClientResult, tms_clients_ws_send, network_schemas::SocketMessage, with_clients_write, with_clients_read};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use warp::{ws::Message, Reply, ws::WebSocket};
 use tokio::sync::mpsc;
@@ -32,8 +32,11 @@ async fn client_msg(
 
   // validation system
   if _socket_message.topic == "validation" {
+    warn!("validation message received from: {}", user_id.clone());
     validate_questions_route(_socket_message.message, tms_event_service, clients, user_id.clone()).await;
   }
+
+  warn!("Finished processing message");
 
   // @todo use socket message for something. (Off chance that the client sends a socket message instead of the server)
 }
@@ -54,9 +57,9 @@ async fn client_connection(
 
   let shared_clients = clients.clone();
   client.ws_sender = Some(client_sender);
-  with_clients_write(&clients, |client_map| {
+  let _ = with_clients_write(&clients, |client_map| {
     client_map.insert(user_id.clone(), client);
-  }).unwrap();
+  }).await;
   warn!("{} connected", user_id.clone());
 
   let client_list_update = SocketMessage {
@@ -66,7 +69,7 @@ async fn client_connection(
     message: String::from(""),
   };
 
-  tms_clients_ws_send(client_list_update.clone(), shared_clients.clone(), Some(String::from("")));
+  tms_clients_ws_send(client_list_update.clone(), shared_clients.clone(), Some(String::from(""))).await;
 
   tokio::task::spawn(client_recv.forward(client_ws_sender).map(move |result| {
     if let Err(e) = result {
@@ -76,19 +79,23 @@ async fn client_connection(
 
   while let Some(result) = client_ws_rcv.next().await {
     let msg = match result {
-      Ok(msg) => msg,
+      Ok(msg) => {
+        warn!("Message received");
+        msg
+      },
       Err(e) => {
         error!("error receiving message for user id: {}: {}", user_id.clone(), e);
         break;
       }
     };
 
-    tokio::spawn(client_msg(user_id.clone(), msg, clients.to_owned(), security.clone(), tms_event_service.clone()));
+
+    tokio::spawn(client_msg(user_id.clone(), msg, clients.clone(), security.clone(), tms_event_service.clone()));
   }
 
-  with_clients_write(&clients, |client_map| {
+  let _ = with_clients_write(&clients, |client_map| {
     client_map.remove(&user_id);
-  }).unwrap();
+  }).await;
   warn!("{} disconnected", user_id.to_owned());
   let _ = tms_clients_ws_send(client_list_update.clone(), clients.clone(), Some(String::from("")));
 }
@@ -100,9 +107,20 @@ pub async fn ws_handler(
   security: Security, 
   tms_event_service: TmsEventServiceArc,
 ) -> TmsClientResult<impl Reply> {
-  let client = clients.read().unwrap().get(&user_id).cloned();
-  match client {
-    Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, user_id, clients.to_owned(), c, security, tms_event_service))),
-    None => Err(warp::reject::not_found()),
+  let result = with_clients_read(&clients, |client_map| {
+    client_map.get(&user_id).cloned()
+  }).await;
+
+  match result {
+    Ok(res) => {
+      match res {
+        Some(c) => Ok(ws.on_upgrade(move |socket| client_connection(socket, user_id, clients.clone(), c, security, tms_event_service))),
+        None => Err(warp::reject::not_found()),
+      }
+    },
+    Err(_) => {
+      error!("failed to get clients lock");
+      Err(warp::reject::not_found())
+    }
   }
 }

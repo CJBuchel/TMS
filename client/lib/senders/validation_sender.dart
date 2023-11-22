@@ -14,7 +14,6 @@ Future<void> senderValidation(List<ScoreAnswer> answers) async {
       subTopic: "",
       message: jsonEncode(message.toJson()),
     );
-    Logger().wtf("Sending validation...");
     await NetworkWebSocket().publish(m);
   } catch (e) {
     Logger().e("Error sending message: $e");

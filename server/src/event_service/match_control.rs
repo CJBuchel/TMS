@@ -33,14 +33,14 @@ impl MatchControl {
       topic: String::from("clock"),
       sub_topic: String::from("start"),
       message: String::from("")
-    }, clients.clone(), None);
+    }, clients.clone(), None).await;
 
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
       sub_topic: String::from("time"),
       message: time.to_string(),
-    }, clients.clone(), None);
+    }, clients.clone(), None).await;
 
 
     for i in (0..time).rev() {
@@ -54,7 +54,7 @@ impl MatchControl {
         topic: String::from("clock"),
         sub_topic: String::from("time"),
         message: i.to_string()
-      }, clients.clone(), None);
+      }, clients.clone(), None).await;
 
       // endgame message
       if i == endgame_time {
@@ -63,7 +63,7 @@ impl MatchControl {
           topic: String::from("clock"),
           sub_topic: String::from("endgame"),
           message: i.to_string(),
-        }, clients.clone(), None);
+        }, clients.clone(), None).await;
       }
     }
 
@@ -72,7 +72,7 @@ impl MatchControl {
       topic: String::from("clock"),
       sub_topic: String::from("end"),
       message: String::from("")
-    }, clients.clone(), None);
+    }, clients.clone(), None).await;
 
     // set database matches to be completed, send the update and unload the matches
     if timer_running.load(std::sync::atomic::Ordering::Relaxed) {
@@ -82,12 +82,12 @@ impl MatchControl {
             game_match.complete = true;
             let _ = tms_db.tms_data.matches.insert(game_match.match_number.as_bytes(), game_match.clone());
             warn!("Match {} completed", game_match.match_number.clone());
-            tms_clients_ws_send(SocketMessage {
+            tokio::spawn(tms_clients_ws_send(SocketMessage {
               from_id: None,
               topic: String::from("match"),
               sub_topic: String::from("update"),
               message: game_match.match_number.clone(),
-            }, clients.clone(), None);
+            }, clients.clone(), None));
           },
           Ok(None) => {
             println!("Failed to get match from db");
@@ -106,7 +106,7 @@ impl MatchControl {
         topic: String::from("match"),
         sub_topic: String::from("unload"),
         message: String::from("")
-      }, clients.clone(), None);
+      }, clients.clone(), None).await;
     }
 
     timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
@@ -156,14 +156,14 @@ impl MatchControl {
       topic: String::from("clock"),
       sub_topic: String::from("pre_start"),
       message: String::from(""),
-    }, clients.clone(), None);
+    }, clients.clone(), None).await;
 
     tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("clock"),
       sub_topic: String::from("time"),
       message: pre_start_timer.to_string(),
-    }, clients.clone(), None);
+    }, clients.clone(), None).await;
     tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
 
     for i in (1..pre_start_timer).rev() {
@@ -176,7 +176,7 @@ impl MatchControl {
         topic: String::from("clock"),
         sub_topic: String::from("time"),
         message: i.to_string(),
-      }, clients.clone(), None);
+      }, clients.clone(), None).await;
       tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
   }
@@ -224,20 +224,20 @@ impl MatchControl {
     warn!("Stopping timer...");
     if self.is_timer_running.load(std::sync::atomic::Ordering::Relaxed) {
       self.is_timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
-      tms_clients_ws_send(SocketMessage {
+      tokio::spawn(tms_clients_ws_send(SocketMessage {
         from_id: None,
         topic: String::from("clock"),
         sub_topic: String::from("stop"),
         message: String::from("")
-      }, self.tms_clients.clone(), None);
+      }, self.tms_clients.clone(), None));
     } else {
       warn!("Cannot abort match. Timer is not running! Reloading clocks...");
-      tms_clients_ws_send(SocketMessage {
+      tokio::spawn(tms_clients_ws_send(SocketMessage {
         from_id: None,
         topic: String::from("clock"),
         sub_topic: String::from("reload"),
         message: String::from("")
-      }, self.tms_clients.clone(), None);
+      }, self.tms_clients.clone(), None));
     }
   }
 
@@ -250,7 +250,7 @@ impl MatchControl {
         message: serde_json::to_string(&SocketMatchLoadedMessage {
           match_numbers: loaded_matches.clone()
         }).unwrap()
-      }, clients.clone(), None);
+      }, clients.clone(), None).await;
       tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
   }
@@ -274,11 +274,12 @@ impl MatchControl {
     warn!("Forcefully unloading matches...");
     self.is_matches_loaded.store(false, std::sync::atomic::Ordering::Relaxed);
     self.loaded_matches.lock().unwrap().clear();
-    tms_clients_ws_send(SocketMessage {
+
+    tokio::spawn(tms_clients_ws_send(SocketMessage {
       from_id: None,
       topic: String::from("match"),
       sub_topic: String::from("unload"),
       message: String::from("")
-    }, self.tms_clients.clone(), None);
+    }, self.tms_clients.clone(), None));
   }
 }

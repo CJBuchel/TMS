@@ -1,14 +1,15 @@
 pub mod security;
 pub mod schemas;
 pub mod network_schemas;
+use std::{time::SystemTime, collections::HashMap};
+
 pub use fll_games::schemas::*;
 
-use log::warn;
+use log::{warn, error};
 use network_schemas::SocketMessage;
 use rocket::{http::Status, serde::json::Json, State};
 use schemas::Permissions;
 use security::encrypt;
-use std::{sync::{RwLock, Arc}, collections::HashMap, time::SystemTime};
 use tokio::sync::mpsc;
 use warp::{ws::Message, Rejection};
 
@@ -24,23 +25,25 @@ pub struct TmsClient {
 }
 
 pub type TmsClientResult<T> = std::result::Result<T, Rejection>;
-pub type TmsClients = Arc<RwLock<HashMap<String, TmsClient>>>;
+pub type TmsClients = std::sync::Arc<tokio::sync::RwLock<HashMap<String, TmsClient>>>;
 pub fn new_clients_map() -> TmsClients {
-  return Arc::new(RwLock::new(HashMap::new()));
+  return std::sync::Arc::new(tokio::sync::RwLock::new(HashMap::new()));
 }
 
-pub fn with_clients_write<F, R>(clients: &TmsClients, f: F) -> Result<R, &'static str>
+pub async fn with_clients_write<F, R>(clients: &TmsClients, f: F) -> Result<R, &'static str>
 where
   F: FnOnce(&mut HashMap<String, TmsClient>) -> R,
 {
-  match clients.write() {
-    Ok(mut guard) => Ok(f(&mut *guard)),
-    Err(poisoned) => {
-      warn!("The Clients Lock was Poisoned. Recovering...");
-      let mut guard = poisoned.into_inner();
-      Ok(f(&mut *guard))
-    },
-  }
+  let mut guard = clients.write().await;
+  Ok(f(&mut *guard))
+}
+
+pub async fn with_clients_read<F, R>(clients: &TmsClients, f: F) -> Result<R, &'static str>
+where
+  F: FnOnce(&HashMap<String, TmsClient>) -> R,
+{
+  let guard = clients.read().await;
+  Ok(f(&*guard))
 }
 
 // Route response for clients
@@ -48,66 +51,92 @@ pub type TmsRouteResponse<E> = Result<(Status, String), E>; // always responds w
 pub type TmsRouteResponseNoEncryption<T,E> = Result<(Status, Json<T>), E>; // responds with a status, and an encrypted message
 
 /// Sends a message to every client, optionally with an origin id (stops a message to the original client)
-pub fn tms_clients_ws_send(message: SocketMessage, clients: TmsClients, origin_id: Option<String>) {
-  clients
-    .read()
-    .unwrap()
-    .iter()
-    .filter(|(_, client)| match origin_id.clone() {
-      Some(v) => client.user_id != v, // if origin id is supplied, check for it and don't match the origin
-      None => true // if no origin id is supplied, just match all
-    })
-    .for_each(|(_, client)| {
-      let sender = match &client.ws_sender {
-        Some(v) => v,
-        None => return,
-      };
-      let m = serde_json::to_string(&message).unwrap();
-      let encrypted_m = encrypt(client.key.clone(), m);
-      let sender = sender.clone();
-      let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
-    });
-}
-/// sends message to a single client, optionally with an origin id
-pub fn tms_client_ws_send(message: SocketMessage, clients: TmsClients, target_id: String, origin_id: Option<String>) {
-  clients
-    .read()
-    .unwrap()
-    .iter()
-    // filter for origin id
-    .filter(|(_, client)| match origin_id.clone() {
-      Some(v) => client.user_id != v, // if origin id is supplied, check for it and don't match the origin
-      None => true // if no origin id is supplied, just match all
-    })
-    // find the target client
-    .filter(|(_, client)| match target_id.clone() {
-      v if v == client.user_id => true,
-      _ => false,
-    })
-    .for_each(|(_, client)| {
-      let sender = match &client.ws_sender {
-        Some(v) => v,
-        None => return,
-      };
-      let m = serde_json::to_string(&message).unwrap();
-      let encrypted_m = encrypt(client.key.clone(), m);
-      let sender = sender.clone();
-      let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
-    });
-}
+pub async fn tms_clients_ws_send(message: SocketMessage, clients: TmsClients, origin_id: Option<String>) {
+  let result = with_clients_read(&clients, |clients_map| {
+    clients_map.clone()
+  }).await;
 
-pub fn check_auth(clients: &State<TmsClients>, uuid: String, auth_token: String) -> (bool, Option<TmsClient>) {
-  if clients.read().unwrap().contains_key(&uuid) {
-    let client = clients.read().unwrap().get(&uuid).unwrap().clone();
-    if client.auth_token == auth_token {
-      return (true, Some(client));
+  match result {
+    Ok(map) => {
+      map.iter()
+      .filter(|(_, client)| match origin_id.clone() {
+        Some(v) => client.user_id != v, // if origin id is supplied, check for it and don't match the origin
+        None => true // if no origin id is supplied, just match all
+      })
+      .for_each(|(_, client)| {
+        let sender = match &client.ws_sender {
+          Some(v) => v,
+          None => return,
+        };
+        let m = serde_json::to_string(&message).unwrap();
+        let encrypted_m = encrypt(client.key.clone(), m);
+        let sender = sender.clone();
+        let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
+      });
+    },
+    Err(_) => {
+      error!("failed to get clients lock");
     }
   }
+}
+/// sends message to a single client, optionally with an origin id
+pub async fn tms_client_ws_send(message: SocketMessage, clients: TmsClients, target_id: String, origin_id: Option<String>) {
+  let result = with_clients_read(&clients, |clients_map| {
+    clients_map.clone()
+  }).await;
+
+  match result {
+    Ok(map) => {
+      map.iter()
+      .filter(|(_, client)| match origin_id.clone() {
+        Some(v) => client.user_id != v, // if origin id is supplied, check for it and don't match the origin
+        None => true // if no origin id is supplied, just match all
+      })
+      .filter(|(_, client)| match target_id.clone() {
+        v if v == client.user_id => true,
+        _ => false,
+      })
+      .for_each(|(_, client)| {
+        let sender = match &client.ws_sender {
+          Some(v) => v,
+          None => return,
+        };
+        let m = serde_json::to_string(&message).unwrap();
+        let encrypted_m = encrypt(client.key.clone(), m);
+        let sender = sender.clone();
+        let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
+      });
+    },
+    Err(_) => {
+      error!("failed to get clients lock");
+    }
+  }
+}
+
+pub async fn check_auth(clients: &State<TmsClients>, uuid: String, auth_token: String) -> (bool, Option<TmsClient>) {
+  let result = with_clients_read(&clients, |clients_map| {
+    clients_map.clone()
+  }).await;
+
+  match result {
+    Ok(map) => {
+      if map.contains_key(&uuid) {
+        let client = map.get(&uuid).unwrap().clone();
+        if client.auth_token == auth_token {
+          return (true, Some(client));
+        }
+      }
+    },
+    Err(_) => {
+      error!("failed to get clients lock");
+    }
+  }
+
   return (false, None);
 }
 
-pub fn check_permissions(clients: &State<TmsClients>, uuid: String, auth_token: String, permissions: Permissions) -> bool {
-  let auth = check_auth(clients, uuid, auth_token);
+pub async fn check_permissions(clients: &State<TmsClients>, uuid: String, auth_token: String, permissions: Permissions) -> bool {
+  let auth = check_auth(clients, uuid, auth_token).await;
 
   if auth.0 {
     let client = auth.1.unwrap();
@@ -192,9 +221,9 @@ macro_rules! TmsRespond {
   };
 
   // Respond with custom status and data encrypted using clients and client uuid
-  ($status:expr, $data:expr, $clients:expr, $uuid:expr) => {
-    if $clients.read().unwrap().contains_key(&$uuid) {
-      let client_key: String = $clients.read().unwrap().get(&$uuid).unwrap().key.to_owned();
+  ($status:expr, $data:expr, $client_map:expr, $uuid:expr) => {
+    if $client_map.contains_key(&$uuid) {
+      let client_key: String = $client_map.get(&$uuid).unwrap().key.to_owned();
       TmsRespond!($status, $data, client_key);
     } else {
       // Err()

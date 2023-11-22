@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/requests/game_requests.dart';
@@ -53,7 +54,9 @@ class GameLocalDB {
     var singleJson = single.toJson();
     await _ls.then((value) => value.setString(storeDbGame, jsonEncode(singleJson)));
     for (var trigger in _singleTriggers) {
-      trigger(single);
+      Future(() async => trigger(single)).catchError((e) {
+        Logger().e("Error triggering single update: $e");
+      });
     }
   }
 

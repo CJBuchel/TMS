@@ -1,7 +1,7 @@
-use log::warn;
+use log::{warn, error};
 use tms_utils::{TmsClients, network_schemas::{QuestionsValidateRequest, QuestionsValidateResponse, SocketMessage}, tms_client_ws_send, TmsSocketRequest};
 
-use crate::event_service::TmsEventServiceArc;
+use crate::event_service::{TmsEventServiceArc, with_tms_event_service_read};
 
 
 pub async fn validate_questions_route(
@@ -20,19 +20,31 @@ pub async fn validate_questions_route(
   };
 
   // validate the answers and send the response
-  match tms_event_service.lock().await.scoring.validate(m.answers) {
-    Some(v) => {
-      let res = QuestionsValidateResponse { errors: v.errors, score: v.score };
-      let socket_message = SocketMessage {
-        from_id: None,
-        topic: "validation".to_string(),
-        sub_topic: "".to_string(),
-        message: serde_json::to_string(&res).unwrap(),
-      };
-      
-      tms_client_ws_send(socket_message, clients, target_id, None);
-    },
-    None => {},
-  }
+  let result = with_tms_event_service_read(&tms_event_service, |service| {
+    service.scoring.validate(m.answers)
+  }).await;
 
+  match result {
+    Ok(v) => {
+      match v {
+        Some(v) => {
+          let res = QuestionsValidateResponse { errors: v.errors, score: v.score };
+          let socket_message = SocketMessage {
+            from_id: None,
+            topic: "validation".to_string(),
+            sub_topic: "".to_string(),
+            message: serde_json::to_string(&res).unwrap(),
+          };
+          
+          warn!("sending validation response to: {}", target_id);
+          tms_client_ws_send(socket_message, clients, target_id, None).await;
+        },
+        None => {},
+      }
+    },
+
+    Err(_) => {
+      error!("failed to get event service lock (socket)");
+    }
+  }
 }

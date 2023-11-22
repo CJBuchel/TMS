@@ -20,12 +20,15 @@ class RefereeScoring extends StatelessWidget {
   final ValueNotifier<List<ScoreError>> _errorsNotifier = ValueNotifier<List<ScoreError>>([]);
   final ValueNotifier<String> _publicCommentNotifier = ValueNotifier<String>("");
   final ValueNotifier<String> _privateCommentNotifier = ValueNotifier<String>("");
-  final ValueNotifier<bool> _defaultAnswers = ValueNotifier<bool>(false);
 
   // team, match and mode notifiers
   final ValueNotifier<bool> _lockedNotifier = ValueNotifier<bool>(true);
   final ValueNotifier<GameMatch?> _nextMatchNotifier = ValueNotifier<GameMatch?>(null);
   final ValueNotifier<Team?> _nextTeamNotifier = ValueNotifier<Team?>(null);
+
+  final GlobalKey<GameScoringState> _gameScoringKey = GlobalKey();
+
+  void _setDefault() => _gameScoringKey.currentState?.getGameScoringHandlerKey.currentState?.setDefault();
 
   set _setPublicComment(String publicComment) {
     if (_publicCommentNotifier.value != publicComment) {
@@ -100,15 +103,12 @@ class RefereeScoring extends StatelessWidget {
               cacheExtent: 10000, // 10,000 pixels in every direction
               children: [
                 GameScoring(
+                  key: _gameScoringKey,
                   onScore: (score) => _setScore = score,
                   onAnswers: (answers) => _setAnswers = answers,
                   onErrors: (errors) => _setErrors = errors,
                   onPublicCommentChange: (pub) => _setPublicComment = pub,
                   onPrivateCommentChange: (priv) => _setPrivateComment = priv,
-                  setDefaultAnswers: _defaultAnswers,
-                  // onDefaultAnswers: () {
-                  //   _defaultAnswers.value = false; // set to false when default is triggered
-                  // },
                 ),
                 const SizedBox(height: 80),
               ],
@@ -133,15 +133,15 @@ class RefereeScoring extends StatelessWidget {
 
               // callbacks
               onClear: () {
-                _defaultAnswers.value = true;
+                _setDefault();
                 scrollToTop();
               },
               onSubmit: () {
-                _defaultAnswers.value = true;
+                _setDefault();
                 scrollToTop();
               },
               onNoShow: () {
-                _defaultAnswers.value = true;
+                _setDefault();
                 scrollToTop();
               },
             ),

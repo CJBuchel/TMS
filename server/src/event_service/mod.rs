@@ -22,4 +22,4 @@ impl TmsEventService {
   }
 }
 
-pub type TmsEventServiceArc = std::sync::Arc<std::sync::Mutex<TmsEventService>>;
+pub type TmsEventServiceArc = std::sync::Arc<tokio::sync::Mutex<TmsEventService>>;

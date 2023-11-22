@@ -35,7 +35,7 @@ use proxy_routes::*;
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
-use crate::{db::db::TmsDB, event_service::{TmsEventService, TmsEventServiceArc}};
+use crate::{event_service::TmsEventServiceArc, db::db::TmsDB};
 
 // CORS fairing
 pub struct CORS;
@@ -136,7 +136,7 @@ pub struct TmsHttpServer {
 }
 
 impl TmsHttpServer {
-  pub fn new(tms_event_service: std::sync::Arc<std::sync::Mutex<TmsEventService>>, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
+  pub fn new(tms_event_service: TmsEventServiceArc, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
     Self { tms_event_service, tms_db, security, clients, port, ws_port }
   }
 

@@ -43,7 +43,7 @@ pub fn questions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Ar
 
 #[tms_private_route]
 #[post("/questions/validate/<uuid>", data = "<message>")]
-pub fn validate_questions_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
+pub async fn validate_questions_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
   let message: QuestionsValidateRequest = TmsRequest!(message.clone(), security);
 
   let mut perms = create_permissions(); // referees/head referee/admin
@@ -52,7 +52,7 @@ pub fn validate_questions_route(message: String, tms_event_service: &State<TmsEv
 
   if check_permissions(clients, uuid.clone(), message.auth_token, perms) {
     // get event from db and check season string
-    match tms_event_service.lock().unwrap().scoring.validate(message.answers) {
+    match tms_event_service.lock().await.scoring.validate(message.answers) {
       Some(validation) => {
         TmsRespond!(
           Status::Ok,
@@ -71,9 +71,9 @@ pub fn validate_questions_route(message: String, tms_event_service: &State<TmsEv
 }
 
 #[get("/game/get/<uuid>")]
-pub fn game_get_route(clients: &State<TmsClients>, tms_event_service: &State<TmsEventServiceArc>, uuid: String) -> TmsRouteResponse<()> {
+pub async fn game_get_route(clients: &State<TmsClients>, tms_event_service: &State<TmsEventServiceArc>, uuid: String) -> TmsRouteResponse<()> {
   // get season
-  let game = tms_event_service.lock().unwrap().scoring.get_game();
+  let game = tms_event_service.lock().await.scoring.get_game();
 
   TmsRespond!(
     Status::Ok,

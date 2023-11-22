@@ -109,12 +109,12 @@ pub fn match_update_route(message: String) -> TmsRouteResponse<()> {
 
 #[tms_private_route]
 #[post("/match/load/<uuid>", data = "<message>")]
-pub fn match_load_route(tms_event_service: &State<TmsEventServiceArc>, message: String) -> TmsRouteResponse<()> {
+pub async fn match_load_route(tms_event_service: &State<TmsEventServiceArc>, message: String) -> TmsRouteResponse<()> {
   let message: MatchLoadRequest = TmsRequest!(message.clone(), security);
   let mut perms = create_permissions();
   perms.head_referee = Some(true);
   if check_permissions(clients, uuid, message.auth_token, perms) {
-    tms_event_service.lock().unwrap().match_control.load_matches(message.match_numbers);
+    tms_event_service.lock().await.match_control.load_matches(message.match_numbers);
     TmsRespond!()
   }
   
@@ -123,12 +123,12 @@ pub fn match_load_route(tms_event_service: &State<TmsEventServiceArc>, message: 
 
 #[tms_private_route]
 #[post("/match/unload/<uuid>", data = "<message>")]
-pub fn match_unload_route(tms_event_service: &State<TmsEventServiceArc>, message: String) -> TmsRouteResponse<()> {
+pub async fn match_unload_route(tms_event_service: &State<TmsEventServiceArc>, message: String) -> TmsRouteResponse<()> {
   let message: MatchLoadRequest = TmsRequest!(message.clone(), security);
   let mut perms = create_permissions();
   perms.head_referee = Some(true);
   if check_permissions(clients, uuid, message.auth_token, perms) {
-    tms_event_service.lock().unwrap().match_control.unload_matches();
+    tms_event_service.lock().await.match_control.unload_matches();
     TmsRespond!()
   }
   

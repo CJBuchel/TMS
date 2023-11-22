@@ -299,7 +299,7 @@ fn scoresheet_update_match(res: TeamPostGameScoresheetRequest, db: &State<std::s
 
 #[tms_private_route]
 #[post("/team/post/game_scoresheet/<uuid>", data = "<message>")]
-pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
+pub async fn team_post_game_scoresheet_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
   let message: TeamPostGameScoresheetRequest = TmsRequest!(message.clone(), security);
 
   let mut perms = create_permissions();
@@ -311,7 +311,7 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
       Some(mut t) => {
         // validate scoresheet, make sure there are no errors and update the score.
         let answers = message.scoresheet.scoresheet.answers.clone();
-        match tms_event_service.lock().unwrap().scoring.validate(answers) {
+        match tms_event_service.lock().await.scoring.validate(answers) {
           Some(validation) => {
             if validation.errors.is_empty() {
               let mut scoresheet = message.scoresheet.clone();
@@ -368,7 +368,7 @@ pub fn team_post_game_scoresheet_route(message: String, tms_event_service: &Stat
 
 #[tms_private_route]
 #[post("/team/delete/<uuid>", data = "<message>")]
-pub fn team_delete_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
+pub async fn team_delete_route(message: String, tms_event_service: &State<TmsEventServiceArc>) -> TmsRouteResponse<()> {
   let message: TeamDeleteRequest = TmsRequest!(message.clone(), security);
 
   let mut perms = create_permissions();
@@ -377,7 +377,7 @@ pub fn team_delete_route(message: String, tms_event_service: &State<TmsEventServ
 
     match db.tms_data.teams.get(message.team_number.clone()).unwrap() {
       Some(t) => {
-        match tms_event_service.lock().unwrap().teams.remove_team(t.team_number.clone()) {
+        match tms_event_service.lock().await.teams.remove_team(t.team_number.clone()) {
           Ok(_) => {
             // update rankings
             if !update_rankings(db, clients) {

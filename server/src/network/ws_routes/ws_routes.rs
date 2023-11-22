@@ -6,8 +6,7 @@ use warp::{ws::Message, Reply, ws::WebSocket};
 use tokio::sync::mpsc;
 
 use crate::{network::ws_routes::game_routes::validate_questions_route, event_service::TmsEventServiceArc};
-
-fn client_msg(
+async fn client_msg(
   user_id: String, 
   msg: Message, 
   clients: TmsClients, 
@@ -33,7 +32,7 @@ fn client_msg(
 
   // validation system
   if _socket_message.topic == "validation" {
-    validate_questions_route(_socket_message.message, tms_event_service, clients, user_id.clone());
+    validate_questions_route(_socket_message.message, tms_event_service, clients, user_id.clone()).await;
   }
 
   // @todo use socket message for something. (Off chance that the client sends a socket message instead of the server)
@@ -84,15 +83,14 @@ async fn client_connection(
       }
     };
 
-    // async message handling (each client message is handled in a new task)
-    client_msg(user_id.clone(), msg, clients.to_owned(), security.clone(), tms_event_service.clone());
+    tokio::spawn(client_msg(user_id.clone(), msg, clients.to_owned(), security.clone(), tms_event_service.clone()));
   }
 
   with_clients_write(&clients, |client_map| {
     client_map.remove(&user_id);
   }).unwrap();
   warn!("{} disconnected", user_id.to_owned());
-  tms_clients_ws_send(client_list_update.clone(), clients.clone(), Some(String::from("")));
+  let _ = tms_clients_ws_send(client_list_update.clone(), clients.clone(), Some(String::from("")));
 }
 
 pub async fn ws_handler(

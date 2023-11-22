@@ -32,7 +32,7 @@ pub struct TmsWebsocket {
 }
 
 impl TmsWebsocket {
-  pub fn new(tms_event_service: std::sync::Arc<std::sync::Mutex<TmsEventService>>, security: Security, clients: TmsClients, port: u16) -> Self {
+  pub fn new(tms_event_service: TmsEventServiceArc, security: Security, clients: TmsClients, port: u16) -> Self {
     Self {
       tms_event_service,
       security,

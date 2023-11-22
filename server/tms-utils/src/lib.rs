@@ -58,11 +58,14 @@ pub fn tms_clients_ws_send(message: SocketMessage, clients: TmsClients, origin_i
       None => true // if no origin id is supplied, just match all
     })
     .for_each(|(_, client)| {
-      if let Some(sender) = &client.ws_sender {
-        let m = serde_json::to_string(&message).unwrap();
-        let encrypted_m = encrypt(client.key.clone(), m);
-        let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
-      }
+      let sender = match &client.ws_sender {
+        Some(v) => v,
+        None => return,
+      };
+      let m = serde_json::to_string(&message).unwrap();
+      let encrypted_m = encrypt(client.key.clone(), m);
+      let sender = sender.clone();
+      let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
     });
 }
 /// sends message to a single client, optionally with an origin id
@@ -82,11 +85,14 @@ pub fn tms_client_ws_send(message: SocketMessage, clients: TmsClients, target_id
       _ => false,
     })
     .for_each(|(_, client)| {
-      if let Some(sender) = &client.ws_sender {
-        let m = serde_json::to_string(&message).unwrap();
-        let encrypted_m = encrypt(client.key.clone(), m);
-        let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
-      }
+      let sender = match &client.ws_sender {
+        Some(v) => v,
+        None => return,
+      };
+      let m = serde_json::to_string(&message).unwrap();
+      let encrypted_m = encrypt(client.key.clone(), m);
+      let sender = sender.clone();
+      let _ = sender.send(Ok(Message::text(encrypted_m.clone())));
     });
 }
 

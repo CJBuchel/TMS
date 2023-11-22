@@ -41,11 +41,11 @@ class ValidationQueue {
   }
 
   void validate(List<ScoreAnswer> answers) {
+    // check the answers, only send if a different request was made, otherwise ignore it as duplicate
     if (!listEquals(answers, _nextAnswers)) {
-      // Logger().wtf("Not the same, requesting validation, size: ${answers.length}");
       _nextAnswers = deepCopyList(answers, ScoreAnswer.fromJson);
       _addValidation(() {
-        senderValidation(_nextAnswers);
+        senderValidation(answers);
       });
     } else {
       Logger().e("list the same, not sending validation request");

@@ -20,9 +20,6 @@ class GameScoring extends StatefulWidget {
   final Function(String)? onPrivateCommentChange;
   final Function()? onDefaultAnswers;
 
-  // value notifiers
-  final ValueNotifier<bool> setDefaultAnswers;
-
   const GameScoring({
     Key? key,
     this.initialAnswers,
@@ -34,15 +31,17 @@ class GameScoring extends StatefulWidget {
     this.onPublicCommentChange,
     this.onPrivateCommentChange,
     this.onDefaultAnswers,
-    required this.setDefaultAnswers,
   }) : super(key: key);
 
   @override
-  State<GameScoring> createState() => _GameScoringState();
+  State<GameScoring> createState() => GameScoringState();
 }
 
-class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
+class GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   final ValueNotifier<Game> _gameNotifier = ValueNotifier<Game>(GameLocalDB.singleDefault());
+  final GlobalKey<GameScoringHandlerState> _gameScoringHandlerKey = GlobalKey();
+
+  GlobalKey<GameScoringHandlerState> get getGameScoringHandlerKey => _gameScoringHandlerKey;
 
   void _setGame(Game g) async {
     if (!listEquals(_gameNotifier.value.missions, g.missions)) {
@@ -65,6 +64,8 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
           return const SizedBox.shrink();
         } else {
           return GameScoringHandler(
+            // key
+            key: _gameScoringHandlerKey,
             // initials
             game: game,
             initialAnswers: widget.initialAnswers,
@@ -78,9 +79,6 @@ class _GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Lo
             onPublicCommentChange: widget.onPublicCommentChange,
             onPrivateCommentChange: widget.onPrivateCommentChange,
             onDefaultAnswers: widget.onDefaultAnswers,
-
-            // notifiers
-            setDefaultAnswers: widget.setDefaultAnswers,
           );
         }
       },

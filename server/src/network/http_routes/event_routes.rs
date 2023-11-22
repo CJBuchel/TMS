@@ -2,12 +2,13 @@ use log::{info, error};
 use rocket::{State, post, get, http::Status};
 use tms_macros::tms_private_route;
 use tms_utils::security::encrypt;
+use tms_utils::with_clients_read;
 use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse, SocketMessage, ApiLinkRequest, ApiLinkResponse}, tms_clients_ws_send};
 
 use crate::db::db::TmsDB;
 
 #[get("/event/get/<uuid>")]
-pub fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub async fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
   let event = match db.tms_data.event.get().unwrap() {
     Some(event) => event,
     None => {
@@ -20,49 +21,73 @@ pub fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<Tm
     event
   };
 
-  TmsRespond!(
-    Status::Ok,
-    event_response,
-    clients,
-    uuid
-  )
+  let result = with_clients_read(clients, |client_map| {
+    client_map.clone()
+  }).await;
+
+  match result {
+    Ok(map) => {
+      TmsRespond!(
+        Status::Ok,
+        event_response,
+        map,
+        uuid
+      )
+    },
+    Err(_) => {
+      error!("failed to get clients lock");
+      TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
+    }
+  }
 }
 
 #[tms_private_route]
 #[post("/event/get/api_link/<uuid>", data = "<message>")]
-pub fn event_get_api_link_route(message: String) -> TmsRouteResponse<()> {
+pub async fn event_get_api_link_route(message: String) -> TmsRouteResponse<()> {
   let message: ApiLinkRequest = TmsRequest!(message.clone(), security);
 
   let perms = create_permissions(); // only admin can get api link
-  if check_permissions(clients, uuid.clone(), message.auth_token, perms) {
-    match db.tms_data.api_link.get().unwrap() {
-      Some(api_link) => {
-        let api_response = ApiLinkResponse {
-          api_link
+  if check_permissions(clients, uuid.clone(), message.auth_token, perms).await {
+    let result = with_clients_read(clients, |client_map| {
+      client_map.clone()
+    }).await;
+
+    match result {
+      Ok(map) => {
+        match db.tms_data.api_link.get().unwrap() {
+          Some(api_link) => {
+            let api_response = ApiLinkResponse {
+              api_link
+            };
+            TmsRespond!(
+              Status::Ok,
+              api_response,
+              map,
+              uuid
+            )
+          },
+          None => {
+            println!("API Link not found");
+            TmsRespond!(Status::NotFound, "API Link not found".to_string());
+          }
         };
-        TmsRespond!(
-          Status::Ok,
-          api_response,
-          clients,
-          uuid
-        )
       },
-      None => {
-        println!("API Link not found");
-        TmsRespond!(Status::NotFound, "API Link not found".to_string());
+      Err(_) => {
+        error!("failed to get clients lock");
+        TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
       }
-    };
+    }
   }
   TmsRespond!(Status::Unauthorized)
 }
 
 #[tms_private_route]
 #[post("/event/purge/<uuid>", data = "<message>")]
-pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
+pub async fn event_purge_route(message: String) -> TmsRouteResponse<()> {
   let message: PurgeRequest = TmsRequest!(message.clone(), security);
 
   let perms = create_permissions(); // only admin can purge
-  if check_permissions(clients, uuid, message.auth_token, perms) {
+  if check_permissions(clients, uuid, message.auth_token, perms).await {
     match db.purge() {
       Ok(_) => {
         info!("Database purged successfully");
@@ -75,7 +100,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           topic: String::from("event"),
           sub_topic: String::from("update"),
           message: String::from("")
-        }, clients.inner().to_owned(), None);
+        }, clients.inner().to_owned(), None).await;
         
         // send teams update
         tms_clients_ws_send(SocketMessage {
@@ -83,7 +108,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           topic: String::from("teams"),
           sub_topic: String::from("update"),
           message: String::from("")
-        }, clients.inner().to_owned(), None);
+        }, clients.inner().to_owned(), None).await;
 
         // send matches update
         tms_clients_ws_send(SocketMessage {
@@ -91,7 +116,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           topic: String::from("matches"),
           sub_topic: String::from("update"),
           message: String::from("")
-        }, clients.inner().to_owned(), None);
+        }, clients.inner().to_owned(), None).await;
 
         // send judging sessions update
         tms_clients_ws_send(SocketMessage {
@@ -99,7 +124,7 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
           topic: String::from("judging_sessions"),
           sub_topic: String::from("update"),
           message: String::from("")
-        }, clients.inner().to_owned(), None);
+        }, clients.inner().to_owned(), None).await;
 
         // good response
         TmsRespond!()
@@ -116,11 +141,11 @@ pub fn event_purge_route(message: String) -> TmsRouteResponse<()> {
 
 #[tms_private_route]
 #[post("/event/setup/<uuid>", data = "<message>")]
-pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
+pub async fn event_setup_route(message: String) -> TmsRouteResponse<()> {
   let message: SetupRequest = TmsRequest!(message.clone(), security);
 
   let perms = create_permissions(); // only admin can setup
-  if check_permissions(clients, uuid, message.auth_token, perms) {
+  if check_permissions(clients, uuid, message.auth_token, perms).await {
     // Put data into database
 
     // supply new admin password
@@ -206,7 +231,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       topic: String::from("event"),
       sub_topic: String::from("update"),
       message: String::from("")
-    }, clients.inner().to_owned(), None);
+    }, clients.inner().to_owned(), None).await;
 
     // send game update
     tms_clients_ws_send(SocketMessage {
@@ -214,7 +239,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       topic: String::from("game"),
       sub_topic: String::from("update"),
       message: String::from("")
-    }, clients.inner().to_owned(), None);
+    }, clients.inner().to_owned(), None).await;
     
     // send teams update
     tms_clients_ws_send(SocketMessage {
@@ -222,7 +247,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       topic: String::from("teams"),
       sub_topic: String::from("update"),
       message: String::from("")
-    }, clients.inner().to_owned(), None);
+    }, clients.inner().to_owned(), None).await;
 
     // send matches update
     tms_clients_ws_send(SocketMessage {
@@ -230,7 +255,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       topic: String::from("matches"),
       sub_topic: String::from("update"),
       message: String::from("")
-    }, clients.inner().to_owned(), None);
+    }, clients.inner().to_owned(), None).await;
 
     // send judging sessions update
     tms_clients_ws_send(SocketMessage {
@@ -238,7 +263,7 @@ pub fn event_setup_route(message: String) -> TmsRouteResponse<()> {
       topic: String::from("judging_sessions"),
       sub_topic: String::from("update"),
       message: String::from("")
-    }, clients.inner().to_owned(), None);
+    }, clients.inner().to_owned(), None).await;
 
     // good response
     TmsRespond!()

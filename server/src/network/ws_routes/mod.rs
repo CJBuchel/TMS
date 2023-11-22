@@ -7,7 +7,7 @@ use log::info;
 use tms_utils::{security::Security, TmsClients};
 use warp::{hyper::Method, Filter};
 
-use crate::event_service::{TmsEventService, TmsEventServiceArc};
+use crate::event_service::TmsEventServiceArc;
 
 use self::ws_routes::ws_handler;
 

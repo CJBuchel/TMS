@@ -22,4 +22,22 @@ impl TmsEventService {
   }
 }
 
-pub type TmsEventServiceArc = std::sync::Arc<tokio::sync::Mutex<TmsEventService>>;
+
+// read write lock, when in read lock it still allows other reads but not writes
+pub type TmsEventServiceArc = std::sync::Arc<tokio::sync::RwLock<TmsEventService>>;
+
+pub async fn with_tms_event_service_write<F, R>(tms_event_service: &TmsEventServiceArc, f: F) -> Result<R, &'static str>
+where
+  F: FnOnce(&mut TmsEventService) -> R,
+{ 
+  let mut guard = tms_event_service.write().await;
+  Ok(f(&mut *guard))
+}
+
+pub async fn with_tms_event_service_read<F, R>(tms_event_service: &TmsEventServiceArc, f: F) -> Result<R, &'static str>
+where
+  F: FnOnce(&TmsEventService) -> R,
+{
+  let guard = tms_event_service.read().await;
+  Ok(f(&*guard))
+}

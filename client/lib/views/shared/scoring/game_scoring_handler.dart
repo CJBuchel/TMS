@@ -26,8 +26,6 @@ class GameScoringHandler extends StatefulWidget {
   final Function(String)? onPrivateCommentChange;
   final Function()? onDefaultAnswers;
 
-  // notifiers
-  final ValueNotifier<bool> setDefaultAnswers;
   const GameScoringHandler({
     Key? key,
     // initials
@@ -43,16 +41,13 @@ class GameScoringHandler extends StatefulWidget {
     required this.onPublicCommentChange,
     required this.onPrivateCommentChange,
     required this.onDefaultAnswers,
-
-    // notifiers
-    required this.setDefaultAnswers,
   }) : super(key: key);
 
   @override
-  State<GameScoringHandler> createState() => _GameScoringHandlerState();
+  State<GameScoringHandler> createState() => GameScoringHandlerState();
 }
 
-class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubScribeMixin {
+class GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubScribeMixin {
   final TextEditingController _publicCommentController = TextEditingController();
   final TextEditingController _privateCommentController = TextEditingController();
 
@@ -120,7 +115,8 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
     widget.onAnswers?.call(_getAnswers);
   }
 
-  void _setDefault() {
+  // this is accessed externally as well
+  void setDefault() {
     List<ScoreAnswer> answers = [];
     for (var q in widget.game.questions) {
       answers.add(ScoreAnswer(
@@ -128,17 +124,7 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
         answer: q.defaultValue.text ?? "",
       ));
     }
-
     _setAnswers = answers;
-  }
-
-  void _defaultHandler() {
-    if (mounted) {
-      if (widget.setDefaultAnswers.value == true) {
-        _setDefault();
-      }
-    }
-    widget.setDefaultAnswers.value = false;
   }
 
   @override
@@ -156,23 +142,12 @@ class _GameScoringHandlerState extends State<GameScoringHandler> with AutoUnsubS
       _setAnswers = widget.initialAnswers!;
     } else {
       Logger().w("No initial answers, setting default");
-      _setDefault();
+      setDefault();
     }
-
-    // check for default answers
-    widget.setDefaultAnswers.value = false;
-    widget.setDefaultAnswers.addListener(_defaultHandler);
-
     // check validation messages
     autoSubscribe("validation", (s) {
       _onValidationResponse(s.message);
     });
-  }
-
-  @override
-  void dispose() {
-    widget.setDefaultAnswers.removeListener(_defaultHandler);
-    super.dispose();
   }
 
   Widget _getMissions(Game game) {

@@ -5,8 +5,8 @@ use crate::db::db::TmsDB;
 
 #[tms_private_route]
 #[post("/publish/<uuid>", data = "<message>")]
-pub fn publish_route(message: String) -> TmsRouteResponse<()> {
+pub async fn publish_route(message: String) -> TmsRouteResponse<()> {
   let socket_message: SocketMessage = TmsRequest!(message, security);
-  tms_clients_ws_send(socket_message.to_owned(), clients.inner().to_owned(), Some(uuid));
+  tms_clients_ws_send(socket_message.to_owned(), clients.inner().to_owned(), Some(uuid)).await;
   TmsRespond!();
 }

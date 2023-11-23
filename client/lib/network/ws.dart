@@ -33,7 +33,6 @@ class NetworkWebSocket {
 
   void unsubscribe(String topic, Function(SocketMessage) onEvent) {
     if (_subscribers.containsKey(topic)) {
-      // Logger().w("Unsubscribing from $topic");
       _subscribers[topic]?.remove(onEvent);
     }
   }
@@ -41,10 +40,8 @@ class NetworkWebSocket {
   Future<void> publish(SocketMessage message) async {
     if (getState() == NetworkWebSocketState.connected) {
       try {
-        // encrypt the message
         String encM = await NetworkSecurity().encryptMessage(message.toJson());
         _channel.sink.add(encM);
-        await _channel.sink.done; // wait until complete
       } catch (e) {
         Logger().e("Error sending message: $e");
         setState(NetworkWebSocketState.disconnected);
@@ -57,7 +54,7 @@ class NetworkWebSocket {
     if (getState() == NetworkWebSocketState.connected) {
       try {
         // Listen to the socket
-        _channel.stream.listen((event) {
+        _channel.stream.listen((event) async {
           // On a regular data message decrypt the message
           NetworkSecurity().decryptMessage(event).then((value) {
             // Convert the message to a socket message type
@@ -68,11 +65,13 @@ class NetworkWebSocket {
               m = SocketMessage(message: "", subTopic: "", topic: "");
             }
             // Iterate through the subscribers and check if the topic matches
-            _subscribers.forEach((topic, functionList) {
+            _subscribers.forEach((topic, functionList) async {
               if (topic == m.topic) {
                 // If the topic matches run every onEvent function in the list associated with the topic
                 for (final onEvent in functionList) {
-                  onEvent(m);
+                  Future(() => onEvent(m)).catchError((error) {
+                    Logger().e("Error running subscribed event function: $error");
+                  });
                 }
               }
             });

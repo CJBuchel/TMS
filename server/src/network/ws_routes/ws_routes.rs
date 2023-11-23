@@ -32,11 +32,8 @@ async fn client_msg(
 
   // validation system
   if _socket_message.topic == "validation" {
-    warn!("validation message received from: {}", user_id.clone());
     validate_questions_route(_socket_message.message, tms_event_service, clients, user_id.clone()).await;
   }
-
-  warn!("Finished processing message");
 
   // @todo use socket message for something. (Off chance that the client sends a socket message instead of the server)
 }
@@ -79,10 +76,7 @@ async fn client_connection(
 
   while let Some(result) = client_ws_rcv.next().await {
     let msg = match result {
-      Ok(msg) => {
-        warn!("Message received");
-        msg
-      },
+      Ok(msg) => msg,
       Err(e) => {
         error!("error receiving message for user id: {}: {}", user_id.clone(), e);
         break;

@@ -36,7 +36,6 @@ pub async fn validate_questions_route(
             message: serde_json::to_string(&res).unwrap(),
           };
           
-          warn!("sending validation response to: {}", target_id);
           tms_client_ws_send(socket_message, clients, target_id, None).await;
         },
         None => {},

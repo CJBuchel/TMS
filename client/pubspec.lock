@@ -325,10 +325,10 @@ packages:
     dependency: "direct main"
     description:
       name: fast_rsa
-      sha256: "04e712f781e772fd5eff35aa19465ce2577f30203ca9adb9e37d4dd32929ed8f"
+      sha256: "2619f8869c0245919fc8f3695f786bf7a7e75e4bb87a7f13ad3b3223fa35bdf0"
       url: "https://pub.dev"
     source: hosted
-    version: "3.5.6"
+    version: "3.6.1"
   ffi:
     dependency: transitive
     description:
@@ -769,10 +769,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: c3120a968135aead39699267f4c74bc9a08e4e909e86bc1b0af5bfd78691123c
+      sha256: "7c1e5f0d23c9016c5bbd8b1473d0d3fb3fc851b876046039509e18e0c7485f2c"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.2"
+    version: "3.7.3"
   pool:
     dependency: transitive
     description:

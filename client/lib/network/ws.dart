@@ -40,12 +40,8 @@ class NetworkWebSocket {
   Future<void> publish(SocketMessage message) async {
     if (getState() == NetworkWebSocketState.connected) {
       try {
-        Logger().wtf("Sending message...");
-        // encrypt the message
         String encM = await NetworkSecurity().encryptMessage(message.toJson());
-        Logger().wtf("Message encrypted...");
         _channel.sink.add(encM);
-        Logger().wtf("Message sent...");
       } catch (e) {
         Logger().e("Error sending message: $e");
         setState(NetworkWebSocketState.disconnected);

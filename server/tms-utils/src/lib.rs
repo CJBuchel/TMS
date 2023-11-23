@@ -5,7 +5,7 @@ use std::{time::SystemTime, collections::HashMap};
 
 pub use fll_games::schemas::*;
 
-use log::{warn, error};
+use log::error;
 use network_schemas::SocketMessage;
 use rocket::{http::Status, serde::json::Json, State};
 use schemas::Permissions;

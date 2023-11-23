@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:fast_rsa/fast_rsa.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
-import 'package:tms/network/encryption.dart';
+
+import 'package:fast_rsa/fast_rsa.dart' as fast_rsa;
+import 'package:tms/network/encryption_queue.dart';
 
 enum SecurityState { noSecurity, encrypting, secure }
 
@@ -60,38 +61,38 @@ class NetworkSecurity {
     }
   }
 
-  Future<void> setKeys(KeyPair keys) async {
+  Future<void> setKeys(fast_rsa.KeyPair keys) async {
     await _localStorage.then((value) => value.setString(storeNtPublicKey, keys.publicKey));
     await _localStorage.then((value) => value.setString(storeNtPrivateKey, keys.privateKey));
   }
 
-  Future<KeyPair> getKeys() async {
+  Future<fast_rsa.KeyPair> getKeys() async {
     try {
       var pubKey = await _localStorage.then((value) => value.getString(storeNtPublicKey));
       var privKey = await _localStorage.then((value) => value.getString(storeNtPrivateKey));
       if (pubKey != null && privKey != null) {
-        return KeyPair(pubKey, privKey);
+        return fast_rsa.KeyPair(pubKey, privKey);
       } else {
-        return KeyPair("", "");
+        return fast_rsa.KeyPair("", "");
       }
     } catch (e) {
-      return KeyPair("", "");
+      return fast_rsa.KeyPair("", "");
     }
   }
 
-  Future<KeyPair> generateKeyPair() async {
+  Future<fast_rsa.KeyPair> generateKeyPair() async {
     try {
       setState(SecurityState.encrypting);
-      KeyPair keyPair;
+      fast_rsa.KeyPair keyPair;
       if (kIsWeb) {
-        keyPair = await RSA.generate(rsaBitSizeWeb);
+        keyPair = await fast_rsa.RSA.generate(rsaBitSizeWeb);
       } else {
-        keyPair = await RSA.generate(rsaBitSize);
+        keyPair = await fast_rsa.RSA.generate(rsaBitSize);
       }
       setState(SecurityState.secure);
       return keyPair;
     } catch (e) {
-      return KeyPair("", "");
+      return fast_rsa.KeyPair("", "");
     }
   }
 

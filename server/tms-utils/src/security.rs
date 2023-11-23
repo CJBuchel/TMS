@@ -1,5 +1,5 @@
 use log::{info, error};
-use openssl::{rsa::{Rsa, Padding}};
+use openssl::rsa::{Rsa, Padding};
 use base64::{Engine, engine::general_purpose};
 
 const PKCS1_PADDING_SIZE: usize = 11; // 11

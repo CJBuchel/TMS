@@ -231,6 +231,7 @@ async fn update_rankings(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsC
   let ranked_teams = rank_teams(teams.clone());
 
   // check if there was a ranking update between teams and ranked_teams
+  let mut trigger_update = false;
   for team in ranked_teams {
     for old_team in teams.clone() {
       if old_team.team_number == team.team_number {
@@ -238,13 +239,7 @@ async fn update_rankings(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsC
           // update the team in the database
           match db.tms_data.teams.update(team.team_number.as_bytes(), team.team_number.as_bytes(), team.clone()) {
             Ok(_) => {
-              // update clients about raking change
-              tms_clients_ws_send(SocketMessage {
-                from_id: None,
-                topic: String::from("teams"),
-                sub_topic: String::from("update"),
-                message: String::from(""),
-              }, clients.inner().clone(), None).await;
+              trigger_update = true;
             },
             Err(_) => {
               error!("Failed to update team {}", team.team_number);
@@ -255,6 +250,16 @@ async fn update_rankings(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsC
       }
     }
   }
+
+  // update clients about raking change
+  if trigger_update {
+    tms_clients_ws_send(SocketMessage {
+      from_id: None,
+      topic: String::from("teams"),
+      sub_topic: String::from("update"),
+      message: String::from(""),
+    }, clients.inner().clone(), None).await;
+  }
   true
 }
 
@@ -262,13 +267,6 @@ async fn update_rankings(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsC
 pub async fn teams_update_ranking_route(db: &State<std::sync::Arc<TmsDB>>, clients: &State<TmsClients>) -> TmsRouteResponse<()> {
   match update_rankings(db, clients).await {
     true => {
-      // send update to clients
-      tms_clients_ws_send(SocketMessage {
-        from_id: None,
-        topic: String::from("teams"),
-        sub_topic: String::from("update"),
-        message: String::from(""),
-      }, clients.inner().clone(), None).await;
       TmsRespond!(Status::Ok)
     },
     false => TmsRespond!(Status::BadRequest, "Failed to update rankings".to_string())

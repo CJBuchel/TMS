@@ -89,8 +89,9 @@ const watchDogTime = Duration(seconds: 5);
 const connectionRetries = 5;
 
 // Auth constants
+const rsaDefaultPaddingSize = 11;
 const rsaBitSize = 2048; // 2048
-const rsaBitSizeWeb = 512; // 1024, the web is slower, lets be a tad lenient
+const rsaBitSizeWeb = 256; // 1024, the web is slower, lets be a tad lenient
 
 // Local Storage Constants
 const storeHttpConnectionState = "ServerHttpConnectionState";

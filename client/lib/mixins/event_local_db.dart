@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/requests/event_requests.dart';
@@ -55,7 +56,9 @@ class EventLocalDB {
     var singleJson = single.toJson();
     await _ls.then((value) => value.setString(storeDbEvent, jsonEncode(singleJson)));
     for (var trigger in _singleTriggers) {
-      trigger(single);
+      Future(() => trigger(single)).catchError((e) {
+        Logger().e("Error triggering single update: $e");
+      });
     }
   }
 

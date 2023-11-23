@@ -35,7 +35,7 @@ use proxy_routes::*;
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
-use crate::{db::db::TmsDB, event_service::{TmsEventService, TmsEventServiceArc}};
+use crate::{event_service::TmsEventServiceArc, db::db::TmsDB};
 
 // CORS fairing
 pub struct CORS;
@@ -74,7 +74,7 @@ impl Fairing for ClientTimestampUpdate {
     if let Some(uuid) = path_segments.last() {
       if Uuid::parse_str(uuid).is_ok() { // check if it is a valid uuid
         if let Some(state) = request.rocket().state::<TmsClients>() {
-          with_clients_write(&state, |client_map| {
+          let result = with_clients_write(&state, |client_map| {
             if let Some(client) = client_map.get_mut(uuid) {
               client.last_timestamp = std::time::SystemTime::now();
             }
@@ -102,8 +102,14 @@ impl Fairing for ClientTimestampUpdate {
                 client_map.remove(&id);
               }
             }
-          }).unwrap();
-  
+          }).await;
+
+          match result {
+            Ok(_) => {},
+            Err(_) => {
+              error!("Failed to get clients lock");
+            }
+          }
         }
       }
     }
@@ -116,9 +122,22 @@ fn pulse_route() -> TmsRouteResponse<()> {
 }
 
 #[post("/pulse_integrity/<uuid>", data = "<message>")]
-fn pulse_integrity_route(security: &State<Security>, clients: &State<TmsClients>, uuid: String, message: String) -> TmsRouteResponse<()> {
+async fn pulse_integrity_route(security: &State<Security>, clients: &State<TmsClients>, uuid: String, message: String) -> TmsRouteResponse<()> {
   let message: IntegrityMessage = TmsRequest!(message, security);
-  TmsRespond!(Status::Ok, message, clients.inner(), uuid);
+
+  let result = with_clients_write(clients, |client_map| {
+    client_map.clone()
+  }).await;
+
+  match result {
+    Ok(map) => {
+      TmsRespond!(Status::Ok, message, map, uuid);
+    },
+
+    Err(_) => {
+      TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
+    }
+  }
 }
 
 #[options("/<_path..>")]
@@ -136,7 +155,7 @@ pub struct TmsHttpServer {
 }
 
 impl TmsHttpServer {
-  pub fn new(tms_event_service: std::sync::Arc<std::sync::Mutex<TmsEventService>>, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
+  pub fn new(tms_event_service: TmsEventServiceArc, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
     Self { tms_event_service, tms_db, security, clients, port, ws_port }
   }
 

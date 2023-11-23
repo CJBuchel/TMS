@@ -5,20 +5,26 @@ import 'package:logger/logger.dart';
 
 class EncryptionQueue {
   final _queue = StreamController<Function>();
+  int _taskCounter = 0;
 
   EncryptionQueue() {
-    _queue.stream.asyncMap((f) => f()).listen(null, onError: (e, s) {
+    _queue.stream.asyncMap((f) => f()).listen((_) {
+      _taskCounter--;
+    }, onError: (e, s) {
       Logger().e("EncryptionQueue error: $e");
     });
   }
 
   void addTask(Future<String> Function() task) {
+    _taskCounter++;
     _queue.sink.add(task);
   }
 
   void dispose() {
     _queue.close();
   }
+
+  int get pendingTasks => _taskCounter;
 }
 
 class Encryption {

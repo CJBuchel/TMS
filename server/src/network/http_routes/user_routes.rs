@@ -14,7 +14,7 @@ use crate::db::db::TmsDB;
 
 #[tms_private_route]
 #[post("/login/<uuid>", data = "<message>")]
-pub fn login_route(message: String) -> TmsRouteResponse<()> {
+pub async fn login_route(message: String) -> TmsRouteResponse<()> {
   let message: LoginRequest = TmsRequest!(message.clone(), security);
   let user = match db.tms_data.users.get(message.username.clone()).unwrap() {
     Some(user) => user,
@@ -25,27 +25,37 @@ pub fn login_route(message: String) -> TmsRouteResponse<()> {
 
   // Check if credentials match
   if user.password == message.password {
-    if clients.read().unwrap().contains_key(&uuid) {
-      // Generate auth token and apply it to the client connection
-      let auth_token = Uuid::new_v4();
-      with_clients_write(&clients, |client_map| {
-        client_map.get_mut(&uuid).unwrap().auth_token = auth_token.to_string();
-        // Copy and apply the specified user permissions to the client
-        client_map.get_mut(&uuid).unwrap().permissions = user.permissions.clone();
-      }).unwrap();
-      
-      // Respond to the client with the auth token
-      let res = LoginResponse {
-        auth_token: auth_token.to_string(),
-        permissions: user.permissions,
-      };
+    let result = with_clients_write(&clients, |client_map| {
+      client_map.clone()
+    }).await;
 
-      TmsRespond!(
-        Status::Ok,
-        res,
-        clients,
-        uuid
-      )
+    match result {
+      Ok(map) => {
+        if map.contains_key(&uuid) {
+          let auth_token = Uuid::new_v4();
+          let _ = with_clients_write(&clients, |client_map| {
+            client_map.get_mut(&uuid).unwrap().auth_token = auth_token.to_string();
+            // Copy and apply the specified user permissions to the client
+            client_map.get_mut(&uuid).unwrap().permissions = user.permissions.clone();
+          }).await;
+          
+          // Respond to the client with the auth token
+          let res = LoginResponse {
+            auth_token: auth_token.to_string(),
+            permissions: user.permissions,
+          };
+
+          TmsRespond!(
+            Status::Ok,
+            res,
+            map,
+            uuid
+          );
+        }
+      },
+      Err(_) => {
+        TmsRespond!(Status::InternalServerError)
+      }
     }
   }
 
@@ -55,12 +65,12 @@ pub fn login_route(message: String) -> TmsRouteResponse<()> {
 
 #[tms_private_route]
 #[post("/users/get/<uuid>", data = "<message>")]
-pub fn users_get_route(message: String) -> TmsRouteResponse<()> {
+pub async fn users_get_route(message: String) -> TmsRouteResponse<()> {
   // get all users except for admin
   let users_request: UsersRequest = TmsRequest!(message.clone(), security);
   let perms = create_permissions();
 
-  if check_permissions(clients, uuid.clone(), users_request.auth_token, perms) {
+  if check_permissions(clients, uuid.clone(), users_request.auth_token, perms).await {
     let mut users:Vec<User> = vec![];
     for user_raw in db.tms_data.users.iter() {
       let user = match user_raw {
@@ -80,12 +90,24 @@ pub fn users_get_route(message: String) -> TmsRouteResponse<()> {
       users
     };
 
-    TmsRespond!(
-      Status::Ok,
-      users_response,
-      clients,
-      uuid
-    )
+    let result = with_clients_write(&clients, |client_map| {
+      client_map.clone()
+    }).await;
+
+    match result {
+      Ok(map) => {
+        TmsRespond!(
+          Status::Ok,
+          users_response,
+          map,
+          uuid
+        )
+      },
+      Err(_) => {
+        error!("failed to get clients lock");
+        TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
+      }
+    }
   }
 
 
@@ -94,11 +116,11 @@ pub fn users_get_route(message: String) -> TmsRouteResponse<()> {
 
 #[tms_private_route]
 #[post("/user/add/<uuid>", data = "<message>")]
-pub fn user_add_route(message: String) -> TmsRouteResponse<()> {
+pub async fn user_add_route(message: String) -> TmsRouteResponse<()> {
   let add_user_request: AddUserRequest = TmsRequest!(message.clone(), security);
   let perms = create_permissions();
 
-  if check_permissions(clients, uuid.clone(), add_user_request.auth_token, perms) {
+  if check_permissions(clients, uuid.clone(), add_user_request.auth_token, perms).await {
     let user = add_user_request.user;
     let username = user.username.clone();
     let password = user.password.clone();
@@ -118,12 +140,24 @@ pub fn user_add_route(message: String) -> TmsRouteResponse<()> {
 
         let _ = db.tms_data.users.insert(username.as_bytes(), user.clone());
         // Respond to client
-        TmsRespond!(
-          Status::Ok,
-          "User added successfully".to_string(),
-          clients,
-          uuid
-        )
+        let result = with_clients_write(&clients, |client_map| {
+          client_map.clone()
+        }).await;
+
+        match result {
+          Ok(map) => {
+            TmsRespond!(
+              Status::Ok,
+              "User added successfully".to_string(),
+              map,
+              uuid
+            )
+          },
+          Err(_) => {
+            error!("failed to get clients lock");
+            TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
+          }
+        }
       }
     }
   }
@@ -133,11 +167,11 @@ pub fn user_add_route(message: String) -> TmsRouteResponse<()> {
 
 #[tms_private_route]
 #[post("/user/delete/<uuid>", data = "<message>")]
-pub fn user_delete_route(message: String) -> TmsRouteResponse<()> {
+pub async fn user_delete_route(message: String) -> TmsRouteResponse<()> {
   let delete_user_request: DeleteUserRequest = TmsRequest!(message.clone(), security);
   let perms = create_permissions();
 
-  if check_permissions(clients, uuid.clone(), delete_user_request.auth_token, perms) {
+  if check_permissions(clients, uuid.clone(), delete_user_request.auth_token, perms).await {
     let username = delete_user_request.username.clone();
     
     // if username is admin, don't allow deletion
@@ -150,12 +184,24 @@ pub fn user_delete_route(message: String) -> TmsRouteResponse<()> {
         Some(_) => {
           let _ = db.tms_data.users.remove(&username);
           // Respond to client
-          TmsRespond!(
-            Status::Ok,
-            "User deleted successfully".to_string(),
-            clients,
-            uuid
-          )
+          let result = with_clients_write(&clients, |client_map| {
+            client_map.clone()
+          }).await;
+
+          match result {
+            Ok(map) => {
+              TmsRespond!(
+                Status::Ok,
+                "User deleted successfully".to_string(),
+                map,
+                uuid
+              );
+            },
+            Err(_) => {
+              error!("failed to get clients lock");
+              TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
+            }
+          }
         },
         None => {
           TmsRespond!(Status::NotFound, "User does not exist".to_string());
@@ -169,11 +215,11 @@ pub fn user_delete_route(message: String) -> TmsRouteResponse<()> {
 
 #[tms_private_route]
 #[post("/user/update/<uuid>", data = "<message>")]
-pub fn user_update_route(message: String) -> TmsRouteResponse<()> {
+pub async fn user_update_route(message: String) -> TmsRouteResponse<()> {
   let update_user_request: UpdateUserRequest = TmsRequest!(message.clone(), security);
   let perms = create_permissions();
 
-  if check_permissions(clients, uuid.clone(), update_user_request.auth_token, perms) {
+  if check_permissions(clients, uuid.clone(), update_user_request.auth_token, perms).await {
     let username = update_user_request.username.clone();
     let updated_user = update_user_request.updated_user.clone();
 
@@ -201,12 +247,24 @@ pub fn user_update_route(message: String) -> TmsRouteResponse<()> {
             }
           }
           // Respond to client
-          TmsRespond!(
-            Status::Ok,
-            "User updated successfully".to_string(),
-            clients,
-            uuid
-          )
+          let result = with_clients_write(&clients, |client_map| {
+            client_map.clone()
+          }).await;
+
+          match result {
+            Ok(map) => {
+              TmsRespond!(
+                Status::Ok,
+                "User updated successfully".to_string(),
+                map,
+                uuid
+              )
+            },
+            Err(_) => {
+              error!("failed to get clients lock");
+              TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
+            }
+          }
         },
         None => {
           TmsRespond!(Status::NotFound, "User does not exist".to_string());

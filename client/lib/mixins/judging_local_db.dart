@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/requests/judging_requests.dart';
@@ -80,14 +81,21 @@ class JudgingLocalDB {
     await _ls.then((value) => value.setString(storeDbJudgingSessions, jsonEncode(listJson)));
     // list triggers
     for (var trigger in _listTriggers) {
-      trigger(list);
+      Future(() => trigger(list)).catchError((e) {
+        Logger().e("Error triggering list update: $e");
+      });
     }
 
     // single triggers
+
     for (JudgingSession s in list) {
-      for (var trigger in _singleTriggers) {
-        trigger(s);
-      }
+      Future(() {
+        for (var trigger in _singleTriggers) {
+          Future(() => trigger(s)).catchError((e) {
+            Logger().e("Error triggering single update: $e");
+          });
+        }
+      });
     }
   }
 

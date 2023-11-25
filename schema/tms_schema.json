@@ -310,6 +310,8 @@
     "Event": {
       "type": "object",
       "required": [
+        "backup_count",
+        "backup_interval",
         "end_game_timer_length",
         "event_rounds",
         "name",
@@ -319,6 +321,16 @@
         "timer_length"
       ],
       "properties": {
+        "backup_count": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "backup_interval": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
         "end_game_timer_length": {
           "type": "integer",
           "format": "uint32",
@@ -1133,9 +1145,7 @@
     "SetupRequest": {
       "type": "object",
       "required": [
-        "admin_password",
         "auth_token",
-        "event",
         "judging_sessions",
         "matches",
         "teams",
@@ -1143,13 +1153,23 @@
       ],
       "properties": {
         "admin_password": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "auth_token": {
           "type": "string"
         },
         "event": {
-          "$ref": "#/definitions/Event"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Event"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "judging_sessions": {
           "type": "array",

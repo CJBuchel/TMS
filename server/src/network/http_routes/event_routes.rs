@@ -149,81 +149,96 @@ pub async fn event_setup_route(message: String) -> TmsRouteResponse<()> {
     // Put data into database
 
     // supply new admin password
-    if message.admin_password != "" {
-      let mut user = match db.tms_data.users.get(String::from("admin")).unwrap() {
-        Some(user) => user,
-        None => {
-          TmsRespond!(Status::NotFound, "Admin user not found".to_string());
-        }
-      };
+    match message.admin_password {
+      Some(password) => {
+        let mut user = match db.tms_data.users.get(String::from("admin")).unwrap() {
+          Some(user) => user,
+          None => {
+            TmsRespond!(Status::NotFound, "Admin user not found".to_string());
+          }
+        };
 
-      user.password = message.admin_password;
-      let _ = db.tms_data.users.insert("admin".as_bytes(), user);
+        user.password = password;
+        let _ = db.tms_data.users.insert("admin".as_bytes(), user);
+      },
+      None => {}
     }
 
     // supply new teams
-    for team in message.teams {
-      match db.tms_data.teams.insert(team.team_number.as_bytes(), team.clone()) {
-        Ok(_) => {
-          info!("Team {} setup successfully", team.team_number);
-        },
-        Err(e) => {
-          error!("Failed to setup team {}: {}", team.team_number, e);
-          TmsRespond!(Status::BadRequest, format!("Failed to setup team {}", team.team_number));
+    if !message.teams.is_empty() {
+      for team in message.teams {
+        match db.tms_data.teams.insert(team.team_number.as_bytes(), team.clone()) {
+          Ok(_) => {
+            info!("Team {} setup successfully", team.team_number);
+          },
+          Err(e) => {
+            error!("Failed to setup team {}: {}", team.team_number, e);
+            TmsRespond!(Status::BadRequest, format!("Failed to setup team {}", team.team_number));
+          }
         }
       }
     }
 
     // supply new matches
-    for game_match in message.matches {
-      match db.tms_data.matches.insert(game_match.match_number.as_bytes(), game_match.clone()) {
-        Ok(_) => {
-          info!("Match {} setup successfully", game_match.match_number);
-        },
-        Err(e) => {
-          error!("Failed to setup match {}: {}", game_match.match_number, e);
-          TmsRespond!(Status::BadRequest, format!("Failed to setup match {}", game_match.match_number));
+    if !message.matches.is_empty() {
+      for game_match in message.matches {
+        match db.tms_data.matches.insert(game_match.match_number.as_bytes(), game_match.clone()) {
+          Ok(_) => {
+            info!("Match {} setup successfully", game_match.match_number);
+          },
+          Err(e) => {
+            error!("Failed to setup match {}: {}", game_match.match_number, e);
+            TmsRespond!(Status::BadRequest, format!("Failed to setup match {}", game_match.match_number));
+          }
         }
       }
     }
 
     // supply new judging sessions (the team number is the key)
-    for judging_session in message.judging_sessions {
-      match db.tms_data.judging_sessions.insert(judging_session.session_number.as_bytes(), judging_session.clone()) {
-        Ok(_) => {
-          info!("Successfully setup Judging Session {}", judging_session.session_number);
-        },
-        Err(e) => {
-          error!("Failed to setup judging session {}: {}", judging_session.session_number, e);
-          TmsRespond!(Status::BadRequest, format!("Failed to setup judging session {}", judging_session.session_number));
+    if !message.judging_sessions.is_empty() {
+      for judging_session in message.judging_sessions {
+        match db.tms_data.judging_sessions.insert(judging_session.session_number.as_bytes(), judging_session.clone()) {
+          Ok(_) => {
+            info!("Successfully setup Judging Session {}", judging_session.session_number);
+          },
+          Err(e) => {
+            error!("Failed to setup judging session {}: {}", judging_session.session_number, e);
+            TmsRespond!(Status::BadRequest, format!("Failed to setup judging session {}", judging_session.session_number));
+          }
         }
       }
     }
 
     // setup users
-    for user in message.users {
-      match db.tms_data.users.insert(user.username.as_bytes(), user.clone()) {
-        Ok(_) => {
-          info!("User {} setup successfully", user.username);
-        },
-        Err(e) => {
-          error!("Failed to setup user {}: {}", user.username, e);
-          TmsRespond!(Status::BadRequest, format!("Failed to setup user {}", user.username));
+    if !message.users.is_empty() {
+      for user in message.users {
+        match db.tms_data.users.insert(user.username.as_bytes(), user.clone()) {
+          Ok(_) => {
+            info!("User {} setup successfully", user.username);
+          },
+          Err(e) => {
+            error!("Failed to setup user {}: {}", user.username, e);
+            TmsRespond!(Status::BadRequest, format!("Failed to setup user {}", user.username));
+          }
         }
       }
     }
 
     // supply new event
-    match db.tms_data.event.set(message.event) {
-      Ok(_) => {
-        info!("Event setup successfully");
+    match message.event {
+      Some(event) => {
+        match db.tms_data.event.set(event) {
+          Ok(_) => {
+            info!("Event setup successfully");
+          },
+          Err(e) => {
+            error!("Failed to setup event: {}", e);
+            TmsRespond!(Status::BadRequest, "Failed to setup event".to_string());
+          }
+        }
       },
-      Err(e) => {
-        error!("Failed to setup event: {}", e);
-        TmsRespond!(Status::BadRequest, "Failed to setup event".to_string());
-      }
+      None => {}
     }
-
 
     // send event update
     tms_clients_ws_send(SocketMessage {

@@ -318,6 +318,8 @@ class DeleteUserRequest {
 
 class Event {
     Event({
+        required this.backupCount,
+        required this.backupInterval,
         required this.endGameTimerLength,
         required this.eventRounds,
         required this.name,
@@ -327,6 +329,8 @@ class Event {
         required this.timerLength,
     });
 
+    int backupCount;
+    int backupInterval;
     int endGameTimerLength;
     int eventRounds;
     String name;
@@ -336,6 +340,8 @@ class Event {
     int timerLength;
 
     factory Event.fromJson(Map<String, dynamic> json) => Event(
+        backupCount: json["backup_count"],
+        backupInterval: json["backup_interval"],
         endGameTimerLength: json["end_game_timer_length"],
         eventRounds: json["event_rounds"],
         name: json["name"],
@@ -346,6 +352,8 @@ class Event {
     );
 
     Map<String, dynamic> toJson() => {
+        "backup_count": backupCount,
+        "backup_interval": backupInterval,
         "end_game_timer_length": endGameTimerLength,
         "event_rounds": eventRounds,
         "name": name,
@@ -1246,18 +1254,18 @@ class SeasonsResponse {
 
 class SetupRequest {
     SetupRequest({
-        required this.adminPassword,
+        this.adminPassword,
         required this.authToken,
-        required this.event,
+        this.event,
         required this.judgingSessions,
         required this.matches,
         required this.teams,
         required this.users,
     });
 
-    String adminPassword;
+    String? adminPassword;
     String authToken;
-    Event event;
+    Event? event;
     List<JudgingSession> judgingSessions;
     List<GameMatch> matches;
     List<Team> teams;
@@ -1266,7 +1274,7 @@ class SetupRequest {
     factory SetupRequest.fromJson(Map<String, dynamic> json) => SetupRequest(
         adminPassword: json["admin_password"],
         authToken: json["auth_token"],
-        event: Event.fromJson(json["event"]),
+        event: json["event"] == null ? null : Event.fromJson(json["event"]),
         judgingSessions: List<JudgingSession>.from(json["judging_sessions"].map((x) => JudgingSession.fromJson(x))),
         matches: List<GameMatch>.from(json["matches"].map((x) => GameMatch.fromJson(x))),
         teams: List<Team>.from(json["teams"].map((x) => Team.fromJson(x))),
@@ -1276,7 +1284,7 @@ class SetupRequest {
     Map<String, dynamic> toJson() => {
         "admin_password": adminPassword,
         "auth_token": authToken,
-        "event": event.toJson(),
+        "event": event?.toJson(),
         "judging_sessions": List<dynamic>.from(judgingSessions.map((x) => x.toJson())),
         "matches": List<dynamic>.from(matches.map((x) => x.toJson())),
         "teams": List<dynamic>.from(teams.map((x) => x.toJson())),

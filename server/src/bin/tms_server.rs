@@ -50,9 +50,7 @@ impl TmsServer {
     );
 
     let tms_db_backup_service = std::sync::Arc::new(
-      std::sync::Mutex::new(
-        BackupService::new(self.config.db_name.clone(), tms_db.clone())
-      )
+      BackupService::new(self.config.db_name.clone(), tms_db.clone())
     );
 
     let tms_db_backup_monitor = std::sync::Arc::new(
@@ -65,7 +63,7 @@ impl TmsServer {
     let tms_ws = TmsWebsocket::new(tms_event_service.clone(), rsa.clone(), clients.clone(), self.config.ws_port);
     let tms_http = TmsHttpServer::new(
       tms_event_service.to_owned(), 
-      tms_db_backup_service.to_owned(), 
+      tms_db_backup_service.clone(), 
       tms_db.to_owned(), 
       rsa.clone(), 
       clients.to_owned(), 

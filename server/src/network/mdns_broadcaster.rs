@@ -28,7 +28,7 @@ impl MDNSBroadcaster {
     let port = self.port;
     let properties = [("property_1", "test")];
 
-    warn!("Staring mDNS Service: {}, with ip: {}", service_name, ip);
+    warn!("Starting mDNS Service: {}, with ip: {}", service_name, ip);
 
     ServiceInfo::new(
       service_type.as_str(),

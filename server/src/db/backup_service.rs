@@ -10,7 +10,7 @@ pub struct BackupService {
   db: std::sync::Arc<TmsDB>
 }
 
-pub type BackupServiceArc = std::sync::Arc<std::sync::Mutex<BackupService>>;
+pub type BackupServiceArc = std::sync::Arc<BackupService>;
 
 impl BackupService {
   pub fn new(db_name: String, db: std::sync::Arc<TmsDB>) -> Self {

@@ -1,14 +1,14 @@
 use log::warn;
 
-use super::backup_service::BackupService;
+use super::backup_service::{BackupService, BackupServiceArc};
 
 
 pub struct BackupMonitor {
-  backup_service: std::sync::Arc<std::sync::Mutex<BackupService>>,
+  backup_service: BackupServiceArc,
 }
 
 impl BackupMonitor {
-  pub fn new(backup_service: std::sync::Arc<std::sync::Mutex<BackupService>>) -> Self {
+  pub fn new(backup_service: BackupServiceArc) -> Self {
     Self {
       backup_service
     }
@@ -19,9 +19,7 @@ impl BackupMonitor {
     loop {
       tokio::select! {
         _ = tokio::time::sleep(tokio::time::Duration::from_secs(60)) => {
-          let backup_service = self.backup_service.clone();
-          let guard: std::sync::MutexGuard<'_, BackupService> = backup_service.lock().unwrap();
-          guard.backup_db(false);
+          self.backup_service.backup_db(false);
         },
 
         // ctrl-c

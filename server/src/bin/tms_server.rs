@@ -1,6 +1,6 @@
 
 // Main steps for server client connection
-// Broadcast a mDNS on port 2123 with the server ip and status (tells client where server is)
+// Broadcast a mDNS on port 5353 with the server ip and status (tells client where server is)
 // Client will then connect to port 2121 on http request to register itself with client user id and client public key.
 // Server will accept the connection and store the UUID in a tabled map
 // Server responds with the generated uuid and server public key for encrypted messaging
@@ -16,7 +16,7 @@
 use std::env;
 
 use log::info;
-use tms_server::{network::{mdns_broadcaster::MDNSBroadcaster, ws_routes::TmsWebsocket, http_routes::TmsHttpServer}, db::{db::TmsDB, backups::BackupService, backup_monitor::BackupMonitor}, event_service::TmsEventService};
+use tms_server::{network::{mdns_broadcaster::MDNSBroadcaster, ws_routes::TmsWebsocket, http_routes::TmsHttpServer}, db::{db::TmsDB, backup_service::BackupService, backup_monitor::BackupMonitor}, event_service::TmsEventService};
 use tms_utils::{new_clients_map, security::Security};
 
 pub struct ServerConfig {
@@ -63,7 +63,15 @@ impl TmsServer {
     let tms_event_service = std::sync::Arc::new(tokio::sync::RwLock::new(TmsEventService::new(tms_db.clone(), clients.clone())));
     let m_dns = MDNSBroadcaster::new(self.config.mdns_port, self.config.mdns_name.clone());
     let tms_ws = TmsWebsocket::new(tms_event_service.clone(), rsa.clone(), clients.clone(), self.config.ws_port);
-    let tms_http = TmsHttpServer::new(tms_event_service.to_owned(), tms_db, rsa.clone(), clients.to_owned(), self.config.http_port, self.config.ws_port);
+    let tms_http = TmsHttpServer::new(
+      tms_event_service.to_owned(), 
+      tms_db_backup_service.to_owned(), 
+      tms_db.to_owned(), 
+      rsa.clone(), 
+      clients.to_owned(), 
+      self.config.http_port, 
+      self.config.ws_port
+    );
 
 
     tokio::spawn(async move {

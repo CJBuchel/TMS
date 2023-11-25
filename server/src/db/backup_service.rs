@@ -10,6 +10,8 @@ pub struct BackupService {
   db: std::sync::Arc<TmsDB>
 }
 
+pub type BackupServiceArc = std::sync::Arc<std::sync::Mutex<BackupService>>;
+
 impl BackupService {
   pub fn new(db_name: String, db: std::sync::Arc<TmsDB>) -> Self {
     Self {
@@ -159,9 +161,61 @@ impl BackupService {
     }
   }
 
+  pub fn get_backups(&self) -> Vec<String> {
+    let mut backups = Vec::new();
+    for entry in fs::read_dir("backups").unwrap() {
+      let entry = entry.unwrap();
+      let path = entry.path();
+      let name = path.file_name().unwrap().to_str().unwrap().to_string();
+      backups.push(name);
+    }
+    backups
+  }
+
+  // get the backups with the time in a pretty format <name, time>
+  pub fn get_backups_pretty(&self) -> std::collections::HashMap<String, String> {
+    let mut backups = std::collections::HashMap::new();
+    for entry in fs::read_dir("backups").unwrap() {
+      let entry = entry.unwrap();
+      let path = entry.path();
+      let name = path.file_name().unwrap().to_str().unwrap().to_string();
+      let time = path.metadata().unwrap().created().unwrap();
+      let time = time.duration_since(UNIX_EPOCH).unwrap().as_secs();
+      let time = time.to_string();
+
+      // convert the time to a pretty format
+      let time = match time.parse::<u64>() {
+        Ok(time) => {
+          let time = time as i64;
+          let time = time * 1000;
+          let time = time as u64;
+          let time = match chrono::NaiveDateTime::from_timestamp_opt(time as i64, 0) {
+            Some(time) => {
+              time.format("%Y-%m-%d %H:%M:%S").to_string()
+            },
+            None => {
+              error!("Failed to convert time to NaiveDateTime");
+              String::from("Failed to convert time to NaiveDateTime")
+            }
+          };
+          time
+        },
+        Err(_) => {
+          error!("Failed to parse time");
+          String::from("Failed to parse time")
+        }
+      };
+      backups.insert(name, time);
+    }
+    backups
+  }
+
+  pub fn delete_backup(&self, backup: &str) {
+    fs::remove_file(format!("backups/{}", backup)).unwrap();
+  }
 
   fn delete_old_backups(&self, backup_count: usize) {
-    let backups = fs::read_dir("backups").unwrap().count();
+    let backups = self.get_backups().len();
     if backups > backup_count {
       let oldest_backup = fs::read_dir("backups")
         .unwrap()
@@ -175,10 +229,10 @@ impl BackupService {
       fs::remove_file(oldest_backup.path()).unwrap();
       warn!("Deleted old backups");
     }
-
   }
+
   
-  pub fn backup_db(&self) {
+  pub fn backup_db(&self, force: bool) {
     let (now, last_backup) = match self.get_backup_times() {
       Ok((now, last_backup)) => {
         (now, last_backup)
@@ -191,7 +245,7 @@ impl BackupService {
 
     let (_, backup_count) = self.get_backup_info();
    
-    if self.should_backup(now, last_backup) {
+    if self.should_backup(now, last_backup) || force {
       warn!("Backing up database...");
       // create backup file
       match self.create_backup_file(now) {
@@ -213,10 +267,28 @@ impl BackupService {
     }
   }
 
-  pub fn restore_db(&self, backup_folder: &str) {
+  pub fn restore_db(&self, backup: &str) -> Result<(), &'static str> {
     let db_folder = Path::new(self.db_name.as_str());
-    fs::remove_dir_all(db_folder).unwrap();
-    let file = fs::File::open(&Path::new(backup_folder)).unwrap();
+
+
+    match fs::remove_dir_all(db_folder) {
+      Ok(_) => {},
+      Err(_) => {
+        error!("Failed to remove db folder");
+        return Err("Failed to remove db folder");
+      }
+    };
+
+    let file = match fs::File::open(&Path::new(backup)) {
+      Ok(f) => {
+        f
+      },
+      Err(_) => {
+        error!("Failed to open backup file");
+        return Err("Failed to open backup file");
+      }
+    };
+
     let mut archive = zip::ZipArchive::new(file).unwrap();
     for i in 0..archive.len() {
     let mut file = archive.by_index(i).unwrap();
@@ -233,5 +305,7 @@ impl BackupService {
         std::io::copy(&mut file, &mut out_file).unwrap();
       }
     }
+
+    Ok(())
   }
 }

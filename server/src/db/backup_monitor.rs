@@ -1,6 +1,6 @@
 use log::warn;
 
-use super::backups::BackupService;
+use super::backup_service::BackupService;
 
 
 pub struct BackupMonitor {
@@ -15,18 +15,18 @@ impl BackupMonitor {
   }
 
   pub async fn start(&self) {
-    warn!("Starting backup monitor (will check every 60 seconds)");
+    warn!("Starting backup monitor service");
     loop {
       tokio::select! {
         _ = tokio::time::sleep(tokio::time::Duration::from_secs(60)) => {
           let backup_service = self.backup_service.clone();
           let guard: std::sync::MutexGuard<'_, BackupService> = backup_service.lock().unwrap();
-          guard.backup_db();
+          guard.backup_db(false);
         },
 
         // ctrl-c
         _ = tokio::signal::ctrl_c() => {
-          warn!("Stopping backup monitor");
+          warn!("Stopping backup service");
           break;
         }
       }

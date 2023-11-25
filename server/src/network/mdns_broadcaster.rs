@@ -65,6 +65,7 @@ impl MDNSBroadcaster {
           }
         },
 
+        // ctrl-c
         _ = signal::ctrl_c() => {
           warn!("Stopping mDNS service");
           break;

@@ -161,7 +161,18 @@ pub async fn event_setup_route(message: String) -> TmsRouteResponse<()> {
         user.password = password;
         let _ = db.tms_data.users.insert("admin".as_bytes(), user);
       },
-      None => {}
+      None => {
+        // no password supplied
+        let mut user = match db.tms_data.users.get(String::from("admin")).unwrap() {
+          Some(user) => user,
+          None => {
+            TmsRespond!(Status::NotFound, "Admin user not found".to_string());
+          }
+        };
+
+        user.password = String::from("password");
+        let _ = db.tms_data.users.insert("admin".as_bytes(), user);
+      }
     }
 
     // supply new teams

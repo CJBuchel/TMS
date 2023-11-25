@@ -4,6 +4,7 @@ import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/setup/offline_setup/admin_password.dart';
+import 'package:tms/views/admin/setup/offline_setup/backup_setup.dart';
 import 'package:tms/views/admin/setup/offline_setup/csv_import_setup.dart';
 import 'package:tms/views/admin/setup/offline_setup/game_setup.dart';
 import 'package:tms/views/admin/setup/offline_setup/setup_buttons/setup_buttons.dart';
@@ -42,6 +43,8 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
         _roundNumberController.text = e.eventRounds.toString();
         _endgameTimerCountdownController.text = e.endGameTimerLength.toString();
         _timerCountdownController.text = e.timerLength.toString();
+        _backupIntervalController.text = e.backupInterval.toString();
+        _backupCountController.text = e.backupCount.toString();
       });
     }
   }
@@ -52,6 +55,8 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
     _roundNumberController.value = const TextEditingValue(text: "3");
     _endgameTimerCountdownController.value = const TextEditingValue(text: "30");
     _timerCountdownController.value = const TextEditingValue(text: "150");
+    _backupIntervalController.value = const TextEditingValue(text: "10");
+    _backupCountController.value = const TextEditingValue(text: "6");
 
     onEventUpdate((event) => _setInitialEvent = event);
 
@@ -125,6 +130,10 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
             ),
 
             // backups
+            BackupSetup(
+              backupIntervalController: _backupIntervalController,
+              backupCountController: _backupCountController,
+            ),
 
             // game setup
             GameSetup(

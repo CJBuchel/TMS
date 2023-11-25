@@ -11,6 +11,7 @@ use super::item::Item;
 #[derive(Deserialize, Serialize, Clone)]
 pub struct SystemInfo {
   pub version: String,
+  pub last_backup: Option<u64>,
 }
 
 #[derive(Clone)]
@@ -65,7 +66,8 @@ impl TmsDB {
       None => {
         warn!("No System Info, generating...");
         let _ = tms_data.system_info.set(SystemInfo {
-          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0"))
+          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0")),
+          last_backup: None
         });
       }
     }
@@ -120,7 +122,8 @@ impl TmsDB {
       None => {
         warn!("No System Info, generating...");
         let _ = tms_data.system_info.set(SystemInfo {
-          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0"))
+          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0")),
+          last_backup: None
         });
       }
     }

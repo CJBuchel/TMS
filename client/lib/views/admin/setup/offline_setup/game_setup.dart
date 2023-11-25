@@ -26,7 +26,7 @@ class GameSetup extends StatelessWidget {
       children: [
         // Select Season
         const Padding(
-          padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+          padding: EdgeInsets.only(top: 16.0),
           child: Text("Select Season", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         ),
 

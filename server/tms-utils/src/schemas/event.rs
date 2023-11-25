@@ -22,7 +22,7 @@ impl APILink {
 pub struct Event {
   pub name: String,
   pub backup_interval: u32, // time in minutes between backups
-  pub backup_count: u32, // number of backups to keep
+  pub backup_count: usize, // number of backups to keep
   pub end_game_timer_length: u32, // 30 seconds is the default
   pub timer_length: u32, // time in seconds the match takes i.e 150 is default
   pub tables: Vec<String>,

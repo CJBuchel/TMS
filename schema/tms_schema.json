@@ -323,7 +323,7 @@
       "properties": {
         "backup_count": {
           "type": "integer",
-          "format": "uint32",
+          "format": "uint",
           "minimum": 0.0
         },
         "backup_interval": {

@@ -4,6 +4,12 @@
   "type": "object",
   "required": [
     "add_user_request",
+    "backup_delete_request",
+    "backup_restore_request",
+    "backups_download_request",
+    "backups_download_response",
+    "backups_request",
+    "backups_response",
     "delete_user_request",
     "event",
     "event_get_api_link_request",
@@ -57,6 +63,24 @@
   "properties": {
     "add_user_request": {
       "$ref": "#/definitions/AddUserRequest"
+    },
+    "backup_delete_request": {
+      "$ref": "#/definitions/DeleteBackupRequest"
+    },
+    "backup_restore_request": {
+      "$ref": "#/definitions/RestoreBackupRequest"
+    },
+    "backups_download_request": {
+      "$ref": "#/definitions/DownloadBackupRequest"
+    },
+    "backups_download_response": {
+      "$ref": "#/definitions/DownloadBackupResponse"
+    },
+    "backups_request": {
+      "$ref": "#/definitions/BackupsRequest"
+    },
+    "backups_response": {
+      "$ref": "#/definitions/BackupsResponse"
     },
     "delete_user_request": {
       "$ref": "#/definitions/DeleteUserRequest"
@@ -263,6 +287,52 @@
         }
       }
     },
+    "Backup": {
+      "type": "object",
+      "required": [
+        "entry",
+        "timestamp",
+        "timestamp_pretty"
+      ],
+      "properties": {
+        "entry": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "timestamp_pretty": {
+          "type": "string"
+        }
+      }
+    },
+    "BackupsRequest": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
+    "BackupsResponse": {
+      "type": "object",
+      "required": [
+        "backups"
+      ],
+      "properties": {
+        "backups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Backup"
+          }
+        }
+      }
+    },
     "DefaultValue": {
       "oneOf": [
         {
@@ -292,6 +362,21 @@
         }
       ]
     },
+    "DeleteBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "backup_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "backup_name": {
+          "type": "string"
+        }
+      }
+    },
     "DeleteUserRequest": {
       "type": "object",
       "required": [
@@ -303,6 +388,43 @@
           "type": "string"
         },
         "username": {
+          "type": "string"
+        }
+      }
+    },
+    "DownloadBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "backup_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "backup_name": {
+          "type": "string"
+        }
+      }
+    },
+    "DownloadBackupResponse": {
+      "type": "object",
+      "required": [
+        "file_name"
+      ],
+      "properties": {
+        "data": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        },
+        "file_name": {
           "type": "string"
         }
       }
@@ -1067,6 +1189,21 @@
           "type": "string"
         },
         "version": {
+          "type": "string"
+        }
+      }
+    },
+    "RestoreBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "backup_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "backup_name": {
           "type": "string"
         }
       }

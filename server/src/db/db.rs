@@ -36,9 +36,11 @@ pub struct TmsDB {
   pub tms_data: Database
 }
 
+pub type TmsDBArc = std::sync::Arc<std::sync::RwLock<TmsDB>>; // specifically just to update the from the backup thread (doesn't technically need this)
+
 impl TmsDB {
   // Start the db and return the object
-  pub fn start(db_path: String) -> Self {
+  pub fn start(db_path: String) -> TmsDBArc {
     // Create db
     let db = sled_extensions::Config::default()
       .path(db_path)
@@ -96,7 +98,12 @@ impl TmsDB {
       }
     }
 
-    Self { db, tms_data}
+    let db = Self { db, tms_data};
+    return std::sync::Arc::new(std::sync::RwLock::new(db));
+  }
+
+  pub fn flush(&self) {
+    self.db.flush().expect("Failed to flush database");
   }
 
   pub fn setup_default(&self) {

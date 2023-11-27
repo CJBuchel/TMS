@@ -11,6 +11,12 @@ String tmsSchemaToJson(TmsSchema data) => json.encode(data.toJson());
 class TmsSchema {
     TmsSchema({
         required this.addUserRequest,
+        required this.backupDeleteRequest,
+        required this.backupRestoreRequest,
+        required this.backupsDownloadRequest,
+        required this.backupsDownloadResponse,
+        required this.backupsRequest,
+        required this.backupsResponse,
         required this.deleteUserRequest,
         required this.event,
         required this.eventGetApiLinkRequest,
@@ -63,6 +69,12 @@ class TmsSchema {
     });
 
     AddUserRequest addUserRequest;
+    DeleteBackupRequest backupDeleteRequest;
+    RestoreBackupRequest backupRestoreRequest;
+    DownloadBackupRequest backupsDownloadRequest;
+    DownloadBackupResponse backupsDownloadResponse;
+    BackupsRequest backupsRequest;
+    BackupsResponse backupsResponse;
     DeleteUserRequest deleteUserRequest;
     Event event;
     ApiLinkRequest eventGetApiLinkRequest;
@@ -115,6 +127,12 @@ class TmsSchema {
 
     factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
         addUserRequest: AddUserRequest.fromJson(json["add_user_request"]),
+        backupDeleteRequest: DeleteBackupRequest.fromJson(json["backup_delete_request"]),
+        backupRestoreRequest: RestoreBackupRequest.fromJson(json["backup_restore_request"]),
+        backupsDownloadRequest: DownloadBackupRequest.fromJson(json["backups_download_request"]),
+        backupsDownloadResponse: DownloadBackupResponse.fromJson(json["backups_download_response"]),
+        backupsRequest: BackupsRequest.fromJson(json["backups_request"]),
+        backupsResponse: BackupsResponse.fromJson(json["backups_response"]),
         deleteUserRequest: DeleteUserRequest.fromJson(json["delete_user_request"]),
         event: Event.fromJson(json["event"]),
         eventGetApiLinkRequest: ApiLinkRequest.fromJson(json["event_get_api_link_request"]),
@@ -168,6 +186,12 @@ class TmsSchema {
 
     Map<String, dynamic> toJson() => {
         "add_user_request": addUserRequest.toJson(),
+        "backup_delete_request": backupDeleteRequest.toJson(),
+        "backup_restore_request": backupRestoreRequest.toJson(),
+        "backups_download_request": backupsDownloadRequest.toJson(),
+        "backups_download_response": backupsDownloadResponse.toJson(),
+        "backups_request": backupsRequest.toJson(),
+        "backups_response": backupsResponse.toJson(),
         "delete_user_request": deleteUserRequest.toJson(),
         "event": event.toJson(),
         "event_get_api_link_request": eventGetApiLinkRequest.toJson(),
@@ -293,6 +317,142 @@ class Permissions {
         "judge": judge,
         "judge_advisor": judgeAdvisor,
         "referee": referee,
+    };
+}
+
+class DeleteBackupRequest {
+    DeleteBackupRequest({
+        required this.authToken,
+        required this.backupName,
+    });
+
+    String authToken;
+    String backupName;
+
+    factory DeleteBackupRequest.fromJson(Map<String, dynamic> json) => DeleteBackupRequest(
+        authToken: json["auth_token"],
+        backupName: json["backup_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "backup_name": backupName,
+    };
+}
+
+class RestoreBackupRequest {
+    RestoreBackupRequest({
+        required this.authToken,
+        required this.backupName,
+    });
+
+    String authToken;
+    String backupName;
+
+    factory RestoreBackupRequest.fromJson(Map<String, dynamic> json) => RestoreBackupRequest(
+        authToken: json["auth_token"],
+        backupName: json["backup_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "backup_name": backupName,
+    };
+}
+
+class DownloadBackupRequest {
+    DownloadBackupRequest({
+        required this.authToken,
+        required this.backupName,
+    });
+
+    String authToken;
+    String backupName;
+
+    factory DownloadBackupRequest.fromJson(Map<String, dynamic> json) => DownloadBackupRequest(
+        authToken: json["auth_token"],
+        backupName: json["backup_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "backup_name": backupName,
+    };
+}
+
+class DownloadBackupResponse {
+    DownloadBackupResponse({
+        this.data,
+        required this.fileName,
+    });
+
+    List<int>? data;
+    String fileName;
+
+    factory DownloadBackupResponse.fromJson(Map<String, dynamic> json) => DownloadBackupResponse(
+        data: json["data"] == null ? [] : List<int>.from(json["data"]!.map((x) => x)),
+        fileName: json["file_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x)),
+        "file_name": fileName,
+    };
+}
+
+class BackupsRequest {
+    BackupsRequest({
+        required this.authToken,
+    });
+
+    String authToken;
+
+    factory BackupsRequest.fromJson(Map<String, dynamic> json) => BackupsRequest(
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+    };
+}
+
+class BackupsResponse {
+    BackupsResponse({
+        required this.backups,
+    });
+
+    List<Backup> backups;
+
+    factory BackupsResponse.fromJson(Map<String, dynamic> json) => BackupsResponse(
+        backups: List<Backup>.from(json["backups"].map((x) => Backup.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "backups": List<dynamic>.from(backups.map((x) => x.toJson())),
+    };
+}
+
+class Backup {
+    Backup({
+        required this.entry,
+        required this.timestamp,
+        required this.timestampPretty,
+    });
+
+    String entry;
+    int timestamp;
+    String timestampPretty;
+
+    factory Backup.fromJson(Map<String, dynamic> json) => Backup(
+        entry: json["entry"],
+        timestamp: json["timestamp"],
+        timestampPretty: json["timestamp_pretty"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "entry": entry,
+        "timestamp": timestamp,
+        "timestamp_pretty": timestampPretty,
     };
 }
 

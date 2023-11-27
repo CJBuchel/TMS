@@ -38,7 +38,7 @@ use proxy_routes::*;
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
-use crate::{event_service::TmsEventServiceArc, db::{db::TmsDB, backup_service::BackupServiceArc}};
+use crate::{event_service::TmsEventServiceArc, db::{db::{TmsDB, TmsDBArc}, backup_service::BackupServiceArc}};
 
 // CORS fairing
 pub struct CORS;
@@ -150,7 +150,7 @@ fn cors_preflight(_path: PathBuf) -> Status {
 
 pub struct TmsHttpServer {
   tms_event_service: TmsEventServiceArc,
-  tms_db: std::sync::Arc<TmsDB>,
+  tms_db: TmsDBArc,
   tms_db_backup_service: BackupServiceArc,
   security: Security,
   clients: TmsClients,
@@ -159,8 +159,16 @@ pub struct TmsHttpServer {
 }
 
 impl TmsHttpServer {
-  pub fn new(tms_event_service: TmsEventServiceArc, tms_db_backup_service: BackupServiceArc, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
-    Self { tms_event_service, tms_db_backup_service, tms_db, security, clients, port, ws_port }
+  pub fn new(tms_event_service: TmsEventServiceArc, tms_db_backup_service: BackupServiceArc, tms_db: TmsDBArc, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
+    Self { 
+      tms_event_service, 
+      tms_db_backup_service,
+      tms_db, 
+      security, 
+      clients, 
+      port, 
+      ws_port 
+    }
   }
 
   pub async fn start(&self) -> Rocket<Build> {
@@ -190,6 +198,13 @@ impl TmsHttpServer {
         unregister_route,
         publish_route,
         proxy_image_get_route,
+
+        // backup routes
+        backups_get_route,
+        backups_create_route,
+        backups_delete_route,
+        backups_restore_route,
+        backups_download_route,
         
         // user routes
         login_route,

@@ -45,25 +45,24 @@ impl TmsServer {
     let clients = new_clients_map();
     
     // DB Services
-    let tms_db = std::sync::Arc::new(
-      TmsDB::start(String::from(self.config.db_name.clone()))
-    );
+    let tms_db = TmsDB::start(String::from(self.config.db_name.clone()));
 
     let tms_db_backup_service = std::sync::Arc::new(
-      BackupService::new(self.config.db_name.clone(), tms_db.clone())
+      tokio::sync::RwLock::new(
+        BackupService::new(self.config.db_name.clone(), tms_db.clone())
+      )
     );
 
-    let tms_db_backup_monitor = std::sync::Arc::new(
-      BackupMonitor::new(tms_db_backup_service.clone())
-    );
 
-    // Event Services
+    
+    // Main Services
+    let tms_db_backup_monitor = BackupMonitor::new(tms_db_backup_service.clone());
     let tms_event_service = std::sync::Arc::new(tokio::sync::RwLock::new(TmsEventService::new(tms_db.clone(), clients.clone())));
     let m_dns = MDNSBroadcaster::new(self.config.mdns_port, self.config.mdns_name.clone());
     let tms_ws = TmsWebsocket::new(tms_event_service.clone(), rsa.clone(), clients.clone(), self.config.ws_port);
     let tms_http = TmsHttpServer::new(
       tms_event_service.to_owned(), 
-      tms_db_backup_service.clone(), 
+      tms_db_backup_service.to_owned(),
       tms_db.to_owned(), 
       rsa.clone(), 
       clients.to_owned(), 

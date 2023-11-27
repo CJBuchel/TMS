@@ -1,3 +1,4 @@
+use log::{error, warn};
 use rocket::{State, http::Status, get, post};
 use tms_macros::tms_private_route;
 use tms_utils::{security::encrypt, TmsClients, TmsRouteResponse, Mission, Games, TmsRespond, network_schemas::{MissionsResponse, QuestionsResponse, GameResponse, SeasonsResponse, QuestionsValidateRequest, QuestionsValidateResponse}, TmsRequest, schemas::create_permissions, check_permissions, with_clients_read};
@@ -29,6 +30,7 @@ pub async fn missions_get_route(clients: &State<TmsClients>, db: &State<std::syn
       );
     },
     Err(_) => {
+      error!("failed to get clients lock");
       TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
     }
   }
@@ -48,6 +50,8 @@ pub async fn questions_get_route(clients: &State<TmsClients>, db: &State<std::sy
     client_map.clone()
   }).await;
 
+  warn!("Getting seasonal questions: {:?}", season);
+
   match result {
     Ok(map) => {
       TmsRespond!(
@@ -58,6 +62,7 @@ pub async fn questions_get_route(clients: &State<TmsClients>, db: &State<std::sy
       );
     },
     Err(_) => {
+      error!("failed to get clients lock");
       TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
     }
   }
@@ -138,11 +143,13 @@ pub async fn game_get_route(clients: &State<TmsClients>, tms_event_service: &Sta
           );
         },
         Err(_) => {
+          warn!("failed to get clients lock");
           TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
         }
       }
     },
     Err(_) => {
+      warn!("failed to get game");
       TmsRespond!(Status::InternalServerError, "Service Read Lock".to_string());
     }
   };

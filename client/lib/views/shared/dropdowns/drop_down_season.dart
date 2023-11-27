@@ -10,11 +10,13 @@ import 'package:tms/network/ws.dart';
 import 'package:tms/requests/game_requests.dart';
 
 class DropdownSeason extends StatefulWidget {
-  final Function(String) onSelectedSeason;
+  final Function(String)? onSelectedSeason;
+  final TextEditingController selectedSeasonController;
 
   const DropdownSeason({
     Key? key,
-    required this.onSelectedSeason,
+    this.onSelectedSeason,
+    required this.selectedSeasonController,
   }) : super(key: key);
 
   @override
@@ -23,15 +25,15 @@ class DropdownSeason extends StatefulWidget {
 
 class _DropdownSeasonState extends State<DropdownSeason> with AutoUnsubScribeMixin, LocalDatabaseMixin {
   List<String> _dropdownSeasons = [];
-  String _selectedSeason = "";
+  // String _selectedSeason = "";
 
   void setAvailableSeasons(List<String> seasons) {
     if (mounted) {
       seasons.sort((a, b) => int.tryParse(b)?.compareTo(int.tryParse(a) ?? 0) ?? 0);
-      var selectedSeason = (_selectedSeason.isEmpty) ? seasons.first : _selectedSeason;
+      var selectedSeason = (widget.selectedSeasonController.text.isEmpty) ? seasons.first : widget.selectedSeasonController.text;
       setState(() {
         _dropdownSeasons = seasons;
-        _selectedSeason = selectedSeason;
+        widget.selectedSeasonController.text = selectedSeason;
       });
     }
   }
@@ -52,7 +54,7 @@ class _DropdownSeasonState extends State<DropdownSeason> with AutoUnsubScribeMix
     onEventUpdate((event) {
       if (_dropdownSeasons.contains(event.season)) {
         setState(() {
-          _selectedSeason = event.season;
+          widget.selectedSeasonController.text = event.season;
         });
       }
     });
@@ -74,12 +76,12 @@ class _DropdownSeasonState extends State<DropdownSeason> with AutoUnsubScribeMix
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      value: _selectedSeason,
+      value: widget.selectedSeasonController.text,
       hint: const Text("Select Season"),
       onChanged: (String? value) {
         setState(() {
-          _selectedSeason = value ?? "";
-          widget.onSelectedSeason(_selectedSeason);
+          widget.selectedSeasonController.text = value ?? "";
+          widget.onSelectedSeason?.call(value ?? "");
         });
       },
       items: _dropdownSeasons.map((String value) {

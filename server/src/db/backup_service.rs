@@ -1,27 +1,44 @@
 use std::{time::{SystemTime, UNIX_EPOCH}, path::Path, fs, io::{Read, Write}};
 
 use log::{warn, error};
+use tms_utils::schemas::Backup;
 use zip::write::FileOptions;
 
-use super::db::TmsDB;
+use super::db::{TmsDB, TmsDBArc};
 
 pub struct BackupService {
   db_name: String,
-  db: std::sync::Arc<TmsDB>
+  db: TmsDBArc
 }
 
-pub type BackupServiceArc = std::sync::Arc<BackupService>;
+pub type BackupServiceArc = std::sync::Arc<tokio::sync::RwLock<BackupService>>;
+
+pub async fn with_backup_service_read<F, R>(backup_service: &BackupServiceArc, f: F) -> Result<R, &'static str>
+where
+  F: FnOnce(&BackupService) -> R,
+{
+  let guard = backup_service.read().await;
+  Ok(f(&*guard))
+}
+
+pub async fn with_backup_service_write<F, R>(backup_service: &BackupServiceArc, f: F) -> Result<R, &'static str>
+where
+  F: FnOnce(&mut BackupService) -> R,
+{
+  let mut guard = backup_service.write().await;
+  Ok(f(&mut *guard))
+}
 
 impl BackupService {
-  pub fn new(db_name: String, db: std::sync::Arc<TmsDB>) -> Self {
+  pub fn new(db_name: String, db: TmsDBArc) -> Self {
     Self {
       db_name,
       db
     }
   }
 
-  fn get_backup_info(&self) -> (u32, usize) {
-    let event = match self.db.tms_data.event.get() {
+  fn get_backup_info(&self) -> (u32, usize, String) {
+    let event = match self.db.read().unwrap().tms_data.event.get() {
       Ok(event) => {
         event
       },
@@ -30,15 +47,27 @@ impl BackupService {
         None
       }
     };
+
+    // convert name to string (replace spaces with underscores, remove non-alphanumeric characters)
+    let event_name = match event.clone() {
+      Some(event) => {
+        let mut name = event.name.clone();
+        name.retain(|c| c.is_alphanumeric());
+        name
+      },
+      None => {
+        String::from("")
+      }
+    };
   
     match event {
       Some(event) => {
         let backup_interval = event.backup_interval;
         let backup_count = event.backup_count;
-        (backup_interval, backup_count)
+        (backup_interval, backup_count, event_name)
       },
       None => {
-        (0, 0)
+        (0, 0, String::from(""))
       }
     }
   }
@@ -54,7 +83,7 @@ impl BackupService {
       }
     };
 
-    let last_backup = match self.db.tms_data.system_info.get() {
+    let last_backup = match self.db.read().unwrap().tms_data.system_info.get() {
       Ok(info) => {
         match info {
           Some(info) => {
@@ -78,30 +107,34 @@ impl BackupService {
       },
       None => {
         warn!("No last backup time, setting to current time");
-        let mut info = self.db.tms_data.system_info.get().unwrap().unwrap();
+        let mut info = self.db.read().unwrap().tms_data.system_info.get().unwrap().unwrap();
         info.last_backup = Some(now);
-        self.db.tms_data.system_info.set(info).unwrap();
+        self.db.read().unwrap().tms_data.system_info.set(info).unwrap();
         Ok((now, now))
       }
     }
   }
 
   fn should_backup(&self, now: u64, last_backup: u64) -> bool {
-    let (backup_interval, count) = self.get_backup_info();
+    let (backup_interval, count, _) = self.get_backup_info();
 
     if backup_interval == 0 || count == 0 {
       return false;
     }
 
-    if now - last_backup >= backup_interval as u64 {
+    // convert from minutes to seconds
+    let backup_interval_secs = backup_interval as u64 * 60;
+
+    if now - last_backup >= backup_interval_secs {
       return true;
     } else {
       return false;
     }
   }
 
-  fn create_backup_file(&self, now: u64) -> Result<(), &'static str> {
-    let backup_folder = format!("backups/{}_{}.zip", self.db_name, now);
+  fn create_backup_file(&self, now: u64, event_name: String) -> Result<(), &'static str> {
+
+    let backup_folder = format!("backups/{}_{}_{}.zip", event_name, now, self.db_name);
 
     // check if the backup folder exists
     if !Path::new("backups").exists() {
@@ -161,7 +194,7 @@ impl BackupService {
     }
   }
 
-  pub fn get_backups(&self) -> Vec<String> {
+  pub fn get_backup_names(&self) -> Vec<String> {
     let mut backups = Vec::new();
     for entry in fs::read_dir("backups").unwrap() {
       let entry = entry.unwrap();
@@ -173,49 +206,54 @@ impl BackupService {
   }
 
   // get the backups with the time in a pretty format <name, time>
-  pub fn get_backups_pretty(&self) -> std::collections::HashMap<String, String> {
-    let mut backups = std::collections::HashMap::new();
+  pub fn get_backups_pretty(&self) -> Vec<Backup> {
+    let mut backups = Vec::new();
+
+    // check if it exists
+    if !Path::new("backups").exists() {
+      fs::create_dir("backups").unwrap();
+    }
+
     for entry in fs::read_dir("backups").unwrap() {
       let entry = entry.unwrap();
       let path = entry.path();
       let name = path.file_name().unwrap().to_str().unwrap().to_string();
-      let time = path.metadata().unwrap().created().unwrap();
-      let time = time.duration_since(UNIX_EPOCH).unwrap().as_secs();
-      let time = time.to_string();
 
       // convert the time to a pretty format
-      let time = match time.parse::<u64>() {
-        Ok(time) => {
-          let time = time as i64;
-          let time = time * 1000;
-          let time = time as u64;
-          let time = match chrono::NaiveDateTime::from_timestamp_opt(time as i64, 0) {
-            Some(time) => {
-              time.format("%Y-%m-%d %H:%M:%S").to_string()
-            },
-            None => {
-              error!("Failed to convert time to NaiveDateTime");
-              String::from("Failed to convert time to NaiveDateTime")
-            }
-          };
-          time
+      let time = path.metadata().unwrap().created().unwrap();
+      let timestamp = time.duration_since(UNIX_EPOCH).unwrap().as_secs();
+      let time = match chrono::NaiveDateTime::from_timestamp_opt(timestamp as i64, 0) {
+        Some(time) => {
+          time.format("%Y-%m-%d-%H:%M:%S").to_string()
         },
-        Err(_) => {
-          error!("Failed to parse time");
-          String::from("Failed to parse time")
+        None => {
+          error!("Failed to convert time to NaiveDateTime");
+          String::from("Failed to convert time to NaiveDateTime")
         }
       };
-      backups.insert(name, time);
+      // backups.insert(name, time);
+      backups.push(Backup {
+        entry: name,
+        timestamp_pretty: time,
+        timestamp: timestamp as u64
+      });
     }
     backups
   }
 
-  pub fn delete_backup(&self, backup: &str) {
+  pub fn download_backup(&self, backup_name: String) -> Vec<u8> {
+    let mut file = fs::File::open(format!("backups/{}", backup_name)).unwrap();
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).unwrap();
+    buffer
+  }
+
+  pub fn delete_backup(&self, backup: String) {
     fs::remove_file(format!("backups/{}", backup)).unwrap();
   }
 
   fn delete_old_backups(&self, backup_count: usize) {
-    let backups = self.get_backups().len();
+    let backups = self.get_backup_names().len();
     if backups > backup_count {
       let oldest_backup = fs::read_dir("backups")
         .unwrap()
@@ -243,12 +281,12 @@ impl BackupService {
       }
     };
 
-    let (_, backup_count) = self.get_backup_info();
+    let (_, backup_count, event_name) = self.get_backup_info();
    
     if self.should_backup(now, last_backup) || force {
       warn!("Backing up database...");
       // create backup file
-      match self.create_backup_file(now) {
+      match self.create_backup_file(now, event_name) {
         Ok(_) => {},
         Err(_) => {
           error!("Failed to create backup, returning...");
@@ -259,17 +297,26 @@ impl BackupService {
       self.delete_old_backups(backup_count);
       warn!("Backup complete");
       // update last backup time
-      let mut info = self.db.tms_data.system_info.get().unwrap().unwrap();
+      let mut info = self.db.read().unwrap().tms_data.system_info.get().unwrap().unwrap();
       info.last_backup = Some(now);
-      self.db.tms_data.system_info.set(info).unwrap();
+      self.db.read().unwrap().tms_data.system_info.set(info).unwrap();
     } else {
       warn!("Skipping backup");
     }
   }
 
-  pub fn restore_db(&self, backup: &str) -> Result<(), &'static str> {
+  pub fn restore_db(&self, backup: String) -> Result<(), &'static str> {
     let db_folder = Path::new(self.db_name.as_str());
+    let backup_folder = format!("backups/{}", backup);
 
+    // check if file exists
+    if !Path::new(&backup_folder).exists() {
+      error!("Backup file does not exist");
+      return Err("Backup file does not exist");
+    }
+
+    // stop the db and flush all it's data (in memory)
+    self.db.read().unwrap().flush();
 
     match fs::remove_dir_all(db_folder) {
       Ok(_) => {},
@@ -279,12 +326,12 @@ impl BackupService {
       }
     };
 
-    let file = match fs::File::open(&Path::new(backup)) {
+    let file = match fs::File::open(&Path::new(backup_folder.as_str())) {
       Ok(f) => {
         f
       },
       Err(_) => {
-        error!("Failed to open backup file");
+        error!("Failed to open backup file: {}", backup_folder);
         return Err("Failed to open backup file");
       }
     };
@@ -306,6 +353,8 @@ impl BackupService {
       }
     }
 
+    // self.db 
+    warn!("Restored database to snapshot: {}", backup);
     Ok(())
   }
 }

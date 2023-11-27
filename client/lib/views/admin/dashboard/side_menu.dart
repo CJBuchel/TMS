@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
+import 'package:tms/views/admin/dashboard/backups/backups.dart';
 import 'package:tms/views/shared/dashboard/judging/judging.dart';
 import 'package:tms/views/shared/dashboard/matches/matches.dart';
 import 'package:tms/views/admin/dashboard/overview/overview.dart';
@@ -62,6 +63,11 @@ class SideMenu extends StatelessWidget {
             title: 'Team Data',
             svgSrc: 'assets/icons/menu_tran.svg',
             press: () => _handleViewSwitch(const TeamData(), context),
+          ),
+          DrawerListTile(
+            title: 'Backups',
+            icon: Icons.backup_outlined,
+            press: () => _handleViewSwitch(const Backups(), context),
           ),
         ],
       ),

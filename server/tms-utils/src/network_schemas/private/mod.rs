@@ -18,3 +18,6 @@ pub use user::*;
 
 mod judging;
 pub use judging::*;
+
+mod backups;
+pub use backups::*;

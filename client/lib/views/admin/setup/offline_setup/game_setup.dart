@@ -34,9 +34,7 @@ class GameSetup extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: DropdownSeason(
-            onSelectedSeason: (season) {
-              selectedSeasonController.text = season;
-            },
+            selectedSeasonController: selectedSeasonController,
           ),
         ),
 

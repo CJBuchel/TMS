@@ -4,7 +4,7 @@ use log::{warn, error};
 use tms_utils::schemas::Backup;
 use zip::write::FileOptions;
 
-use super::db::{TmsDB, TmsDBArc};
+use super::db::TmsDBArc;
 
 pub struct BackupService {
   db_name: String,
@@ -12,14 +12,6 @@ pub struct BackupService {
 }
 
 pub type BackupServiceArc = std::sync::Arc<tokio::sync::RwLock<BackupService>>;
-
-pub async fn with_backup_service_read<F, R>(backup_service: &BackupServiceArc, f: F) -> Result<R, &'static str>
-where
-  F: FnOnce(&BackupService) -> R,
-{
-  let guard = backup_service.read().await;
-  Ok(f(&*guard))
-}
 
 pub async fn with_backup_service_write<F, R>(backup_service: &BackupServiceArc, f: F) -> Result<R, &'static str>
 where
@@ -37,8 +29,8 @@ impl BackupService {
     }
   }
 
-  fn get_backup_info(&self) -> (u32, usize, String) {
-    let event = match self.db.read().unwrap().tms_data.event.get() {
+  async fn get_backup_info(&self) -> (u32, usize, String) {
+    let event = match self.db.get_data().await.event.get() {
       Ok(event) => {
         event
       },
@@ -72,7 +64,7 @@ impl BackupService {
     }
   }
 
-  fn get_backup_times(&self) -> Result<(u64, u64), &'static str> {
+  async fn get_backup_times(&self) -> Result<(u64, u64), &'static str> {
     let now = match SystemTime::now().duration_since(UNIX_EPOCH) {
       Ok(now) => {
         now.as_secs()
@@ -83,7 +75,7 @@ impl BackupService {
       }
     };
 
-    let last_backup = match self.db.read().unwrap().tms_data.system_info.get() {
+    let last_backup = match self.db.get_data().await.system_info.get() {
       Ok(info) => {
         match info {
           Some(info) => {
@@ -107,16 +99,16 @@ impl BackupService {
       },
       None => {
         warn!("No last backup time, setting to current time");
-        let mut info = self.db.read().unwrap().tms_data.system_info.get().unwrap().unwrap();
+        let mut info = self.db.get_data().await.system_info.get().unwrap().unwrap();
         info.last_backup = Some(now);
-        self.db.read().unwrap().tms_data.system_info.set(info).unwrap();
+        self.db.get_data().await.system_info.set(info).unwrap();
         Ok((now, now))
       }
     }
   }
 
-  fn should_backup(&self, now: u64, last_backup: u64) -> bool {
-    let (backup_interval, count, _) = self.get_backup_info();
+  async fn should_backup(&self, now: u64, last_backup: u64) -> bool {
+    let (backup_interval, count, _) = self.get_backup_info().await;
 
     if backup_interval == 0 || count == 0 {
       return false;
@@ -270,8 +262,8 @@ impl BackupService {
   }
 
   
-  pub fn backup_db(&self, force: bool) {
-    let (now, last_backup) = match self.get_backup_times() {
+  pub async fn backup_db(&self, force: bool) {
+    let (now, last_backup) = match self.get_backup_times().await {
       Ok((now, last_backup)) => {
         (now, last_backup)
       },
@@ -281,9 +273,9 @@ impl BackupService {
       }
     };
 
-    let (_, backup_count, event_name) = self.get_backup_info();
+    let (_, backup_count, event_name) = self.get_backup_info().await;
    
-    if self.should_backup(now, last_backup) || force {
+    if self.should_backup(now, last_backup).await || force {
       warn!("Backing up database...");
       // create backup file
       match self.create_backup_file(now, event_name) {
@@ -297,15 +289,13 @@ impl BackupService {
       self.delete_old_backups(backup_count);
       warn!("Backup complete");
       // update last backup time
-      let mut info = self.db.read().unwrap().tms_data.system_info.get().unwrap().unwrap();
+      let mut info = self.db.get_data().await.system_info.get().unwrap().unwrap();
       info.last_backup = Some(now);
-      self.db.read().unwrap().tms_data.system_info.set(info).unwrap();
-    } else {
-      warn!("Skipping backup");
+      self.db.get_data().await.system_info.set(info).unwrap();
     }
   }
 
-  pub fn restore_db(&self, backup: String) -> Result<(), &'static str> {
+  pub async fn restore_db(&self, backup: String) -> Result<(), &'static str> {
     let db_folder = Path::new(self.db_name.as_str());
     let backup_folder = format!("backups/{}", backup);
 
@@ -315,8 +305,8 @@ impl BackupService {
       return Err("Backup file does not exist");
     }
 
-    // stop the db and flush all it's data (in memory)
-    self.db.read().unwrap().flush();
+    // flush the db
+    self.db.flush().await;
 
     match fs::remove_dir_all(db_folder) {
       Ok(_) => {},
@@ -353,8 +343,16 @@ impl BackupService {
       }
     }
 
-    // self.db 
-    warn!("Restored database to snapshot: {}", backup);
-    Ok(())
+    // reload the db
+    match self.db.reload().await {
+      Ok(_) => {
+        warn!("Database reloaded");
+        Ok(())
+      },
+      Err(_) => {
+        error!("Failed to reload db");
+        Err("Failed to reload db")
+      }
+    }
   }
 }

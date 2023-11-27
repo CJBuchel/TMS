@@ -38,7 +38,7 @@ use proxy_routes::*;
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
-use crate::{event_service::TmsEventServiceArc, db::{db::{TmsDB, TmsDBArc}, backup_service::BackupServiceArc}};
+use crate::{event_service::TmsEventServiceArc, db::{db::TmsDBArc, backup_service::BackupServiceArc}};
 
 // CORS fairing
 pub struct CORS;

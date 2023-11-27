@@ -4,13 +4,13 @@ use tms_macros::tms_private_route;
 use tms_utils::{security::encrypt, TmsClients, TmsRouteResponse, Mission, Games, TmsRespond, network_schemas::{MissionsResponse, QuestionsResponse, GameResponse, SeasonsResponse, QuestionsValidateRequest, QuestionsValidateResponse}, TmsRequest, schemas::create_permissions, check_permissions, with_clients_read};
 use tms_utils::security::Security;
 
-use crate::{db::db::TmsDB, event_service::{TmsEventServiceArc, with_tms_event_service_read}};
+use crate::{db::db::TmsDB, event_service::TmsEventServiceArc};
 
 
 #[get("/missions/get/<uuid>")]
 pub async fn missions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
   // get season
-  let season = db.tms_data.event.get().unwrap().unwrap().season;
+  let season = db.get_data().await.event.get().unwrap().unwrap().season;
   let missions = match Games::get_games().get(season.as_str()) {
     Some(g) => g.get_missions(),
     None => Vec::<Mission>::new()
@@ -40,7 +40,7 @@ pub async fn missions_get_route(clients: &State<TmsClients>, db: &State<std::syn
 pub async fn questions_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
   
   // get season
-  let season = db.tms_data.event.get().unwrap().unwrap().season;
+  let season = db.get_data().await.event.get().unwrap().unwrap().season;
   let questions = match Games::get_games().get(season.as_str()) {
     Some(g) => g.get_questions(),
     None => Vec::<tms_utils::Score>::new()
@@ -79,40 +79,31 @@ pub async fn validate_questions_route(message: String, tms_event_service: &State
 
   if check_permissions(clients, uuid.clone(), message.auth_token, perms).await {
     // get event from db and check season string
-    let result = with_tms_event_service_read(tms_event_service, |service| {
-      service.scoring.validate(message.answers)
-    }).await;
+
+    let result = tms_event_service.read().await.scoring.validate(message.answers).await;
 
     match result {
-      Ok(response) => {
-        match response {
-          Some(validation) => {
-            let result = with_clients_read(clients, |client_map| {
-              client_map.clone()
-            }).await;
+      Some(validation) => {
+        let result = with_clients_read(clients, |client_map| {
+          client_map.clone()
+        }).await;
 
-            match result {
-              Ok(map) => {
-                TmsRespond!(
-                  Status::Ok,
-                  QuestionsValidateResponse { errors: validation.errors, score: validation.score },
-                  map,
-                  uuid
-                );
-              },
-              Err(_) => {
-                TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
-              }
-            }
+        match result {
+          Ok(map) => {
+            TmsRespond!(
+              Status::Ok,
+              QuestionsValidateResponse { errors: validation.errors, score: validation.score },
+              map,
+              uuid
+            );
           },
-          None => {
-            TmsRespond!(Status::NotFound, "Season not found".to_string());
+          Err(_) => {
+            TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
           }
         }
       },
-
-      Err(_) => {
-        TmsRespond!(Status::InternalServerError, "Service Read Lock".to_string());
+      None => {
+        TmsRespond!(Status::NotFound, "Season not found".to_string());
       }
     }
   }
@@ -122,37 +113,26 @@ pub async fn validate_questions_route(message: String, tms_event_service: &State
 
 #[get("/game/get/<uuid>")]
 pub async fn game_get_route(clients: &State<TmsClients>, tms_event_service: &State<TmsEventServiceArc>, uuid: String) -> TmsRouteResponse<()> {
-  // get season
-  let result = with_tms_event_service_read(tms_event_service, |service| {
-    service.scoring.get_game()
+  let game = tms_event_service.read().await.scoring.get_game().await;
+  let client_map = with_clients_read(clients, |client_map| {
+    client_map.clone()
   }).await;
 
-  match result {
-    Ok(game) => {
-      let result = with_clients_read(clients, |client_map| {
-        client_map.clone()
-      }).await;
 
-      match result {
-        Ok(map) => {
-          TmsRespond!(
-            Status::Ok,
-            GameResponse { game },
-            map,
-            uuid
-          );
-        },
-        Err(_) => {
-          warn!("failed to get clients lock");
-          TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
-        }
-      }
+  match client_map {
+    Ok(map) => {
+      TmsRespond!(
+        Status::Ok,
+        GameResponse { game },
+        map,
+        uuid
+      );
     },
     Err(_) => {
-      warn!("failed to get game");
-      TmsRespond!(Status::InternalServerError, "Service Read Lock".to_string());
+      warn!("failed to get clients lock");
+      TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
     }
-  };
+  }
 }
 
 #[get("/seasons/get/<uuid>")]

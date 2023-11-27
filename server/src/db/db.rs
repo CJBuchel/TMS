@@ -1,5 +1,3 @@
-
-
 use log::{warn, error};
 
 use serde::{Serialize, Deserialize, de::DeserializeOwned};
@@ -30,25 +28,28 @@ pub trait RequestDatabase {
   type Error;
 }
 
-#[derive(Clone)]
+// #[derive(Clone)]
 pub struct TmsDB {
-  pub db: Db,
-  pub tms_data: Database
+  pub db_path: String,
+  db: tokio::sync::RwLock<Db>,
+  tms_data: tokio::sync::RwLock<Database>
 }
 
-pub type TmsDBArc = std::sync::Arc<std::sync::RwLock<TmsDB>>; // specifically just to update the from the backup thread (doesn't technically need this)
+pub type TmsDBArc = std::sync::Arc<TmsDB>;
 
 impl TmsDB {
-  // Start the db and return the object
-  pub fn start(db_path: String) -> TmsDBArc {
-    // Create db
+  fn new_db(db_path: String) -> Db {
+    // sled db
     let db = sled_extensions::Config::default()
-      .path(db_path)
+      .path(db_path.clone())
       .open()
       .expect("Failed to open TSM Database");
-  
 
-    // Setup
+    db
+  }
+
+  fn new_tms_data(db: &Db) -> Database {
+    // database data
     let tms_data = Database {
       teams: db.open_bincode_tree("teams").expect("Failed to open team tree"),
       matches: db.open_bincode_tree("matches").expect("Failed to open match tree"),
@@ -59,68 +60,24 @@ impl TmsDB {
       system_info: Item::new(db.clone(), "system_info")
     };
 
-    match tms_data.system_info.get().unwrap() {
-      Some(info) => {
-        if info.version != std::env::var("VERSION").unwrap_or(String::from("0.0.0")) {
-          error!("Version Mismatch: {} != {}, this may causes issues", info.version, std::env::var("VERSION").unwrap_or(String::from("0.0.0")));
-        }
-      },
-      None => {
-        warn!("No System Info, generating...");
-        let _ = tms_data.system_info.set(SystemInfo {
-          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0")),
-          last_backup: None
-        });
-      }
-    }
-
-    // Create event if it doesn't exist
-    match tms_data.event.get().unwrap() {
-      Some(event) => warn!("Event Exists: {}", event.name),
-      None => {
-        warn!("No Event, generating...");
-        let _ = tms_data.event.set(Event::new());
-      }
-    }
-
-    // Create admin user
-    let mut new_admin = create_user();
-    new_admin.username = String::from("admin");
-    new_admin.password = String::from("password");
-    new_admin.permissions.admin = true;
-
-    // Check if admin is present, if not add one
-    match tms_data.users.get(String::from("admin")).unwrap() {
-      Some(user) => warn!("Admin Exists: [{}, {}]", user.username, user.password),
-      None => {
-        warn!("No Admin, generating...");
-        let _ = tms_data.users.insert(new_admin.username.as_bytes(), new_admin.clone());
-      }
-    }
-
-    let db = Self { db, tms_data};
-    return std::sync::Arc::new(std::sync::RwLock::new(db));
+    tms_data
   }
 
-  pub fn flush(&self) {
-    self.db.flush().expect("Failed to flush database");
+  pub fn new(db_path: String) -> TmsDB {
+    // sled db
+    let db = Self::new_db(db_path.clone());
+    let tms_data = Self::new_tms_data(&db);
+    // return
+    Self { 
+      db: tokio::sync::RwLock::new(db), 
+      tms_data: tokio::sync::RwLock::new(tms_data), 
+      db_path
+    }
   }
 
-  pub fn setup_default(&self) {
-    // Setup
-    let tms_data = Database {
-      teams: self.db.open_bincode_tree("teams").expect("Failed to open team tree"),
-      matches: self.db.open_bincode_tree("matches").expect("Failed to open match tree"),
-      judging_sessions: self.db.open_bincode_tree("judging_sessions").expect("Failed to open judging session tree"),
-      users: self.db.open_bincode_tree("users").expect("Failed to open user tree"),
-      event: Item::new(self.db.clone(), "event"),
-      api_link: Item::new(self.db.clone(), "api_link"),
-
-      // this shouldn't be purged. (I think... don't remember)
-      system_info: Item::new(self.db.clone(), "system_info")
-    };
-
-    match tms_data.system_info.get().unwrap() {
+  // setup data structures and populate with initial data if need be
+  pub async fn setup_database(&self) {
+    match self.tms_data.read().await.system_info.get().unwrap() {
       Some(info) => {
         if info.version != std::env::var("VERSION").unwrap_or(String::from("0.0.0")) {
           error!("Version Mismatch: {} != {}, this may cause issues", info.version, std::env::var("VERSION").unwrap_or(String::from("0.0.0")));
@@ -128,7 +85,7 @@ impl TmsDB {
       },
       None => {
         warn!("No System Info, generating...");
-        let _ = tms_data.system_info.set(SystemInfo {
+        let _ = self.tms_data.read().await.system_info.set(SystemInfo {
           version: std::env::var("VERSION").unwrap_or(String::from("0.0.0")),
           last_backup: None
         });
@@ -136,11 +93,11 @@ impl TmsDB {
     }
 
     // Create event if it doesn't exist
-    match tms_data.event.get().unwrap() {
+    match self.tms_data.read().await.event.get().unwrap() {
       Some(event) => warn!("Event Exists: {}", event.name),
       None => {
         warn!("No Event, generating...");
-        let _ = tms_data.event.set(Event::new());
+        let _ = self.tms_data.read().await.event.set(Event::new());
       }
     }
 
@@ -151,21 +108,57 @@ impl TmsDB {
     new_admin.permissions.admin = true;
 
     // Check if admin is present, if not add one
-    match tms_data.users.get(String::from("admin")).unwrap() {
+    match self.tms_data.read().await.users.get(String::from("admin")).unwrap() {
       Some(user) => warn!("Admin Exists: [{}, {}]", user.username, user.password),
       None => {
         warn!("No Admin, generating...");
-        let _ = tms_data.users.insert(new_admin.username.as_bytes(), new_admin.clone());
+        let _ = self.tms_data.read().await.users.insert(new_admin.username.as_bytes(), new_admin.clone());
       }
     }
   }
 
-  pub fn purge(&self) -> sled_extensions::Result<()> {
-    self.tms_data.teams.clear()
-      .and_then(|_| self.tms_data.matches.clear())
-      .and_then(|_| self.tms_data.judging_sessions.clear())
-      .and_then(|_| self.tms_data.users.clear())
-      .and_then(|_| self.tms_data.event.clear())
-      .and_then(|_| self.tms_data.api_link.clear())
+  pub async fn flush(&self) {
+    self.db.read().await.flush().expect("Failed to flush database");
+  }
+
+  // Start the db and return the object
+  pub async fn start(&self) {
+    // Create db
+    warn!("Starting TMS Database");
+    self.flush().await;
+    self.setup_database().await;
+  }
+
+  // reload the database
+  pub async fn reload(&self) -> Result<(), String> {
+    // flush and close
+    self.flush().await;
+
+    // replace with new db
+    let db = Self::new_db(self.db_path.clone());
+    let tms_data = Self::new_tms_data(&db);
+
+    // replace
+    *self.db.write().await = db;
+    *self.tms_data.write().await = tms_data;
+    
+    // setup and reinitialize
+    self.setup_database().await;
+
+    Ok(())
+  }
+
+  pub async fn purge(&self) {
+    let guard = self.tms_data.read().await;
+    let _ = guard.teams.clear();
+    let _ = guard.matches.clear();
+    let _ = guard.judging_sessions.clear();
+    let _ = guard.users.clear();
+    let _ = guard.event.clear();
+    let _ = guard.api_link.clear();
+  }
+
+  pub async fn get_data(&self) -> tokio::sync::RwLockReadGuard<'_, Database> {
+    self.tms_data.read().await
   }
 }

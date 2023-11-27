@@ -1,29 +1,29 @@
 use log::warn;
 use tms_utils::{TmsClients, tms_clients_ws_send, network_schemas::{SocketMessage, SocketMatchLoadedMessage}};
 
-use crate::db::db::TmsDB;
+use crate::db::db::TmsDBArc;
 
-// #[derive(Clone)]
+#[derive(Clone)]
 pub struct MatchControl {
-  tms_db: std::sync::Arc<TmsDB>,
+  tms_db: TmsDBArc,
   tms_clients: TmsClients,
-  loaded_matches: std::sync::Arc<std::sync::Mutex<Vec<String>>>,
+  loaded_matches: std::sync::Arc<tokio::sync::RwLock<Vec<String>>>,
   is_timer_running: std::sync::Arc<std::sync::atomic::AtomicBool>,
   is_matches_loaded: std::sync::Arc<std::sync::atomic::AtomicBool>
 }
 
 impl MatchControl {
-  pub fn new(tms_db: std::sync::Arc<TmsDB>, tms_clients: TmsClients) -> Self {
+  pub fn new(tms_db: TmsDBArc, tms_clients: TmsClients) -> Self {
     Self {
       tms_db,
       tms_clients,
-      loaded_matches: std::sync::Arc::new(std::sync::Mutex::new(vec![])),
+      loaded_matches: std::sync::Arc::new(tokio::sync::RwLock::new(vec![])),
       is_timer_running: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
       is_matches_loaded: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
     }
   }
 
-  async fn timer(time: u32, endgame_time: u32, loaded_matches: std::sync::Arc<std::sync::Mutex<Vec<String>>>, clients: TmsClients, timer_running: std::sync::Arc<std::sync::atomic::AtomicBool>, matches_loaded: std::sync::Arc<std::sync::atomic::AtomicBool>, tms_db: std::sync::Arc<TmsDB>) {
+  async fn timer(time: u32, endgame_time: u32, loaded_matches: std::sync::Arc<tokio::sync::RwLock<Vec<String>>>, clients: TmsClients, timer_running: std::sync::Arc<std::sync::atomic::AtomicBool>, matches_loaded: std::sync::Arc<std::sync::atomic::AtomicBool>, tms_db: TmsDBArc) {
     // countdown from set time (150) to 0
     warn!("Timer running...");
 
@@ -76,11 +76,11 @@ impl MatchControl {
 
     // set database matches to be completed, send the update and unload the matches
     if timer_running.load(std::sync::atomic::Ordering::Relaxed) {
-      for match_number in loaded_matches.lock().unwrap().iter() {
-        match tms_db.tms_data.matches.get(&match_number) {
+      for match_number in loaded_matches.read().await.iter() {
+        match tms_db.get_data().await.matches.get(&match_number) {
           Ok(Some(mut game_match)) => {
             game_match.complete = true;
-            let _ = tms_db.tms_data.matches.insert(game_match.match_number.as_bytes(), game_match.clone());
+            let _ = tms_db.get_data().await.matches.insert(game_match.match_number.as_bytes(), game_match.clone());
             warn!("Match {} completed", game_match.match_number.clone());
             tokio::spawn(tms_clients_ws_send(SocketMessage {
               from_id: None,
@@ -100,7 +100,7 @@ impl MatchControl {
   
       // unload matches
       matches_loaded.store(false, std::sync::atomic::Ordering::Relaxed);
-      loaded_matches.lock().unwrap().clear();
+      loaded_matches.write().await.clear();
       tms_clients_ws_send(SocketMessage {
         from_id: None,
         topic: String::from("match"),
@@ -112,12 +112,12 @@ impl MatchControl {
     timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
   }
 
-  pub fn start_timer(&mut self, override_running: bool) {
+  pub async fn start_timer(&mut self, override_running: bool) {
     // get time from db
     if !self.is_timer_running.load(std::sync::atomic::Ordering::Relaxed) || override_running {
       warn!("Starting timer...");
       self.is_timer_running.store(true, std::sync::atomic::Ordering::Relaxed);
-      let time = match self.tms_db.tms_data.event.get() {
+      let time = match self.tms_db.get_data().await.event.get() {
         Ok(Some(event)) => event.timer_length,
         Ok(None) => 150,
         Err(e) => {
@@ -125,7 +125,7 @@ impl MatchControl {
           150
         }
       };
-      let endgame_time = match self.tms_db.tms_data.event.get() {
+      let endgame_time = match self.tms_db.get_data().await.event.get() {
         Ok(Some(event)) => event.end_game_timer_length,
         Ok(None) => 30,
         Err(e) => {
@@ -139,8 +139,9 @@ impl MatchControl {
       let clients = self.tms_clients.clone();
       let loaded_matches = self.loaded_matches.clone();
       let tms_db = self.tms_db.clone();
+      
       tokio::task::spawn(async move {
-        MatchControl::timer(time, endgame_time, loaded_matches, clients.clone(), timer_flag, matches_loaded_flag, tms_db).await;
+        MatchControl::timer(time, endgame_time, loaded_matches, clients, timer_flag, matches_loaded_flag, tms_db).await;
       });
     } else {
       warn!("Timer already running!");
@@ -177,6 +178,8 @@ impl MatchControl {
         sub_topic: String::from("time"),
         message: i.to_string(),
       }, clients.clone(), None).await;
+
+
       tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
     }
   }
@@ -197,14 +200,18 @@ impl MatchControl {
         let is_timer_running_clone = self.is_timer_running.clone();
         let is_matches_loaded_clone = self.is_matches_loaded.clone();
         move |override_running| {
-          let mut control = MatchControl {
-            tms_db: tms_db_clone,
-            tms_clients: tms_clients_clone,
-            loaded_matches: loaded_matches_clone,
-            is_timer_running: is_timer_running_clone,
-            is_matches_loaded: is_matches_loaded_clone
+          let start_timer_function = async move {
+            let mut control = MatchControl {
+              tms_db: tms_db_clone,
+              tms_clients: tms_clients_clone,
+              loaded_matches: loaded_matches_clone,
+              is_timer_running: is_timer_running_clone,
+              is_matches_loaded: is_matches_loaded_clone
+            };
+            control.start_timer(override_running).await;
           };
-          control.start_timer(override_running);
+
+          start_timer_function
         }
       };
 
@@ -212,7 +219,7 @@ impl MatchControl {
       tokio::task::spawn(async move {
         MatchControl::pre_timer(clients, timer_flag.clone()).await;
         if timer_flag.load(std::sync::atomic::Ordering::Relaxed) {
-          start_timer_function(true);
+          start_timer_function(true).await;
         }
       });
     } else {
@@ -259,7 +266,7 @@ impl MatchControl {
     if !self.is_matches_loaded.load(std::sync::atomic::Ordering::Relaxed) {
       warn!("Loading matches...");
       self.is_matches_loaded.store(true, std::sync::atomic::Ordering::Relaxed);
-      self.loaded_matches = std::sync::Arc::new(std::sync::Mutex::new(matches.clone()));
+      self.loaded_matches = std::sync::Arc::new(tokio::sync::RwLock::new(matches.clone()));
       let matches_loaded_flag = self.is_matches_loaded.clone();
       let clients = self.tms_clients.clone();
       tokio::task::spawn(async move {
@@ -270,10 +277,10 @@ impl MatchControl {
     }
   }
 
-  pub fn unload_matches(&mut self) {
+  pub async fn unload_matches(&mut self) {
     warn!("Forcefully unloading matches...");
     self.is_matches_loaded.store(false, std::sync::atomic::Ordering::Relaxed);
-    self.loaded_matches.lock().unwrap().clear();
+    self.loaded_matches.write().await.clear();
 
     tokio::spawn(tms_clients_ws_send(SocketMessage {
       from_id: None,

@@ -12,7 +12,7 @@ pub async fn judging_sessions_get_route() -> TmsRouteResponse<()> {
   // get matches from db and put into MatchesResponse
   let mut judging_sessions:Vec<JudgingSession> = vec![];
 
-  for judging_sessions_raw in db.tms_data.judging_sessions.iter() {
+  for judging_sessions_raw in db.get_data().await.judging_sessions.iter() {
     let judging_session = match judging_sessions_raw {
       Ok(judging_session) => judging_session.1,
       _ => {
@@ -53,7 +53,7 @@ pub async fn judging_sessions_get_route() -> TmsRouteResponse<()> {
 pub async fn judging_session_get_route(message: String) -> TmsRouteResponse<()> {
   let judging_session_request: JudgingSessionRequest = TmsRequest!(message.clone(), security);
 
-  match db.tms_data.judging_sessions.get(&judging_session_request.session_number).unwrap() {
+  match db.get_data().await.judging_sessions.get(&judging_session_request.session_number).unwrap() {
     Some(j) => {
       let judging_session_response: JudgingSessionResponse = JudgingSessionResponse { judging_session: j.clone() };
 
@@ -92,10 +92,10 @@ pub async fn judging_session_update_route(message: String) -> TmsRouteResponse<(
   perms.judge = Some(true);
 
   if check_permissions(clients, uuid, message.auth_token, perms).await {
-    match db.tms_data.judging_sessions.get(message.session_number.clone()).unwrap() {
+    match db.get_data().await.judging_sessions.get(message.session_number.clone()).unwrap() {
       Some(s) => {
         let origin_session_number = s.session_number.clone();
-        match db.tms_data.judging_sessions.update(origin_session_number.as_bytes(), message.judging_session.session_number.as_bytes(), message.judging_session.clone()) {
+        match db.get_data().await.judging_sessions.update(origin_session_number.as_bytes(), message.judging_session.session_number.as_bytes(), message.judging_session.clone()) {
           Ok(_) => {},
           Err(e) => {
             match e {
@@ -146,9 +146,9 @@ pub async fn judging_session_delete_route(message: String) -> TmsRouteResponse<(
   perms.judge_advisor = Some(true);
 
   if check_permissions(clients, uuid, message.auth_token, perms).await {
-    match db.tms_data.judging_sessions.get(message.session_number.clone()).unwrap() {
+    match db.get_data().await.judging_sessions.get(message.session_number.clone()).unwrap() {
       Some(_) => {
-        let _ = db.tms_data.judging_sessions.remove(message.session_number.as_bytes());
+        let _ = db.get_data().await.judging_sessions.remove(message.session_number.as_bytes());
 
         // send updates to clients
         tms_clients_ws_send(SocketMessage {
@@ -180,7 +180,7 @@ pub async fn judging_session_add_route(message: String) -> TmsRouteResponse<()> 
   if check_permissions(clients, uuid, session_request.auth_token, perms).await {
     let session_number = session_request.judging_session.session_number.clone();
     let session = session_request.judging_session.clone();
-    let _ = db.tms_data.judging_sessions.insert(session_number.as_bytes(), session.clone());
+    let _ = db.get_data().await.judging_sessions.insert(session_number.as_bytes(), session.clone());
     // send updates to clients
     tms_clients_ws_send(SocketMessage {
       from_id: None,

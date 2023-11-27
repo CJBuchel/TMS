@@ -1,7 +1,5 @@
 use log::warn;
 
-use crate::db::backup_service::with_backup_service_read;
-
 use super::backup_service::BackupServiceArc;
 
 
@@ -21,12 +19,7 @@ impl BackupMonitor {
     loop {
       tokio::select! {
         _ = tokio::time::sleep(tokio::time::Duration::from_secs(60)) => {
-
-
-
-          let _ = with_backup_service_read(&self.backup_service, |service| {
-            service.backup_db(false)
-          }).await;
+          self.backup_service.read().await.backup_db(false).await;
         },
 
         // ctrl-c

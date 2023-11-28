@@ -68,9 +68,13 @@ class _TeamsState extends State<Teams> with AutoUnsubScribeMixin, LocalDatabaseM
     onTeamsUpdate((t) => _setTeams = t);
 
     // add listener to the team number
-    _selectedTeamNumberNotifier.addListener(() {
-      _setSelectedTeam();
-    });
+    _selectedTeamNumberNotifier.addListener(_setSelectedTeam);
+  }
+
+  @override
+  void dispose() {
+    _teamsNotifier.removeListener(_setSelectedTeam);
+    super.dispose();
   }
 
   @override

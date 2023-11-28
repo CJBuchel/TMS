@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
-import 'package:tms/views/admin/dashboard/backups/backups.dart';
-// import 'package:tms/views/admin/dashboard/overview/overview.dart';
+import 'package:tms/views/admin/dashboard/overview/overview.dart';
 import 'package:tms/views/admin/dashboard/side_menu.dart';
 import 'package:tms/views/shared/error_handlers.dart';
 import 'package:tms/views/shared/toolbar/tool_bar.dart';
@@ -30,8 +29,7 @@ class _DashboardState extends State<Dashboard> {
     // after the first frame set state to dashboard
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // default view
-      // switchView(const Overview());
-      switchView(const Backups());
+      switchView(const Overview());
     });
   }
 

@@ -216,6 +216,7 @@ impl TmsHttpServer {
 
         // event routes
         event_setup_route,
+        event_set_route,
         event_purge_route,
         event_get_route,
         event_get_api_link_route,

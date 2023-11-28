@@ -55,6 +55,7 @@
     "team_post_game_scoresheet_request",
     "team_update_request",
     "teams_get_response",
+    "update_event_request",
     "update_user_request",
     "upload_backup_request",
     "users",
@@ -217,6 +218,9 @@
     },
     "teams_get_response": {
       "$ref": "#/definitions/TeamsResponse"
+    },
+    "update_event_request": {
+      "$ref": "#/definitions/UpdateEventRequest"
     },
     "update_user_request": {
       "$ref": "#/definitions/UpdateUserRequest"
@@ -1642,6 +1646,21 @@
       "properties": {
         "auth_token": {
           "type": "string"
+        }
+      }
+    },
+    "UpdateEventRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "event"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "event": {
+          "$ref": "#/definitions/Event"
         }
       }
     },

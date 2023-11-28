@@ -62,6 +62,7 @@ class TmsSchema {
         required this.teamPostGameScoresheetRequest,
         required this.teamUpdateRequest,
         required this.teamsGetResponse,
+        required this.updateEventRequest,
         required this.updateUserRequest,
         required this.uploadBackupRequest,
         required this.users,
@@ -121,6 +122,7 @@ class TmsSchema {
     TeamPostGameScoresheetRequest teamPostGameScoresheetRequest;
     TeamUpdateRequest teamUpdateRequest;
     TeamsResponse teamsGetResponse;
+    UpdateEventRequest updateEventRequest;
     UpdateUserRequest updateUserRequest;
     UploadBackupRequest uploadBackupRequest;
     User users;
@@ -180,6 +182,7 @@ class TmsSchema {
         teamPostGameScoresheetRequest: TeamPostGameScoresheetRequest.fromJson(json["team_post_game_scoresheet_request"]),
         teamUpdateRequest: TeamUpdateRequest.fromJson(json["team_update_request"]),
         teamsGetResponse: TeamsResponse.fromJson(json["teams_get_response"]),
+        updateEventRequest: UpdateEventRequest.fromJson(json["update_event_request"]),
         updateUserRequest: UpdateUserRequest.fromJson(json["update_user_request"]),
         uploadBackupRequest: UploadBackupRequest.fromJson(json["upload_backup_request"]),
         users: User.fromJson(json["users"]),
@@ -240,6 +243,7 @@ class TmsSchema {
         "team_post_game_scoresheet_request": teamPostGameScoresheetRequest.toJson(),
         "team_update_request": teamUpdateRequest.toJson(),
         "teams_get_response": teamsGetResponse.toJson(),
+        "update_event_request": updateEventRequest.toJson(),
         "update_user_request": updateUserRequest.toJson(),
         "upload_backup_request": uploadBackupRequest.toJson(),
         "users": users.toJson(),
@@ -1861,6 +1865,26 @@ class TeamsResponse {
 
     Map<String, dynamic> toJson() => {
         "teams": List<dynamic>.from(teams.map((x) => x.toJson())),
+    };
+}
+
+class UpdateEventRequest {
+    UpdateEventRequest({
+        required this.authToken,
+        required this.event,
+    });
+
+    String authToken;
+    Event event;
+
+    factory UpdateEventRequest.fromJson(Map<String, dynamic> json) => UpdateEventRequest(
+        authToken: json["auth_token"],
+        event: Event.fromJson(json["event"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "event": event.toJson(),
     };
 }
 

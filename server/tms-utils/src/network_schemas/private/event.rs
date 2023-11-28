@@ -3,6 +3,12 @@ use serde::{Deserialize, Serialize};
 use crate::schemas::{Event, GameMatch, JudgingSession, User, Team, APILink};
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
+pub struct UpdateEventRequest {
+  pub auth_token: String,
+  pub event: Event,
+}
+
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct SetupRequest {
   pub auth_token: String,
   pub admin_password: Option<String>,

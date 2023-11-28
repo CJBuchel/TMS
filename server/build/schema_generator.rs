@@ -32,6 +32,7 @@ pub struct TmsSchema {
   register_response: RegisterResponse,
   integrity_message: IntegrityMessage,
   setup_request: SetupRequest,
+  update_event_request: UpdateEventRequest,
   purge_request: PurgeRequest,
   proxy_bytes_response: ProxyBytesResponse,
   // users

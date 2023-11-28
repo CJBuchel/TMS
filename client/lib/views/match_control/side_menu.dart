@@ -3,6 +3,7 @@ import 'package:tms/responsive.dart';
 import 'package:tms/views/match_control/match_control_handler.dart';
 import 'package:tms/views/shared/dashboard/matches/matches.dart';
 import 'package:tms/views/shared/dashboard/side_menu_tile.dart';
+import 'package:tms/views/shared/dashboard/tables/tables.dart';
 
 class MatchSideMenu extends StatelessWidget {
   final Function(Widget view) onView;
@@ -38,6 +39,11 @@ class MatchSideMenu extends StatelessWidget {
             title: 'Match Edit',
             svgSrc: 'assets/icons/table.svg',
             press: () => _handleViewSwitch(const Matches(), context),
+          ),
+          DrawerListTile(
+            title: 'Tables',
+            icon: Icons.table_restaurant,
+            press: () => _handleViewSwitch(const Tables(), context),
           ),
         ],
       ),

@@ -1,14 +1,16 @@
 use log::{info, error, warn};
 use rocket::{State, post, get, http::Status};
 use tms_macros::tms_private_route;
+use tms_utils::network_schemas::UpdateEventRequest;
 use tms_utils::security::encrypt;
 use tms_utils::with_clients_read;
 use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, TmsClients, TmsRequest, schemas::create_permissions, check_permissions, network_schemas::{SetupRequest, PurgeRequest, EventResponse, SocketMessage, ApiLinkRequest, ApiLinkResponse}, tms_clients_ws_send};
 
 use crate::db::db::TmsDB;
 
+#[tms_private_route]
 #[get("/event/get/<uuid>")]
-pub async fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::Arc<TmsDB>>, uuid: String) -> TmsRouteResponse<()> {
+pub async fn event_get_route() -> TmsRouteResponse<()> {
   let event = match db.get_data().await.event.get().unwrap() {
     Some(event) => event,
     None => {
@@ -39,6 +41,38 @@ pub async fn event_get_route(clients: &State<TmsClients>, db: &State<std::sync::
       TmsRespond!(Status::InternalServerError, "Failed to get clients lock".to_string());
     }
   }
+}
+
+#[tms_private_route]
+#[post("/event/set/<uuid>", data = "<message>")]
+pub async fn event_set_route(message: String) -> TmsRouteResponse<()> {
+  let message: UpdateEventRequest = TmsRequest!(message.clone(), security);
+
+  let mut perms = create_permissions();
+  perms.head_referee = Some(true);
+  perms.judge_advisor = Some(true);
+
+  if check_permissions(clients, uuid, message.auth_token, perms).await {
+    match db.get_data().await.event.set(message.event) {
+      Ok(_) => {
+        info!("Event updated successfully");
+        // send event update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("event"),
+          sub_topic: String::from("update"),
+          message: String::from("")
+        }, clients.inner().to_owned(), None).await;
+        TmsRespond!();
+      },
+      Err(e) => {
+        error!("Failed to update event: {}", e);
+        TmsRespond!(Status::BadRequest, "Failed to update event".to_string());
+      }
+    }
+  }
+
+  TmsRespond!(Status::Unauthorized)
 }
 
 #[tms_private_route]

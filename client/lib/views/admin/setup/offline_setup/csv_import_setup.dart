@@ -36,41 +36,32 @@ class CSVImportSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "CSV Import",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: SizedBox(
+        height: Responsive.buttonHeight(context, 1),
+        width: Responsive.buttonWidth(context, 1),
+        child: ElevatedButton.icon(
+          onPressed: () {
+            FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowedExtensions: ['csv', 'txt'],
+            ).then((result) {
+              if (result != null) {
+                // parse the schedule, if it's not valid, pop up dialog
+                Tuple2<bool, SetupRequest?> parsed = parseSchedule(result);
+                if (parsed.item1 && parsed.item2 != null) {
+                  onSelectedSchedule(Tuple2(result, parsed.item2!));
+                } else {
+                  showParseError(context);
+                }
+              }
+            });
+          },
+          icon: const Icon(Icons.upload_file),
+          label: const Text("Import CSV"),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: SizedBox(
-            height: Responsive.buttonHeight(context, 1),
-            width: Responsive.buttonWidth(context, 1),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['csv', 'txt'],
-                ).then((result) {
-                  if (result != null) {
-                    // parse the schedule, if it's not valid, pop up dialog
-                    Tuple2<bool, SetupRequest?> parsed = parseSchedule(result);
-                    if (parsed.item1 && parsed.item2 != null) {
-                      onSelectedSchedule(Tuple2(result, parsed.item2!));
-                    } else {
-                      showParseError(context);
-                    }
-                  }
-                });
-              },
-              icon: const Icon(Icons.upload_file),
-              label: const Text("Import CSV"),
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

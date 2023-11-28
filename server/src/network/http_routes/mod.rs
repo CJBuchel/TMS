@@ -14,8 +14,8 @@ use user_routes::*;
 mod timer_routes;
 use timer_routes::*;
 
-mod backup_routes;
-use backup_routes::*;
+mod database_routes;
+use database_routes::*;
 
 mod event_routes;
 use event_routes::*;
@@ -205,6 +205,7 @@ impl TmsHttpServer {
         backups_delete_route,
         backups_restore_route,
         backups_download_route,
+        backups_upload_restore_route,
         
         // user routes
         login_route,

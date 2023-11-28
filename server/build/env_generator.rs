@@ -16,7 +16,7 @@ struct YamlVariables {
   variables: Vec<YamlEnv>
 }
 
-const VERSION: &str = "2023.1.6";
+const VERSION: &str = "2023.2.0";
 
 pub fn generate_env(outdir: &OsString) {
 
@@ -33,7 +33,7 @@ pub fn generate_env(outdir: &OsString) {
     f.write_all(line.as_bytes()).expect("Could not write to file");
   }
 
-  println!("cargo:rustc-env=VERSION={}", VERSION);
+  // println!("cargo:rustc-env=VERSION={}", VERSION); // for debug builds
 }
 
 pub fn generate_env_yaml(outdir: &OsString) {

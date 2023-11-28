@@ -1,4 +1,5 @@
 use log::{warn, error};
+use dotenv::dotenv;
 
 use serde::{Serialize, Deserialize, de::DeserializeOwned};
 use sled_extensions::{bincode::Tree, DbExt, Db};
@@ -79,14 +80,17 @@ impl TmsDB {
   pub async fn setup_database(&self) {
     match self.tms_data.read().await.system_info.get().unwrap() {
       Some(info) => {
-        if info.version != std::env::var("VERSION").unwrap_or(String::from("0.0.0")) {
-          error!("Version Mismatch: {} != {}, this may cause issues", info.version, std::env::var("VERSION").unwrap_or(String::from("0.0.0")));
+        dotenv().ok();
+        if info.version != std::env::var("TMS_TAG").unwrap_or(String::from("0.0.0")) {
+          error!("Version Mismatch: {} != {}, this may cause issues", info.version, std::env::var("TMS_TAG").unwrap_or(String::from("0.0.0")));
         }
       },
       None => {
         warn!("No System Info, generating...");
+        dotenv().ok();
+        warn!("System Version: {}", std::env::var("TMS_TAG").unwrap_or(String::from("0.0.0")));
         let _ = self.tms_data.read().await.system_info.set(SystemInfo {
-          version: std::env::var("VERSION").unwrap_or(String::from("0.0.0")),
+          version: std::env::var("TMS_TAG").unwrap_or(String::from("0.0.0")),
           last_backup: None
         });
       }

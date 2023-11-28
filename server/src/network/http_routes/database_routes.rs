@@ -1,7 +1,7 @@
 use log::error;
 use rocket::{State, post, http::Status};
 use tms_macros::tms_private_route;
-use tms_utils::network_schemas::{BackupsRequest, BackupsResponse, RestoreBackupRequest, DeleteBackupRequest, DownloadBackupRequest, DownloadBackupResponse, SocketMessage};
+use tms_utils::network_schemas::{BackupsRequest, BackupsResponse, RestoreBackupRequest, DeleteBackupRequest, DownloadBackupRequest, DownloadBackupResponse, SocketMessage, UploadBackupRequest};
 use tms_utils::security::encrypt;
 use tms_utils::{with_clients_read, tms_clients_ws_send};
 use tms_utils::{TmsRouteResponse, TmsRespond, security::Security, TmsClients, TmsRequest, schemas::create_permissions, check_permissions};
@@ -138,10 +138,6 @@ pub async fn backups_download_route(message: String, backup_service: &State<Back
 
   let perms = create_permissions(); // only admin can download backups
   if check_permissions(clients, uuid.clone(), message.auth_token, perms).await {
-    // let result = with_backup_service_read(backup_service, |service| {
-    //   service.download_backup(message.backup_name.clone())
-    // }).await;
-
     let backup = backup_service.read().await.download_backup(message.backup_name.clone());
 
     let response = DownloadBackupResponse {
@@ -169,6 +165,65 @@ pub async fn backups_download_route(message: String, backup_service: &State<Back
     }
   }
 
+
+  TmsRespond!(Status::Unauthorized, "Unauthorized".to_string());
+}
+
+
+
+#[tms_private_route]
+#[post("/backups/upload_restore/<uuid>", data = "<message>")]
+pub async fn backups_upload_restore_route(message: String, backup_service: &State<BackupServiceArc>) -> TmsRouteResponse<()> {
+  let message: UploadBackupRequest = TmsRequest!(message.clone(), security);
+
+  let perms = create_permissions(); // only admin can upload backups
+  if check_permissions(clients, uuid.clone(), message.auth_token, perms).await {
+    let result = backup_service.read().await.upload_restore_backup(message.file_name, message.data).await;
+
+    match result {
+      Ok(_) => {
+        // notify clients that the database has been restored
+
+        // send event update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("event"),
+          sub_topic: String::from("update"),
+          message: String::from("")
+        }, clients.inner().to_owned(), None).await;
+        
+        // send teams update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("teams"),
+          sub_topic: String::from("update"),
+          message: String::from("")
+        }, clients.inner().to_owned(), None).await;
+
+        // send matches update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("matches"),
+          sub_topic: String::from("update"),
+          message: String::from("")
+        }, clients.inner().to_owned(), None).await;
+
+        // send judging sessions update
+        tms_clients_ws_send(SocketMessage {
+          from_id: None,
+          topic: String::from("judging_sessions"),
+          sub_topic: String::from("update"),
+          message: String::from("")
+        }, clients.inner().to_owned(), None).await;
+
+        TmsRespond!()
+      },
+      Err(_) => {
+        error!("Failed to get Backups lock");
+        TmsRespond!(Status::InternalServerError, "Failed to get Backups lock".to_string());
+      }
+    }
+  }
 
   TmsRespond!(Status::Unauthorized, "Unauthorized".to_string());
 }

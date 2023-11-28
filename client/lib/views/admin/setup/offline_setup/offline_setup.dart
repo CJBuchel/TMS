@@ -7,6 +7,7 @@ import 'package:tms/views/admin/setup/offline_setup/admin_password.dart';
 import 'package:tms/views/admin/setup/offline_setup/backup_setup.dart';
 import 'package:tms/views/admin/setup/offline_setup/csv_import_setup.dart';
 import 'package:tms/views/admin/setup/offline_setup/game_setup.dart';
+import 'package:tms/views/admin/setup/offline_setup/kvdb_import_setup.dart';
 import 'package:tms/views/admin/setup/offline_setup/setup_buttons/setup_buttons.dart';
 import 'package:tms/views/shared/list_util.dart';
 
@@ -84,37 +85,37 @@ class _OfflineSetupState extends State<OfflineSetup> with AutoUnsubScribeMixin, 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // title
-            const Text(
-              'Offline Setup',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
             // snippet instructions
-            const NumberedList(title: "", list: [
-              "Import CSV",
-              "Admin Password",
-              "Select Backup Intervals",
-              "Select Season",
-              "Enter Event Name",
+            const NumberedList(title: "Offline Setup", list: [
+              "Import CSV Or KVDB",
+              "Update Admin Password",
+              "Update Backup Intervals",
+              "Update Season",
+              "Update Event Name",
               "Submit",
             ]),
 
             // import csv
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 16),
-              child: CSVImportSetup(
-                onSelectedSchedule: (schedule) {
-                  setState(() {
-                    _selectedSchedule = schedule.item1;
-                    _setupRequest = schedule.item2;
-                  });
-                },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // csv import
+                  CSVImportSetup(
+                    onSelectedSchedule: (schedule) {
+                      setState(() {
+                        _selectedSchedule = schedule.item1;
+                        _setupRequest = schedule.item2;
+                      });
+                    },
+                  ),
+                  // kvdb import
+                  const KVDBImportSetup(),
+                ],
               ),
             ),
+
             if (_selectedSchedule != null)
               Text(
                 "Selected Schedule: ${_selectedSchedule!.files.single.name}",

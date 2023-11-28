@@ -29,6 +29,23 @@ impl BackupService {
     }
   }
 
+  fn check_backups_folder(&self) -> bool {
+    // check if it exists
+    if !Path::new("backups").exists() {
+      match fs::create_dir("backups") {
+        Ok(_) => {
+          return true;
+        },
+        Err(_) => {
+          error!("Failed to create backups folder");
+          return false;
+        }
+      }
+    } else {
+      return true;
+    }
+  }
+
   async fn get_backup_info(&self) -> (u32, usize, String) {
     let event = match self.db.get_data().await.event.get() {
       Ok(event) => {
@@ -129,9 +146,7 @@ impl BackupService {
     let backup_folder = format!("backups/{}_{}_{}.zip", event_name, now, self.db_name);
 
     // check if the backup folder exists
-    if !Path::new("backups").exists() {
-      fs::create_dir("backups").unwrap();
-    }
+    self.check_backups_folder();
 
     let db_folder = Path::new(self.db_name.as_str());
     match fs::File::create(&backup_folder) {
@@ -188,11 +203,28 @@ impl BackupService {
 
   pub fn get_backup_names(&self) -> Vec<String> {
     let mut backups = Vec::new();
-    for entry in fs::read_dir("backups").unwrap() {
-      let entry = entry.unwrap();
-      let path = entry.path();
-      let name = path.file_name().unwrap().to_str().unwrap().to_string();
-      backups.push(name);
+    // check if it exists
+    if self.check_backups_folder() {
+      match fs::read_dir("backups") {
+        Ok(entries) => {
+          for entry_result in entries {
+            match entry_result {
+              Ok(entry) => {
+                let path = entry.path();
+                let name = path.file_name().unwrap().to_str().unwrap().to_string();
+                backups.push(name);
+              },
+              Err(_) => {
+                error!("Failed to read backup folder");
+                continue;
+              }
+            }
+          }
+        },
+        Err(_) => {
+          error!("Failed to read backup folder");
+        }
+      }
     }
     backups
   }
@@ -202,46 +234,85 @@ impl BackupService {
     let mut backups = Vec::new();
 
     // check if it exists
-    if !Path::new("backups").exists() {
-      fs::create_dir("backups").unwrap();
-    }
+    if self.check_backups_folder() {
+      match fs::read_dir("backups") {
+        Ok(entries) => {
+          for entry_result in entries {
+            match entry_result {
+              Ok(entry) => {
+                let path = entry.path();
+                let name = path.file_name().unwrap().to_str().unwrap().to_string();
+          
+                // convert the time to a pretty format
+                match path.metadata() {
+                  Ok(metadata) => {
+                    let time = match metadata.created() {
+                      Ok(time) => {
+                        time
+                      },
+                      Err(_) => {
+                        error!("Failed to get backup time");
+                        continue;
+                      }
+                    };
 
-    for entry in fs::read_dir("backups").unwrap() {
-      let entry = entry.unwrap();
-      let path = entry.path();
-      let name = path.file_name().unwrap().to_str().unwrap().to_string();
+                    let timestamp = match time.duration_since(UNIX_EPOCH) {
+                      Ok(timestamp) => {
+                        timestamp.as_secs()
+                      },
+                      Err(_) => {
+                        error!("Failed to get backup time");
+                        continue;
+                      }
+                    };
 
-      // convert the time to a pretty format
-      let time = path.metadata().unwrap().created().unwrap();
-      let timestamp = time.duration_since(UNIX_EPOCH).unwrap().as_secs();
-      let time = match chrono::NaiveDateTime::from_timestamp_opt(timestamp as i64, 0) {
-        Some(time) => {
-          time.format("%Y-%m-%d-%H:%M:%S").to_string()
+                    let time = match chrono::NaiveDateTime::from_timestamp_opt(timestamp as i64, 0) {
+                      Some(time) => {
+                        time.format("%Y-%m-%d-%H:%M:%S").to_string()
+                      },
+                      None => {
+                        error!("Failed to convert time to NaiveDateTime");
+                        String::from("Failed to convert time to NaiveDateTime")
+                      }
+                    };
+                    // backups.insert(name, time);
+                    backups.push(Backup {
+                      entry: name,
+                      timestamp_pretty: time,
+                      timestamp: timestamp as u64
+                    });
+                  },
+                  Err(_) => {
+                    error!("Failed to read backup folder");
+                    continue;
+                  }
+                }
+              },
+              Err(_) => {
+                error!("Failed to read backup folder");
+                continue;
+              }
+            }
+          }
         },
-        None => {
-          error!("Failed to convert time to NaiveDateTime");
-          String::from("Failed to convert time to NaiveDateTime")
+        
+        Err(_) => {
+          error!("Failed to read backup folder");
         }
-      };
-      // backups.insert(name, time);
-      backups.push(Backup {
-        entry: name,
-        timestamp_pretty: time,
-        timestamp: timestamp as u64
-      });
+      }
     }
+
+
     backups
   }
 
   pub fn download_backup(&self, backup_name: String) -> Vec<u8> {
-    let mut file = fs::File::open(format!("backups/{}", backup_name)).unwrap();
     let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer).unwrap();
+    if self.check_backups_folder() {
+      let mut file = fs::File::open(format!("backups/{}", backup_name)).unwrap();
+      file.read_to_end(&mut buffer).unwrap();
+    }
     buffer
-  }
-
-  pub fn delete_backup(&self, backup: String) {
-    fs::remove_file(format!("backups/{}", backup)).unwrap();
   }
 
   fn delete_old_backups(&self, backup_count: usize) {
@@ -258,6 +329,45 @@ impl BackupService {
 
       fs::remove_file(oldest_backup.path()).unwrap();
       warn!("Deleted old backups");
+    }
+  }
+
+  pub async fn upload_backup(&self, backup_name: String, data: Vec<u8>) -> Result<(), &'static str> {
+    // delete old backups (make space if needed)
+    let (_, backup_count, _) = self.get_backup_info().await;
+    self.delete_old_backups(backup_count);
+
+    // upload the backup to folder
+    match fs::File::create(format!("backups/{}", backup_name)) {
+      Ok(mut file) => {
+        match file.write_all(&data) {
+          Ok(_) => Ok(()),
+          Err(_) => {
+            error!("Failed to write backup file");
+            return Err("Failed to write backup file");
+          }
+        }
+      },
+      Err(_) => {
+        error!("Failed to create backup file");
+        Err("Failed to create backup file")
+      }
+    }
+  }
+
+  pub async fn upload_restore_backup(&self, backup_name: String, data: Vec<u8>) -> Result<(), &'static str> {
+    // upload the backup to folder
+    warn!("Uploading backup...");
+    self.upload_backup(backup_name.clone(), data).await?;
+
+    // restore using the backup
+    warn!("Restoring backup {}...", backup_name);
+    self.restore_db(backup_name).await
+  }
+
+  pub fn delete_backup(&self, backup: String) {
+    if self.check_backups_folder() {
+      fs::remove_file(format!("backups/{}", backup)).unwrap();
     }
   }
 

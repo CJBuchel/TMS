@@ -3,6 +3,12 @@ use serde::{Deserialize, Serialize};
 
 use crate::schemas::Backup;
 
+#[derive(JsonSchema, Deserialize, Serialize, Clone)]
+pub struct UploadBackupRequest {
+  pub auth_token: String,
+  pub file_name: String,
+  pub data: Vec<u8>, // binary format of the backup (zip)
+}
 
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct BackupsRequest {

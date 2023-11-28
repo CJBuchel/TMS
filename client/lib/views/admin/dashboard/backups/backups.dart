@@ -5,7 +5,7 @@ import 'package:tms/network/auth.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
-import 'package:tms/requests/backup_requests.dart';
+import 'package:tms/requests/database_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/admin/dashboard/backups/backups_table.dart';
 import 'package:tms/views/admin/dashboard/backups/create_backup.dart';

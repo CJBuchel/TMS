@@ -92,8 +92,9 @@ pub struct TmsSchema {
   match_loaded_request: MatchLoadRequest,
 
   // 
-  // Network structures (Backups)
+  // Network structures (Database/Backups)
   //
+  upload_backup_request: UploadBackupRequest,
   backups_request: BackupsRequest,
   backups_response: BackupsResponse,
   backup_delete_request: DeleteBackupRequest,

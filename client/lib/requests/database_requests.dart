@@ -95,3 +95,19 @@ Future<Tuple2<int, Uint8List>> downloadBackupRequest(String backupName) async {
     return Tuple2(HttpStatus.badRequest, Uint8List(0));
   }
 }
+
+Future<int> uploadRestoreBackupRequest(String backupName, Uint8List data) async {
+  try {
+    var message = UploadBackupRequest(authToken: await NetworkAuth().getToken(), data: data, fileName: backupName).toJson();
+    var res = await Network().serverPost("backups/upload_restore", message);
+
+    if (res.item1) {
+      return res.item2;
+    } else {
+      return HttpStatus.badRequest;
+    }
+  } catch (e) {
+    Logger().e(e);
+    return HttpStatus.badRequest;
+  }
+}

@@ -56,6 +56,7 @@
     "team_update_request",
     "teams_get_response",
     "update_user_request",
+    "upload_backup_request",
     "users",
     "users_request",
     "users_response"
@@ -219,6 +220,9 @@
     },
     "update_user_request": {
       "$ref": "#/definitions/UpdateUserRequest"
+    },
+    "upload_backup_request": {
+      "$ref": "#/definitions/UploadBackupRequest"
     },
     "users": {
       "$ref": "#/definitions/User"
@@ -1656,6 +1660,30 @@
           "$ref": "#/definitions/User"
         },
         "username": {
+          "type": "string"
+        }
+      }
+    },
+    "UploadBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "data",
+        "file_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        },
+        "file_name": {
           "type": "string"
         }
       }

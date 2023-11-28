@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
-import 'package:tms/requests/backup_requests.dart';
+import 'package:logger/logger.dart';
+import 'package:tms/requests/database_requests.dart';
 import 'package:tms/views/shared/network_error_popup.dart';
 
 class DownloadBackupButton extends StatelessWidget {
@@ -37,6 +38,7 @@ class DownloadBackupButton extends StatelessWidget {
               Navigator.pop(context);
               if (snapshot.hasData) {
                 if (snapshot.data?.item1 == HttpStatus.ok) {
+                  Logger().i("Length: ${snapshot.data?.item2.length}");
                   FileSaver.instance.saveFile(
                     name: backupName,
                     bytes: snapshot.data?.item2,

@@ -63,6 +63,7 @@ class TmsSchema {
         required this.teamUpdateRequest,
         required this.teamsGetResponse,
         required this.updateUserRequest,
+        required this.uploadBackupRequest,
         required this.users,
         required this.usersRequest,
         required this.usersResponse,
@@ -121,6 +122,7 @@ class TmsSchema {
     TeamUpdateRequest teamUpdateRequest;
     TeamsResponse teamsGetResponse;
     UpdateUserRequest updateUserRequest;
+    UploadBackupRequest uploadBackupRequest;
     User users;
     UsersRequest usersRequest;
     UsersResponse usersResponse;
@@ -179,6 +181,7 @@ class TmsSchema {
         teamUpdateRequest: TeamUpdateRequest.fromJson(json["team_update_request"]),
         teamsGetResponse: TeamsResponse.fromJson(json["teams_get_response"]),
         updateUserRequest: UpdateUserRequest.fromJson(json["update_user_request"]),
+        uploadBackupRequest: UploadBackupRequest.fromJson(json["upload_backup_request"]),
         users: User.fromJson(json["users"]),
         usersRequest: UsersRequest.fromJson(json["users_request"]),
         usersResponse: UsersResponse.fromJson(json["users_response"]),
@@ -238,6 +241,7 @@ class TmsSchema {
         "team_update_request": teamUpdateRequest.toJson(),
         "teams_get_response": teamsGetResponse.toJson(),
         "update_user_request": updateUserRequest.toJson(),
+        "upload_backup_request": uploadBackupRequest.toJson(),
         "users": users.toJson(),
         "users_request": usersRequest.toJson(),
         "users_response": usersResponse.toJson(),
@@ -1881,6 +1885,30 @@ class UpdateUserRequest {
         "auth_token": authToken,
         "updated_user": updatedUser.toJson(),
         "username": username,
+    };
+}
+
+class UploadBackupRequest {
+    UploadBackupRequest({
+        required this.authToken,
+        required this.data,
+        required this.fileName,
+    });
+
+    String authToken;
+    List<int> data;
+    String fileName;
+
+    factory UploadBackupRequest.fromJson(Map<String, dynamic> json) => UploadBackupRequest(
+        authToken: json["auth_token"],
+        data: List<int>.from(json["data"].map((x) => x)),
+        fileName: json["file_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "data": List<dynamic>.from(data.map((x) => x)),
+        "file_name": fileName,
     };
 }
 

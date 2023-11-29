@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/responsive.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/scoring/game_scoring.dart';
 
@@ -47,6 +48,15 @@ class ScoresheetEditPopup {
     );
   }
 
+  Widget _scoresheetContents() {
+    return SizedBox(
+      width: Responsive.buttonWidth(context, 3.5),
+      child: SingleChildScrollView(
+        child: _scoresheetDisplay(),
+      ),
+    );
+  }
+
   void _dialog() {
     showDialog(
       context: context,
@@ -59,11 +69,7 @@ class ScoresheetEditPopup {
               Text("Editing Scoresheet"),
             ],
           ),
-          content: SizedBox.expand(
-            child: SingleChildScrollView(
-              child: _scoresheetDisplay(),
-            ),
-          ),
+          content: _scoresheetContents(),
           actions: [
             TextButton(
               onPressed: () {

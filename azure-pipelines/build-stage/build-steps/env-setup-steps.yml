@@ -27,3 +27,5 @@ steps:
       cargoCommand: 'build'
       cargoWorkingDir: './server'
       verbose: true
+    env:
+      CARGO_BUILD_JOBS: 2

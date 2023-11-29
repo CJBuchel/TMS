@@ -12,42 +12,59 @@ class KVDBImportSetup extends StatelessWidget {
   }) : super(key: key);
 
   void _uploadDatabase(BuildContext context, FilePickerResult result) {
-    var name = result.files.single.name;
-    var data = result.files.single.bytes;
-    if (data != null && data.isNotEmpty && name.isNotEmpty) {
-      uploadRestoreBackupRequest(name, data).then((res) {
-        if (res == HttpStatus.ok) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: const Row(
-                children: [
-                  Icon(Icons.check, color: Colors.green),
-                  SizedBox(width: 10),
-                  Text(
-                    "Successful Import",
-                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              content: const Text("The database has been imported."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            ),
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        var name = result.files.single.name;
+        var data = result.files.single.bytes;
+        if (data != null && data.isNotEmpty && name.isNotEmpty) {
+          return FutureBuilder(
+            future: uploadRestoreBackupRequest(name, data),
+            builder: (context, res) {
+              if (res.connectionState == ConnectionState.waiting) {
+                return const AlertDialog(
+                  title: Text("Importing Database..."),
+                  content: LinearProgressIndicator(),
+                );
+              } else {
+                if (res.data == HttpStatus.ok) {
+                  return AlertDialog(
+                    title: const Row(
+                      children: [
+                        Icon(Icons.check, color: Colors.green),
+                        SizedBox(width: 10),
+                        Text(
+                          "Successful Import",
+                          style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    content: const Text("The database has been imported."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  );
+                } else {
+                  Navigator.pop(context);
+                  showNetworkError(res.data!, context, subMessage: "Failed to upload database.");
+                  return const SizedBox.shrink();
+                }
+              }
+            },
           );
         } else {
-          showNetworkError(res, context, subMessage: "Failed to upload database.");
+          Navigator.pop(context);
+          showNetworkError(HttpStatus.badRequest, context, subMessage: "Failed to upload database.");
+          return const SizedBox.shrink();
         }
-      });
-    } else {
-      showNetworkError(HttpStatus.badRequest, context, subMessage: "Failed to upload database.");
-    }
+      },
+    );
   }
 
   void _uploadFile(BuildContext context) {

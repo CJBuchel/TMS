@@ -51,7 +51,7 @@ jobs:
 
 # - job: Server_MacOs
 #   pool:
-#     vmImage: 'macOs-12'
+#     vmImage: 'macOs-13'
 #   steps:
 #     - template: ./build-steps/env-setup-steps.yml
 #     - template: ./build-steps/setup-rust-steps.yml

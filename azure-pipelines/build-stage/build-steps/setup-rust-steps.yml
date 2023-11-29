@@ -38,9 +38,13 @@ steps:
 
   # install openssl for macos
   - script: |
-      brew install openssl@3
+      brew update
+      brew install rbenv/tap/openssl@3.1.0
+      brew link --force openssl@3.1.0
+      export PKG_CONFIG_PATH="/usr/local/opt/openssl@3.1.0/lib/pkgconfig"
+      export OPENSSL_ROOT_DIR="/usr/local/opt/openssl@3.1.0"
+    displayName: 'Install specific version of OpenSSL'
     condition: eq( variables['Agent.OS'], 'Darwin' )
-    displayName: 'Install/Update openssl on macOS'
 
   # Rust install for linux MUSL target
   - task: Rustup@1

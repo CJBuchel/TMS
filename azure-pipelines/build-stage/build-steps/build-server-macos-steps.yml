@@ -5,6 +5,8 @@ steps:
       cargoCommand: 'build --target x86_64-apple-darwin --release'
       cargoWorkingDir: './server'
       verbose: true
+    env:
+      CARGO_BUILD_JOBS: 2
 
   - task: CopyFiles@2
     displayName: 'Copy Server to Artifact Staging Directory'

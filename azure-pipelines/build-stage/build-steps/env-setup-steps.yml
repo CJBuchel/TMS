@@ -21,7 +21,7 @@ steps:
 
   # build server in debug to generate env (only if publishable)
   - task: Cargo@1
-    condition: and(eq(variables['isPublishable'], true), ne(variables['Agent.OS'], 'Ventura'))
+    condition: and(eq(variables['isPublishable'], true), ne(variables['Agent.OS'], 'Darwin'))
     displayName: 'Build Rust Server (debug)'
     inputs:
       cargoCommand: 'build'

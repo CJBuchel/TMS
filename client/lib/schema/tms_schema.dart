@@ -11,6 +11,12 @@ String tmsSchemaToJson(TmsSchema data) => json.encode(data.toJson());
 class TmsSchema {
     TmsSchema({
         required this.addUserRequest,
+        required this.backupDeleteRequest,
+        required this.backupRestoreRequest,
+        required this.backupsDownloadRequest,
+        required this.backupsDownloadResponse,
+        required this.backupsRequest,
+        required this.backupsResponse,
         required this.deleteUserRequest,
         required this.event,
         required this.eventGetApiLinkRequest,
@@ -56,13 +62,21 @@ class TmsSchema {
         required this.teamPostGameScoresheetRequest,
         required this.teamUpdateRequest,
         required this.teamsGetResponse,
+        required this.updateEventRequest,
         required this.updateUserRequest,
+        required this.uploadBackupRequest,
         required this.users,
         required this.usersRequest,
         required this.usersResponse,
     });
 
     AddUserRequest addUserRequest;
+    DeleteBackupRequest backupDeleteRequest;
+    RestoreBackupRequest backupRestoreRequest;
+    DownloadBackupRequest backupsDownloadRequest;
+    DownloadBackupResponse backupsDownloadResponse;
+    BackupsRequest backupsRequest;
+    BackupsResponse backupsResponse;
     DeleteUserRequest deleteUserRequest;
     Event event;
     ApiLinkRequest eventGetApiLinkRequest;
@@ -108,13 +122,21 @@ class TmsSchema {
     TeamPostGameScoresheetRequest teamPostGameScoresheetRequest;
     TeamUpdateRequest teamUpdateRequest;
     TeamsResponse teamsGetResponse;
+    UpdateEventRequest updateEventRequest;
     UpdateUserRequest updateUserRequest;
+    UploadBackupRequest uploadBackupRequest;
     User users;
     UsersRequest usersRequest;
     UsersResponse usersResponse;
 
     factory TmsSchema.fromJson(Map<String, dynamic> json) => TmsSchema(
         addUserRequest: AddUserRequest.fromJson(json["add_user_request"]),
+        backupDeleteRequest: DeleteBackupRequest.fromJson(json["backup_delete_request"]),
+        backupRestoreRequest: RestoreBackupRequest.fromJson(json["backup_restore_request"]),
+        backupsDownloadRequest: DownloadBackupRequest.fromJson(json["backups_download_request"]),
+        backupsDownloadResponse: DownloadBackupResponse.fromJson(json["backups_download_response"]),
+        backupsRequest: BackupsRequest.fromJson(json["backups_request"]),
+        backupsResponse: BackupsResponse.fromJson(json["backups_response"]),
         deleteUserRequest: DeleteUserRequest.fromJson(json["delete_user_request"]),
         event: Event.fromJson(json["event"]),
         eventGetApiLinkRequest: ApiLinkRequest.fromJson(json["event_get_api_link_request"]),
@@ -160,7 +182,9 @@ class TmsSchema {
         teamPostGameScoresheetRequest: TeamPostGameScoresheetRequest.fromJson(json["team_post_game_scoresheet_request"]),
         teamUpdateRequest: TeamUpdateRequest.fromJson(json["team_update_request"]),
         teamsGetResponse: TeamsResponse.fromJson(json["teams_get_response"]),
+        updateEventRequest: UpdateEventRequest.fromJson(json["update_event_request"]),
         updateUserRequest: UpdateUserRequest.fromJson(json["update_user_request"]),
+        uploadBackupRequest: UploadBackupRequest.fromJson(json["upload_backup_request"]),
         users: User.fromJson(json["users"]),
         usersRequest: UsersRequest.fromJson(json["users_request"]),
         usersResponse: UsersResponse.fromJson(json["users_response"]),
@@ -168,6 +192,12 @@ class TmsSchema {
 
     Map<String, dynamic> toJson() => {
         "add_user_request": addUserRequest.toJson(),
+        "backup_delete_request": backupDeleteRequest.toJson(),
+        "backup_restore_request": backupRestoreRequest.toJson(),
+        "backups_download_request": backupsDownloadRequest.toJson(),
+        "backups_download_response": backupsDownloadResponse.toJson(),
+        "backups_request": backupsRequest.toJson(),
+        "backups_response": backupsResponse.toJson(),
         "delete_user_request": deleteUserRequest.toJson(),
         "event": event.toJson(),
         "event_get_api_link_request": eventGetApiLinkRequest.toJson(),
@@ -213,7 +243,9 @@ class TmsSchema {
         "team_post_game_scoresheet_request": teamPostGameScoresheetRequest.toJson(),
         "team_update_request": teamUpdateRequest.toJson(),
         "teams_get_response": teamsGetResponse.toJson(),
+        "update_event_request": updateEventRequest.toJson(),
         "update_user_request": updateUserRequest.toJson(),
+        "upload_backup_request": uploadBackupRequest.toJson(),
         "users": users.toJson(),
         "users_request": usersRequest.toJson(),
         "users_response": usersResponse.toJson(),
@@ -296,6 +328,142 @@ class Permissions {
     };
 }
 
+class DeleteBackupRequest {
+    DeleteBackupRequest({
+        required this.authToken,
+        required this.backupName,
+    });
+
+    String authToken;
+    String backupName;
+
+    factory DeleteBackupRequest.fromJson(Map<String, dynamic> json) => DeleteBackupRequest(
+        authToken: json["auth_token"],
+        backupName: json["backup_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "backup_name": backupName,
+    };
+}
+
+class RestoreBackupRequest {
+    RestoreBackupRequest({
+        required this.authToken,
+        required this.backupName,
+    });
+
+    String authToken;
+    String backupName;
+
+    factory RestoreBackupRequest.fromJson(Map<String, dynamic> json) => RestoreBackupRequest(
+        authToken: json["auth_token"],
+        backupName: json["backup_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "backup_name": backupName,
+    };
+}
+
+class DownloadBackupRequest {
+    DownloadBackupRequest({
+        required this.authToken,
+        required this.backupName,
+    });
+
+    String authToken;
+    String backupName;
+
+    factory DownloadBackupRequest.fromJson(Map<String, dynamic> json) => DownloadBackupRequest(
+        authToken: json["auth_token"],
+        backupName: json["backup_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "backup_name": backupName,
+    };
+}
+
+class DownloadBackupResponse {
+    DownloadBackupResponse({
+        this.data,
+        required this.fileName,
+    });
+
+    List<int>? data;
+    String fileName;
+
+    factory DownloadBackupResponse.fromJson(Map<String, dynamic> json) => DownloadBackupResponse(
+        data: json["data"] == null ? [] : List<int>.from(json["data"]!.map((x) => x)),
+        fileName: json["file_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x)),
+        "file_name": fileName,
+    };
+}
+
+class BackupsRequest {
+    BackupsRequest({
+        required this.authToken,
+    });
+
+    String authToken;
+
+    factory BackupsRequest.fromJson(Map<String, dynamic> json) => BackupsRequest(
+        authToken: json["auth_token"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+    };
+}
+
+class BackupsResponse {
+    BackupsResponse({
+        required this.backups,
+    });
+
+    List<Backup> backups;
+
+    factory BackupsResponse.fromJson(Map<String, dynamic> json) => BackupsResponse(
+        backups: List<Backup>.from(json["backups"].map((x) => Backup.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "backups": List<dynamic>.from(backups.map((x) => x.toJson())),
+    };
+}
+
+class Backup {
+    Backup({
+        required this.entry,
+        required this.timestamp,
+        required this.timestampPretty,
+    });
+
+    String entry;
+    int timestamp;
+    String timestampPretty;
+
+    factory Backup.fromJson(Map<String, dynamic> json) => Backup(
+        entry: json["entry"],
+        timestamp: json["timestamp"],
+        timestampPretty: json["timestamp_pretty"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "entry": entry,
+        "timestamp": timestamp,
+        "timestamp_pretty": timestampPretty,
+    };
+}
+
 class DeleteUserRequest {
     DeleteUserRequest({
         required this.authToken,
@@ -318,6 +486,8 @@ class DeleteUserRequest {
 
 class Event {
     Event({
+        required this.backupCount,
+        required this.backupInterval,
         required this.endGameTimerLength,
         required this.eventRounds,
         required this.name,
@@ -327,6 +497,8 @@ class Event {
         required this.timerLength,
     });
 
+    int backupCount;
+    int backupInterval;
     int endGameTimerLength;
     int eventRounds;
     String name;
@@ -336,6 +508,8 @@ class Event {
     int timerLength;
 
     factory Event.fromJson(Map<String, dynamic> json) => Event(
+        backupCount: json["backup_count"],
+        backupInterval: json["backup_interval"],
         endGameTimerLength: json["end_game_timer_length"],
         eventRounds: json["event_rounds"],
         name: json["name"],
@@ -346,6 +520,8 @@ class Event {
     );
 
     Map<String, dynamic> toJson() => {
+        "backup_count": backupCount,
+        "backup_interval": backupInterval,
         "end_game_timer_length": endGameTimerLength,
         "event_rounds": eventRounds,
         "name": name,
@@ -1246,18 +1422,18 @@ class SeasonsResponse {
 
 class SetupRequest {
     SetupRequest({
-        required this.adminPassword,
+        this.adminPassword,
         required this.authToken,
-        required this.event,
+        this.event,
         required this.judgingSessions,
         required this.matches,
         required this.teams,
         required this.users,
     });
 
-    String adminPassword;
+    String? adminPassword;
     String authToken;
-    Event event;
+    Event? event;
     List<JudgingSession> judgingSessions;
     List<GameMatch> matches;
     List<Team> teams;
@@ -1266,7 +1442,7 @@ class SetupRequest {
     factory SetupRequest.fromJson(Map<String, dynamic> json) => SetupRequest(
         adminPassword: json["admin_password"],
         authToken: json["auth_token"],
-        event: Event.fromJson(json["event"]),
+        event: json["event"] == null ? null : Event.fromJson(json["event"]),
         judgingSessions: List<JudgingSession>.from(json["judging_sessions"].map((x) => JudgingSession.fromJson(x))),
         matches: List<GameMatch>.from(json["matches"].map((x) => GameMatch.fromJson(x))),
         teams: List<Team>.from(json["teams"].map((x) => Team.fromJson(x))),
@@ -1276,7 +1452,7 @@ class SetupRequest {
     Map<String, dynamic> toJson() => {
         "admin_password": adminPassword,
         "auth_token": authToken,
-        "event": event.toJson(),
+        "event": event?.toJson(),
         "judging_sessions": List<dynamic>.from(judgingSessions.map((x) => x.toJson())),
         "matches": List<dynamic>.from(matches.map((x) => x.toJson())),
         "teams": List<dynamic>.from(teams.map((x) => x.toJson())),
@@ -1692,6 +1868,26 @@ class TeamsResponse {
     };
 }
 
+class UpdateEventRequest {
+    UpdateEventRequest({
+        required this.authToken,
+        required this.event,
+    });
+
+    String authToken;
+    Event event;
+
+    factory UpdateEventRequest.fromJson(Map<String, dynamic> json) => UpdateEventRequest(
+        authToken: json["auth_token"],
+        event: Event.fromJson(json["event"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "event": event.toJson(),
+    };
+}
+
 class UpdateUserRequest {
     UpdateUserRequest({
         required this.authToken,
@@ -1713,6 +1909,30 @@ class UpdateUserRequest {
         "auth_token": authToken,
         "updated_user": updatedUser.toJson(),
         "username": username,
+    };
+}
+
+class UploadBackupRequest {
+    UploadBackupRequest({
+        required this.authToken,
+        required this.data,
+        required this.fileName,
+    });
+
+    String authToken;
+    List<int> data;
+    String fileName;
+
+    factory UploadBackupRequest.fromJson(Map<String, dynamic> json) => UploadBackupRequest(
+        authToken: json["auth_token"],
+        data: List<int>.from(json["data"].map((x) => x)),
+        fileName: json["file_name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "data": List<dynamic>.from(data.map((x) => x)),
+        "file_name": fileName,
     };
 }
 

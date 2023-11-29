@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/dashboard/judging/judging.dart';
+import 'package:tms/views/shared/dashboard/pods/pods.dart';
 import 'package:tms/views/shared/dashboard/team_data/team_data.dart';
 import 'package:tms/views/shared/dashboard/teams/teams.dart';
 import 'package:tms/views/judge_advisor/ja_handler.dart';
@@ -43,6 +44,11 @@ class JudgeAdvisorSideMenu extends StatelessWidget {
             title: 'Judging Sessions',
             svgSrc: 'assets/icons/table.svg',
             press: () => _handleViewSwitch(const Judging(), context),
+          ),
+          DrawerListTile(
+            title: 'Pods',
+            icon: Icons.table_bar_rounded,
+            press: () => _handleViewSwitch(const Pods(), context),
           ),
           DrawerListTile(
             title: 'Teams',

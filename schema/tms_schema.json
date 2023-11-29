@@ -4,6 +4,12 @@
   "type": "object",
   "required": [
     "add_user_request",
+    "backup_delete_request",
+    "backup_restore_request",
+    "backups_download_request",
+    "backups_download_response",
+    "backups_request",
+    "backups_response",
     "delete_user_request",
     "event",
     "event_get_api_link_request",
@@ -49,7 +55,9 @@
     "team_post_game_scoresheet_request",
     "team_update_request",
     "teams_get_response",
+    "update_event_request",
     "update_user_request",
+    "upload_backup_request",
     "users",
     "users_request",
     "users_response"
@@ -57,6 +65,24 @@
   "properties": {
     "add_user_request": {
       "$ref": "#/definitions/AddUserRequest"
+    },
+    "backup_delete_request": {
+      "$ref": "#/definitions/DeleteBackupRequest"
+    },
+    "backup_restore_request": {
+      "$ref": "#/definitions/RestoreBackupRequest"
+    },
+    "backups_download_request": {
+      "$ref": "#/definitions/DownloadBackupRequest"
+    },
+    "backups_download_response": {
+      "$ref": "#/definitions/DownloadBackupResponse"
+    },
+    "backups_request": {
+      "$ref": "#/definitions/BackupsRequest"
+    },
+    "backups_response": {
+      "$ref": "#/definitions/BackupsResponse"
     },
     "delete_user_request": {
       "$ref": "#/definitions/DeleteUserRequest"
@@ -193,8 +219,14 @@
     "teams_get_response": {
       "$ref": "#/definitions/TeamsResponse"
     },
+    "update_event_request": {
+      "$ref": "#/definitions/UpdateEventRequest"
+    },
     "update_user_request": {
       "$ref": "#/definitions/UpdateUserRequest"
+    },
+    "upload_backup_request": {
+      "$ref": "#/definitions/UploadBackupRequest"
     },
     "users": {
       "$ref": "#/definitions/User"
@@ -263,6 +295,52 @@
         }
       }
     },
+    "Backup": {
+      "type": "object",
+      "required": [
+        "entry",
+        "timestamp",
+        "timestamp_pretty"
+      ],
+      "properties": {
+        "entry": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "uint64",
+          "minimum": 0.0
+        },
+        "timestamp_pretty": {
+          "type": "string"
+        }
+      }
+    },
+    "BackupsRequest": {
+      "type": "object",
+      "required": [
+        "auth_token"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        }
+      }
+    },
+    "BackupsResponse": {
+      "type": "object",
+      "required": [
+        "backups"
+      ],
+      "properties": {
+        "backups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Backup"
+          }
+        }
+      }
+    },
     "DefaultValue": {
       "oneOf": [
         {
@@ -292,6 +370,21 @@
         }
       ]
     },
+    "DeleteBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "backup_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "backup_name": {
+          "type": "string"
+        }
+      }
+    },
     "DeleteUserRequest": {
       "type": "object",
       "required": [
@@ -307,9 +400,48 @@
         }
       }
     },
+    "DownloadBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "backup_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "backup_name": {
+          "type": "string"
+        }
+      }
+    },
+    "DownloadBackupResponse": {
+      "type": "object",
+      "required": [
+        "file_name"
+      ],
+      "properties": {
+        "data": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        },
+        "file_name": {
+          "type": "string"
+        }
+      }
+    },
     "Event": {
       "type": "object",
       "required": [
+        "backup_count",
+        "backup_interval",
         "end_game_timer_length",
         "event_rounds",
         "name",
@@ -319,6 +451,16 @@
         "timer_length"
       ],
       "properties": {
+        "backup_count": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "backup_interval": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
         "end_game_timer_length": {
           "type": "integer",
           "format": "uint32",
@@ -1059,6 +1201,21 @@
         }
       }
     },
+    "RestoreBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "backup_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "backup_name": {
+          "type": "string"
+        }
+      }
+    },
     "Score": {
       "type": "object",
       "required": [
@@ -1133,9 +1290,7 @@
     "SetupRequest": {
       "type": "object",
       "required": [
-        "admin_password",
         "auth_token",
-        "event",
         "judging_sessions",
         "matches",
         "teams",
@@ -1143,13 +1298,23 @@
       ],
       "properties": {
         "admin_password": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "auth_token": {
           "type": "string"
         },
         "event": {
-          "$ref": "#/definitions/Event"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Event"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "judging_sessions": {
           "type": "array",
@@ -1484,6 +1649,21 @@
         }
       }
     },
+    "UpdateEventRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "event"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "event": {
+          "$ref": "#/definitions/Event"
+        }
+      }
+    },
     "UpdateUserRequest": {
       "type": "object",
       "required": [
@@ -1499,6 +1679,30 @@
           "$ref": "#/definitions/User"
         },
         "username": {
+          "type": "string"
+        }
+      }
+    },
+    "UploadBackupRequest": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "data",
+        "file_name"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint8",
+            "minimum": 0.0
+          }
+        },
+        "file_name": {
           "type": "string"
         }
       }

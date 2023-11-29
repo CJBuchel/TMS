@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/admin/setup/api_setup.dart';
-import 'package:tms/views/admin/setup/offline_setup.dart';
+import 'package:tms/views/admin/setup/offline_setup/offline_setup.dart';
 import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
 class Setup extends StatelessWidget {

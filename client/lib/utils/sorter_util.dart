@@ -86,3 +86,8 @@ List<JudgingSession> sortJudgingByTime(List<JudgingSession> judging) {
   });
   return judging;
 }
+
+List<Backup> sortBackupsByDate(List<Backup> backups) {
+  var sortedBackups = backups..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  return sortedBackups;
+}

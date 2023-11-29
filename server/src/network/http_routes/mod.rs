@@ -14,6 +14,9 @@ use user_routes::*;
 mod timer_routes;
 use timer_routes::*;
 
+mod database_routes;
+use database_routes::*;
+
 mod event_routes;
 use event_routes::*;
 
@@ -35,7 +38,7 @@ use proxy_routes::*;
 use tms_utils::{security::Security, security::encrypt, TmsRespond, TmsRouteResponse, TmsClients, TmsRequest, network_schemas::IntegrityMessage, with_clients_write};
 use uuid::Uuid;
 
-use crate::{event_service::TmsEventServiceArc, db::db::TmsDB};
+use crate::{event_service::TmsEventServiceArc, db::{db::TmsDBArc, backup_service::BackupServiceArc}};
 
 // CORS fairing
 pub struct CORS;
@@ -147,7 +150,8 @@ fn cors_preflight(_path: PathBuf) -> Status {
 
 pub struct TmsHttpServer {
   tms_event_service: TmsEventServiceArc,
-  tms_db: std::sync::Arc<TmsDB>,
+  tms_db: TmsDBArc,
+  tms_db_backup_service: BackupServiceArc,
   security: Security,
   clients: TmsClients,
   port: u16,
@@ -155,8 +159,16 @@ pub struct TmsHttpServer {
 }
 
 impl TmsHttpServer {
-  pub fn new(tms_event_service: TmsEventServiceArc, tms_db: std::sync::Arc<TmsDB>, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
-    Self { tms_event_service, tms_db, security, clients, port, ws_port }
+  pub fn new(tms_event_service: TmsEventServiceArc, tms_db_backup_service: BackupServiceArc, tms_db: TmsDBArc, security: Security, clients: TmsClients, port: u16, ws_port: u16) -> Self {
+    Self { 
+      tms_event_service, 
+      tms_db_backup_service,
+      tms_db, 
+      security, 
+      clients, 
+      port, 
+      ws_port 
+    }
   }
 
   pub async fn start(&self) -> Rocket<Build> {
@@ -173,6 +185,7 @@ impl TmsHttpServer {
     rocket::custom(figment)
       .manage(self.tms_event_service.clone())
       .manage(self.tms_db.clone())
+      .manage(self.tms_db_backup_service.clone())
       .manage(self.clients.clone())
       .manage(self.security.clone())
       .manage(self.security.public_key.clone())
@@ -185,6 +198,14 @@ impl TmsHttpServer {
         unregister_route,
         publish_route,
         proxy_image_get_route,
+
+        // backup routes
+        backups_get_route,
+        backups_create_route,
+        backups_delete_route,
+        backups_restore_route,
+        backups_download_route,
+        backups_upload_restore_route,
         
         // user routes
         login_route,
@@ -195,6 +216,7 @@ impl TmsHttpServer {
 
         // event routes
         event_setup_route,
+        event_set_route,
         event_purge_route,
         event_get_route,
         event_get_api_link_route,

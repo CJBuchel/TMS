@@ -3,6 +3,7 @@ FROM nginx:stable-alpine3.17-slim as nginx
 WORKDIR /tms
 
 # Setup server
+COPY ./.env .
 COPY ./server/target/x86_64-unknown-linux-musl/release/tms_server .
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
 

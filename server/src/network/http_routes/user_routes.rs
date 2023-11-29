@@ -16,7 +16,7 @@ use crate::db::db::TmsDB;
 #[post("/login/<uuid>", data = "<message>")]
 pub async fn login_route(message: String) -> TmsRouteResponse<()> {
   let message: LoginRequest = TmsRequest!(message.clone(), security);
-  let user = match db.tms_data.users.get(message.username.clone()).unwrap() {
+  let user = match db.get_data().await.users.get(message.username.clone()).unwrap() {
     Some(user) => user,
     None => {
       TmsRespond!(Status::NotFound)
@@ -72,7 +72,7 @@ pub async fn users_get_route(message: String) -> TmsRouteResponse<()> {
 
   if check_permissions(clients, uuid.clone(), users_request.auth_token, perms).await {
     let mut users:Vec<User> = vec![];
-    for user_raw in db.tms_data.users.iter() {
+    for user_raw in db.get_data().await.users.iter() {
       let user = match user_raw {
         Ok(user) => user.1,
         _ => {
@@ -127,7 +127,7 @@ pub async fn user_add_route(message: String) -> TmsRouteResponse<()> {
     let permissions = user.permissions.clone();
 
     // Check if user already exists
-    match db.tms_data.users.get(&username).unwrap() {
+    match db.get_data().await.users.get(&username).unwrap() {
       Some(_) => {
         TmsRespond!(Status::BadRequest, "User already exists".to_string());
       },
@@ -138,7 +138,7 @@ pub async fn user_add_route(message: String) -> TmsRouteResponse<()> {
           permissions: permissions.clone()
         };
 
-        let _ = db.tms_data.users.insert(username.as_bytes(), user.clone());
+        let _ = db.get_data().await.users.insert(username.as_bytes(), user.clone());
         // Respond to client
         let result = with_clients_write(&clients, |client_map| {
           client_map.clone()
@@ -180,9 +180,9 @@ pub async fn user_delete_route(message: String) -> TmsRouteResponse<()> {
     } else {
 
       // Check if user already exists
-      match db.tms_data.users.get(&username).unwrap() {
+      match db.get_data().await.users.get(&username).unwrap() {
         Some(_) => {
-          let _ = db.tms_data.users.remove(&username);
+          let _ = db.get_data().await.users.remove(&username);
           // Respond to client
           let result = with_clients_write(&clients, |client_map| {
             client_map.clone()
@@ -231,9 +231,9 @@ pub async fn user_update_route(message: String) -> TmsRouteResponse<()> {
     } else {
 
       // Check if user already exists
-      match db.tms_data.users.get(username.as_bytes()).unwrap() {
+      match db.get_data().await.users.get(username.as_bytes()).unwrap() {
         Some(_) => {
-          match db.tms_data.users.update(username.as_bytes(), update_user_request.updated_user.username.as_bytes(), updated_user.clone()) {
+          match db.get_data().await.users.update(username.as_bytes(), update_user_request.updated_user.username.as_bytes(), updated_user.clone()) {
             Ok(_) => {},
             Err(e) => {
               match e {

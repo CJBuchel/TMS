@@ -2,7 +2,7 @@ steps:
   - task: Cargo@1
     displayName: 'Build Rust Server'
     inputs:
-      cargoCommand: 'build --target x86_64-apple-darwin --release -j 2'
+      cargoCommand: 'build --target x86_64-apple-darwin --release -j 1'
       cargoWorkingDir: './server'
       verbose: true
 

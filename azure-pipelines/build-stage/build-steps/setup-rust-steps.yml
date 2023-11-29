@@ -38,7 +38,7 @@ steps:
 
   # install openssl for macos
   - script: |
-      brew install openssl
+      brew install openssl@3
     condition: eq( variables['Agent.OS'], 'Darwin' )
     displayName: 'Install/Update openssl on macOS'
 

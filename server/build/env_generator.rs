@@ -16,7 +16,7 @@ struct YamlVariables {
   variables: Vec<YamlEnv>
 }
 
-const VERSION: &str = "2023.2.0";
+const VERSION: &str = "2023.2.1";
 
 pub fn generate_env(outdir: &OsString) {
 

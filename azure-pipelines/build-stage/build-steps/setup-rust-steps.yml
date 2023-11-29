@@ -44,7 +44,7 @@ steps:
       export PKG_CONFIG_PATH="/usr/local/opt/openssl@3.1.0/lib/pkgconfig"
       export OPENSSL_ROOT_DIR="/usr/local/opt/openssl@3.1.0"
     displayName: 'Install specific version of OpenSSL'
-    condition: eq( variables['Agent.OS'], 'Ventura' )
+    condition: eq( variables['Agent.OS'], 'Darwin' )
 
   # Rust install for linux MUSL target
   - task: Rustup@1
@@ -65,9 +65,9 @@ steps:
   # Rust install for macos target
   - task: Rustup@1
     displayName: 'Install Rust for macos'
-    condition: eq( variables['Agent.OS'], 'Ventura' )
+    condition: eq( variables['Agent.OS'], 'Darwin' )
     inputs:
-      rustupCommand: 'target install x86_64-apple-ventura'
+      rustupCommand: 'target install x86_64-apple-darwin'
       verbose: false
 
   # Rust install for windows target

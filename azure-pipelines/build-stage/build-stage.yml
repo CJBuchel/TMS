@@ -11,7 +11,7 @@ jobs:
 
 - job: IOS
   pool:
-    vmImage: 'macOs-13'
+    vmImage: 'macOs-12'
   steps:
     - template: ./build-steps/env-setup-steps.yml
     - template: ./build-steps/setup-flutter-steps.yml
@@ -49,10 +49,10 @@ jobs:
     - template: ./build-steps/setup-rust-steps.yml
     - template: ./build-steps/build-server-linux-steps.yml
 
-- job: Server_MacOs
-  pool:
-    vmImage: 'macOs-13'
-  steps:
-    - template: ./build-steps/env-setup-steps.yml
-    - template: ./build-steps/setup-rust-steps.yml
-    - template: ./build-steps/build-server-macos-steps.yml
+# - job: Server_MacOs
+#   pool:
+#     vmImage: 'macOs-13'
+#   steps:
+#     - template: ./build-steps/env-setup-steps.yml
+#     - template: ./build-steps/setup-rust-steps.yml
+#     - template: ./build-steps/build-server-macos-steps.yml

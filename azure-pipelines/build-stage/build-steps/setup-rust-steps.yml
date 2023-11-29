@@ -39,8 +39,8 @@ steps:
   # install openssl for macos
   - script: |
       brew install openssl@3
-    condition: contains( variables['Agent.OS'], 'macOS' )
-    displayName: 'Install/Update openssl on MacOS'
+    condition: eq( variables['Agent.OS'], 'Ventura' )
+    displayName: 'Install/Update openssl on Ventura'
 
   # Rust install for linux MUSL target
   - task: Rustup@1
@@ -61,7 +61,7 @@ steps:
   # Rust install for macos target
   - task: Rustup@1
     displayName: 'Install Rust for macos'
-    condition: contains( variables['Agent.OS'], 'macOS' )
+    condition: eq( variables['Agent.OS'], 'Ventura' )
     inputs:
       rustupCommand: 'target install x86_64-apple-darwin'
       verbose: false

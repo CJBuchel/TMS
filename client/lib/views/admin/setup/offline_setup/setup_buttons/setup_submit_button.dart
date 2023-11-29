@@ -44,52 +44,75 @@ class SetupSubmitButton extends StatelessWidget {
   }) : super(key: key);
 
   void _onSubmit(BuildContext context) {
-    Event fallbackEvent = existingEvent ?? EventLocalDB.singleDefault();
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        Event fallbackEvent = existingEvent ?? EventLocalDB.singleDefault();
 
-    Event event = Event(
-      name: eventNameController.text,
-      backupInterval: int.tryParse(backupIntervalController.text) ?? fallbackEvent.backupInterval,
-      backupCount: int.tryParse(backupCountController.text) ?? fallbackEvent.backupCount,
-      eventRounds: int.tryParse(roundNumberController.text) ?? fallbackEvent.eventRounds,
-      pods: setupRequest?.event?.pods ?? fallbackEvent.pods,
-      season: selectedSeasonController.text.isNotEmpty ? selectedSeasonController.text : fallbackEvent.season,
-      tables: setupRequest?.event?.tables ?? fallbackEvent.tables,
-      endGameTimerLength: int.tryParse(endgameTimerCountdownController.text) ?? fallbackEvent.endGameTimerLength,
-      timerLength: int.tryParse(timerCountdownController.text) ?? fallbackEvent.timerLength,
-    );
-
-    SetupRequest request = SetupRequest(
-      authToken: "", // handled by requester
-      adminPassword: adminPasswordController.text,
-      event: event,
-      judgingSessions: setupRequest?.judgingSessions ?? [],
-      matches: setupRequest?.matches ?? [],
-      teams: setupRequest?.teams ?? [],
-      users: setupRequest?.users ?? [],
-    );
-
-    setupEventRequest(request).then((res) {
-      if (res != HttpStatus.ok) {
-        showNetworkError(res, context);
-      } else {
-        onSubmit?.call();
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Row(
-              children: [
-                Icon(Icons.check, color: Colors.green),
-                Text(
-                  "Setup Success",
-                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            content: Text("The event ${eventNameController.text} has been successfully setup."),
-          ),
+        Event event = Event(
+          name: eventNameController.text,
+          backupInterval: int.tryParse(backupIntervalController.text) ?? fallbackEvent.backupInterval,
+          backupCount: int.tryParse(backupCountController.text) ?? fallbackEvent.backupCount,
+          eventRounds: int.tryParse(roundNumberController.text) ?? fallbackEvent.eventRounds,
+          pods: setupRequest?.event?.pods ?? fallbackEvent.pods,
+          season: selectedSeasonController.text.isNotEmpty ? selectedSeasonController.text : fallbackEvent.season,
+          tables: setupRequest?.event?.tables ?? fallbackEvent.tables,
+          endGameTimerLength: int.tryParse(endgameTimerCountdownController.text) ?? fallbackEvent.endGameTimerLength,
+          timerLength: int.tryParse(timerCountdownController.text) ?? fallbackEvent.timerLength,
         );
-      }
-    });
+
+        SetupRequest request = SetupRequest(
+          authToken: "", // handled by requester
+          adminPassword: adminPasswordController.text,
+          event: event,
+          judgingSessions: setupRequest?.judgingSessions ?? [],
+          matches: setupRequest?.matches ?? [],
+          teams: setupRequest?.teams ?? [],
+          users: setupRequest?.users ?? [],
+        );
+        return FutureBuilder(
+          future: setupEventRequest(request),
+          builder: (context, res) {
+            if (res.connectionState == ConnectionState.waiting) {
+              return const AlertDialog(
+                title: Text("Submitting..."),
+                content: LinearProgressIndicator(),
+              );
+            } else {
+              if (res.data == HttpStatus.ok) {
+                onSubmit?.call();
+                return AlertDialog(
+                  title: const Row(
+                    children: [
+                      Icon(Icons.check, color: Colors.green),
+                      Text(
+                        "Setup Success",
+                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  content: Text("The event ${eventNameController.text} has been successfully setup."),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("OK"),
+                    ),
+                  ],
+                );
+              } else {
+                // remove this popup and show the network error
+                Navigator.pop(context);
+                showNetworkError(res.data!, context);
+                return const SizedBox.shrink();
+              }
+            }
+          },
+        );
+      },
+    );
   }
 
   @override

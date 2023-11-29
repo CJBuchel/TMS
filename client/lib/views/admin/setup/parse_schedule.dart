@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:tms/mixins/event_local_db.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tuple/tuple.dart';
 import 'package:logger/logger.dart';
@@ -200,15 +201,10 @@ Tuple2<bool, SetupRequest?> parseSchedule(FilePickerResult result) {
     }
 
     // Parse Event
-    Event event = Event(
-      eventRounds: numRounds,
-      name: "",
-      pods: pods,
-      season: "",
-      tables: tables,
-      endGameTimerLength: 30,
-      timerLength: 150,
-    );
+    Event event = EventLocalDB.singleDefault();
+    event.eventRounds = numRounds;
+    event.pods = pods;
+    event.tables = tables;
 
     return Tuple2(
       true,

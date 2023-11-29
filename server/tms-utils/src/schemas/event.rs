@@ -21,6 +21,8 @@ impl APILink {
 #[derive(JsonSchema, Deserialize, Serialize, Clone)]
 pub struct Event {
   pub name: String,
+  pub backup_interval: u32, // time in minutes between backups
+  pub backup_count: usize, // number of backups to keep
   pub end_game_timer_length: u32, // 30 seconds is the default
   pub timer_length: u32, // time in seconds the match takes i.e 150 is default
   pub tables: Vec<String>,
@@ -33,6 +35,8 @@ impl Event {
   pub fn new() -> Self {
     Self {
       name: String::from(""),
+      backup_interval: 10,
+      backup_count: 6,
       end_game_timer_length: 30,
       timer_length: 150,
       tables: Vec::new(),

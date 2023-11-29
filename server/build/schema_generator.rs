@@ -32,6 +32,7 @@ pub struct TmsSchema {
   register_response: RegisterResponse,
   integrity_message: IntegrityMessage,
   setup_request: SetupRequest,
+  update_event_request: UpdateEventRequest,
   purge_request: PurgeRequest,
   proxy_bytes_response: ProxyBytesResponse,
   // users
@@ -90,6 +91,17 @@ pub struct TmsSchema {
   //
   start_timer_request: TimerRequest,
   match_loaded_request: MatchLoadRequest,
+
+  // 
+  // Network structures (Database/Backups)
+  //
+  upload_backup_request: UploadBackupRequest,
+  backups_request: BackupsRequest,
+  backups_response: BackupsResponse,
+  backup_delete_request: DeleteBackupRequest,
+  backup_restore_request: RestoreBackupRequest,
+  backups_download_request: DownloadBackupRequest,
+  backups_download_response: DownloadBackupResponse,
 }
 
 pub fn generate_schema(outdir: &OsString) {

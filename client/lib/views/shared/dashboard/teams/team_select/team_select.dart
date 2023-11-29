@@ -144,36 +144,46 @@ class _TeamSelectState extends State<TeamSelect> with AutoUnsubScribeMixin, Loca
     );
   }
 
+  Widget _mainColumn(List<Team> teams) {
+    if (teams.isEmpty) {
+      return const Center(
+        child: Text("No teams found"),
+      );
+    } else {
+      return Column(
+        children: [
+          SizedBox(
+            height: 30,
+            child: _getFilters(),
+          ),
+          Expanded(
+            child: TeamSelectTable(
+              event: _event,
+              teams: _filteredTeams,
+              onTeamSelected: (t) => widget.onTeamSelected(t.teamNumber),
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: widget.teams,
       builder: (context, teams, child) {
-        if (teams.isEmpty) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return Column(
-            children: [
-              SizedBox(
-                height: 50,
-                child: _topButtons(),
-              ),
-              SizedBox(
-                height: 30,
-                child: _getFilters(),
-              ),
-              Expanded(
-                child: TeamSelectTable(
-                  event: _event,
-                  teams: _filteredTeams,
-                  onTeamSelected: (t) => widget.onTeamSelected(t.teamNumber),
-                ),
-              ),
-            ],
-          );
-        }
+        return Column(
+          children: [
+            SizedBox(
+              height: 50,
+              child: _topButtons(),
+            ),
+            Expanded(
+              child: _mainColumn(_filteredTeams),
+            ),
+          ],
+        );
       },
     );
   }

@@ -22,6 +22,22 @@ Future<int> setupEventRequest(SetupRequest request) async {
   }
 }
 
+Future<int> setEventRequest(Event event) async {
+  try {
+    var message = UpdateEventRequest(authToken: await NetworkAuth().getToken(), event: event);
+    var res = await Network().serverPost("event/set", message.toJson());
+
+    if (res.item1) {
+      return res.item2;
+    } else {
+      return res.item2;
+    }
+  } catch (e) {
+    Logger().e(e);
+    return HttpStatus.badRequest;
+  }
+}
+
 Future<Tuple2<int, Event?>> getEventRequest() async {
   try {
     var res = await Network().serverGet("event/get");

@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/mixins/auto_subscribe.dart';
 import 'package:tms/mixins/game_local_db.dart';
 import 'package:tms/mixins/local_db_mixin.dart';
+import 'package:tms/requests/game_requests.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/views/shared/scoring/game_scoring_handler.dart';
 
@@ -49,11 +53,22 @@ class GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Loc
     }
   }
 
+  void fetchGame() async {
+    getGameRequest().then((g) {
+      if (g.item1 == HttpStatus.ok && g.item2 != null) {
+        _setGame(g.item2!);
+      } else {
+        Logger().w("Game fetch failed");
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     // initial get game
     onGameUpdate((g) => _setGame(g));
+    WidgetsBinding.instance.addPostFrameCallback((_) => fetchGame());
   }
 
   Widget _getGameHandler() {

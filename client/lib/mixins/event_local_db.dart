@@ -30,6 +30,8 @@ class EventLocalDB {
   static Event singleDefault() {
     return Event(
       eventRounds: 3,
+      backupInterval: 10,
+      backupCount: 6,
       name: "",
       pods: [],
       season: "",

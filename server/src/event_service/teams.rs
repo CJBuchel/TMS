@@ -1,23 +1,27 @@
 use log::error;
+use tms_utils::schemas::{GameMatch, JudgingSession};
 
-use crate::db::db::TmsDB;
+use crate::db::db::TmsDBArc;
 
 
+#[derive(Clone)]
 pub struct Teams {
-  tms_db: std::sync::Arc<TmsDB>,
+  tms_db: TmsDBArc,
 }
+
+type TmsDataTree<T> = sled_extensions::structured::Tree<T, sled_extensions::bincode::BincodeEncoding>;
 
 
 impl Teams {
-  pub fn new(tms_db: std::sync::Arc<TmsDB>) -> Self {
+  pub fn new(tms_db: TmsDBArc) -> Self {
     Self {
       tms_db
     }
   }
 
-  fn remove_team_matches(&self, team_number: String) -> Result<(), String> {
+  async fn remove_team_matches(&self, matches: &TmsDataTree<GameMatch>, team_number: String) -> Result<(), String> {
     // find all instances of team in matches and remove them
-    let matches_iter = self.tms_db.tms_data.matches.iter();
+    let matches_iter = matches.iter();
     for match_raw in matches_iter {
       let mut game_match = match match_raw {
         Ok(game_match) => game_match.1,
@@ -32,7 +36,7 @@ impl Teams {
           // remove OnTable structure from game_match
           game_match.match_tables.retain(|t| t.team_number != team_number);
           // update game_match in db
-          match self.tms_db.tms_data.matches.insert(game_match.match_number.as_bytes(), game_match.clone()) {
+          match matches.insert(game_match.match_number.as_bytes(), game_match.clone()) {
             Ok(_) => {},
             Err(_) => {
               error!("Failed to update match {}", game_match.match_number);
@@ -46,9 +50,9 @@ impl Teams {
     Ok(())
   }
 
-  fn remove_team_judging(&self, team_number: String) -> Result<(), String> {
+  async fn remove_team_judging(&self, judging_sessions: &TmsDataTree<JudgingSession>, team_number: String) -> Result<(), String> {
     // remove team from judging sessions
-    let judging_iter = self.tms_db.tms_data.judging_sessions.iter();
+    let judging_iter = judging_sessions.iter();
     for judging_raw in judging_iter {
       let mut judging_session = match judging_raw {
         Ok(judging_session) => judging_session.1,
@@ -63,7 +67,7 @@ impl Teams {
           // remove pod from judging session
           judging_session.judging_pods.retain(|p| p.team_number != team_number);
           // update judging session in db
-          match self.tms_db.tms_data.judging_sessions.insert(judging_session.session_number.as_bytes(), judging_session.clone()) {
+          match judging_sessions.insert(judging_session.session_number.as_bytes(), judging_session.clone()) {
             Ok(_) => {},
             Err(_) => {
               error!("Failed to update judging session {}", judging_session.session_number);
@@ -77,11 +81,14 @@ impl Teams {
     Ok(())
   }
 
-  pub fn remove_team(&self, team_number: String) -> Result<(), String> {
+  pub async fn remove_team(&self, team_number: String) -> Result<(), String> {
     // remove from matches, teams, and judging
 
+    let game_matches = &self.tms_db.get_data().await.matches;
+    let judging_sessions = &self.tms_db.get_data().await.judging_sessions;
+
     // remove team from matches
-    match self.remove_team_matches(team_number.clone()) {
+    match self.remove_team_matches(game_matches, team_number.clone()).await {
       Ok(_) => {},
       Err(_) => {
         error!("Failed to remove team {} from matches, will continue removal...", team_number);
@@ -89,7 +96,7 @@ impl Teams {
     }
 
     // remove team from judging
-    match self.remove_team_judging(team_number.clone()) {
+    match self.remove_team_judging(judging_sessions, team_number.clone()).await {
       Ok(_) => {},
       Err(_) => {
         error!("Failed to remove team {} from judging, will continue removal...", team_number);
@@ -97,7 +104,7 @@ impl Teams {
     }
 
     // remove team from teams
-    match self.tms_db.tms_data.teams.remove(team_number.as_bytes()) {
+    match self.tms_db.get_data().await.teams.remove(team_number.as_bytes()) {
       Ok(_) => {},
       Err(_) => {
         error!("Failed to remove team from teams, flagged as fail {}", team_number);

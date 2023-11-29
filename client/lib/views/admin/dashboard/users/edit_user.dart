@@ -135,7 +135,8 @@ class EditUser extends StatelessWidget {
         return AlertDialog(
           title: const Row(
             children: [
-              Icon(Icons.edit, color: Colors.blue),
+              Icon(Icons.edit, color: Colors.orange),
+              SizedBox(width: 10),
               Text("Edit User"),
             ],
           ),
@@ -197,7 +198,7 @@ class EditUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.edit, color: Colors.blue),
+      icon: const Icon(Icons.edit, color: Colors.orange),
       onPressed: () => _addUserDialog(context),
     );
   }

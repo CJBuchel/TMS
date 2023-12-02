@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/schema/tms_schema.dart';
+import 'package:tms/utils/parse_util.dart';
 import 'package:tms/utils/sorter_util.dart';
 import 'package:tms/views/admin/dashboard/backups/backups_row.dart';
 
@@ -88,7 +90,9 @@ class BackupsTable extends StatelessWidget {
                   itemCount: backups.length,
                   itemBuilder: (context, index) {
                     String name = backups[index].entry;
-                    String date = backups[index].timestampPretty;
+                    // convert unix timestamp to human readable date
+                    String date = parseServerTimestampToString(backups[index].unixTimestamp);
+
                     return BackupsRow(
                       backupName: name,
                       backupDate: date,

@@ -16,7 +16,7 @@ pub async fn backups_get_route(message: String, backup_service: &State<BackupSer
 
   let perms = create_permissions(); // only admin can get backups
   if check_permissions(clients, uuid.clone(), message.auth_token, perms).await {
-    let backups = backup_service.read().await.get_backups_pretty();
+    let backups = backup_service.read().await.get_backups();
 
     let backup_response = BackupsResponse {
       backups

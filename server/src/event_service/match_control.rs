@@ -43,6 +43,8 @@ impl MatchControl {
     }, clients.clone(), None).await;
 
 
+    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
     for i in (0..time).rev() {
       let start_epoch_time = std::time::Instant::now();
       if !timer_running.load(std::sync::atomic::Ordering::Relaxed) {

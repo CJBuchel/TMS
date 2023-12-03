@@ -178,7 +178,7 @@ class _TimerState extends State<Timer> with AutoUnsubScribeMixin, LocalDatabaseM
           ),
 
           // match info
-          if (Responsive.isDesktop(context))
+          if (!Responsive.isMobile(context))
             SizedBox(
               height: 170, // allows for 3 tables (row height is 48, header is 26)
               child: TimerMatchInfo(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:tms/schema/tms_schema.dart';
 import 'package:tms/utils/parse_util.dart';
 import 'package:tms/utils/sorter_util.dart';

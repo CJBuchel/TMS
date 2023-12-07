@@ -43,11 +43,14 @@ impl MatchControl {
     }, clients.clone(), None).await;
 
 
+    tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+
     for i in (0..time).rev() {
-      tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+      let start_epoch_time = std::time::Instant::now();
       if !timer_running.load(std::sync::atomic::Ordering::Relaxed) {
         return;
       }
+
       // publish time message
       tms_clients_ws_send(SocketMessage {
         from_id: None,
@@ -64,6 +67,11 @@ impl MatchControl {
           sub_topic: String::from("endgame"),
           message: i.to_string(),
         }, clients.clone(), None).await;
+      }
+
+      let elapsed_epoch = start_epoch_time.elapsed();
+      if let Some(sleep_duration) = std::time::Duration::from_secs(1).checked_sub(elapsed_epoch) {
+        tokio::time::sleep(sleep_duration).await;
       }
     }
 
@@ -168,6 +176,7 @@ impl MatchControl {
     tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
 
     for i in (1..pre_start_timer).rev() {
+      let start_epoch_time = std::time::Instant::now();
       if !timer_running.load(std::sync::atomic::Ordering::Relaxed) {
         return;
       }
@@ -180,7 +189,10 @@ impl MatchControl {
       }, clients.clone(), None).await;
 
 
-      tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+      let elapsed_epoch = start_epoch_time.elapsed();
+      if let Some(sleep_duration) = std::time::Duration::from_secs(1).checked_sub(elapsed_epoch) {
+        tokio::time::sleep(sleep_duration).await;
+      }
     }
   }
 

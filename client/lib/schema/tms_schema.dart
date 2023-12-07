@@ -443,24 +443,20 @@ class BackupsResponse {
 class Backup {
     Backup({
         required this.entry,
-        required this.timestamp,
-        required this.timestampPretty,
+        required this.unixTimestamp,
     });
 
     String entry;
-    int timestamp;
-    String timestampPretty;
+    int unixTimestamp;
 
     factory Backup.fromJson(Map<String, dynamic> json) => Backup(
         entry: json["entry"],
-        timestamp: json["timestamp"],
-        timestampPretty: json["timestamp_pretty"],
+        unixTimestamp: json["unix_timestamp"],
     );
 
     Map<String, dynamic> toJson() => {
         "entry": entry,
-        "timestamp": timestamp,
-        "timestamp_pretty": timestampPretty,
+        "unix_timestamp": unixTimestamp,
     };
 }
 

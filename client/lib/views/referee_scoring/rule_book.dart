@@ -23,16 +23,16 @@ class _RuleBookState extends State<RuleBook> with AutoUnsubScribeMixin, LocalDat
   String ruleBookUrl = "";
   late PdfViewerController _pdfViewerController;
 
-  void _fetchData() async {
-    var response = await getProxyBytes(ruleBookUrl);
-
-    if (response.item1 == HttpStatus.ok) {
-      if (mounted) {
-        setState(() {
-          _pdfBytes = response.item2;
-        });
+  void _fetchData() {
+    getProxyBytes(ruleBookUrl).then((res) {
+      if (res.item1 == HttpStatus.ok) {
+        if (mounted) {
+          setState(() {
+            _pdfBytes = res.item2;
+          });
+        }
       }
-    }
+    });
   }
 
   void onConnect() {

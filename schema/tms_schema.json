@@ -299,20 +299,16 @@
       "type": "object",
       "required": [
         "entry",
-        "timestamp",
-        "timestamp_pretty"
+        "unix_timestamp"
       ],
       "properties": {
         "entry": {
           "type": "string"
         },
-        "timestamp": {
+        "unix_timestamp": {
           "type": "integer",
           "format": "uint64",
           "minimum": 0.0
-        },
-        "timestamp_pretty": {
-          "type": "string"
         }
       }
     },

@@ -16,8 +16,8 @@ class AdminPasswordSetup extends StatelessWidget {
             obscureText: true,
             decoration: InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Admin Password',
-              hintText: 'Enter the admin password (default: `password`)',
+              labelText: 'Set Admin Password',
+              hintText: 'Set the admin password (default: `password`)',
             ),
           ),
         ),

@@ -47,7 +47,7 @@ dependencies:
   intl: ^0.18.1
   accordion: ^2.6.0
   path_provider: ^2.1.1
-  file_saver: ^0.2.6
+  file_saver: 0.2.8
 
 dev_dependencies:
   flutter_test:

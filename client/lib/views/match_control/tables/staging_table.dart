@@ -49,14 +49,22 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
     return Center(child: Text(content, style: const TextStyle(fontWeight: FontWeight.bold)));
   }
 
-  DataCell styledCell(String text) {
-    return DataCell(Center(
+  DataCell styledCell({Widget? child}) {
+    return DataCell(
+      Center(
+        child: child,
+      ),
+    );
+  }
+
+  DataCell styledTextCell(String text) {
+    return styledCell(
       child: Text(
         text,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 12),
       ),
-    ));
+    );
   }
 
   DataCell sigCell(List<GameMatch> loadedMatches, {bool? badSig, bool? goodSig}) {
@@ -122,11 +130,16 @@ class _StagingTableState extends State<StagingTable> with SingleTickerProviderSt
       ),
 
       // info cells
-      styledCell(match.matchNumber),
+      styledTextCell(match.matchNumber),
       sigCell(loadedMatches, badSig: !goodSig),
-      styledCell(table.table),
+      styledTextCell(table.table),
       sigCell(loadedMatches, goodSig: goodSig),
-      styledCell("${table.teamNumber} | $teamName"),
+      styledCell(
+        child: Tooltip(
+          message: "${table.teamNumber} | $teamName",
+          child: Text("${table.teamNumber} | $teamName"),
+        ),
+      ),
 
       // edit on table
       DataCell(

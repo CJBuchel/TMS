@@ -40,10 +40,53 @@ class ScoringFooter extends StatelessWidget {
     required this.onNoShow,
   }) : super(key: key);
 
+  Future<bool?> showConfirmClear(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.warning, color: Colors.red),
+              SizedBox(width: 10),
+              Text(
+                "Clear Scoresheet",
+                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Because a certain someone complained..."),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text(
+                "Confirm",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<bool?> showConfirmNoShow(BuildContext context) {
     return showDialog(
       context: context,
-      builder: ((context) {
+      builder: (context) {
         return AlertDialog(
           title: const Row(
             children: [
@@ -73,7 +116,7 @@ class ScoringFooter extends StatelessWidget {
             ),
           ],
         );
-      }),
+      },
     );
   }
 
@@ -250,7 +293,11 @@ class ScoringFooter extends StatelessWidget {
                         height: buttonHeight,
                         child: ElevatedButton.icon(
                           onPressed: () {
-                            onClear();
+                            showConfirmClear(context).then((confirmed) {
+                              if (confirmed != null && confirmed) {
+                                onClear();
+                              }
+                            });
                           },
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(Colors.red),

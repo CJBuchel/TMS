@@ -1,4 +1,5 @@
 use std::{time::{SystemTime, UNIX_EPOCH}, path::Path, fs, io::{Read, Write}};
+use filetime::FileTime;
 
 use log::{warn, error};
 use tms_utils::schemas::Backup;
@@ -115,7 +116,7 @@ impl BackupService {
         Ok((now, last_backup))
       },
       None => {
-        warn!("No last backup time, setting to current time");
+        warn!("No last backup epoch, setting to current");
         let mut info = self.db.get_data().await.system_info.get().unwrap().unwrap();
         info.last_backup = Some(now);
         self.db.get_data().await.system_info.set(info).unwrap();
@@ -230,7 +231,7 @@ impl BackupService {
   }
 
   // get the backups with the time in a pretty format <name, time>
-  pub fn get_backups_pretty(&self) -> Vec<Backup> {
+  pub fn get_backups(&self) -> Vec<Backup> {
     let mut backups = Vec::new();
 
     // check if it exists
@@ -246,40 +247,13 @@ impl BackupService {
                 // convert the time to a pretty format
                 match path.metadata() {
                   Ok(metadata) => {
-                    let time = match metadata.created() {
-                      Ok(time) => {
-                        time
-                      },
-                      Err(_) => {
-                        error!("Failed to get backup time");
-                        continue;
-                      }
-                    };
-
-                    let timestamp = match time.duration_since(UNIX_EPOCH) {
-                      Ok(timestamp) => {
-                        timestamp.as_secs()
-                      },
-                      Err(_) => {
-                        error!("Failed to get backup time");
-                        continue;
-                      }
-                    };
-
-                    let time = match chrono::NaiveDateTime::from_timestamp_opt(timestamp as i64, 0) {
-                      Some(time) => {
-                        time.format("%Y-%m-%d-%H:%M:%S").to_string()
-                      },
-                      None => {
-                        error!("Failed to convert time to NaiveDateTime");
-                        String::from("Failed to convert time to NaiveDateTime")
-                      }
-                    };
+                    let creation_time = FileTime::from_creation_time(&metadata).unwrap_or_else(|| FileTime::from_last_modification_time(&metadata));
+                    let timestamp = creation_time.unix_seconds();
+                    
                     // backups.insert(name, time);
                     backups.push(Backup {
                       entry: name,
-                      timestamp_pretty: time,
-                      timestamp: timestamp as u64
+                      unix_timestamp: timestamp as u64,
                     });
                   },
                   Err(_) => {
@@ -318,14 +292,31 @@ impl BackupService {
   fn delete_old_backups(&self, backup_count: usize) {
     let backups = self.get_backup_names().len();
     if backups > backup_count {
-      let oldest_backup = fs::read_dir("backups")
+      let oldest_backup_res = fs::read_dir("backups")
         .unwrap()
         .min_by_key(|res| {
           let file = res.as_ref().unwrap();
-          file.metadata().unwrap().created().unwrap()
-        })
-        .unwrap()
-        .unwrap();
+          let metadata = file.metadata().unwrap();
+          FileTime::from_creation_time(&metadata).unwrap_or_else(|| FileTime::from_last_modification_time(&metadata))
+        });
+
+      let oldest_backup = match oldest_backup_res {
+        Some(backup) => {
+          match backup {
+            Ok(backup) => {
+              backup
+            },
+            Err(_) => {
+              error!("Failed to get oldest backup");
+              return;
+            }
+          }
+        },
+        None => {
+          error!("Failed to get oldest backup");
+          return;
+        }
+      };
 
       fs::remove_file(oldest_backup.path()).unwrap();
       warn!("Deleted old backups");

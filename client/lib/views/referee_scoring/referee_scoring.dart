@@ -9,9 +9,14 @@ import 'package:tms/views/referee_scoring/referee_scoring_header/scoring_header.
 import 'package:tms/views/shared/scoring/game_scoring.dart';
 import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
-class RefereeScoring extends StatelessWidget {
-  RefereeScoring({Key? key}) : super(key: key);
+class RefereeScoring extends StatefulWidget {
+  const RefereeScoring({Key? key}) : super(key: key);
 
+  @override
+  State<RefereeScoring> createState() => _RefereeScoringState();
+}
+
+class _RefereeScoringState extends State<RefereeScoring> {
   final ScrollController _scrollController = ScrollController();
 
   // score notifiers

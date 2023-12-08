@@ -187,6 +187,7 @@ pub async fn event_setup_route(message: String) -> TmsRouteResponse<()> {
             }
           };
 
+          warn!("Setting admin password to {}", password);
           user.password = password;
           let _ = db.get_data().await.users.insert("admin".as_bytes(), user);
         }

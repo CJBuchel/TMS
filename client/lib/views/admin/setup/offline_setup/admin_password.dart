@@ -6,15 +6,16 @@ class AdminPasswordSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Admin Password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        const Text("Admin Password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         Padding(
-          padding: EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 10),
           child: TextField(
+            controller: adminPasswordController,
             obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Set Admin Password',
               hintText: 'Set the admin password (default: `password`)',

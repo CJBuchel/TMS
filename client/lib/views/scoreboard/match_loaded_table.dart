@@ -22,7 +22,6 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
   @override
   bool get wantKeepAlive => true;
 
-  final double _tableWidth = 100;
   final double _headerHeight = 24;
   final double _rowHeight = 48;
 
@@ -100,9 +99,8 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
     super.dispose();
   }
 
-  Widget _buildCell(String text, {Color? backgroundColor, Color? textColor, double? width}) {
+  Widget _buildCell(String text, {Color? backgroundColor, Color? textColor}) {
     return Container(
-      width: width,
       color: backgroundColor,
       child: Center(child: Text(text, style: TextStyle(color: textColor, overflow: TextOverflow.ellipsis))),
     );
@@ -121,8 +119,14 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
       height: _headerHeight,
       child: Row(
         children: [
-          _buildCell("On Table", width: _tableWidth, textColor: Colors.white, backgroundColor: Colors.blueGrey[800]),
-          Expanded(child: _buildCell("Team", textColor: Colors.white, backgroundColor: Colors.blueGrey[800])),
+          Expanded(
+            flex: 1,
+            child: _buildCell("On Table", textColor: Colors.white, backgroundColor: Colors.blueGrey[800]),
+          ),
+          Expanded(
+            flex: 3,
+            child: _buildCell("Team", textColor: Colors.white, backgroundColor: Colors.blueGrey[800]),
+          ),
         ],
       ),
     );
@@ -154,8 +158,12 @@ class _MatchLoadedTableState extends State<MatchLoadedTable> with AutomaticKeepA
       height: _rowHeight,
       child: Row(
         children: [
-          _buildCell(table.table, width: _tableWidth, textColor: textColor),
           Expanded(
+            flex: 1,
+            child: _buildCell(table.table, textColor: textColor),
+          ),
+          Expanded(
+            flex: 3,
             child: _buildCell(
               tmpTeam != null ? "${tmpTeam.teamNumber} | ${tmpTeam.teamName}" : "",
               textColor: textColor,

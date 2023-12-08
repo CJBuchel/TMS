@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:tms/network/http.dart';
 import 'package:tms/network/security.dart';
 import 'package:tms/network/ws.dart';
@@ -33,6 +34,22 @@ class TmsToolBarTitleBar extends StatelessWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _networkState.value = connected;
       });
+    }
+
+    if (!connected) {
+      Logger().w('Network is not connected');
+      // reason
+      if (NetworkHttp().httpState.value == NetworkHttpConnectionState.disconnected) {
+        Logger().w('NetworkHttp is disconnected');
+      }
+
+      if (NetworkWebSocket().wsState.value == NetworkWebSocketState.disconnected) {
+        Logger().w('NetworkWebSocket is disconnected');
+      }
+
+      if (NetworkSecurity().securityState.value == SecurityState.noSecurity) {
+        Logger().w('NetworkSecurity is not secure');
+      }
     }
   }
 

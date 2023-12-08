@@ -5,9 +5,14 @@ import 'package:tms/requests/user_requests.dart';
 import 'package:tms/responsive.dart';
 import 'package:tms/views/shared/toolbar/tool_bar.dart';
 
-class Login extends StatelessWidget {
-  Login({super.key});
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
 
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 

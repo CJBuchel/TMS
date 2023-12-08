@@ -17,14 +17,32 @@ import 'package:tms/views/shared/toolbar/tool_bar.dart';
  */
 ///
 
-class ScreenSelector extends StatelessWidget {
+class ScreenSelector extends StatefulWidget {
+  const ScreenSelector({Key? key}) : super(key: key);
+
+  @override
+  State<ScreenSelector> createState() => _ScreenSelectorState();
+}
+
+class _ScreenSelectorState extends State<ScreenSelector> {
   final ValueNotifier<User> _userNotifier = ValueNotifier<User>(User(password: "", permissions: Permissions(admin: false), username: ""));
 
-  ScreenSelector({Key? key}) : super(key: key) {
+  @override
+  void initState() {
+    super.initState();
     NetworkAuth().loginState.addListener(() {
       checkUser();
     });
     checkUser();
+  }
+
+  @override
+  void dispose() {
+    _userNotifier.dispose();
+    NetworkAuth().loginState.removeListener(() {
+      checkUser();
+    });
+    super.dispose();
   }
 
   void checkUser() {

@@ -4,7 +4,7 @@ import 'package:tms/views/shared/toolbar/actions/list_actions.dart';
 import 'package:tms/views/shared/toolbar/leading.dart';
 import 'package:tms/views/shared/toolbar/title.dart';
 
-class TmsToolBar extends StatelessWidget implements PreferredSizeWidget {
+class TmsToolBar extends StatefulWidget implements PreferredSizeWidget {
   final bool displayLogicActions;
   final bool displayMenuButton;
   final VoidCallback? onBackButtonPressed;
@@ -21,6 +21,11 @@ class TmsToolBar extends StatelessWidget implements PreferredSizeWidget {
     this.onMenuButtonPressed,
   }) : super(key: key);
 
+  @override
+  State<TmsToolBar> createState() => _TmsToolBarState();
+}
+
+class _TmsToolBarState extends State<TmsToolBar> {
   @override
   Widget build(BuildContext context) {
     double scaledFontSize = 20; // medium
@@ -42,12 +47,12 @@ class TmsToolBar extends StatelessWidget implements PreferredSizeWidget {
 
       // main title
       title: TmsToolBarTitle(
-        displayMenuButton: displayMenuButton,
-        onMenuButtonPressed: onMenuButtonPressed,
+        displayMenuButton: widget.displayLogicActions,
+        onMenuButtonPressed: widget.onMenuButtonPressed,
       ),
 
       // get the actions
-      actions: tmsToolBarActions(context, displayLogicActions),
+      actions: tmsToolBarActions(context, widget.displayLogicActions),
     );
   }
 }

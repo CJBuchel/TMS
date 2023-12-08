@@ -102,15 +102,6 @@ class GameScoringState extends State<GameScoring> with AutoUnsubScribeMixin, Loc
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getGame(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox.shrink();
-        } else {
-          return _getGameHandler();
-        }
-      },
-    );
+    return _getGameHandler();
   }
 }

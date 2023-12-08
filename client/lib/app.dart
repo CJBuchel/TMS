@@ -18,9 +18,14 @@ import 'package:tms/views/user/login.dart';
 import 'package:tms/views/user/logout.dart';
 import 'package:tms/views/selector/screen_selector.dart';
 
-class TMSApp extends StatelessWidget {
-  const TMSApp({super.key});
+class TMSApp extends StatefulWidget {
+  const TMSApp({Key? key}) : super(key: key);
 
+  @override
+  State<TMSApp> createState() => _TMSAppState();
+}
+
+class _TMSAppState extends State<TMSApp> {
   @override
   Widget build(BuildContext context) {
     AppTheme.isDarkTheme; // trigger getter for local storage

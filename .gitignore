@@ -31,3 +31,6 @@ target/
 *.pdb
 
 !build/
+
+*.rsa
+*.pem

@@ -7,12 +7,12 @@ pub struct Database {
 }
 
 impl Database {
-  pub fn new(port: u16, db_path: String) -> Self {
+  pub fn new(port: u16, db_path: String, addr: [u8; 4]) -> Self {
     log::info!("Starting Database...");
     let config = EchoTreeServerConfig {
       db_path,
       port,
-      addr: [0,0,0,0].into(),
+      addr: addr.into(),
     };
 
     let db_server = EchoTreeServer::new(config);
@@ -40,5 +40,9 @@ impl Database {
 
     self.inner.add_tree_schema(":tournament_config".to_string(), TournamentConfig::get_schema()).await;
     self.inner.add_tree_schema(":teams".to_string(), Team::get_schema()).await;
+  }
+
+  pub fn get_inner(&self) -> &EchoTreeServer {
+    &self.inner
   }
 }

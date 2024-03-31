@@ -2,7 +2,7 @@ use database::Database;
 // use echo_tree_rs::echo_tree_server::{EchoTreeServer, EchoTreeServerConfig};
 use server::web_server::web_server::{WebConfig, WebServer};
 use warp::Filter;
-use std::{env, path::PathBuf};
+use std::env;
 
 const DB_PATH: &str = "tms.kvdb";
 const PORT: u16 = 8080;
@@ -23,41 +23,24 @@ async fn main() {
   #[cfg(not(debug_assertions))]
   log4rs::init_file("config/release_log4rs.yaml", Default::default()).unwrap();
 
-  log::debug!("This is a debug message");
   log::info!("Start TMS...");
-  log::warn!("This is a warning");
-  log::error!("This is an error");
 
-  match env::current_dir() {
-    Ok(path) => {
-      log::info!("Current directory: {:?}", path);
-    }
-    Err(e) => {
-      log::error!("Failed to get current directory: {:?}", e);
-    }
-  }
+  // create database
+  let mut db = Database::new(PORT, DB_PATH.to_string(), ADDR);
+  db.create_trees().await;
 
-  let static_files_path = PathBuf::from("client").join("build").join("web");
-  let static_files = warp::fs::dir(static_files_path).map(|reply| {
-    warp::reply::with_header(reply, "Cache-Control", "public, max-age=86400")
-  });
+  // create webserver
+  let web_config = WebConfig {
+    port: PORT,
+    addr: ADDR,
+    cert_path: None,
+    key_path: None,
+  };
 
-  let root_route = warp::path::end().map(|| {
-    warp::redirect(warp::http::Uri::from_static("/ui"))
-  });
-
-  let web_route = warp::path("ui").and(static_files).or(root_route);
-  // let routes = web_route.or(echo_tree_routes);
-
-  // #[cfg(debug_assertions)]
-  // {
-  //   let config = WebConfig::default();
-  //   WebServer::new(8080, config).start(routes).await;
-  // }
-
-  // #[cfg(not(debug_assertions))]
-  // {
-  //   let config = WebConfig::default();
-  //   WebServer::new(8080, config).start_tls(routes).await;
-  // }
+  let web_server = WebServer::new(web_config);
+  let default_route = warp::path::end().map(|| warp::reply::html("Hello, World!"));
+  
+  let _ = db.get_inner().backup_db("backups/backup.zip").await;
+  let _ = db.get_inner().restore_db("backups/backup.zip").await;
+  web_server.start(default_route, db).await;
 }

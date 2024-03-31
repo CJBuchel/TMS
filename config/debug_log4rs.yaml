@@ -10,17 +10,17 @@ appenders:
   # Rolling file appender
   tms_server:
     kind: rolling_file
-    path: "log/tms.log"
+    path: "logs/tms.log"
     policy:
       kind: compound
       trigger:
         kind: size
-        limit: 10MB
+        limit: 1MB
       roller:
         kind: fixed_window
         base: 1
         count: 10
-        pattern: "log/tms.{}.log"
+        pattern: "logs/tms.{}.log"
     encoder:
       pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {m}{n}"
 

@@ -50,7 +50,6 @@
         "backup_count",
         "backup_interval",
         "end_game_timer_length",
-        "event_rounds",
         "name",
         "season",
         "timer_length"
@@ -69,11 +68,6 @@
         "end_game_timer_length": {
           "type": "integer",
           "format": "uint32",
-          "minimum": 0.0
-        },
-        "event_rounds": {
-          "type": "integer",
-          "format": "uint8",
           "minimum": 0.0
         },
         "name": {

@@ -3,8 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::DataSchemeExtensions;
 
-
-
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct TournamentConfig {
   pub name: String,
@@ -12,7 +10,6 @@ pub struct TournamentConfig {
   pub backup_count: u32, // number of backups retained
   pub end_game_timer_length: u32, // in seconds
   pub timer_length: u32, // in seconds
-  pub event_rounds: u8,
   pub season: String,
 }
 
@@ -24,7 +21,6 @@ impl Default for TournamentConfig {
       backup_count: 6,
       end_game_timer_length: 30,
       timer_length: 150,
-      event_rounds: 3,
       season: "".to_string(),
     }
   }

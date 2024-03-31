@@ -450,6 +450,7 @@ version = "0.1.0"
 dependencies = [
  "echo_tree_rs",
  "log",
+ "rand",
  "schema",
  "schemars",
  "serde",
@@ -504,7 +505,7 @@ checksum = "0d6ef0072f8a535281e4876be788938b528e9a1d43900b82c2569af7da799125"
 [[package]]
 name = "echo_tree_rs"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#08980d1e8fe80fba98411ce4332c40babafbf739"
+source = "git+https://github.com/CJBuchel/EchoTree.git#99e59848fc6b751ec53daa27d45b90197bd83650"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1468,7 +1469,7 @@ dependencies = [
 [[package]]
 name = "protocol"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#08980d1e8fe80fba98411ce4332c40babafbf739"
+source = "git+https://github.com/CJBuchel/EchoTree.git#99e59848fc6b751ec53daa27d45b90197bd83650"
 dependencies = [
  "schemars",
  "serde",

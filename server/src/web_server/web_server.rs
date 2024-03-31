@@ -42,26 +42,13 @@ impl WebServer {
     log::info!("{:?}", opt);
     // check if user provided port
     let port = opt.port.unwrap_or(config.port);
-    // convert string to [u8; 4]
-    let addr = match opt.addr {
-      Some(a) => {
-        let mut addr = [0; 4];
-        let parts: Vec<&str> = a.split(".").collect();
-        for (i, p) in parts.iter().enumerate() {
-          addr[i] = p.parse().unwrap_or_default();
-        }
-        addr
-      },
-      None => config.addr, // use default/config
-    };
-
     let no_tls = opt.no_tls;
 
     // users have their own certificate and key
     if config.cert_path.is_some() && config.key_path.is_some() {
       return WebServer {
         port,
-        addr,
+        addr: config.addr,
         certificates: keys::CertificateKeys::new(config.cert_path, config.key_path),
         no_tls,
       };
@@ -72,7 +59,7 @@ impl WebServer {
     
     WebServer {
       port,
-      addr,
+      addr: config.addr,
       certificates,
       no_tls,
     }

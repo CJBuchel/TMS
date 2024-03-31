@@ -5,8 +5,8 @@ use schemars::JsonSchema;
 
 #[derive(JsonSchema)]
 struct DatabaseSchema {
-  team: Team,
-  tournament_config: TournamentConfig,
+  _team: Team,
+  _tournament_config: TournamentConfig,
 }
 
 fn get_workspace_path() -> std::io::Result<PathBuf> {

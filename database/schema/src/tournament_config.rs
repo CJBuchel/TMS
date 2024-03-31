@@ -1,7 +1,8 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::SchemaUtil;
+use crate::DataSchemeExtensions;
+
 
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
@@ -29,7 +30,7 @@ impl Default for TournamentConfig {
   }
 }
 
-impl SchemaUtil for TournamentConfig {
+impl DataSchemeExtensions for TournamentConfig {
   fn get_schema() -> String {
     let schema = schemars::schema_for!(TournamentConfig);
     serde_json::to_string_pretty(&schema).unwrap_or_default()

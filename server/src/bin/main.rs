@@ -4,6 +4,10 @@ use server::web_server::web_server::{WebConfig, WebServer};
 use warp::Filter;
 use std::{env, path::PathBuf};
 
+const DB_PATH: &str = "tms.kvdb";
+const PORT: u16 = 8080;
+const ADDR: [u8; 4] = [0,0,0,0];
+
 #[tokio::main]
 async fn main() {
 
@@ -14,23 +18,15 @@ async fn main() {
   env::set_var("RUST_LOG", "info");
 
   // initialize logger
-  pretty_env_logger::init();
+  #[cfg(debug_assertions)]
+  log4rs::init_file("config/debug_log4rs.yaml", Default::default()).unwrap();
+  #[cfg(not(debug_assertions))]
+  log4rs::init_file("config/release_log4rs.yaml", Default::default()).unwrap();
 
+  log::debug!("This is a debug message");
   log::info!("Start TMS...");
-
-  // let config = EchoTreeServerConfig {
-  //   db_path: "tms.kvdb".to_string(),
-  //   port: 8080,
-  //   addr: [0,0,0,0].into(),
-  // };
-
-  // let db_server = EchoTreeServer::new(config);
-
-  // #[cfg(debug_assertions)]
-  // let echo_tree_routes = db_server.get_internal_routes();
-
-  // #[cfg(not(debug_assertions))]
-  // let echo_tree_routes = db_server.get_internal_tls_routes();
+  log::warn!("This is a warning");
+  log::error!("This is an error");
 
   match env::current_dir() {
     Ok(path) => {

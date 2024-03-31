@@ -3,14 +3,14 @@
   "title": "DatabaseSchema",
   "type": "object",
   "required": [
-    "team",
-    "tournament_config"
+    "_team",
+    "_tournament_config"
   ],
   "properties": {
-    "team": {
+    "_team": {
       "$ref": "#/definitions/Team"
     },
-    "tournament_config": {
+    "_tournament_config": {
       "$ref": "#/definitions/TournamentConfig"
     }
   },

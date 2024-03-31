@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DatabaseSchema",
+  "type": "object",
+  "required": [
+    "team",
+    "tournament_config"
+  ],
+  "properties": {
+    "team": {
+      "$ref": "#/definitions/Team"
+    },
+    "tournament_config": {
+      "$ref": "#/definitions/TournamentConfig"
+    }
+  },
+  "definitions": {
+    "Team": {
+      "type": "object",
+      "required": [
+        "affiliation",
+        "cloud_id",
+        "name",
+        "number",
+        "ranking"
+      ],
+      "properties": {
+        "affiliation": {
+          "type": "string"
+        },
+        "cloud_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "ranking": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "TournamentConfig": {
+      "type": "object",
+      "required": [
+        "backup_count",
+        "backup_interval",
+        "end_game_timer_length",
+        "event_rounds",
+        "name",
+        "season",
+        "timer_length"
+      ],
+      "properties": {
+        "backup_count": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "backup_interval": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "end_game_timer_length": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "event_rounds": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0.0
+        },
+        "name": {
+          "type": "string"
+        },
+        "season": {
+          "type": "string"
+        },
+        "timer_length": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    }
+  }
+}

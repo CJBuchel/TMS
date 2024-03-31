@@ -1,0 +1,27 @@
+[package]
+name = "database"
+version = "0.1.0"
+edition = "2021"
+build = "build/build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "^1.36", features = ["full"] }
+tokio-stream = "^0.1"
+log = "^0.4"
+serde = { version = "^1.0", features = ["derive"] }
+serde_json = "^1.0"
+schemars = "^0.8"
+
+[build-dependencies]
+serde = { version = "^1.0", features = ["derive"] }
+serde_json = "^1.0"
+schemars = "^0.8"
+schema = { path = "schema" }
+
+[dependencies.echo_tree_rs]
+git = "https://github.com/CJBuchel/EchoTree.git"
+
+[dependencies.schema]
+path = "schema"

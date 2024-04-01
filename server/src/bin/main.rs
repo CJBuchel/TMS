@@ -1,8 +1,7 @@
-use database::Database;
+use database::{SharedDatabase, SharedDatabaseTrait, BackupService};
 use structopt::StructOpt;
 // use echo_tree_rs::echo_tree_server::{EchoTreeServer, EchoTreeServerConfig};
 use server::web_server::web_server::{WebConfig, WebServer};
-use warp::Filter;
 use std::env;
 
 const DEFAULT_DB_PATH: &str = "tms.kvdb";
@@ -26,29 +25,37 @@ async fn main() {
 
   // initialize logger
   #[cfg(debug_assertions)]
-  log4rs::init_file("config/debug_log4rs.yaml", Default::default()).unwrap();
+  log4rs::init_file("log_config/debug_log4rs.yaml", Default::default()).unwrap();
   #[cfg(not(debug_assertions))]
-  log4rs::init_file("config/release_log4rs.yaml", Default::default()).unwrap();
+  log4rs::init_file("log_config/release_log4rs.yaml", Default::default()).unwrap();
 
   log::info!("TMS Start...");
 
   // create database
-  let mut db = Database::new(port, DEFAULT_DB_PATH.to_string(), DEFAULT_ADDR);
-  db.create_trees().await;
-  db.create_roles().await;
+  let db = SharedDatabase::new_instance(port, DEFAULT_DB_PATH.to_string(), DEFAULT_ADDR);
+  db.write().await.create_trees().await;
+  db.write().await.create_roles().await;
+
+  // startup the backup service
+  db.write().await.start_backup_service();
 
   // create web server
   let web_config = WebConfig {
-    port: port,
+    port,
     addr: DEFAULT_ADDR,
     cert_path: None,
     key_path: None,
   };
 
+  let echo_tree_routes = db.read().await.get_echo_tree_routes(!opt.no_tls).await;
+
   let web_server = WebServer::new(web_config);
-  let default_route = warp::path::end().map(|| warp::reply::html("Hello, World!"));
+  let routes = echo_tree_routes;
   
-  let _ = db.get_inner().backup_db("backups/backup.zip").await;
-  let _ = db.get_inner().restore_db("backups/backup.zip").await;
-  web_server.start(default_route, db).await;
+
+  // start main web server, including the routes
+  web_server.start(routes).await;
+
+  // stop the backup service
+  db.write().await.stop_backup_service().await;
 }

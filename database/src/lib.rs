@@ -1,43 +1,54 @@
-
+use database_schema::{DataSchemeExtensions, Team, TournamentConfig, User};
 use echo_tree_rs::core::{EchoTreeServer, EchoTreeServerConfig, SchemaUtil};
-use schema::{DataSchemeExtensions, Team, TournamentConfig};
-use rand::Rng;
 use rand::distributions::Alphanumeric;
+use rand::Rng;
+
+mod backup_service;
+pub use backup_service::*;
 
 pub struct Database {
-  inner: EchoTreeServer,
+  inner: std::sync::Arc<tokio::sync::RwLock<EchoTreeServer>>,
+  backup_service_thread: Option<tokio::task::JoinHandle<()>>,
+  stop_signal_sender: tokio::sync::watch::Sender<bool>,
+}
+
+pub type SharedDatabase = std::sync::Arc<tokio::sync::RwLock<Database>>;
+
+pub trait SharedDatabaseTrait {
+  fn new_instance(port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase;
+}
+
+impl SharedDatabaseTrait for SharedDatabase {
+  fn new_instance(port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase {
+    std::sync::Arc::new(tokio::sync::RwLock::new(Database::new(port, db_path, addr)))
+  }
 }
 
 impl Database {
   pub fn new(port: u16, db_path: String, addr: [u8; 4]) -> Self {
     log::info!("Starting Database...");
-    let config = EchoTreeServerConfig {
-      db_path,
-      port,
-      addr: addr.into(),
-    };
+    let config = EchoTreeServerConfig { db_path, port, addr: addr.into() };
 
     let db_server = EchoTreeServer::new(config);
 
+    let (stop_signal_sender, _) = tokio::sync::watch::channel(false);
     Self {
-      inner: db_server,
+      inner: std::sync::Arc::new(tokio::sync::RwLock::new(db_server)),
+      backup_service_thread: None,
+      stop_signal_sender,
     }
   }
 
   fn generate_password(&self) -> String {
-    rand::thread_rng()
-    .sample_iter(&Alphanumeric)
-    .take(30)
-    .map(char::from)
-    .collect()
+    rand::thread_rng().sample_iter(&Alphanumeric).take(30).map(char::from).collect()
   }
 
   async fn check_insert_role(&self, role: &str, password: &str, read_echo_trees: Vec<&str>, read_write_echo_trees: Vec<&str>) {
-    match self.get_inner().get_role_manager().await.get_role(role.to_string()) {
+    match self.inner.read().await.get_role_manager().await.get_role(role.to_string()) {
       Some(_) => {
         log::warn!("Role already exist: {}", role);
         return;
-      },
+      }
       None => {
         let role = echo_tree_rs::protocol::schemas::Role {
           role_id: role.to_string(),
@@ -45,8 +56,8 @@ impl Database {
           read_echo_trees: read_echo_trees.iter().map(|x| x.to_string()).collect(),
           read_write_echo_trees: read_write_echo_trees.iter().map(|x| x.to_string()).collect(),
         };
-        self.inner.get_role_manager().await.insert_role(role);
-      },
+        self.inner.read().await.get_role_manager().await.insert_role(role);
+      }
     }
   }
 
@@ -72,24 +83,25 @@ impl Database {
   pub async fn create_trees(&mut self) {
     log::info!("Creating trees...");
 
-    // :tournament_config
+    // :tournament:config
     // :teams
+    // :users
 
     // :robot_game:matches
     // :robot_game:game_scores
     // :robot_game:tables
 
-    // :judging:core_values_scores
+    // :judging:core_value_scores
     // :judging:innovation_project_scores
     // :judging:robot_design_scores
     // :judging:pods
 
-
-    self.inner.add_tree_schema(":tournament_config".to_string(), TournamentConfig::get_schema()).await;
-    self.inner.add_tree_schema(":teams".to_string(), Team::get_schema()).await;
+    self.inner.read().await.add_tree_schema(":tournament:config".to_string(), TournamentConfig::get_schema()).await;
+    self.inner.read().await.add_tree_schema(":teams".to_string(), Team::get_schema()).await;
+    self.inner.read().await.add_tree_schema(":users".to_string(), User::get_schema()).await;
   }
 
-  pub fn get_inner(&self) -> &EchoTreeServer {
-    &self.inner
+  pub async fn get_echo_tree_routes(&self, tls: bool) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    self.inner.read().await.get_internal_routes(tls)
   }
 }

@@ -5,7 +5,7 @@ appenders:
   stdout:
     kind: console
     encoder:
-      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M}] {m}{n}"
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M}] {h({m})}{n}"
 
   # Rolling file appender
   tms_server:
@@ -22,7 +22,7 @@ appenders:
         count: 10
         pattern: "logs/tms.{}.log"
     encoder:
-      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {m}{n}"
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M}] {h({m})}{n}"
 
 # Loggers
 root:

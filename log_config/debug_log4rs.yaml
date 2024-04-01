@@ -1,11 +1,19 @@
 refresh_rate: 30 seconds
 appenders:
 
+  # d - Date and time
+  # l - Log level
+  # M - Module path
+  # L - Line number
+  # m - Message
+  # n - New line
+  # h - Highlight log level
+
   # General Console/Terminal output
   stdout:
     kind: console
     encoder:
-      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {m}{n}"
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {h({m})}{n}"
 
   # Rolling file appender
   tms_server:
@@ -22,7 +30,7 @@ appenders:
         count: 10
         pattern: "logs/tms.{}.log"
     encoder:
-      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {m}{n}"
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {h({m})}{n}"
 
 # Loggers
 root:

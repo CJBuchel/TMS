@@ -1,6 +1,6 @@
 use std::{fs, path::PathBuf};
 
-use schema::*;
+use database_schema::*;
 use schemars::JsonSchema;
 
 #[derive(JsonSchema)]

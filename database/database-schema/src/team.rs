@@ -25,9 +25,4 @@ impl Default for Team {
   }
 }
 
-impl DataSchemeExtensions for Team {
-  fn get_schema() -> String {
-    let schema = schemars::schema_for!(Team);
-    serde_json::to_string_pretty(&schema).unwrap_or_default()
-  }
-}
+impl DataSchemeExtensions for Team {}

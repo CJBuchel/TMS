@@ -298,7 +298,9 @@ checksum = "8a0d04d43504c61aa6c7531f1871dd0d418d91130162063b789da00fd7057a5e"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
+ "js-sys",
  "num-traits",
+ "wasm-bindgen",
  "windows-targets 0.52.4",
 ]
 
@@ -448,15 +450,28 @@ checksum = "7e962a19be5cfc3f3bf6dd8f61eb50107f356ad6270fbb3ed41476571db78be5"
 name = "database"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
+ "chrono",
+ "database-schema",
  "echo_tree_rs",
  "log",
  "rand",
- "schema",
  "schemars",
  "serde",
  "serde_json",
  "tokio",
  "tokio-stream",
+ "warp",
+]
+
+[[package]]
+name = "database-schema"
+version = "0.1.0"
+dependencies = [
+ "schemars",
+ "serde",
+ "serde_json",
+ "uuid",
 ]
 
 [[package]]
@@ -505,7 +520,7 @@ checksum = "0d6ef0072f8a535281e4876be788938b528e9a1d43900b82c2569af7da799125"
 [[package]]
 name = "echo_tree_rs"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#99e59848fc6b751ec53daa27d45b90197bd83650"
+source = "git+https://github.com/CJBuchel/EchoTree.git#28c02fb41dad8752f2c647516664ae63f60ac440"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1166,6 +1181,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "network"
+version = "0.1.0"
+dependencies = [
+ "database",
+ "network-schema",
+]
+
+[[package]]
+name = "network-schema"
+version = "0.1.0"
+
+[[package]]
 name = "nom"
 version = "7.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1469,7 +1496,7 @@ dependencies = [
 [[package]]
 name = "protocol"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#99e59848fc6b751ec53daa27d45b90197bd83650"
+source = "git+https://github.com/CJBuchel/EchoTree.git#28c02fb41dad8752f2c647516664ae63f60ac440"
 dependencies = [
  "schemars",
  "serde",
@@ -1674,16 +1701,6 @@ name = "ryu"
 version = "1.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e86697c916019a8588c99b5fac3cead74ec0b4b819707a682fd4d23fa0ce1ba1"
-
-[[package]]
-name = "schema"
-version = "0.1.0"
-dependencies = [
- "schemars",
- "serde",
- "serde_json",
- "uuid",
-]
 
 [[package]]
 name = "schemars"

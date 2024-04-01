@@ -26,9 +26,4 @@ impl Default for TournamentConfig {
   }
 }
 
-impl DataSchemeExtensions for TournamentConfig {
-  fn get_schema() -> String {
-    let schema = schemars::schema_for!(TournamentConfig);
-    serde_json::to_string_pretty(&schema).unwrap_or_default()
-  }
-}
+impl DataSchemeExtensions for TournamentConfig {}

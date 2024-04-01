@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-use database::Database;
 use structopt::StructOpt;
 use warp::Filter;
 use crate::ServerArgs;
@@ -91,7 +90,7 @@ impl WebServer {
       .await;
   }
 
-  pub async fn start<F, R>(&self, routes: F, db: Database)
+  pub async fn start<F, R>(&self, routes: F)
   where
     F: warp::Filter<Extract = R, Error = warp::Rejection> + Clone + Send + Sync + 'static,
     R: warp::Reply,
@@ -113,12 +112,10 @@ impl WebServer {
 
     if self.no_tls {
       log::warn!("Starting server without TLS. Using http/ws... This is insecure!");
-      let echo_tree_routes = db.get_inner().get_internal_routes();
-      self.start_no_tls(routes.or(echo_tree_routes)).await;
+      self.start_no_tls(routes).await;
     } else {
       log::info!("Starting server with TLS. Using with https/wss...");
-      let echo_tree_routes = db.get_inner().get_internal_tls_routes();
-      self.start_tls(routes.or(echo_tree_routes)).await;
+      self.start_tls(routes).await;
     }
   }
 }

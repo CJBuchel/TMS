@@ -1,10 +1,12 @@
-use database_schema::{DataSchemeExtensions, Team, TournamentConfig, User};
-use echo_tree_rs::core::{EchoTreeServer, EchoTreeServerConfig, SchemaUtil};
+pub use echo_tree_rs::core::{EchoTreeServer, EchoTreeServerConfig, SchemaUtil, TreeManager};
 use rand::distributions::Alphanumeric;
 use rand::Rng;
 
 mod backup_service;
 pub use backup_service::*;
+
+pub use database_schema::*;
+// pub use database_schema::;
 
 pub struct Database {
   inner: std::sync::Arc<tokio::sync::RwLock<EchoTreeServer>>,
@@ -103,5 +105,9 @@ impl Database {
 
   pub async fn get_echo_tree_routes(&self, tls: bool) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     self.inner.read().await.get_internal_routes(tls)
+  }
+
+  pub fn get_inner(&self) -> &std::sync::Arc<tokio::sync::RwLock<EchoTreeServer>> {
+    &self.inner
   }
 }

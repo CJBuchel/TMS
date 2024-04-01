@@ -12,5 +12,5 @@ impl Network {
     }
   }
 
-  
+  pub fn get_network_routes(&self) {}
 }

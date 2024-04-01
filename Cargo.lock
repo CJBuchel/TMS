@@ -1184,8 +1184,13 @@ dependencies = [
 name = "network"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "database",
+ "log",
  "network-schema",
+ "rand",
+ "tokio",
+ "warp",
 ]
 
 [[package]]

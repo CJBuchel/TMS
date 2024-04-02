@@ -6,7 +6,7 @@ use crate::{clients::{client_access::ClientAccess, ClientMap}, filters::FailAuth
 use super::HEADER_X_CLIENT_ID;
 
 
-pub fn role_permission_filter<'a>(clients: ClientMap, db: SharedDatabase, roles: Vec<&str>) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone + 'a {
+pub fn role_permission_filter(clients: ClientMap, db: SharedDatabase, roles: Vec<&str>) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone {
   // let filter = warp::any().map(move || clients.clone());
 
   let roles: Vec<String> = roles.iter().map(|x| x.to_string()).collect();

@@ -7,7 +7,6 @@ use super::{HEADER_X_AUTH_TOKEN, HEADER_X_CLIENT_ID};
 
 pub fn check_auth_token(clients: ClientMap) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone {
   let filter = warp::any().map(move || clients.clone());
-  
   // check for headers, (client and token)
   filter
     .and(warp::header::<String>(HEADER_X_CLIENT_ID))

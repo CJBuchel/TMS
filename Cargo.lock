@@ -520,7 +520,7 @@ checksum = "0d6ef0072f8a535281e4876be788938b528e9a1d43900b82c2569af7da799125"
 [[package]]
 name = "echo_tree_rs"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#28c02fb41dad8752f2c647516664ae63f60ac440"
+source = "git+https://github.com/CJBuchel/EchoTree.git#39256feefa4b91c2655388bc681c4145f5405df7"
 dependencies = [
  "async-trait",
  "bincode",
@@ -530,6 +530,7 @@ dependencies = [
  "local-ip-address",
  "log",
  "protocol",
+ "rand",
  "schemars",
  "serde",
  "serde_json",
@@ -1190,12 +1191,18 @@ dependencies = [
  "network-schema",
  "rand",
  "tokio",
+ "uuid",
  "warp",
 ]
 
 [[package]]
 name = "network-schema"
 version = "0.1.0"
+dependencies = [
+ "schemars",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "nom"
@@ -1501,7 +1508,7 @@ dependencies = [
 [[package]]
 name = "protocol"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#28c02fb41dad8752f2c647516664ae63f60ac440"
+source = "git+https://github.com/CJBuchel/EchoTree.git#39256feefa4b91c2655388bc681c4145f5405df7"
 dependencies = [
  "schemars",
  "serde",
@@ -1840,6 +1847,7 @@ dependencies = [
  "log",
  "log4rs",
  "mime_guess",
+ "network",
  "rcgen",
  "structopt",
  "tokio",

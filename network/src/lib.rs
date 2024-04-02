@@ -2,4 +2,7 @@
 mod clients;
 mod filters;
 mod handlers;
-pub mod network;
+mod network;
+
+pub use network::*;
+pub use clients::*;

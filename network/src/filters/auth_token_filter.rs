@@ -1,6 +1,6 @@
 use warp::Filter;
 
-use crate::{clients::ClientMap, filters::FailAuth};
+use crate::{clients::ClientMap, filters::Unauthorized};
 
 use super::{HEADER_X_AUTH_TOKEN, HEADER_X_CLIENT_ID};
 
@@ -20,12 +20,12 @@ pub fn check_auth_token(clients: ClientMap) -> impl Filter<Extract = (), Error =
             return Ok(());
           } else {
             log::warn!("Client auth failed: {}", client_id);
-            Err(warp::reject::custom(FailAuth))
+            Err(warp::reject::custom(Unauthorized))
           }
         },
         None => {
           log::debug!("Client not found: {}", client_id);
-          Err(warp::reject::custom(FailAuth))
+          Err(warp::reject::custom(Unauthorized))
         },
       }
     }).untuple_one()

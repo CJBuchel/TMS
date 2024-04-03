@@ -1,14 +1,12 @@
 use database::SharedDatabase;
 use warp::Filter;
 
-use crate::{clients::{client_access::ClientAccess, ClientMap}, filters::FailAuth};
+use crate::{clients::{client_access::ClientAccess, ClientMap}, filters::Unauthorized};
 
 use super::HEADER_X_CLIENT_ID;
 
 
 pub fn role_permission_filter(clients: ClientMap, db: SharedDatabase, roles: Vec<&str>) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone {
-  // let filter = warp::any().map(move || clients.clone());
-
   let roles: Vec<String> = roles.iter().map(|x| x.to_string()).collect();
 
   warp::any()
@@ -25,12 +23,12 @@ pub fn role_permission_filter(clients: ClientMap, db: SharedDatabase, roles: Vec
             return Ok(());
           } else {
             log::warn!("Client role auth failed: {}, roles: {}", client_id, roles.join(", "));
-            return Err(warp::reject::custom(FailAuth));
+            return Err(warp::reject::custom(Unauthorized));
           }
         },
         None => {
           log::debug!("Client not found: {}", client_id);
-          return Err(warp::reject::custom(FailAuth));
+          return Err(warp::reject::custom(Unauthorized));
         },
       }
     }).untuple_one()

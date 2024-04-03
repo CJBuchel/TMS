@@ -1,16 +1,23 @@
 use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Serialize};
 
+mod register_requests;
+pub use register_requests::*;
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub struct RegisterRequest {
-  pub username: Option<String>, // optionally log in with username/password
-  pub password: Option<String>,
-}
+mod errors;
+pub use errors::*;
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
-pub struct RegisterResponse {
-  pub auth_token: String,
-  pub uuid: String,
-  pub url: String,
+pub trait DataSchemeExtensions: Default + JsonSchema + Serialize + DeserializeOwned {
+  fn to_schema() -> String {
+    let schema = schemars::schema_for!(Self);
+    serde_json::to_string_pretty(&schema).unwrap_or_default()
+  }
+
+  fn to_json(&self) -> String {
+    serde_json::to_string_pretty(&self).unwrap_or_default()
+  }
+
+  fn from_schema(schema: &str) -> Self {
+    serde_json::from_str(schema).unwrap_or_default()
+  }
 }

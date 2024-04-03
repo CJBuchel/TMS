@@ -98,9 +98,9 @@ impl Database {
     // :judging:robot_design_scores
     // :judging:pods
 
-    self.inner.read().await.add_tree_schema(":tournament:config".to_string(), TournamentConfig::get_schema()).await;
-    self.inner.read().await.add_tree_schema(":teams".to_string(), Team::get_schema()).await;
-    self.inner.read().await.add_tree_schema(":users".to_string(), User::get_schema()).await;
+    self.inner.read().await.add_tree_schema(":tournament:config".to_string(), TournamentConfig::to_schema()).await;
+    self.inner.read().await.add_tree_schema(":teams".to_string(), Team::to_schema()).await;
+    self.inner.read().await.add_tree_schema(":users".to_string(), User::to_schema()).await;
   }
 
   pub async fn get_echo_tree_routes(&self, tls: bool) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {

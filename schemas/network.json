@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NetworkSchema",
+  "type": "object",
+  "required": [
+    "_register_request",
+    "_register_response"
+  ],
+  "properties": {
+    "_register_request": {
+      "$ref": "#/definitions/RegisterRequest"
+    },
+    "_register_response": {
+      "$ref": "#/definitions/RegisterResponse"
+    }
+  },
+  "definitions": {
+    "RegisterRequest": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "RegisterResponse": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "url",
+        "uuid"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

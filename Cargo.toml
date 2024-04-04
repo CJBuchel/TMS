@@ -1,7 +1,6 @@
 [workspace]
 resolver = "2"
 members = [
-  "server", 
-  "database",
-  "network", "web-server", 
+  "tms-infra", 
+  "tms-server", 
 ]

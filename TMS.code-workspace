@@ -1,17 +1,12 @@
 {
 	"folders": [
 		{
-			"path": ".",
-		},
-		{
-			"path": "./tms-client"
+			"path": "."
 		}
 	],
 	"settings": {
-		"rust-analyzer.linkedProjects": [
-			"./Cargo.toml"
-		],
 		"rust-analyzer.showUnlinkedFileNotification": false,
+		"svg.preview.background": "transparent",
 		"java.compile.nullAnalysis.mode": "automatic"
 	}
 }

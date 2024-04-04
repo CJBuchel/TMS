@@ -13,7 +13,7 @@ appenders:
   stdout:
     kind: console
     encoder:
-      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {h({m})}{n}"
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})}] {h({m})}{n}"
 
   # Rolling file appender
   tms_server:

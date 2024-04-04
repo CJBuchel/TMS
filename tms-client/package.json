@@ -1,0 +1,19 @@
+{
+  "name": "tms",
+  "version": "1.0.0",
+  "description": "A new Flutter project.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "prepare_db": "quicktype -l dart -s schema ../schemas/database.json -o lib/schemas/database.dart",
+    "prepare_network": "quicktype -l dart -s schema ../schemas/network.json -o lib/schemas/network.dart",
+    "prepare": "npm run prepare_db && npm run prepare_network"
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "quicktype": "^23.0.19"
+  }
+}

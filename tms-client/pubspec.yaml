@@ -21,6 +21,10 @@ dependencies:
   cupertino_icons: ^1.0.6
   dotenv: ^4.2.0
   flutter_dotenv: ^5.1.0
+  web_socket_channel: ^2.4.4
+  http: ^1.2.1
+  uuid: ^4.3.3
+  logger: ^2.2.0
 
 dev_dependencies:
   flutter_test:

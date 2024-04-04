@@ -25,6 +25,7 @@ dependencies:
   http: ^1.2.1
   uuid: ^4.3.3
   logger: ^2.2.0
+  multicast_dns: ^0.3.2+6
 
 dev_dependencies:
   flutter_test:

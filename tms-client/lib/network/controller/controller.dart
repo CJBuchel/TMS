@@ -2,24 +2,22 @@ import 'package:flutter/foundation.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
+import 'package:tms/network/controller/db.dart';
 import 'package:tms/network/controller/http.dart';
 import 'package:tms/network/controller/mdns.dart';
 import 'package:tms/network/controller/ws.dart';
 
 class NetworkController {
-  final HttpController _httpController;
-  final MdnsController _mdnsController;
-  final WebSocketController _webSocketController;
-
-  NetworkController()
-      : _httpController = HttpController(),
-        _mdnsController = MdnsController(),
-        _webSocketController = WebSocketController();
+  final HttpController _httpController = HttpController();
+  final MdnsController _mdnsController = MdnsController();
+  final WebSocketController _webSocketController = WebSocketController();
+  final DbController _dbController = DbController();
 
   NetworkConnectionState get state {
     var states = [
       _httpController.state,
       _webSocketController.state,
+      _dbController.state,
     ];
 
     if (states.every((element) => element == NetworkConnectionState.connected)) {
@@ -99,6 +97,7 @@ class NetworkController {
     if (await _heartbeat()) {
       if (await _httpController.register()) {
         if (await _websocketConnect()) {
+          await _dbController.connect();
           return true;
         }
       }
@@ -107,6 +106,7 @@ class NetworkController {
   }
 
   Future<void> disconnect() async {
+    await _dbController.disconnect();
     await _httpController.unregister();
     await _webSocketController.disconnect();
   }

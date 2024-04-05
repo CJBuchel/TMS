@@ -78,7 +78,7 @@ packages:
     description:
       path: echo_tree_flutter
       ref: HEAD
-      resolved-ref: e6da9b3d44651096c68b5fad1083882a9f266291
+      resolved-ref: cb4236535a934312ea575b1b6032547ce6ec5821
       url: "https://github.com/CJBuchel/EchoTree.git"
     source: git
     version: "0.0.1"

@@ -492,7 +492,7 @@ checksum = "0d6ef0072f8a535281e4876be788938b528e9a1d43900b82c2569af7da799125"
 [[package]]
 name = "echo_tree_rs"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#ae5ed33ee6ba69c4953bdfc5fec8e5c4e71ae9ac"
+source = "git+https://github.com/CJBuchel/EchoTree.git#d4137eba01bbe5e12735ce968ff9a5159e315147"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1480,7 +1480,7 @@ dependencies = [
 [[package]]
 name = "protocol"
 version = "0.1.0"
-source = "git+https://github.com/CJBuchel/EchoTree.git#ae5ed33ee6ba69c4953bdfc5fec8e5c4e71ae9ac"
+source = "git+https://github.com/CJBuchel/EchoTree.git#d4137eba01bbe5e12735ce968ff9a5159e315147"
 dependencies = [
  "schemars",
  "serde",
@@ -1528,9 +1528,9 @@ dependencies = [
 
 [[package]]
 name = "rcgen"
-version = "0.13.0"
+version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa96feb4d337a43eae1b39b6d4cafc2860a46cf9cec6f1e65294244ece65e348"
+checksum = "54077e1872c46788540de1ea3d7f4ccb1983d12f9aa909b234468676c1a36779"
 dependencies = [
  "pem",
  "ring",

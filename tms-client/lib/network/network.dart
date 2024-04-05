@@ -2,12 +2,18 @@ import 'dart:async';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/network/controller/controller.dart';
+import 'package:tms/utils/blocking_loop_timer.dart';
 
 class Network {
   static final Network _instance = Network._internal();
   final NetworkController _controller = NetworkController();
-  Timer? _watchdogTimer;
-  Network._internal();
+  BlockingLoopTimer? _watchdogTimer;
+  Network._internal() {
+    _watchdogTimer = BlockingLoopTimer(
+      interval: const Duration(seconds: 5),
+      callback: _checkConnection,
+    );
+  }
 
   factory Network() {
     return _instance;
@@ -26,24 +32,16 @@ class Network {
       TmsLogger().d("Reconnecting...");
       await _controller.connect();
     }
-    // start it up again
-    _startWatchdog();
-  }
-
-  void _startWatchdog() {
-    _watchdogTimer?.cancel();
-    _watchdogTimer = Timer(const Duration(seconds: 5), _checkConnection);
   }
 
   Future<void> start() async {
-    _startWatchdog();
+    _watchdogTimer?.start();
     await connect();
   }
 
   Future<void> stop() async {
     if (_watchdogTimer != null) {
-      _watchdogTimer?.cancel();
-      _watchdogTimer = null;
+      _watchdogTimer?.stop();
     }
     await disconnect();
   }

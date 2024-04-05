@@ -10,7 +10,7 @@ appenders:
   # h - Highlight log level
 
   # General Console/Terminal output
-  stdout:
+  tms_server_stdout:
     kind: console
     encoder:
       pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})}] {h({m})}{n}"
@@ -32,9 +32,39 @@ appenders:
     encoder:
       pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {h({m})}{n}"
 
+  echo_tree_rs_stdout:
+    kind: console
+    encoder:
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h(EchoTree {l})}] {h({m})}{n}"
+
+
+  echo_tree_rs:
+    kind: rolling_file
+    path: "logs/db.log"
+    policy:
+      kind: compound
+      trigger:
+        kind: size
+        limit: 1MB
+      roller:
+        kind: fixed_window
+        base: 1
+        count: 10
+        pattern: "logs/db.{}.log"
+    encoder:
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h(EchoTree {l})} {M} LINE: {L}] {h({m})}{n}"
+
 # Loggers
 root:
   level: debug
   appenders:
-    - stdout
+    - tms_server_stdout
     - tms_server
+
+loggers:
+  echo_tree_rs:
+    level: debug
+    appenders:
+      - echo_tree_rs_stdout
+      - echo_tree_rs
+    additive: false

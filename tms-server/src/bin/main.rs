@@ -25,7 +25,6 @@ async fn main() {
   log4rs::init_file("log_config/debug_log4rs.yaml", Default::default()).unwrap();
   #[cfg(not(debug_assertions))]
   log4rs::init_file("log_config/release_log4rs.yaml", Default::default()).unwrap();
-
   log::info!("TMS Start...");
 
   //

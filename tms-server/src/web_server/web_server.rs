@@ -14,8 +14,8 @@ pub struct WebConfig {
   pub local_ip: Option<String>,
 
   // if you have your own certificate and key instead, you can specify the paths here
-  pub cert_path: Option<String>,
-  pub key_path: Option<String>,
+  // pub cert_path: Option<String>,
+  // pub key_path: Option<String>,
 }
 
 impl Default for WebConfig {
@@ -25,8 +25,8 @@ impl Default for WebConfig {
       addr: [0,0,0,0],
       tls: false,
       local_ip: None,
-      cert_path: None,
-      key_path: None,
+      // cert_path: None,
+      // key_path: None,
     }
   }
 }
@@ -39,9 +39,9 @@ pub struct WebServer {
 }
 
 impl WebServer {
-  pub fn new(config: WebConfig) -> Self {
+  pub fn new(config: WebConfig, certs: CertificateKeys) -> Self {
 
-    let certs = CertificateKeys::new(config.cert_path, config.key_path, config.local_ip);
+    // let certs = CertificateKeys::new(config.cert_path, config.key_path, config.local_ip);
 
     WebServer {
       port: config.port,

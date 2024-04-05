@@ -16,6 +16,7 @@ pub fn registration_filter(clients: ClientMap, db: SharedDatabase, local_ip: Str
     .and(warp::any().map(move || local_ip.clone()))
     .and(warp::any().map(move || tls))
     .and(warp::any().map(move || port))
+    .and(warp::filters::addr::remote())
     .and_then(register_handler);
 
   let unregister = register_path

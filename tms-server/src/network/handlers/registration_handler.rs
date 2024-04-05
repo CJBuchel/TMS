@@ -14,10 +14,22 @@ async fn register_client(uuid: String, auth_token: String, user_id: String, clie
   log::debug!("Client registered: {}", uuid);
 }
 
-pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: SharedDatabase, local_ip: String, tls: bool, port: u16) -> ResponseResult<impl warp::reply::Reply> {
+pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: SharedDatabase, local_ip: String, tls: bool, port: u16, remote_addr: Option<std::net::SocketAddr>) -> ResponseResult<impl warp::reply::Reply> {
   let uuid = uuid::Uuid::new_v4().to_string();
   let auth_token = generate_auth_token();
-  let url = format!("{}://{}:{}/ws/{}", if tls { "wss" } else { "ws" }, local_ip, port, uuid);
+
+  // check if client is loopback connection (localhost)
+  let ip = if let Some(remote_addr) = remote_addr {
+    if remote_addr.ip().is_loopback() {
+      "localhost".to_string()
+    } else {
+      local_ip
+    }
+  } else {
+    local_ip
+  };
+
+  let url = format!("{}://{}:{}/ws/{}", if tls { "wss" } else { "ws" }, ip, port, uuid);
 
   // read db access
   let read_db = db.read().await;

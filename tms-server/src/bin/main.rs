@@ -4,6 +4,7 @@ use local_ip_address::local_ip;
 use tms_server::network::ClientMap;
 use tms_server::database::*;
 use tms_server::network::*;
+use tms_server::web_server::certificates::CertificateKeys;
 use tms_server::web_server::web_server::WebConfig;
 use tms_server::web_server::web_server::WebServer;
 use tms_server::ServerArgs;
@@ -54,14 +55,25 @@ async fn main() {
   // create network
   let network = Network::new(db.clone(), clients.clone(), ip.clone(), ServerArgs::get_tls(), ServerArgs::get_port());
 
+  // check arguments for certificates
+  let cert_path = ServerArgs::get_cert_path();
+  let key_path = ServerArgs::get_key_path();
+  let certs: CertificateKeys;
+
+  if cert_path.is_none() && key_path.is_none() {
+    certs = CertificateKeys::new(Some("cert.pem".to_string()), Some("key.rsa".to_string()), Some(ip.clone()));
+    #[cfg(not(debug_assertions))]
+    certs.write_to_location("cert.pem", "key.rsa");
+  } else {
+    certs = CertificateKeys::new(cert_path, key_path, Some(ip.clone()));
+  }
+
   // create web server
   let web_config = WebConfig {
     port: ServerArgs::get_port(),
     addr: ServerArgs::get_addr(),
     tls: ServerArgs::get_tls(),
     local_ip: Some(ip),
-    cert_path: ServerArgs::get_cert_path(),
-    key_path: ServerArgs::get_key_path(),
   };
 
   // get main web/network routes
@@ -72,7 +84,7 @@ async fn main() {
   let routes = echo_tree_routes.or(network_routes);
   
   // start main web server, including the routes
-  let web_server = WebServer::new(web_config);
+  let web_server = WebServer::new(web_config, certs);
   web_server.start(routes).await;
 
   // stop the backup service

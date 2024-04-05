@@ -25,7 +25,7 @@ class TmsLocalStorage {
   String get serverHttpProtocol => _ls?.getString("serverHttpProtocol") ?? "https";
 
   set serverIp(String value) => _ls?.setString("serverIp", value);
-  String get serverIp => _ls?.getString("serverIp") ?? "";
+  String get serverIp => _ls?.getString("serverIp") ?? ""; // should be localhost
 
   String get serverAddress => "$serverHttpProtocol://$serverIp:$serverPort";
 

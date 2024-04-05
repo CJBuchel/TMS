@@ -1,32 +1,10 @@
-import 'dart:async';
+import 'package:flutter/foundation.dart';
 
-enum NetworkConnectionState {
-  disconnected,
-  connecting,
-  connected,
-}
-
-typedef NetworkChangeHandler = Function(NetworkConnectionState state);
+enum NetworkConnectionState { disconnected, connecting, connected }
 
 class NetworkConnectivity {
-  NetworkChangeHandler? onNetworkChange;
-  NetworkConnectionState _state;
-  final _stateController = StreamController<NetworkConnectionState>.broadcast();
+  final ValueNotifier<NetworkConnectionState> _state = ValueNotifier(NetworkConnectionState.disconnected);
 
-  NetworkConnectivity() : _state = NetworkConnectionState.disconnected {
-    _stateController.stream.listen((state) {
-      _state = state;
-      onNetworkChange?.call(state);
-    });
-  }
-
-  set state(NetworkConnectionState state) {
-    _stateController.add(state);
-  }
-
-  NetworkConnectionState get state => _state;
-
-  void dispose() {
-    _stateController.close();
-  }
+  set state(NetworkConnectionState v) => _state.value = v;
+  NetworkConnectionState get state => _state.value;
 }

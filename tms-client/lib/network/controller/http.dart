@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:tms/constants.dart';
 import 'package:tms/logger.dart';
+import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/schemas/network.dart' as nts;
 import 'package:http/http.dart' as http;
 
@@ -39,24 +40,24 @@ class HttpStatusToMessage {
 }
 
 class HttpController {
-  bool _connected = false;
-
-  get connected => _connected;
+  final NetworkConnectivity _connectivity = NetworkConnectivity();
+  NetworkConnectionState get state => _connectivity.state;
 
   Future<bool> pulse(String addr) async {
-    var response = await http.get(
-      Uri.parse("$addr/pulse"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
+    try {
+      var response = await http.get(
+        Uri.parse("$addr/pulse"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
 
-    if (response.statusCode == HttpStatus.ok) {
-      TmsLogger().d("Pulsed TMS server");
-      return true;
-    } else {
-      var m = HttpStatusToMessage().getMessage(response.statusCode);
-      TmsLogger().w("Failed to pulse TMS server: $m");
+      if (response.statusCode == HttpStatus.ok) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
       return false;
     }
   }
@@ -80,13 +81,13 @@ class HttpController {
       TmsLocalStorage().wsConnectionString = res.url;
       TmsLocalStorage().authToken = res.authToken;
       TmsLocalStorage().uuid = res.uuid;
-      _connected = true;
+      _connectivity.state = NetworkConnectionState.connected;
 
       return true;
     } else {
       var m = HttpStatusToMessage().getMessage(response.statusCode);
       TmsLogger().w("Failed to register with TMS server: $m");
-      _connected = false;
+      _connectivity.state = NetworkConnectionState.disconnected;
       return false;
     }
   }
@@ -104,12 +105,12 @@ class HttpController {
 
     if (response.statusCode == HttpStatus.ok) {
       TmsLogger().d("Unregistered with TMS server");
-      _connected = false;
+      _connectivity.state = NetworkConnectionState.disconnected;
       return true;
     } else {
       var m = HttpStatusToMessage().getMessage(response.statusCode);
       TmsLogger().w("Failed to unregister with TMS server: $m");
-      _connected = false; // assume server failure and reset connection anyway
+      _connectivity.state = NetworkConnectionState.disconnected;
       return false;
     }
   }

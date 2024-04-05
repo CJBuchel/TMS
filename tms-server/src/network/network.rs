@@ -2,7 +2,7 @@ use warp::Filter;
 
 use crate::database::SharedDatabase;
 
-use super::{filters::{register_filter::registration_filter, websocket_filter::websocket_filter}, handlers::handle_rejection, ClientMap};
+use super::{filters::{pulse_filter::pulse_filter, register_filter::registration_filter, websocket_filter::websocket_filter}, handlers::handle_rejection, ClientMap};
 pub struct Network {
   db: SharedDatabase,
   clients: ClientMap,
@@ -22,7 +22,8 @@ impl Network {
     .allow_headers(vec!["content-type"])
     .allow_methods(vec!["GET", "POST", "DELETE", "OPTIONS"]);
 
-    let routes = registration_filter(self.clients.clone(), self.db.clone(), self.local_ip.clone(), self.tls, self.port)
+    let routes = pulse_filter()
+      .or(registration_filter(self.clients.clone(), self.db.clone(), self.local_ip.clone(), self.tls, self.port))
       .or(websocket_filter(self.clients.clone(), self.db.clone()))
       .recover(handle_rejection)
       .with(cors);

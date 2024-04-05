@@ -1,18 +1,56 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
 import 'package:logger/web.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/network/network.dart';
 
+class NetworkObserver extends WidgetsBindingObserver {
+  void networkStartup() {
+    if (!TmsLocalStorage().isReady) {
+      TmsLocalStorage().init().then((_) => Network().start());
+    } else {
+      Network().start();
+    }
+  }
+
+  @override
+  Future<AppExitResponse> didRequestAppExit() {
+    Network().stop();
+    return super.didRequestAppExit();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      Network().stop();
+    } else if (state == AppLifecycleState.resumed) {
+      Network().start();
+    }
+  }
+}
+
 void main() async {
   Logger().i("TMS App starting...");
-  // initialize the local storage (singleton future)
-  if (!TmsLocalStorage().isReady) await TmsLocalStorage().init();
+  WidgetsFlutterBinding.ensureInitialized();
+  final observer = NetworkObserver();
+  WidgetsBinding.instance.addObserver(observer);
+  observer.networkStartup();
+  runApp(const MyApp());
+}
 
-  Network().start();
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-  // wait for 30 seconds
-  await Future.delayed(const Duration(seconds: 30), () {
-    Logger().i("TMS App stopping...");
-  });
-
-  Network().stop();
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Basic Counter App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+    );
+  }
 }

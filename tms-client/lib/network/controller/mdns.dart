@@ -2,8 +2,8 @@ import 'package:multicast_dns/multicast_dns.dart';
 import 'package:tms/constants.dart';
 import 'package:tms/logger.dart';
 
-class MdnsNetwork {
-  Future<(bool, String)> _findServer() async {
+class MdnsController {
+  Future<(bool, String)> findServer() async {
     TmsLogger().i("Finding TMS server...");
     const String name = mdnsName;
     final MDnsClient client = MDnsClient();

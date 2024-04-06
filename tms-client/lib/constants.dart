@@ -1,5 +1,25 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Style constants (dark)
+const primaryColorDark = Color(0xFF2697FF);
+const secondaryColorDark = Color(0xFF2A2D3E);
+const bgColorDark = Color(0xFF212332);
+const bgSecondaryColorDark = Color(0xFF2A2D3E);
+const primaryRowColorDark = Color(0xFF355558);
+const secondaryRowColorDark = Color(0xFF707279);
+const secondaryCardColorDark = Color.fromARGB(255, 69, 80, 100);
+
+// Style constants (light)
+const primaryColorLight = Color(0xFF2697FF);
+const secondaryColorLight = Color(0xFF2A2D3E);
+const bgColorLight = Color(0xFFFFFFFF);
+const bgSecondaryColorLight = Color(0xFFEEEEEE);
+const primaryRowColorLight = Color(0xFFCBE2F5);
+const secondaryRowColorLight = Color(0xFFD8D8D8);
+const secondaryCardColorLight = Color.fromRGBO(225, 245, 254, 1);
+
+// variable constants
 const serverPort = 8080;
 const mdnsName = '_mdns_tms_server._udp.local';
 
@@ -37,4 +57,7 @@ class TmsLocalStorage {
 
   set uuid(String value) => _ls?.setString("uuid", value);
   String get uuid => _ls?.getString("uuid") ?? "";
+
+  set isDarkTheme(bool value) => _ls?.setBool("isDarkTheme", value);
+  bool get isDarkTheme => _ls?.getBool("isDarkTheme") ?? true;
 }

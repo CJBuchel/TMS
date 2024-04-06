@@ -28,7 +28,6 @@ async fn client_connection(ws: warp::ws::WebSocket, uuid: String, clients: Clien
   let ping_task = tokio::spawn(async move {
     loop {
       tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
-      log::debug!("{}: ping", ping_uuid);
       let ping_m = warp::filters::ws::Message::ping("");
       if client_sender.send(Ok(ping_m)).is_err() {
         log::warn!("{}: client ping failed, breaking task...", ping_uuid);
@@ -42,9 +41,9 @@ async fn client_connection(ws: warp::ws::WebSocket, uuid: String, clients: Clien
     let msg = match result {
       Ok(msg) => {
         if msg.is_close() {
+          log::debug!("{}: close message received", uuid);
           break;
         } else if msg.is_pong() {
-          log::debug!("{}: pong", uuid);
           continue;
         } else {
           msg

@@ -5,20 +5,32 @@ import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 
 class DbController {
-  // final NetworkConnectivity _connectivity = NetworkConnectivity();
+  final NetworkConnectivity _connectivity = NetworkConnectivity();
   NetworkConnectionState get state => _stateParser();
+  NetworkConnectivity get connectivity => _connectivity;
 
   NetworkConnectionState _stateParser() {
+    NetworkConnectionState st;
+
     switch (EchoTreeClient().state) {
       case EchoTreeConnection.connected:
-        return NetworkConnectionState.connected;
+        st = NetworkConnectionState.connected;
+        break;
       case EchoTreeConnection.connecting:
-        return NetworkConnectionState.connecting;
+        st = NetworkConnectionState.connecting;
+        break;
       case EchoTreeConnection.disconnected:
-        return NetworkConnectionState.disconnected;
+        st = NetworkConnectionState.disconnected;
+        break;
       default:
-        return NetworkConnectionState.disconnected;
+        st = NetworkConnectionState.disconnected;
     }
+
+    if (st != _connectivity.state) {
+      _connectivity.state = st;
+    }
+
+    return st;
   }
 
   Future<void> connect() async {

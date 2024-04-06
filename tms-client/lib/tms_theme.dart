@@ -9,6 +9,11 @@ final ThemeData tmsLightTheme = ThemeData(
   secondaryHeaderColor: Color(0xFFEEEEEE),
   canvasColor: Color(0xFFEEEEEE),
   cardColor: Color.fromRGBO(225, 245, 254, 1),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Color(0xFF2697FF),
+    foregroundColor: Colors.white,
+    iconTheme: IconThemeData(color: Colors.white),
+  ),
 );
 
 final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
@@ -20,4 +25,9 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
   secondaryHeaderColor: Color(0xFF2A2D3E),
   canvasColor: Color(0xFF2A2D3E),
   cardColor: Color.fromARGB(255, 69, 80, 100),
+  appBarTheme: AppBarTheme(
+    backgroundColor: Colors.blueGrey[800],
+    foregroundColor: Colors.white,
+    iconTheme: IconThemeData(color: Colors.white),
+  ),
 );

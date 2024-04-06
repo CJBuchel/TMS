@@ -6,6 +6,7 @@ class WebSocketController {
   final NetworkConnectivity _connectivity = NetworkConnectivity();
   WebSocketChannel? _channel;
   NetworkConnectionState get state => _connectivity.state;
+  NetworkConnectivity get connectivity => _connectivity;
 
   void _handleEvent(dynamic event) async {
     try {

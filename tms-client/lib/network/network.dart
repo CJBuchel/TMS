@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/network/controller/controller.dart';
@@ -17,6 +18,12 @@ class Network {
 
   factory Network() {
     return _instance;
+  }
+
+  ValueNotifier<NetworkConnectionState> get state => _controller.stateNotifier;
+  // (http, ws, db)
+  (NetworkConnectivity, NetworkConnectivity, NetworkConnectivity) innerNetworkStates() {
+    return _controller.innerNetworkStates();
   }
 
   Future<void> connect() async {

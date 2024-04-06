@@ -13,6 +13,14 @@ class NetworkController {
   final WebSocketController _webSocketController = WebSocketController();
   final DbController _dbController = DbController();
 
+  final ValueNotifier<NetworkConnectionState> _stateNotifier = ValueNotifier(NetworkConnectionState.disconnected);
+  ValueNotifier<NetworkConnectionState> get stateNotifier => _stateNotifier;
+
+  // (http, ws, db)
+  (NetworkConnectivity, NetworkConnectivity, NetworkConnectivity) innerNetworkStates() {
+    return (_httpController.connectivity, _webSocketController.connectivity, _dbController.connectivity);
+  }
+
   NetworkConnectionState get state {
     var states = [
       _httpController.state,
@@ -20,14 +28,22 @@ class NetworkController {
       _dbController.state,
     ];
 
+    NetworkConnectionState st;
+
     if (states.every((element) => element == NetworkConnectionState.connected)) {
-      return NetworkConnectionState.connected;
+      st = NetworkConnectionState.connected;
     } else if (states.contains(NetworkConnectionState.connecting)) {
-      return NetworkConnectionState.connecting;
+      st = NetworkConnectionState.connecting;
     } else {
       // disconnected
-      return NetworkConnectionState.disconnected;
+      st = NetworkConnectionState.disconnected;
     }
+
+    if (st != _stateNotifier.value) {
+      _stateNotifier.value = st;
+    }
+
+    return st;
   }
 
   Future<bool> _checkIp(String ip) async {

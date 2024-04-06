@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:tms/constants.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
+import 'package:tms/network/network.dart';
 import 'package:tms/schemas/network.dart' as nts;
 import 'package:http/http.dart' as http;
 
@@ -42,6 +43,7 @@ class HttpStatusToMessage {
 class HttpController {
   final NetworkConnectivity _connectivity = NetworkConnectivity();
   NetworkConnectionState get state => _connectivity.state;
+  NetworkConnectivity get connectivity => _connectivity;
 
   Future<bool> pulse(String addr) async {
     try {

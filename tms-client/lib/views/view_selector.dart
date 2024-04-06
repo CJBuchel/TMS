@@ -5,6 +5,8 @@ class ViewSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ListView(
+      children: <Widget>[],
+    );
   }
 }

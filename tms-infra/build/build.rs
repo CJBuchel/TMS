@@ -14,6 +14,8 @@ struct DatabaseSchema {
 struct NetworkSchema {
   _register_request: RegisterRequest,
   _register_response: RegisterResponse,
+  _login_request: LoginRequest,
+  _login_response: LoginResponse,
 }
 
 fn get_workspace_path() -> std::io::Result<PathBuf> {
@@ -45,6 +47,6 @@ fn generate_schema<T: JsonSchema>(schema_name: &str) {
 }
 
 fn main() {
-  generate_schema::<DatabaseSchema>("database");
-  generate_schema::<NetworkSchema>("network");
+  generate_schema::<DatabaseSchema>("databaseSchema");
+  generate_schema::<NetworkSchema>("networkSchema");
 }

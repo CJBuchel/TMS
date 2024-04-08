@@ -32,7 +32,7 @@ impl BackupService for Database {
             let config = inner.read().await.get_entry(":tournament:config".to_string(), "config".to_string()).await;
             match config {
               Some(config) => {
-                let config = TournamentConfig::from_schema(&config);
+                let config = TournamentConfig::from_json(&config);
                 let interval_seconds = config.backup_interval * 60;
                 let name = if config.name.is_empty() { "tms".to_string() } else { config.name };
                 let backup_name = format!("{}-backup-{}_{}.kvdb.zip", name, chrono::Local::now().format("%Y-%m-%d"), chrono::Local::now().format("%H-%M-%S"));

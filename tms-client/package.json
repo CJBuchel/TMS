@@ -7,8 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "prepare_db": "quicktype -l dart -s schema ../schemas/database.json -o lib/schemas/database.dart",
-    "prepare_network": "quicktype -l dart -s schema ../schemas/network.json -o lib/schemas/network.dart",
+    "prepare_db": "quicktype -l dart -s schema ../schemas/databaseSchema.json -o lib/schemas/databaseSchema.dart",
+    "prepare_network": "quicktype -l dart -s schema ../schemas/networkSchema.json -o lib/schemas/networkSchema.dart",
     "prepare": "npm run prepare_db && npm run prepare_network"
   },
   "keywords": [],

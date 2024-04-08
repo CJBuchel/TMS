@@ -3,10 +3,18 @@
   "title": "NetworkSchema",
   "type": "object",
   "required": [
+    "_login_request",
+    "_login_response",
     "_register_request",
     "_register_response"
   ],
   "properties": {
+    "_login_request": {
+      "$ref": "#/definitions/LoginRequest"
+    },
+    "_login_response": {
+      "$ref": "#/definitions/LoginResponse"
+    },
     "_register_request": {
       "$ref": "#/definitions/RegisterRequest"
     },
@@ -15,6 +23,35 @@
     }
   },
   "definitions": {
+    "LoginRequest": {
+      "type": "object",
+      "required": [
+        "password",
+        "username"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "required": [
+        "roles"
+      ],
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "RegisterRequest": {
       "type": "object",
       "properties": {

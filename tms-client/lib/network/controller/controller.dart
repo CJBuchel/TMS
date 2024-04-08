@@ -10,7 +10,7 @@ import 'package:tms/network/controller/ws.dart';
 class NetworkController {
   final HttpController _httpController = HttpController();
   final MdnsController _mdnsController = MdnsController();
-  final WebSocketController _webSocketController = WebSocketController();
+  final WebsocketController _websocketController = WebsocketController();
   final DbController _dbController = DbController();
 
   final ValueNotifier<NetworkConnectionState> _stateNotifier = ValueNotifier(NetworkConnectionState.disconnected);
@@ -18,13 +18,13 @@ class NetworkController {
 
   // (http, ws, db)
   (NetworkConnectivity, NetworkConnectivity, NetworkConnectivity) innerNetworkStates() {
-    return (_httpController.connectivity, _webSocketController.connectivity, _dbController.connectivity);
+    return (_httpController.connectivity, _websocketController.connectivity, _dbController.connectivity);
   }
 
   NetworkConnectionState get state {
     var states = [
       _httpController.state,
-      _webSocketController.state,
+      _websocketController.state,
       _dbController.state,
     ];
 
@@ -106,7 +106,7 @@ class NetworkController {
   }
 
   Future<bool> _websocketConnect() async {
-    return await _webSocketController.connect(TmsLocalStorage().wsConnectionString);
+    return await _websocketController.connect(TmsLocalStorage().wsConnectionString);
   }
 
   Future<bool> connect() async {
@@ -124,6 +124,10 @@ class NetworkController {
   Future<void> disconnect() async {
     await _dbController.disconnect();
     await _httpController.unregister();
-    await _webSocketController.disconnect();
+    await _websocketController.disconnect();
   }
+
+  Future<ServerResponse> httpPost(String route, dynamic body) => _httpController.httpPost(route, body);
+  Future<ServerResponse> httpGet(String route) => _httpController.httpGet(route);
+  Future<ServerResponse> httpDelete(String route, dynamic body) => _httpController.httpDelete(route, body);
 }

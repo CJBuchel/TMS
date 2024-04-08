@@ -1,23 +1,23 @@
 // To parse this JSON data, do
 //
-//     final database = databaseFromJson(jsonString);
+//     final databaseSchema = databaseSchemaFromJson(jsonString);
 
 import 'dart:convert';
 
-Database databaseFromJson(String str) => Database.fromJson(json.decode(str));
+DatabaseSchema databaseSchemaFromJson(String str) => DatabaseSchema.fromJson(json.decode(str));
 
-String databaseToJson(Database data) => json.encode(data.toJson());
+String databaseSchemaToJson(DatabaseSchema data) => json.encode(data.toJson());
 
-class Database {
+class DatabaseSchema {
     Team team;
     TournamentConfig tournamentConfig;
 
-    Database({
+    DatabaseSchema({
         required this.team,
         required this.tournamentConfig,
     });
 
-    factory Database.fromJson(Map<String, dynamic> json) => Database(
+    factory DatabaseSchema.fromJson(Map<String, dynamic> json) => DatabaseSchema(
         team: Team.fromJson(json["_team"]),
         tournamentConfig: TournamentConfig.fromJson(json["_tournament_config"]),
     );

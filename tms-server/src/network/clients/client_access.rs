@@ -19,7 +19,7 @@ impl ClientAccess for Client {
     match user {
       // if user is found, check if user has any of the roles required
       Some(user) => {
-        let user = User::from_schema(&user);
+        let user = User::from_json(&user);
         for role in roles {
           if user.roles.contains(&role.to_string()) {
             return true;

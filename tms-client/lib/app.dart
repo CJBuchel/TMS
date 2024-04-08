@@ -34,7 +34,7 @@ class _TMSAppState extends State<TMSApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      debugShowCheckedModeBanner: true, // set this to false in the future
+      debugShowCheckedModeBanner: false, // gets in the way of the login button
       title: 'TMS Client',
       theme: tmsLightTheme, // light theme
       darkTheme: tmsDarkTheme, // dark theme

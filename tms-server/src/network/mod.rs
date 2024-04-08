@@ -1,8 +1,11 @@
 
 mod clients;
-mod filters;
-mod handlers;
-mod network;
-
-pub use network::*;
 pub use clients::*;
+mod filters;
+pub use filters::*;
+
+mod handlers;
+pub use handlers::*;
+
+mod network;
+pub use network::*;

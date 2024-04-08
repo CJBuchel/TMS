@@ -4,9 +4,10 @@ import 'dart:io';
 import 'package:tms/constants.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
-import 'package:tms/network/network.dart';
-import 'package:tms/schemas/network.dart' as nts;
+import 'package:tms/schemas/networkSchema.dart' as nts;
 import 'package:http/http.dart' as http;
+
+typedef ServerResponse = (bool, int, dynamic); // success, status code, response
 
 class HttpStatusToMessage {
   static final HttpStatusToMessage _instance = HttpStatusToMessage._internal();
@@ -57,14 +58,17 @@ class HttpController {
       if (response.statusCode == HttpStatus.ok) {
         return true;
       } else {
+        _connectivity.state = NetworkConnectionState.disconnected;
         return false;
       }
     } catch (e) {
+      _connectivity.state = NetworkConnectionState.disconnected;
       return false;
     }
   }
 
   Future<bool> register() async {
+    _connectivity.state = NetworkConnectionState.connecting;
     String addr = TmsLocalStorage().serverAddress;
     var request = nts.RegisterRequest();
 
@@ -114,6 +118,81 @@ class HttpController {
       TmsLogger().w("Failed to unregister with TMS server: $m");
       _connectivity.state = NetworkConnectionState.disconnected;
       return false;
+    }
+  }
+
+  // success, status code, response
+  Future<ServerResponse> httpPost(String route, dynamic body) async {
+    try {
+      String addr = TmsLocalStorage().serverAddress;
+      final response = await http.post(
+        Uri.parse("$addr$route"),
+        body: jsonEncode(body),
+        headers: {
+          "X-Client-Id": TmsLocalStorage().uuid,
+          "X-Auth-Token": TmsLocalStorage().authToken,
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return (true, response.statusCode, jsonDecode(response.body));
+      } else {
+        TmsLogger().e("Failed to post to $route: ${response.statusCode}");
+        return (false, response.statusCode, jsonDecode(response.body));
+      }
+    } catch (e) {
+      TmsLogger().e("Caught failure. Failed to post to $route: $e");
+      return (false, HttpStatus.internalServerError, e);
+    }
+  }
+
+  Future<ServerResponse> httpGet(String route) async {
+    try {
+      String addr = TmsLocalStorage().serverAddress;
+      final response = await http.get(
+        Uri.parse("$addr$route"),
+        headers: {
+          "X-Client-Id": TmsLocalStorage().uuid,
+          "X-Auth-Token": TmsLocalStorage().authToken,
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return (true, response.statusCode, jsonDecode(response.body));
+      } else {
+        TmsLogger().e("Failed to get from $route: ${response.statusCode}");
+        return (false, response.statusCode, jsonDecode(response.body));
+      }
+    } catch (e) {
+      TmsLogger().e("Caught failure. Failed to get from $route: $e");
+      return (false, HttpStatus.internalServerError, e);
+    }
+  }
+
+  Future<ServerResponse> httpDelete(String route, dynamic body) async {
+    try {
+      String addr = TmsLocalStorage().serverAddress;
+      final response = await http.delete(
+        Uri.parse("$addr$route"),
+        body: jsonEncode(body),
+        headers: {
+          "X-Client-Id": TmsLocalStorage().uuid,
+          "X-Auth-Token": TmsLocalStorage().authToken,
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        return (true, response.statusCode, jsonDecode(response.body));
+      } else {
+        TmsLogger().e("Failed to delete from $route: ${response.statusCode}");
+        return (false, response.statusCode, jsonDecode(response.body));
+      }
+    } catch (e) {
+      TmsLogger().e("Caught failure. Failed to delete from $route: $e");
+      return (false, HttpStatus.internalServerError, e);
     }
   }
 }

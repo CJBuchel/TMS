@@ -1,6 +1,6 @@
 use futures::{FutureExt, StreamExt};
 
-use crate::{database::SharedDatabase, network::{client::Client, filters::Unauthorized, ClientMap}};
+use crate::{database::SharedDatabase, network::{client::Client, filters::ClientNotFound, ClientMap}};
 
 async fn client_msg(uuid: String, msg: warp::filters::ws::Message, clients: &ClientMap, db: &SharedDatabase) {
   log::debug!("{}: message: {:?}", uuid, msg);
@@ -72,7 +72,7 @@ pub async fn websocket_handler(ws: warp::ws::Ws, uuid: String, clients: ClientMa
     },
     None => {
       log::warn!("Client not found: {}", client_id);
-      Err(warp::reject::custom(Unauthorized))
+      Err(warp::reject::custom(ClientNotFound))
     }
   }
 }

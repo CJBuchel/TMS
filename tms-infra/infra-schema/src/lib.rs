@@ -17,7 +17,7 @@ pub trait DataSchemeExtensions: Default + JsonSchema + Serialize + DeserializeOw
     serde_json::to_string_pretty(&self).unwrap_or_default()
   }
 
-  fn from_schema(schema: &str) -> Self {
-    serde_json::from_str(schema).unwrap_or_default()
+  fn from_json(json: &str) -> Self {
+    serde_json::from_str(json).unwrap_or_default()
   }
 }

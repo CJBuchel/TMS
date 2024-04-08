@@ -37,7 +37,7 @@ pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: Sha
   // if username/password
   if let (Some(username), Some(password)) = (body.username, body.password) {
     let result = read_db.get_inner().read().await.get_tree(":users".to_string()).await.iter().find_map(|(id, user)| {
-      let user = User::from_schema(user);
+      let user = User::from_json(user);
       if user.username == username {
         Some((id.clone(), user))
       } else {

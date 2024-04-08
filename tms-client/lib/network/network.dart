@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/network/controller/controller.dart';
+import 'package:tms/network/controller/http.dart';
 import 'package:tms/utils/blocking_loop_timer.dart';
+
+typedef TypedServerResponse<T> = (bool, int, T?, String?);
 
 class Network {
   static final Network _instance = Network._internal();
@@ -52,4 +57,9 @@ class Network {
     }
     await disconnect();
   }
+
+  // regular http
+  Future<ServerResponse> networkPost(String route, dynamic body) => _controller.httpPost(route, body);
+  Future<ServerResponse> networkGet(String route) => _controller.httpGet(route);
+  Future<ServerResponse> networkDelete(String route, dynamic body) => _controller.httpDelete(route, body);
 }

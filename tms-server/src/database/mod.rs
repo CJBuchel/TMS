@@ -1,12 +1,14 @@
-pub use echo_tree_rs::core::{EchoTreeServer, EchoTreeServerConfig, SchemaUtil, TreeManager};
+pub use echo_tree_rs::core::*;
 use rand::distributions::Alphanumeric;
 use rand::Rng;
 
 mod backup_service;
 pub use backup_service::*;
 
+mod extensions;
+pub use extensions::*;
+
 pub use tms_infra::*;
-// pub use database_schema::;
 
 pub struct Database {
   inner: std::sync::Arc<tokio::sync::RwLock<EchoTreeServer>>,
@@ -80,6 +82,18 @@ impl Database {
     self.check_insert_role("head_referee", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("judge", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("judge_advisor", &self.generate_password(), vec![], vec![]).await;
+
+    // insert admin user
+    let admin_user = User {
+      username: "admin".to_string(),
+      password: "admin".to_string(),
+      roles: vec!["admin".to_string()],
+    };
+
+    match self.insert_user(admin_user).await {
+      Ok(_) => log::info!("Admin user created"),
+      Err(e) => log::error!("Failed to create admin user: {}", e),
+    }
   }
 
   pub async fn create_trees(&mut self) {

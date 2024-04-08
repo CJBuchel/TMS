@@ -1,11 +1,10 @@
 use warp::Filter;
 
-use crate::network::{filters::Unauthorized, ClientMap};
-
-use super::{HEADER_X_AUTH_TOKEN, HEADER_X_CLIENT_ID};
+use crate::network::{filters::{ClientNotFound, UnauthorizedToken, HEADER_X_AUTH_TOKEN, HEADER_X_CLIENT_ID}, ClientMap};
 
 
-pub fn check_auth_token(clients: ClientMap) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone {
+
+pub fn check_auth_token_filter(clients: ClientMap) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone {
   let filter = warp::any().map(move || clients.clone());
   // check for headers, (client and token)
   filter
@@ -20,12 +19,12 @@ pub fn check_auth_token(clients: ClientMap) -> impl Filter<Extract = (), Error =
             return Ok(());
           } else {
             log::warn!("Client auth failed: {}", client_id);
-            Err(warp::reject::custom(Unauthorized))
+            Err(warp::reject::custom(UnauthorizedToken))
           }
         },
         None => {
           log::debug!("Client not found: {}", client_id);
-          Err(warp::reject::custom(Unauthorized))
+          Err(warp::reject::custom(ClientNotFound))
         },
       }
     }).untuple_one()

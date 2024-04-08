@@ -1,7 +1,7 @@
 use tms_infra::*;
 use warp::http::StatusCode;
 
-use crate::network::filters::Unauthorized;
+use crate::network::filters::*;
 
 pub async fn handle_rejection(err: warp::Rejection) -> Result<impl warp::Reply, warp::Rejection> {
   let code;
@@ -10,10 +10,22 @@ pub async fn handle_rejection(err: warp::Rejection) -> Result<impl warp::Reply, 
   if err.is_not_found() {
     code = StatusCode::NOT_FOUND;
     message = "Not Found";
-  } else if let Some(_) = err.find::<Unauthorized>() {
+  } else if let Some(_) = err.find::<UnauthorizedToken>() {
     code = StatusCode::UNAUTHORIZED;
-    message = "Unauthorized";
-  } else {
+    message = "Unauthorized Auth Token";
+  } else if let Some(_) = err.find::<ClientNotFound>() {
+    code = StatusCode::NOT_FOUND;
+    message = "Client Not Found";
+  } else if let Some(_) = err.find::<UnauthorizedClient>() {
+    code = StatusCode::UNAUTHORIZED;
+    message = "Unauthorized Client Access";
+  } else if let Some(_) = err.find::<UnauthorizedLogin>() {
+    code = StatusCode::UNAUTHORIZED;
+    message = "Unauthorized Login";
+  }
+
+  // fallback to a generic message for unhandled errors
+  else {
     code = StatusCode::INTERNAL_SERVER_ERROR;
     message = "Internal Server Error";
   }

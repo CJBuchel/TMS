@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:tms/constants.dart';
+import 'package:tms/local_storage.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/schemas/networkSchema.dart' as nts;

@@ -1,5 +1,5 @@
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:tms/constants.dart';
+import 'package:tms/local_storage.dart';
 import 'package:tms/logger.dart';
 
 class MdnsController {

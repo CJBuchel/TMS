@@ -1,6 +1,6 @@
 import 'package:echo_tree_flutter/client/network_service.dart';
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
-import 'package:tms/constants.dart';
+import 'package:tms/local_storage.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 

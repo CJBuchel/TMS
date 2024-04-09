@@ -55,6 +55,7 @@ class NetworkController {
         TmsLocalStorage().serverIp = ip;
         return true;
       }
+      await Future.delayed(const Duration(milliseconds: 200));
     }
     return false;
   }
@@ -67,12 +68,17 @@ class NetworkController {
       return true;
     }
 
+    // wait for half a second
+    await Future.delayed(const Duration(milliseconds: 200));
+
     // check if ip is correct
     TmsLogger().d("Checking stored ip");
     if (await _checkIp(TmsLocalStorage().serverIp)) {
       TmsLogger().i("Connected to TMS server (protocol changed)");
       return true;
     }
+
+    await Future.delayed(const Duration(milliseconds: 200));
 
     // check web connection (web server is usually same as regular server)
     if (kIsWeb) {
@@ -87,6 +93,8 @@ class NetworkController {
         }
       }
     }
+
+    await Future.delayed(const Duration(milliseconds: 200));
 
     // find server using mdns
     if (!kIsWeb) {

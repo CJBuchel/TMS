@@ -77,7 +77,7 @@ impl Database {
 
     // Future me, maybe make passwords auto generated, then have a login method which verifies the user and gives back the generated password for their role.
     self.check_insert_role("public", "public", vec![], vec![]).await;
-    self.check_insert_role("admin", &self.generate_password(), vec![], vec![":"]).await;
+    self.check_insert_role("admin", &self.generate_password(), vec![":"], vec![":"]).await;
     self.check_insert_role("referee", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("head_referee", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("judge", &self.generate_password(), vec![], vec![]).await;

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:tms/app.dart';
 import 'package:tms/constants.dart';
+import 'package:tms/logger.dart';
 import 'package:tms/network/network.dart';
 
 class NetworkObserver extends WidgetsBindingObserver {
@@ -35,6 +36,7 @@ class NetworkObserver extends WidgetsBindingObserver {
 
 void main() async {
   Logger().i("TMS App starting...");
+  TmsLogger().setLogLevel(LogLevel.info); // set log level to info
   WidgetsFlutterBinding.ensureInitialized();
   final observer = NetworkObserver();
   WidgetsBinding.instance.addObserver(observer);

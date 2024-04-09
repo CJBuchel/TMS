@@ -10,6 +10,8 @@ Future<int> loginRequest(String username, String password) async {
     var response = await Network().networkPost("/login", request);
 
     if (response.$1) {
+      LoginResponse loginResponse = LoginResponse.fromJson(response.$3);
+      TmsLogger().i("Login successful: ${loginResponse.roles}");
       return response.$2;
     } else {
       return HttpStatus.badRequest;

@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
@@ -22,6 +21,7 @@ class Network {
   }
 
   factory Network() {
+    EchoTreeLogger().useLogger(EchoTreeTmsLogBinder());
     return _instance;
   }
 

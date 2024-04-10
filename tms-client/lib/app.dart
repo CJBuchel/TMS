@@ -1,21 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:tms/local_storage.dart';
+import 'package:tms/router.dart';
 import 'package:tms/tms_theme.dart';
-import 'package:tms/views/view_selector.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
-
-final GoRouter _router = GoRouter(
-  initialLocation: '/',
-  routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const ViewSelector(),
-    ),
-  ],
-);
 
 class TMSApp extends StatefulWidget {
   const TMSApp({super.key});
@@ -41,7 +28,7 @@ class _TMSAppState extends State<TMSApp> {
       theme: tmsLightTheme, // light theme
       darkTheme: tmsDarkTheme, // dark theme
       themeMode: _themeMode, // theme mode (light or dark)
-      routerConfig: _router,
+      routerConfig: tmsRouter,
       builder: (context, child) => ResponsiveBreakpoints.builder(
         child: Scaffold(
           appBar: const TmsAppBar(),

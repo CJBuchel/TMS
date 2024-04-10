@@ -90,9 +90,17 @@ impl Database {
       roles: vec!["admin".to_string()],
     };
 
-    match self.insert_user(admin_user).await {
-      Ok(_) => log::info!("Admin user created"),
-      Err(e) => log::error!("Failed to create admin user: {}", e),
+    match self.get_user_by_username(admin_user.username.clone()).await {
+      Some((_, user)) => {
+        log::warn!("User already exists: {}, skipping insert...", user.username);
+        return;
+      }
+      None => {
+        match self.insert_user(admin_user).await {
+          Ok(_) => log::info!("Admin user created"),
+          Err(e) => log::error!("Failed to create admin user: {}", e),
+        }
+      }
     }
   }
 

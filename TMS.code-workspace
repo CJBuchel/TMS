@@ -1,10 +1,29 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": ".",
+			"name": "TMS"
 		},
+		{
+			"path": "./tms-client",
+			"name": "tms-client"
+		},
+		{
+			"path": "./tms-server",
+			"name": "tms-server"
+		},
+		{
+			"path": "./tms-infra",
+			"name": "tms-infra"
+		}
 	],
 	"settings": {
+		// "files.exclude": {
+		// 	"**/android": true,
+		// },
+		"search.exclude": {
+			"**/android": true,
+		},
 		"rust-analyzer.showUnlinkedFileNotification": false,
 		"svg.preview.background": "transparent",
 		"java.compile.nullAnalysis.mode": "automatic"

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tms/providers/auth_provider.dart';
 
 class Login extends StatelessWidget {
@@ -12,7 +13,7 @@ class Login extends StatelessWidget {
     int status = await _authProvider.login(_usernameController.text, _passwordController.text);
 
     if (status == HttpStatus.ok) {
-      Navigator.pop(context);
+      context.pop();
     } else {
       showDialog(
         context: context,
@@ -21,7 +22,7 @@ class Login extends StatelessWidget {
           content: Text(status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status"),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => context.pop(),
               child: const Text('OK'),
             ),
           ],

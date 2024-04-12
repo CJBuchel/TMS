@@ -1,6 +1,6 @@
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:tms/local_storage.dart';
-import 'package:tms/logger.dart';
+import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/utils/logger.dart';
 
 class MdnsController {
   Future<(bool, String)> findServer() async {

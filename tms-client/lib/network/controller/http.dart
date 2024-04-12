@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:tms/local_storage.dart';
-import 'package:tms/logger.dart';
+import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/schemas/networkSchema.dart' as nts;
 import 'package:http/http.dart' as http;
@@ -69,7 +69,7 @@ class HttpController {
 
   Future<bool> register() async {
     _connectivity.state = NetworkConnectionState.connecting;
-    String addr = TmsLocalStorage().serverAddress;
+    String addr = TmsLocalStorageProvider().serverAddress;
     var request = nts.RegisterRequest();
 
     var response = await http.post(
@@ -84,9 +84,9 @@ class HttpController {
       TmsLogger().d("Registered with TMS server");
       nts.RegisterResponse res = nts.RegisterResponse.fromJson(jsonDecode(response.body));
 
-      TmsLocalStorage().wsConnectionString = res.url;
-      TmsLocalStorage().authToken = res.authToken;
-      TmsLocalStorage().uuid = res.uuid;
+      TmsLocalStorageProvider().wsConnectionString = res.url;
+      TmsLocalStorageProvider().authToken = res.authToken;
+      TmsLocalStorageProvider().uuid = res.uuid;
       _connectivity.state = NetworkConnectionState.connected;
 
       return true;
@@ -99,12 +99,12 @@ class HttpController {
   }
 
   Future<bool> unregister() async {
-    String addr = TmsLocalStorage().serverAddress;
+    String addr = TmsLocalStorageProvider().serverAddress;
     final response = await http.delete(
-      Uri.parse("$addr/unregister/${TmsLocalStorage().uuid}"),
+      Uri.parse("$addr/unregister/${TmsLocalStorageProvider().uuid}"),
       headers: {
-        "X-Client-Id": TmsLocalStorage().uuid,
-        "X-Auth-Token": TmsLocalStorage().authToken,
+        "X-Client-Id": TmsLocalStorageProvider().uuid,
+        "X-Auth-Token": TmsLocalStorageProvider().authToken,
         "Content-Type": "application/json",
       },
     );
@@ -124,13 +124,13 @@ class HttpController {
   // success, status code, response
   Future<ServerResponse> httpPost(String route, dynamic body) async {
     try {
-      String addr = TmsLocalStorage().serverAddress;
+      String addr = TmsLocalStorageProvider().serverAddress;
       final response = await http.post(
         Uri.parse("$addr$route"),
         body: jsonEncode(body),
         headers: {
-          "X-Client-Id": TmsLocalStorage().uuid,
-          "X-Auth-Token": TmsLocalStorage().authToken,
+          "X-Client-Id": TmsLocalStorageProvider().uuid,
+          "X-Auth-Token": TmsLocalStorageProvider().authToken,
           "Content-Type": "application/json",
         },
       );
@@ -149,12 +149,12 @@ class HttpController {
 
   Future<ServerResponse> httpGet(String route) async {
     try {
-      String addr = TmsLocalStorage().serverAddress;
+      String addr = TmsLocalStorageProvider().serverAddress;
       final response = await http.get(
         Uri.parse("$addr$route"),
         headers: {
-          "X-Client-Id": TmsLocalStorage().uuid,
-          "X-Auth-Token": TmsLocalStorage().authToken,
+          "X-Client-Id": TmsLocalStorageProvider().uuid,
+          "X-Auth-Token": TmsLocalStorageProvider().authToken,
           "Content-Type": "application/json",
         },
       );
@@ -173,13 +173,13 @@ class HttpController {
 
   Future<ServerResponse> httpDelete(String route, dynamic body) async {
     try {
-      String addr = TmsLocalStorage().serverAddress;
+      String addr = TmsLocalStorageProvider().serverAddress;
       final response = await http.delete(
         Uri.parse("$addr$route"),
         body: jsonEncode(body),
         headers: {
-          "X-Client-Id": TmsLocalStorage().uuid,
-          "X-Auth-Token": TmsLocalStorage().authToken,
+          "X-Client-Id": TmsLocalStorageProvider().uuid,
+          "X-Auth-Token": TmsLocalStorageProvider().authToken,
           "Content-Type": "application/json",
         },
       );

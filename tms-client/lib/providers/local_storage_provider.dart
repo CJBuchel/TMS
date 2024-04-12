@@ -73,11 +73,11 @@ abstract class TmsLocalStorageBase extends ChangeNotifier {
 }
 
 // shared preferences
-class TmsLocalStorage extends TmsLocalStorageBase {
-  static final TmsLocalStorage _instance = TmsLocalStorage._internal();
-  TmsLocalStorage._internal();
+class TmsLocalStorageProvider extends TmsLocalStorageBase {
+  static final TmsLocalStorageProvider _instance = TmsLocalStorageProvider._internal();
+  TmsLocalStorageProvider._internal();
 
-  factory TmsLocalStorage() {
+  factory TmsLocalStorageProvider() {
     return _instance;
   }
 

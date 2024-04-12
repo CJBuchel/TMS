@@ -1,7 +1,7 @@
 import 'package:echo_tree_flutter/client/network_service.dart';
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
-import 'package:tms/local_storage.dart';
-import 'package:tms/logger.dart';
+import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 
 class DbController {
@@ -35,7 +35,7 @@ class DbController {
 
   Future<void> connect() async {
     TmsLogger().d("Connecting to EchoTree DB...");
-    await EchoTreeClient().connect(TmsLocalStorage().serverAddress);
+    await EchoTreeClient().connect(TmsLocalStorageProvider().serverAddress);
   }
 
   Future<void> disconnect() async {

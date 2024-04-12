@@ -8,3 +8,4 @@ analyzer:
 linter:
   rules:
     line_length: 120
+    prefer_const_constructors: true

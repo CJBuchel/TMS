@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/app.dart';
-import 'package:tms/local_storage.dart';
-import 'package:tms/logger.dart';
+import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/providers/auth_provider.dart';
 
 class NetworkObserver extends WidgetsBindingObserver {
   void networkStartup() {
-    if (!TmsLocalStorage().isReady) {
-      TmsLocalStorage().init().then((_) => Network().start());
+    if (!TmsLocalStorageProvider().isReady) {
+      TmsLocalStorageProvider().init().then((_) => Network().start());
     } else {
       Network().start();
     }
@@ -46,7 +46,7 @@ class AppWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TmsLocalStorage()),
+        ChangeNotifierProvider(create: (_) => TmsLocalStorageProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: child,
@@ -54,7 +54,7 @@ class AppWrapper extends StatelessWidget {
   }
 }
 
-void main() async {
+void main() {
   Logger().i("TMS App starting...");
   TmsLogger().setLogLevel(LogLevel.info);
   EchoTreeLogger().useLogger(EchoTreeTmsLogBinder());
@@ -62,5 +62,5 @@ void main() async {
   final observer = NetworkObserver();
   WidgetsBinding.instance.addObserver(observer);
   observer.networkStartup();
-  runApp(const TMSApp());
+  runApp(AppWrapper(child: TMSApp()));
 }

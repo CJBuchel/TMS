@@ -1,4 +1,4 @@
-import 'package:tms/logger.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

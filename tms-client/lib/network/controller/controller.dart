@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tms/local_storage.dart';
-import 'package:tms/logger.dart';
+import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/network/controller/db.dart';
 import 'package:tms/network/controller/http.dart';
@@ -50,10 +50,10 @@ class NetworkController {
   Future<bool> _checkIp(String ip) async {
     var protocols = ["https", "http"];
     for (var p in protocols) {
-      // TmsLocalStorage().serverHttpProtocol = p;
+      // TmsLocalStorageProvider().serverHttpProtocol = p;
       if (await _httpController.pulse("$p://$ip:$serverPort")) {
-        TmsLocalStorage().serverHttpProtocol = p;
-        TmsLocalStorage().serverIp = ip;
+        TmsLocalStorageProvider().serverHttpProtocol = p;
+        TmsLocalStorageProvider().serverIp = ip;
         return true;
       }
       await Future.delayed(const Duration(milliseconds: 200));
@@ -64,7 +64,7 @@ class NetworkController {
   Future<bool> _heartbeat() async {
     // check stored address
     TmsLogger().d("Checking stored address");
-    if (await _httpController.pulse(TmsLocalStorage().serverAddress)) {
+    if (await _httpController.pulse(TmsLocalStorageProvider().serverAddress)) {
       TmsLogger().i("Connected to TMS server using stored address");
       return true;
     }
@@ -74,7 +74,7 @@ class NetworkController {
 
     // check if ip is correct
     TmsLogger().d("Checking stored ip");
-    if (await _checkIp(TmsLocalStorage().serverIp)) {
+    if (await _checkIp(TmsLocalStorageProvider().serverIp)) {
       TmsLogger().i("Connected to TMS server (protocol changed)");
       return true;
     }
@@ -102,7 +102,7 @@ class NetworkController {
       TmsLogger().d("Finding server using mdns");
       var (found, ip) = await _mdnsController.findServer();
       if (found) {
-        TmsLocalStorage().serverIp = ip;
+        TmsLocalStorageProvider().serverIp = ip;
         if (await _checkIp(ip)) {
           return true;
         }
@@ -115,7 +115,7 @@ class NetworkController {
   }
 
   Future<bool> _websocketConnect() async {
-    return await _websocketController.connect(TmsLocalStorage().wsConnectionString);
+    return await _websocketController.connect(TmsLocalStorageProvider().wsConnectionString);
   }
 
   Future<bool> connect() async {

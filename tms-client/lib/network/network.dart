@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tms/logger.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/network/controller/controller.dart';
 import 'package:tms/network/controller/http.dart';

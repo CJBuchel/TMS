@@ -1,23 +1,23 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:tms/local_storage.dart';
-import 'package:tms/logger.dart';
+import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/schemas/networkSchema.dart';
 import 'package:tms/services/AuthService.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
 
-  String get authToken => TmsLocalStorage().authToken;
-  String get uuid => TmsLocalStorage().uuid;
+  String get authToken => TmsLocalStorageProvider().authToken;
+  String get uuid => TmsLocalStorageProvider().uuid;
 
-  bool get isLoggedIn => TmsLocalStorage().isLoggedIn;
-  String get username => TmsLocalStorage().authUsername;
-  String get password => TmsLocalStorage().authPassword;
-  List<String> get roles => TmsLocalStorage().authRoles;
+  bool get isLoggedIn => TmsLocalStorageProvider().isLoggedIn;
+  String get username => TmsLocalStorageProvider().authUsername;
+  String get password => TmsLocalStorageProvider().authPassword;
+  List<String> get roles => TmsLocalStorageProvider().authRoles;
 
-  final TmsLocalStorage _localStorage = TmsLocalStorage();
+  final _localStorage = TmsLocalStorageProvider();
   late final VoidCallback _lsListener;
 
   AuthProvider() {
@@ -35,14 +35,25 @@ class AuthProvider with ChangeNotifier {
     LoginResponse? loginResponse = result.$2;
 
     if (status == HttpStatus.ok) {
-      TmsLocalStorage().authUsername = username;
-      TmsLocalStorage().authPassword = password;
-      TmsLocalStorage().authRoles = loginResponse?.roles ?? [];
+      TmsLocalStorageProvider().authUsername = username;
+      TmsLocalStorageProvider().authPassword = password;
+      TmsLocalStorageProvider().authRoles = loginResponse?.roles ?? [];
 
-      TmsLocalStorage().isLoggedIn = true;
+      TmsLocalStorageProvider().isLoggedIn = true;
       notifyListeners();
     } else {
-      TmsLocalStorage().isLoggedIn = false;
+      TmsLocalStorageProvider().isLoggedIn = false;
+    }
+
+    return status;
+  }
+
+  Future<int> logout() async {
+    var status = await _authService.logout();
+
+    if (status == HttpStatus.ok) {
+      TmsLocalStorageProvider().isLoggedIn = false;
+      notifyListeners();
     }
 
     return status;

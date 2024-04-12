@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:tms/logger.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/schemas/networkSchema.dart';
 
@@ -20,6 +20,20 @@ class AuthService {
     } catch (e) {
       TmsLogger().e("Error: $e");
       return (HttpStatus.badRequest, null);
+    }
+  }
+
+  Future<int> logout() async {
+    try {
+      var response = await Network().networkPost("/logout", {});
+
+      if (response.$1) {
+        TmsLogger().i("Logout successful");
+      }
+      return response.$2;
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
     }
   }
 }

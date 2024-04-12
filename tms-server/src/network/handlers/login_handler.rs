@@ -26,3 +26,14 @@ pub async fn login_handler(body: LoginRequest, uuid: String, clients: ClientMap,
     }
   }
 }
+
+pub async fn logout_handler(uuid: String, clients: ClientMap) -> ResponseResult<impl warp::reply::Reply> {
+  log::info!("Logout request for client {}", uuid);
+
+  // get client
+  let mut write_clients = clients.write().await;
+  let client = write_clients.get_mut(&uuid).ok_or_else(|| warp::reject::custom(ClientNotFound))?;
+  client.user_id.clear();
+
+  Ok(warp::reply::json(&()))
+}

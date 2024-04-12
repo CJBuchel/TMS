@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
@@ -62,5 +63,6 @@ void main() {
   final observer = NetworkObserver();
   WidgetsBinding.instance.addObserver(observer);
   observer.networkStartup();
-  runApp(AppWrapper(child: TMSApp()));
+  GoRouter.optionURLReflectsImperativeAPIs = true;
+  runApp(const AppWrapper(child: TMSApp()));
 }

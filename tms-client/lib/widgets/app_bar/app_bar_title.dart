@@ -8,13 +8,13 @@ class TmsAppBarTitle extends StatelessWidget {
   Text _state2Text(NetworkConnectionState state) {
     switch (state) {
       case NetworkConnectionState.disconnected:
-        return Text("DC", style: TextStyle(color: Colors.red));
+        return const Text("DC", style: TextStyle(color: Colors.red));
       case NetworkConnectionState.connecting:
-        return Text("CNT", style: TextStyle(color: Colors.orange));
+        return const Text("CNT", style: TextStyle(color: Colors.orange));
       case NetworkConnectionState.connected:
-        return Text("OK", style: TextStyle(color: Colors.green));
+        return const Text("OK", style: TextStyle(color: Colors.green));
       default:
-        return Text("N/A");
+        return const Text("N/A");
     }
   }
 
@@ -31,13 +31,13 @@ class TmsAppBarTitle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("["),
+        const Text("["),
         _vlbText(Network().innerNetworkStates().$1.notifier), // http
-        Text("|"),
+        const Text("|"),
         _vlbText(Network().innerNetworkStates().$2.notifier), // ws
-        Text("|"),
+        const Text("|"),
         _vlbText(Network().innerNetworkStates().$3.notifier), // db
-        Text("]"),
+        const Text("]"),
       ],
     );
   }
@@ -48,7 +48,7 @@ class TmsAppBarTitle extends StatelessWidget {
       valueListenable: Network().state,
       builder: (context, state, child) {
         if (state == NetworkConnectionState.connected) {
-          return Text("TMS Title");
+          return const Text("TMS Title");
         } else {
           return _stateTitleRow();
         }

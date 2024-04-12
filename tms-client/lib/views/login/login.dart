@@ -13,7 +13,7 @@ class Login extends StatelessWidget {
     int status = await _authProvider.login(_usernameController.text, _passwordController.text);
 
     if (status == HttpStatus.ok) {
-      context.pop();
+      context.canPop() ? context.pop() : GoRouter.of(context).go('/');
     } else {
       showDialog(
         context: context,
@@ -22,7 +22,7 @@ class Login extends StatelessWidget {
           content: Text(status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status"),
           actions: <Widget>[
             TextButton(
-              onPressed: () => context.pop(),
+              onPressed: () => context.canPop() ? context.pop() : GoRouter.of(context).go('/'),
               child: const Text('OK'),
             ),
           ],
@@ -40,9 +40,12 @@ class Login extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/logos/TMS_LOGO.png',
-              width: 200,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 25),
+              child: Image.asset(
+                'assets/logos/TMS_LOGO_NO_TEXT.png',
+                width: 200,
+              ),
             ),
           ],
         ),
@@ -54,7 +57,7 @@ class Login extends StatelessWidget {
             SizedBox(
               width: 200,
               child: Padding(
-                padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
+                padding: const EdgeInsets.only(bottom: 25),
                 child: TextField(
                   controller: _usernameController,
                   decoration: const InputDecoration(

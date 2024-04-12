@@ -8,12 +8,12 @@ final tmsRouter = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      name: 'selector',
-      builder: (context, state) => BaseScaffold(child: ViewSelector()),
+      // name: 'selector',
+      builder: (context, state) => const BaseScaffold(child: ViewSelector()),
     ),
     GoRoute(
       path: '/login',
-      name: 'login',
+      // name: 'login',
       builder: (context, state) => BaseScaffold(child: Login()),
     ),
   ],

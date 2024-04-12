@@ -9,7 +9,7 @@ class TMSApp extends StatefulWidget {
   State<TMSApp> createState() => _TMSAppState();
 
   // static accessor
-  static State<TMSApp> of(BuildContext context) {
+  static _TMSAppState of(BuildContext context) {
     return context.findAncestorStateOfType<_TMSAppState>()!;
   }
 }

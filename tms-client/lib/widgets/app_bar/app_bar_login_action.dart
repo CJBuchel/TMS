@@ -13,7 +13,8 @@ class TmsAppBarLoginAction extends StatelessWidget {
       builder: (_, isLoggedIn, __) => IconButton(
         onPressed: () {
           if (!isLoggedIn) {
-            context.pushNamed('login');
+            // context.pushNamed('login');
+            context.push('/login');
           }
         },
         icon: Icon(

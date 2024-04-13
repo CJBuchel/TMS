@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tms/widgets/app_bar/app_bar_leading.dart';
 import 'package:tms/widgets/app_bar/app_bar_login_action.dart';
 import 'package:tms/widgets/app_bar/app_bar_theme_action.dart';
 import 'package:tms/widgets/app_bar/app_bar_title.dart';
 
 class TmsAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const TmsAppBar({Key? key}) : super(key: key);
+  final GoRouterState state;
+
+  const TmsAppBar({
+    Key? key,
+    required this.state,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: true,
+      leading: TmsAppBarLeading(state: this.state),
       title: TmsAppBarTitle(),
       centerTitle: true,
       leadingWidth: 100,
       actions: [
         const TmsAppBarThemeAction(),
-        const TmsAppBarLoginAction(),
+        TmsAppBarLoginAction(state: state),
       ],
     );
   }

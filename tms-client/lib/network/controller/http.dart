@@ -70,7 +70,10 @@ class HttpController {
   Future<bool> register() async {
     _connectivity.state = NetworkConnectionState.connecting;
     String addr = TmsLocalStorageProvider().serverAddress;
-    var request = nts.RegisterRequest();
+    var request = nts.RegisterRequest(
+      username: TmsLocalStorageProvider().authUsername,
+      password: TmsLocalStorageProvider().authPassword,
+    );
 
     var response = await http.post(
       Uri.parse("$addr/register"),

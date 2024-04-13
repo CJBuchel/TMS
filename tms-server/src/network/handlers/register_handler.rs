@@ -57,13 +57,11 @@ pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: Sha
       }
     }
 
-  // register client normally without username/password
-  } else {
-    register_client(uuid.clone(), auth_token.clone(), "".to_string(), clients).await;
-    return Ok(warp::reply::json(&RegisterResponse { auth_token, uuid, url }));
   }
-
-  Err(warp::reject::reject())
+  
+  // register client normally without username/password
+  register_client(uuid.clone(), auth_token.clone(), "".to_string(), clients).await;
+  return Ok(warp::reply::json(&RegisterResponse { auth_token, uuid, url }));
 }
 
 pub async fn unregister_handler(uuid: String, clients: ClientMap) -> ResponseResult<impl warp::reply::Reply> {

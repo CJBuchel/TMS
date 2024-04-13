@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
 
 class BaseScaffold extends StatelessWidget {
   final Widget child;
+  final GoRouterState state;
 
-  const BaseScaffold({Key? key, required this.child}) : super(key: key);
+  const BaseScaffold({
+    Key? key,
+    required this.state,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,7 @@ class BaseScaffold extends StatelessWidget {
       ],
 
       child: Scaffold(
-        appBar: const TmsAppBar(),
+        appBar: TmsAppBar(state: this.state),
         body: child,
       ),
     );

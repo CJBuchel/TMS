@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/router.dart';
 import 'package:tms/tms_theme.dart';
 
@@ -15,7 +16,7 @@ class TMSApp extends StatefulWidget {
 }
 
 class _TMSAppState extends State<TMSApp> {
-  ThemeMode _themeMode = ThemeMode.dark; // default for now
+  ThemeMode _themeMode = TmsLocalStorageProvider().themeMode; // default for now
   ThemeMode get themeMode => _themeMode;
 
   @override
@@ -33,6 +34,7 @@ class _TMSAppState extends State<TMSApp> {
   void changeTheme(ThemeMode themeMode) {
     setState(() {
       _themeMode = themeMode;
+      TmsLocalStorageProvider().themeMode = themeMode;
     });
   }
 }

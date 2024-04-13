@@ -44,7 +44,7 @@ async fn main() {
   let clients = ClientMap::new(tokio::sync::RwLock::new(std::collections::HashMap::new()));
 
   // create database
-  let db = SharedDatabase::new_instance(ServerArgs::get_port(), DEFAULT_DB_PATH.to_string(), ServerArgs::get_addr());
+  let db = SharedDatabase::new_instance(ip.clone(), ServerArgs::get_port(), DEFAULT_DB_PATH.to_string(), ServerArgs::get_addr());
   db.write().await.create_trees().await;
   db.write().await.create_roles().await;
 

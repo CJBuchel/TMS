@@ -56,13 +56,18 @@ class AppWrapper extends StatelessWidget {
 }
 
 void main() {
+  // startup loggers
   Logger().i("TMS App starting...");
   TmsLogger().setLogLevel(LogLevel.info);
   EchoTreeLogger().useLogger(EchoTreeTmsLogBinder());
+
+  // initialize the network observers
   WidgetsFlutterBinding.ensureInitialized();
   final observer = NetworkObserver();
   WidgetsBinding.instance.addObserver(observer);
   observer.networkStartup();
+
+  // set imperative API ans start app
   GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(const AppWrapper(child: TMSApp()));
 }

@@ -112,4 +112,7 @@ class TmsLocalStorageProvider extends TmsLocalStorageBase {
 
   set isLoggedIn(bool value) => setBool("isLoggedIn", value);
   bool get isLoggedIn => getBool("isLoggedIn") ?? false;
+
+  set themeMode(ThemeMode value) => setInt("themeMode", value.index);
+  ThemeMode get themeMode => ThemeMode.values[getInt("themeMode") ?? 0]; // default to system theme
 }

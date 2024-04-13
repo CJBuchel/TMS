@@ -5,22 +5,19 @@ import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/providers/auth_provider.dart';
 
-class Login extends StatelessWidget {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class Logout extends StatelessWidget {
   final AuthProvider _authProvider = AuthProvider();
 
-  void _loginController(BuildContext context) async {
-    int status = await _authProvider.login(_usernameController.text, _passwordController.text);
-
+  void _logoutController(BuildContext context) async {
+    int status = await _authProvider.logout();
     if (status == HttpStatus.ok) {
       context.canPop() ? context.pop() : GoRouter.of(context).go('/');
     } else {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Login Failed'),
-          content: Text(status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status"),
+          title: const Text('Logout Failed'),
+          content: Text('Server Error: $status'),
           actions: <Widget>[
             TextButton(
               onPressed: () => context.canPop() ? context.pop() : GoRouter.of(context).go('/'),
@@ -33,6 +30,7 @@ class Login extends StatelessWidget {
   }
 
   Widget _buildWidgets(BuildContext context) {
+    String username = _authProvider.username;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -50,50 +48,21 @@ class Login extends StatelessWidget {
           ],
         ),
 
-        // Username
+        // currently logged in
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              width: 400,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 25),
-                child: TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Username',
-                    hintText: 'Enter username, e.g `admin`',
-                  ),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 25),
+              child: Text(
+                'Logged in as: $username',
+                // style: const TextStyle(fontSize: 20),
               ),
             ),
           ],
         ),
 
-        // Password
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 400,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
-                child: TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                    hintText: 'Enter password, e.g `password1!`',
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-
-        // Login button
+        // logout button
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -101,9 +70,20 @@ class Login extends StatelessWidget {
               width: 200,
               height: 50,
               child: ElevatedButton.icon(
-                onPressed: () => _loginController(context),
-                icon: const Icon(Icons.login),
-                label: const Text("Login"),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  overlayColor: MaterialStateProperty.all<Color>(Colors.orange[800] ?? Colors.orange),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      side: const BorderSide(color: Colors.black),
+                    ),
+                  ),
+                ),
+                onPressed: () => _logoutController(context),
+                icon: const Icon(Icons.logout),
+                label: const Text("Logout"),
               ),
             )
           ],

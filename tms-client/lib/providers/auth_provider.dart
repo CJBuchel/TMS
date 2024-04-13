@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tms/providers/local_storage_provider.dart';
-import 'package:tms/utils/logger.dart';
 import 'package:tms/schemas/networkSchema.dart';
 import 'package:tms/services/AuthService.dart';
 
@@ -22,7 +21,6 @@ class AuthProvider with ChangeNotifier {
 
   AuthProvider() {
     _lsListener = () {
-      TmsLogger().i("Auth Provider - Local Storage Changed");
       notifyListeners();
     };
 

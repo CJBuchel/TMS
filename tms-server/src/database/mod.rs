@@ -19,19 +19,19 @@ pub struct Database {
 pub type SharedDatabase = std::sync::Arc<tokio::sync::RwLock<Database>>;
 
 pub trait SharedDatabaseTrait {
-  fn new_instance(port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase;
+  fn new_instance(local_ip:String, port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase;
 }
 
 impl SharedDatabaseTrait for SharedDatabase {
-  fn new_instance(port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase {
-    std::sync::Arc::new(tokio::sync::RwLock::new(Database::new(port, db_path, addr)))
+  fn new_instance(local_ip: String, port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase {
+    std::sync::Arc::new(tokio::sync::RwLock::new(Database::new(local_ip, port, db_path, addr)))
   }
 }
 
 impl Database {
-  pub fn new(port: u16, db_path: String, addr: [u8; 4]) -> Self {
+  pub fn new(local_ip: String, port: u16, db_path: String, addr: [u8; 4]) -> Self {
     log::info!("Starting Database...");
-    let config = EchoTreeServerConfig { db_path, port, addr: addr.into() };
+    let config = EchoTreeServerConfig { local_ip, db_path, port, addr: addr.into() };
 
     let db_server = EchoTreeServer::new(config);
 

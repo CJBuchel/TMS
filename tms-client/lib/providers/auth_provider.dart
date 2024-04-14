@@ -27,6 +27,12 @@ class AuthProvider with ChangeNotifier {
     _localStorage.addListener(_lsListener);
   }
 
+  @override
+  void dispose() {
+    _localStorage.removeListener(_lsListener);
+    super.dispose();
+  }
+
   Future<int> login(String username, String password) async {
     var result = await _authService.login(username, password);
     int status = result.$1;

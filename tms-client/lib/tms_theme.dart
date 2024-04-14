@@ -56,6 +56,11 @@ final ThemeData tmsLightTheme = ThemeData(
       ),
     ),
   ),
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: Colors.black,
+    selectionColor: Colors.blue,
+    selectionHandleColor: Colors.blue,
+  ),
 );
 
 ///
@@ -113,5 +118,10 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
         width: 2.0,
       ),
     ),
+  ),
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: Colors.white,
+    selectionColor: Colors.blue,
+    selectionHandleColor: Colors.blue,
   ),
 );

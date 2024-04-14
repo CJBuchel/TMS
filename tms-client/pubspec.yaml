@@ -25,11 +25,12 @@ dependencies:
   http: ^1.2.1
   uuid: ^4.3.3
   logger: ^2.2.0
-  multicast_dns: ^0.3.2+6
   shared_preferences: ^2.2.2
   go_router: ^13.2.2
   responsive_framework: ^1.4.0
   provider: ^6.1.2
+  nsd: ^3.0.0
+  path_provider: ^2.1.3
 
 dev_dependencies:
   flutter_test:

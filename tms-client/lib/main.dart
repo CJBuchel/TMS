@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/app.dart';
+import 'package:tms/providers/connection_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/network.dart';
@@ -49,6 +50,7 @@ class AppWrapper extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => TmsLocalStorageProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ConnectionProvider()),
       ],
       child: child,
     );

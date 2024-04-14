@@ -47,6 +47,10 @@ class HttpController {
   NetworkConnectivity get connectivity => _connectivity;
 
   Future<bool> pulse(String addr) async {
+    if (addr.isEmpty) {
+      _connectivity.state = NetworkConnectionState.disconnected;
+      return false;
+    }
     try {
       var response = await http.get(
         Uri.parse("$addr/pulse"),

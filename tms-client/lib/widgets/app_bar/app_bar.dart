@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tms/widgets/app_bar/app_bar_connection.dart';
 import 'package:tms/widgets/app_bar/app_bar_leading.dart';
 import 'package:tms/widgets/app_bar/app_bar_login_action.dart';
 import 'package:tms/widgets/app_bar/app_bar_theme_action.dart';
@@ -21,7 +22,8 @@ class TmsAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leadingWidth: 100,
       actions: [
-        const TmsAppBarThemeAction(),
+        TmsAppBarThemeAction(),
+        TmsAppBarConnectionAction(),
         TmsAppBarLoginAction(state: state),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tms/network/controller/connectivity.dart';
-import 'package:tms/network/network.dart';
+import 'package:tms/providers/connection_provider.dart';
 
 class TmsAppBarTitle extends StatelessWidget {
   TmsAppBarTitle({super.key});
@@ -18,25 +19,25 @@ class TmsAppBarTitle extends StatelessWidget {
     }
   }
 
-  Widget _vlbText(ValueNotifier<NetworkConnectionState> nt) {
-    return ValueListenableBuilder(
-      valueListenable: nt,
-      builder: (context, state, _) {
-        return _state2Text(state);
-      },
-    );
-  }
-
   Widget _stateTitleRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text("["),
-        _vlbText(Network().innerNetworkStates().$1.notifier), // http
+        Selector<ConnectionProvider, NetworkConnectionState>(
+          selector: (_, connectionProvider) => connectionProvider.httpState,
+          builder: (_, state, __) => _state2Text(state),
+        ),
         const Text("|"),
-        _vlbText(Network().innerNetworkStates().$2.notifier), // ws
+        Selector<ConnectionProvider, NetworkConnectionState>(
+          selector: (_, connectionProvider) => connectionProvider.wsState,
+          builder: (_, state, __) => _state2Text(state),
+        ),
         const Text("|"),
-        _vlbText(Network().innerNetworkStates().$3.notifier), // db
+        Selector<ConnectionProvider, NetworkConnectionState>(
+          selector: (_, connectionProvider) => connectionProvider.dbState,
+          builder: (_, state, __) => _state2Text(state),
+        ),
         const Text("]"),
       ],
     );
@@ -44,10 +45,10 @@ class TmsAppBarTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: Network().state,
-      builder: (context, state, child) {
-        if (state == NetworkConnectionState.connected) {
+    return Selector<ConnectionProvider, bool>(
+      selector: (_, connectionProvider) => connectionProvider.isConnected,
+      builder: (_, isConnected, __) {
+        if (isConnected) {
           return const Text("TMS Title");
         } else {
           return _stateTitleRow();

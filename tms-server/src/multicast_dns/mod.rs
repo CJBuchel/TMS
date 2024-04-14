@@ -7,8 +7,7 @@ pub struct MulticastDnsBroadcaster {
 
 impl MulticastDnsBroadcaster {
   pub fn new(local_ip: String, advertise_port: u16, tls: bool) -> Self {
-
-    let service_type = "_tms_service._udp.local.";
+    let service_type = "_tms-service._udp.local.";
     let instance_name = "tms_server";
     let host_name = format!("{}.local.", local_ip);
     let properties = [("tls", tls)];
@@ -24,12 +23,14 @@ impl MulticastDnsBroadcaster {
 
     Self {
       service_info: service,
-      m_dns: ServiceDaemon::new().ok(),
+      m_dns: None,
     }
   }
 
-  pub fn start(&self) {
+  pub fn start(&mut self) {
     log::info!("Starting Multicast DNS Service");
+
+    self.m_dns = ServiceDaemon::new().ok();
 
     match &self.m_dns {
       Some(m_dns) => {

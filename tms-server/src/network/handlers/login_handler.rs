@@ -22,7 +22,7 @@ pub async fn login_handler(body: LoginRequest, uuid: String, clients: ClientMap,
       }
     }
     None => {
-      Err(warp::reject::custom(ClientNotFound))
+      Err(warp::reject::custom(UnauthorizedLogin))
     }
   }
 }

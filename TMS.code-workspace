@@ -26,6 +26,7 @@
 		},
 		"rust-analyzer.showUnlinkedFileNotification": false,
 		"svg.preview.background": "transparent",
-		"java.compile.nullAnalysis.mode": "automatic"
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.configuration.updateBuildConfiguration": "automatic"
 	}
 }

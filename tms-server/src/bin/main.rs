@@ -42,8 +42,12 @@ async fn main() {
   };
 
   // broadcast server
-  let m_dns = MulticastDnsBroadcaster::new(ip.clone(), ServerArgs::get_port(), ServerArgs::get_tls());
-  m_dns.start();
+  let mut m_dns = MulticastDnsBroadcaster::new(ip.clone(), ServerArgs::get_port(), ServerArgs::get_tls());
+  if ServerArgs::get_mdns() {
+    m_dns.start();
+  } else {
+    log::warn!("Multicast DNS Service Disabled");
+  }
 
   // create clients
   let clients = ClientMap::new(tokio::sync::RwLock::new(std::collections::HashMap::new()));

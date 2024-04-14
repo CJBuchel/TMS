@@ -16,6 +16,9 @@ pub struct ServerArgs {
   #[structopt(long = "no-tls", help = "Use insecure connection, http/ws instead of https/wss, --no-tls")]
   pub no_tls: bool,
 
+  #[structopt(long = "no-mdns", help = "Don't broadcast service over mDNS, --no-mdns")]
+  pub no_mdns: bool,
+
   #[structopt(long = "cert", help = "Path to the certificate file, --cert=cert.pem")]
   pub cert_path: Option<String>,
 
@@ -40,6 +43,10 @@ impl ServerArgs {
 
   pub fn get_tls() -> bool {
     !ServerArgs::from_args().no_tls
+  }
+
+  pub fn get_mdns() -> bool {
+    !ServerArgs::from_args().no_mdns
   }
 
   pub fn get_cert_path() -> Option<String> {

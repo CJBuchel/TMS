@@ -22,7 +22,7 @@ class WebsocketController {
       _channel?.stream.listen((event) {
         _handleEvent(event);
       }, onDone: () {
-        TmsLogger().d("Websocket connection closed");
+        TmsLogger().w("Websocket connection closed");
         _connectivity.state = NetworkConnectionState.disconnected;
       }, onError: (e) {
         TmsLogger().e("Websocket error: $e");

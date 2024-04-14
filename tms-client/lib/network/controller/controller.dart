@@ -4,17 +4,12 @@ import 'package:tms/utils/logger.dart';
 import 'package:tms/network/controller/connectivity.dart';
 import 'package:tms/network/controller/db.dart';
 import 'package:tms/network/controller/http.dart';
-import 'package:tms/network/controller/mdns.dart';
 import 'package:tms/network/controller/ws.dart';
 
 class NetworkController {
   final HttpController _httpController = HttpController();
-  final MdnsController _mdnsController = MdnsController();
   final WebsocketController _websocketController = WebsocketController();
   final DbController _dbController = DbController();
-
-  final ValueNotifier<NetworkConnectionState> _stateNotifier = ValueNotifier(NetworkConnectionState.disconnected);
-  ValueNotifier<NetworkConnectionState> get stateNotifier => _stateNotifier;
 
   // (http, ws, db)
   (NetworkConnectivity, NetworkConnectivity, NetworkConnectivity) innerNetworkStates() {
@@ -39,10 +34,6 @@ class NetworkController {
       st = NetworkConnectionState.disconnected;
     }
 
-    if (st != _stateNotifier.value) {
-      _stateNotifier.value = st;
-    }
-
     return st;
   }
 
@@ -50,7 +41,8 @@ class NetworkController {
     var protocols = ["https", "http"];
     for (var p in protocols) {
       // TmsLocalStorageProvider().serverHttpProtocol = p;
-      if (await _httpController.pulse("$p://$ip:$serverPort")) {
+      int port = TmsLocalStorageProvider().serverPort;
+      if (await _httpController.pulse("$p://$ip:$port")) {
         TmsLocalStorageProvider().serverHttpProtocol = p;
         TmsLocalStorageProvider().serverIp = ip;
         return true;
@@ -89,20 +81,6 @@ class NetworkController {
       if (host.isNotEmpty) {
         if (await _checkIp(host)) {
           TmsLogger().i("Connected to TMS server (web server)");
-          return true;
-        }
-      }
-    }
-
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    // find server using mdns
-    if (!kIsWeb) {
-      TmsLogger().d("Finding server using mdns");
-      var (found, ip) = await _mdnsController.findServer();
-      if (found) {
-        TmsLocalStorageProvider().serverIp = ip;
-        if (await _checkIp(ip)) {
           return true;
         }
       }

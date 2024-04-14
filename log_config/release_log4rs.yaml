@@ -23,7 +23,7 @@ appenders:
       kind: compound
       trigger:
         kind: size
-        limit: 1MB
+        limit: 10MB
       roller:
         kind: fixed_window
         base: 1
@@ -37,7 +37,6 @@ appenders:
     encoder:
       pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h(EchoTree {l})}] {h({m})}{n}"
 
-
   echo_tree_rs:
     kind: rolling_file
     path: "logs/db.log"
@@ -45,7 +44,7 @@ appenders:
       kind: compound
       trigger:
         kind: size
-        limit: 1MB
+        limit: 10MB
       roller:
         kind: fixed_window
         base: 1
@@ -53,6 +52,30 @@ appenders:
         pattern: "logs/db.{}.log"
     encoder:
       pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h(EchoTree {l})} {M} LINE: {L}] {h({m})}{n}"
+
+  mdns_sd_stdout_info:
+    kind: console
+    filters:
+      - kind: threshold
+        level: info # floods console in debug
+    encoder:
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h(Mdns {l})}] {h({m})}{n}"
+
+  mdns_sd:
+    kind: rolling_file
+    path: "logs/mdns.log"
+    policy:
+      kind: compound
+      trigger:
+        kind: size
+        limit: 10MB
+      roller:
+        kind: fixed_window
+        base: 1
+        count: 10
+        pattern: "logs/mdns.{}.log"
+    encoder:
+      pattern: "[{d(%Y-%m-%d %H:%M:%S)} {h(Mdns {l})} {M} LINE: {L}] {h({m})}{n}"
 
 # Loggers
 root:
@@ -67,4 +90,18 @@ loggers:
     appenders:
       - echo_tree_rs_stdout
       - echo_tree_rs
+    additive: false
+  
+  mdns_sd:
+    level: info
+    appenders:
+      - mdns_sd_stdout_info
+      - mdns_sd
+    additive: false
+
+  tms_server::multicast_dns:
+    level: info
+    appenders:
+      - mdns_sd_stdout_info
+      - mdns_sd
     additive: false

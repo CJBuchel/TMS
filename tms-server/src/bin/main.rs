@@ -4,6 +4,7 @@ use local_ip_address::local_ip;
 use tms_server::network::ClientMap;
 use tms_server::database::*;
 use tms_server::network::*;
+use tms_server::multicast_dns::*;
 use tms_server::web_server::certificates::CertificateKeys;
 use tms_server::web_server::web_server::WebConfig;
 use tms_server::web_server::web_server::WebServer;
@@ -39,6 +40,10 @@ async fn main() {
       String::from("127.0.0.1")
     }
   };
+
+  // broadcast server
+  let m_dns = MulticastDnsBroadcaster::new(ip.clone(), ServerArgs::get_port(), ServerArgs::get_tls());
+  m_dns.start();
 
   // create clients
   let clients = ClientMap::new(tokio::sync::RwLock::new(std::collections::HashMap::new()));
@@ -86,6 +91,13 @@ async fn main() {
   let web_server = WebServer::new(web_config, certs);
   web_server.start(routes).await;
 
+
+  //
+  // Stop all services
+  //
+
+  // stop the multicast dns service
+  m_dns.stop();
   // stop the backup service
   db.write().await.stop_backup_service().await;
 }

@@ -108,7 +108,7 @@ class HttpController {
   Future<bool> unregister() async {
     String addr = TmsLocalStorageProvider().serverAddress;
     final response = await http.delete(
-      Uri.parse("$addr/unregister/${TmsLocalStorageProvider().uuid}"),
+      Uri.parse("$addr/register/${TmsLocalStorageProvider().uuid}"),
       headers: {
         "X-Client-Id": TmsLocalStorageProvider().uuid,
         "X-Auth-Token": TmsLocalStorageProvider().authToken,

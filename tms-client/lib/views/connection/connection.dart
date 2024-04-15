@@ -29,7 +29,7 @@ class Connection extends StatelessWidget {
               isConnected ? 'Connected' : 'Disconnected',
               style: TextStyle(color: isConnected ? Colors.green : Colors.red),
             ),
-            Text(isConnected ? ' to ' : ' from '),
+            Text(isConnected ? ' to ' : ' using '),
             Text(
               ip.isNotEmpty ? '${ip}:${port}' : 'N/A',
               style: TextStyle(color: isConnected ? Colors.green : Colors.red),

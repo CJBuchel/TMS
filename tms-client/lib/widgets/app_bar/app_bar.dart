@@ -22,8 +22,8 @@ class TmsAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leadingWidth: 100,
       actions: [
-        TmsAppBarThemeAction(),
-        TmsAppBarConnectionAction(),
+        const TmsAppBarThemeAction(),
+        TmsAppBarConnectionAction(state: state),
         TmsAppBarLoginAction(state: state),
       ],
     );

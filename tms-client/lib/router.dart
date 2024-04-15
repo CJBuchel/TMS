@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:tms/views/connection/connection.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/view_selector.dart';
@@ -20,6 +21,11 @@ final tmsRouter = GoRouter(
       path: '/logout',
       name: 'logout',
       builder: (context, state) => BaseScaffold(state: state, child: Logout()),
+    ),
+    GoRoute(
+      path: '/connection',
+      name: 'connection',
+      builder: (context, state) => BaseScaffold(state: state, child: Connection()),
     ),
   ],
 );

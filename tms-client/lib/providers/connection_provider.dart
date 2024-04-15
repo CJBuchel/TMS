@@ -25,7 +25,7 @@ class ConnectionProvider with ChangeNotifier {
   late final VoidCallback _wsListener;
   late final VoidCallback _dbListener;
 
-  void _checkConnection() {
+  void _setStates() {
     bool http = _httpState == NetworkConnectionState.connected;
     bool ws = _wsState == NetworkConnectionState.connected;
     bool db = _dbState == NetworkConnectionState.connected;
@@ -36,17 +36,17 @@ class ConnectionProvider with ChangeNotifier {
   ConnectionProvider() {
     _httpListener = () {
       _httpState = Network().innerNetworkStates().$1.state;
-      _checkConnection();
+      _setStates();
       notifyListeners();
     };
     _wsListener = () {
       _wsState = Network().innerNetworkStates().$2.state;
-      _checkConnection();
+      _setStates();
       notifyListeners();
     };
     _dbListener = () {
       _dbState = Network().innerNetworkStates().$3.state;
-      _checkConnection();
+      _setStates();
       notifyListeners();
     };
 

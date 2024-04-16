@@ -22,6 +22,7 @@ class TmsAppBarTitle extends StatelessWidget {
   Widget _stateTitleRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Text("["),
         Selector<ConnectionProvider, NetworkConnectionState>(

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
+// Base theme to copy from, annoyingly it doesn't merge, certain inner parts have to be referenced
+// final ThemeData _baseTheme = ThemeData(
+//   fontFamily: 'Poppins',
+// );
+
 ///
 /// Light theme
 ///
-final ThemeData tmsLightTheme = ThemeData(
-  fontFamily: 'Poppins',
+final ThemeData tmsLightTheme = ThemeData.light().copyWith(
+  textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Poppins'),
   colorScheme: const ColorScheme.light(),
   brightness: Brightness.light,
   primaryColor: const Color(0xFF2697FF),
@@ -15,11 +20,9 @@ final ThemeData tmsLightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: Colors.blue[900],
     foregroundColor: Colors.white,
-    iconTheme: const IconThemeData(color: Colors.white),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      elevation: MaterialStateProperty.all<double>(0.0),
       backgroundColor: MaterialStateProperty.all<Color?>(Colors.white),
       foregroundColor: MaterialStateProperty.all<Color?>(Colors.blue),
       overlayColor: MaterialStateProperty.all<Color?>(Colors.lightBlue[50]),
@@ -61,6 +64,12 @@ final ThemeData tmsLightTheme = ThemeData(
     selectionColor: Colors.blue,
     selectionHandleColor: Colors.blue,
   ),
+  popupMenuTheme: PopupMenuThemeData(
+    color: Colors.blue[700],
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8.0),
+    ),
+  ),
 );
 
 ///
@@ -79,7 +88,6 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
     backgroundColor: Colors.blueGrey[800],
     surfaceTintColor: Colors.blue,
     foregroundColor: Colors.white,
-    iconTheme: const IconThemeData(color: Colors.white),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(

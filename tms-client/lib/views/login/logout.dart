@@ -92,6 +92,15 @@ class Logout extends StatelessWidget {
     );
   }
 
+  Widget _scrolledInner(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(25),
+        child: _buildWidgets(context),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -102,12 +111,12 @@ class Logout extends StatelessWidget {
             context,
             defaultValue: 800,
             conditionalValues: const [
-              Condition.equals(name: MOBILE, value: 600),
-              Condition.between(start: 601, end: 800, value: 800),
+              Condition.equals(name: MOBILE, value: 500),
+              Condition.between(start: 601, end: 800, value: 900),
               Condition.largerThan(name: TABLET, value: 1100),
             ],
           ).value,
-          child: _buildWidgets(context),
+          child: _scrolledInner(context),
         ),
       ),
     );

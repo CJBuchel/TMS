@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/schemas/networkSchema.dart';
 import 'package:tms/services/AuthService.dart';
+import 'package:tms/utils/permissions.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -57,9 +58,17 @@ class AuthProvider with ChangeNotifier {
 
     if (status == HttpStatus.ok) {
       TmsLocalStorageProvider().isLoggedIn = false;
+      TmsLocalStorageProvider().authRoles = [];
+      TmsLocalStorageProvider().authUsername = '';
+      TmsLocalStorageProvider().authPassword = '';
+
       notifyListeners();
     }
 
     return status;
+  }
+
+  bool hasAccess(Permissions permissions) {
+    return permissions.hasAccess(roles);
   }
 }

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/providers/connection_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/views/connection/floating_qr_button.dart';
+import 'package:tms/widgets/app_bar/app_bar.dart';
 
 // Connection widget, provides text input and buttons to connect and disconnect to the server
 class Connection extends StatelessWidget {
+  final GoRouterState state;
   final TextEditingController _ipTextController = TextEditingController();
   final TextEditingController _portTextController = TextEditingController();
 
-  Connection() {
+  Connection({required this.state}) {
     _ipTextController.text = TmsLocalStorageProvider().serverIp;
     _portTextController.text = TmsLocalStorageProvider().serverPort.toString();
   }
@@ -93,17 +97,22 @@ class Connection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              _connectionStatus(),
-              _ipController(),
-              _portController(),
-              _connectButton(),
-            ],
+    return Scaffold(
+      appBar: TmsAppBar(state: state),
+      floatingActionButton: FloatingQrButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25),
+            child: Column(
+              children: [
+                _connectionStatus(),
+                _ipController(),
+                _portController(),
+                _connectButton(),
+              ],
+            ),
           ),
         ),
       ),

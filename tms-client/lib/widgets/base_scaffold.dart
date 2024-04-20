@@ -1,37 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
+import 'package:tms/widgets/base_responsive.dart';
 
 class BaseScaffold extends StatelessWidget {
-  final Widget child;
   final GoRouterState state;
+  final Widget child;
+
+  final WidgetBuilder? floatingActionButtonBuilder;
 
   const BaseScaffold({
     Key? key,
     required this.state,
     required this.child,
+    this.floatingActionButtonBuilder,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBreakpoints.builder(
-      // portrait breakpoints
-      breakpoints: [
-        const Breakpoint(start: 0, end: 600, name: MOBILE),
-        const Breakpoint(start: 601, end: 820, name: TABLET), // ipad air is 820 in portrait
-        const Breakpoint(start: 821, end: 1920, name: DESKTOP),
-        const Breakpoint(start: 1921, end: double.infinity, name: 'XL'),
-      ],
-
-      // landscape breakpoints
-      // breakpointsLandscape: [
-      //   const Breakpoint(start: 0, end: 820, name: MOBILE),
-      //   const Breakpoint(start: 821, end: 1200, name: TABLET),
-      //   const Breakpoint(start: 1201, end: 1920, name: DESKTOP),
-      //   const Breakpoint(start: 1921, end: double.infinity, name: 'XL'),
-      // ],
-
+    return BaseResponsive(
       child: Scaffold(
         appBar: TmsAppBar(state: this.state),
         body: child,

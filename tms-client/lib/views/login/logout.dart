@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/providers/auth_provider.dart';
 
 class Logout extends StatelessWidget {
@@ -29,94 +28,77 @@ class Logout extends StatelessWidget {
     }
   }
 
-  Widget _buildWidgets(BuildContext context) {
-    String username = _authProvider.username;
-    return Column(
+  Widget _logo() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Logo
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 25),
-              child: Image.asset(
-                'assets/logos/TMS_LOGO_NO_TEXT.png',
-                width: 200,
-              ),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: Image.asset(
+            'assets/logos/TMS_LOGO_NO_TEXT.png',
+            width: 200,
+          ),
         ),
-
-        // currently logged in
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 25),
-              child: Text(
-                'Logged in as: $username',
-                // style: const TextStyle(fontSize: 20),
-              ),
-            ),
-          ],
-        ),
-
-        // logout button
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 200,
-              height: 50,
-              child: ElevatedButton.icon(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                  overlayColor: MaterialStateProperty.all<Color>(Colors.orange[800] ?? Colors.orange),
-                  shape: MaterialStateProperty.all<OutlinedBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      side: const BorderSide(color: Colors.black),
-                    ),
-                  ),
-                ),
-                onPressed: () => _logoutController(context),
-                icon: const Icon(Icons.logout),
-                label: const Text("Logout"),
-              ),
-            )
-          ],
-        )
       ],
     );
   }
 
-  Widget _scrolledInner(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(25),
-        child: _buildWidgets(context),
-      ),
+  Widget _currentUser() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: Text(
+            'Logged in as: ${_authProvider.username}',
+            // style: const TextStyle(fontSize: 20),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _logoutButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          width: 200,
+          height: 50,
+          child: ElevatedButton.icon(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+              overlayColor: MaterialStateProperty.all<Color>(Colors.orange[800] ?? Colors.orange),
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  side: const BorderSide(color: Colors.black),
+                ),
+              ),
+            ),
+            onPressed: () => _logoutController(context),
+            icon: const Icon(Icons.logout),
+            label: const Text("Logout"),
+          ),
+        )
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: MaxWidthBox(
-        maxWidth: 1000,
-        child: ResponsiveScaledBox(
-          width: ResponsiveValue<double>(
-            context,
-            defaultValue: 800,
-            conditionalValues: const [
-              Condition.equals(name: MOBILE, value: 500),
-              Condition.between(start: 601, end: 800, value: 900),
-              Condition.largerThan(name: TABLET, value: 1100),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              _logo(),
+              _currentUser(),
+              _logoutButton(context),
             ],
-          ).value,
-          child: _scrolledInner(context),
+          ),
         ),
       ),
     );

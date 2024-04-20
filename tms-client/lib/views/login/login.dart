@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/providers/auth_provider.dart';
 
 class Login extends StatelessWidget {
@@ -32,91 +31,64 @@ class Login extends StatelessWidget {
     }
   }
 
-  Widget _buildWidgets(BuildContext context) {
-    return Column(
+  Widget _logo() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Logo
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 25),
-              child: Image.asset(
-                'assets/logos/TMS_LOGO_NO_TEXT.png',
-                width: 200,
-              ),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: Image.asset(
+            'assets/logos/TMS_LOGO_NO_TEXT.png',
+            width: 200,
+          ),
         ),
-
-        // Username
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 400,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 25),
-                child: TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Username',
-                    hintText: 'Enter username, e.g `admin`',
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-
-        // Password
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 400,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
-                child: TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                    hintText: 'Enter password, e.g `password1!`',
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-
-        // Login button
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 200,
-              height: 50,
-              child: ElevatedButton.icon(
-                onPressed: () => _loginController(context),
-                icon: const Icon(Icons.login),
-                label: const Text("Login"),
-              ),
-            )
-          ],
-        )
       ],
     );
   }
 
-  Widget _scrolledInner(BuildContext context) {
-    return SingleChildScrollView(
+  Widget _username() {
+    return SizedBox(
+      width: 400,
       child: Padding(
-        padding: const EdgeInsets.all(25),
-        child: _buildWidgets(context),
+        padding: const EdgeInsets.only(bottom: 25),
+        child: TextField(
+          controller: _usernameController,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Username',
+            hintText: 'Enter username, e.g `admin`',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _password() {
+    return SizedBox(
+      width: 400,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
+        child: TextField(
+          controller: _passwordController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Password',
+            hintText: 'Enter password, e.g `password1!`',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _loginButton(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      height: 50,
+      child: ElevatedButton.icon(
+        onPressed: () => _loginController(context),
+        icon: const Icon(Icons.login),
+        label: const Text("Login"),
       ),
     );
   }
@@ -124,19 +96,17 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: MaxWidthBox(
-        maxWidth: 1000,
-        child: ResponsiveScaledBox(
-          width: ResponsiveValue<double>(
-            context,
-            defaultValue: 800,
-            conditionalValues: const [
-              Condition.equals(name: MOBILE, value: 500),
-              Condition.between(start: 601, end: 800, value: 900),
-              Condition.largerThan(name: TABLET, value: 1100),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              _logo(),
+              _username(),
+              _password(),
+              _loginButton(context),
             ],
-          ).value,
-          child: _scrolledInner(context),
+          ),
         ),
       ),
     );

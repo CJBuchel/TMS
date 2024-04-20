@@ -37,14 +37,14 @@ class NetworkController {
     return st;
   }
 
-  Future<bool> _checkIp(String ip) async {
+  Future<bool> _checkIp(String ip, int? port) async {
     var protocols = ["https", "http"];
     for (var p in protocols) {
       // TmsLocalStorageProvider().serverHttpProtocol = p;
-      int port = TmsLocalStorageProvider().serverPort;
       if (await _httpController.pulse("$p://$ip:$port")) {
         TmsLocalStorageProvider().serverHttpProtocol = p;
         TmsLocalStorageProvider().serverIp = ip;
+        TmsLocalStorageProvider().serverPort = port ?? defaultServerPort;
         return true;
       }
       await Future.delayed(const Duration(milliseconds: 200));
@@ -65,7 +65,7 @@ class NetworkController {
 
     // check if ip is correct
     TmsLogger().d("Checking stored ip");
-    if (await _checkIp(TmsLocalStorageProvider().serverIp)) {
+    if (await _checkIp(TmsLocalStorageProvider().serverIp, TmsLocalStorageProvider().serverPort)) {
       TmsLogger().i("Connected to TMS server (protocol changed)");
       return true;
     }
@@ -79,7 +79,14 @@ class NetworkController {
       String host = Uri.parse(url).toString();
       TmsLogger().d("Checking host: $host");
       if (host.isNotEmpty) {
-        if (await _checkIp(host)) {
+        // check with ip and stored port
+        if (await _checkIp(host, TmsLocalStorageProvider().serverPort)) {
+          TmsLogger().i("Connected to TMS server (web server)");
+          return true;
+        }
+
+        // check with web ip and uri port
+        if (await _checkIp(host, Uri.base.port)) {
           TmsLogger().i("Connected to TMS server (web server)");
           return true;
         }

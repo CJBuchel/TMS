@@ -50,7 +50,7 @@ class TmsAppBarTitle extends StatelessWidget {
       selector: (_, connectionProvider) => connectionProvider.isConnected,
       builder: (_, isConnected, __) {
         if (isConnected) {
-          return const Text("TMS Title");
+          return const Text("TMS Title", overflow: TextOverflow.ellipsis);
         } else {
           return _stateTitleRow();
         }

@@ -20,6 +20,10 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
   appBarTheme: AppBarTheme(
     backgroundColor: Colors.blue[900],
     foregroundColor: Colors.white,
+    titleTextStyle: const TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+    ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
@@ -88,6 +92,10 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
     backgroundColor: Colors.blueGrey[800],
     surfaceTintColor: Colors.blue,
     foregroundColor: Colors.white,
+    titleTextStyle: const TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+    ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(

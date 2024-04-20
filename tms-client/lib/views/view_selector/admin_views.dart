@@ -14,9 +14,9 @@ class AdminViews extends StatelessWidget {
         // Title
         IntrinsicHeight(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: Alignment.center,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 40, 0, 0),
+              padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
               child: Text(
                 "Admin Screens",
                 style: TextStyle(
@@ -35,17 +35,20 @@ class AdminViews extends StatelessWidget {
               // Setup card
               Flexible(
                 flex: 1,
-                child: ImageButtonCard(
-                  title: "Setup",
-                  subTitle: "ADMIN",
-                  color: const Color(0xffFA6E5A),
-                  textColor: const Color(0xff3F414E),
-                  image: const Image(
-                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ImageButtonCard(
+                    title: "Setup",
+                    subTitle: "ADMIN",
+                    color: const Color(0xffFA6E5A),
+                    textColor: const Color(0xff3F414E),
+                    image: const Image(
+                      image: AssetImage('assets/images/FIRST_LOGO.png'),
+                    ),
+                    onPressed: () {
+                      context.go('/setup');
+                    },
                   ),
-                  onPressed: () {
-                    context.go('/setup');
-                  },
                 ),
               ),
             ],

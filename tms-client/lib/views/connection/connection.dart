@@ -27,12 +27,15 @@ class Connection extends StatelessWidget {
             const Text('Status: '),
             Text(
               isConnected ? 'Connected' : 'Disconnected',
-              style: TextStyle(color: isConnected ? Colors.green : Colors.red),
+              style: TextStyle(color: isConnected ? Colors.green : Colors.red, overflow: TextOverflow.ellipsis),
             ),
             Text(isConnected ? ' to ' : ' using '),
             Text(
               ip.isNotEmpty ? '${ip}:${port}' : 'N/A',
-              style: TextStyle(color: isConnected ? Colors.green : Colors.red),
+              style: TextStyle(
+                color: isConnected ? Colors.green : Colors.red,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         );
@@ -90,18 +93,20 @@ class Connection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        // status of current connection
-        _connectionStatus(),
-        // text input for server IP
-        Center(child: _ipController()),
-        // text input for server port
-        Center(child: _portController()),
-        // connect button
-        Center(child: _connectButton()),
-      ],
+    return Center(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              _connectionStatus(),
+              _ipController(),
+              _portController(),
+              _connectButton(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

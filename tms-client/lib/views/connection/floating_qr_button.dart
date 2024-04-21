@@ -71,6 +71,13 @@ class FloatingQrButton extends StatelessWidget {
     _displayQrCode(context, qrData, Colors.blue, Colors.red);
   }
 
+  void _displayAppQrCode(BuildContext context) {
+    String serverIp = TmsLocalStorageProvider().serverExternalIp;
+    String serverPort = TmsLocalStorageProvider().serverPort.toString();
+    String qrData = "tmsapplicationscheme://connect?ip=$serverIp&port=$serverPort";
+    _displayQrCode(context, qrData, Colors.blue, Colors.purpleAccent);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -99,6 +106,12 @@ class FloatingQrButton extends StatelessWidget {
             label: 'Server',
             backgroundColor: Colors.red,
             onTap: () => _displayServerQrCode(context),
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.app_registration),
+            label: 'App',
+            backgroundColor: Colors.purpleAccent,
+            onTap: () => _displayAppQrCode(context),
           ),
         ],
       ),

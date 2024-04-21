@@ -44,7 +44,7 @@ async fn main() {
   // broadcast server
   let mut m_dns = MulticastDnsBroadcaster::new(ip.clone(), ServerArgs::get_port(), ServerArgs::get_tls());
   if ServerArgs::get_mdns() {
-    // m_dns.start(); // todo, put this back in after deep link testing
+    m_dns.start();
   } else {
     log::warn!("Multicast DNS Service Disabled");
   }

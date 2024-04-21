@@ -23,10 +23,10 @@ pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: Sha
     if remote_addr.ip().is_loopback() {
       "localhost".to_string()
     } else {
-      local_ip
+      local_ip.clone()
     }
   } else {
-    local_ip
+    local_ip.clone()
   };
 
   let url = format!("{}://{}:{}/ws/{}", if tls { "wss" } else { "ws" }, ip, port, uuid);
@@ -53,6 +53,7 @@ pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: Sha
           auth_token,
           uuid: uuid.clone(),
           url,
+          server_ip: local_ip,
         }));
       }
     }
@@ -61,7 +62,7 @@ pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: Sha
   
   // register client normally without username/password
   register_client(uuid.clone(), auth_token.clone(), "".to_string(), clients).await;
-  return Ok(warp::reply::json(&RegisterResponse { auth_token, uuid, url }));
+  return Ok(warp::reply::json(&RegisterResponse { auth_token, uuid, url, server_ip: local_ip}));
 }
 
 pub async fn unregister_handler(uuid: String, clients: ClientMap) -> ResponseResult<impl warp::reply::Reply> {

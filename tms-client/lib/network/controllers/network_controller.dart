@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controller/connectivity.dart';
-import 'package:tms/network/controller/db.dart';
-import 'package:tms/network/controller/http.dart';
-import 'package:tms/network/controller/ws.dart';
+import 'package:tms/network/controllers/connectivity.dart';
+import 'package:tms/network/controllers/db.dart';
+import 'package:tms/network/controllers/http.dart';
+import 'package:tms/network/controllers/ws.dart';
 
 class NetworkController {
   final HttpController _httpController = HttpController();

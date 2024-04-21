@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tms/network/controller/connectivity.dart';
-import 'package:tms/network/controller/http.dart';
+import 'package:tms/network/controllers/connectivity.dart';
+import 'package:tms/network/controllers/http.dart';
 import 'package:tms/network/network.dart';
 
 class ConnectionProvider with ChangeNotifier {

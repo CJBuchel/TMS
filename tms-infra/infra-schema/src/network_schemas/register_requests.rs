@@ -24,6 +24,7 @@ pub struct RegisterResponse {
   pub auth_token: String,
   pub uuid: String,
   pub url: String,
+  pub server_ip: String,
 }
 
 impl Default for RegisterResponse {
@@ -32,6 +33,7 @@ impl Default for RegisterResponse {
       auth_token: "".to_string(),
       uuid: "".to_string(),
       url: "".to_string(),
+      server_ip: "".to_string(),
     }
   }
 }

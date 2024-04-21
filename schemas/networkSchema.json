@@ -73,11 +73,15 @@
       "type": "object",
       "required": [
         "auth_token",
+        "server_ip",
         "url",
         "uuid"
       ],
       "properties": {
         "auth_token": {
+          "type": "string"
+        },
+        "server_ip": {
           "type": "string"
         },
         "url": {

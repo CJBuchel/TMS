@@ -22,18 +22,18 @@ class TmsAppBarLeading extends StatelessWidget {
     }
   }
 
-  Widget _showBack(BuildContext context) {
-    if (context.canPop()) {
-      return IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          context.pop();
-        },
-      );
-    } else {
-      return const SizedBox();
-    }
-  }
+  // Widget _showBack(BuildContext context) {
+  //   if (context.canPop()) {
+  //     return IconButton(
+  //       icon: const Icon(Icons.arrow_back),
+  //       onPressed: () {
+  //         context.pop();
+  //       },
+  //     );
+  //   } else {
+  //     return const SizedBox();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class TmsAppBarLeading extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _showHome(context),
-        _showBack(context),
+        // _showBack(context),
       ],
     );
   }

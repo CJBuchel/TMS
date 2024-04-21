@@ -94,23 +94,27 @@ class RegisterRequest {
 
 class RegisterResponse {
     String authToken;
+    String serverIp;
     String url;
     String uuid;
 
     RegisterResponse({
         required this.authToken,
+        required this.serverIp,
         required this.url,
         required this.uuid,
     });
 
     factory RegisterResponse.fromJson(Map<String, dynamic> json) => RegisterResponse(
         authToken: json["auth_token"],
+        serverIp: json["server_ip"],
         url: json["url"],
         uuid: json["uuid"],
     );
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+        "server_ip": serverIp,
         "url": url,
         "uuid": uuid,
     };

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controller/connectivity.dart';
+import 'package:tms/network/controllers/connectivity.dart';
 
 class DbController {
   final NetworkConnectivity _connectivity = NetworkConnectivity();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/utils/logger.dart';
 
 enum WiFiEncryptionType {
   WPA,
@@ -28,19 +30,16 @@ class FloatingQrButton extends StatelessWidget {
     // example enterprise PEAP wifi
     // WIFI:S:myNetwork;T:WPA2-EAP;E:PEAP;PH2:MSCHAPV2;U:myUser;P:myPassword;;
 
-    return "";
-  }
-
-  void _displayQrCode(BuildContext context, Color dataColor, Color eyeColor) {
-    // var qrCode = QrCode(4, 0);
-    // qrCode.addData('Hello, World!');
-    // var image = QrImage(qrCode);
-
     String ssid = "mySSID";
-    String password = "myPass";
+    String password = "myPassword";
 
     String qrData = "WIFI:T:WPA;S:$ssid;P:$password;;";
+    // String qrData = "tmsapplicationscheme://connect?ip=192.168.178.116&port=8080";
 
+    return qrData;
+  }
+
+  void _displayQrCode(BuildContext context, String qrData, Color dataColor, Color eyeColor) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -62,11 +61,14 @@ class FloatingQrButton extends StatelessWidget {
   }
 
   void _displayWiFiQrCode(BuildContext context) {
-    _displayQrCode(context, Colors.blue, Colors.green);
+    _displayQrCode(context, _getQrWifiData(), Colors.blue, Colors.green);
   }
 
   void _displayServerQrCode(BuildContext context) {
-    _displayQrCode(context, Colors.blue, Colors.red);
+    String addr = TmsLocalStorageProvider().serverExternalAddress;
+    String qrData = "$addr/deep_linking";
+    TmsLogger().i("Server QR data: $qrData");
+    _displayQrCode(context, qrData, Colors.blue, Colors.red);
   }
 
   @override

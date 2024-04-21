@@ -47,10 +47,10 @@
 	<true/>
 
 	<key>NSLocalNetworkUsageDescription</key>
-<string>Required to discover local network devices</string>
-<key>NSBonjourServices</key>
-<array>
-    <string>_tms-service._udp</string>
-</array>
+	<string>Required to discover local network devices</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_tms-service._udp</string>
+	</array>
 </dict>
 </plist>

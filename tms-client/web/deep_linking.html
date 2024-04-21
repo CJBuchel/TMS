@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="TMS Application Client">
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="client">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="icons/favicon.png"/>
+
+    <title>App Handler</title>
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Custom styles -->
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevent scrolling */
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        background-color: #2A2D3E; /* Dark bluish background */
+        color: #fff; /* White text color for all text */
+      }
+      .container {
+        text-align: center;
+        width: 100vw; /* Ensures container is full viewport width */
+      }
+      h1 {
+        font-size: 5vw;
+        margin: 2vh 0; /* Reduced margin to accommodate in one screen */
+      }
+      .button {
+        display: block; /* Make buttons block level for full width */
+        width: 80vw; /* Control button width via viewport width */
+        margin: 3vh auto; /* Vertical margin as percentage of viewport height */
+        padding: 2vh 0; /* Padding relative to viewport height */
+        font-size: 4vw; /* Font size relative to viewport width */
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        transition: background-color 0.3s;
+        box-sizing: border-box; /* Includes padding and border in width */
+      }
+      .button-green {
+        background-color: #4CAF50; /* Green background */
+      }
+      .button-green:hover, .button-green:active {
+        background-color: #3e8e41; /* Darker green on interaction */
+      }
+      .button-blue {
+        background-color: #007BFF; /* Blue background */
+      }
+      .button-blue:hover, .button-blue:active {
+        background-color: #0056b3; /* Darker blue on interaction */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>TMS Application</h1>
+      <a href="$TMS_APP_DEEP_LINK" class="button button-green">Open App</a>
+      <a href="/" class="button button-blue">Continue with Browser</a>
+    </div>
+  </body>
+</html>

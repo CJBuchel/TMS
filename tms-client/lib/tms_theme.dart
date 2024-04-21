@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Base theme to copy from, annoyingly it doesn't merge, certain inner parts have to be referenced
-// final ThemeData _baseTheme = ThemeData(
-//   fontFamily: 'Poppins',
-// );
-
 ///
 /// Light theme
 ///

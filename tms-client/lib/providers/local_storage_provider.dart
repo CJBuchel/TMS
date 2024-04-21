@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // variable constants
 const defaultServerPort = 8080;
 
-abstract class TmsLocalStorageBase extends ChangeNotifier {
+abstract class _TmsLocalStorageBase extends ChangeNotifier {
   SharedPreferences? _ls;
 
   Future<void> init() async {
@@ -54,7 +54,7 @@ abstract class TmsLocalStorageBase extends ChangeNotifier {
 }
 
 // shared preferences
-class TmsLocalStorageProvider extends TmsLocalStorageBase {
+class TmsLocalStorageProvider extends _TmsLocalStorageBase {
   static final TmsLocalStorageProvider _instance = TmsLocalStorageProvider._internal();
   TmsLocalStorageProvider._internal();
 
@@ -68,10 +68,16 @@ class TmsLocalStorageProvider extends TmsLocalStorageBase {
   set serverPort(int value) => setInt("serverPort", value);
   int get serverPort => getInt("serverPort") ?? defaultServerPort;
 
+  // server ip used for connecting (can be localhost)
   set serverIp(String value) => setString("serverIp", value);
   String get serverIp => getString("serverIp") ?? ""; // should be localhost
 
+  // external ip used for sharing (cannot be localhost)
+  set serverExternalIp(String value) => setString("serverExternalIp", value);
+  String get serverExternalIp => getString("serverExternalIp") ?? "";
+
   String get serverAddress => "$serverHttpProtocol://$serverIp:$serverPort";
+  String get serverExternalAddress => "$serverHttpProtocol://$serverExternalIp:$serverPort";
 
   set wsConnectionString(String value) => setString("wsConnectionString", value);
   String get wsConnectionString => getString("wsConnectionString") ?? "";

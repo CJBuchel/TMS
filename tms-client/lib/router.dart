@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/connection/connection.dart';
-import 'package:tms/views/deep_linking/deep_linking.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
@@ -47,10 +46,6 @@ final tmsRouter = GoRouter(
       name: 'connection',
       // we don't use base Scaffold because we need the scaffold for floating buttons
       builder: (context, state) => BaseResponsive(child: Connection(state: state)),
-    ),
-    GoRoute(
-      path: '/deep_linking',
-      builder: (context, state) => BaseResponsive(child: DeepLinking()),
     ),
     ..._protectedRoutes,
   ],

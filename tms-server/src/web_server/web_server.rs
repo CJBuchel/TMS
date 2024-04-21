@@ -10,8 +10,8 @@ pub struct WebConfig {
   pub addr: [u8; 4],
   pub tls: bool,
 
-  // the local IP address to use in the certificate
-  pub local_ip: Option<String>,
+  // the local IP address to use for specifics
+  pub local_ip: String,
 
   // if you have your own certificate and key instead, you can specify the paths here
   // pub cert_path: Option<String>,
@@ -24,7 +24,7 @@ impl Default for WebConfig {
       port: 8080,
       addr: [0,0,0,0],
       tls: false,
-      local_ip: None,
+      local_ip: "".to_string(),
       // cert_path: None,
       // key_path: None,
     }
@@ -36,6 +36,7 @@ pub struct WebServer {
   addr: [u8; 4],
   certificates: CertificateKeys,
   tls: bool,
+  local_ip: String,
 }
 
 impl WebServer {
@@ -48,6 +49,7 @@ impl WebServer {
       addr: config.addr,
       certificates: certs,
       tls: config.tls,
+      local_ip: config.local_ip,
     }
   }
 
@@ -82,9 +84,20 @@ impl WebServer {
   {
 
     // static files for web hosting, (add cache control header for 24 hours)
-    let static_files_path = PathBuf::from("tms-client").join("build").join("web");
-    let static_files = warp::fs::dir(static_files_path).map(|reply| {
+    let ui_static_files_path = PathBuf::from("tms-client").join("build").join("web");
+    let ui_static_files = warp::fs::dir(ui_static_files_path).map(|reply| {
       warp::reply::with_header(reply, "Cache-Control", "public, max-age=86400")
+    });
+    let ui_route = warp::path("ui").and(ui_static_files);
+
+    // static files for deep linking
+    let deep_linking_static_file_path = PathBuf::from("tms-client").join("build").join("web").join("deep_linking.html");
+    let html_template = std::fs::read_to_string(deep_linking_static_file_path.clone()).unwrap();
+    let deep_link = format!("tmsapplicationscheme://connect?ip={}&port={}", self.local_ip.clone(), self.port);
+    log::info!("Deep Link: {}", deep_link);
+    let deep_linking_route = warp::path("deep_linking").map(move || {
+      let html_content = html_template.replace("$TMS_APP_DEEP_LINK", &deep_link);
+      warp::reply::html(html_content)
     });
 
     // redirect all root traffic to /ui
@@ -93,7 +106,11 @@ impl WebServer {
     });
 
     // append the web route to provided routes
-    let web_route = warp::path("ui").and(static_files).or(root_route);
+    let web_route = root_route
+      .or(ui_route)
+      .or(deep_linking_route);
+
+    // combine the web route with the provided routes
     let routes = web_route.or(routes);
 
     if self.tls {

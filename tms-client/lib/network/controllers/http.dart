@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controller/connectivity.dart';
+import 'package:tms/network/controllers/connectivity.dart';
 import 'package:tms/schemas/networkSchema.dart' as nts;
 import 'package:http/http.dart' as http;
 
@@ -91,6 +91,7 @@ class HttpController {
       TmsLogger().d("Registered with TMS server");
       nts.RegisterResponse res = nts.RegisterResponse.fromJson(jsonDecode(response.body));
 
+      TmsLocalStorageProvider().serverExternalIp = res.serverIp;
       TmsLocalStorageProvider().wsConnectionString = res.url;
       TmsLocalStorageProvider().authToken = res.authToken;
       TmsLocalStorageProvider().uuid = res.uuid;

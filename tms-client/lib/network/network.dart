@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:tms/network/controller/service_discovery.dart';
+import 'package:tms/network/controllers/service_discovery.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controller/connectivity.dart';
-import 'package:tms/network/controller/controller.dart';
-import 'package:tms/network/controller/http.dart';
+import 'package:tms/network/controllers/connectivity.dart';
+import 'package:tms/network/controllers/network_controller.dart';
+import 'package:tms/network/controllers/http.dart';
 import 'package:tms/utils/blocking_loop_timer.dart';
 
 typedef TypedServerResponse<T> = (bool, int, T?, String?);

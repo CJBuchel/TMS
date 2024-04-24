@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:tms/network/controllers/service_discovery.dart';
+import 'package:tms/network/service_discovery.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controllers/connectivity.dart';
-import 'package:tms/network/controllers/network_controller.dart';
-import 'package:tms/network/controllers/http.dart';
+import 'package:tms/network/connectivity.dart';
+import 'package:tms/network/network_controller.dart';
+import 'package:tms/network/http.dart';
 import 'package:tms/utils/blocking_loop_timer.dart';
-
-typedef TypedServerResponse<T> = (bool, int, T?, String?);
 
 class Network {
   static final Network _instance = Network._internal();
   final NetworkController _controller = NetworkController();
+  bool _running = false;
   BlockingLoopTimer? _watchdogTimer;
   Network._internal() {
     _watchdogTimer = BlockingLoopTimer(
@@ -56,15 +55,25 @@ class Network {
   }
 
   Future<void> start() async {
+    if (_running) {
+      return;
+    }
+    _controller.init();
     _watchdogTimer?.start();
     await connect();
+    _running = true;
   }
 
   Future<void> stop() async {
+    if (!_running) {
+      return;
+    }
+    _controller.dispose();
     if (_watchdogTimer != null) {
       _watchdogTimer?.stop();
     }
     await disconnect();
+    _running = false;
   }
 
   // regular http

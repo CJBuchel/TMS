@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:tms/network/http_client.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controllers/connectivity.dart';
+import 'package:tms/network/connectivity.dart';
 import 'package:tms/schemas/networkSchema.dart' as nts;
-import 'package:http/http.dart' as http;
 
 typedef ServerResponse = (bool, int, dynamic); // success, status code, response
 
@@ -46,18 +46,22 @@ class HttpController {
   NetworkConnectionState get state => _connectivity.state;
   NetworkConnectivity get connectivity => _connectivity;
 
+  final _client = TmsHttpClient.create();
+
   Future<bool> pulse(String addr) async {
     if (addr.isEmpty) {
       _connectivity.state = NetworkConnectionState.disconnected;
       return false;
     }
     try {
-      var response = await http.get(
+      var response = await _client.get(
         Uri.parse("$addr/pulse"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+
+      TmsLogger().d("Pulse response: ${response.statusCode}");
 
       if (response.statusCode == HttpStatus.ok) {
         return true;
@@ -67,11 +71,12 @@ class HttpController {
       }
     } catch (e) {
       _connectivity.state = NetworkConnectionState.disconnected;
+      TmsLogger().e("Caught failure. Failed to pulse: $e");
       return false;
     }
   }
 
-  Future<bool> register() async {
+  Future<bool> connect() async {
     _connectivity.state = NetworkConnectionState.connecting;
     String addr = TmsLocalStorageProvider().serverAddress;
     var request = nts.RegisterRequest(
@@ -79,7 +84,7 @@ class HttpController {
       password: TmsLocalStorageProvider().authPassword,
     );
 
-    var response = await http.post(
+    var response = await _client.post(
       Uri.parse("$addr/register"),
       body: jsonEncode(request.toJson()),
       headers: <String, String>{
@@ -106,9 +111,9 @@ class HttpController {
     }
   }
 
-  Future<bool> unregister() async {
+  Future<bool> disconnect() async {
     String addr = TmsLocalStorageProvider().serverAddress;
-    final response = await http.delete(
+    final response = await _client.delete(
       Uri.parse("$addr/register/${TmsLocalStorageProvider().uuid}"),
       headers: {
         "X-Client-Id": TmsLocalStorageProvider().uuid,
@@ -120,11 +125,13 @@ class HttpController {
     if (response.statusCode == HttpStatus.ok) {
       TmsLogger().d("Unregistered with TMS server");
       _connectivity.state = NetworkConnectionState.disconnected;
+      _client.close();
       return true;
     } else {
       var m = HttpStatusToMessage().getMessage(response.statusCode);
       TmsLogger().w("Failed to unregister with TMS server: $m");
       _connectivity.state = NetworkConnectionState.disconnected;
+      _client.close();
       return false;
     }
   }
@@ -133,7 +140,7 @@ class HttpController {
   Future<ServerResponse> httpPost(String route, dynamic body) async {
     try {
       String addr = TmsLocalStorageProvider().serverAddress;
-      final response = await http.post(
+      final response = await _client.post(
         Uri.parse("$addr$route"),
         body: jsonEncode(body),
         headers: {
@@ -158,7 +165,7 @@ class HttpController {
   Future<ServerResponse> httpGet(String route) async {
     try {
       String addr = TmsLocalStorageProvider().serverAddress;
-      final response = await http.get(
+      final response = await _client.get(
         Uri.parse("$addr$route"),
         headers: {
           "X-Client-Id": TmsLocalStorageProvider().uuid,
@@ -182,7 +189,7 @@ class HttpController {
   Future<ServerResponse> httpDelete(String route, dynamic body) async {
     try {
       String addr = TmsLocalStorageProvider().serverAddress;
-      final response = await http.delete(
+      final response = await _client.delete(
         Uri.parse("$addr$route"),
         body: jsonEncode(body),
         headers: {

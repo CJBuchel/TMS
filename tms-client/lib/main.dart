@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:app_links/app_links.dart';
@@ -9,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/app.dart';
+import 'package:tms/network/http_client.dart';
 import 'package:tms/providers/connection_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
@@ -20,7 +22,6 @@ class NetworkObserver extends WidgetsBindingObserver {
   StreamSubscription<Uri>? _appLinkSubscription;
 
   void handleLink(Uri link) {
-    TmsLogger().i('Link: $link');
     if (link.host == 'connect') {
       String? ip = link.queryParameters['ip'];
       String? port = link.queryParameters['port'];
@@ -41,7 +42,6 @@ class NetworkObserver extends WidgetsBindingObserver {
   Future<void> initAppLinks() async {
     var link = await _appLinks.getInitialAppLink();
     if (link != null) {
-      TmsLogger().i('Initial Link: $link');
       handleLink(link);
     }
     _appLinkSubscription = _appLinks.uriLinkStream.listen(handleLink);
@@ -97,11 +97,12 @@ class AppWrapper extends StatelessWidget {
 }
 
 void main() {
+  HttpOverrides.global = TmsHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
 
   // startup loggers
   Logger().i("TMS App starting...");
-  TmsLogger().setLogLevel(LogLevel.info);
+  TmsLogger().setLogLevel(LogLevel.debug); // info
   EchoTreeLogger().useLogger(EchoTreeTmsLogBinder());
 
   // initialize the network observers

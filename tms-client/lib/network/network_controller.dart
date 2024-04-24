@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controllers/connectivity.dart';
-import 'package:tms/network/controllers/db.dart';
-import 'package:tms/network/controllers/http.dart';
-import 'package:tms/network/controllers/ws.dart';
+import 'package:tms/network/connectivity.dart';
+import 'package:tms/network/db.dart';
+import 'package:tms/network/http.dart';
+import 'package:tms/network/ws.dart';
 
 class NetworkController {
   final HttpController _httpController = HttpController();
@@ -41,6 +41,7 @@ class NetworkController {
     var protocols = ["https", "http"];
     for (var p in protocols) {
       // TmsLocalStorageProvider().serverHttpProtocol = p;
+      TmsLogger().d("Checking $p://$ip:$port");
       if (await _httpController.pulse("$p://$ip:$port")) {
         TmsLocalStorageProvider().serverHttpProtocol = p;
         TmsLocalStorageProvider().serverIp = ip;
@@ -102,9 +103,19 @@ class NetworkController {
     return await _websocketController.connect(TmsLocalStorageProvider().wsConnectionString);
   }
 
+  void init() {
+    // Write code to initialize the network controller
+    _dbController.init();
+  }
+
+  void dispose() {
+    // Write code to dispose the network controller
+    _dbController.dispose();
+  }
+
   Future<bool> connect() async {
     if (await _heartbeat()) {
-      if (await _httpController.register()) {
+      if (await _httpController.connect()) {
         if (await _websocketConnect()) {
           await _dbController.connect();
           return true;
@@ -116,7 +127,7 @@ class NetworkController {
 
   Future<void> disconnect() async {
     await _dbController.disconnect();
-    await _httpController.unregister();
+    await _httpController.disconnect();
     await _websocketController.disconnect();
   }
 

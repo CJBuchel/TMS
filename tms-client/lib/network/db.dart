@@ -4,17 +4,17 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/network/controllers/connectivity.dart';
+import 'package:tms/network/connectivity.dart';
 
 class DbController {
   final NetworkConnectivity _connectivity = NetworkConnectivity();
-  NetworkConnectionState get state => _stateParser();
+  NetworkConnectionState get state => _connectivity.state;
   NetworkConnectivity get connectivity => _connectivity;
 
   NetworkConnectionState _stateParser() {
     NetworkConnectionState st;
 
-    switch (EchoTreeClient().state) {
+    switch (EchoTreeClient().state.value) {
       case EchoTreeConnection.connected:
         st = NetworkConnectionState.connected;
         break;
@@ -28,11 +28,19 @@ class DbController {
         st = NetworkConnectionState.disconnected;
     }
 
-    if (st != _connectivity.state) {
-      _connectivity.state = st;
-    }
-
     return st;
+  }
+
+  void _listener() {
+    _connectivity.state = _stateParser();
+  }
+
+  void init() {
+    EchoTreeClient().state.addListener(_listener);
+  }
+
+  void dispose() {
+    EchoTreeClient().state.removeListener(_listener);
   }
 
   Future<void> connect() async {
@@ -42,7 +50,10 @@ class DbController {
       final dir = await getApplicationDocumentsDirectory(); // might switch to support
       path = dir.path + "/tms";
     }
+
     await EchoTreeClient().connect(path, TmsLocalStorageProvider().serverAddress);
+    var state = _stateParser();
+    TmsLogger().i("State: $state");
   }
 
   Future<void> disconnect() async {

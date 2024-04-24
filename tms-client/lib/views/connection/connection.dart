@@ -25,21 +25,30 @@ class Connection extends StatelessWidget {
         String ip = TmsLocalStorageProvider().serverIp;
         String port = TmsLocalStorageProvider().serverPort.toString();
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        return Column(
           children: [
-            const Text('Status: '),
-            Text(
-              isConnected ? 'Connected' : 'Disconnected',
-              style: TextStyle(color: isConnected ? Colors.green : Colors.red, overflow: TextOverflow.ellipsis),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Status: '),
+                Text(
+                  isConnected ? 'Connected' : 'Disconnected',
+                  style: TextStyle(color: isConnected ? Colors.green : Colors.red, overflow: TextOverflow.ellipsis),
+                ),
+              ],
             ),
-            Text(isConnected ? ' to ' : ' using '),
-            Text(
-              ip.isNotEmpty ? '${ip}:${port}' : 'N/A',
-              style: TextStyle(
-                color: isConnected ? Colors.green : Colors.red,
-                overflow: TextOverflow.ellipsis,
-              ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  ip.isNotEmpty ? '${ip}:${port}' : 'N/A',
+                  style: TextStyle(
+                    color: isConnected ? null : Colors.red,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ],
         );

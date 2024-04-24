@@ -92,7 +92,13 @@ impl WebServer {
 
     // static files for deep linking
     let deep_linking_static_file_path = PathBuf::from("tms-client").join("build").join("web").join("deep_linking.html");
-    let html_template = std::fs::read_to_string(deep_linking_static_file_path.clone()).unwrap();
+    let html_template = match std::fs::read_to_string(deep_linking_static_file_path.clone()) {
+      Ok(content) => content,
+      Err(e) => {
+        log::error!("Error reading deep linking html file: {:?}", e);
+        "".to_string()
+      }
+    };
     let deep_link = format!("tmsapplicationscheme://connect?ip={}&port={}", self.local_ip.clone(), self.port);
     log::info!("Deep Link: {}", deep_link);
     let deep_linking_route = warp::path("deep_linking").map(move || {

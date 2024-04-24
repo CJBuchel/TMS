@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/connection/connection.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
+import 'package:tms/views/setup/setup.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
 import 'package:tms/widgets/base_responsive.dart';
 import 'package:tms/widgets/base_scaffold.dart';
@@ -13,7 +13,7 @@ final _protectedRoutes = <GoRoute>[
   GoRoute(
     path: '/setup',
     name: 'setup',
-    builder: (context, state) => const SizedBox.shrink(),
+    builder: (context, state) => BaseScaffold(state: state, child: Setup()),
     redirect: (context, state) {
       if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
         return '/login';

@@ -34,8 +34,11 @@ impl CertificateKeys {
     log::info!("Generating self-signed certificate");
     let subject_alt_names = vec![
       "localhost".to_string(), // local machine
+      "tms_server.local".to_string(), // testing SNI spoofing
       local_ip.unwrap_or("127.0.0.1".to_string()), // local IP
     ];
+
+    log::debug!("cert names: {:?}", subject_alt_names);
 
     let certificate = rcgen::generate_simple_self_signed(subject_alt_names).unwrap();
 

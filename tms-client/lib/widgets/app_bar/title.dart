@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tms/network/controllers/connectivity.dart';
+import 'package:tms/network/connectivity.dart';
 import 'package:tms/providers/connection_provider.dart';
 
 class TmsAppBarTitle extends StatelessWidget {

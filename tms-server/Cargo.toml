@@ -18,11 +18,16 @@ rand = "0.8.5"
 uuid = { version = "^1.7", features = ["serde", "v4"] }
 async-trait = "0.1.79"
 futures = "0.3.30"
-chrono = "0.4.37"
-mdns-sd = "0.10.5"
+chrono = "^0.4"
+mdns-sd = "^0.11"
+
+# Patch rustls for now, there is a flutter bug https://github.com/dart-lang/http/issues/1161 which isn't fixed yet.
+# And we need the latest version of rustls in warp to get around it
+# tokio-rustls = { version = "0.26.0" }
 
 [dependencies.tms-infra]
 path = "../tms-infra"
 
-[dependencies.echo_tree_rs]
-git = "https://github.com/CJBuchel/EchoTree.git"
+[dependencies.echo-tree-rs]
+# git = "https://github.com/CJBuchel/EchoTree.git"
+path = "../echo-tree-rs"

@@ -2,5 +2,9 @@
 resolver = "2"
 members = [
   "tms-infra", 
+  "echo-tree-rs",
   "tms-server", 
 ]
+
+[patch.crates-io]
+# rustls = { git = "https://github.com/rustls/rustls.git" }

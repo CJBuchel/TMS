@@ -116,11 +116,9 @@ packages:
   echo_tree_flutter:
     dependency: "direct main"
     description:
-      path: echo_tree_flutter
-      ref: HEAD
-      resolved-ref: dd7ef185caa274391e8748feab731f9ec3796808
-      url: "https://github.com/CJBuchel/EchoTree.git"
-    source: git
+      path: "../echo-tree-flutter"
+      relative: true
+    source: path
     version: "0.0.1"
   fake_async:
     dependency: transitive
@@ -205,10 +203,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "771c8feb40ad0ef639973d7ecf1b43d55ffcedb2207fd43fab030f5639e40446"
+      sha256: b465e99ce64ba75e61c8c0ce3d87b66d8ac07f0b35d0a7e0263fcfc10f99e836
       url: "https://pub.dev"
     source: hosted
-    version: "13.2.4"
+    version: "13.2.5"
   gtk:
     dependency: transitive
     description:
@@ -261,10 +259,10 @@ packages:
     dependency: transitive
     description:
       name: json_annotation
-      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.1"
+    version: "4.9.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -682,10 +680,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "0a989dc7ca2bb51eac91e8fd00851297cfffd641aa7538b165c62637ca0eaa4a"
+      sha256: "0eaf06e3446824099858367950a813472af675116bf63f008a4c2a75ae13e9cb"
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.0"
+    version: "5.5.0"
   xdg_directories:
     dependency: transitive
     description:

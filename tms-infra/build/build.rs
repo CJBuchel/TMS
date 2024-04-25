@@ -18,6 +18,36 @@ struct NetworkSchema {
   _login_response: LoginResponse,
 }
 
+#[derive(JsonSchema)]
+struct EchoTreeSchema {
+  // http protocol
+  _role: EchoTreeRole,
+  _register_request: EchoTreeRegisterRequest,
+  _register_response: EchoTreeRegisterResponse,
+  _role_authenticate_request: EchoTreeRoleAuthenticateRequest,
+
+  // socket protocol (message)
+  _echo_tree_client_socket_message: client_socket_protocol::EchoTreeClientSocketMessage,
+  _echo_tree_server_socket_message: server_socket_protocol::EchoTreeServerSocketMessage,
+
+  // server message protocols
+  _echo_tree_event: server_socket_protocol::EchoTreeEvent,
+  _echo_item_event: server_socket_protocol::EchoItemEvent,
+  _response_event: server_socket_protocol::StatusResponseEvent,
+
+  // client message protocols
+  _checksum_event: client_socket_protocol::ChecksumEvent,
+  _set_event: client_socket_protocol::InsertEvent,
+  _get_event: client_socket_protocol::GetEvent,
+  _delete_event: client_socket_protocol::DeleteEvent,
+
+  _set_tree_event: client_socket_protocol::SetTreeEvent,
+  _get_tree_event: client_socket_protocol::GetTreeEvent,
+
+  _subscribe_event: client_socket_protocol::SubscribeEvent,
+  _unsubscribe_event: client_socket_protocol::UnsubscribeEvent,
+}
+
 fn get_workspace_path() -> std::io::Result<PathBuf> {
   let path = std::env::current_dir()?;
   let mut path_ancestors = path.ancestors();
@@ -49,4 +79,5 @@ fn generate_schema<T: JsonSchema>(schema_name: &str) {
 fn main() {
   generate_schema::<DatabaseSchema>("databaseSchema");
   generate_schema::<NetworkSchema>("networkSchema");
+  generate_schema::<EchoTreeSchema>("echoTreeSchema");
 }

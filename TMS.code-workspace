@@ -15,6 +15,14 @@
 		{
 			"path": "./tms-infra",
 			"name": "tms-infra"
+		},
+		{
+			"path": "./echo-tree-rs",
+			"name": "echo-tree-rs"
+		},
+		{
+			"path": "./echo-tree-flutter",
+			"name": "echo-tree-flutter"
 		}
 	],
 	"settings": {

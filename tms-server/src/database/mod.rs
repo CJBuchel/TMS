@@ -54,7 +54,7 @@ impl Database {
         return;
       }
       None => {
-        let role = echo_tree_rs::protocol::schemas::Role {
+        let role = EchoTreeRole {
           role_id: role.to_string(),
           password: password.to_string(),
           read_echo_trees: read_echo_trees.iter().map(|x| x.to_string()).collect(),

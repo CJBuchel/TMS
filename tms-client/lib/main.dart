@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 import 'package:tms/app.dart';
 import 'package:tms/network/http_client.dart';
 import 'package:tms/providers/connection_provider.dart';
+import 'package:tms/providers/event_config_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/providers/schedule_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/providers/auth_provider.dart';
@@ -90,6 +92,8 @@ class AppWrapper extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TmsLocalStorageProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ConnectionProvider()),
+        ChangeNotifierProvider(create: (_) => ScheduleProvider()),
+        ChangeNotifierProvider(create: (_) => EventConfigProvider()),
       ],
       child: child,
     );

@@ -2,6 +2,9 @@ pub use echo_tree_rs::core::*;
 use rand::distributions::Alphanumeric;
 use rand::Rng;
 
+mod tree_names;
+pub use tree_names::*;
+
 mod backup_service;
 pub use backup_service::*;
 
@@ -107,22 +110,9 @@ impl Database {
   pub async fn create_trees(&mut self) {
     log::info!("Creating trees...");
 
-    // :tournament:config
-    // :teams
-    // :users
-
-    // :robot_game:matches
-    // :robot_game:game_scores
-    // :robot_game:tables
-
-    // :judging:core_value_scores
-    // :judging:innovation_project_scores
-    // :judging:robot_design_scores
-    // :judging:pods
-
-    self.inner.read().await.add_tree_schema(":tournament:config".to_string(), TournamentConfig::to_schema()).await;
-    self.inner.read().await.add_tree_schema(":teams".to_string(), Team::to_schema()).await;
-    self.inner.read().await.add_tree_schema(":users".to_string(), User::to_schema()).await;
+    self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
+    self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
+    self.inner.read().await.add_tree_schema(USERS.to_string(), User::to_schema()).await;
   }
 
   pub async fn get_echo_tree_routes(&self, tls: bool) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {

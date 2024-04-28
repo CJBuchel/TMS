@@ -13,12 +13,14 @@ class NetworkSchema {
     LoginResponse loginResponse;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
+    TournamentConfigSetNameRequest tournamentConfigSetNameRequest;
 
     NetworkSchema({
         required this.loginRequest,
         required this.loginResponse,
         required this.registerRequest,
         required this.registerResponse,
+        required this.tournamentConfigSetNameRequest,
     });
 
     factory NetworkSchema.fromJson(Map<String, dynamic> json) => NetworkSchema(
@@ -26,6 +28,7 @@ class NetworkSchema {
         loginResponse: LoginResponse.fromJson(json["_login_response"]),
         registerRequest: RegisterRequest.fromJson(json["_register_request"]),
         registerResponse: RegisterResponse.fromJson(json["_register_response"]),
+        tournamentConfigSetNameRequest: TournamentConfigSetNameRequest.fromJson(json["_tournament_config_set_name_request"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -33,6 +36,7 @@ class NetworkSchema {
         "_login_response": loginResponse.toJson(),
         "_register_request": registerRequest.toJson(),
         "_register_response": registerResponse.toJson(),
+        "_tournament_config_set_name_request": tournamentConfigSetNameRequest.toJson(),
     };
 }
 
@@ -117,5 +121,21 @@ class RegisterResponse {
         "server_ip": serverIp,
         "url": url,
         "uuid": uuid,
+    };
+}
+
+class TournamentConfigSetNameRequest {
+    String name;
+
+    TournamentConfigSetNameRequest({
+        required this.name,
+    });
+
+    factory TournamentConfigSetNameRequest.fromJson(Map<String, dynamic> json) => TournamentConfigSetNameRequest(
+        name: json["name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
     };
 }

@@ -6,7 +6,8 @@
     "_login_request",
     "_login_response",
     "_register_request",
-    "_register_response"
+    "_register_response",
+    "_tournament_config_set_name_request"
   ],
   "properties": {
     "_login_request": {
@@ -20,6 +21,9 @@
     },
     "_register_response": {
       "$ref": "#/definitions/RegisterResponse"
+    },
+    "_tournament_config_set_name_request": {
+      "$ref": "#/definitions/TournamentConfigSetNameRequest"
     }
   },
   "definitions": {
@@ -88,6 +92,17 @@
           "type": "string"
         },
         "uuid": {
+          "type": "string"
+        }
+      }
+    },
+    "TournamentConfigSetNameRequest": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
           "type": "string"
         }
       }

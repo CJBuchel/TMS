@@ -16,6 +16,7 @@ struct NetworkSchema {
   _register_response: RegisterResponse,
   _login_request: LoginRequest,
   _login_response: LoginResponse,
+  _tournament_config_set_name_request: TournamentConfigSetNameRequest,
 }
 
 #[derive(JsonSchema)]

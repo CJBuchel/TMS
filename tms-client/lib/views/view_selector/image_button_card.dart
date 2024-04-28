@@ -23,17 +23,25 @@ class ImageButtonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double titleSize;
+    double cardHeight;
+    double imageHeight;
 
     if (ResponsiveBreakpoints.of(context).isDesktop) {
       titleSize = 28;
+      cardHeight = 280;
+      imageHeight = 115;
     } else if (ResponsiveBreakpoints.of(context).isTablet) {
       titleSize = 24;
+      cardHeight = 200;
+      imageHeight = 100;
     } else {
       titleSize = 20; // mobile
+      cardHeight = 150;
+      imageHeight = 80;
     }
 
     return SizedBox(
-      height: 280,
+      height: cardHeight,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
@@ -54,7 +62,7 @@ class ImageButtonCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: SizedBox(
-                    height: 115,
+                    height: imageHeight,
                     child: image,
                   ),
                 ),

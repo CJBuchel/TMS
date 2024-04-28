@@ -12,7 +12,7 @@ class ViewSelector extends StatelessWidget {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return ListView(
-          children: <Widget>[
+          children: [
             // admin views
             if (authProvider.hasAccess(const Permissions(admin: true))) const AdminViews(),
           ],

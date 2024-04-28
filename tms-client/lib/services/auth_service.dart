@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/schemas/networkSchema.dart';
+import 'package:tms/schemas/network_schema.dart';
 
 class AuthService {
   Future<(int, LoginResponse?)> login(String username, String password) async {

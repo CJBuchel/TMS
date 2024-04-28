@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tms/providers/auth_provider.dart';
-import 'package:tms/widgets/dialogs/error_dialog.dart';
+import 'package:tms/widgets/dialogs/popup_dialog.dart';
 
 class Login extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -16,13 +16,17 @@ class Login extends StatelessWidget {
     if (status == HttpStatus.ok) {
       context.canPop() ? context.pop() : GoRouter.of(context).go('/');
     } else {
-      showDialog(
-        context: context,
-        builder: (context) => ErrorDialog(
-          title: 'Login Failed',
-          message: status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status",
-        ),
-      );
+      PopupDialog.error(
+        title: 'Login Failed',
+        message: status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status",
+      ).show(context);
+      // showDialog(
+      //   context: context,
+      //   builder: (context) => ErrorDialog(
+      //     title: 'Login Failed',
+      //     message: status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status",
+      //   ),
+      // );
     }
   }
 

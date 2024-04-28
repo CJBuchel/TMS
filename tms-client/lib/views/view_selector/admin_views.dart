@@ -12,47 +12,43 @@ class AdminViews extends StatelessWidget {
     return Column(
       children: [
         // Title
-        IntrinsicHeight(
-          child: Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
-              child: Text(
-                "Admin Screens",
-                style: TextStyle(
-                  fontSize: 28,
-                  color: Colors.blueGrey[800],
-                ),
+        Align(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
+            child: Text(
+              "Admin Screens",
+              style: TextStyle(
+                fontSize: 28,
+                color: Colors.blueGrey[800],
               ),
             ),
           ),
         ),
 
         // setup car
-        IntrinsicHeight(
-          child: Row(
-            children: [
-              // Setup card
-              Flexible(
-                flex: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: ImageButtonCard(
-                    title: "Setup",
-                    subTitle: "ADMIN",
-                    color: const Color(0xffFA6E5A),
-                    textColor: const Color(0xff3F414E),
-                    image: const Image(
-                      image: AssetImage('assets/images/FIRST_LOGO.png'),
-                    ),
-                    onPressed: () {
-                      context.go('/setup');
-                    },
+        Row(
+          children: [
+            // Setup card
+            Flexible(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: ImageButtonCard(
+                  title: "Setup",
+                  subTitle: "ADMIN",
+                  color: const Color(0xffFA6E5A),
+                  textColor: const Color(0xff3F414E),
+                  image: const Image(
+                    image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
+                  onPressed: () {
+                    context.go('/setup');
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );

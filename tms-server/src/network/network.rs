@@ -2,7 +2,7 @@ use warp::Filter;
 
 use crate::database::SharedDatabase;
 
-use super::{filters::{pulse_filter::pulse_filter, register_filter::registration_filter, websocket_filter::websocket_filter}, handlers::handle_rejection, login_filter::login_filter, ClientMap};
+use super::{filters::{pulse_filter::pulse_filter, register_filter::registration_filter, websocket_filter::websocket_filter}, handlers::handle_rejection, login_filter::login_filter, tournament_config_filter::tournament_config_filter, ClientMap};
 pub struct Network {
   db: SharedDatabase,
   clients: ClientMap,
@@ -23,6 +23,7 @@ impl Network {
     .allow_methods(vec!["GET", "POST", "DELETE", "OPTIONS"]);
 
     let routes = pulse_filter()
+      .or(tournament_config_filter(self.clients.clone(), self.db.clone()))
       .or(login_filter(self.clients.clone(), self.db.clone()))
       .or(registration_filter(self.clients.clone(), self.db.clone(), self.local_ip.clone(), self.tls, self.port))
       .or(websocket_filter(self.clients.clone(), self.db.clone()))

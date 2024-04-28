@@ -2,7 +2,7 @@ use warp::Filter;
 use crate::{database::SharedDatabase, network::{client_access::ClientAccess, filters::{ClientNotFound, UnauthorizedClient, HEADER_X_CLIENT_ID}, ClientMap}};
 
 
-pub fn _role_permission_filter(clients: ClientMap, db: SharedDatabase, roles: Vec<&str>) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone {
+pub fn role_permission_filter(clients: ClientMap, db: SharedDatabase, roles: Vec<&str>) -> impl Filter<Extract = (), Error = warp::Rejection> + Clone {
   let roles: Vec<String> = roles.iter().map(|x| x.to_string()).collect();
 
   warp::any()

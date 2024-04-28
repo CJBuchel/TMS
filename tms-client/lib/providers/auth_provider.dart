@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:tms/providers/local_storage_provider.dart';
-import 'package:tms/schemas/networkSchema.dart';
-import 'package:tms/services/AuthService.dart';
+import 'package:tms/schemas/network_schema.dart';
+import 'package:tms/services/auth_service.dart';
 import 'package:tms/utils/permissions.dart';
 
 class AuthProvider with ChangeNotifier {

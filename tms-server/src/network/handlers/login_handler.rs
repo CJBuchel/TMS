@@ -36,5 +36,5 @@ pub async fn logout_handler(uuid: String, clients: ClientMap) -> ResponseResult<
   let client = write_clients.get_mut(&uuid).ok_or_else(|| warp::reject::custom(ClientNotFound))?;
   client.user_id.clear();
 
-  Ok(warp::reply::json(&()))
+  Ok(warp::http::StatusCode::OK)
 }

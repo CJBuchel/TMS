@@ -5,7 +5,7 @@ import 'package:tms/network/http_client.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
-import 'package:tms/schemas/networkSchema.dart' as nts;
+import 'package:tms/schemas/network_schema.dart' as nts;
 
 typedef ServerResponse = (bool, int, dynamic); // success, status code, response
 

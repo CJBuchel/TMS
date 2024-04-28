@@ -1,10 +1,10 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::DataSchemeExtensions;
+use crate::{DataSchemeExtensions, EchoTreeRole};
 
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 pub struct RegisterRequest {
   pub username: Option<String>, // optionally log in with username/password
   pub password: Option<String>,
@@ -19,12 +19,13 @@ impl Default for RegisterRequest {
   }
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 pub struct RegisterResponse {
   pub auth_token: String,
   pub uuid: String,
   pub url: String,
   pub server_ip: String,
+  pub roles: Vec<EchoTreeRole>,
 }
 
 impl Default for RegisterResponse {
@@ -34,6 +35,7 @@ impl Default for RegisterResponse {
       uuid: "".to_string(),
       url: "".to_string(),
       server_ip: "".to_string(),
+      roles: Vec::new(),
     }
   }
 }

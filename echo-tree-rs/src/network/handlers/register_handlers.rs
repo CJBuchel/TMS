@@ -31,29 +31,43 @@ pub async fn register_handler(body: EchoTreeRegisterRequest, clients: ClientMap,
 
   let db = db.read().await;
 
-  // check authentication
-  let role_id = body.role_id.clone().unwrap_or("".to_string());
-  let password = body.password.clone().unwrap_or("".to_string());
+  // let role_read_trees: Vec<String>;
+  // let role_read_write_trees: Vec<String>;
+  let role_read_trees: Vec<String> = body.roles.iter().flat_map(|(role_id, password)| {
+    let read_trees = futures::executor::block_on(async {
+      match db.get_role_manager().await.authenticate_role(role_id.clone(), password.clone()) {
+        true => {
+          let trees = db.get_role_manager().await.get_role_read_access(role_id.clone());
+          log::debug!("role found: {}, with read trees: {:?}", role_id.clone(), trees);
+          trees
+        },
+        false => {
+          log::info!("role not found: {}", role_id.clone());
+          [].to_vec()
+        },
+      }
+    });
 
-  let role_read_trees: Vec<String>;
-  let role_read_write_trees: Vec<String>;
-  if role_id.is_empty() {
-    role_read_trees = vec![];
-  } else {
-    role_read_trees = match db.get_role_manager().await.authenticate_role(role_id.clone(), password.clone()) {
-      true => db.get_role_manager().await.get_role_read_access(role_id.clone()),
-      false => vec![],
-    };
-  }
+    read_trees
+  }).collect();
 
-  if role_id.is_empty() {
-    role_read_write_trees = vec![];
-  } else {
-    role_read_write_trees = match db.get_role_manager().await.authenticate_role(role_id.clone(), password) {
-      true => db.get_role_manager().await.get_role_read_write_access(role_id),
-      false => vec![],
-    };
-  }
+  let role_read_write_trees: Vec<String> = body.roles.iter().flat_map(|(role_id, password)| {
+    let read_write_trees = futures::executor::block_on(async {
+      match db.get_role_manager().await.authenticate_role(role_id.clone(), password.clone()) {
+        true => {
+          let trees = db.get_role_manager().await.get_role_read_write_access(role_id.clone());
+          log::debug!("role found: {}, with read-write trees: {:?}", role_id.clone(), trees);
+          trees
+        },
+        false => {
+          log::info!("role not found: {}", role_id.clone());
+          [].to_vec()
+        },
+      }
+    });
+
+    read_write_trees
+  }).collect();
 
   register_client(uuid.clone(), auth_token.clone(), body.echo_trees, role_read_trees, role_read_write_trees, clients).await;
 

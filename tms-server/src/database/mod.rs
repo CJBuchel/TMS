@@ -79,12 +79,24 @@ impl Database {
     // :judge_advisor
 
     // Future me, maybe make passwords auto generated, then have a login method which verifies the user and gives back the generated password for their role.
-    self.check_insert_role("public", "public", vec![], vec![]).await;
+    self.check_insert_role("public", "", vec![TOURNAMENT_CONFIG], vec![]).await;
     self.check_insert_role("admin", &self.generate_password(), vec![":"], vec![":"]).await;
     self.check_insert_role("referee", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("head_referee", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("judge", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("judge_advisor", &self.generate_password(), vec![], vec![]).await;
+
+    // public user
+    let public_user = User {
+      username: "public".to_string(),
+      password: "".to_string(),
+      roles: vec!["public".to_string()],
+    };
+
+    match self.insert_user(public_user).await {
+      Ok(_) => log::info!("Public user created"),
+      Err(e) => log::error!("Failed to create public user: {}", e),
+    }
 
     // insert admin user
     let admin_user = User {

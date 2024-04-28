@@ -61,18 +61,48 @@ class LoginRequest {
 }
 
 class LoginResponse {
-    List<String> roles;
+    List<EchoTreeRole> roles;
 
     LoginResponse({
         required this.roles,
     });
 
     factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
-        roles: List<String>.from(json["roles"].map((x) => x)),
+        roles: List<EchoTreeRole>.from(json["roles"].map((x) => EchoTreeRole.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "roles": List<dynamic>.from(roles.map((x) => x)),
+        "roles": List<dynamic>.from(roles.map((x) => x.toJson())),
+    };
+}
+
+
+///Role used for authentication to branches of the database
+class EchoTreeRole {
+    String password;
+    List<String> readEchoTrees;
+    List<String> readWriteEchoTrees;
+    String roleId;
+
+    EchoTreeRole({
+        required this.password,
+        required this.readEchoTrees,
+        required this.readWriteEchoTrees,
+        required this.roleId,
+    });
+
+    factory EchoTreeRole.fromJson(Map<String, dynamic> json) => EchoTreeRole(
+        password: json["password"],
+        readEchoTrees: List<String>.from(json["read_echo_trees"].map((x) => x)),
+        readWriteEchoTrees: List<String>.from(json["read_write_echo_trees"].map((x) => x)),
+        roleId: json["role_id"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "password": password,
+        "read_echo_trees": List<dynamic>.from(readEchoTrees.map((x) => x)),
+        "read_write_echo_trees": List<dynamic>.from(readWriteEchoTrees.map((x) => x)),
+        "role_id": roleId,
     };
 }
 
@@ -98,12 +128,14 @@ class RegisterRequest {
 
 class RegisterResponse {
     String authToken;
+    List<EchoTreeRole> roles;
     String serverIp;
     String url;
     String uuid;
 
     RegisterResponse({
         required this.authToken,
+        required this.roles,
         required this.serverIp,
         required this.url,
         required this.uuid,
@@ -111,6 +143,7 @@ class RegisterResponse {
 
     factory RegisterResponse.fromJson(Map<String, dynamic> json) => RegisterResponse(
         authToken: json["auth_token"],
+        roles: List<EchoTreeRole>.from(json["roles"].map((x) => EchoTreeRole.fromJson(x))),
         serverIp: json["server_ip"],
         url: json["url"],
         uuid: json["uuid"],
@@ -118,6 +151,7 @@ class RegisterResponse {
 
     Map<String, dynamic> toJson() => {
         "auth_token": authToken,
+        "roles": List<dynamic>.from(roles.map((x) => x.toJson())),
         "server_ip": serverIp,
         "url": url,
         "uuid": uuid,

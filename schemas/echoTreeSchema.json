@@ -195,7 +195,8 @@
     "EchoTreeRegisterRequest": {
       "type": "object",
       "required": [
-        "echo_trees"
+        "echo_trees",
+        "roles"
       ],
       "properties": {
         "echo_trees": {
@@ -204,17 +205,11 @@
             "type": "string"
           }
         },
-        "password": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "role_id": {
-          "type": [
-            "string",
-            "null"
-          ]
+        "roles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
@@ -277,15 +272,14 @@
     "EchoTreeRoleAuthenticateRequest": {
       "type": "object",
       "required": [
-        "password",
-        "role_id"
+        "roles"
       ],
       "properties": {
-        "password": {
-          "type": "string"
-        },
-        "role_id": {
-          "type": "string"
+        "roles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },

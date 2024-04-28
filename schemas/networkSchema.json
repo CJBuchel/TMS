@@ -27,6 +27,36 @@
     }
   },
   "definitions": {
+    "EchoTreeRole": {
+      "description": "Role used for authentication to branches of the database",
+      "type": "object",
+      "required": [
+        "password",
+        "read_echo_trees",
+        "read_write_echo_trees",
+        "role_id"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "read_echo_trees": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "read_write_echo_trees": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "role_id": {
+          "type": "string"
+        }
+      }
+    },
     "LoginRequest": {
       "type": "object",
       "required": [
@@ -51,7 +81,7 @@
         "roles": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/EchoTreeRole"
           }
         }
       }
@@ -77,6 +107,7 @@
       "type": "object",
       "required": [
         "auth_token",
+        "roles",
         "server_ip",
         "url",
         "uuid"
@@ -84,6 +115,12 @@
       "properties": {
         "auth_token": {
           "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EchoTreeRole"
+          }
         },
         "server_ip": {
           "type": "string"

@@ -100,6 +100,7 @@ class HttpController {
       TmsLocalStorageProvider().wsConnectionString = res.url;
       TmsLocalStorageProvider().authToken = res.authToken;
       TmsLocalStorageProvider().uuid = res.uuid;
+      TmsLocalStorageProvider().authRoles = res.roles;
       _connectivity.state = NetworkConnectionState.connected;
 
       return true;
@@ -150,11 +151,21 @@ class HttpController {
         },
       );
 
+      dynamic responseBody;
+      if (response.body.isNotEmpty) {
+        try {
+          responseBody = jsonDecode(response.body);
+        } catch (e) {
+          TmsLogger().w("Failed to decode response body: $e, using raw response");
+          responseBody = response.body;
+        }
+      }
+
       if (response.statusCode == HttpStatus.ok) {
-        return (true, response.statusCode, jsonDecode(response.body));
+        return (true, response.statusCode, responseBody);
       } else {
         TmsLogger().e("Failed to post to $route: ${response.statusCode}");
-        return (false, response.statusCode, jsonDecode(response.body));
+        return (false, response.statusCode, responseBody);
       }
     } catch (e) {
       TmsLogger().e("Caught failure. Failed to post to $route: $e");
@@ -174,11 +185,21 @@ class HttpController {
         },
       );
 
+      dynamic responseBody;
+      if (response.body.isNotEmpty) {
+        try {
+          responseBody = jsonDecode(response.body);
+        } catch (e) {
+          TmsLogger().w("Failed to decode response body: $e, using raw response");
+          responseBody = response.body;
+        }
+      }
+
       if (response.statusCode == HttpStatus.ok) {
-        return (true, response.statusCode, jsonDecode(response.body));
+        return (true, response.statusCode, responseBody);
       } else {
         TmsLogger().e("Failed to get from $route: ${response.statusCode}");
-        return (false, response.statusCode, jsonDecode(response.body));
+        return (false, response.statusCode, responseBody);
       }
     } catch (e) {
       TmsLogger().e("Caught failure. Failed to get from $route: $e");
@@ -199,11 +220,21 @@ class HttpController {
         },
       );
 
+      dynamic responseBody;
+      if (response.body.isNotEmpty) {
+        try {
+          responseBody = jsonDecode(response.body);
+        } catch (e) {
+          TmsLogger().w("Failed to decode response body: $e, using raw response");
+          responseBody = response.body;
+        }
+      }
+
       if (response.statusCode == HttpStatus.ok) {
-        return (true, response.statusCode, jsonDecode(response.body));
+        return (true, response.statusCode, responseBody);
       } else {
         TmsLogger().e("Failed to delete from $route: ${response.statusCode}");
-        return (false, response.statusCode, jsonDecode(response.body));
+        return (false, response.statusCode, responseBody);
       }
     } catch (e) {
       TmsLogger().e("Caught failure. Failed to delete from $route: $e");

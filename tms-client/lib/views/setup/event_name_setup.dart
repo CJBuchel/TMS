@@ -1,3 +1,4 @@
+import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/event_config_provider.dart';
@@ -8,6 +9,7 @@ class EventNameSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    EchoTreeClient().subscribe([":tournament:config"]);
     return Column(
       children: [
         Consumer<EventConfigProvider>(

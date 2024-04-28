@@ -1,13 +1,8 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/views/setup/event_name_setup.dart';
-import 'package:tms/views/setup/input_setter.dart';
 import 'package:tms/views/setup/schedule_setup.dart';
 
 class Setup extends StatelessWidget {
-  final FilePickerResult? result = null;
-  final TextEditingController _eventNameController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

@@ -1,4 +1,3 @@
-use log::{debug, trace};
 use tms_infra::server_socket_protocol::{EchoItemEvent, EchoTreeEvent, EchoTreeEventTree, EchoTreeServerSocketEvent, EchoTreeServerSocketMessage};
 
 use super::{client::Client, ClientHashMap, client_access::ClientAccess};
@@ -10,7 +9,6 @@ pub trait ClientEcho {
 
 impl ClientEcho for Client {
   fn echo_tree(&self, msg: Vec<EchoTreeEventTree>) {
-    trace!("echoing tree to client: {}", self.auth_token);
     let filtered_subscribed_trees: Vec<EchoTreeEventTree> = msg
       .iter()
       .filter(|t| self.has_read_access_and_subscribed_to_tree(&t.tree_name))
@@ -29,7 +27,7 @@ impl ClientEcho for Client {
       let json = serde_json::to_string(&echo_message).unwrap_or_default();
       self.send_message(json);
     } else {
-      debug!("no trees to echo to client: {}, client trees: {:?}", self.auth_token, self.subscribed_trees);
+      log::debug!("no trees to echo to client: {}, client trees: {:?}", self.auth_token, self.subscribed_trees);
     }
   }
 
@@ -43,6 +41,9 @@ impl ClientEcho for Client {
 
       let json = serde_json::to_string(&echo_message).unwrap_or_default();
       self.send_message(json);
+    } else {
+      log::warn!("Client does not have access to tree: {}, has read access to: {:?}, write access to: {:?}", msg.tree_name, self.role_read_access_trees, self.role_read_write_access_trees);
+      log::warn!("Client subscribed trees: {:?}", self.subscribed_trees);
     }
   }
 }
@@ -50,12 +51,14 @@ impl ClientEcho for Client {
 impl ClientEcho for ClientHashMap {
   fn echo_tree(&self, msg: Vec<EchoTreeEventTree>) {
     for (_, client) in self.iter() {
+      log::info!("Trying to echo tree with auth token: {}", client.auth_token);
       client.echo_tree(msg.clone());
     }
   }
 
   fn echo_item(&self, msg: EchoItemEvent) {
     for (_, client) in self.iter() {
+      log::info!("Trying to echo item with auth token: {}", client.auth_token);
       client.echo_item(msg.clone());
     }
   }

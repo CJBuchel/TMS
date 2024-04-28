@@ -1,9 +1,9 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::DataSchemeExtensions;
+use crate::{DataSchemeExtensions, EchoTreeRole};
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 pub struct LoginRequest {
   pub username: String, // optionally log in with username/password
   pub password: String,
@@ -18,15 +18,15 @@ impl Default for LoginRequest {
   }
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 pub struct LoginResponse {
-  pub roles: Vec<String>, // list of roles the user has 
+  pub roles: Vec<EchoTreeRole>, // role id, password
 }
 
 impl Default for LoginResponse {
   fn default() -> Self {
     Self {
-      roles: vec![],
+      roles: Vec::new(),
     }
   }
 }

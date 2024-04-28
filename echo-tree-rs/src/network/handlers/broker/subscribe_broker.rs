@@ -25,6 +25,8 @@ pub async fn subscribe_broker(uuid: String, msg: EchoTreeClientSocketMessage, cl
     }
   };
 
+  log::info!("{}: subscribe {:?}", uuid, msg.tree_names);
+
   let new_tree_names: Vec<String> = msg.tree_names.iter().filter(|tree| !client.subscribed_trees.contains(tree)).cloned().collect();
   client.subscribed_trees.extend(new_tree_names);
 

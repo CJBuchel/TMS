@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/schemas/network_schema.dart';
@@ -15,7 +16,7 @@ class AuthProvider with ChangeNotifier {
   bool get isLoggedIn => TmsLocalStorageProvider().isLoggedIn;
   String get username => TmsLocalStorageProvider().authUsername;
   String get password => TmsLocalStorageProvider().authPassword;
-  List<String> get roles => TmsLocalStorageProvider().authRoles;
+  List<EchoTreeRole> get roles => TmsLocalStorageProvider().authRoles;
 
   final _localStorage = TmsLocalStorageProvider();
   late final VoidCallback _lsListener;
@@ -39,10 +40,16 @@ class AuthProvider with ChangeNotifier {
     int status = result.$1;
     LoginResponse? loginResponse = result.$2;
 
-    if (status == HttpStatus.ok) {
+    if (status == HttpStatus.ok && loginResponse != null) {
       TmsLocalStorageProvider().authUsername = username;
       TmsLocalStorageProvider().authPassword = password;
-      TmsLocalStorageProvider().authRoles = loginResponse?.roles ?? [];
+      TmsLocalStorageProvider().authRoles = loginResponse.roles;
+
+      Map<String, String> roles = Map<String, String>.fromEntries(
+        loginResponse.roles.map((e) => MapEntry(e.roleId, e.password)),
+      );
+
+      await EchoTreeClient().authenticate(roles);
 
       TmsLocalStorageProvider().isLoggedIn = true;
       notifyListeners();
@@ -69,6 +76,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   bool hasAccess(Permissions permissions) {
-    return permissions.hasAccess(roles);
+    var r = roles.map((e) => e.roleId).toList();
+    return permissions.hasAccess(r);
   }
 }

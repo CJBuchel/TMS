@@ -36,33 +36,48 @@ pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: Sha
 
   // if username/password
   if let (Some(username), Some(password)) = (body.username, body.password) {
-    let result = read_db.get_inner().read().await.get_tree(":users".to_string()).await.iter().find_map(|(id, user)| {
-      let user = User::from_json(user);
-      if user.username == username {
-        Some((id.clone(), user))
-      } else {
-        None
-      }
-    });
+    let result = read_db.get_user_by_username(username.clone()).await;
 
     if let Some((id, user)) = result {
       if user.password == password {
+        log::debug!("User `{}` logged in", username);
         // create client
-        register_client(uuid.clone(), auth_token.clone(), id, clients).await;
+        register_client(uuid.clone(), auth_token.clone(), id.clone(), clients).await;
         return Ok(warp::reply::json(&RegisterResponse {
           auth_token,
           uuid: uuid.clone(),
           url,
           server_ip: local_ip,
+          roles: read_db.get_user_roles(id).await,
         }));
       }
     }
+  }
 
+  // no username/password or invalid username/password (use public user)
+  log::debug!("No username/password or invalid username/password, using public user");
+  match read_db.get_user_by_username("public".to_string()).await {
+    Some((id, _)) => {
+      // create client
+      register_client(uuid.clone(), auth_token.clone(), id.clone(), clients).await;
+      log::debug!("Public user logged in");
+      return Ok(warp::reply::json(&RegisterResponse {
+        auth_token,
+        uuid: uuid.clone(),
+        url,
+        server_ip: local_ip,
+        roles: read_db.get_user_roles(id).await,
+      }));
+    }
+    None => {
+      log::warn!("Public user not found in database");
+    }
   }
   
   // register client normally without username/password
+  log::warn!("No default users found, registering blank client");
   register_client(uuid.clone(), auth_token.clone(), "".to_string(), clients).await;
-  return Ok(warp::reply::json(&RegisterResponse { auth_token, uuid, url, server_ip: local_ip}));
+  return Ok(warp::reply::json(&RegisterResponse { auth_token, uuid, url, server_ip: local_ip, roles: Vec::new()}));
 }
 
 pub async fn unregister_handler(uuid: String, clients: ClientMap) -> ResponseResult<impl warp::reply::Reply> {

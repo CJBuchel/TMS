@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:echo_tree_flutter/db/managed_tree.dart';
+import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,7 @@ class EchoTreeNotifier<K, V> extends ChangeNotifier {
     _populateData();
     // listen and update items
     _updatesStream = managedTree.updates.listen((update) {
+      EchoTreeLogger().i("updating items: $update");
       update.forEach((key, value) {
         if (value == null) {
           items.remove(key as K);

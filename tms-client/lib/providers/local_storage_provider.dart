@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tms/schemas/network_schema.dart';
 
 // variable constants
 const defaultServerPort = 8080;
@@ -97,8 +100,15 @@ class TmsLocalStorageProvider extends _TmsLocalStorageBase {
   set authPassword(String value) => setString("authPassword", value);
   String get authPassword => getString("authPassword") ?? "";
 
-  set authRoles(List<String> value) => setStringList("authRoles", value);
-  List<String> get authRoles => getStringList("authRoles") ?? [];
+  set authRoles(List<EchoTreeRole> value) {
+    List<String> roles = value.map((e) => jsonEncode(e.toJson())).toList();
+    setStringList("authRoles", roles);
+  }
+
+  List<EchoTreeRole> get authRoles {
+    List<String>? roles = getStringList("authRoles");
+    return roles?.map((e) => EchoTreeRole.fromJson(jsonDecode(e))).toList() ?? [];
+  }
 
   set isLoggedIn(bool value) => setBool("isLoggedIn", value);
   bool get isLoggedIn => getBool("isLoggedIn") ?? false;

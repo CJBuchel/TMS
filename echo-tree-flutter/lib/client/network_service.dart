@@ -22,8 +22,7 @@ class EchoTreeNetworkService {
   String _authToken = "";
   String _uuid = "";
   String _connectedUrl = "";
-  String _roleId = "";
-  String _password = "";
+  Map<String, String> _roles = {};
   WebSocketChannel? _channel;
 
   // main connection flag
@@ -43,8 +42,7 @@ class EchoTreeNetworkService {
   String get authToken => _authToken;
   String get uuid => _uuid;
   String get connectedUrl => _connectedUrl;
-  String get roleId => _roleId;
-  String get password => _password;
+  Map<String, String> get roles => _roles;
 
   Future<bool> _checkPulse() async {
     final response = await http.get(Uri.parse("$_address/echo_tree/pulse"));
@@ -54,7 +52,7 @@ class EchoTreeNetworkService {
   Future<EchoTreeRegisterResponse> register({List<String>? echoTrees}) async {
     // register the client
     List<String> trees = echoTrees ?? [];
-    final request = EchoTreeRegisterRequest(echoTrees: trees, roleId: roleId, password: password).toJson();
+    final request = EchoTreeRegisterRequest(echoTrees: trees, roles: roles).toJson();
 
     final response = await http.post(
       Uri.parse("$address/echo_tree/register"),
@@ -89,9 +87,9 @@ class EchoTreeNetworkService {
     }
   }
 
-  Future<int> authenticate(String roleId, String password) async {
+  Future<int> authenticate(Map<String, String> roles) async {
     // authenticate the client
-    final request = EchoTreeRoleAuthenticateRequest(roleId: roleId, password: password).toJson();
+    final request = EchoTreeRoleAuthenticateRequest(roles: roles).toJson();
 
     return await http.post(
       Uri.parse("$address/echo_tree/role_auth"),
@@ -112,14 +110,13 @@ class EchoTreeNetworkService {
 
   // send checksum event to server (if connected)
   Future<void> _sendChecksumsEvent() async {
-    if (_state != EchoTreeConnection.connected) return;
+    if (_state.value != EchoTreeConnection.connected) return;
     final event = ChecksumEvent(treeChecksums: Database().getChecksums).toJson();
     final message = EchoTreeClientSocketMessage(
       authToken: _authToken,
       messageEvent: EchoTreeClientSocketEvent.CHECKSUM_EVENT,
       message: jsonEncode(event),
     ).toJson();
-
     _channel?.sink.add(jsonEncode(message));
   }
 
@@ -155,15 +152,13 @@ class EchoTreeNetworkService {
   Future<bool> connect(
     String dbPath, // e.g /et.kvdb
     String address, {
-    String? roleId,
-    String? password,
+    Map<String, String>? roles, // e.g {"admin": "password"}
     List<String>? echoTrees,
   }) async {
     // reset values
     _state.value = EchoTreeConnection.connecting;
     _address = address;
-    _roleId = roleId ?? "";
-    _password = password ?? "";
+    _roles = roles ?? {};
 
     // check server pulse
     final pulse = await _checkPulse();

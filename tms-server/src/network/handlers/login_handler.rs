@@ -13,9 +13,9 @@ pub async fn login_handler(body: LoginRequest, uuid: String, clients: ClientMap,
         
         // respond with login response and roles
         log::info!("User `{}` logged in", body.username);
-        return Ok(warp::reply::json(&LoginResponse {
-          roles: user.roles,
-        }));
+        // get roles and their passwords
+        let roles = db.read().await.get_user_roles(user_id).await;
+        return Ok(warp::reply::json(&LoginResponse {roles}));
       } else {
         log::error!("Login attempt failed for `{}`, reason: BAD PASSWORD: `{}`", body.username, body.password);
         Err(warp::reject::custom(UnauthorizedLogin))

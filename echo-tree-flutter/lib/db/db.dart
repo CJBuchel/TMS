@@ -9,8 +9,8 @@ import 'package:hive/hive.dart';
 
 class Database {
   static final Database _instance = Database._internal();
-  TreeHierarchy? _treeHierarchy;
-  TreeMap? _treeMap;
+  TreeHierarchy _treeHierarchy = TreeHierarchy("");
+  TreeMap _treeMap = TreeMap("");
 
   factory Database() {
     return _instance;
@@ -26,30 +26,30 @@ class Database {
     }
 
     _treeHierarchy = TreeHierarchy(metadataPath);
-    _treeMap = await _treeHierarchy?.openTreeMap(hierarchy: hierarchy);
+    _treeMap = await _treeHierarchy.openTreeMap(hierarchy: hierarchy);
   }
 
-  TreeHierarchy? get getTreeHierarchy => _treeHierarchy;
-  TreeMap? get getTreeMap => _treeMap;
+  TreeHierarchy get getTreeHierarchy => _treeHierarchy;
+  TreeMap get getTreeMap => _treeMap;
 
   void clear() {
-    _treeMap?.clear();
-    _treeHierarchy?.clear();
+    _treeMap.clear();
+    _treeHierarchy.clear();
   }
 
   void drop() {
-    _treeMap?.drop();
-    _treeHierarchy?.drop();
+    _treeMap.drop();
+    _treeHierarchy.drop();
   }
 
   void addTree(String treeName, String schema) {
-    _treeHierarchy?.insertSchema(treeName, schema);
-    _treeMap?.openTree(treeName);
+    _treeHierarchy.insertSchema(treeName, schema);
+    _treeMap.openTree(treeName);
   }
 
   void removeTree(String treeName) {
-    _treeHierarchy?.removeSchema(treeName);
-    _treeMap?.removeTree(treeName);
+    _treeHierarchy.removeSchema(treeName);
+    _treeMap.removeTree(treeName);
   }
 
   HashMap<String, int> get getChecksums {

@@ -1,4 +1,4 @@
-use tms_infra::{DataSchemeExtensions, User};
+use tms_infra::{DataSchemeExtensions, EchoTreeRole, User};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
 
@@ -9,6 +9,7 @@ pub trait UserExtensions {
   async fn get_user(&self, user_id: String) -> Option<User>;
   async fn get_user_by_username(&self, username: String) -> Option<(String, User)>;
   async fn insert_user(&self, user: User) -> Result<(), String>;
+  async fn get_user_roles(&self, user_id: String) -> Vec<EchoTreeRole>;
 }
 
 
@@ -60,6 +61,23 @@ impl UserExtensions for Database {
         return Ok(());
       },
     }
+  }
 
+  async fn get_user_roles(&self, user_id: String) -> Vec<EchoTreeRole> {
+    let user = self.get_user(user_id.clone()).await;
+
+    match user {
+      Some(user) => {
+        let roles: Vec<EchoTreeRole> = user.roles.iter().filter_map(|role| {
+          let role = futures::executor::block_on(async {
+            self.inner.read().await.get_role_manager().await.get_role(role.clone())
+          });
+          role
+        }).collect();
+
+        roles
+      }
+      None => vec![],
+    }
   }
 }

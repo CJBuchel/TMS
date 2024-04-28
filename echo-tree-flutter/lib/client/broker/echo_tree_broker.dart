@@ -14,7 +14,7 @@ class EchoTreeBroker {
   EchoTreeBroker._internal();
 
   Future<void> _setTree(EchoTreeEventTree tree) async {
-    await Database().getTreeMap?.getTree(tree.treeName).setFromHashmap(tree.tree);
+    await Database().getTreeMap.getTree(tree.treeName).setFromHashmap(tree.tree);
   }
 
   Future<void> _set(List<EchoTreeEventTree> trees) async {
@@ -33,7 +33,7 @@ class EchoTreeBroker {
 
       if (event.trees.isEmpty) {
         // clear all trees
-        Database().getTreeMap?.clear();
+        Database().getTreeMap.clear();
       } else {
         // set the trees
         await _set(event.trees);

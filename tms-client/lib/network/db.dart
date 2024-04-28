@@ -51,7 +51,11 @@ class DbController {
       path = dir.path + "/tms";
     }
 
-    await EchoTreeClient().connect(path, TmsLocalStorageProvider().serverAddress);
+    Map<String, String> roles = Map<String, String>.fromEntries(
+      TmsLocalStorageProvider().authRoles.map((e) => MapEntry(e.roleId, e.password)),
+    );
+
+    await EchoTreeClient().connect(path, TmsLocalStorageProvider().serverAddress, roles: roles);
     var state = _stateParser();
     TmsLogger().i("State: $state");
   }

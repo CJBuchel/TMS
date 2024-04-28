@@ -6,8 +6,7 @@ use schemars::JsonSchema;
 #[derive(serde::Deserialize, serde::Serialize, JsonSchema)]
 pub struct EchoTreeRegisterRequest {
   pub echo_trees: Vec<String>, // list of topics/trees the client is subscribed to
-  pub role_id: Option<String>, // optional role id for the client
-  pub password: Option<String>, // optional password for the client
+  pub roles: HashMap<String, String>, // role_id, password
 }
 
 #[derive(serde::Deserialize, serde::Serialize, JsonSchema)]
@@ -20,6 +19,5 @@ pub struct EchoTreeRegisterResponse {
 
 #[derive(serde::Deserialize, serde::Serialize, JsonSchema)]
 pub struct EchoTreeRoleAuthenticateRequest {
-  pub role_id: String,
-  pub password: String,
+  pub roles: HashMap<String, String>, // role_id, password
 }

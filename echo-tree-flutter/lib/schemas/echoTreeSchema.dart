@@ -313,25 +313,21 @@ class GetTreeEvent {
 
 class EchoTreeRegisterRequest {
     List<String> echoTrees;
-    String? password;
-    String? roleId;
+    Map<String, String> roles;
 
     EchoTreeRegisterRequest({
         required this.echoTrees,
-        this.password,
-        this.roleId,
+        required this.roles,
     });
 
     factory EchoTreeRegisterRequest.fromJson(Map<String, dynamic> json) => EchoTreeRegisterRequest(
         echoTrees: List<String>.from(json["echo_trees"].map((x) => x)),
-        password: json["password"],
-        roleId: json["role_id"],
+        roles: Map.from(json["roles"]).map((k, v) => MapEntry<String, String>(k, v)),
     );
 
     Map<String, dynamic> toJson() => {
         "echo_trees": List<dynamic>.from(echoTrees.map((x) => x)),
-        "password": password,
-        "role_id": roleId,
+        "roles": Map.from(roles).map((k, v) => MapEntry<String, dynamic>(k, v)),
     };
 }
 
@@ -418,22 +414,18 @@ class EchoTreeRole {
 }
 
 class EchoTreeRoleAuthenticateRequest {
-    String password;
-    String roleId;
+    Map<String, String> roles;
 
     EchoTreeRoleAuthenticateRequest({
-        required this.password,
-        required this.roleId,
+        required this.roles,
     });
 
     factory EchoTreeRoleAuthenticateRequest.fromJson(Map<String, dynamic> json) => EchoTreeRoleAuthenticateRequest(
-        password: json["password"],
-        roleId: json["role_id"],
+        roles: Map.from(json["roles"]).map((k, v) => MapEntry<String, String>(k, v)),
     );
 
     Map<String, dynamic> toJson() => {
-        "password": password,
-        "role_id": roleId,
+        "roles": Map.from(roles).map((k, v) => MapEntry<String, dynamic>(k, v)),
     };
 }
 

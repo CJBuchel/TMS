@@ -9,8 +9,8 @@ import 'package:hive/hive.dart';
 
 class Database {
   static final Database _instance = Database._internal();
-  TreeHierarchy _treeHierarchy = TreeHierarchy("");
-  TreeMap _treeMap = TreeMap("");
+  TreeHierarchy _treeHierarchy = TreeHierarchy();
+  TreeMap _treeMap = TreeMap();
 
   factory Database() {
     return _instance;
@@ -18,15 +18,23 @@ class Database {
 
   Database._internal();
 
-  void init(String path, String metadataPath, {Map<String, String>? hierarchy}) async {
+  Future<void> init(String path, String metaDataPath, {Map<String, String>? hierarchy}) async {
     if (!kIsWeb) {
       // String path = Directory.current.path;
       // path += "/tree.kvdb";
       Hive.init(path);
     }
-
-    _treeHierarchy = TreeHierarchy(metadataPath);
-    _treeMap = await _treeHierarchy.openTreeMap(hierarchy: hierarchy);
+    //
+    if (_treeMap.isEmpty) {
+      _treeMap = await _treeHierarchy.getNewTreeMap("$metaDataPath:hierarchy:trees", hierarchy: hierarchy);
+    } else {
+      List<String> trees = await _treeHierarchy.getTreeMapNames("$metaDataPath:hierarchy:trees", hierarchy: hierarchy);
+      for (var tree in trees) {
+        _treeMap.openTree(tree);
+      }
+    }
+    // _treeHierarchy = TreeHierarchy(metadataPath);
+    // _treeMap = await _treeHierarchy.openTreeMap(hierarchy: hierarchy);
   }
 
   TreeHierarchy get getTreeHierarchy => _treeHierarchy;

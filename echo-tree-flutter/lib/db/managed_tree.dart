@@ -7,15 +7,24 @@ import 'package:hive/hive.dart';
 
 class ManagedTree {
   Box? _box;
-  final String _treeName;
   int _checksum = 0;
+  String? _treeName;
   final CRC32 _crc32 = CRC32();
 
   final StreamController<Map<String, dynamic>> _updatesController = StreamController<Map<String, dynamic>>.broadcast();
 
-  ManagedTree(String treeName) : _treeName = treeName {
+  ManagedTree({String? treeName}) {
+    EchoTreeLogger().d("Creating new tree: $treeName");
+    if (treeName != null) {
+      _setTreeName(treeName);
+    }
+  }
+
+  void _setTreeName(String treeName) {
     if (treeName.contains('/')) {
       throw Exception("Invalid tree name: $treeName, cannot contain '/', use ':' instead.");
+    } else {
+      _treeName = treeName;
     }
   }
 
@@ -33,9 +42,24 @@ class ManagedTree {
     }
   }
 
-  Future<void> open() async {
+  Future<void> open({String? treeName}) async {
+    if (treeName != null) {
+      _setTreeName(treeName);
+    }
+
+    if (_treeName == null) {
+      EchoTreeLogger().w("Tree name is null, cannot open tree");
+      return;
+    }
+
+    if (Hive.isBoxOpen(_treeName!)) {
+      EchoTreeLogger().w("Tree already open: $_treeName");
+      return;
+    }
+
     EchoTreeLogger().i("opening tree: $_treeName...");
-    _box = await Hive.openBox(_treeName);
+
+    _box = await Hive.openBox(_treeName!);
     updateChecksum();
 
     // listen to changes
@@ -107,6 +131,8 @@ class ManagedTree {
       _box!.toMap().forEach((key, value) {
         map[key] = value;
       });
+    } else {
+      EchoTreeLogger().w("box is null, try opening it first: $_treeName...");
     }
     return map;
   }
@@ -120,7 +146,7 @@ class ManagedTree {
   }
 
   String get getAsJson => jsonEncode(getAsHashmap);
-  String get getName => _treeName;
+  String get getName => _treeName ?? '';
   Stream<Map<String, dynamic>> get updates => _updatesController.stream;
   int get getChecksum => _checksum;
 }

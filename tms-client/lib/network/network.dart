@@ -58,7 +58,7 @@ class Network {
     if (_running) {
       return;
     }
-    _controller.init();
+    await _controller.init();
     _watchdogTimer?.start();
     await connect();
     _running = true;

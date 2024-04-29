@@ -1,7 +1,5 @@
 import 'package:echo_tree_flutter/client/network_service.dart';
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
@@ -35,7 +33,7 @@ class DbController {
     _connectivity.state = _stateParser();
   }
 
-  void init() {
+  Future<void> init() async {
     EchoTreeClient().state.addListener(_listener);
   }
 
@@ -45,17 +43,11 @@ class DbController {
 
   Future<void> connect() async {
     TmsLogger().d("Connecting to EchoTree DB...");
-    var path = "tms";
-    if (!kIsWeb) {
-      final dir = await getApplicationDocumentsDirectory(); // might switch to support
-      path = dir.path + "/tms";
-    }
-
     Map<String, String> roles = Map<String, String>.fromEntries(
       TmsLocalStorageProvider().authRoles.map((e) => MapEntry(e.roleId, e.password)),
     );
 
-    await EchoTreeClient().connect(path, TmsLocalStorageProvider().serverAddress, roles: roles);
+    await EchoTreeClient().connect(TmsLocalStorageProvider().serverAddress, roles: roles);
     var state = _stateParser();
     TmsLogger().i("State: $state");
   }

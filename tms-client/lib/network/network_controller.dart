@@ -103,9 +103,9 @@ class NetworkController {
     return await _websocketController.connect(TmsLocalStorageProvider().wsConnectionString);
   }
 
-  void init() {
+  Future<void> init() async {
     // Write code to initialize the network controller
-    _dbController.init();
+    await _dbController.init();
   }
 
   void dispose() {

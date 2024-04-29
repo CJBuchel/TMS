@@ -44,7 +44,7 @@ class TmsAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: TmsAppBarLeading(state: this.state),
       title: TmsAppBarTitle(),
       centerTitle: true,
-      leadingWidth: 100,
+      // leadingWidth: 100,
       actions: _actions(context),
     );
   }

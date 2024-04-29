@@ -12,7 +12,7 @@ class EventConfigProvider extends EchoTreeProvider<String, TournamentConfig> {
 
   EventConfigService _service = EventConfigService();
 
-  String get eventName => this.items["config"]?.name ?? "";
+  String get eventName => this.items["config"]?.name ?? "N/A";
 
   Future<int> setEventName(String name) async {
     TmsLogger().d("Setting event name to $name");

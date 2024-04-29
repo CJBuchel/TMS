@@ -2,10 +2,7 @@ import 'package:echo_tree_flutter/db/managed_tree.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
 
 class TreeMap {
-  final String _metaDataPath;
   final Map<String, ManagedTree> _treeMap = {};
-
-  TreeMap(this._metaDataPath);
 
   void clear() async {
     List<Future> futures = [];
@@ -32,10 +29,8 @@ class TreeMap {
       return;
     }
 
-    if (!treeName.startsWith(_metaDataPath)) {
-      _treeMap[treeName] = ManagedTree(treeName);
-      await _treeMap[treeName]?.open();
-    }
+    _treeMap[treeName] = ManagedTree(treeName: treeName);
+    await _treeMap[treeName]?.open();
   }
 
   void removeTree(String treeName) {
@@ -50,11 +45,13 @@ class TreeMap {
     if (_treeMap.containsKey(treeName)) {
       return _treeMap[treeName]!;
     } else {
-      return ManagedTree(treeName);
+      return ManagedTree(treeName: treeName);
     }
   }
 
   void forEach(void Function(String, ManagedTree) f) {
     _treeMap.forEach(f);
   }
+
+  bool get isEmpty => _treeMap.isEmpty;
 }

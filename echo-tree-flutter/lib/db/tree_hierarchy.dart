@@ -3,15 +3,11 @@ import 'package:echo_tree_flutter/db/tree_map.dart';
 
 class TreeHierarchy {
   final ManagedTree _hierarchy;
-  final String _metaDataPath;
 
-  TreeHierarchy(
-    this._metaDataPath, {
-    Map<String, String>? hierarchy,
-  }) : _hierarchy = ManagedTree("$_metaDataPath:hierarchy:trees");
+  TreeHierarchy() : _hierarchy = ManagedTree();
 
-  Future<TreeMap> openTreeMap({Map<String, String>? hierarchy}) async {
-    await _hierarchy.open();
+  Future<void> _initializeHierarchy(String metaDataTree, {Map<String, String>? hierarchy}) async {
+    await _hierarchy.open(treeName: metaDataTree);
 
     if (hierarchy != null) {
       List<Future> futures = [];
@@ -20,13 +16,18 @@ class TreeHierarchy {
       });
       await Future.wait(futures);
     }
+  }
 
+  Future<TreeMap> getNewTreeMap(String metaDataTree, {Map<String, String>? hierarchy}) async {
+    await _initializeHierarchy(metaDataTree, hierarchy: hierarchy);
+
+    // get the metadata
     Map<String, String> metadataMap = _hierarchy.getAsHashmap;
-    TreeMap map = TreeMap(_metaDataPath);
+    TreeMap map = TreeMap();
 
     List<Future> futures = [];
     metadataMap.forEach((treeName, schema) {
-      if (!treeName.startsWith(_metaDataPath)) {
+      if (!treeName.startsWith(metaDataTree)) {
         futures.add(map.openTree(treeName));
       }
     });
@@ -34,6 +35,11 @@ class TreeHierarchy {
     await Future.wait(futures);
 
     return map;
+  }
+
+  Future<List<String>> getTreeMapNames(String metaDataTree, {Map<String, String>? hierarchy}) async {
+    await _initializeHierarchy(metaDataTree, hierarchy: hierarchy);
+    return Future.value(_hierarchy.getAsHashmap.keys.toList());
   }
 
   Future<int> clear() async {

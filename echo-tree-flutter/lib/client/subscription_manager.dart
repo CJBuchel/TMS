@@ -1,3 +1,5 @@
+import 'package:echo_tree_flutter/logging/logger.dart';
+
 class EchoTreeSubscriptionManager {
   final Map<String, int> _topicList = {};
   final List<Function(String)> _subscribeCallbacks = [];
@@ -14,6 +16,7 @@ class EchoTreeSubscriptionManager {
   }
 
   void subscribe(List<String> topics) {
+    // EchoTreeLogger().d("Subscribing to: $topics");
     for (var topic in topics) {
       if (_topicList.containsKey(topic)) {
         _topicList[topic] = _topicList[topic]! + 1;
@@ -27,6 +30,7 @@ class EchoTreeSubscriptionManager {
   }
 
   void unsubscribe(List<String> topics) {
+    // EchoTreeLogger().d("Unsubscribing from: $topics");
     for (var topic in topics) {
       if (_topicList.containsKey(topic)) {
         _topicList[topic] = _topicList[topic]! - 1;
@@ -40,7 +44,9 @@ class EchoTreeSubscriptionManager {
     }
   }
 
-  void unsubscribeAll() {
+  // Forces all topics to be unsubscribed
+  void triggerAllUnsubscribe() {
+    EchoTreeLogger().w("Triggering All Unsubscribes: $_topicList");
     for (var topic in _topicList.keys) {
       for (var callback in _unsubscribeCallbacks) {
         callback(topic);
@@ -48,5 +54,15 @@ class EchoTreeSubscriptionManager {
     }
 
     _topicList.clear();
+  }
+
+  // Forces all topics to be re-subscribed
+  void triggerAllSubscribe() {
+    EchoTreeLogger().w("Triggering All Subscriptions: $_topicList");
+    for (var topic in _topicList.keys) {
+      for (var callback in _subscribeCallbacks) {
+        callback(topic);
+      }
+    }
   }
 }

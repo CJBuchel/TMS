@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:echo_tree_flutter/db/db.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
-import 'package:echo_tree_flutter/schemas/echoTreeSchema.dart';
+import 'package:echo_tree_flutter/schemas/echo_tree_schema.dart';
 
 class EchoItemBroker {
   static final EchoItemBroker _instance = EchoItemBroker._internal();
@@ -20,7 +20,7 @@ class EchoItemBroker {
 
   Future<void> _insert(String treeName, String key, String data) async {
     // insert the item
-    EchoTreeLogger().i("Got insertion request from server: $key, $data");
+    EchoTreeLogger().d("Got insertion request from server: $key, $data");
     await Database().getTreeMap.getTree(treeName).insert(key, data);
   }
 

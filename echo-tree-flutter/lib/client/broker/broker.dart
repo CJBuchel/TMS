@@ -1,7 +1,7 @@
 import 'package:echo_tree_flutter/client/broker/echo_item_broker.dart';
 import 'package:echo_tree_flutter/client/broker/echo_tree_broker.dart';
 import 'package:echo_tree_flutter/client/broker/responder_broker.dart';
-import 'package:echo_tree_flutter/schemas/echoTreeSchema.dart';
+import 'package:echo_tree_flutter/schemas/echo_tree_schema.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
 
 class EchoTreeMessageBroker {

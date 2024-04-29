@@ -1,7 +1,9 @@
+import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/providers/connection_provider.dart';
+import 'package:tms/providers/event_config_provider.dart';
 
 class TmsAppBarTitle extends StatelessWidget {
   TmsAppBarTitle({super.key});
@@ -44,13 +46,22 @@ class TmsAppBarTitle extends StatelessWidget {
     );
   }
 
+  Widget _eventTitle() {
+    return Selector<EventConfigProvider, String>(
+      selector: (_, configProvider) => configProvider.eventName,
+      builder: (_, eventName, __) {
+        return Text(eventName, overflow: TextOverflow.ellipsis);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Selector<ConnectionProvider, bool>(
       selector: (_, connectionProvider) => connectionProvider.isConnected,
       builder: (_, isConnected, __) {
         if (isConnected) {
-          return const Text("TMS Title", overflow: TextOverflow.ellipsis);
+          return EchoTreeLifetime(trees: [":tournament:config"], child: _eventTitle());
         } else {
           return _stateTitleRow();
         }

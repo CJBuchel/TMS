@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:echo_tree_flutter/db/db.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
-import 'package:echo_tree_flutter/schemas/echoTreeSchema.dart';
+import 'package:echo_tree_flutter/schemas/echo_tree_schema.dart';
 
 class EchoTreeBroker {
   static final EchoTreeBroker _instance = EchoTreeBroker._internal();
@@ -20,6 +20,7 @@ class EchoTreeBroker {
   Future<void> _set(List<EchoTreeEventTree> trees) async {
     List<Future> futures = [];
     for (EchoTreeEventTree tree in trees) {
+      EchoTreeLogger().d("Got tree insertion request from server: ${tree.treeName}");
       futures.add(_setTree(tree));
     }
 

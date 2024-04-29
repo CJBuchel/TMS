@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:tms/network/network.dart';
@@ -9,9 +8,6 @@ class EventConfigService {
   Future<int> setEventName(String name) async {
     try {
       var request = TournamentConfigSetNameRequest(name: name).toJson();
-      TmsLogger().d("Request: $request");
-      var testRequest = jsonEncode(request);
-      TmsLogger().d("Test request: $testRequest");
       var response = await Network().networkPost("/tournament/config/name", request);
       if (response.$1) {
         TmsLogger().i("Event name set to $name");

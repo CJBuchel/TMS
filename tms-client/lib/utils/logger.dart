@@ -19,9 +19,9 @@ class TmsLogger {
 
   final Logger _logger = Logger(
     printer: PrettyPrinter(
-      methodCount: 0,
+      methodCount: 1,
       errorMethodCount: 5,
-      lineLength: 50,
+      lineLength: 100,
       colors: true,
       printEmojis: false,
       printTime: true,

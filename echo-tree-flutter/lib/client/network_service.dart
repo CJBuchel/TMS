@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:echo_tree_flutter/client/broker/broker.dart';
+import 'package:echo_tree_flutter/client/subscription_manager.dart';
 import 'package:echo_tree_flutter/db/db.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
-import 'package:echo_tree_flutter/schemas/echoTreeSchema.dart';
+import 'package:echo_tree_flutter/schemas/echo_tree_schema.dart';
 import 'package:echo_tree_flutter/utils/blocking_loop_timer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +18,7 @@ enum EchoTreeConnection {
   connected,
 }
 
-class EchoTreeNetworkService {
+class EchoTreeNetworkService extends EchoTreeSubscriptionManager {
   String _address = "http://localhost:2121";
   String _authToken = "";
   String _uuid = "";
@@ -34,6 +35,10 @@ class EchoTreeNetworkService {
       interval: const Duration(seconds: 20),
       callback: _sendChecksumsEvent,
     );
+
+    // subscription manager (yea, i know it does it one at a time. It just works better logically)
+    onFirstSubscribe((topic) => _serverSubscribe([topic]));
+    onLastUnsubscribe((topic) => _serverUnsubscribe([topic]));
   }
 
   // getters
@@ -106,6 +111,26 @@ class EchoTreeNetworkService {
         throw Exception('Failed to authenticate client ${response.statusCode}');
       }
     });
+  }
+
+  void _serverSubscribe(List<String> treeNames) {
+    final event = SubscribeEvent(treeNames: treeNames).toJson();
+    final message = EchoTreeClientSocketMessage(
+      authToken: _authToken,
+      messageEvent: EchoTreeClientSocketEvent.SUBSCRIBE_EVENT,
+      message: jsonEncode(event),
+    ).toJson();
+    _channel?.sink.add(jsonEncode(message));
+  }
+
+  void _serverUnsubscribe(List<String> treeNames) {
+    final event = UnsubscribeEvent(treeNames: treeNames).toJson();
+    final message = EchoTreeClientSocketMessage(
+      authToken: _authToken,
+      messageEvent: EchoTreeClientSocketEvent.UNSUBSCRIBE_EVENT,
+      message: jsonEncode(event),
+    ).toJson();
+    _channel?.sink.add(jsonEncode(message));
   }
 
   // send checksum event to server (if connected)
@@ -196,26 +221,6 @@ class EchoTreeNetworkService {
     _state.value = EchoTreeConnection.disconnected;
     // https://datatracker.ietf.org/doc/html/rfc6455#section-7.4 (i'm being proper XD )
     _channel?.sink.close(1000);
-  }
-
-  void subscribe(List<String> treeNames) {
-    final event = SubscribeEvent(treeNames: treeNames).toJson();
-    final message = EchoTreeClientSocketMessage(
-      authToken: _authToken,
-      messageEvent: EchoTreeClientSocketEvent.SUBSCRIBE_EVENT,
-      message: jsonEncode(event),
-    ).toJson();
-    _channel?.sink.add(jsonEncode(message));
-  }
-
-  void unsubscribe(List<String> treeNames) {
-    final event = UnsubscribeEvent(treeNames: treeNames).toJson();
-    final message = EchoTreeClientSocketMessage(
-      authToken: _authToken,
-      messageEvent: EchoTreeClientSocketEvent.UNSUBSCRIBE_EVENT,
-      message: jsonEncode(event),
-    ).toJson();
-    _channel?.sink.add(jsonEncode(message));
   }
 
   void sendMessage(EchoTreeClientSocketMessage message) {

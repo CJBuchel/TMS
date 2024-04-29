@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:echo_tree_flutter/client/network_service.dart';
-import 'package:echo_tree_flutter/schemas/echoTreeSchema.dart';
+import 'package:echo_tree_flutter/schemas/echo_tree_schema.dart';
 
 class EchoTreeClient extends EchoTreeNetworkService {
   static final EchoTreeClient _instance = EchoTreeClient._internal();

@@ -25,7 +25,7 @@ pub async fn echo_message_broker(uuid:String, msg: EchoTreeClientSocketMessage, 
 
     // subscription events
     EchoTreeClientSocketEvent::SubscribeEvent => {
-      subscribe_broker::subscribe_broker(uuid, msg, clients).await;
+      subscribe_broker::subscribe_broker(uuid, msg, clients, db).await;
     },
     EchoTreeClientSocketEvent::UnsubscribeEvent => {
       unsubscribe_broker::unsubscribe_broker(uuid, msg, clients).await;

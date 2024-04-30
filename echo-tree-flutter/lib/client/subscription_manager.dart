@@ -15,29 +15,29 @@ class EchoTreeSubscriptionManager {
     _unsubscribeCallbacks.add(callback);
   }
 
-  void subscribe(List<String> topics) {
+  void subscribe(List<String> trees) {
     // EchoTreeLogger().d("Subscribing to: $topics");
-    for (var topic in topics) {
-      if (_topicList.containsKey(topic)) {
-        _topicList[topic] = _topicList[topic]! + 1;
+    for (var tree in trees) {
+      if (_topicList.containsKey(tree)) {
+        _topicList[tree] = _topicList[tree]! + 1;
       } else {
-        _topicList[topic] = 1;
+        _topicList[tree] = 1;
         for (var callback in _subscribeCallbacks) {
-          callback(topic);
+          callback(tree);
         }
       }
     }
   }
 
-  void unsubscribe(List<String> topics) {
+  void unsubscribe(List<String> trees) {
     // EchoTreeLogger().d("Unsubscribing from: $topics");
-    for (var topic in topics) {
-      if (_topicList.containsKey(topic)) {
-        _topicList[topic] = _topicList[topic]! - 1;
-        if (_topicList[topic] == 0) {
-          _topicList.remove(topic);
+    for (var tree in trees) {
+      if (_topicList.containsKey(tree)) {
+        _topicList[tree] = _topicList[tree]! - 1;
+        if (_topicList[tree] == 0) {
+          _topicList.remove(tree);
           for (var callback in _unsubscribeCallbacks) {
-            callback(topic);
+            callback(tree);
           }
         }
       }

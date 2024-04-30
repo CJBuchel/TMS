@@ -20,6 +20,17 @@ class ManagedTree {
     }
   }
 
+  void _treeListener(BoxEvent event) {
+    updateChecksum();
+    if (event.deleted) {
+      _updatesController.add({event.key: null});
+    } else {
+      final value = _box?.get(event.key);
+      EchoTreeLogger().d("Internal Tree update: ${event.key}, $value");
+      _updatesController.add({event.key: value});
+    }
+  }
+
   void _setTreeName(String treeName) {
     if (treeName.contains('/')) {
       throw Exception("Invalid tree name: $treeName, cannot contain '/', use ':' instead.");
@@ -54,6 +65,7 @@ class ManagedTree {
 
     if (Hive.isBoxOpen(_treeName!)) {
       EchoTreeLogger().w("Tree already open: $_treeName");
+      _box = Hive.box(_treeName!);
       return;
     }
 
@@ -62,20 +74,14 @@ class ManagedTree {
     _box = await Hive.openBox(_treeName!);
     updateChecksum();
 
-    // listen to changes
-    _box?.watch().listen((event) {
-      updateChecksum();
-      if (event.deleted) {
-        _updatesController.add({event.key: null});
-      } else {
-        final value = _box?.get(event.key);
-        _updatesController.add({event.key: value});
-      }
-    });
+    if (_box != null) {
+      _box?.watch().listen(_treeListener);
+    }
   }
 
   Future<void> insert(String key, String value) async {
     if (_box != null) {
+      EchoTreeLogger().d("Inserting into tree: $_treeName, key: $key, value: $value");
       await _box!.put(key, value);
     } else {
       EchoTreeLogger().w("box is null, try opening it first: $_treeName...");

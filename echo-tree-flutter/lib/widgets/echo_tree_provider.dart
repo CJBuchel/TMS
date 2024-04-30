@@ -14,26 +14,36 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
   Map<K, V> items = {};
 
   late final StreamSubscription<Map<String, dynamic>> _updatesStream;
-  ManagedTree managedTree;
+  ManagedTree? managedTree;
 
-  EchoTreeProvider({required this.tree, required this.fromJson}) : managedTree = Database().getTreeMap.getTree(tree) {
+  EchoTreeProvider({required this.tree, required this.fromJson}) {
     // populate data
     // _populateData();
     EchoTreeClient().state.addListener(_treeListener);
     // listen and update items
-    _updatesStream = managedTree.updates.listen((update) {
-      // EchoTreeLogger().i("updating items: $update");
-      update.forEach((key, value) {
-        if (value == null) {
-          items.remove(key as K);
-        } else {
-          items[key as K] = fromJson(jsonDecode(value as String));
-        }
-      });
+    _startListener();
+  }
 
-      // notify listeners when the data changes
-      notifyListeners();
-    });
+  void _startListener() async {
+    managedTree = await Database().getTreeMap.getTree(tree);
+
+    if (managedTree != null) {
+      _updatesStream = managedTree!.updates.listen((update) {
+        // EchoTreeLogger().i("updating items: $update");
+        update.forEach((key, value) {
+          if (value == null) {
+            items.remove(key as K);
+          } else {
+            items[key as K] = fromJson(jsonDecode(value as String));
+          }
+        });
+
+        // notify listeners when the data changes
+        notifyListeners();
+      });
+    } else {
+      EchoTreeLogger().e("Error: ManagedTree is null, the provider is not live");
+    }
   }
 
   void _treeListener() {
@@ -52,7 +62,7 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
   }
 
   void _populateData() {
-    final rawData = managedTree.getAsHashmap;
+    final rawData = managedTree?.getAsHashmap ?? {};
     EchoTreeLogger().i("Populating data: $rawData");
 
     // New item map

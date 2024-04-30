@@ -1,4 +1,6 @@
+import 'package:echo_tree_flutter/db/db.dart';
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
+import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/widgets.dart';
 
 // Auto unsubscribe from trees when the widget is disposed
@@ -7,7 +9,17 @@ mixin EchoTreeSubscriberMixin<T extends StatefulWidget> on State<T> {
 
   void subscribeToTrees(List<String> trees) {
     _subscriptions.addAll(trees);
-    EchoTreeClient().subscribe(trees);
+    for (var tree in trees) {
+      if (Database().getTreeMap.treeExists(tree)) {
+        EchoTreeClient().subscribe([tree]);
+        continue;
+      } else {
+        Database().getTreeMap.onTreeExists(tree, () {
+          EchoTreeLogger().d("Tree created $tree, running sub function...");
+          EchoTreeClient().subscribe([tree]);
+        });
+      }
+    }
   }
 
   void subscribeToTree(tree) {
@@ -35,6 +47,7 @@ class _EchoTreeLifetimeState extends State<EchoTreeLifetime> with EchoTreeSubscr
   @override
   void initState() {
     super.initState();
+    EchoTreeLogger().d("Subscribing to trees: ${widget.trees}");
     subscribeToTrees(widget.trees);
   }
 

@@ -4,13 +4,14 @@ import 'dart:collection';
 
 import 'package:echo_tree_flutter/db/tree_hierarchy.dart';
 import 'package:echo_tree_flutter/db/tree_map.dart';
+import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 class Database {
   static final Database _instance = Database._internal();
-  TreeHierarchy _treeHierarchy = TreeHierarchy();
-  TreeMap _treeMap = TreeMap();
+  final TreeHierarchy _treeHierarchy = TreeHierarchy();
+  final TreeMap _treeMap = TreeMap();
 
   factory Database() {
     return _instance;
@@ -24,13 +25,12 @@ class Database {
       // path += "/tree.kvdb";
       Hive.init(path);
     }
-    //
-    if (_treeMap.isEmpty) {
-      _treeMap = await _treeHierarchy.getNewTreeMap("$metaDataPath:hierarchy:trees", hierarchy: hierarchy);
-    } else {
-      List<String> trees = await _treeHierarchy.getTreeMapNames("$metaDataPath:hierarchy:trees", hierarchy: hierarchy);
-      for (var tree in trees) {
-        _treeMap.openTree(tree);
+    List<String> trees = await _treeHierarchy.getTreeMapNames("$metaDataPath:hierarchy:trees", hierarchy: hierarchy);
+    for (var treeName in trees) {
+      if (treeName.startsWith(metaDataPath)) {
+        EchoTreeLogger().w("Trees cannot have metadata reference: $treeName");
+      } else {
+        if (!_treeMap.treeExists(treeName)) _treeMap.openTree(treeName);
       }
     }
     // _treeHierarchy = TreeHierarchy(metadataPath);

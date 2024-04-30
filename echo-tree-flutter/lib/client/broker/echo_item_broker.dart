@@ -15,13 +15,15 @@ class EchoItemBroker {
 
   Future<void> _remove(String treeName, String key) async {
     // delete the item
-    await Database().getTreeMap.getTree(treeName).remove(key);
+    var t = await Database().getTreeMap.getTree(treeName);
+    t.remove(key);
   }
 
   Future<void> _insert(String treeName, String key, String data) async {
     // insert the item
     EchoTreeLogger().d("Got insertion request from server: $key, $data");
-    await Database().getTreeMap.getTree(treeName).insert(key, data);
+    var t = await Database().getTreeMap.getTree(treeName);
+    await t.insert(key, data);
   }
 
   // broker method

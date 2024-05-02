@@ -10,15 +10,10 @@ mixin EchoTreeSubscriberMixin<T extends StatefulWidget> on State<T> {
   void subscribeToTrees(List<String> trees) {
     _subscriptions.addAll(trees);
     for (var tree in trees) {
-      if (Database().getTreeMap.treeExists(tree)) {
+      Database().getTreeMap.onTreeOpen(tree, () {
+        EchoTreeLogger().d("Tree created $tree, running sub function...");
         EchoTreeClient().subscribe([tree]);
-        continue;
-      } else {
-        Database().getTreeMap.onTreeExists(tree, () {
-          EchoTreeLogger().d("Tree created $tree, running sub function...");
-          EchoTreeClient().subscribe([tree]);
-        });
-      }
+      });
     }
   }
 

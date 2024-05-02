@@ -77,7 +77,9 @@ class Network {
   }
 
   // regular http
-  Future<ServerResponse> networkPost(String route, dynamic body) => _controller.httpPost(route, body);
+  Future<ServerResponse> networkPost(String route, dynamic body, {bool encode = true}) =>
+      _controller.httpPost(route, body, encode);
   Future<ServerResponse> networkGet(String route) => _controller.httpGet(route);
-  Future<ServerResponse> networkDelete(String route, dynamic body) => _controller.httpDelete(route, body);
+  Future<ServerResponse> networkDelete(String route, dynamic body, {bool encode = true}) =>
+      _controller.httpDelete(route, body, encode);
 }

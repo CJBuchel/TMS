@@ -6,6 +6,8 @@ use super::header_filters::{auth_token_filter::check_auth_token_filter, role_per
 
 
 pub fn tournament_config_filter(clients: ClientMap, db: SharedDatabase) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+  
+
   let tournament_event_name_path = warp::path("tournament").and(warp::path("config")).and(warp::path("name"));
 
   let set_name = tournament_event_name_path
@@ -21,7 +23,6 @@ pub fn tournament_config_filter(clients: ClientMap, db: SharedDatabase) -> impl 
     .and(with_db(db.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and_then(tournament_config_get_name_handler);
-
 
   set_name.or(get_name)
 }

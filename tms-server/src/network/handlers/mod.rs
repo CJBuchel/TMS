@@ -12,3 +12,6 @@ pub use login_handler::*;
 
 mod tournament_config_handler;
 pub use tournament_config_handler::*;
+
+mod tournament_schedule_handler;
+pub use tournament_schedule_handler::*;

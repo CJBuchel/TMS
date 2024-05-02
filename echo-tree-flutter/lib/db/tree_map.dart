@@ -5,16 +5,16 @@ import 'package:echo_tree_flutter/logging/logger.dart';
 
 class TreeMap {
   final Map<String, ManagedTree> _treeMap = {};
-  final StreamController<String> _treeExistsController = StreamController<String>.broadcast();
+  final StreamController<String> _treeQueueController = StreamController<String>.broadcast();
 
-  Stream<String> get treeExistsStream => _treeExistsController.stream;
+  Stream<String> get treeQueueStream => _treeQueueController.stream;
 
-  void onTreeExists(String treeName, Function callback) {
-    if (treeExists(treeName)) {
+  void onTreeOpen(String treeName, Function callback) {
+    if (treeOpen(treeName)) {
       callback();
       return;
     }
-    treeExistsStream.firstWhere((event) => event == treeName).then((_) {
+    _treeQueueController.stream.firstWhere((event) => event == treeName).then((_) {
       callback();
     });
   }
@@ -38,20 +38,20 @@ class TreeMap {
     _treeMap.clear();
   }
 
-  bool treeExists(String treeName) {
-    return _treeMap.containsKey(treeName);
+  bool treeOpen(String treeName) {
+    return _treeMap[treeName]?.isOpen == true;
   }
 
   Future<void> openTree(String treeName) async {
-    if (_treeMap.containsKey(treeName)) {
+    if (_treeMap.containsKey(treeName) && _treeMap[treeName]?.isOpen == true) {
       EchoTreeLogger().w("Tree already open: $treeName");
       return;
     }
 
     _treeMap[treeName] = ManagedTree(treeName: treeName);
     await _treeMap[treeName]?.open();
-    // Notify listeners that the tree is now open
-    _treeExistsController.add(treeName);
+    // Notify listeners that the tree is now open/exists
+    _treeQueueController.add(treeName);
   }
 
   void removeTree(String treeName) {

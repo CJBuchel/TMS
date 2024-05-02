@@ -1,5 +1,8 @@
 import 'package:echo_tree_flutter/logging/logger.dart';
 
+// manager to monitor how many subscriptions are made to a topic
+// when the first subscription is made, it will trigger a subscribe callback
+// when the last subscription is removed, it will trigger an unsubscribe callback
 class EchoTreeSubscriptionManager {
   final Map<String, int> _topicList = {};
   final List<Function(String)> _subscribeCallbacks = [];

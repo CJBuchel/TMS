@@ -70,11 +70,7 @@ class NetworkObserver extends WidgetsBindingObserver {
   }
 
   void networkStartup() async {
-    if (!TmsLocalStorageProvider().isReady) {
-      TmsLocalStorageProvider().init().then((_) => Network().start());
-    } else {
-      Network().start();
-    }
+    Network().start();
   }
 
   @override
@@ -125,7 +121,12 @@ void main() async {
   TmsLogger().setLogLevel(LogLevel.debug); // info
   EchoTreeLogger().useLogger(EchoTreeTmsLogBinder());
 
-  // initialize the network observers
+  // initialize local storage (network and some views are dependent on this)
+  if (!TmsLocalStorageProvider().isReady) {
+    await TmsLocalStorageProvider().init();
+  }
+
+  // initialize the network observers (async, don't wait up)
   final observer = NetworkObserver();
   WidgetsBinding.instance.addObserver(observer);
   observer.initEchoTree().then((_) {
@@ -134,7 +135,7 @@ void main() async {
     });
   });
 
-  // set imperative API ans start app
+  // set imperative API and start app
   GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(const AppWrapper(child: TMSApp()));
 }

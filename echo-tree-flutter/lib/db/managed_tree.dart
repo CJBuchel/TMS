@@ -75,7 +75,10 @@ class ManagedTree {
     updateChecksum();
 
     if (_box != null) {
+      EchoTreeLogger().d("Tree opened: $_treeName, box is not null...");
       _box?.watch().listen(_treeListener);
+    } else {
+      EchoTreeLogger().w("box is null after being created: $_treeName...");
     }
   }
 
@@ -121,6 +124,7 @@ class ManagedTree {
   }
 
   Future<void> setFromHashmap(Map<String, String> map) async {
+    EchoTreeLogger().d("Setting tree from hashmap: $_treeName");
     if (_box != null) {
       await clear();
       List<Future> futures = [];
@@ -128,6 +132,8 @@ class ManagedTree {
         futures.add(insert(key, value));
       });
       await Future.wait(futures);
+    } else {
+      EchoTreeLogger().w("box is null, try opening it first: $_treeName..., checksum: $_checksum");
     }
   }
 
@@ -155,4 +161,10 @@ class ManagedTree {
   String get getName => _treeName ?? '';
   Stream<Map<String, dynamic>> get updates => _updatesController.stream;
   int get getChecksum => _checksum;
+  bool get isOpen {
+    if (_box != null) {
+      return _box!.isOpen;
+    }
+    return false;
+  }
 }

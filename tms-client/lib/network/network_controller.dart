@@ -131,7 +131,9 @@ class NetworkController {
     await _websocketController.disconnect();
   }
 
-  Future<ServerResponse> httpPost(String route, dynamic body) => _httpController.httpPost(route, body);
+  Future<ServerResponse> httpPost(String route, dynamic body, bool encode) =>
+      _httpController.httpPost(route, body, encode);
   Future<ServerResponse> httpGet(String route) => _httpController.httpGet(route);
-  Future<ServerResponse> httpDelete(String route, dynamic body) => _httpController.httpDelete(route, body);
+  Future<ServerResponse> httpDelete(String route, dynamic body, bool encode) =>
+      _httpController.httpDelete(route, body, encode);
 }

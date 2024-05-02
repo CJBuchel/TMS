@@ -30,7 +30,7 @@ class Database {
       if (treeName.startsWith(metaDataPath)) {
         EchoTreeLogger().w("Trees cannot have metadata reference: $treeName");
       } else {
-        if (!_treeMap.treeExists(treeName)) _treeMap.openTree(treeName);
+        if (!_treeMap.treeOpen(treeName)) _treeMap.openTree(treeName);
       }
     }
     // _treeHierarchy = TreeHierarchy(metadataPath);

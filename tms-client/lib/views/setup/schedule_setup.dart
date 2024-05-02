@@ -13,7 +13,7 @@ class ScheduleSetup extends StatelessWidget {
             return InputSetter(
               label: "Upload Schedule:",
               onSet: () async {
-                await Future.delayed(const Duration(seconds: 2));
+                await provider.uploadSchedule();
               },
               input: ElevatedButton(
                 onPressed: () async {

@@ -138,12 +138,12 @@ class HttpController {
   }
 
   // success, status code, response
-  Future<ServerResponse> httpPost(String route, dynamic body) async {
+  Future<ServerResponse> httpPost(String route, dynamic body, bool encode) async {
     try {
       String addr = TmsLocalStorageProvider().serverAddress;
       final response = await _client.post(
         Uri.parse("$addr$route"),
-        body: jsonEncode(body),
+        body: encode ? jsonEncode(body) : body,
         headers: {
           "X-Client-Id": TmsLocalStorageProvider().uuid,
           "X-Auth-Token": TmsLocalStorageProvider().authToken,
@@ -207,12 +207,12 @@ class HttpController {
     }
   }
 
-  Future<ServerResponse> httpDelete(String route, dynamic body) async {
+  Future<ServerResponse> httpDelete(String route, dynamic body, bool encode) async {
     try {
       String addr = TmsLocalStorageProvider().serverAddress;
       final response = await _client.delete(
         Uri.parse("$addr$route"),
-        body: jsonEncode(body),
+        body: encode ? jsonEncode(body) : body,
         headers: {
           "X-Client-Id": TmsLocalStorageProvider().uuid,
           "X-Auth-Token": TmsLocalStorageProvider().authToken,

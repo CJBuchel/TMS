@@ -55,8 +55,6 @@ pub async fn checksum_broker(uuid: String, msg: EchoTreeClientSocketMessage, cli
     client.echo_tree(new_client_trees);
   }
 
-  log::trace!("{}: checksums checked", uuid);
-
   client.respond(StatusResponseEvent {
     status_code: warp::http::StatusCode::OK.as_u16(),
     from_event: Some(EchoTreeClientSocketEvent::ChecksumEvent),

@@ -7,6 +7,7 @@ pub mod register_filter;
 pub mod login_filter;
 pub mod websocket_filter;
 pub mod tournament_config_filter;
+pub mod tournament_schedule_filter;
 
 #[derive(Debug)]
 pub struct UnauthorizedToken;

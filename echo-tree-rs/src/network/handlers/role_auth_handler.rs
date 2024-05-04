@@ -1,4 +1,4 @@
-use tms_infra::EchoTreeRoleAuthenticateRequest;
+use echo_tree_infra::EchoTreeRoleAuthenticateRequest;
 
 use crate::common::{ClientMap, EchoDB, ResponseResult};
 

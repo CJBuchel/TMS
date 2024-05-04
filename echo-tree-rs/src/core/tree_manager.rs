@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use tms_infra::server_socket_protocol::{EchoItemEvent, EchoTreeEventTree};
+use echo_tree_infra::server_socket_protocol::{EchoItemEvent, EchoTreeEventTree};
 
 use crate::common::client_echo::ClientEcho;
 

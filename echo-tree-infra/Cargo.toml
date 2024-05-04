@@ -1,5 +1,5 @@
 [package]
-name = "tms-infra"
+name = "echo-tree-infra"
 version = "0.1.0"
 edition = "2021"
 build = "build/build.rs"
@@ -7,9 +7,9 @@ build = "build/build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tms-infra-schema = { path = "tms-infra-schema" }
+echo-tree-infra-schema = { path = "echo-tree-infra-schema" }
 
 [build-dependencies]
 serde_json = "^1.0"
 schemars = "^0.8"
-tms-infra-schema = { path = "tms-infra-schema" }
+echo-tree-infra-schema = { path = "echo-tree-infra-schema" }

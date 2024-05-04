@@ -1,4 +1,5 @@
-use tms_infra::{DataSchemeExtensions, EchoTreeRole, User};
+use echo_tree_infra::EchoTreeRole;
+use tms_infra::{DataSchemeExtensions, User};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
 

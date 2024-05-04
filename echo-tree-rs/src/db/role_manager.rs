@@ -1,5 +1,5 @@
 use log::{error, info, warn};
-use tms_infra::EchoTreeRole;
+use echo_tree_infra::EchoTreeRole;
 
 #[derive(Clone)]
 pub struct RoleManager {

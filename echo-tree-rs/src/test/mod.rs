@@ -30,7 +30,7 @@ async fn test_backup() {
   // insert and backup
   let json = serde_json::to_string(&person).expect("Failed to serialize person");
   server.insert_entry(":people".to_string(), "test".to_string(), json.clone()).await;
-  server.backup_db("backups/backup.zip").await.expect("Failed to backup db");
+  server.backup_db("backups/backup.zip", 1).await.expect("Failed to backup db");
   assert!(std::path::Path::new("backups/backup.zip").exists());
   
   

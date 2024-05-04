@@ -1,4 +1,4 @@
-use tms_infra::{client_socket_protocol::{DeleteEvent, EchoTreeClientSocketEvent, EchoTreeClientSocketMessage}, server_socket_protocol::{EchoItemEvent, StatusResponseEvent}};
+use echo_tree_infra::{client_socket_protocol::{DeleteEvent, EchoTreeClientSocketEvent, EchoTreeClientSocketMessage}, server_socket_protocol::{EchoItemEvent, StatusResponseEvent}};
 
 use crate::common::{ClientMap, EchoDB, client_echo::ClientEcho, client_access::ClientAccess};
 

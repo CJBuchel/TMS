@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
   "tms-infra", 
+  "echo-tree-infra",
   "echo-tree-rs",
   "tms-server", 
 ]

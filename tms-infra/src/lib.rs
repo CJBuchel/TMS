@@ -1,1 +1,1 @@
-pub use infra_schema::*;
+pub use tms_infra_schema::*;

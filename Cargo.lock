@@ -597,11 +597,30 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d6ef0072f8a535281e4876be788938b528e9a1d43900b82c2569af7da799125"
 
 [[package]]
+name = "echo-tree-infra"
+version = "0.1.0"
+dependencies = [
+ "echo-tree-infra-schema",
+ "schemars",
+ "serde_json",
+]
+
+[[package]]
+name = "echo-tree-infra-schema"
+version = "0.1.0"
+dependencies = [
+ "schemars",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "echo-tree-rs"
 version = "0.1.0"
 dependencies = [
  "async-trait",
  "bincode",
+ "echo-tree-infra",
  "futures",
  "jsonschema",
  "lazy_static",
@@ -613,7 +632,6 @@ dependencies = [
  "serde",
  "serde_json",
  "sled",
- "tms-infra",
  "tokio",
  "tokio-stream",
  "uuid",
@@ -1093,15 +1111,6 @@ checksum = "168fb715dda47215e360912c096649d23d58bf392ac62f73919e831745e40f26"
 dependencies = [
  "equivalent",
  "hashbrown",
-]
-
-[[package]]
-name = "infra-schema"
-version = "0.1.0"
-dependencies = [
- "schemars",
- "serde",
- "serde_json",
 ]
 
 [[package]]
@@ -2375,8 +2384,18 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 name = "tms-infra"
 version = "0.1.0"
 dependencies = [
- "infra-schema",
  "schemars",
+ "serde_json",
+ "tms-infra-schema",
+]
+
+[[package]]
+name = "tms-infra-schema"
+version = "0.1.0"
+dependencies = [
+ "echo-tree-infra",
+ "schemars",
+ "serde",
  "serde_json",
 ]
 
@@ -2386,6 +2405,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "chrono",
+ "echo-tree-infra",
  "echo-tree-rs",
  "futures",
  "local-ip-address",

@@ -61,36 +61,36 @@ class Team {
 }
 
 class TournamentConfig {
-    int backupCount;
     int backupInterval;
     int endGameTimerLength;
     String name;
+    int retainBackups;
     String season;
     int timerLength;
 
     TournamentConfig({
-        required this.backupCount,
         required this.backupInterval,
         required this.endGameTimerLength,
         required this.name,
+        required this.retainBackups,
         required this.season,
         required this.timerLength,
     });
 
     factory TournamentConfig.fromJson(Map<String, dynamic> json) => TournamentConfig(
-        backupCount: json["backup_count"],
         backupInterval: json["backup_interval"],
         endGameTimerLength: json["end_game_timer_length"],
         name: json["name"],
+        retainBackups: json["retain_backups"],
         season: json["season"],
         timerLength: json["timer_length"],
     );
 
     Map<String, dynamic> toJson() => {
-        "backup_count": backupCount,
         "backup_interval": backupInterval,
         "end_game_timer_length": endGameTimerLength,
         "name": name,
+        "retain_backups": retainBackups,
         "season": season,
         "timer_length": timerLength,
     };

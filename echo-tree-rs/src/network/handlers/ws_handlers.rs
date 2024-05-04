@@ -1,6 +1,6 @@
 use futures::{FutureExt, StreamExt};
 use log::{debug, error, info, warn};
-use tms_infra::client_socket_protocol::EchoTreeClientSocketMessage;
+use echo_tree_infra::client_socket_protocol::EchoTreeClientSocketMessage;
 
 use crate::{common::{client::Client, ClientMap, EchoDB, ResponseResult}, network::handlers::broker::echo_message_broker};
 

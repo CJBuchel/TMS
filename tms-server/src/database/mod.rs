@@ -1,3 +1,4 @@
+use echo_tree_infra::EchoTreeRole;
 pub use echo_tree_rs::core::*;
 use rand::distributions::Alphanumeric;
 use rand::Rng;

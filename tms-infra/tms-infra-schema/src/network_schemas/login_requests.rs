@@ -1,7 +1,8 @@
+use echo_tree_infra::EchoTreeRole;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::{DataSchemeExtensions, EchoTreeRole};
+use crate::DataSchemeExtensions;
 
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct LoginRequest {

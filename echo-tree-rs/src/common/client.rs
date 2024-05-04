@@ -1,5 +1,5 @@
 use log::{error, trace};
-use tms_infra::server_socket_protocol::{EchoTreeServerSocketEvent, EchoTreeServerSocketMessage, StatusResponseEvent};
+use echo_tree_infra::server_socket_protocol::{EchoTreeServerSocketEvent, EchoTreeServerSocketMessage, StatusResponseEvent};
 use tokio::sync::mpsc;
 use warp::filters::ws::Message;
 

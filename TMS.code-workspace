@@ -21,6 +21,10 @@
 			"name": "echo-tree-rs"
 		},
 		{
+			"path": "./echo-tree-infra",
+			"name": "echo-tree-infra"
+		},
+		{
 			"path": "./echo-tree-flutter",
 			"name": "echo-tree-flutter"
 		}
@@ -38,6 +42,7 @@
 		"java.configuration.updateBuildConfiguration": "automatic",
 		"cSpell.words": [
 			"tmsapplicationscheme"
-		]
+		],
+		"circleci.persistedProjectSelection": []
 	}
 }

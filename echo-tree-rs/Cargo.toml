@@ -25,5 +25,5 @@ async-trait = "^0.1"
 jsonschema = "^0.17"
 rand = "0.8.5"
 
-[dependencies.tms-infra]
-path = "../tms-infra"
+[dependencies.echo-tree-infra]
+path = "../echo-tree-infra"

@@ -28,6 +28,9 @@ mdns-sd = "^0.11"
 [dependencies.tms-infra]
 path = "../tms-infra"
 
+[dependencies.echo-tree-infra]
+path = "../echo-tree-infra"
+
 [dependencies.echo-tree-rs]
 # git = "https://github.com/CJBuchel/EchoTree.git"
 path = "../echo-tree-rs"

@@ -1,5 +1,5 @@
 use log::{debug, error};
-use tms_infra::{EchoTreeRegisterRequest, EchoTreeRegisterResponse};
+use echo_tree_infra::{EchoTreeRegisterRequest, EchoTreeRegisterResponse};
 use rand::Rng;
 use crate::common::{client::Client, ClientMap, EchoDB, ResponseResult};
 

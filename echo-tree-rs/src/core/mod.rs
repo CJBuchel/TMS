@@ -1,6 +1,6 @@
 use std::{collections::HashMap, net::Ipv4Addr};
 use local_ip_address::linux::local_ip;
-use tms_infra::server_socket_protocol::EchoTreeEventTree;
+use echo_tree_infra::server_socket_protocol::EchoTreeEventTree;
 use crate::{common::{client_echo::ClientEcho, ClientMap, EchoDB}, db::{backup_manager::BackupManager, db::{Database, DatabaseConfig}}, network::filters};
 
 pub mod schema_util;
@@ -97,9 +97,9 @@ impl EchoTreeServer {
     db.drop_db().await;
   }
 
-  pub async fn backup_db(&self, backup_path: &str) -> zip::result::ZipResult<()> {
+  pub async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> zip::result::ZipResult<()> {
     let db = self.database.read().await;
-    db.backup_db(backup_path).await
+    db.backup_db(backup_path, retain_backups).await
   }
 
   pub async fn restore_db(&self, backup_path: &str) -> zip::result::ZipResult<()> {

@@ -52,16 +52,33 @@ impl SerializableBackup {
 }
 
 pub trait BackupManager {
-  async fn backup_db(&self, backup_path: &str) -> zip::result::ZipResult<()>;
+  async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> zip::result::ZipResult<()>;
   async fn restore_db(&mut self, backup_path: &str) -> zip::result::ZipResult<()>;
 }
 
 impl BackupManager for Database {
-  async fn backup_db(&self, backup_path: &str) -> zip::result::ZipResult<()> {
+  async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> zip::result::ZipResult<()> {
     log::warn!("EchoTree backing up...");
 
-    if let Some(parent) = std::path::Path::new(backup_path).parent() {
-      std::fs::create_dir_all(parent)?;
+    if let Some(parent_path) = std::path::Path::new(backup_path).parent() {
+      std::fs::create_dir_all(parent_path)?;
+
+      // remove old backups (based on database retain)
+      if retain_backups > 0 { // 0 means retain all backups
+        if let Ok(entries) = std::fs::read_dir(parent_path) {
+          let mut entries: Vec<_> = entries
+            .map(|res| res.map(|e| e.path()))
+            .collect::<Result<_, _>>()?;
+  
+          entries.sort_unstable();
+          while entries.len() >= retain_backups {
+            if let Some(oldest) = entries.first() {
+              std::fs::remove_file(oldest)?;
+              entries.remove(0);
+            }
+          }
+        }
+      }
     }
 
     let file = std::fs::File::create(backup_path)?;

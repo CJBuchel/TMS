@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use crate::DataSchemeExtensions;
 
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Team {
   pub cloud_id: String,
   pub number: String,

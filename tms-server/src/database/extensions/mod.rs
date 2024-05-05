@@ -7,3 +7,6 @@ pub use tournament_config_extensions::*;
 
 mod tournament_schedule_extension;
 pub use tournament_schedule_extension::*;
+
+mod team_extensions;
+pub use team_extensions::*;

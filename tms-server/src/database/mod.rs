@@ -94,7 +94,7 @@ impl Database {
       roles: vec!["public".to_string()],
     };
 
-    match self.insert_user(public_user).await {
+    match self.insert_user(public_user, None).await {
       Ok(_) => log::info!("Public user created"),
       Err(e) => log::error!("Failed to create public user: {}", e),
     }
@@ -112,7 +112,7 @@ impl Database {
         return;
       }
       None => {
-        match self.insert_user(admin_user).await {
+        match self.insert_user(admin_user, None).await {
           Ok(_) => log::info!("Admin user created"),
           Err(e) => log::error!("Failed to create admin user: {}", e),
         }
@@ -125,6 +125,8 @@ impl Database {
 
     self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
     self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
+    self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
+    self.inner.read().await.add_tree_schema(JUDGING_SESSIONS.to_string(), JudgingSession::to_schema()).await;
     self.inner.read().await.add_tree_schema(USERS.to_string(), User::to_schema()).await;
   }
 

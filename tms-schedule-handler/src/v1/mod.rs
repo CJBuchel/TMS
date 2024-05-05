@@ -84,10 +84,10 @@ pub trait V1Block {
 }
 
 pub struct V1 {
-  pub teams_block: ScheduleTeamsBlock,
-  pub matches_block: ScheduleMatchesBlock,
-  pub practice_matches_block: SchedulePracticeMatchesBlock,
-  pub judging_block: ScheduleJudgeBlock,
+  pub teams_block: Option<ScheduleTeamsBlock>,
+  pub matches_block: Option<ScheduleMatchesBlock>,
+  pub practice_matches_block: Option<SchedulePracticeMatchesBlock>,
+  pub judging_block: Option<ScheduleJudgeBlock>,
 }
 
 impl CsvToTmsSchedule for V1 {
@@ -114,25 +114,48 @@ impl CsvToTmsSchedule for V1 {
 
   fn csv_to_tms_schedule(csv: &str) -> Result<TmsSchedule, String> {
     let v1 = V1 {
-      teams_block: ScheduleTeamsBlock::from_csv(csv)?,
-      matches_block: ScheduleMatchesBlock::from_csv(csv)?,
-      practice_matches_block: SchedulePracticeMatchesBlock::from_csv(csv)?,
-      judging_block: ScheduleJudgeBlock::from_csv(csv)?,
+      teams_block: match ScheduleTeamsBlock::from_csv(csv) {
+        Ok(block) => Some(block),
+        Err(_) => None,
+      },
+      matches_block: match ScheduleMatchesBlock::from_csv(csv) {
+        Ok(block) => Some(block),
+        Err(_) => None,
+      },
+      judging_block: match ScheduleJudgeBlock::from_csv(csv) {
+        Ok(block) => Some(block),
+        Err(_) => None,
+      },
+      practice_matches_block: match SchedulePracticeMatchesBlock::from_csv(csv) {
+        Ok(block) => Some(block),
+        Err(_) => None,
+      },
     };
 
     // v1 to tms schedule
-    let schedule = TmsSchedule {
-      teams: v1.teams_block.teams.iter().map(|t| {
-        Team {
-          cloud_id: "".to_string(),
-          ranking: 0,
-          number: t.number.clone(),
-          name: t.name.clone(),
-          affiliation: t.affiliation.clone(),
-        }
-      }).collect(),
+    let mut schedule = TmsSchedule {
+      teams: vec![],
+      game_matches: vec![],
+      judging_sessions: vec![],
+      practice_game_matches: vec![],
+    };
 
-      game_matches: v1.matches_block.matches.iter().map(|m| {
+    // teams
+    if let Some(teams_block) = v1.teams_block {
+      for team in teams_block.teams {
+        schedule.teams.push(Team {
+          cloud_id: "".to_string(),
+          number: team.number,
+          name: team.name,
+          affiliation: team.affiliation,
+          ranking: 0,
+        });
+      }
+    }
+
+    // matches
+    if let Some(matches_block) = v1.matches_block {
+      for m in matches_block.matches {
         let mut game_match_tables: Vec<GameMatchTable> = vec![];
 
         for on_table in m.on_tables.clone() {
@@ -144,15 +167,43 @@ impl CsvToTmsSchedule for V1 {
           game_match_tables.push(game_match_table);
         }
 
-        GameMatch {
+        schedule.game_matches.push(GameMatch {
           match_number: m.match_number.clone(),
           start_time: m.start_time.clone(),
           end_time: m.end_time.clone(),
           game_match_tables: game_match_tables,
-        }
-      }).collect(),
+        });
+      }
+    }
 
-      practice_game_matches: v1.practice_matches_block.matches.iter().map(|m| {
+    // judging
+    if let Some(judging_block) = v1.judging_block {
+      for j in judging_block.sessions {
+        let mut judging_session_pods: Vec<JudgingSessionPod> = vec![];
+
+        for pod in j.in_rooms.clone() {
+          let judging_session_pod = JudgingSessionPod {
+            team_number: pod.team_number.clone(),
+            pod: pod.room_name.clone(),
+            innovation_submitted: false,
+            core_values_submitted: false,
+            robot_design_submitted: false,
+          };
+          judging_session_pods.push(judging_session_pod);
+        }
+
+        schedule.judging_sessions.push(JudgingSession {
+          session_number: j.session_number.clone(),
+          start_time: j.start_time.clone(),
+          end_time: j.end_time.clone(),
+          judging_session_pods: judging_session_pods,
+        });
+      }
+    }
+
+    // practice matches
+    if let Some(practice_matches_block) = v1.practice_matches_block {
+      for m in practice_matches_block.matches {
         let mut game_match_tables: Vec<GameMatchTable> = vec![];
 
         for on_table in m.on_tables.clone() {
@@ -164,36 +215,14 @@ impl CsvToTmsSchedule for V1 {
           game_match_tables.push(game_match_table);
         }
 
-        GameMatch {
+        schedule.practice_game_matches.push(GameMatch {
           match_number: m.match_number.clone(),
           start_time: m.start_time.clone(),
           end_time: m.end_time.clone(),
-          game_match_tables,
-        }
-      }).collect(),
-
-      judging_sessions: v1.judging_block.sessions.iter().map(|s| {
-        let mut session_pods: Vec<JudgingSessionPod> = vec![];
-
-        for in_room in s.in_rooms.clone() {
-          let session_pod = JudgingSessionPod {
-            pod: in_room.room_name,
-            team_number: in_room.team_number,
-            core_values_submitted: false,
-            innovation_submitted: false,
-            robot_design_submitted: false,
-          };
-          session_pods.push(session_pod);
-        }
-
-        JudgingSession {
-          session_number: s.session_number.clone(),
-          start_time: s.start_time.clone(),
-          end_time: s.end_time.clone(),
-          judging_session_pods: session_pods,
-        }
-      }).collect(),
-    };
+          game_match_tables: game_match_tables,
+        });
+      }
+    }
 
     Ok(schedule)
   }

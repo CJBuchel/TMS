@@ -1,9 +1,10 @@
 [workspace]
 resolver = "2"
 members = [
-  "tms-infra", 
   "echo-tree-infra",
   "echo-tree-rs",
+  "tms-infra", 
+  "tms-schedule-handler",
   "tms-server", 
 ]
 

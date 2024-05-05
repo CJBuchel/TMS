@@ -34,3 +34,6 @@ path = "../echo-tree-infra"
 [dependencies.echo-tree-rs]
 # git = "https://github.com/CJBuchel/EchoTree.git"
 path = "../echo-tree-rs"
+
+[dependencies.tms-schedule-handler]
+path = "../tms-schedule-handler"

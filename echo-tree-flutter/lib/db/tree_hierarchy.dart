@@ -17,25 +17,6 @@ class TreeHierarchy {
     }
   }
 
-  // Future<TreeMap> getNewTreeMap(String metaDataTree, {Map<String, String>? hierarchy}) async {
-  //   await _initializeHierarchy(metaDataTree, hierarchy: hierarchy);
-
-  //   // get the metadata
-  //   Map<String, String> metadataMap = _hierarchy.getAsHashmap;
-  //   TreeMap map = TreeMap();
-
-  //   List<Future> futures = [];
-  //   metadataMap.forEach((treeName, schema) {
-  //     if (!treeName.startsWith(metaDataTree)) {
-  //       futures.add(map.openTree(treeName));
-  //     }
-  //   });
-
-  //   await Future.wait(futures);
-
-  //   return map;
-  // }
-
   Future<List<String>> getTreeMapNames(String metaDataTree, {Map<String, String>? hierarchy}) async {
     await _initializeHierarchy(metaDataTree, hierarchy: hierarchy);
     return Future.value(_hierarchy.getAsHashmap.keys.toList());

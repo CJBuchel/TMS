@@ -24,3 +24,10 @@ impl warp::reject::Reject for ClientNotFound {}
 #[derive(Debug)]
 pub struct UnauthorizedLogin;
 impl warp::reject::Reject for UnauthorizedLogin{}
+
+#[derive(Debug)]
+pub struct BadRequestWithMessage {
+  pub message: String,
+}
+
+impl warp::reject::Reject for BadRequestWithMessage{}

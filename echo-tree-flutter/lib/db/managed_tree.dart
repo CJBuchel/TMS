@@ -26,7 +26,6 @@ class ManagedTree {
       _updatesController.add({event.key: null});
     } else {
       final value = _box?.get(event.key);
-      EchoTreeLogger().d("Internal Tree update: ${event.key}, $value");
       _updatesController.add({event.key: value});
     }
   }

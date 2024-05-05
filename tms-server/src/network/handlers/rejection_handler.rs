@@ -22,6 +22,9 @@ pub async fn handle_rejection(err: warp::Rejection) -> Result<impl warp::Reply, 
   } else if let Some(_) = err.find::<UnauthorizedLogin>() {
     code = StatusCode::UNAUTHORIZED;
     message = "Unauthorized Login";
+  } else if let Some(e) = err.find::<BadRequestWithMessage>() {
+    code = StatusCode::BAD_REQUEST;
+    message = e.message.as_str();
   }
 
   // fallback to a generic message for unhandled errors

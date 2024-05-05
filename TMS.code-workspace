@@ -27,6 +27,10 @@
 		{
 			"path": "./echo-tree-flutter",
 			"name": "echo-tree-flutter"
+		},
+		{
+			"path": "./tms-schedule-handler",
+			"name": "tms-schedule-handler"
 		}
 	],
 	"settings": {

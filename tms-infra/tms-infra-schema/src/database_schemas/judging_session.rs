@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::DataSchemeExtensions;
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct JudgingSessionPod {
   pub pod: String,
   pub team_number: String,
@@ -12,7 +12,7 @@ pub struct JudgingSessionPod {
   pub robot_design_submitted: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct JudgingSession {
   pub session_number: String,
   pub start_time: String,

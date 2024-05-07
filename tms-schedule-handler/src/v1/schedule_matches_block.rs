@@ -74,7 +74,11 @@ impl V1Block for ScheduleMatchesBlock {
 
         "Table Names" => {
           // from 1 to n_tables
-          table_names = fields[1..].iter().map(|s| s.to_string()).collect();
+          for i in 1..=n_tables {
+            if !fields[i].is_empty() {
+              table_names.push(fields[i].to_string());
+            }
+          }
         },
 
         // match number, start time, end time, table 1, team 1, table 2, team 2, ...

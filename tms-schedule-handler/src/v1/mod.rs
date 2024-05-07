@@ -138,6 +138,8 @@ impl CsvToTmsSchedule for V1 {
       game_matches: vec![],
       judging_sessions: vec![],
       practice_game_matches: vec![],
+      game_tables: vec![],
+      judging_pods: vec![],
     };
 
     // teams
@@ -153,8 +155,14 @@ impl CsvToTmsSchedule for V1 {
       }
     }
 
-    // matches
+    // matches & tables
     if let Some(matches_block) = v1.matches_block {
+      // tables
+      for table in matches_block.table_names {
+        schedule.game_tables.push(table);
+      }
+
+      // matches
       for m in matches_block.matches {
         let mut game_match_tables: Vec<GameMatchTable> = vec![];
 
@@ -176,8 +184,14 @@ impl CsvToTmsSchedule for V1 {
       }
     }
 
-    // judging
+    // judging & pods
     if let Some(judging_block) = v1.judging_block {
+      // pods
+      for pod in judging_block.judging_room_names {
+        schedule.judging_pods.push(pod);
+      }
+
+      // sessions
       for j in judging_block.sessions {
         let mut judging_session_pods: Vec<JudgingSessionPod> = vec![];
 

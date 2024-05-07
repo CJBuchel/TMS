@@ -13,6 +13,8 @@ pub struct TmsSchedule {
   pub game_matches: Vec<GameMatch>,
   pub practice_game_matches: Vec<GameMatch>,
   pub judging_sessions: Vec<JudgingSession>,
+  pub game_tables: Vec<String>,
+  pub judging_pods: Vec<String>,
 }
 
 impl TmsSchedule {

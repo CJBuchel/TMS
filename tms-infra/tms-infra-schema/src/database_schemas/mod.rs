@@ -15,3 +15,9 @@ pub use judging_session::*;
 
 pub mod date_time;
 pub use date_time::*;
+
+pub mod game_table;
+pub use game_table::*;
+
+pub mod judging_pod;
+pub use judging_pod::*;

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 
 class InputSetter extends StatefulWidget {
   final String label;
-  final String? info;
   final Widget input;
   final Future<void> Function() onSet;
+
+  final ConfirmDialogStyle? confirmDialogStyle;
+  final String? info;
   final double height;
 
   InputSetter({
-    this.info,
     required this.label,
     required this.input,
     required this.onSet,
+    this.info,
+    this.confirmDialogStyle,
     this.height = 70,
   });
 
@@ -52,9 +56,20 @@ class _InputSetterState extends State<InputSetter> {
                         return IconButton(
                           icon: const Icon(Icons.send),
                           onPressed: () {
-                            setState(() {
-                              _future = widget.onSet();
-                            });
+                            if (widget.confirmDialogStyle != null) {
+                              ConfirmDialog(
+                                style: widget.confirmDialogStyle!,
+                                onConfirm: () {
+                                  setState(() {
+                                    _future = widget.onSet();
+                                  });
+                                },
+                              ).show(context);
+                            } else {
+                              setState(() {
+                                _future = widget.onSet();
+                              });
+                            }
                           },
                         );
                       }

@@ -3,14 +3,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::DataSchemeExtensions;
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameMatchTable {
   pub table: String,
   pub team_number: String,
   pub score_submitted: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameMatch {
   pub match_number: String,
   pub start_time: String,

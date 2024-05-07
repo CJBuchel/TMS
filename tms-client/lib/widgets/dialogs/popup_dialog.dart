@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/widgets/dialogs/base_dialog.dart';
 
-enum DialogType { error, info, success, warn }
-
 class PopupDialog extends BaseDialog {
   final String title;
   final String message;

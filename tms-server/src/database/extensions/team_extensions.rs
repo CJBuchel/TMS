@@ -57,11 +57,11 @@ impl TeamExtensions for Database {
       Some((team_id, team)) => {
         log::warn!("Team already exists: {}, overwriting with insert...", team_id);
         self.inner.write().await.insert_entry(TEAMS.to_string(), team_id, team.to_json()).await;
-        return Ok(());
+        Ok(())
       },
       None => {
         self.inner.write().await.insert_entry(TEAMS.to_string(), Uuid::new_v4().to_string(), team.to_json()).await;
-        return Ok(());
+        Ok(())
       }
     }
   }
@@ -73,10 +73,10 @@ impl TeamExtensions for Database {
     match team {
       Some(_) => {
         self.inner.write().await.remove_entry(TEAMS.to_string(), team_id).await;
-        return Ok(());
+        Ok(())
       }
       None => {
-        return Err(format!("Team with id {} not found", team_id));
+        Err(format!("Team with id {} not found", team_id))
       }
     }
   }

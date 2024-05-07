@@ -13,14 +13,24 @@ class NetworkSchema {
     LoginResponse loginResponse;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
+    TournamentConfigSetBackupIntervalRequest tournamentConfigSetBackupIntervalRequest;
+    TournamentConfigSetEndgameTimerLengthRequest tournamentConfigSetEndgameTimerLengthRequest;
     TournamentConfigSetNameRequest tournamentConfigSetNameRequest;
+    TournamentConfigSetRetainBackupsRequest tournamentConfigSetRetainBackupsRequest;
+    TournamentConfigSetSeasonRequest tournamentConfigSetSeasonRequest;
+    TournamentConfigSetTimerLengthRequest tournamentConfigSetTimerLengthRequest;
 
     NetworkSchema({
         required this.loginRequest,
         required this.loginResponse,
         required this.registerRequest,
         required this.registerResponse,
+        required this.tournamentConfigSetBackupIntervalRequest,
+        required this.tournamentConfigSetEndgameTimerLengthRequest,
         required this.tournamentConfigSetNameRequest,
+        required this.tournamentConfigSetRetainBackupsRequest,
+        required this.tournamentConfigSetSeasonRequest,
+        required this.tournamentConfigSetTimerLengthRequest,
     });
 
     factory NetworkSchema.fromJson(Map<String, dynamic> json) => NetworkSchema(
@@ -28,7 +38,12 @@ class NetworkSchema {
         loginResponse: LoginResponse.fromJson(json["_login_response"]),
         registerRequest: RegisterRequest.fromJson(json["_register_request"]),
         registerResponse: RegisterResponse.fromJson(json["_register_response"]),
+        tournamentConfigSetBackupIntervalRequest: TournamentConfigSetBackupIntervalRequest.fromJson(json["_tournament_config_set_backup_interval_request"]),
+        tournamentConfigSetEndgameTimerLengthRequest: TournamentConfigSetEndgameTimerLengthRequest.fromJson(json["_tournament_config_set_endgame_timer_length_request"]),
         tournamentConfigSetNameRequest: TournamentConfigSetNameRequest.fromJson(json["_tournament_config_set_name_request"]),
+        tournamentConfigSetRetainBackupsRequest: TournamentConfigSetRetainBackupsRequest.fromJson(json["_tournament_config_set_retain_backups_request"]),
+        tournamentConfigSetSeasonRequest: TournamentConfigSetSeasonRequest.fromJson(json["_tournament_config_set_season_request"]),
+        tournamentConfigSetTimerLengthRequest: TournamentConfigSetTimerLengthRequest.fromJson(json["_tournament_config_set_timer_length_request"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -36,7 +51,12 @@ class NetworkSchema {
         "_login_response": loginResponse.toJson(),
         "_register_request": registerRequest.toJson(),
         "_register_response": registerResponse.toJson(),
+        "_tournament_config_set_backup_interval_request": tournamentConfigSetBackupIntervalRequest.toJson(),
+        "_tournament_config_set_endgame_timer_length_request": tournamentConfigSetEndgameTimerLengthRequest.toJson(),
         "_tournament_config_set_name_request": tournamentConfigSetNameRequest.toJson(),
+        "_tournament_config_set_retain_backups_request": tournamentConfigSetRetainBackupsRequest.toJson(),
+        "_tournament_config_set_season_request": tournamentConfigSetSeasonRequest.toJson(),
+        "_tournament_config_set_timer_length_request": tournamentConfigSetTimerLengthRequest.toJson(),
     };
 }
 
@@ -158,6 +178,38 @@ class RegisterResponse {
     };
 }
 
+class TournamentConfigSetBackupIntervalRequest {
+    int interval;
+
+    TournamentConfigSetBackupIntervalRequest({
+        required this.interval,
+    });
+
+    factory TournamentConfigSetBackupIntervalRequest.fromJson(Map<String, dynamic> json) => TournamentConfigSetBackupIntervalRequest(
+        interval: json["interval"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "interval": interval,
+    };
+}
+
+class TournamentConfigSetEndgameTimerLengthRequest {
+    int timerLength;
+
+    TournamentConfigSetEndgameTimerLengthRequest({
+        required this.timerLength,
+    });
+
+    factory TournamentConfigSetEndgameTimerLengthRequest.fromJson(Map<String, dynamic> json) => TournamentConfigSetEndgameTimerLengthRequest(
+        timerLength: json["timer_length"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "timer_length": timerLength,
+    };
+}
+
 class TournamentConfigSetNameRequest {
     String name;
 
@@ -171,5 +223,53 @@ class TournamentConfigSetNameRequest {
 
     Map<String, dynamic> toJson() => {
         "name": name,
+    };
+}
+
+class TournamentConfigSetRetainBackupsRequest {
+    int retainBackups;
+
+    TournamentConfigSetRetainBackupsRequest({
+        required this.retainBackups,
+    });
+
+    factory TournamentConfigSetRetainBackupsRequest.fromJson(Map<String, dynamic> json) => TournamentConfigSetRetainBackupsRequest(
+        retainBackups: json["retain_backups"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "retain_backups": retainBackups,
+    };
+}
+
+class TournamentConfigSetSeasonRequest {
+    String season;
+
+    TournamentConfigSetSeasonRequest({
+        required this.season,
+    });
+
+    factory TournamentConfigSetSeasonRequest.fromJson(Map<String, dynamic> json) => TournamentConfigSetSeasonRequest(
+        season: json["season"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "season": season,
+    };
+}
+
+class TournamentConfigSetTimerLengthRequest {
+    int timerLength;
+
+    TournamentConfigSetTimerLengthRequest({
+        required this.timerLength,
+    });
+
+    factory TournamentConfigSetTimerLengthRequest.fromJson(Map<String, dynamic> json) => TournamentConfigSetTimerLengthRequest(
+        timerLength: json["timer_length"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "timer_length": timerLength,
     };
 }

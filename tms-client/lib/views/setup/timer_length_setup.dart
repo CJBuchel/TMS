@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/event_config_provider.dart';
 import 'package:tms/views/setup/input_setter.dart';
 
-class EventNameSetup extends StatelessWidget {
+class TimerLengthSetup extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -17,17 +17,18 @@ class EventNameSetup extends StatelessWidget {
         children: [
           Consumer<EventConfigProvider>(
             builder: (context, provider, child) {
-              _controller.text = provider.eventName;
+              _controller.text = provider.timerLength.toString();
               return InputSetter(
-                label: "Set event name:",
+                label: "Set timer length:",
                 onSet: () async {
-                  await provider.setEventName(_controller.text);
+                  await provider.setTimerLength(int.parse(_controller.text));
                 },
                 input: TextField(
                   controller: _controller,
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Event Name",
+                    labelText: "Timer Length",
                   ),
                 ),
               );

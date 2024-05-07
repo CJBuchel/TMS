@@ -7,7 +7,12 @@
     "_login_response",
     "_register_request",
     "_register_response",
-    "_tournament_config_set_name_request"
+    "_tournament_config_set_backup_interval_request",
+    "_tournament_config_set_endgame_timer_length_request",
+    "_tournament_config_set_name_request",
+    "_tournament_config_set_retain_backups_request",
+    "_tournament_config_set_season_request",
+    "_tournament_config_set_timer_length_request"
   ],
   "properties": {
     "_login_request": {
@@ -22,8 +27,23 @@
     "_register_response": {
       "$ref": "#/definitions/RegisterResponse"
     },
+    "_tournament_config_set_backup_interval_request": {
+      "$ref": "#/definitions/TournamentConfigSetBackupIntervalRequest"
+    },
+    "_tournament_config_set_endgame_timer_length_request": {
+      "$ref": "#/definitions/TournamentConfigSetEndgameTimerLengthRequest"
+    },
     "_tournament_config_set_name_request": {
       "$ref": "#/definitions/TournamentConfigSetNameRequest"
+    },
+    "_tournament_config_set_retain_backups_request": {
+      "$ref": "#/definitions/TournamentConfigSetRetainBackupsRequest"
+    },
+    "_tournament_config_set_season_request": {
+      "$ref": "#/definitions/TournamentConfigSetSeasonRequest"
+    },
+    "_tournament_config_set_timer_length_request": {
+      "$ref": "#/definitions/TournamentConfigSetTimerLengthRequest"
     }
   },
   "definitions": {
@@ -133,6 +153,32 @@
         }
       }
     },
+    "TournamentConfigSetBackupIntervalRequest": {
+      "type": "object",
+      "required": [
+        "interval"
+      ],
+      "properties": {
+        "interval": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "TournamentConfigSetEndgameTimerLengthRequest": {
+      "type": "object",
+      "required": [
+        "timer_length"
+      ],
+      "properties": {
+        "timer_length": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
     "TournamentConfigSetNameRequest": {
       "type": "object",
       "required": [
@@ -141,6 +187,43 @@
       "properties": {
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "TournamentConfigSetRetainBackupsRequest": {
+      "type": "object",
+      "required": [
+        "retain_backups"
+      ],
+      "properties": {
+        "retain_backups": {
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        }
+      }
+    },
+    "TournamentConfigSetSeasonRequest": {
+      "type": "object",
+      "required": [
+        "season"
+      ],
+      "properties": {
+        "season": {
+          "type": "string"
+        }
+      }
+    },
+    "TournamentConfigSetTimerLengthRequest": {
+      "type": "object",
+      "required": [
+        "timer_length"
+      ],
+      "properties": {
+        "timer_length": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
         }
       }
     }

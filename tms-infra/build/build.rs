@@ -16,7 +16,14 @@ struct NetworkSchema {
   _register_response: RegisterResponse,
   _login_request: LoginRequest,
   _login_response: LoginResponse,
+
+  // config
   _tournament_config_set_name_request: TournamentConfigSetNameRequest,
+  _tournament_config_set_season_request: TournamentConfigSetSeasonRequest,
+  _tournament_config_set_timer_length_request: TournamentConfigSetTimerLengthRequest,
+  _tournament_config_set_endgame_timer_length_request: TournamentConfigSetEndgameTimerLengthRequest,
+  _tournament_config_set_backup_interval_request: TournamentConfigSetBackupIntervalRequest,
+  _tournament_config_set_retain_backups_request: TournamentConfigSetRetainBackupsRequest,
 }
 
 fn get_workspace_path() -> std::io::Result<PathBuf> {

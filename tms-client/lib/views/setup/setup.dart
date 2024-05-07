@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tms/views/setup/backup_interval_setup.dart';
+import 'package:tms/views/setup/endgame_timer_length_setup.dart';
 import 'package:tms/views/setup/event_name_setup.dart';
+import 'package:tms/views/setup/retain_backup_setup.dart';
 import 'package:tms/views/setup/schedule_setup.dart';
+import 'package:tms/views/setup/timer_length_setup.dart';
 
 class Setup extends StatelessWidget {
   @override
@@ -20,6 +24,10 @@ class Setup extends StatelessWidget {
               ),
               EventNameSetup(),
               ScheduleSetup(),
+              TimerLengthSetup(),
+              EndgameTimerLengthSetup(),
+              BackupIntervalSetup(),
+              BackupRetentionSetup(),
             ],
           ),
         ),

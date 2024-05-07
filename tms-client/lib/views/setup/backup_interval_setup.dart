@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/event_config_provider.dart';
 import 'package:tms/views/setup/input_setter.dart';
 
-class EventNameSetup extends StatelessWidget {
+class BackupIntervalSetup extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -17,17 +17,18 @@ class EventNameSetup extends StatelessWidget {
         children: [
           Consumer<EventConfigProvider>(
             builder: (context, provider, child) {
-              _controller.text = provider.eventName;
+              _controller.text = provider.backupInterval.toString();
               return InputSetter(
-                label: "Set event name:",
+                label: "Set backup interval:",
                 onSet: () async {
-                  await provider.setEventName(_controller.text);
+                  await provider.setBackupInterval(int.parse(_controller.text));
                 },
                 input: TextField(
                   controller: _controller,
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Event Name",
+                    labelText: "Backup Interval",
                   ),
                 ),
               );

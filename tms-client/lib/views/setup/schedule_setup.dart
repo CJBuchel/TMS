@@ -13,7 +13,7 @@ class ScheduleSetup extends StatelessWidget {
         Consumer<ScheduleProvider>(
           builder: (context, provider, child) {
             return InputSetter(
-              label: "Upload Schedule:",
+              label: "Upload schedule:",
               onSet: () async {
                 await provider.uploadSchedule().then((_) {
                   PopupDialog.success(title: "Success", message: "Successfully uploaded schedule").show(context);

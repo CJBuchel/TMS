@@ -36,6 +36,7 @@ impl BackupService for Database {
                 let interval_seconds = config.backup_interval * 60;
                 let name = if config.name.is_empty() { "tms".to_string() } else { config.name };
                 let backup_name = format!("{}-backup-{}_{}.kvdb.zip", name, chrono::Local::now().format("%Y-%m-%d"), chrono::Local::now().format("%H-%M-%S"));
+                let backup_name = backup_name.replace(" ", "_").replace(":", "-");
                 let retain_backups = config.retain_backups;
                 
                 match inner.read().await.backup_db(&format!("backups/{}", backup_name), retain_backups).await {

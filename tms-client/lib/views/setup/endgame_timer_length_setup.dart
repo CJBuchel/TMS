@@ -28,7 +28,7 @@ class EndgameTimerLengthSetup extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Endgame Length",
+                    labelText: "Endgame Length (seconds)",
                   ),
                 ),
               );

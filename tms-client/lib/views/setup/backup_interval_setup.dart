@@ -28,7 +28,7 @@ class BackupIntervalSetup extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Backup Interval",
+                    labelText: "Backup Interval (minutes)",
                   ),
                 ),
               );

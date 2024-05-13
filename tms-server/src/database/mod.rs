@@ -18,6 +18,7 @@ pub struct Database {
   inner: std::sync::Arc<tokio::sync::RwLock<EchoTreeServer>>,
   backup_service_thread: Option<tokio::task::JoinHandle<()>>,
   stop_signal_sender: tokio::sync::watch::Sender<bool>,
+  reset_backups_signal_sender: tokio::sync::watch::Sender<bool>,
 }
 
 pub type SharedDatabase = std::sync::Arc<tokio::sync::RwLock<Database>>;
@@ -40,10 +41,12 @@ impl Database {
     let db_server = EchoTreeServer::new(config);
 
     let (stop_signal_sender, _) = tokio::sync::watch::channel(false);
+    let (reset_backups_signal_sender, _) = tokio::sync::watch::channel(false);
     Self {
       inner: std::sync::Arc::new(tokio::sync::RwLock::new(db_server)),
       backup_service_thread: None,
       stop_signal_sender,
+      reset_backups_signal_sender,
     }
   }
 

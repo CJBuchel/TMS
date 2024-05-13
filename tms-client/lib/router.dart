@@ -4,6 +4,7 @@ import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/connection/connection.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
+import 'package:tms/views/match_controller/match_controller.dart';
 import 'package:tms/views/setup/setup.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
 import 'package:tms/widgets/base_responsive.dart';
@@ -14,6 +15,27 @@ final _protectedRoutes = <GoRoute>[
     path: '/setup',
     name: 'setup',
     builder: (context, state) => BaseScaffold(state: state, child: Setup()),
+    redirect: (context, state) {
+      if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
+        return '/login';
+      }
+
+      return null;
+    },
+  ),
+
+  // referee routes
+  GoRoute(
+    path: '/referee',
+    name: 'referee',
+    // builder: (context, state) => BaseScaffold(state: state, child: const ViewSelector()),
+    routes: [
+      GoRoute(
+        path: 'match_controller',
+        name: 'match_controller',
+        builder: (context, state) => BaseScaffold(state: state, child: const MatchController()),
+      ),
+    ],
     redirect: (context, state) {
       if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
         return '/login';

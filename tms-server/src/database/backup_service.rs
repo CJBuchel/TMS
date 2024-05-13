@@ -6,6 +6,7 @@ use super::Database;
 #[async_trait::async_trait]
 pub trait BackupService {
   fn start_backup_service(&mut self);
+  fn reset_backup_service(&mut self);
   async fn stop_backup_service(&mut self);
 }
 
@@ -18,6 +19,7 @@ impl BackupService for Database {
     }
 
     let mut stop_signal_receiver = self.stop_signal_sender.subscribe();
+    let mut reset_signal_receiver = self.reset_backups_signal_sender.subscribe();
     let inner = self.inner.clone();
 
     self.backup_service_thread = Some(tokio::spawn(async move {
@@ -26,6 +28,10 @@ impl BackupService for Database {
           _ = stop_signal_receiver.changed() => {
             log::info!("Backup service stopped");
             break;
+          }
+          _ = reset_signal_receiver.changed() => {
+            log::info!("Backup service reset");
+            continue;
           }
           _ =  async {
             // backup code
@@ -79,6 +85,20 @@ impl BackupService for Database {
           log::error!("Failed to join backup service: {}", e);
         },
       }
+    }
+  }
+
+  fn reset_backup_service(&mut self) {
+    if let Some(handle) = self.backup_service_thread.take() {
+      match self.reset_backups_signal_sender.send(true) {
+        Ok(_) => {
+          log::info!("Backup service resetting...")
+        },
+        Err(e) => {
+          log::error!("Error resetting backup service: {}", e)
+        }
+      }
+      self.backup_service_thread = Some(handle);
     }
   }
 }

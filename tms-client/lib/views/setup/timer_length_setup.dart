@@ -28,7 +28,7 @@ class TimerLengthSetup extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: "Timer Length",
+                    labelText: "Timer Length (seconds)",
                   ),
                 ),
               );

@@ -72,7 +72,7 @@ class EventConfigService {
   Future<int> setRetainBackups(int retainBackups) async {
     try {
       var request = TournamentConfigSetRetainBackupsRequest(retainBackups: retainBackups).toJson();
-      var response = await Network().networkPost("/tournament/config/backup_retention", request);
+      var response = await Network().networkPost("/tournament/config/retain_backups", request);
       if (response.$1) {
         TmsLogger().i("Backup retention set to $retainBackups");
         return HttpStatus.ok;

@@ -1,4 +1,4 @@
-use crate::database::{Database, TOURNAMENT_CONFIG};
+use crate::database::*;
 pub use echo_tree_rs::core::*;
 use tms_infra::{DataSchemeExtensions, TournamentConfig};
 
@@ -169,6 +169,9 @@ impl TournamentConfigExtensions for Database {
         self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json()).await;
       }
     }
+
+    // reset backup service
+    self.reset_backup_service();
   }
 
   async fn get_tournament_retain_backups(&self) -> Option<usize> {

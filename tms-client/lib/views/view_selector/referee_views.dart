@@ -36,7 +36,7 @@ class RefereeViews extends StatelessWidget {
                 child: ImageButtonCard(
                   title: "Match Controller",
                   subTitle: "HEAD REFEREE",
-                  color: const Color(0xffFA6E5A),
+                  color: const Color(0xffD291BC),
                   textColor: const Color(0xff3F414E),
                   image: const Image(
                     image: AssetImage('assets/images/FIRST_LOGO.png'),

@@ -69,6 +69,9 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
       borderRadius: BorderRadius.circular(8.0),
     ),
   ),
+  drawerTheme: const DrawerThemeData(
+    backgroundColor: Color(0xFFFFFFFF),
+  ),
 );
 
 ///
@@ -82,7 +85,8 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: const Color(0xFF212332),
   secondaryHeaderColor: const Color(0xFF2A2D3E),
   canvasColor: const Color(0xFF2A2D3E),
-  cardColor: const Color.fromARGB(255, 69, 80, 100),
+  // cardColor: const Color.fromARGB(255, 69, 80, 100),
+  cardColor: const Color(0xFF121212),
   appBarTheme: AppBarTheme(
     backgroundColor: Colors.blueGrey[800],
     surfaceTintColor: Colors.blue,
@@ -134,5 +138,8 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
     cursorColor: Colors.white,
     selectionColor: Colors.blue,
     selectionHandleColor: Colors.blue,
+  ),
+  drawerTheme: const DrawerThemeData(
+    backgroundColor: Color(0xFF121212),
   ),
 );

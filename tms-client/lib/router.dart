@@ -9,6 +9,7 @@ import 'package:tms/views/setup/setup.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
 import 'package:tms/widgets/base_responsive.dart';
 import 'package:tms/widgets/base_scaffold.dart';
+import 'package:tms/widgets/base_scaffold_drawer_router.dart';
 
 final _protectedRoutes = <GoRoute>[
   GoRoute(
@@ -33,7 +34,7 @@ final _protectedRoutes = <GoRoute>[
       GoRoute(
         path: 'match_controller',
         name: 'match_controller',
-        builder: (context, state) => BaseScaffold(state: state, child: const MatchController()),
+        builder: (context, state) => BaseScaffoldDrawerRouter(state: state, child: const MatchController()),
       ),
     ],
     redirect: (context, state) {
@@ -66,7 +67,6 @@ final tmsRouter = GoRouter(
     GoRoute(
       path: '/connection',
       name: 'connection',
-      // we don't use base Scaffold because we need the scaffold for floating buttons
       builder: (context, state) => BaseResponsive(child: Connection(state: state)),
     ),
     ..._protectedRoutes,

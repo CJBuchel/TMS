@@ -7,13 +7,10 @@ class BaseScaffold extends StatelessWidget {
   final GoRouterState state;
   final Widget child;
 
-  final WidgetBuilder? floatingActionButtonBuilder;
-
   const BaseScaffold({
     Key? key,
     required this.state,
     required this.child,
-    this.floatingActionButtonBuilder,
   }) : super(key: key);
 
   @override

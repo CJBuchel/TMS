@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::DataSchemeExtensions;
+use crate::{DataSchemeExtensions, TmsDateTime};
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameMatchTable {
@@ -13,8 +13,8 @@ pub struct GameMatchTable {
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameMatch {
   pub match_number: String,
-  pub start_time: String,
-  pub end_time: String,
+  pub start_time: TmsDateTime,
+  pub end_time: TmsDateTime,
   pub game_match_tables: Vec<GameMatchTable>,
 }
 
@@ -22,8 +22,8 @@ impl Default for GameMatch {
   fn default() -> Self {
     Self {
       match_number: "".to_string(),
-      start_time: "".to_string(),
-      end_time: "".to_string(),
+      start_time: TmsDateTime::default(),
+      end_time: TmsDateTime::default(),
       game_match_tables: Vec::new(),
     }
   }

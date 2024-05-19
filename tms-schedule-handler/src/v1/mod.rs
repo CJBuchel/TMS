@@ -9,6 +9,7 @@ const BLOCK_JUDGING: &str = "3";
 const BLOCK_PRACTICE_MATCHES: &str = "4";
 
 mod schedule_teams_block;
+use chrono::Timelike;
 use schedule_teams_block::*;
 
 mod schedule_matches_block;
@@ -19,7 +20,7 @@ use schedule_practice_matches_block::*;
 
 mod schedule_judging_block;
 use schedule_judging_block::*;
-use tms_infra::{GameMatch, GameMatchTable, JudgingSession, JudgingSessionPod, Team};
+use tms_infra::{GameMatch, GameMatchTable, JudgingSession, JudgingSessionPod, Team, TmsDateTime};
 
 pub trait V1Block {
   type Output;
@@ -88,6 +89,37 @@ pub struct V1 {
   pub matches_block: Option<ScheduleMatchesBlock>,
   pub practice_matches_block: Option<SchedulePracticeMatchesBlock>,
   pub judging_block: Option<ScheduleJudgeBlock>,
+}
+
+impl V1 {
+  pub fn string_to_tms_date_time(time: String) -> Result<TmsDateTime, String> {
+    let time_regex = match regex::Regex::new(r"(\d{2}):(\d{2}):(\d{2})") {
+      Ok(re) => re,
+      Err(_) => return Err("Error creating time regex".to_string()),
+    };
+
+    let start_time_str = match time_regex.captures(&time) {
+      Some(caps) => caps.get(0).unwrap().as_str(),
+      None => return Err(format!("Error getting regex time: {}", time)),
+    };
+
+    let start_time_native = match chrono::NaiveTime::parse_from_str(start_time_str, "%H:%M:%S") {
+      Ok(time) => time,
+      Err(_) => return Err(format!("Error parsing time: {}", time)),
+    };
+
+    // TMS Date Time
+    let start_time = TmsDateTime {
+      date: None,
+      time: Some(tms_infra::TmsTime {
+        hour: start_time_native.hour(),
+        minute: start_time_native.minute(),
+        second: start_time_native.second(),
+      }),
+    };
+
+    Ok(start_time)
+  }
 }
 
 impl CsvToTmsSchedule for V1 {
@@ -175,10 +207,14 @@ impl CsvToTmsSchedule for V1 {
           game_match_tables.push(game_match_table);
         }
 
+        // start/end time
+        let start_time = Self::string_to_tms_date_time(m.start_time)?;
+        let end_time = Self::string_to_tms_date_time(m.end_time)?;
+
         schedule.game_matches.push(GameMatch {
           match_number: m.match_number.clone(),
-          start_time: m.start_time.clone(),
-          end_time: m.end_time.clone(),
+          start_time,
+          end_time,
           game_match_tables: game_match_tables,
         });
       }
@@ -206,10 +242,14 @@ impl CsvToTmsSchedule for V1 {
           judging_session_pods.push(judging_session_pod);
         }
 
+        // start/end time
+        let start_time = Self::string_to_tms_date_time(j.start_time)?;
+        let end_time = Self::string_to_tms_date_time(j.end_time)?;
+
         schedule.judging_sessions.push(JudgingSession {
           session_number: j.session_number.clone(),
-          start_time: j.start_time.clone(),
-          end_time: j.end_time.clone(),
+          start_time,
+          end_time,
           judging_session_pods: judging_session_pods,
         });
       }
@@ -229,10 +269,14 @@ impl CsvToTmsSchedule for V1 {
           game_match_tables.push(game_match_table);
         }
 
+        // start/end time
+        let start_time = Self::string_to_tms_date_time(m.start_time)?;
+        let end_time = Self::string_to_tms_date_time(m.end_time)?;
+
         schedule.practice_game_matches.push(GameMatch {
           match_number: m.match_number.clone(),
-          start_time: m.start_time.clone(),
-          end_time: m.end_time.clone(),
+          start_time,
+          end_time,
           game_match_tables: game_match_tables,
         });
       }

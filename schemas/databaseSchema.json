@@ -3,10 +3,18 @@
   "title": "DatabaseSchema",
   "type": "object",
   "required": [
+    "_game_match",
+    "_judging_session",
     "_team",
     "_tournament_config"
   ],
   "properties": {
+    "_game_match": {
+      "$ref": "#/definitions/GameMatch"
+    },
+    "_judging_session": {
+      "$ref": "#/definitions/JudgingSession"
+    },
     "_team": {
       "$ref": "#/definitions/Team"
     },
@@ -15,6 +23,104 @@
     }
   },
   "definitions": {
+    "GameMatch": {
+      "type": "object",
+      "required": [
+        "end_time",
+        "game_match_tables",
+        "match_number",
+        "start_time"
+      ],
+      "properties": {
+        "end_time": {
+          "$ref": "#/definitions/TmsDateTime"
+        },
+        "game_match_tables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GameMatchTable"
+          }
+        },
+        "match_number": {
+          "type": "string"
+        },
+        "start_time": {
+          "$ref": "#/definitions/TmsDateTime"
+        }
+      }
+    },
+    "GameMatchTable": {
+      "type": "object",
+      "required": [
+        "score_submitted",
+        "table",
+        "team_number"
+      ],
+      "properties": {
+        "score_submitted": {
+          "type": "boolean"
+        },
+        "table": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
+    "JudgingSession": {
+      "type": "object",
+      "required": [
+        "end_time",
+        "judging_session_pods",
+        "session_number",
+        "start_time"
+      ],
+      "properties": {
+        "end_time": {
+          "$ref": "#/definitions/TmsDateTime"
+        },
+        "judging_session_pods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JudgingSessionPod"
+          }
+        },
+        "session_number": {
+          "type": "string"
+        },
+        "start_time": {
+          "$ref": "#/definitions/TmsDateTime"
+        }
+      }
+    },
+    "JudgingSessionPod": {
+      "type": "object",
+      "required": [
+        "core_values_submitted",
+        "innovation_submitted",
+        "pod",
+        "robot_design_submitted",
+        "team_number"
+      ],
+      "properties": {
+        "core_values_submitted": {
+          "type": "boolean"
+        },
+        "innovation_submitted": {
+          "type": "boolean"
+        },
+        "pod": {
+          "type": "string"
+        },
+        "robot_design_submitted": {
+          "type": "boolean"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      }
+    },
     "Team": {
       "type": "object",
       "required": [
@@ -38,6 +144,80 @@
           "type": "string"
         },
         "ranking": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
+    "TmsDate": {
+      "type": "object",
+      "required": [
+        "day",
+        "month",
+        "year"
+      ],
+      "properties": {
+        "day": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "month": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "year": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TmsDateTime": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TmsDate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "time": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TmsTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "TmsTime": {
+      "type": "object",
+      "required": [
+        "hour",
+        "minute",
+        "second"
+      ],
+      "properties": {
+        "hour": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "minute": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "second": {
           "type": "integer",
           "format": "uint32",
           "minimum": 0.0

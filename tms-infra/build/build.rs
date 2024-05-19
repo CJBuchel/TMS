@@ -8,6 +8,8 @@ use schemars::JsonSchema;
 struct DatabaseSchema {
   _team: Team,
   _tournament_config: TournamentConfig,
+  _game_match: GameMatch,
+  _judging_session: JudgingSession,
 }
 
 #[derive(JsonSchema)]

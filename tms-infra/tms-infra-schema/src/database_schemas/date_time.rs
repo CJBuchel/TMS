@@ -2,21 +2,21 @@ use echo_tree_infra::DataSchemeExtensions;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct TmsDate {
   pub year: i32, // 4-digit year
-  pub month: u8, // 1-12
-  pub day: u8, // 1-31
+  pub month: u32, // 1-12
+  pub day: u32, // 1-31
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct TmsTime {
-  pub hour: u8, // 24-hour format
-  pub minute: u8, // 0-59
-  pub second: u8, // 0-59
+  pub hour: u32, // 24-hour format
+  pub minute: u32, // 0-59
+  pub second: u32, // 0-59
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct TmsDateTime {
   pub date: Option<TmsDate>,
   pub time: Option<TmsTime>,

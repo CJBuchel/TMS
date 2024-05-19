@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
 import 'package:tms/widgets/base_responsive.dart';
 
@@ -10,6 +11,7 @@ class _DrawStack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double buttonWidth = ResponsiveBreakpoints.of(context).isMobile ? 20 : 30;
     return Stack(
       children: [
         // inserted child
@@ -23,7 +25,7 @@ class _DrawStack extends StatelessWidget {
               Scaffold.of(context).openDrawer();
             },
             child: Container(
-              width: 40,
+              width: buttonWidth,
               height: 80,
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,

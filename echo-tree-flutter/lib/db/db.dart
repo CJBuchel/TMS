@@ -5,12 +5,12 @@ import 'dart:collection';
 import 'package:echo_tree_flutter/db/tree_hierarchy.dart';
 import 'package:echo_tree_flutter/db/tree_map.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
-import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 
 class Database {
+  static const String METADATA_PATH = "metadata";
+
   static final Database _instance = Database._internal();
-  final TreeHierarchy _treeHierarchy = TreeHierarchy();
+  final TreeHierarchy _treeHierarchy = TreeHierarchy("$METADATA_PATH:hierarchy:trees");
   final TreeMap _treeMap = TreeMap();
 
   factory Database() {
@@ -19,22 +19,15 @@ class Database {
 
   Database._internal();
 
-  Future<void> init(String path, String metaDataPath, {Map<String, String>? hierarchy}) async {
-    if (!kIsWeb) {
-      // String path = Directory.current.path;
-      // path += "/tree.kvdb";
-      Hive.init(path);
-    }
-    List<String> trees = await _treeHierarchy.getTreeMapNames("$metaDataPath:hierarchy:trees", hierarchy: hierarchy);
-    for (var treeName in trees) {
-      if (treeName.startsWith(metaDataPath)) {
-        EchoTreeLogger().w("Trees cannot have metadata reference: $treeName");
+  Future<void> init({Map<String, String>? hierarchy}) async {
+    List<String> trees = await _treeHierarchy.getTreeMapPaths(hierarchy: hierarchy);
+    for (var treePath in trees) {
+      if (treePath.startsWith(METADATA_PATH)) {
+        EchoTreeLogger().w("Trees cannot have metadata reference: $treePath");
       } else {
-        if (!_treeMap.treeOpen(treeName)) _treeMap.openTree(treeName);
+        _treeMap.addTree(treePath);
       }
     }
-    // _treeHierarchy = TreeHierarchy(metadataPath);
-    // _treeMap = await _treeHierarchy.openTreeMap(hierarchy: hierarchy);
   }
 
   TreeHierarchy get getTreeHierarchy => _treeHierarchy;
@@ -45,14 +38,9 @@ class Database {
     _treeHierarchy.clear();
   }
 
-  void drop() {
-    _treeMap.drop();
-    _treeHierarchy.drop();
-  }
-
   void addTree(String treeName, String schema) {
     _treeHierarchy.insertSchema(treeName, schema);
-    _treeMap.openTree(treeName);
+    _treeMap.addTree(treeName);
   }
 
   void removeTree(String treeName) {
@@ -63,7 +51,7 @@ class Database {
   HashMap<String, int> get getChecksums {
     HashMap<String, int> checksums = HashMap();
     _treeMap.forEach((treeName, tree) {
-      checksums[treeName] = tree.getChecksum;
+      checksums[treeName] = tree.checksum;
     });
 
     return checksums;

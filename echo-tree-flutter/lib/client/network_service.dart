@@ -23,8 +23,6 @@ class EchoTreeNetworkService extends EchoTreeSubscriptionManager {
   String _authToken = "";
   String _uuid = "";
   String _connectedUrl = "";
-  String _dbPath = "";
-  String _metaDataPath = "";
   Map<String, String> _roles = {};
   WebSocketChannel? _channel;
 
@@ -41,12 +39,7 @@ class EchoTreeNetworkService extends EchoTreeSubscriptionManager {
     // subscription manager (yea, i know it does it one at a time. It just works better logically)
     onFirstSubscribe((topic) => _serverSubscribe([topic]));
     onLastUnsubscribe((topic) => _serverUnsubscribe([topic]));
-  }
-
-  Future<void> init(String dbPath, String metadataPath) async {
-    _dbPath = dbPath;
-    _metaDataPath = metadataPath;
-    await Database().init(dbPath, metadataPath); // initialize the database
+    Database().init(); // initialize the database
   }
 
   // getters
@@ -205,7 +198,7 @@ class EchoTreeNetworkService extends EchoTreeSubscriptionManager {
       // initialize the database
       if (response.hierarchy.isNotEmpty) {
         EchoTreeLogger().i("initializing new metadata...");
-        Database().init(_dbPath, _metaDataPath, hierarchy: response.hierarchy);
+        Database().init(hierarchy: response.hierarchy);
       }
 
       // startup the websocket

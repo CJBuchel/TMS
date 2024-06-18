@@ -1,33 +1,27 @@
 // sort tms date time
 import 'package:tms/schemas/database_schema.dart';
 
-int getTmsDateTimeAsValue(TmsDateTime tmsDateTime) {
-  int value = 0;
-  value += tmsDateTime.date?.year ?? 0;
-  value += tmsDateTime.date?.month ?? 0;
-  value += tmsDateTime.date?.day ?? 0;
+// provides unix timestamp for tms date time
+int getTmsDateTimestamp(TmsDateTime tmsDateTime) {
+  int timestamp = 0;
 
-  value += tmsDateTime.time?.hour ?? 0;
-  value += tmsDateTime.time?.minute ?? 0;
-  value += tmsDateTime.time?.second ?? 0;
+  // date
+  timestamp += (tmsDateTime.date?.year ?? 0) * 10000000000; // 10 digits for year
+  timestamp += (tmsDateTime.date?.month ?? 0) * 100000000; // 2 digits for month
+  timestamp += (tmsDateTime.date?.day ?? 0) * 1000000; // 2 digits for day
 
-  return value;
+  // time
+  timestamp += (tmsDateTime.time?.hour ?? 0) * 10000; // 2 digits for hour
+  timestamp += (tmsDateTime.time?.minute ?? 0) * 100; // 2 digits for minute
+  timestamp += tmsDateTime.time?.second ?? 0; // 2 digits for second
+
+  return timestamp;
 }
 
-// -1 if a < b
-// 1 if a > b
-// 0 if a == b
 int tmsDateTimeCompare(TmsDateTime a, TmsDateTime b) {
-  int aValue = getTmsDateTimeAsValue(a);
-  int bValue = getTmsDateTimeAsValue(b);
-
-  if (aValue < bValue) {
-    return -1;
-  } else if (aValue > bValue) {
-    return 1;
-  } else {
-    return 0;
-  }
+  int aValue = getTmsDateTimestamp(a);
+  int bValue = getTmsDateTimestamp(b);
+  return aValue.compareTo(bValue);
 }
 
 // to string

@@ -34,7 +34,7 @@ class _DrawStack extends StatelessWidget {
                   bottomRight: Radius.circular(10),
                 ),
               ),
-              child: const Center(child: Icon(Icons.keyboard_arrow_right)),
+              child: const Center(child: Icon(Icons.chevron_right)),
             ),
           ),
         )

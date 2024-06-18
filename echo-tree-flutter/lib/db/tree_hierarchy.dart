@@ -1,13 +1,11 @@
-import 'package:echo_tree_flutter/db/managed_tree.dart';
+import 'package:echo_tree_flutter/db/managed_tree/managed_tree.dart';
 
 class TreeHierarchy {
   final ManagedTree _hierarchy;
 
-  TreeHierarchy() : _hierarchy = ManagedTree();
+  TreeHierarchy(String hierarchyPath) : _hierarchy = ManagedTree(hierarchyPath);
 
-  Future<void> _initializeHierarchy(String metaDataTree, {Map<String, String>? hierarchy}) async {
-    await _hierarchy.open(treeName: metaDataTree);
-
+  Future<void> _initializeHierarchy({Map<String, String>? hierarchy}) async {
     if (hierarchy != null) {
       List<Future> futures = [];
       hierarchy.forEach((key, value) {
@@ -17,33 +15,25 @@ class TreeHierarchy {
     }
   }
 
-  Future<List<String>> getTreeMapNames(String metaDataTree, {Map<String, String>? hierarchy}) async {
-    await _initializeHierarchy(metaDataTree, hierarchy: hierarchy);
-    return Future.value(_hierarchy.getAsHashmap.keys.toList());
+  Future<List<String>> getTreeMapPaths({Map<String, String>? hierarchy}) async {
+    await _initializeHierarchy(hierarchy: hierarchy);
+    return Future.value(_hierarchy.getDataMap().keys.toList());
   }
 
-  Future<int> clear() async {
+  Future<void> clear() async {
     return _hierarchy.clear();
   }
 
-  Future<void> drop() async {
-    return _hierarchy.drop();
+  Future<void> insertSchema(String treePath, String value) {
+    return _hierarchy.insert(treePath, value);
   }
 
-  Future<void> open() {
-    return _hierarchy.open();
+  Future<void> removeSchema(String treePath) {
+    return _hierarchy.remove(treePath);
   }
 
-  Future<void> insertSchema(String tree, String value) {
-    return _hierarchy.insert(tree, value);
-  }
-
-  Future<void> removeSchema(String tree) {
-    return _hierarchy.remove(tree);
-  }
-
-  String getSchema(String tree) {
-    return _hierarchy.get(tree);
+  String getSchema(String treePath) {
+    return _hierarchy.get(treePath);
   }
 
   void forEach(void Function(String, String) f) {

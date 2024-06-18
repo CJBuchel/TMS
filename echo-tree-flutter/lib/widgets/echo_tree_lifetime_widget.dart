@@ -1,4 +1,3 @@
-import 'package:echo_tree_flutter/db/db.dart';
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/widgets.dart';
@@ -10,10 +9,7 @@ mixin EchoTreeSubscriberMixin<T extends StatefulWidget> on State<T> {
   void subscribeToTrees(List<String> trees) {
     _subscriptions.addAll(trees);
     for (var tree in trees) {
-      Database().getTreeMap.onTreeOpen(tree, () {
-        EchoTreeLogger().d("Tree created $tree, running sub function...");
-        EchoTreeClient().subscribe([tree]);
-      });
+      EchoTreeClient().subscribe([tree]);
     }
   }
 

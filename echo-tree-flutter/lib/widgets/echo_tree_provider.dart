@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:echo_tree_flutter/client/network_service.dart';
 import 'package:echo_tree_flutter/db/db.dart';
-import 'package:echo_tree_flutter/db/managed_tree.dart';
+import 'package:echo_tree_flutter/db/managed_tree/managed_tree.dart';
+import 'package:echo_tree_flutter/db/managed_tree/managed_tree_event.dart';
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/widgets.dart';
@@ -13,48 +14,48 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
   final V Function(dynamic) fromJson;
   Map<K, V> items = {};
 
-  late final StreamSubscription<Map<String, dynamic>> _updatesStream;
-  ManagedTree? managedTree;
+  late final StreamSubscription<ManagedTreeEvent> _eventStream;
+  ManagedTree managedTree;
 
-  EchoTreeProvider({required this.tree, required this.fromJson}) {
-    // populate data
-    // _populateData();
-    EchoTreeClient().state.addListener(_treeListener);
-    // listen and update items
-    _startListener();
+  EchoTreeProvider({required this.tree, required this.fromJson}) : managedTree = Database().getTreeMap.getTree(tree) {
+    // check if connected listener (used to populate data if connection reset)
+    EchoTreeClient().state.addListener(_connectedListener);
+    // listen and update items in map
+    _treeEventListener();
   }
 
-  void _startListener() async {
-    managedTree = await Database().getTreeMap.getTree(tree);
+  void _treeEventListener() async {
+    managedTree.updateStream.listen((event) {});
 
-    if (managedTree != null) {
-      _updatesStream = managedTree!.updates.listen((update) {
-        // EchoTreeLogger().i("updating items: $update");
-        update.forEach((key, value) {
-          if (value == null) {
-            items.remove(key as K);
-          } else {
-            items[key as K] = fromJson(jsonDecode(value as String));
-          }
-        });
+    _eventStream = managedTree.updateStream.listen((event) {
+      if (event.deleted) {
+        items.remove(event.key as K);
+        return;
+      } else {
+        if (event.value != null) {
+          V? entry = _entryFromString(event.value as String);
+          if (entry != null) items[event.key as K] = entry;
+        }
+      }
 
-        // notify listeners when the data changes
-        notifyListeners();
-      });
-    } else {
-      EchoTreeLogger().e("Error: ManagedTree is null, the provider is not live");
-    }
+      // // notify listeners when the data changes
+      notifyListeners();
+    });
   }
 
-  void _treeListener() {
+  void _connectedListener() {
     if (EchoTreeClient().state.value == EchoTreeConnection.connected) {
       _populateData();
     }
   }
 
-  V? _entryFromData(dynamic data) {
+  V? _entryFromString(String strJson) {
+    return _entryFromJson(jsonDecode(strJson));
+  }
+
+  V? _entryFromJson(dynamic json) {
     try {
-      return fromJson(data);
+      return fromJson(json);
     } catch (e) {
       EchoTreeLogger().w("Warning parsing data: $e, null entry returned");
       return null;
@@ -62,13 +63,13 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
   }
 
   void _populateData() {
-    final rawData = managedTree?.getAsHashmap ?? {};
+    final rawData = managedTree.getDataMap();
     EchoTreeLogger().i("Populating data: $rawData");
 
     // New item map
     Map<K, V> newItems = {};
     rawData.forEach((key, value) {
-      V? entry = _entryFromData(value);
+      V? entry = _entryFromString(value);
       if (entry != null) {
         newItems[key as K] = entry;
       }
@@ -79,7 +80,7 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
 
   @override
   void dispose() {
-    _updatesStream.cancel();
+    _eventStream.cancel();
     super.dispose();
   }
 }

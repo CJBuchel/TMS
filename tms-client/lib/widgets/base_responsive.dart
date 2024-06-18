@@ -16,8 +16,8 @@ class BaseResponsive extends StatelessWidget {
       breakpoints: [
         const Breakpoint(start: 0, end: 600, name: MOBILE),
         const Breakpoint(start: 601, end: 820, name: TABLET), // ipad air is 820 in portrait
-        const Breakpoint(start: 821, end: 1920, name: DESKTOP),
-        const Breakpoint(start: 1921, end: double.infinity, name: 'XL'),
+        const Breakpoint(start: 821, end: double.infinity, name: DESKTOP),
+        // const Breakpoint(start: 1921, end: double.infinity, name: 'XL'),
       ],
 
       // landscape breakpoints

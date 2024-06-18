@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:echo_tree_flutter/db/checksum.dart';
 import 'package:echo_tree_flutter/db/managed_tree/managed_tree_event.dart';
-import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _SP_Wrapper {
@@ -75,7 +74,7 @@ class ManagedTree {
     // get all keys that start with key
     List<String> keys = _spWrapper.ls?.getKeys().where((k) => k.startsWith(_treePath)).toList() ?? [];
 
-    // sort keys
+    // just be mindful the keys need to be in order (checksum requires specific order, so keep server and client same)
     List<String> sortedKeys = keys.toList(growable: true)..sort((k1, k2) => k1.compareTo(k2));
 
     // get the values for the keys
@@ -119,19 +118,7 @@ class ManagedTree {
   }
 
   // checksum
-  int get checksum {
-    if (_checksum != 0) {
-      // log first item
-      var data = getDataMap();
-      EchoTreeLogger().d("First Item: ${data.keys.first}");
-
-      EchoTreeLogger().d('ManagedTree checksum: $_checksum');
-    } else {
-      _updateChecksum();
-    }
-    return _checksum;
-  }
-
+  int get checksum => _checksum;
   String get getAsJson => jsonEncode(getDataMap());
   Stream<ManagedTreeEvent> get updateStream => _updatesController.stream;
 }

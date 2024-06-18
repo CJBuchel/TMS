@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tms/views/match_controller/match_table.dart';
+import 'package:tms/views/match_controller/match_table/match_table.dart';
 
 class MatchController extends StatelessWidget {
   const MatchController({Key? key}) : super(key: key);

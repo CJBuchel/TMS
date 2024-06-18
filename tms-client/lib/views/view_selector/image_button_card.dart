@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/utils/color_modifiers.dart';
+import 'package:tms/utils/logger.dart';
 
 class ImageButtonCard extends StatelessWidget {
   final String? title;
@@ -27,14 +28,17 @@ class ImageButtonCard extends StatelessWidget {
     double imageHeight;
 
     if (ResponsiveBreakpoints.of(context).isDesktop) {
+      TmsLogger().d('Desktop');
       titleSize = 28;
-      cardHeight = 280;
+      cardHeight = 220;
       imageHeight = 115;
     } else if (ResponsiveBreakpoints.of(context).isTablet) {
+      TmsLogger().d('Tablet');
       titleSize = 24;
       cardHeight = 200;
       imageHeight = 100;
     } else {
+      TmsLogger().d('Mobile');
       titleSize = 20; // mobile
       cardHeight = 150;
       imageHeight = 80;

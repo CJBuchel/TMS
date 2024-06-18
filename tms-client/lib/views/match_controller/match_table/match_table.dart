@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/utils/tms_date_time.dart';
+import 'package:tms/views/match_controller/match_table/match_table_item.dart';
 
 class MatchTable extends StatelessWidget {
   const MatchTable({Key? key}) : super(key: key);
@@ -14,14 +14,9 @@ class MatchTable extends StatelessWidget {
       selector: (_, provider) => provider.matches[index],
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, match, _) {
-        return Card(
-          color: index.isEven ? Theme.of(context).cardColor : lighten(Theme.of(context).cardColor, 0.05),
-          child: ListTile(
-            leading: const Icon(Icons.sports_esports),
-            title: Text(match.matchNumber),
-            subtitle: Text(tmsDateTimeToString(match.startTime)),
-            trailing: const Icon(Icons.chevron_right),
-          ),
+        return MatchTableItem(
+          match: match,
+          backgroundColor: index.isEven ? Theme.of(context).cardColor : lighten(Theme.of(context).cardColor, 0.05),
         );
       },
     );

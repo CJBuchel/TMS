@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/app.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/tms_date_time.dart';
@@ -14,11 +15,8 @@ class MatchTableItem extends StatelessWidget {
   }) : super(key: key);
 
   Widget _leading() {
-    return Container(
+    return SizedBox(
       width: 100,
-      decoration: BoxDecoration(
-          // border: Border.all(color: Colors.blue),
-          ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -40,7 +38,7 @@ class MatchTableItem extends StatelessWidget {
     return const Icon(Icons.chevron_right);
   }
 
-  Widget _tableInfo(GameMatchTable table) {
+  Widget _tableInfo(GameMatchTable table, Color borderColor) {
     return Expanded(
       flex: 1,
       child: Container(
@@ -48,6 +46,7 @@ class MatchTableItem extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
         decoration: BoxDecoration(
           // border: Border.all(color: Colors.blue),
+          border: Border.all(color: borderColor),
           borderRadius: BorderRadius.circular(8),
           color: lighten(backgroundColor ?? Colors.white, 0.05),
         ),
@@ -62,11 +61,11 @@ class MatchTableItem extends StatelessWidget {
     );
   }
 
-  Widget _central() {
+  Widget _central(Color borderColor) {
     List<Widget> children = [];
 
     for (GameMatchTable table in match.gameMatchTables) {
-      children.add(_tableInfo(table));
+      children.add(_tableInfo(table, borderColor));
     }
 
     return Row(
@@ -77,10 +76,15 @@ class MatchTableItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = TMSApp.of(context).themeMode == ThemeMode.dark;
+    Color borderColor = isDark ? Colors.grey[800] ?? Colors.black : Colors.black;
+
     return Card(
+      margin: const EdgeInsets.all(5),
       color: backgroundColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: borderColor),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
@@ -96,7 +100,7 @@ class MatchTableItem extends StatelessWidget {
 
               // central/main info
               Expanded(
-                child: _central(),
+                child: _central(borderColor),
               ),
 
               // trailing

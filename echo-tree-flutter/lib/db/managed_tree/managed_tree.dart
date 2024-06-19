@@ -39,7 +39,7 @@ class ManagedTree {
   // stream controller
   final StreamController<ManagedTreeEvent> _updatesController = StreamController<ManagedTreeEvent>.broadcast();
 
-  ManagedTree(String treePath) : _treePath = treePath;
+  ManagedTree(String treePath) : _treePath = treePath + ":";
 
   void _updateChecksum() {
     Map<String, String> data = getDataMap();

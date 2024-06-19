@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tms/views/match_controller/match_table/match_table.dart';
+import 'package:tms/views/match_controller/match_selector/match_table.dart';
 
 class MatchController extends StatelessWidget {
   const MatchController({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class MatchController extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox.shrink();
               }
-              return const MatchTable();
+              return MatchTable();
             },
           ),
         ),

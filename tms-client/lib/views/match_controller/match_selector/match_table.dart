@@ -4,19 +4,38 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/views/match_controller/match_table/match_table_item.dart';
+import 'package:tms/views/match_controller/match_selector/match_table_item.dart';
+import 'package:tms/widgets/expandable/expandable_tile.dart';
 
 class MatchTable extends StatelessWidget {
-  const MatchTable({Key? key}) : super(key: key);
+  MatchTable({Key? key}) : super(key: key);
 
-  Widget _matchItem(int index) {
+  // expansion controllers for each match item
+  final List<ExpansionController> _controllers = [];
+
+  Widget _matchItem(int listIndex) {
+    if (listIndex >= _controllers.length) {
+      _controllers.add(ExpansionController(isExpanded: false));
+    }
+
     return Selector<GameMatchProvider, GameMatch>(
-      selector: (_, provider) => provider.matches[index],
+      selector: (_, provider) => provider.matches[listIndex],
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, match, _) {
+        // listenable builder for the expanded index
         return MatchTableItem(
           match: match,
-          backgroundColor: index.isEven ? Theme.of(context).cardColor : lighten(Theme.of(context).cardColor, 0.05),
+          controller: _controllers[listIndex],
+          onChange: (isExpanded) {
+            if (isExpanded) {
+              _controllers.forEach((element) {
+                if (element != _controllers[listIndex]) {
+                  element.collapse();
+                }
+              });
+            }
+          },
+          backgroundColor: listIndex.isEven ? Theme.of(context).cardColor : lighten(Theme.of(context).cardColor, 0.05),
         );
       },
     );

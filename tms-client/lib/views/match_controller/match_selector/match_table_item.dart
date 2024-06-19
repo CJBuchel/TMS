@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:tms/app.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/tms_date_time.dart';
+import 'package:tms/widgets/expandable/expandable_tile.dart';
 
 class MatchTableItem extends StatelessWidget {
   final GameMatch match;
   final Color? backgroundColor;
+  final Function(bool)? onChange;
+  final ExpansionController? controller;
 
   const MatchTableItem({
     Key? key,
     required this.match,
     this.backgroundColor,
+    this.controller,
+    this.onChange,
   }) : super(key: key);
 
   Widget _leading() {
@@ -35,7 +39,13 @@ class MatchTableItem extends StatelessWidget {
   }
 
   Widget _trailing() {
-    return const Icon(Icons.chevron_right);
+    // return const Icon(Icons.chevron_right);
+    return ValueListenableBuilder(
+      valueListenable: controller ?? ExpansionController(),
+      builder: (context, isExpanded, child) {
+        return isExpanded ? const Icon(Icons.expand_more) : const Icon(Icons.chevron_right);
+      },
+    );
   }
 
   Widget _tableInfo(GameMatchTable table, Color borderColor) {
@@ -76,8 +86,7 @@ class MatchTableItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = TMSApp.of(context).themeMode == ThemeMode.dark;
-    Color borderColor = isDark ? Colors.grey[800] ?? Colors.black : Colors.black;
+    Color borderColor = Colors.black;
 
     return Card(
       margin: const EdgeInsets.all(5),
@@ -86,12 +95,10 @@ class MatchTableItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(color: borderColor),
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          print("Tapped");
-        },
-        child: Padding(
+      child: ExpandableTile(
+        controller: controller,
+        onChange: onChange,
+        header: Padding(
           padding: const EdgeInsets.all(10),
           child: Row(
             children: [
@@ -108,6 +115,7 @@ class MatchTableItem extends StatelessWidget {
             ],
           ),
         ),
+        body: _central(borderColor),
       ),
     );
   }

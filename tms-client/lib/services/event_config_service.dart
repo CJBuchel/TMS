@@ -100,4 +100,19 @@ class EventConfigService {
       return HttpStatus.badRequest;
     }
   }
+
+  Future<int> purge() async {
+    try {
+      var response = await Network().networkPost("/tournament/config/purge", {});
+      if (response.$1) {
+        TmsLogger().i("Purged tournament configuration");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
 }

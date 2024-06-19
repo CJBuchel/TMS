@@ -3,6 +3,7 @@ use crate::database::SharedDatabase;
 use self::client::Client;
 use warp::Filter;
 pub mod client_access;
+pub mod client_publish;
 pub mod client;
 
 pub type ClientHashMap = std::collections::HashMap<String, Client>;

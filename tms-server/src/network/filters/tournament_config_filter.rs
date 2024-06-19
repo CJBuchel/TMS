@@ -106,6 +106,16 @@ pub fn tournament_config_filter(clients: ClientMap, db: SharedDatabase) -> impl 
     .and(check_auth_token_filter(clients.clone()))
     .and_then(tournament_config_get_season);
 
+  let tournament_purge_path = tournament_config_path.and(warp::path("purge"));
+
+  let purge = tournament_purge_path
+    .and(warp::post())
+    .and(with_db(db.clone()))
+    .and(with_clients(clients.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["admin"]))
+    .and_then(tournament_config_purge);
+
   set_name.or(get_name)
     .or(set_timer_length)
     .or(get_timer_length)
@@ -121,4 +131,6 @@ pub fn tournament_config_filter(clients: ClientMap, db: SharedDatabase) -> impl 
     
     .or(set_season)
     .or(get_season)
+
+    .or(purge)
 }

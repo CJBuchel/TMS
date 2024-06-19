@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/services/schedule_service.dart';
@@ -18,9 +20,11 @@ class ScheduleProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> uploadSchedule() async {
+  Future<int> uploadSchedule() async {
     if (result != null) {
-      await _scheduleService.uploadSchedule(result!.files.first.bytes!);
+      return await _scheduleService.uploadSchedule(result!.files.first.bytes!);
+    } else {
+      return HttpStatus.badRequest;
     }
   }
 }

@@ -13,6 +13,7 @@ class NetworkSchema {
     LoginResponse loginResponse;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
+    TmsServerSocketMessage tmsServerSocketMessage;
     TournamentConfigSetBackupIntervalRequest tournamentConfigSetBackupIntervalRequest;
     TournamentConfigSetEndgameTimerLengthRequest tournamentConfigSetEndgameTimerLengthRequest;
     TournamentConfigSetNameRequest tournamentConfigSetNameRequest;
@@ -25,6 +26,7 @@ class NetworkSchema {
         required this.loginResponse,
         required this.registerRequest,
         required this.registerResponse,
+        required this.tmsServerSocketMessage,
         required this.tournamentConfigSetBackupIntervalRequest,
         required this.tournamentConfigSetEndgameTimerLengthRequest,
         required this.tournamentConfigSetNameRequest,
@@ -38,6 +40,7 @@ class NetworkSchema {
         loginResponse: LoginResponse.fromJson(json["_login_response"]),
         registerRequest: RegisterRequest.fromJson(json["_register_request"]),
         registerResponse: RegisterResponse.fromJson(json["_register_response"]),
+        tmsServerSocketMessage: TmsServerSocketMessage.fromJson(json["_tms_server_socket_message"]),
         tournamentConfigSetBackupIntervalRequest: TournamentConfigSetBackupIntervalRequest.fromJson(json["_tournament_config_set_backup_interval_request"]),
         tournamentConfigSetEndgameTimerLengthRequest: TournamentConfigSetEndgameTimerLengthRequest.fromJson(json["_tournament_config_set_endgame_timer_length_request"]),
         tournamentConfigSetNameRequest: TournamentConfigSetNameRequest.fromJson(json["_tournament_config_set_name_request"]),
@@ -51,6 +54,7 @@ class NetworkSchema {
         "_login_response": loginResponse.toJson(),
         "_register_request": registerRequest.toJson(),
         "_register_response": registerResponse.toJson(),
+        "_tms_server_socket_message": tmsServerSocketMessage.toJson(),
         "_tournament_config_set_backup_interval_request": tournamentConfigSetBackupIntervalRequest.toJson(),
         "_tournament_config_set_endgame_timer_length_request": tournamentConfigSetEndgameTimerLengthRequest.toJson(),
         "_tournament_config_set_name_request": tournamentConfigSetNameRequest.toJson(),
@@ -178,6 +182,38 @@ class RegisterResponse {
     };
 }
 
+class TmsServerSocketMessage {
+    String authToken;
+    String? message;
+    TmsServerSocketEvent messageEvent;
+
+    TmsServerSocketMessage({
+        required this.authToken,
+        this.message,
+        required this.messageEvent,
+    });
+
+    factory TmsServerSocketMessage.fromJson(Map<String, dynamic> json) => TmsServerSocketMessage(
+        authToken: json["auth_token"],
+        message: json["message"],
+        messageEvent: tmsServerSocketEventValues.map[json["message_event"]]!,
+    );
+
+    Map<String, dynamic> toJson() => {
+        "auth_token": authToken,
+        "message": message,
+        "message_event": tmsServerSocketEventValues.reverse[messageEvent],
+    };
+}
+
+enum TmsServerSocketEvent {
+    PURGE_EVENT
+}
+
+final tmsServerSocketEventValues = EnumValues({
+    "PurgeEvent": TmsServerSocketEvent.PURGE_EVENT
+});
+
 class TournamentConfigSetBackupIntervalRequest {
     int interval;
 
@@ -272,4 +308,16 @@ class TournamentConfigSetTimerLengthRequest {
     Map<String, dynamic> toJson() => {
         "timer_length": timerLength,
     };
+}
+
+class EnumValues<T> {
+    Map<String, T> map;
+    late Map<T, String> reverseMap;
+
+    EnumValues(this.map);
+
+    Map<T, String> get reverse {
+        reverseMap = map.map((k, v) => MapEntry(v, k));
+        return reverseMap;
+    }
 }

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/schedule_provider.dart';
 import 'package:tms/views/setup/input_setter.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
-import 'package:tms/widgets/dialogs/popup_dialog.dart';
+import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class ScheduleSetup extends StatelessWidget {
   @override
@@ -15,8 +15,8 @@ class ScheduleSetup extends StatelessWidget {
             return InputSetter(
               label: "Upload schedule:",
               onSet: () async {
-                await provider.uploadSchedule().then((_) {
-                  PopupDialog.success(title: "Success", message: "Successfully uploaded schedule").show(context);
+                await provider.uploadSchedule().then((res) {
+                  SnackBarDialog.fromStatus(message: "Set Backup Interval", status: res).show(context);
                 });
               },
               confirmDialogStyle: ConfirmDialogStyle.warn(

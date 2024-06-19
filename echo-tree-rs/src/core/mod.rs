@@ -90,6 +90,16 @@ impl EchoTreeServer {
   pub async fn clear(&mut self) {
     let mut db = self.database.write().await;
     db.clear().await;
+
+    // echo change to all clients
+    let echo_trees: Vec<EchoTreeEventTree> = db.get_tree_map().await.iter().map(|(tree_name, tree)| {
+      EchoTreeEventTree {
+        tree_name: tree_name.clone(),
+        tree: tree.get_as_hashmap().unwrap_or_default(),
+      }
+    }).collect();
+
+    self.clients.read().await.echo_tree(echo_trees);
   }
 
   pub async fn drop(&mut self) {

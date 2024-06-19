@@ -2424,6 +2424,8 @@ dependencies = [
  "mdns-sd",
  "rand",
  "rcgen",
+ "serde",
+ "serde_json",
  "structopt",
  "tms-infra",
  "tms-schedule-handler",

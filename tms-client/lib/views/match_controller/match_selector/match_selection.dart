@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/views/match_controller/match_selector/match_table_item.dart';
+import 'package:tms/views/match_controller/match_selector/match_selection_item.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 
-class MatchTable extends StatelessWidget {
-  MatchTable({Key? key}) : super(key: key);
+class MatchSelection extends StatelessWidget {
+  MatchSelection({Key? key}) : super(key: key);
 
   // expansion controllers for each match item
   final List<ExpansionController> _controllers = [];
@@ -23,7 +23,7 @@ class MatchTable extends StatelessWidget {
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, match, _) {
         // listenable builder for the expanded index
-        return MatchTableItem(
+        return MatchSelectionItem(
           match: match,
           controller: _controllers[listIndex],
           onChange: (isExpanded) {

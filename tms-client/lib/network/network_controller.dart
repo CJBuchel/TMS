@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/network/db.dart';
@@ -131,9 +132,19 @@ class NetworkController {
     await _websocketController.disconnect();
   }
 
+  // http
   Future<ServerResponse> httpPost(String route, dynamic body, bool encode) =>
       _httpController.httpPost(route, body, encode);
   Future<ServerResponse> httpGet(String route) => _httpController.httpGet(route);
   Future<ServerResponse> httpDelete(String route, dynamic body, bool encode) =>
       _httpController.httpDelete(route, body, encode);
+
+  // websocket
+  void subscribe(TmsServerSocketEvent event, TmsEventHandler handler) {
+    _websocketController.subscribe(event, handler);
+  }
+
+  void unsubscribe(TmsServerSocketEvent event, TmsEventHandler handler) {
+    _websocketController.unsubscribe(event, handler);
+  }
 }

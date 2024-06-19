@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:tms/network/service_discovery.dart';
+import 'package:tms/network/ws.dart';
+import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/network/network_controller.dart';
@@ -82,4 +84,12 @@ class Network {
   Future<ServerResponse> networkGet(String route) => _controller.httpGet(route);
   Future<ServerResponse> networkDelete(String route, dynamic body, {bool encode = true}) =>
       _controller.httpDelete(route, body, encode);
+
+  void subscribe(TmsServerSocketEvent event, TmsEventHandler handler) {
+    _controller.subscribe(event, handler);
+  }
+
+  void unsubscribe(TmsServerSocketEvent event, TmsEventHandler handler) {
+    _controller.unsubscribe(event, handler);
+  }
 }

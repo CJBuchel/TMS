@@ -122,6 +122,7 @@ impl RoleManager {
     if role.password == password {
       return true
     } else {
+      warn!("password mismatch for role: {}", role_id);
       return false
     }
   }

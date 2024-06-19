@@ -54,4 +54,10 @@ class EventConfigProvider extends EchoTreeProvider<String, TournamentConfig> {
     int status = await _service.setSeason(season);
     return status;
   }
+
+  Future<int> purgeEvent() async {
+    TmsLogger().d("Purging event");
+    int status = await _service.purge();
+    return status;
+  }
 }

@@ -10,3 +10,6 @@ pub use login_requests::*;
 
 mod tournament_config_requests;
 pub use tournament_config_requests::*;
+
+mod socket_protocol;
+pub use socket_protocol::*;

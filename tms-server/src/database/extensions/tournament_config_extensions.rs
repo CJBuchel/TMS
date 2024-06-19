@@ -21,6 +21,8 @@ pub trait TournamentConfigExtensions {
 
   async fn get_tournament_retain_backups(&self) -> Option<usize>;
   async fn set_tournament_retain_backups(&mut self, retain_backups: usize);
+
+  async fn purge(&mut self);
 }
 
 #[async_trait::async_trait]
@@ -201,5 +203,14 @@ impl TournamentConfigExtensions for Database {
         self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json()).await;
       }
     }
+  }
+
+  async fn purge(&mut self) {
+    // clear the database
+    self.inner.write().await.clear().await;
+
+    // add the trees and roles again
+    self.create_trees().await;
+    self.create_roles().await;
   }
 }

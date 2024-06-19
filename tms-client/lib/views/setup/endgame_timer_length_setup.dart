@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/event_config_provider.dart';
 import 'package:tms/views/setup/input_setter.dart';
+import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class EndgameTimerLengthSetup extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
@@ -21,7 +22,9 @@ class EndgameTimerLengthSetup extends StatelessWidget {
               return InputSetter(
                 label: "Set endgame length:",
                 onSet: () async {
-                  await provider.setEndgameTimerLength(int.parse(_controller.text));
+                  await provider.setEndgameTimerLength(int.parse(_controller.text)).then((res) {
+                    SnackBarDialog.fromStatus(message: "Set Endgame Length", status: res).show(context);
+                  });
                 },
                 input: TextField(
                   controller: _controller,

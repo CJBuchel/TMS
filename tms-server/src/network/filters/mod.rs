@@ -18,6 +18,10 @@ pub struct UnauthorizedClient;
 impl warp::reject::Reject for UnauthorizedClient {}
 
 #[derive(Debug)]
+pub struct AuthenticationRequired;
+impl warp::reject::Reject for AuthenticationRequired {}
+
+#[derive(Debug)]
 pub struct ClientNotFound;
 impl warp::reject::Reject for ClientNotFound {}
 

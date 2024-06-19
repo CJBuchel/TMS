@@ -1,4 +1,4 @@
-use crate::database::*;
+use crate::{database::*, network::ClientMap, network::client_publish::ClientPublish};
 
 
 pub async fn tournament_config_set_name_handler(request: TournamentConfigSetNameRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
@@ -89,4 +89,12 @@ pub async fn tournament_config_get_season(db: SharedDatabase) -> Result<impl war
     Some(season) => Ok(warp::reply::json(&season)),
     None => Ok(warp::reply::json(&""))
   }
+}
+
+pub async fn tournament_config_purge(db: SharedDatabase, clients: ClientMap) -> Result<impl warp::Reply, warp::Rejection> {
+  let mut write_db = db.write().await;
+  write_db.purge().await;
+  // publish the purge message to all clients
+  clients.read().await.publish_purge();
+  Ok(warp::http::StatusCode::OK)
 }

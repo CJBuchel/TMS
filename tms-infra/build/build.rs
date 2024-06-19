@@ -19,6 +19,9 @@ struct NetworkSchema {
   _login_request: LoginRequest,
   _login_response: LoginResponse,
 
+  // socket protocol
+  _tms_server_socket_message: TmsServerSocketMessage,
+
   // config
   _tournament_config_set_name_request: TournamentConfigSetNameRequest,
   _tournament_config_set_season_request: TournamentConfigSetSeasonRequest,

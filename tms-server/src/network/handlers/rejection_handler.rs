@@ -25,6 +25,9 @@ pub async fn handle_rejection(err: warp::Rejection) -> Result<impl warp::Reply, 
   } else if let Some(e) = err.find::<BadRequestWithMessage>() {
     code = StatusCode::BAD_REQUEST;
     message = e.message.as_str();
+  } else if let Some(_) = err.find::<AuthenticationRequired>() {
+    code = StatusCode::NETWORK_AUTHENTICATION_REQUIRED;
+    message = "Authentication Required";
   }
 
   // fallback to a generic message for unhandled errors

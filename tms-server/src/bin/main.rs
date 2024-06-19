@@ -95,7 +95,6 @@ async fn main() {
   let web_server = WebServer::new(web_config, certs);
   web_server.start(routes).await;
 
-
   //
   // Stop all services
   //

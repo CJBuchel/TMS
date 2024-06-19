@@ -19,11 +19,21 @@ class EchoTreeBroker {
     await t.setDataMap(tree.tree);
   }
 
+  Future<void> _clearTree(String treeName) async {
+    EchoTreeLogger().d("Clearing tree: $treeName");
+    var t = Database().getTreeMap.getTree(treeName);
+    await t.clear();
+  }
+
   Future<void> _set(List<EchoTreeEventTree> trees) async {
     List<Future> futures = [];
     for (EchoTreeEventTree tree in trees) {
       EchoTreeLogger().d("Got tree insertion request from server: ${tree.treeName}");
-      futures.add(_setTree(tree));
+      if (tree.tree.isEmpty) {
+        futures.add(_clearTree(tree.treeName));
+      } else {
+        futures.add(_setTree(tree));
+      }
     }
 
     await Future.wait(futures);

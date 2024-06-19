@@ -7,6 +7,7 @@
     "_login_response",
     "_register_request",
     "_register_response",
+    "_tms_server_socket_message",
     "_tournament_config_set_backup_interval_request",
     "_tournament_config_set_endgame_timer_length_request",
     "_tournament_config_set_name_request",
@@ -26,6 +27,9 @@
     },
     "_register_response": {
       "$ref": "#/definitions/RegisterResponse"
+    },
+    "_tms_server_socket_message": {
+      "$ref": "#/definitions/TmsServerSocketMessage"
     },
     "_tournament_config_set_backup_interval_request": {
       "$ref": "#/definitions/TournamentConfigSetBackupIntervalRequest"
@@ -150,6 +154,33 @@
         },
         "uuid": {
           "type": "string"
+        }
+      }
+    },
+    "TmsServerSocketEvent": {
+      "type": "string",
+      "enum": [
+        "PurgeEvent"
+      ]
+    },
+    "TmsServerSocketMessage": {
+      "type": "object",
+      "required": [
+        "auth_token",
+        "message_event"
+      ],
+      "properties": {
+        "auth_token": {
+          "type": "string"
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message_event": {
+          "$ref": "#/definitions/TmsServerSocketEvent"
         }
       }
     },

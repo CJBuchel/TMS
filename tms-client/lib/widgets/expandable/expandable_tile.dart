@@ -92,26 +92,15 @@ class _ExpandableTileState extends State<ExpandableTile> with SingleTickerProvid
     return InkWell(
       borderRadius: widget.borderRadius,
       onTap: _expansionController.toggle,
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, _) {
-          Color defaultIconTheme = Theme.of(context).iconTheme.color ?? Theme.of(context).primaryColor;
-          Color iconColor = _expandAnimation.value > 0 ? Colors.blue : defaultIconTheme;
-
-          return IconTheme(
-            data: IconThemeData(color: iconColor),
-            child: Column(
-              children: [
-                widget.header,
-                SizeTransition(
-                  sizeFactor: _expandAnimation,
-                  axisAlignment: 1.0,
-                  child: widget.body,
-                ),
-              ],
-            ),
-          );
-        },
+      child: Column(
+        children: [
+          widget.header,
+          SizeTransition(
+            sizeFactor: _expandAnimation,
+            axisAlignment: 1.0,
+            child: widget.body,
+          ),
+        ],
       ),
     );
   }

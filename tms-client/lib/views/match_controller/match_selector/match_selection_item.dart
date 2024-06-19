@@ -4,13 +4,13 @@ import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/tms_date_time.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 
-class MatchTableItem extends StatelessWidget {
+class MatchSelectionItem extends StatelessWidget {
   final GameMatch match;
   final Color? backgroundColor;
   final Function(bool)? onChange;
   final ExpansionController? controller;
 
-  const MatchTableItem({
+  const MatchSelectionItem({
     Key? key,
     required this.match,
     this.backgroundColor,

@@ -43,31 +43,25 @@ class ManagedTree {
 
   void _updateChecksum() {
     Map<String, String> data = getDataMap();
-    _checksum = _crc32.calculateChecksum(data).toUnsigned(32);
-  }
-
-  Future<void> clear() async {
-    List<String> keys = _spWrapper.ls?.getKeys().where((k) => k.startsWith(_treePath)).toList() ?? [];
-
-    List<Future> futures = [];
-    keys.forEach((key) {
-      futures.add(remove(key));
-    });
-
-    await Future.wait(futures);
-
-    _updateChecksum();
-  }
-
-  Future<void> setDataMap(Map<String, String> data) async {
-    await clear();
-
-    // just be mindful this is a blocking operation, the keys need to be in order (checksum requires specific order, so keep server and client same)
-    for (String key in data.keys) {
-      await insert(key, data[key] ?? '');
+    if (data.isEmpty) {
+      _checksum = 0;
+    } else {
+      _checksum = _crc32.calculateChecksum(data).toUnsigned(32);
     }
+  }
 
+  Future<void> _internalInsert(String path, String value) async {
+    await _spWrapper.ls?.setString(path, value);
     _updateChecksum();
+  }
+
+  Future<void> _internalRemove(String path) async {
+    await _spWrapper.ls?.remove(path);
+    _updateChecksum();
+  }
+
+  String _internalGet(String path) {
+    return _spWrapper.ls?.getString(path) ?? '';
   }
 
   Map<String, String> getDataMap() {
@@ -92,25 +86,46 @@ class ManagedTree {
     return data;
   }
 
+  Future<void> clear() async {
+    // get all keys that start with key
+
+    getDataMap().forEach((key, _) async {
+      await remove(key);
+    });
+
+    _updateChecksum();
+  }
+
+  Future<void> setDataMap(Map<String, String> data) async {
+    await clear();
+
+    // just be mindful this is a blocking operation, the keys need to be in order (checksum requires specific order, so keep server and client same)
+    for (String key in data.keys) {
+      await insert(key, data[key] ?? '');
+    }
+
+    _updateChecksum();
+  }
+
+  // public methods
+
   // set a value
   Future<void> insert(String key, String value) async {
-    await _spWrapper.ls?.setString(_treePath + key, value).then((_) {
+    await _internalInsert(_treePath + key, value).then((_) {
       _updatesController.add(ManagedTreeEvent(key, value, false));
     });
-    _updateChecksum();
   }
 
   // remove a value
   Future<void> remove(String key) async {
-    await _spWrapper.ls?.remove(_treePath + key).then((_) {
+    await _internalRemove(_treePath + key).then((_) {
       _updatesController.add(ManagedTreeEvent(key, null, true));
     });
-    _updateChecksum();
   }
 
   // get a value
   String get(String key) {
-    return _spWrapper.ls?.getString(_treePath + key) ?? '';
+    return _internalGet(_treePath + key);
   }
 
   void forEach(void Function(String, String) f) {

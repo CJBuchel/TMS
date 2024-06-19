@@ -30,7 +30,6 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
     _eventStream = managedTree.updateStream.listen((event) {
       if (event.deleted) {
         items.remove(event.key as K);
-        return;
       } else {
         if (event.value != null) {
           V? entry = _entryFromString(event.value as String);

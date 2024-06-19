@@ -26,7 +26,7 @@ class EchoTreeMessageBroker {
         EchoTreeBroker().broker(message.message ?? "");
         break;
       default:
-        EchoTreeLogger().e("Unhandled event ${message.messageEvent}");
+        EchoTreeLogger().e("Unhandled event ${message.messageEvent}, Full Message: ${message}");
     }
   }
 }

@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+
+typedef TmsEventHandler = void Function(TmsServerSocketMessage event);
 
 class WebsocketController {
   final NetworkConnectivity _connectivity = NetworkConnectivity();
@@ -8,21 +13,28 @@ class WebsocketController {
   NetworkConnectionState get state => _connectivity.state;
   NetworkConnectivity get connectivity => _connectivity;
 
-  void _handleEvent(dynamic event) async {
-    try {
-      // handle the event
-      TmsLogger().d("Websocket message: $event");
-    } catch (e) {
-      TmsLogger().e("Websocket error: $e");
+  // events
+  final Map<TmsServerSocketEvent, List<TmsEventHandler>> _eventHandlers = {};
+
+  void _handleMessage(TmsServerSocketMessage message) async {
+    if (_eventHandlers.containsKey(message.messageEvent)) {
+      List<TmsEventHandler>? handlers = _eventHandlers[message.messageEvent];
+      if (handlers != null) {
+        for (TmsEventHandler handler in handlers) {
+          handler(message);
+        }
+      }
     }
   }
 
   void _listen() async {
     try {
       _channel?.stream.listen((event) {
-        _handleEvent(event);
+        final json = jsonDecode(event);
+        TmsServerSocketMessage message = TmsServerSocketMessage.fromJson(json);
+        _handleMessage(message);
       }, onDone: () {
-        TmsLogger().w("Websocket connection closed");
+        TmsLogger().w("Websocket  connection closed");
         _connectivity.state = NetworkConnectionState.disconnected;
       }, onError: (e) {
         TmsLogger().e("Websocket error: $e");
@@ -54,5 +66,18 @@ class WebsocketController {
     TmsLogger().i("Disconnecting from TMS server...");
     _connectivity.state = NetworkConnectionState.disconnected;
     _channel?.sink.close();
+  }
+
+  void subscribe(TmsServerSocketEvent event, TmsEventHandler handler) {
+    if (!_eventHandlers.containsKey(event)) {
+      _eventHandlers[event] = [];
+    }
+    _eventHandlers[event]?.add(handler);
+  }
+
+  void unsubscribe(TmsServerSocketEvent event, TmsEventHandler handler) {
+    if (_eventHandlers.containsKey(event)) {
+      _eventHandlers[event]?.remove(handler);
+    }
   }
 }

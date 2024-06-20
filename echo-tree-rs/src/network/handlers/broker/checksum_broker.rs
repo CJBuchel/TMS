@@ -35,22 +35,10 @@ pub async fn checksum_broker(uuid: String, msg: EchoTreeClientSocketMessage, cli
       // only check the checksum if the client has read access and is subscribed to the tree
       if client.has_read_access_and_subscribed_to_tree(tree_name) {
         if tree.get_checksum() != *checksum {
-          
-          let mut iter = tree.iter();
-          // print out first item
-          if let Some(key) = iter.next() {
-            match key {
-              Ok((k, _)) => {
-                let k = String::from_utf8(k.to_vec()).unwrap_or_default();
-                log::warn!("client {}: tree checksum mismatch: {} != {}, first item: {:?}", uuid, tree.get_checksum(), checksum, k);
-              },
-              Err(_) => {},
-            }
-          } else {
-            log::warn!("client {}: tree checksum mismatch: {} != {}, tree is empty", uuid, tree.get_checksum(), checksum);
-          }
 
-          // log::warn!("client {}: tree checksum mismatch: {} != {}", uuid, tree.get_checksum(), checksum);
+          let tree_name = tree.get_name();
+
+          log::warn!("client {}: tree [{}] checksum mismatch: {} != {}", uuid, tree_name, tree.get_checksum(), checksum);
 
           if let Some(tree_hashmap) = tree.get_as_hashmap().ok() {
             new_client_trees.push(EchoTreeEventTree {

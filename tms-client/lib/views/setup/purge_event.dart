@@ -43,6 +43,10 @@ class PurgeButton extends StatelessWidget {
               textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.headlineSmall),
               backgroundColor: MaterialStateProperty.all(Colors.red),
               overlayColor: MaterialStateProperty.all(Colors.redAccent),
+              // text color
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+              // border color
+              side: MaterialStateProperty.all(const BorderSide(color: Colors.black)),
             ),
             onPressed: () => _confirmDialog(context, provider),
             child: const Text("PURGE"),

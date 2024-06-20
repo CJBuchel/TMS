@@ -63,7 +63,6 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
 
   void _populateData() {
     final rawData = managedTree.getDataMap();
-    EchoTreeLogger().i("Populating data: $rawData");
 
     // New item map
     Map<K, V> newItems = {};

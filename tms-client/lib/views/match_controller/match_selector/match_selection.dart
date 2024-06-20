@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/views/match_controller/match_selector/match_selection_item.dart';
+import 'package:tms/views/match_controller/match_selector/match_expandable_row.dart';
+import 'package:tms/widgets/buttons/category_button.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 
 class MatchSelection extends StatelessWidget {
@@ -13,7 +14,10 @@ class MatchSelection extends StatelessWidget {
   // expansion controllers for each match item
   final List<ExpansionController> _controllers = [];
 
-  Widget _matchItem(int listIndex) {
+  // multi match trigger
+  final ValueNotifier<bool> _isMultiMatch = ValueNotifier<bool>(false);
+
+  Widget _matchItem(int listIndex, bool isMultiMatch) {
     if (listIndex >= _controllers.length) {
       _controllers.add(ExpansionController(isExpanded: false));
     }
@@ -22,11 +26,18 @@ class MatchSelection extends StatelessWidget {
       selector: (_, provider) => provider.matches[listIndex],
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, match, _) {
+        // alternating background colors
+        Color evenBackground = Theme.of(context).cardColor;
+        Color oddBackground = lighten(Theme.of(context).cardColor, 0.05);
+
+        Color backgroundColor = listIndex.isEven ? evenBackground : oddBackground;
+
         // listenable builder for the expanded index
-        return MatchSelectionItem(
+        return MatchExpandableRow(
           match: match,
+          isMultiMatch: isMultiMatch,
           controller: _controllers[listIndex],
-          onChange: (isExpanded) {
+          onChangeExpand: (isExpanded) {
             if (isExpanded) {
               _controllers.forEach((element) {
                 if (element != _controllers[listIndex]) {
@@ -35,7 +46,7 @@ class MatchSelection extends StatelessWidget {
               });
             }
           },
-          backgroundColor: listIndex.isEven ? Theme.of(context).cardColor : lighten(Theme.of(context).cardColor, 0.05),
+          backgroundColor: backgroundColor,
         );
       },
     );
@@ -46,12 +57,27 @@ class MatchSelection extends StatelessWidget {
       selector: (_, provider) => provider.matches,
       shouldRebuild: (previous, next) => previous.length != next.length,
       builder: (context, matches, _) {
-        return ListView.builder(
-          itemCount: matches.length,
-          itemBuilder: (context, index) {
-            return _matchItem(index);
+        return ValueListenableBuilder(
+          valueListenable: _isMultiMatch,
+          builder: (context, isMultiMatch, _) {
+            return ListView.builder(
+              itemCount: matches.length,
+              itemBuilder: (context, index) {
+                return _matchItem(index, isMultiMatch);
+              },
+            );
           },
         );
+      },
+    );
+  }
+
+  Widget _modeHeader() {
+    return CategoryButtons(
+      categories: ["Single", "Multi"],
+      defaultCategory: "Single",
+      onCategoryChange: (category) {
+        _isMultiMatch.value = category == "Multi";
       },
     );
   }
@@ -60,7 +86,14 @@ class MatchSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     return EchoTreeLifetime(
       trees: [":robot_game:matches"],
-      child: _matchList(),
+      child: Column(
+        children: [
+          _modeHeader(),
+          Expanded(
+            child: _matchList(),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
@@ -23,6 +23,7 @@ class StageCheckbox extends StatelessWidget {
       builder: (context, data, _) {
         if (data.canStage || data.isStaged) {
           return LiveCheckbox(
+            color: Colors.purpleAccent,
             defaultValue: data.isStaged,
             onChanged: (value) {
               if (value) {

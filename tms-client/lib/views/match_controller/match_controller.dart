@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/views/match_controller/match_controls/match_controls.dart';
 import 'package:tms/views/match_controller/match_selector/match_selection.dart';
 import 'package:tms/views/match_controller/match_stage/match_stage.dart';
 
@@ -16,15 +17,33 @@ class MatchController extends StatelessWidget {
               // stage
               Expanded(
                 flex: 1,
-                child: MatchStage(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                    ),
+                  ),
+                  child: MatchStage(),
+                ),
               ),
 
-              // button controllers
+              // match control
+              Expanded(
+                flex: 1,
+                child: MatchControls(),
+              ),
+
+              // timer controls
               Expanded(
                 flex: 1,
                 child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.white,
+                    ),
+                  ),
                   child: const Center(
-                    child: Text('Button Controllers'),
+                    child: Text('Timer Controllers'),
                   ),
                 ),
               ),

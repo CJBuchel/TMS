@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class _CategoryButtonWidget extends StatelessWidget {
   final String category;
   final bool isSelected;
+  final IconData? leadingIcon;
+  final IconData? trailingIcon;
   final Color? selectedColor;
   final Color? textColor;
   final Color? hoverColor;
@@ -12,6 +14,8 @@ class _CategoryButtonWidget extends StatelessWidget {
     Key? key,
     required this.category,
     required this.isSelected,
+    this.leadingIcon,
+    this.trailingIcon,
     this.selectedColor = Colors.blue,
     this.hoverColor = Colors.blueAccent,
     this.textColor = Colors.white,
@@ -37,11 +41,18 @@ class _CategoryButtonWidget extends StatelessWidget {
         }),
       ),
       onPressed: () => onSelected?.call(!isSelected),
-      child: Text(
-        category,
-        style: TextStyle(
-          color: textColor,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          if (leadingIcon != null) Icon(leadingIcon),
+          Text(
+            category,
+            style: TextStyle(
+              color: textColor,
+            ),
+          ),
+          if (trailingIcon != null) Icon(trailingIcon),
+        ],
       ),
     );
   }
@@ -49,6 +60,8 @@ class _CategoryButtonWidget extends StatelessWidget {
 
 class CategoryButton {
   final String category;
+  final IconData? leadingIcon;
+  final IconData? trailingIcon;
   final Color? selectedColor;
   final Color? textColor;
   final Color? hoverColor;
@@ -56,6 +69,8 @@ class CategoryButton {
 
   CategoryButton({
     required this.category,
+    this.leadingIcon,
+    this.trailingIcon,
     this.selectedColor,
     this.textColor,
     this.hoverColor,
@@ -95,6 +110,8 @@ class CategoryButtons extends StatelessWidget {
         builder: (context, selected, child) {
           return _CategoryButtonWidget(
             category: button.category,
+            leadingIcon: button.leadingIcon,
+            trailingIcon: button.trailingIcon,
             isSelected: button == selected,
             selectedColor: button.selectedColor,
             textColor: button.textColor,

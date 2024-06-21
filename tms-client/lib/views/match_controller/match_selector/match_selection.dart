@@ -84,8 +84,8 @@ class MatchSelection extends StatelessWidget {
         CategoryButton(
           category: "Multi",
           onPressed: () => _isMultiMatch.value = true,
-          selectedColor: Colors.orange,
-          hoverColor: Colors.orangeAccent,
+          selectedColor: Colors.purpleAccent,
+          hoverColor: Colors.purple,
         ),
       ],
       defaultCategory: "Single",

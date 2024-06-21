@@ -2,9 +2,22 @@ import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/tms_date_time.dart';
 
-class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
-  GameMatchProvider() : super(tree: ":robot_game:matches", fromJson: (json) => GameMatch.fromJson(json));
+abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch> {
+  _BaseGameMatchProvider() : super(tree: ":robot_game:matches", fromJson: (json) => GameMatch.fromJson(json));
 
+  List<GameMatch> get matches {
+    // order matches by start time
+    List<GameMatch> matches = this.items.values.toList();
+    matches.sort((a, b) {
+      // sort by start time
+      return tmsDateTimeCompare(a.startTime, b.startTime);
+    });
+
+    return matches;
+  }
+}
+
+abstract class _StageGameMatchProvider extends _BaseGameMatchProvider {
   List<String> _stagedMatchNumbers = [];
 
   bool isMatchStaged(String matchNumber) {
@@ -24,17 +37,6 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
     });
 
     return !conflictingTable;
-  }
-
-  List<GameMatch> get matches {
-    // order matches by start time
-    List<GameMatch> matches = this.items.values.toList();
-    matches.sort((a, b) {
-      // sort by start time
-      return tmsDateTimeCompare(a.startTime, b.startTime);
-    });
-
-    return matches;
   }
 
   List<GameMatch> get stagedMatches {
@@ -66,8 +68,27 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
       notifyListeners();
     }
   }
+}
 
-  void loadMatches(List<GameMatch> matches) {}
-  void setMatchCompleted(GameMatch match) {}
-  void setMatchIncomplete(GameMatch match) {}
+class GameMatchProvider extends _StageGameMatchProvider {
+  List<String> _loadedMatchNumbers = [];
+
+  bool get canLoad {
+    return _stagedMatchNumbers.isNotEmpty && _loadedMatchNumbers.isEmpty;
+  }
+
+  bool get canUnload {
+    return _loadedMatchNumbers.isNotEmpty;
+  }
+
+  List<GameMatch> get loadedMatches {
+    return matches.where((match) => _loadedMatchNumbers.contains(match.matchNumber)).toList();
+  }
+
+  void loadMatches() {
+    // send staged matches to server
+  }
+  void unloadMatches() {
+    // send unload request to server
+  }
 }

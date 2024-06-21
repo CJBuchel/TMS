@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/views/match_controller/match_selector/match_expandable_row.dart';
+import 'package:tms/views/match_controller/match_selector/match_row/match_expandable_row.dart';
 import 'package:tms/widgets/buttons/category_button.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 
@@ -74,11 +74,21 @@ class MatchSelection extends StatelessWidget {
 
   Widget _modeHeader() {
     return CategoryButtons(
-      categories: ["Single", "Multi"],
+      buttons: [
+        CategoryButton(
+          category: "Single",
+          onPressed: () => _isMultiMatch.value = false,
+          selectedColor: Colors.blue,
+          hoverColor: Colors.blueAccent,
+        ),
+        CategoryButton(
+          category: "Multi",
+          onPressed: () => _isMultiMatch.value = true,
+          selectedColor: Colors.orange,
+          hoverColor: Colors.orangeAccent,
+        ),
+      ],
       defaultCategory: "Single",
-      onCategoryChange: (category) {
-        _isMultiMatch.value = category == "Multi";
-      },
     );
   }
 

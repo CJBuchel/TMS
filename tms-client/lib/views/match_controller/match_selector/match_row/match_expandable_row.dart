@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
-import 'package:tms/utils/color_modifiers.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/utils/tms_date_time.dart';
-import 'package:tms/views/match_controller/match_selector/match_row_body.dart';
+import 'package:tms/views/match_controller/match_selector/match_row/expanded_row_body/expanded_row_body.dart';
+import 'package:tms/views/match_controller/match_selector/match_row/stage_checkbox.dart';
+import 'package:tms/views/match_controller/match_selector/match_row/table_info.dart';
 import 'package:tms/widgets/animated/barber_pole_container.dart';
-import 'package:tms/widgets/buttons/live_checkbox.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 
 enum MatchRowState {
-  UNSELECTED, // default, blank
-  SELECTED, // blue
+  IDLE, // default, blank
+  STAGED, // blue
   LOADED, // orange
   RUNNING, // green
 }
@@ -33,22 +34,6 @@ class MatchExpandableRow extends StatelessWidget {
     this.onChangeExpand,
     this.onSelect,
   }) : super(key: key);
-
-  Widget _checkBoxSelect(BuildContext context) {
-    GameMatchProvider provider = Provider.of<GameMatchProvider>(context, listen: false);
-    bool isStaged = provider.isMatchStaged(match);
-
-    return LiveCheckbox(
-      defaultValue: isStaged,
-      onChanged: (value) {
-        if (value) {
-          provider.addMatchToStage(match);
-        } else {
-          provider.removeMatchFromStage(match);
-        }
-      },
-    );
-  }
 
   Widget _leading() {
     return SizedBox(
@@ -79,39 +64,15 @@ class MatchExpandableRow extends StatelessWidget {
     );
   }
 
-  Widget _tableInfo(GameMatchTable table, Color borderColor) {
-    return Expanded(
-      flex: 1,
-      child: Container(
-        margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-        decoration: BoxDecoration(
-          // border: Border.all(color: Colors.blue),
-          border: Border.all(color: borderColor),
-          borderRadius: BorderRadius.circular(8),
-          color: lighten(backgroundColor ?? Colors.white, 0.05),
-        ),
-        child: Column(
-          children: [
-            Text(table.table),
-            const SizedBox(height: 10),
-            Text(table.teamNumber, style: const TextStyle(fontSize: 12)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _central(Color borderColor) {
-    List<Widget> children = [];
-
-    for (GameMatchTable table in match.gameMatchTables) {
-      children.add(_tableInfo(table, borderColor));
-    }
-
+  Widget _central() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: children,
+      children: match.gameMatchTables.map((table) {
+        return TableItem(
+          table: table,
+          backgroundColor: backgroundColor,
+        );
+      }).toList(),
     );
   }
 
@@ -119,7 +80,7 @@ class MatchExpandableRow extends StatelessWidget {
     return !isMultiMatch;
   }
 
-  Widget _tileRow(BuildContext context, Color borderColor) {
+  Widget _tileRow() {
     return ExpandableTile(
       controller: controller,
       onChange: onChangeExpand,
@@ -128,14 +89,14 @@ class MatchExpandableRow extends StatelessWidget {
         child: Row(
           children: [
             // optional checkbox (multi match only)
-            if (isMultiMatch) _checkBoxSelect(context),
+            if (isMultiMatch) StageCheckbox(match: match),
 
             // leading
             _leading(),
 
             // central/main info
             Expanded(
-              child: _central(borderColor),
+              child: _central(),
             ),
 
             // trailing
@@ -143,13 +104,13 @@ class MatchExpandableRow extends StatelessWidget {
           ],
         ),
       ),
-      body: _isExpandable ? MatchRowBody() : const SizedBox.shrink(),
+      body: _isExpandable ? ExpandedRowBody(match: match) : const SizedBox.shrink(),
     );
   }
 
   Color _stateColor(MatchRowState state) {
     switch (state) {
-      case MatchRowState.SELECTED:
+      case MatchRowState.STAGED:
         return Colors.blue[700] ?? Colors.blue;
       case MatchRowState.LOADED:
         return Colors.orange[700] ?? Colors.orange;
@@ -173,20 +134,20 @@ class MatchExpandableRow extends StatelessWidget {
       ),
       // provider selector
       child: Selector<GameMatchProvider, bool>(
-        selector: (context, provider) => provider.isMatchStaged(match),
+        selector: (context, provider) => provider.isMatchStaged(match.matchNumber),
         builder: (context, isSelected, child) {
-          MatchRowState state = MatchRowState.UNSELECTED;
+          MatchRowState state = MatchRowState.STAGED;
           if (isSelected) {
-            state = MatchRowState.SELECTED;
+            state = MatchRowState.STAGED;
           } else {
-            state = MatchRowState.UNSELECTED;
+            state = MatchRowState.IDLE;
           }
 
           return BarberPoleContainer(
-            active: state != MatchRowState.UNSELECTED,
+            active: state != MatchRowState.IDLE,
             stripeColor: _stateColor(state),
             borderRadius: BorderRadius.circular(8),
-            child: _tileRow(context, borderColor),
+            child: _tileRow(),
           );
         },
       ),

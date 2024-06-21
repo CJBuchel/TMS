@@ -1,19 +1,29 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
-// import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/tms_date_time.dart';
 
 class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
-  GameMatchProvider()
-      : super(
-          tree: ":robot_game:matches",
-          fromJson: (json) => GameMatch.fromJson(json),
-        );
+  GameMatchProvider() : super(tree: ":robot_game:matches", fromJson: (json) => GameMatch.fromJson(json));
 
-  List<GameMatch> stagedMatched = [];
+  List<String> _stagedMatchNumbers = [];
 
-  bool isMatchStaged(GameMatch match) {
-    return stagedMatches.contains(match);
+  bool isMatchStaged(String matchNumber) {
+    return _stagedMatchNumbers.contains(matchNumber);
+  }
+
+  bool canStageMatch(String matchNumber) {
+    // check if this match is already staged
+    bool conflictingTable = stagedMatches.any((stagedMatch) {
+      // check against each staged match
+      GameMatch match = matches.firstWhere((match) => match.matchNumber == matchNumber);
+      return match.gameMatchTables.any((table) {
+        return stagedMatch.gameMatchTables.any((stagedTable) {
+          return table.table == stagedTable.table;
+        });
+      });
+    });
+
+    return !conflictingTable;
   }
 
   List<GameMatch> get matches {
@@ -27,25 +37,32 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
     return matches;
   }
 
-  List<GameMatch> get stagedMatches => stagedMatched;
+  List<GameMatch> get stagedMatches {
+    return matches.where((match) => _stagedMatchNumbers.contains(match.matchNumber)).toList();
+  }
 
-  set stageMatches(List<GameMatch> matches) {
-    stagedMatched = matches;
+  void stageMatches(List<String> matchNumbers) {
+    _stagedMatchNumbers = matchNumbers;
     notifyListeners();
   }
 
-  void addMatchToStage(GameMatch match) {
+  void clearStagedMatches() {
+    _stagedMatchNumbers = [];
+    notifyListeners();
+  }
+
+  void addMatchToStage(String matchNumber) {
     // add match if not already staged
-    if (!stagedMatches.contains(match)) {
-      stagedMatches.add(match);
+    if (!_stagedMatchNumbers.contains(matchNumber)) {
+      _stagedMatchNumbers = List.from(_stagedMatchNumbers)..add(matchNumber);
       notifyListeners();
     }
   }
 
-  void removeMatchFromStage(GameMatch match) {
+  void removeMatchFromStage(String matchNumber) {
     // remove match if staged
-    if (stagedMatches.contains(match)) {
-      stagedMatches.remove(match);
+    if (_stagedMatchNumbers.contains(matchNumber)) {
+      _stagedMatchNumbers = List.from(_stagedMatchNumbers)..remove(matchNumber);
       notifyListeners();
     }
   }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class CategoryButton extends StatelessWidget {
+class _CategoryButtonWidget extends StatelessWidget {
   final String category;
   final bool isSelected;
-  final Color selectedColor;
-  final Color textColor;
-  final Color hoverColor;
+  final Color? selectedColor;
+  final Color? textColor;
+  final Color? hoverColor;
   final Function(bool)? onSelected;
 
-  const CategoryButton({
+  const _CategoryButtonWidget({
     Key? key,
     required this.category,
     required this.isSelected,
@@ -22,7 +22,7 @@ class CategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        overlayColor: MaterialStateProperty.all<Color>(hoverColor),
+        overlayColor: MaterialStateProperty.all<Color>(hoverColor ?? Colors.blueAccent),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0),
@@ -47,38 +47,62 @@ class CategoryButton extends StatelessWidget {
   }
 }
 
+class CategoryButton {
+  final String category;
+  final Color? selectedColor;
+  final Color? textColor;
+  final Color? hoverColor;
+  final Function()? onPressed;
+
+  CategoryButton({
+    required this.category,
+    this.selectedColor,
+    this.textColor,
+    this.hoverColor,
+    this.onPressed,
+  });
+}
+
 class CategoryButtons extends StatelessWidget {
-  final List<String> categories;
+  final List<CategoryButton> buttons;
   final String? defaultCategory;
   final Function(String)? onCategoryChange;
 
-  final ValueNotifier<String> _selectedCategory = ValueNotifier<String>('');
+  final ValueNotifier<CategoryButton> _selectedCategory = ValueNotifier<CategoryButton>(CategoryButton(category: ''));
 
   CategoryButtons({
     Key? key,
-    required this.categories,
+    required this.buttons,
     this.defaultCategory,
     this.onCategoryChange,
   }) : super(key: key) {
-    _selectedCategory.value = defaultCategory ?? categories.first;
+    if (defaultCategory != null) {
+      _selectedCategory.value = buttons.firstWhere((element) => element.category == defaultCategory);
+    } else {
+      _selectedCategory.value = buttons.first;
+    }
   }
 
   void _handleCategoryChange(String category) {
-    _selectedCategory.value = category;
+    _selectedCategory.value = buttons.firstWhere((element) => element.category == category);
     onCategoryChange?.call(category);
   }
 
-  Widget _category(String category) {
+  Widget _category(CategoryButton button) {
     return Expanded(
-      child: ValueListenableBuilder<String>(
+      child: ValueListenableBuilder<CategoryButton>(
         valueListenable: _selectedCategory,
         builder: (context, selected, child) {
-          return CategoryButton(
-            category: category,
-            isSelected: category == selected,
+          return _CategoryButtonWidget(
+            category: button.category,
+            isSelected: button == selected,
+            selectedColor: button.selectedColor,
+            textColor: button.textColor,
+            hoverColor: button.hoverColor,
             onSelected: (isSelected) {
+              button.onPressed?.call();
               if (isSelected) {
-                _handleCategoryChange(category);
+                _handleCategoryChange(button.category);
               }
             },
           );
@@ -88,7 +112,7 @@ class CategoryButtons extends StatelessWidget {
   }
 
   List<Widget> _categories() {
-    return categories.map((category) => _category(category)).toList();
+    return buttons.map((button) => _category(button)).toList();
   }
 
   @override

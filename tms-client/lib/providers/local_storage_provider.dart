@@ -1,48 +1,59 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/schemas/network_schema.dart';
-import 'package:tms/services/local_storage_provider.dart';
 
 // variable constants
 const defaultServerPort = 8080;
 
 abstract class _TmsLocalStorageBase extends ChangeNotifier {
-  TmsLocalStorageService _storage = TmsLocalStorageService();
+  SharedPreferences? _ls;
 
-  Future<void> init() async => await _storage.init();
-  bool get isReady => _storage.isReady;
+  Future<void> init() async {
+    if (_ls == null) {
+      _ls = await SharedPreferences.getInstance();
+      notifyListeners();
+    }
+  }
+
+  bool get isReady => _ls != null ? true : false;
 
   // ls generic sets and gets
   void setString(String k, String v) {
-    _storage.setString(k, v).then((_) => notifyListeners());
+    _ls?.setString(k, v);
+    notifyListeners();
   }
 
-  String? getString(String k) => _storage.getString(k);
+  String? getString(String k) => _ls?.getString(k);
 
   void setBool(String k, bool v) {
-    _storage.setBool(k, v).then((_) => notifyListeners());
+    _ls?.setBool(k, v);
+    notifyListeners();
   }
 
-  bool? getBool(String k) => _storage.getBool(k);
+  bool? getBool(String k) => _ls?.getBool(k);
 
   void setInt(String k, int v) {
-    _storage.setInt(k, v).then((_) => notifyListeners());
+    _ls?.setInt(k, v);
+    notifyListeners();
   }
 
-  int? getInt(String k) => _storage.getInt(k);
+  int? getInt(String k) => _ls?.getInt(k);
 
   void setDouble(String k, double v) {
-    _storage.setDouble(k, v).then((_) => notifyListeners());
+    _ls?.setDouble(k, v);
+    notifyListeners();
   }
 
-  double? getDouble(String k) => _storage.getDouble(k);
+  double? getDouble(String k) => _ls?.getDouble(k);
 
   void setStringList(String k, List<String> v) {
-    _storage.setStringList(k, v).then((_) => notifyListeners());
+    _ls?.setStringList(k, v);
+    notifyListeners();
   }
 
-  List<String>? getStringList(String k) => _storage.getStringList(k);
+  List<String>? getStringList(String k) => _ls?.getStringList(k);
 }
 
 // shared preferences
@@ -104,7 +115,4 @@ class TmsLocalStorageProvider extends _TmsLocalStorageBase {
 
   set themeMode(ThemeMode value) => setInt("themeMode", value.index);
   ThemeMode get themeMode => ThemeMode.values[getInt("themeMode") ?? 0]; // default to system theme
-
-  set stagedMatches(List<String> matchNumbers) => setStringList("stagedMatches", matchNumbers);
-  List<String> get stagedMatches => getStringList("stagedMatches") ?? [];
 }

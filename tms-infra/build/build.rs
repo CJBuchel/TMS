@@ -21,6 +21,8 @@ struct NetworkSchema {
 
   // socket protocol
   _tms_server_socket_message: TmsServerSocketMessage,
+  _tms_server_match_timer_time_event: TmsServerMatchTimerTimeEvent,
+  _tms_server_match_load_event: TmsServerMatchLoadEvent,
 
   // config
   _tournament_config_set_name_request: TournamentConfigSetNameRequest,

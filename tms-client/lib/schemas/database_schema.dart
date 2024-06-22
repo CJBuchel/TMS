@@ -37,12 +37,14 @@ class DatabaseSchema {
 }
 
 class GameMatch {
+    bool completed;
     TmsDateTime endTime;
     List<GameMatchTable> gameMatchTables;
     String matchNumber;
     TmsDateTime startTime;
 
     GameMatch({
+        required this.completed,
         required this.endTime,
         required this.gameMatchTables,
         required this.matchNumber,
@@ -50,6 +52,7 @@ class GameMatch {
     });
 
     factory GameMatch.fromJson(Map<String, dynamic> json) => GameMatch(
+        completed: json["completed"],
         endTime: TmsDateTime.fromJson(json["end_time"]),
         gameMatchTables: List<GameMatchTable>.from(json["game_match_tables"].map((x) => GameMatchTable.fromJson(x))),
         matchNumber: json["match_number"],
@@ -57,6 +60,7 @@ class GameMatch {
     );
 
     Map<String, dynamic> toJson() => {
+        "completed": completed,
         "end_time": endTime.toJson(),
         "game_match_tables": List<dynamic>.from(gameMatchTables.map((x) => x.toJson())),
         "match_number": matchNumber,

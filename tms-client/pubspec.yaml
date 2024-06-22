@@ -79,3 +79,8 @@ flutter:
           weight: 800
         - asset: assets/fonts/Poppins/Poppins-Black.ttf
           weight: 900
+
+    # timer fonts
+    - family: lcdbold
+      fonts:
+        - asset: assets/fonts/LCDBOLD.ttf

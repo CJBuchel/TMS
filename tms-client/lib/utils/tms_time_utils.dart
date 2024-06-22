@@ -24,6 +24,18 @@ int tmsDateTimeCompare(TmsDateTime a, TmsDateTime b) {
   return aValue.compareTo(bValue);
 }
 
+int tmsDateTimeGetDifferenceFromNow(TmsDateTime a) {
+  DateTime now = DateTime.now();
+  DateTime aValueDateTime = tmsDateTimeToDateTime(a);
+  return aValueDateTime.difference(now).inSeconds;
+}
+
+int tmsDateTimeGetDifference(TmsDateTime a, TmsDateTime b) {
+  int aValue = getTmsDateTimestamp(a);
+  int bValue = getTmsDateTimestamp(b);
+  return aValue - bValue;
+}
+
 // to string
 String tmsDateTimeToString(TmsDateTime tmsDateTime) {
   String date = "";
@@ -44,4 +56,45 @@ String tmsDateTimeToString(TmsDateTime tmsDateTime) {
   }
 
   return "$date $time";
+}
+
+String _padTime(int value, int length) {
+  return value.toString().padLeft(length, '0');
+}
+
+// to string
+String secondsToTimeString(int seconds) {
+  String hourTime = _padTime(seconds.abs() ~/ 3600, 2);
+  String minuteTime = _padTime((seconds.abs() % 3600) ~/ 60, 2);
+  String secondTime = _padTime(seconds.abs() % 60, 2);
+  return "$hourTime:$minuteTime:$secondTime";
+}
+
+// convert DateTime obj to TmsDateTime obj
+TmsDateTime dateTimeToTmsDateTime(DateTime dateTime) {
+  return TmsDateTime(
+    date: TmsDate(
+      year: dateTime.year,
+      month: dateTime.month,
+      day: dateTime.day,
+    ),
+    time: TmsTime(
+      hour: dateTime.hour,
+      minute: dateTime.minute,
+      second: dateTime.second,
+    ),
+  );
+}
+
+// convert TmsDateTime obj to DateTime obj
+DateTime tmsDateTimeToDateTime(TmsDateTime tmsDateTime) {
+  DateTime now = DateTime.now();
+  return DateTime(
+    tmsDateTime.date?.year ?? now.year,
+    tmsDateTime.date?.month ?? now.month,
+    tmsDateTime.date?.day ?? now.day,
+    tmsDateTime.time?.hour ?? now.hour,
+    tmsDateTime.time?.minute ?? now.minute,
+    tmsDateTime.time?.second ?? now.second,
+  );
 }

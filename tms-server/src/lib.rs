@@ -1,6 +1,7 @@
 use structopt::StructOpt;
 
 pub mod database;
+pub mod services;
 pub mod multicast_dns;
 pub mod network;
 pub mod web_server;

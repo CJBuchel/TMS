@@ -7,6 +7,8 @@
     "_login_response",
     "_register_request",
     "_register_response",
+    "_tms_server_match_load_event",
+    "_tms_server_match_timer_time_event",
     "_tms_server_socket_message",
     "_tournament_config_set_backup_interval_request",
     "_tournament_config_set_endgame_timer_length_request",
@@ -27,6 +29,12 @@
     },
     "_register_response": {
       "$ref": "#/definitions/RegisterResponse"
+    },
+    "_tms_server_match_load_event": {
+      "$ref": "#/definitions/TmsServerMatchLoadEvent"
+    },
+    "_tms_server_match_timer_time_event": {
+      "$ref": "#/definitions/TmsServerMatchTimerTimeEvent"
     },
     "_tms_server_socket_message": {
       "$ref": "#/definitions/TmsServerSocketMessage"
@@ -157,10 +165,44 @@
         }
       }
     },
+    "TmsServerMatchLoadEvent": {
+      "type": "object",
+      "required": [
+        "game_match_numbers"
+      ],
+      "properties": {
+        "game_match_numbers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TmsServerMatchTimerTimeEvent": {
+      "type": "object",
+      "required": [
+        "time"
+      ],
+      "properties": {
+        "time": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        }
+      }
+    },
     "TmsServerSocketEvent": {
       "type": "string",
       "enum": [
-        "PurgeEvent"
+        "PurgeEvent",
+        "MatchTimerStartEvent",
+        "MatchTimerTimeEvent",
+        "MatchTimerEndgameEvent",
+        "MatchTimerEndEvent",
+        "MatchTimerStopEvent",
+        "MatchLoadEvent",
+        "MatchUnloadEvent"
       ]
     },
     "TmsServerSocketMessage": {

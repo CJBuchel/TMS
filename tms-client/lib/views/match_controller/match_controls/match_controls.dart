@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tms/views/match_controller/match_controls/load_match_button.dart';
+import 'package:tms/widgets/timers/MatchLiveScheduleTimer.dart';
 
 class MatchControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Load/Unload button
-        // Expanded(
-        //   flex: 1,
-        //   child: LoadMatchButton(),
-        // ),
-
         LoadMatchButton(),
 
         // TTL Timer
@@ -24,7 +19,21 @@ class MatchControls extends StatelessWidget {
               ),
             ),
             child: const Center(
-              child: Text('TTL Timer'),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: MatchLiveScheduleTimer(
+                  positiveStyle: TextStyle(
+                    color: Colors.green,
+                    fontSize: 50,
+                    fontFamily: "lcdbold",
+                  ),
+                  negativeStyle: TextStyle(
+                    color: Colors.red,
+                    fontSize: 50,
+                    fontFamily: "lcdbold",
+                  ),
+                ),
+              ),
             ),
           ),
         ),

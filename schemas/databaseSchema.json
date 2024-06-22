@@ -26,12 +26,16 @@
     "GameMatch": {
       "type": "object",
       "required": [
+        "completed",
         "end_time",
         "game_match_tables",
         "match_number",
         "start_time"
       ],
       "properties": {
+        "completed": {
+          "type": "boolean"
+        },
         "end_time": {
           "$ref": "#/definitions/TmsDateTime"
         },

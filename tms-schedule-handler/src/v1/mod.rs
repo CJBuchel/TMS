@@ -216,6 +216,7 @@ impl CsvToTmsSchedule for V1 {
           start_time,
           end_time,
           game_match_tables: game_match_tables,
+          completed: false,
         });
       }
     }
@@ -278,6 +279,7 @@ impl CsvToTmsSchedule for V1 {
           start_time,
           end_time,
           game_match_tables: game_match_tables,
+          completed: false,
         });
       }
     }

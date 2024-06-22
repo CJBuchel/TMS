@@ -11,6 +11,7 @@ pub trait GameMatchExtensions {
   async fn get_game_match_by_number(&self, number: String) -> Option<(String, GameMatch)>;
   async fn insert_game_match(&self, game_match: GameMatch, game_match_id: Option<String>) -> Result<(), String>;
   async fn remove_game_match(&self, game_match_id: String) -> Result<(), String>;
+  async fn set_game_match_complete(&self, game_match_id: String) -> Result<(), String>;
 }
 
 #[async_trait::async_trait]
@@ -73,6 +74,23 @@ impl GameMatchExtensions for Database {
     match game_match {
       Some(_) => {
         self.inner.write().await.remove_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id).await;
+        Ok(())
+      }
+      None => {
+        Err(format!("GameMatch not found: {}", game_match_id))
+      }
+    }
+  }
+
+  async fn set_game_match_complete(&self, game_match_id: String) -> Result<(), String> {
+    let tree = self.inner.read().await.get_tree(ROBOT_GAME_MATCHES.to_string()).await;
+    let game_match_str = tree.get(&game_match_id).cloned();
+
+    match game_match_str {
+      Some(game_match) => {
+        let mut game_match = GameMatch::from_json(&game_match);
+        game_match.completed = true;
+        self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json()).await;
         Ok(())
       }
       None => {

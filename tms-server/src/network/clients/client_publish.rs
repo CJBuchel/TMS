@@ -10,11 +10,13 @@ pub trait ClientPublish {
   fn publish_purge(&self);
 
   // publish timer events
+  fn publish_start_countdown(&self);
   fn publish_start_timer(&self);
   fn publish_time_timer(&self, time: u32);
   fn publish_endgame_timer(&self, endgame_time: u32);
   fn publish_end_timer(&self);
   fn publish_stop_timer(&self);
+  fn publish_reload_timer(&self);
 
   // publish match events
   fn publish_load_matches(&self, game_match_numbers: Vec<String>);
@@ -45,6 +47,15 @@ impl ClientPublish for Client {
   //
   // Timer
   //
+  fn publish_start_countdown(&self) {
+    let msg = TmsServerSocketMessage {
+      auth_token: self.auth_token.clone(),
+      message_event: TmsServerSocketEvent::MatchTimerStartCountdownEvent,
+      message: None,
+    };
+    self.publish_message(msg);
+  }
+
   fn publish_start_timer(&self) {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
@@ -85,6 +96,15 @@ impl ClientPublish for Client {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
       message_event: TmsServerSocketEvent::MatchTimerStopEvent,
+      message: None,
+    };
+    self.publish_message(msg);
+  }
+
+  fn publish_reload_timer(&self) {
+    let msg = TmsServerSocketMessage {
+      auth_token: self.auth_token.clone(),
+      message_event: TmsServerSocketEvent::MatchTimerReloadEvent,
       message: None,
     };
     self.publish_message(msg);
@@ -134,6 +154,12 @@ impl ClientPublish for ClientHashMap {
   //
   // Timer
   //
+  fn publish_start_countdown(&self) {
+    for client in self.values() {
+      client.publish_start_countdown();
+    }
+  }
+
   fn publish_end_timer(&self) {
     for client in self.values() {
       client.publish_end_timer();
@@ -161,6 +187,12 @@ impl ClientPublish for ClientHashMap {
   fn publish_time_timer(&self, time: u32) {
     for client in self.values() {
       client.publish_time_timer(time);
+    }
+  }
+
+  fn publish_reload_timer(&self) {
+    for client in self.values() {
+      client.publish_reload_timer();
     }
   }
 

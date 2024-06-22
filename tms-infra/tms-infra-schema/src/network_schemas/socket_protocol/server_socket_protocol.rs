@@ -13,11 +13,13 @@ pub enum TmsServerSocketEvent {
   PurgeEvent,
 
   // timer events
+  MatchTimerStartCountdownEvent, // start the countdown timer (no message)
   MatchTimerStartEvent, // start the timer (no message)
   MatchTimerTimeEvent, // time in seconds
   MatchTimerEndgameEvent, // endgame time in seconds
   MatchTimerEndEvent, // end the timer (no message)
   MatchTimerStopEvent, // stop the timer (no message)
+  MatchTimerReloadEvent, // reload the timer (no message)
 
   // match events
   MatchLoadEvent, // game match numbers

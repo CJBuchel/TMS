@@ -5,6 +5,8 @@ use tms_server::network::ClientMap;
 use tms_server::database::*;
 use tms_server::network::*;
 use tms_server::multicast_dns::*;
+use tms_server::services::SharedServices;
+use tms_server::services::SharedServicesTrait;
 use tms_server::web_server::certificates::CertificateKeys;
 use tms_server::web_server::web_server::WebConfig;
 use tms_server::web_server::web_server::WebServer;
@@ -60,8 +62,11 @@ async fn main() {
   // startup the backup service
   db.write().await.start_backup_service();
 
+  // create services
+  let services = SharedServices::new_instance(db.clone(), clients.clone());
+
   // create network
-  let network = Network::new(db.clone(), clients.clone(), ip.clone(), ServerArgs::get_tls(), ServerArgs::get_port());
+  let network = Network::new(db.clone(), clients.clone(), services, ip.clone(), ServerArgs::get_tls(), ServerArgs::get_port());
 
   // check arguments for certificates
   let cert_path = ServerArgs::get_cert_path();

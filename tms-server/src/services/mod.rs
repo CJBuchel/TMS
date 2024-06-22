@@ -1,6 +1,7 @@
 use crate::{database::SharedDatabase, network::ClientMap};
 
 mod match_service;
+pub use match_service::*;
 
 pub struct Services {
   pub match_service: match_service::MatchService,

@@ -1,5 +1,6 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
+import 'package:tms/services/game_match_service.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 
 abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch> {
@@ -18,6 +19,8 @@ abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch
 }
 
 class GameMatchProvider extends _BaseGameMatchProvider {
+  GameMatchService _service = GameMatchService();
+
   //
   // -- Staging Matches --
   //
@@ -91,10 +94,10 @@ class GameMatchProvider extends _BaseGameMatchProvider {
     return matches.where((match) => _loadedMatchNumbers.contains(match.matchNumber)).toList();
   }
 
-  void loadMatches() {
-    // send staged matches to server
+  Future<int> loadMatches() async {
+    int status = await _service.loadMatches(_stagedMatchNumbers);
+    return status;
   }
-  void unloadMatches() {
-    // send unload request to server
-  }
+
+  void unloadMatches() {}
 }

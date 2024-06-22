@@ -15,3 +15,6 @@ pub use tournament_config_handler::*;
 
 mod tournament_schedule_handler;
 pub use tournament_schedule_handler::*;
+
+mod robot_game_matches_handler;
+pub use robot_game_matches_handler::*;

@@ -7,6 +7,7 @@
     "_login_response",
     "_register_request",
     "_register_response",
+    "_robot_games_load_match_request",
     "_tms_server_match_load_event",
     "_tms_server_match_timer_time_event",
     "_tms_server_socket_message",
@@ -29,6 +30,9 @@
     },
     "_register_response": {
       "$ref": "#/definitions/RegisterResponse"
+    },
+    "_robot_games_load_match_request": {
+      "$ref": "#/definitions/RobotGamesLoadMatchRequest"
     },
     "_tms_server_match_load_event": {
       "$ref": "#/definitions/TmsServerMatchLoadEvent"
@@ -165,6 +169,20 @@
         }
       }
     },
+    "RobotGamesLoadMatchRequest": {
+      "type": "object",
+      "required": [
+        "game_match_numbers"
+      ],
+      "properties": {
+        "game_match_numbers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "TmsServerMatchLoadEvent": {
       "type": "object",
       "required": [
@@ -196,11 +214,13 @@
       "type": "string",
       "enum": [
         "PurgeEvent",
+        "MatchTimerStartCountdownEvent",
         "MatchTimerStartEvent",
         "MatchTimerTimeEvent",
         "MatchTimerEndgameEvent",
         "MatchTimerEndEvent",
         "MatchTimerStopEvent",
+        "MatchTimerReloadEvent",
         "MatchLoadEvent",
         "MatchUnloadEvent"
       ]

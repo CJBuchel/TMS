@@ -17,6 +17,7 @@ class WebsocketController {
   final Map<TmsServerSocketEvent, List<TmsEventHandler>> _eventHandlers = {};
 
   void _handleMessage(TmsServerSocketMessage message) async {
+    TmsLogger().d("Received message: ${message.toJson()}");
     if (_eventHandlers.containsKey(message.messageEvent)) {
       List<TmsEventHandler>? handlers = _eventHandlers[message.messageEvent];
       if (handlers != null) {

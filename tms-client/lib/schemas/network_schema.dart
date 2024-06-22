@@ -13,6 +13,9 @@ class NetworkSchema {
     LoginResponse loginResponse;
     RegisterRequest registerRequest;
     RegisterResponse registerResponse;
+    RobotGamesLoadMatchRequest robotGamesLoadMatchRequest;
+    TmsServerMatchLoadEvent tmsServerMatchLoadEvent;
+    TmsServerMatchTimerTimeEvent tmsServerMatchTimerTimeEvent;
     TmsServerSocketMessage tmsServerSocketMessage;
     TournamentConfigSetBackupIntervalRequest tournamentConfigSetBackupIntervalRequest;
     TournamentConfigSetEndgameTimerLengthRequest tournamentConfigSetEndgameTimerLengthRequest;
@@ -26,6 +29,9 @@ class NetworkSchema {
         required this.loginResponse,
         required this.registerRequest,
         required this.registerResponse,
+        required this.robotGamesLoadMatchRequest,
+        required this.tmsServerMatchLoadEvent,
+        required this.tmsServerMatchTimerTimeEvent,
         required this.tmsServerSocketMessage,
         required this.tournamentConfigSetBackupIntervalRequest,
         required this.tournamentConfigSetEndgameTimerLengthRequest,
@@ -40,6 +46,9 @@ class NetworkSchema {
         loginResponse: LoginResponse.fromJson(json["_login_response"]),
         registerRequest: RegisterRequest.fromJson(json["_register_request"]),
         registerResponse: RegisterResponse.fromJson(json["_register_response"]),
+        robotGamesLoadMatchRequest: RobotGamesLoadMatchRequest.fromJson(json["_robot_games_load_match_request"]),
+        tmsServerMatchLoadEvent: TmsServerMatchLoadEvent.fromJson(json["_tms_server_match_load_event"]),
+        tmsServerMatchTimerTimeEvent: TmsServerMatchTimerTimeEvent.fromJson(json["_tms_server_match_timer_time_event"]),
         tmsServerSocketMessage: TmsServerSocketMessage.fromJson(json["_tms_server_socket_message"]),
         tournamentConfigSetBackupIntervalRequest: TournamentConfigSetBackupIntervalRequest.fromJson(json["_tournament_config_set_backup_interval_request"]),
         tournamentConfigSetEndgameTimerLengthRequest: TournamentConfigSetEndgameTimerLengthRequest.fromJson(json["_tournament_config_set_endgame_timer_length_request"]),
@@ -54,6 +63,9 @@ class NetworkSchema {
         "_login_response": loginResponse.toJson(),
         "_register_request": registerRequest.toJson(),
         "_register_response": registerResponse.toJson(),
+        "_robot_games_load_match_request": robotGamesLoadMatchRequest.toJson(),
+        "_tms_server_match_load_event": tmsServerMatchLoadEvent.toJson(),
+        "_tms_server_match_timer_time_event": tmsServerMatchTimerTimeEvent.toJson(),
         "_tms_server_socket_message": tmsServerSocketMessage.toJson(),
         "_tournament_config_set_backup_interval_request": tournamentConfigSetBackupIntervalRequest.toJson(),
         "_tournament_config_set_endgame_timer_length_request": tournamentConfigSetEndgameTimerLengthRequest.toJson(),
@@ -182,6 +194,54 @@ class RegisterResponse {
     };
 }
 
+class RobotGamesLoadMatchRequest {
+    List<String> gameMatchNumbers;
+
+    RobotGamesLoadMatchRequest({
+        required this.gameMatchNumbers,
+    });
+
+    factory RobotGamesLoadMatchRequest.fromJson(Map<String, dynamic> json) => RobotGamesLoadMatchRequest(
+        gameMatchNumbers: List<String>.from(json["game_match_numbers"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "game_match_numbers": List<dynamic>.from(gameMatchNumbers.map((x) => x)),
+    };
+}
+
+class TmsServerMatchLoadEvent {
+    List<String> gameMatchNumbers;
+
+    TmsServerMatchLoadEvent({
+        required this.gameMatchNumbers,
+    });
+
+    factory TmsServerMatchLoadEvent.fromJson(Map<String, dynamic> json) => TmsServerMatchLoadEvent(
+        gameMatchNumbers: List<String>.from(json["game_match_numbers"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "game_match_numbers": List<dynamic>.from(gameMatchNumbers.map((x) => x)),
+    };
+}
+
+class TmsServerMatchTimerTimeEvent {
+    int time;
+
+    TmsServerMatchTimerTimeEvent({
+        required this.time,
+    });
+
+    factory TmsServerMatchTimerTimeEvent.fromJson(Map<String, dynamic> json) => TmsServerMatchTimerTimeEvent(
+        time: json["time"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "time": time,
+    };
+}
+
 class TmsServerSocketMessage {
     String authToken;
     String? message;
@@ -207,10 +267,28 @@ class TmsServerSocketMessage {
 }
 
 enum TmsServerSocketEvent {
+    MATCH_LOAD_EVENT,
+    MATCH_TIMER_ENDGAME_EVENT,
+    MATCH_TIMER_END_EVENT,
+    MATCH_TIMER_RELOAD_EVENT,
+    MATCH_TIMER_START_COUNTDOWN_EVENT,
+    MATCH_TIMER_START_EVENT,
+    MATCH_TIMER_STOP_EVENT,
+    MATCH_TIMER_TIME_EVENT,
+    MATCH_UNLOAD_EVENT,
     PURGE_EVENT
 }
 
 final tmsServerSocketEventValues = EnumValues({
+    "MatchLoadEvent": TmsServerSocketEvent.MATCH_LOAD_EVENT,
+    "MatchTimerEndgameEvent": TmsServerSocketEvent.MATCH_TIMER_ENDGAME_EVENT,
+    "MatchTimerEndEvent": TmsServerSocketEvent.MATCH_TIMER_END_EVENT,
+    "MatchTimerReloadEvent": TmsServerSocketEvent.MATCH_TIMER_RELOAD_EVENT,
+    "MatchTimerStartCountdownEvent": TmsServerSocketEvent.MATCH_TIMER_START_COUNTDOWN_EVENT,
+    "MatchTimerStartEvent": TmsServerSocketEvent.MATCH_TIMER_START_EVENT,
+    "MatchTimerStopEvent": TmsServerSocketEvent.MATCH_TIMER_STOP_EVENT,
+    "MatchTimerTimeEvent": TmsServerSocketEvent.MATCH_TIMER_TIME_EVENT,
+    "MatchUnloadEvent": TmsServerSocketEvent.MATCH_UNLOAD_EVENT,
     "PurgeEvent": TmsServerSocketEvent.PURGE_EVENT
 });
 

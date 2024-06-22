@@ -31,6 +31,9 @@ struct NetworkSchema {
   _tournament_config_set_endgame_timer_length_request: TournamentConfigSetEndgameTimerLengthRequest,
   _tournament_config_set_backup_interval_request: TournamentConfigSetBackupIntervalRequest,
   _tournament_config_set_retain_backups_request: TournamentConfigSetRetainBackupsRequest,
+
+  // game matches
+  _robot_games_load_match_request: RobotGamesLoadMatchRequest,
 }
 
 fn get_workspace_path() -> std::io::Result<PathBuf> {

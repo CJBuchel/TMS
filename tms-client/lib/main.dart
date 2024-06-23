@@ -17,6 +17,7 @@ import 'package:tms/providers/event_config_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/providers/schedule_provider.dart';
+import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/providers/auth_provider.dart';
@@ -93,6 +94,7 @@ class AppWrapper extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ScheduleProvider()),
         ChangeNotifierProvider(create: (_) => EventConfigProvider()),
         ChangeNotifierProvider(create: (_) => GameMatchProvider()),
+        ChangeNotifierProvider(create: (_) => TeamsProvider()),
       ],
       child: child,
     );

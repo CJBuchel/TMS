@@ -1,4 +1,4 @@
-use tms_infra::{TmsServerSocketEvent, TmsServerSocketMessage};
+use tms_infra::{TmsServerMatchLoadEvent, TmsServerMatchTimerTimeEvent, TmsServerSocketEvent, TmsServerSocketMessage};
 
 use super::{client::Client, ClientHashMap};
 
@@ -66,10 +66,14 @@ impl ClientPublish for Client {
   }
 
   fn publish_time_timer(&self, time: u32) {
+    let msg_payload = TmsServerMatchTimerTimeEvent {
+      time,
+    };
+
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
       message_event: TmsServerSocketEvent::MatchTimerTimeEvent,
-      message: Some(time.to_string()),
+      message: Some(serde_json::to_string(&msg_payload).unwrap_or_default()),
     };
     self.publish_message(msg);
   }
@@ -114,10 +118,14 @@ impl ClientPublish for Client {
   // Matches
   //
   fn publish_load_matches(&self, game_match_numbers: Vec<String>) {
+    let msg_payload = TmsServerMatchLoadEvent {
+      game_match_numbers,
+    };
+
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
       message_event: TmsServerSocketEvent::MatchLoadEvent,
-      message: Some(serde_json::to_string(&game_match_numbers).unwrap_or_default()),
+      message: Some(serde_json::to_string(&msg_payload).unwrap_or_default()),
     };
     self.publish_message(msg);
   }

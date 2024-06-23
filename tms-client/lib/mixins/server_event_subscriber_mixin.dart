@@ -24,3 +24,24 @@ mixin ServerEventSubscriberMixin<T extends StatefulWidget> on State<T> {
     super.dispose();
   }
 }
+
+mixin ServerEventSubscribeNotifierMixin<T extends ChangeNotifier> on ChangeNotifier {
+  Map<TmsServerSocketEvent, TmsEventHandler> _subscriptions = {};
+
+  void subscribeToEvent(TmsServerSocketEvent event, TmsEventHandler handler) {
+    _subscriptions[event] = handler;
+    Network().subscribe(event, handler);
+  }
+
+  void autoUnsubscribe() {
+    for (var event in _subscriptions.keys) {
+      if (_subscriptions[event] != null) Network().unsubscribe(event, _subscriptions[event]!);
+    }
+  }
+
+  @override
+  void dispose() {
+    autoUnsubscribe();
+    super.dispose();
+  }
+}

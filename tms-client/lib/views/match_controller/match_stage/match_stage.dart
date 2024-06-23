@@ -1,72 +1,43 @@
+import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/schemas/database_schema.dart';
+import 'package:tms/views/match_controller/match_stage/loaded_table.dart';
+import 'package:tms/views/match_controller/match_stage/stage_table.dart';
 
 class MatchStage extends StatelessWidget {
-  Widget _cell(BuildContext context, String label) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        // only top and bottom borders
-        border: Border(
-          bottom: BorderSide(color: Theme.of(context).dividerColor),
-        ),
-      ),
-      child: Center(
-        child: Text(label),
-      ),
-    );
-  }
-
-  Widget _tableRow(BuildContext context, GameMatchTable table) {
-    return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(
-          flex: 1,
-          child: _cell(context, table.table),
-        ),
-        Expanded(
-          flex: 1,
-          child: _cell(context, table.teamNumber),
-        ),
-        Expanded(
-          flex: 1,
-          child: _cell(context, "Team Name"),
-        ),
-      ],
-    );
-  }
-
-  Widget _stagedMatchesList(BuildContext context, List<GameMatch> matches) {
-    List<GameMatchTable> tables = [];
-
-    for (GameMatch match in matches) {
-      tables.addAll(match.gameMatchTables);
-    }
-
-    return ListView.builder(
-      itemCount: tables.length,
-      itemBuilder: (context, index) {
-        return _tableRow(context, tables[index]);
+  Widget _matchStageTables(BuildContext context) {
+    return Selector<GameMatchProvider, ({List<GameMatch> stagedMatches, List<GameMatch> loadedMatches})>(
+      selector: (_, provider) {
+        return (stagedMatches: provider.stagedMatches, loadedMatches: provider.loadedMatches);
+      },
+      builder: (context, data, _) {
+        if (data.loadedMatches.isNotEmpty) {
+          return LoadedTable(loadedMatches: data.loadedMatches);
+        } else if (data.stagedMatches.isNotEmpty) {
+          return StageTable(stagedMatches: data.stagedMatches);
+        } else {
+          return const Center(
+            child: Text('No Matches Staged'),
+          );
+        }
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<GameMatchProvider, List<GameMatch>>(
-      selector: (context, provider) => provider.stagedMatches,
-      builder: (context, stagedMatches, _) {
-        if (stagedMatches.isEmpty) {
-          return const Center(
-            child: Text('No Matches Staged'),
-          );
-        } else {
-          return _stagedMatchesList(context, stagedMatches);
-        }
-      },
+    return EchoTreeLifetime(
+      trees: [":teams"],
+      child: Selector<TeamsProvider, List<Team>>(
+        selector: (_, provider) => provider.teams,
+        shouldRebuild: (previous, next) => previous.length != next.length,
+        builder: (context, _, __) {
+          return _matchStageTables(context);
+        },
+      ),
     );
   }
 }

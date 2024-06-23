@@ -24,7 +24,7 @@ impl Client {
     // send message to client
     if let Some(sender) = &self.sender {
       match sender.send(Ok(Message::text(msg))) {
-        Ok(_) => log::debug!("Message sent to client"),
+        Ok(_) => log::trace!("Message sent to client"),
         Err(e) => log::error!("Error sending message to client: {:?}", e),
       }
     }

@@ -1,6 +1,14 @@
+import 'dart:convert';
+
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:tms/mixins/server_event_subscriber_mixin.dart';
+import 'package:tms/network/connectivity.dart';
+import 'package:tms/network/network.dart';
 import 'package:tms/schemas/database_schema.dart';
+import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/services/game_match_service.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 
 abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch> {
@@ -18,7 +26,55 @@ abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch
   }
 }
 
-class GameMatchProvider extends _BaseGameMatchProvider {
+class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribeNotifierMixin {
+  // network callback
+  late final VoidCallback _networkListener;
+
+  GameMatchProvider() {
+    _networkListener = () {
+      if (Network().state != NetworkConnectionState.connected) {
+        clearLoadedMatches();
+      }
+    };
+
+    // listen to network state
+    Network().innerNetworkStates().$1.notifier.addListener(_networkListener);
+    Network().innerNetworkStates().$2.notifier.addListener(_networkListener);
+    Network().innerNetworkStates().$3.notifier.addListener(_networkListener);
+
+    subscribeToEvent(TmsServerSocketEvent.MATCH_LOAD_EVENT, (event) {
+      if (event.message != null) {
+        try {
+          final json = jsonDecode(event.message!);
+          TmsServerMatchLoadEvent matchLoadEvent = TmsServerMatchLoadEvent.fromJson(json);
+          _loadedMatchNumbers = matchLoadEvent.gameMatchNumbers;
+          notifyListeners();
+        } catch (e) {
+          TmsLogger().e("Error parsing match load event: $e");
+        }
+      } else {
+        TmsLogger().e("Error parsing match load event: message is null");
+      }
+    });
+
+    subscribeToEvent(TmsServerSocketEvent.MATCH_UNLOAD_EVENT, (event) {
+      try {
+        _loadedMatchNumbers = [];
+        notifyListeners();
+      } catch (e) {
+        TmsLogger().e("Error parsing match unload event: $e");
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    Network().innerNetworkStates().$1.notifier.removeListener(_networkListener);
+    Network().innerNetworkStates().$2.notifier.removeListener(_networkListener);
+    Network().innerNetworkStates().$3.notifier.removeListener(_networkListener);
+    super.dispose();
+  }
+
   GameMatchService _service = GameMatchService();
 
   //
@@ -82,6 +138,10 @@ class GameMatchProvider extends _BaseGameMatchProvider {
 
   List<String> _loadedMatchNumbers = [];
 
+  bool isMatchLoaded(String matchNumber) {
+    return _loadedMatchNumbers.contains(matchNumber);
+  }
+
   bool get canLoad {
     return _stagedMatchNumbers.isNotEmpty && _loadedMatchNumbers.isEmpty;
   }
@@ -94,10 +154,16 @@ class GameMatchProvider extends _BaseGameMatchProvider {
     return matches.where((match) => _loadedMatchNumbers.contains(match.matchNumber)).toList();
   }
 
-  Future<int> loadMatches() async {
-    int status = await _service.loadMatches(_stagedMatchNumbers);
-    return status;
+  void clearLoadedMatches() {
+    _loadedMatchNumbers = [];
+    notifyListeners();
   }
 
-  void unloadMatches() {}
+  Future<int> loadMatches() async {
+    return await _service.loadMatches(_stagedMatchNumbers);
+  }
+
+  Future<int> unloadMatches() async {
+    return await _service.unloadMatches();
+  }
 }

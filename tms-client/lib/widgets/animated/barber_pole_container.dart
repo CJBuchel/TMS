@@ -55,6 +55,7 @@ class BarberPoleContainer extends StatefulWidget {
   // container
   final Widget? child;
   final Color? color;
+  final Color? hoverColor;
   final double? width;
   final double? height;
   final BoxBorder? border;
@@ -72,6 +73,7 @@ class BarberPoleContainer extends StatefulWidget {
     // container
     this.child,
     this.color,
+    this.hoverColor,
     this.width,
     this.height,
     this.border,
@@ -84,6 +86,7 @@ class BarberPoleContainer extends StatefulWidget {
 
 class _BarberPoleContainerState extends State<BarberPoleContainer> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  final ValueNotifier<bool> _hovering = ValueNotifier(false);
 
   @override
   void initState() {
@@ -127,24 +130,33 @@ class _BarberPoleContainerState extends State<BarberPoleContainer> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      decoration: BoxDecoration(
-        color: widget.color,
-        border: widget.border,
-        borderRadius: widget.borderRadius,
-      ),
+    return MouseRegion(
+      onEnter: (_) => _hovering.value = true,
+      onExit: (_) => _hovering.value = false,
+      child: ValueListenableBuilder(
+        valueListenable: _hovering,
+        builder: (context, hovering, _) {
+          return Container(
+            width: widget.width,
+            height: widget.height,
+            decoration: BoxDecoration(
+              color: hovering ? widget.hoverColor ?? widget.color : widget.color,
+              border: widget.border,
+              borderRadius: widget.borderRadius,
+            ),
 
-      // child
-      child: ClipRRect(
-        borderRadius: widget.borderRadius ?? BorderRadius.zero,
-        child: Stack(
-          children: [
-            if (widget.active) _barberPole(_controller),
-            if (widget.child != null) widget.child!,
-          ],
-        ),
+            // child
+            child: ClipRRect(
+              borderRadius: widget.borderRadius ?? BorderRadius.zero,
+              child: Stack(
+                children: [
+                  if (widget.active) _barberPole(_controller),
+                  if (widget.child != null) widget.child!,
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

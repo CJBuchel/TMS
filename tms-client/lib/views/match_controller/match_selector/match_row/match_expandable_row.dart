@@ -34,19 +34,23 @@ class MatchExpandableRow extends StatelessWidget {
     this.onSelect,
   }) : super(key: key);
 
-  Widget _leading() {
+  Widget _leading(MatchRowState state) {
+    Color? color = null;
+    if (state == MatchRowState.STAGED) color = Colors.white;
+    if (state == MatchRowState.LOADED) color = Colors.white;
+
     return SizedBox(
       width: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Icon(Icons.sports_esports),
+          Icon(Icons.sports_esports, color: color),
           const SizedBox(width: 10),
           Column(
             children: [
-              Text("#${match.matchNumber}"),
+              Text("#${match.matchNumber}", style: TextStyle(color: color)),
               const SizedBox(height: 10),
-              Text(tmsDateTimeToString(match.startTime), style: const TextStyle(fontSize: 12)),
+              Text(tmsDateTimeToString(match.startTime), style: TextStyle(fontSize: 12, color: color)),
             ],
           ),
         ],
@@ -54,11 +58,15 @@ class MatchExpandableRow extends StatelessWidget {
     );
   }
 
-  Widget _trailing() {
+  Widget _trailing(MatchRowState state) {
+    Color? color = null;
+    if (state == MatchRowState.STAGED) color = Colors.white;
+    if (state == MatchRowState.LOADED) color = Colors.white;
+
     return ValueListenableBuilder(
       valueListenable: controller ?? ExpansionController(),
       builder: (context, isExpanded, child) {
-        return isExpanded ? const Icon(Icons.expand_more) : const Icon(Icons.chevron_right);
+        return isExpanded ? Icon(Icons.expand_more, color: color) : Icon(Icons.chevron_right, color: color);
       },
     );
   }
@@ -75,11 +83,10 @@ class MatchExpandableRow extends StatelessWidget {
     );
   }
 
-  bool get _isExpandable {
-    return !isMultiMatch;
-  }
+  Widget _tileRow(MatchRowState state, List<GameMatch> loadedMatches) {
+    bool isLoaded = state == MatchRowState.LOADED;
+    bool isExpandable = !isMultiMatch && !isLoaded;
 
-  Widget _tileRow() {
     return ExpandableTile(
       controller: controller,
       onChange: onChangeExpand,
@@ -88,10 +95,10 @@ class MatchExpandableRow extends StatelessWidget {
         child: Row(
           children: [
             // optional checkbox (multi match only)
-            if (isMultiMatch) StageCheckbox(match: match),
+            if (isMultiMatch && loadedMatches.isEmpty) StageCheckbox(match: match),
 
             // leading
-            _leading(),
+            _leading(state),
 
             // central/main info
             Expanded(
@@ -99,22 +106,22 @@ class MatchExpandableRow extends StatelessWidget {
             ),
 
             // trailing
-            if (!isMultiMatch) _trailing(),
+            if (isExpandable) _trailing(state),
           ],
         ),
       ),
-      body: _isExpandable ? ExpandedRowBody(match: match) : const SizedBox.shrink(),
+      body: isExpandable ? ExpandedRowBody(match: match, loadedMatches: loadedMatches) : const SizedBox.shrink(),
     );
   }
 
   Color _stateColor(MatchRowState state) {
     switch (state) {
       case MatchRowState.STAGED:
-        return Colors.blue[700] ?? Colors.blue;
+        return const Color(0xFF1976D2);
       case MatchRowState.LOADED:
-        return Colors.orange[700] ?? Colors.orange;
+        return const Color(0xFFD55C00);
       case MatchRowState.RUNNING:
-        return Colors.green[700] ?? Colors.green;
+        return const Color(0xFF388E3C);
       default:
         return Colors.transparent;
     }
@@ -132,22 +139,47 @@ class MatchExpandableRow extends StatelessWidget {
         side: BorderSide(color: borderColor),
       ),
       // provider selector
-      child: Selector<GameMatchProvider, bool>(
-        selector: (context, provider) => provider.isMatchStaged(match.matchNumber),
-        builder: (context, isSelected, child) {
+      child: Selector<
+          GameMatchProvider,
+          ({
+            bool isMatchStaged,
+            bool isMatchLoaded,
+            List<GameMatch> loadedMatches,
+          })>(
+        selector: (context, provider) {
+          return (
+            isMatchStaged: provider.isMatchStaged(match.matchNumber),
+            isMatchLoaded: provider.isMatchLoaded(match.matchNumber),
+            loadedMatches: provider.loadedMatches,
+          );
+        },
+        builder: (context, data, child) {
           MatchRowState state = MatchRowState.STAGED;
-          if (isSelected) {
+          if (data.isMatchLoaded) {
+            state = MatchRowState.LOADED;
+          } else if (data.isMatchStaged) {
             state = MatchRowState.STAGED;
           } else {
             state = MatchRowState.IDLE;
           }
 
-          return BarberPoleContainer(
-            active: state != MatchRowState.IDLE,
-            stripeColor: _stateColor(state),
-            borderRadius: BorderRadius.circular(8),
-            child: _tileRow(),
-          );
+          if (state != MatchRowState.IDLE && state != MatchRowState.STAGED) {
+            return BarberPoleContainer(
+              active: true,
+              stripeColor: _stateColor(state),
+              color: Colors.grey[800],
+              hoverColor: Colors.grey[700],
+              borderRadius: BorderRadius.circular(8),
+              child: _tileRow(state, data.loadedMatches),
+            );
+          } else {
+            return BarberPoleContainer(
+              active: false,
+              color: _stateColor(state),
+              borderRadius: BorderRadius.circular(8),
+              child: _tileRow(state, data.loadedMatches),
+            );
+          }
         },
       ),
     );

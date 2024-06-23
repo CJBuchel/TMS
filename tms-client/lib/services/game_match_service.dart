@@ -8,9 +8,24 @@ class GameMatchService {
   Future<int> loadMatches(List<String> gameMatchNumbers) async {
     try {
       var request = RobotGamesLoadMatchRequest(gameMatchNumbers: gameMatchNumbers).toJson();
-      var response = await Network().networkPost("/robot_game/matches", request);
+      var response = await Network().networkPost("/robot_game/matches/load_matches", request);
       if (response.$1) {
         TmsLogger().i("Loaded game matches: $gameMatchNumbers");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
+
+  Future<int> unloadMatches() async {
+    try {
+      var response = await Network().networkPost("/robot_game/matches/unload_matches", {});
+      if (response.$1) {
+        TmsLogger().i("Unloaded game matches");
         return HttpStatus.ok;
       } else {
         return response.$2;

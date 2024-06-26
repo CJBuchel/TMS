@@ -5,6 +5,7 @@ version: 1.0.0+1
 
 environment:
   sdk: '>=3.3.1 <4.0.0'
+  flutter: '>=3.17.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -12,6 +13,10 @@ dependencies:
 
   echo_tree_flutter:
     path: ../echo-tree-flutter
+
+  rust_lib_my_app:
+    path: rust_builder
+  flutter_rust_bridge: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

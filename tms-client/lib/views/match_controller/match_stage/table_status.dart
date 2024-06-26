@@ -31,6 +31,12 @@ class _TableStatusState extends State<TableStatus> with SingleTickerProviderStat
     )..repeat(reverse: true);
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Widget _statusText(TableStatusState state) {
     Color? color = Colors.red;
     String text = "SIG";

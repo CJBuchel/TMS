@@ -1,6 +1,7 @@
 
 use std::{fs, path::PathBuf};
 
+use lib_flutter_rust_bridge_codegen::{build_web, codegen};
 use tms_infra_schema::*;
 use schemars::JsonSchema;
 
@@ -64,7 +65,31 @@ fn generate_schema<T: JsonSchema>(schema_name: &str) {
   fs::write(schema_file, json).expect("Unable to write schema file");
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
   generate_schema::<DatabaseSchema>("databaseSchema");
   generate_schema::<NetworkSchema>("networkSchema");
+
+  // If you want to see logs
+  // Alternatively, use `cargo build -vvv` (instead of `cargo build`) to see logs on screen
+  // configure_opinionated_logging("./logs/", true)?;
+
+  let mut config = codegen::Config::default();
+  config.rust_input = Some("crate::api".to_string());
+  config.rust_root = Some(".".to_owned());
+  config.dart_output = Some(get_workspace_path()?.join("tms-client/lib/generated").to_string_lossy().to_string());
+  config.local = Some(true);
+
+  codegen::generate(
+    // Config::from_config_file("../tms_frb.yaml")?.unwrap(),
+    config,
+    Default::default(),
+  )
+
+  // build_web::build(
+  //   Some(get_workspace_path()?.join("tms-client")), 
+  //   true, 
+  //   vec![
+  //     format!("--crate {}", config.rust_root.unwrap()),
+  //   ]
+  // )
 }

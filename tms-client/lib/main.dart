@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/app.dart';
+import 'package:tms/generated/frb_generated.dart';
 import 'package:tms/network/http_client.dart';
 import 'package:tms/providers/connection_provider.dart';
 import 'package:tms/providers/event_config_provider.dart';
@@ -102,6 +103,7 @@ class AppWrapper extends StatelessWidget {
 }
 
 void main() async {
+  await RustLib.init();
   HttpOverrides.global = TmsHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -124,5 +126,6 @@ void main() async {
 
   // set imperative API and start app
   GoRouter.optionURLReflectsImperativeAPIs = true;
+
   runApp(const AppWrapper(child: TMSApp()));
 }

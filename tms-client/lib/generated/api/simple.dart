@@ -19,6 +19,9 @@ class TestStruct {
     required this.age,
   });
 
+  static Future<TestStruct> fromJson({required String json}) =>
+      RustLib.instance.api.crateApiSimpleTestStructFromJson(json: json);
+
   Future<String> toJson() =>
       RustLib.instance.api.crateApiSimpleTestStructToJson(
         that: this,

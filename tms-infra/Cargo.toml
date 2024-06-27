@@ -5,8 +5,8 @@ edition = "2021"
 build = "build/build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-# [lib]
-# crate-type = ["cdylib"]
+[lib]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 tms-infra-schema = { path = "tms-infra-schema" }
@@ -16,6 +16,7 @@ serde_json = "^1.0"
 
 [build-dependencies]
 anyhow = { version = "1.0.64", features = ["backtrace"] }
+wasm-pack = "0.12.1"
 flutter_rust_bridge_codegen = "2.0.0" # used for infra-logic
 serde_json = "^1.0" # used for infra schema
 schemars = "^0.8" # used for infra-schema

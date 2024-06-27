@@ -1,9 +1,16 @@
 use serde::{Deserialize, Serialize};
 
 
-pub trait ToJson: Serialize {
+pub trait ToJson<'a>: Serialize + Deserialize<'a> {
   fn to_json(&self) -> String {
     serde_json::to_string(self).unwrap()
+  }
+
+  fn from_json(json: &'a str) -> Result<Self, serde_json::Error>
+  where
+    Self: Sized,
+  {
+    serde_json::from_str(json)
   }
 }
 
@@ -13,19 +20,7 @@ pub struct TestStruct {
   pub age: i32,
 }
 
-impl ToJson for TestStruct {}
-
-// pub fn tms_serialize<V>(data: V) -> Result<String, ()> {
-//   // convert test struct to json string
-//   let test_struct = TestStruct {
-//     name: "John".to_string(),
-//     age: 30,
-//   };
-
-//   let json_string = serde_json::to_string(&test_struct).unwrap();
-
-//   return Ok(json_string);
-// }
+impl ToJson<'_> for TestStruct {}
 
 #[flutter_rust_bridge::frb(init)]
 pub fn init_app() {

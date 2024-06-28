@@ -1,11 +1,9 @@
 
 use std::{fs, path::PathBuf};
 
-use anyhow::Ok;
 use lib_flutter_rust_bridge_codegen::codegen;
 use tms_infra_schema::*;
 use schemars::JsonSchema;
-use wasm_pack::{build::wasm_target, command::build::BuildOptions};
 
 #[derive(JsonSchema)]
 struct DatabaseSchema {
@@ -68,6 +66,9 @@ fn generate_schema<T: JsonSchema>(schema_name: &str) {
 }
 
 fn main() -> anyhow::Result<()> {
+  // only recompile on directory change
+  println!("cargo:rerun-if-changed=src");
+
   generate_schema::<DatabaseSchema>("databaseSchema");
   generate_schema::<NetworkSchema>("networkSchema");
 
@@ -75,39 +76,15 @@ fn main() -> anyhow::Result<()> {
   // Alternatively, use `cargo build -vvv` (instead of `cargo build`) to see logs on screen
   // configure_opinionated_logging("./logs/", true)?;
 
-  let mut config = codegen::Config::default();
-  config.rust_input = Some("crate::api".to_string());
-  config.rust_root = Some(".".to_owned());
-  config.dart_output = Some(get_workspace_path()?.join("tms-client/lib/generated").to_string_lossy().to_string());
-  config.local = Some(true);
-
   // codegen::generate(
   //   codegen::Config {
   //     rust_input: Some("crate::api".to_string()),
-  //     rust_root: Some(".".to_owned()),
+  //     rust_root: Some("tms-infra-logic".to_string()),
   //     dart_output: Some(get_workspace_path()?.join("tms-client/lib/generated").to_string_lossy().to_string()),
   //     local: Some(true),
   //     ..Default::default()
   //   },
   //   Default::default(),
   // )?;
-
-
-  let options = BuildOptions {
-    path: Some(std::env::current_dir()?),
-    scope: None,
-    disable_dts: true,
-    target: wasm_pack::command::build::Target::NoModules,
-    debug: true,
-    dev: true,
-    out_dir: get_workspace_path()?.join("tms-client").join("web").join("pkg").to_string_lossy().to_string(),
-    out_name: Some("rust_lib_my_app".to_string()),
-    extra_options: vec![],
-    ..Default::default()
-  };
-
-  let command = wasm_pack::command::Command::Build(options);
-  wasm_pack::command::run_wasm_pack(command)?;
-
   Ok(())
 }

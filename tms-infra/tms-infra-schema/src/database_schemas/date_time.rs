@@ -1,6 +1,7 @@
-use echo_tree_infra::DataSchemeExtensions;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+
+use crate::DataSchemeExtensions;
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct TmsDate {

@@ -3,9 +3,9 @@ resolver = "2"
 members = [
   "echo-tree-infra",
   "echo-tree-rs",
-  "tms-infra", 
+  "tms-infra",
   "tms-schedule-handler",
-  "tms-server", 
+  "tms-server",
 ]
 
 [patch.crates-io]

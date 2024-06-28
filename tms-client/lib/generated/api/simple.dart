@@ -6,9 +6,8 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-abstract class ToJson {
-  Future<String> toJson();
-}
+String testOutput({required TestStruct v}) =>
+    RustLib.instance.api.crateApiSimpleTestOutput(v: v);
 
 class TestStruct {
   final String name;
@@ -18,14 +17,6 @@ class TestStruct {
     required this.name,
     required this.age,
   });
-
-  static Future<TestStruct> fromJson({required String json}) =>
-      RustLib.instance.api.crateApiSimpleTestStructFromJson(json: json);
-
-  Future<String> toJson() =>
-      RustLib.instance.api.crateApiSimpleTestStructToJson(
-        that: this,
-      );
 
   @override
   int get hashCode => name.hashCode ^ age.hashCode;

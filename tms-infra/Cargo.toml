@@ -2,19 +2,21 @@
 name = "tms-infra"
 version = "0.1.0"
 edition = "2021"
-build = "build/build.rs"
+# build = "build/build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 tms-infra-schema = { path = "tms-infra-schema" }
 flutter_rust_bridge = "=2.0.0"
 wasm-bindgen = "0.2.92"
-
-[build-dependencies]
-anyhow = { version = "1.0.64", features = ["backtrace"] }
-flutter_rust_bridge_codegen = "2.0.0" # used for infra-logic
+serde = { version = "^1.0", features = ["derive"] }
 serde_json = "^1.0" # used for infra schema
-schemars = "^0.8" # used for infra-schema
-tms-infra-schema = { path = "tms-infra-schema" }
-# tms-infra-logic = { path = "tms-infra-logic" }
+
+
+# [build-dependencies]
+# anyhow = { version = "1.0.64", features = ["backtrace"] }
+# flutter_rust_bridge_codegen = "2.0.0" # used for infra-logic
+# tms-infra-schema = { path = "tms-infra-schema" }

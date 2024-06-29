@@ -6,8 +6,11 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-String testOutput({required TestStruct v}) =>
-    RustLib.instance.api.crateApiSimpleTestOutput(v: v);
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
+
+abstract class ToJson {
+  String toJson();
+}
 
 class TestStruct {
   final String name;
@@ -17,6 +20,13 @@ class TestStruct {
     required this.name,
     required this.age,
   });
+
+  static TestStruct fromJson({required String json}) =>
+      RustLib.instance.api.crateApiSimpleTestStructFromJson(json: json);
+
+  String toJson() => RustLib.instance.api.crateApiSimpleTestStructToJson(
+        that: this,
+      );
 
   @override
   int get hashCode => name.hashCode ^ age.hashCode;

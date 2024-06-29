@@ -14,6 +14,10 @@ class ViewSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     TestStruct test = const TestStruct(name: 'test', age: 10);
 
+    var json = test.toJson();
+
+    TmsLogger().i("testOutput: $json");
+
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return ListView(

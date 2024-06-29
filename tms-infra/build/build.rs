@@ -69,8 +69,8 @@ fn main() -> anyhow::Result<()> {
   // only recompile on directory change
   println!("cargo:rerun-if-changed=src");
 
-  generate_schema::<DatabaseSchema>("databaseSchema");
-  generate_schema::<NetworkSchema>("networkSchema");
+  // generate_schema::<DatabaseSchema>("databaseSchema");
+  // generate_schema::<NetworkSchema>("networkSchema");
 
   // If you want to see logs
   // Alternatively, use `cargo build -vvv` (instead of `cargo build`) to see logs on screen
@@ -79,7 +79,7 @@ fn main() -> anyhow::Result<()> {
   // codegen::generate(
   //   codegen::Config {
   //     rust_input: Some("crate::api".to_string()),
-  //     rust_root: Some("tms-infra-logic".to_string()),
+  //     rust_root: Some(".".to_string()),
   //     dart_output: Some(get_workspace_path()?.join("tms-client/lib/generated").to_string_lossy().to_string()),
   //     local: Some(true),
   //     ..Default::default()

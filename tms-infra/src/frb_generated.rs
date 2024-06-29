@@ -25,6 +25,7 @@
 
 // Section: imports
 
+use crate::api::simple::ToJson;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
 use flutter_rust_bridge::{Handler, IntoIntoDart};
@@ -33,7 +34,7 @@ use flutter_rust_bridge::{Handler, IntoIntoDart};
 
 flutter_rust_bridge::frb_generated_boilerplate!(default_stream_sink_codec = SseCodec, default_rust_opaque = RustOpaqueMoi, default_rust_auto_opaque = RustAutoOpaqueMoi,);
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1036575408;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1664648024;
 
 // Section: executor
 
@@ -63,20 +64,39 @@ fn wire__crate__api__simple__init_app_impl(port_: flutter_rust_bridge::for_gener
     },
   )
 }
-fn wire__crate__api__simple__test_output_impl(ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr, rust_vec_len_: i32, data_len_: i32) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+fn wire__crate__api__simple__test_struct_from_json_impl(ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr, rust_vec_len_: i32, data_len_: i32) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
   FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
     flutter_rust_bridge::for_generated::TaskInfo {
-      debug_name: "test_output",
+      debug_name: "test_struct_from_json",
       port: None,
       mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
     },
     move || {
       let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-      let api_v = <crate::api::simple::TestStruct>::sse_decode(&mut deserializer);
+      let api_json = <String>::sse_decode(&mut deserializer);
+      deserializer.end();
+      transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>((move || {
+        let output_ok = crate::api::simple::TestStruct::from_json(&api_json)?;
+        Ok(output_ok)
+      })())
+    },
+  )
+}
+fn wire__crate__api__simple__test_struct_to_json_impl(ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr, rust_vec_len_: i32, data_len_: i32) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+  FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+    flutter_rust_bridge::for_generated::TaskInfo {
+      debug_name: "test_struct_to_json",
+      port: None,
+      mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+    },
+    move || {
+      let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+      let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+      let api_that = <crate::api::simple::TestStruct>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::api::simple::test_output(api_v))?;
+        let output_ok = Result::<_, ()>::Ok(crate::api::simple::TestStruct::to_json(&api_that))?;
         Ok(output_ok)
       })())
     },
@@ -84,6 +104,14 @@ fn wire__crate__api__simple__test_output_impl(ptr_: flutter_rust_bridge::for_gen
 }
 
 // Section: dart2rust
+
+impl SseDecode for flutter_rust_bridge::for_generated::anyhow::Error {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+    let mut inner = <String>::sse_decode(deserializer);
+    return flutter_rust_bridge::for_generated::anyhow::anyhow!("{}", inner);
+  }
+}
 
 impl SseDecode for String {
   // Codec=Sse (Serialization based), see doc to use other codecs
@@ -143,7 +171,7 @@ impl SseDecode for bool {
 fn pde_ffi_dispatcher_primary_impl(func_id: i32, port: flutter_rust_bridge::for_generated::MessagePort, ptr: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr, rust_vec_len: i32, data_len: i32) {
   // Codec=Pde (Serialization + dispatch), see doc to use other codecs
   match func_id {
-    1 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+    3 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
     _ => unreachable!(),
   }
 }
@@ -151,7 +179,8 @@ fn pde_ffi_dispatcher_primary_impl(func_id: i32, port: flutter_rust_bridge::for_
 fn pde_ffi_dispatcher_sync_impl(func_id: i32, ptr: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr, rust_vec_len: i32, data_len: i32) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
   // Codec=Pde (Serialization + dispatch), see doc to use other codecs
   match func_id {
-    2 => wire__crate__api__simple__test_output_impl(ptr, rust_vec_len, data_len),
+    4 => wire__crate__api__simple__test_struct_from_json_impl(ptr, rust_vec_len, data_len),
+    5 => wire__crate__api__simple__test_struct_to_json_impl(ptr, rust_vec_len, data_len),
     _ => unreachable!(),
   }
 }
@@ -168,6 +197,13 @@ impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api:
 impl flutter_rust_bridge::IntoIntoDart<crate::api::simple::TestStruct> for crate::api::simple::TestStruct {
   fn into_into_dart(self) -> crate::api::simple::TestStruct {
     self
+  }
+}
+
+impl SseEncode for flutter_rust_bridge::for_generated::anyhow::Error {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+    <String>::sse_encode(format!("{:?}", self), serializer);
   }
 }
 

@@ -1,6 +1,5 @@
-use tms_infra::{DataSchemeExtensions, GameMatch};
-
 pub use echo_tree_rs::core::*;
+use tms_infra::*;
 use uuid::Uuid;
 use crate::database::{Database, ROBOT_GAME_MATCHES};
 
@@ -22,7 +21,7 @@ impl GameMatchExtensions for Database {
 
     match game_match {
       Some(game_match) => {
-        Some(GameMatch::from_json(&game_match))
+        Some(GameMatch::from_json_string(&game_match))
       }
       None => None,
     }
@@ -31,7 +30,7 @@ impl GameMatchExtensions for Database {
   async fn get_game_match_by_number(&self, number: String) -> Option<(String, GameMatch)> {
     let tree = self.inner.read().await.get_tree(ROBOT_GAME_MATCHES.to_string()).await;
     let game_match = tree.iter().find_map(|(id, game_match)| {
-      let game_match = GameMatch::from_json(game_match);
+      let game_match = GameMatch::from_json_string(game_match);
       if game_match.match_number == number {
         Some((id.clone(), game_match))
       } else {
@@ -57,11 +56,11 @@ impl GameMatchExtensions for Database {
     match existing_game_match {
       Some((game_match_id, game_match)) => {
         log::warn!("GameMatch already exists: {}, overwriting with insert...", game_match_id);
-        self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json()).await;
+        self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json_string()).await;
         Ok(())
       },
       None => {
-        self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), Uuid::new_v4().to_string(), game_match.to_json()).await;
+        self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), Uuid::new_v4().to_string(), game_match.to_json_string()).await;
         Ok(())
       },
     }
@@ -88,9 +87,9 @@ impl GameMatchExtensions for Database {
 
     match game_match_str {
       Some(game_match) => {
-        let mut game_match = GameMatch::from_json(&game_match);
+        let mut game_match = GameMatch::from_json_string(&game_match);
         game_match.completed = true;
-        self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json()).await;
+        self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json_string()).await;
         Ok(())
       }
       None => {

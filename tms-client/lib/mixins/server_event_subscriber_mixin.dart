@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/network/ws.dart';
-import 'package:tms/schemas/network_schema.dart';
 
 // monitor subs to server events, unsubscribes when widget is disposed
 mixin ServerEventSubscriberMixin<T extends StatefulWidget> on State<T> {

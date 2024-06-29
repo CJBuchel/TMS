@@ -7,7 +7,7 @@ class ScheduleService {
   Future<int> uploadSchedule(Uint8List csv) async {
     try {
       var request = csv;
-      var response = await Network().networkPost("/tournament/schedule/csv", request, encode: false);
+      var response = await Network().networkPost("/tournament/schedule/csv", request);
       if (response.$1) {
         return HttpStatus.ok;
       } else {

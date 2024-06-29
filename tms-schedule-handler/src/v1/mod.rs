@@ -20,7 +20,7 @@ use schedule_practice_matches_block::*;
 
 mod schedule_judging_block;
 use schedule_judging_block::*;
-use tms_infra::{GameMatch, GameMatchTable, JudgingSession, JudgingSessionPod, Team, TmsDateTime};
+use tms_infra::infra::database_schemas::{GameMatch, GameMatchTable, JudgingSession, JudgingSessionPod, Team, TmsDateTime, TmsTime};
 
 pub trait V1Block {
   type Output;
@@ -111,7 +111,7 @@ impl V1 {
     // TMS Date Time
     let start_time = TmsDateTime {
       date: None,
-      time: Some(tms_infra::TmsTime {
+      time: Some(TmsTime {
         hour: start_time_native.hour(),
         minute: start_time_native.minute(),
         second: start_time_native.second(),

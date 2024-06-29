@@ -1,7 +1,6 @@
-// sort tms date time
-import 'package:tms/schemas/database_schema.dart';
-
 // provides unix timestamp for tms date time
+import 'package:tms/generated/infra/database_schemas/date_time.dart';
+
 int getTmsDateTimestamp(TmsDateTime tmsDateTime) {
   int timestamp = 0;
 

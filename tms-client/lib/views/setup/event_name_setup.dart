@@ -23,7 +23,7 @@ class EventNameSetup extends StatelessWidget {
                 label: "Set event name:",
                 onSet: () async {
                   await provider.setEventName(_controller.text).then((res) {
-                    SnackBarDialog.fromStatus(message: "Set Backup Interval", status: res).show(context);
+                    SnackBarDialog.fromStatus(message: "Set Event Name", status: res).show(context);
                   });
                 },
                 input: TextField(

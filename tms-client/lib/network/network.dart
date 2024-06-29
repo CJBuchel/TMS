@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/network/service_discovery.dart';
 import 'package:tms/network/ws.dart';
-import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/network/network_controller.dart';
@@ -79,11 +79,9 @@ class Network {
   }
 
   // regular http
-  Future<ServerResponse> networkPost(String route, dynamic body, {bool encode = true}) =>
-      _controller.httpPost(route, body, encode);
+  Future<ServerResponse> networkPost(String route, dynamic body) => _controller.httpPost(route, body);
   Future<ServerResponse> networkGet(String route) => _controller.httpGet(route);
-  Future<ServerResponse> networkDelete(String route, dynamic body, {bool encode = true}) =>
-      _controller.httpDelete(route, body, encode);
+  Future<ServerResponse> networkDelete(String route, dynamic body) => _controller.httpDelete(route, body);
 
   void subscribe(TmsServerSocketEvent event, TmsEventHandler handler) {
     _controller.subscribe(event, handler);

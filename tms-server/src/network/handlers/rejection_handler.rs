@@ -41,7 +41,7 @@ pub async fn handle_rejection(err: warp::Rejection) -> Result<impl warp::Reply, 
     message: message.to_string(),
   };
 
-  let json = warp::reply::json(&m.to_json());
+  let json = warp::reply::json(&m.to_json_string());
 
   Ok(warp::reply::with_status(json, code))
 }

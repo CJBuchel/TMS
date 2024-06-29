@@ -7,16 +7,16 @@ import 'package:tms/widgets/buttons/barber_pole_button.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class LoadMatchButton extends StatelessWidget {
-  final MaterialStateProperty<Color?> _inactiveColor = const MaterialStatePropertyAll(Colors.grey);
-  final MaterialStateProperty<Color?> _backgroundColor = const MaterialStatePropertyAll(Color(0xFFD55C00));
-  final MaterialStateProperty<Color?> _overlayColor = const MaterialStatePropertyAll(Color(0xFFFF6F00));
+  final WidgetStateProperty<Color?> _inactiveColor = const WidgetStatePropertyAll(Colors.grey);
+  final WidgetStateProperty<Color?> _backgroundColor = const WidgetStatePropertyAll(Color(0xFFD55C00));
+  final WidgetStateProperty<Color?> _overlayColor = const WidgetStatePropertyAll(Color(0xFFFF6F00));
 
   Widget _loadButton(BuildContext context, {bool active = true}) {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: active ? _backgroundColor : _inactiveColor,
         overlayColor: active ? _overlayColor : _inactiveColor,
-        textStyle: MaterialStateProperty.all(const TextStyle(color: Colors.white)),
+        textStyle: WidgetStateProperty.all(const TextStyle(color: Colors.white)),
       ),
       onPressed: () {
         if (active) {

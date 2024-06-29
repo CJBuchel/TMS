@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/event_config_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
-import 'package:tms/widgets/dialogs/popup_dialog.dart';
+import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class PurgeButton extends StatelessWidget {
   void _confirmDialog(BuildContext context, EventConfigProvider provider) {
@@ -20,11 +18,7 @@ class PurgeButton extends StatelessWidget {
       ),
       onConfirm: () async {
         await provider.purgeEvent().then((res) {
-          if (res != HttpStatus.ok) {
-            PopupDialog.error(title: "Error", message: "Failed to purge event").show(context);
-          } else {
-            PopupDialog.success(title: "Success", message: "Successfully purged event").show(context);
-          }
+          SnackBarDialog.fromStatus(message: "Purge Event", status: res).show(context);
         });
       },
     ).show(context);
@@ -40,13 +34,13 @@ class PurgeButton extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: ElevatedButton(
             style: ButtonStyle(
-              textStyle: MaterialStateProperty.all(Theme.of(context).textTheme.headlineSmall),
-              backgroundColor: MaterialStateProperty.all(Colors.red),
-              overlayColor: MaterialStateProperty.all(Colors.redAccent),
+              textStyle: WidgetStateProperty.all(Theme.of(context).textTheme.headlineSmall),
+              backgroundColor: WidgetStateProperty.all(Colors.red),
+              overlayColor: WidgetStateProperty.all(Colors.redAccent),
               // text color
-              foregroundColor: MaterialStateProperty.all(Colors.white),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
               // border color
-              side: MaterialStateProperty.all(const BorderSide(color: Colors.black)),
+              side: WidgetStateProperty.all(const BorderSide(color: Colors.black)),
             ),
             onPressed: () => _confirmDialog(context, provider),
             child: const Text("PURGE"),

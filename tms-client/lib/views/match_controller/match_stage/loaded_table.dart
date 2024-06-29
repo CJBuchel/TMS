@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/teams_provider.dart';
-import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/views/match_controller/match_stage/table_status.dart';
 
 class LoadedTable extends StatelessWidget {

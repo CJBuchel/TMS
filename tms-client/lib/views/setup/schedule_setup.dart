@@ -16,7 +16,7 @@ class ScheduleSetup extends StatelessWidget {
               label: "Upload schedule:",
               onSet: () async {
                 await provider.uploadSchedule().then((res) {
-                  SnackBarDialog.fromStatus(message: "Set Backup Interval", status: res).show(context);
+                  SnackBarDialog.fromStatus(message: "Upload CSV Schedule", status: res).show(context);
                 });
               },
               confirmDialogStyle: ConfirmDialogStyle.warn(

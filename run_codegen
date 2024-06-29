@@ -3,8 +3,9 @@
 # temprarily run command within tms-client
 TMS_INFRA=$(pwd)/tms-infra
 TMS_CLIENT=$(pwd)/tms-client
+TMS_CRATES=crate::infra
 # codegen for flutter
-flutter_rust_bridge_codegen generate --rust-input crate::api --rust-root $TMS_INFRA --dart-output $TMS_CLIENT/lib/generated
+flutter_rust_bridge_codegen generate --rust-input $TMS_CRATES --rust-root $TMS_INFRA --dart-output $TMS_CLIENT/lib/generated
 # build wasm logic
 wasm-pack build $TMS_INFRA --target no-modules --out-dir $TMS_CLIENT/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
 (cd $TMS_CLIENT && dart run flutter_rust_bridge build-web --dart-root $TMS_CLIENT --rust-root $TMS_INFRA)

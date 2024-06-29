@@ -1,5 +1,5 @@
 use echo_tree_rs::core::TreeManager;
-use tms_infra::{DataSchemeExtensions, TournamentConfig};
+use tms_infra::*;
 
 use super::Database;
 
@@ -38,13 +38,14 @@ impl BackupService for Database {
             let config = inner.read().await.get_entry(":tournament:config".to_string(), "config".to_string()).await;
             match config {
               Some(config) => {
-                let config = TournamentConfig::from_json(&config);
+                let config = TournamentConfig::from_json_string(&config);
                 let interval_seconds = config.backup_interval * 60;
                 let name = if config.name.is_empty() { "tms".to_string() } else { config.name };
                 let backup_name = format!("{}-backup-{}_{}.kvdb.zip", name, chrono::Local::now().format("%Y-%m-%d"), chrono::Local::now().format("%H-%M-%S"));
                 let backup_name = backup_name.replace(" ", "_").replace(":", "-");
-                let retain_backups = config.retain_backups;
+                let retain_backups: usize = config.retain_backups.try_into().unwrap_or(0);
                 
+
                 match inner.read().await.backup_db(&format!("backups/{}", backup_name), retain_backups).await {
                   Ok(_) => {
                     log::info!("Backup successful: {}", backup_name);

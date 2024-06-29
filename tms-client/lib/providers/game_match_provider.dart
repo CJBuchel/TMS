@@ -2,17 +2,18 @@ import 'dart:convert';
 
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/mixins/server_event_subscriber_mixin.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/schemas/database_schema.dart';
-import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/services/game_match_service.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 
 abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch> {
-  _BaseGameMatchProvider() : super(tree: ":robot_game:matches", fromJson: (json) => GameMatch.fromJson(json));
+  _BaseGameMatchProvider()
+      : super(tree: ":robot_game:matches", fromJsonString: (json) => GameMatch.fromJsonString(json: json));
 
   List<GameMatch> get matches {
     // order matches by start time
@@ -42,11 +43,11 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
     Network().innerNetworkStates().$2.notifier.addListener(_networkListener);
     Network().innerNetworkStates().$3.notifier.addListener(_networkListener);
 
-    subscribeToEvent(TmsServerSocketEvent.MATCH_LOAD_EVENT, (event) {
+    subscribeToEvent(TmsServerSocketEvent.matchLoadEvent, (event) {
       if (event.message != null) {
         try {
           final json = jsonDecode(event.message!);
-          TmsServerMatchLoadEvent matchLoadEvent = TmsServerMatchLoadEvent.fromJson(json);
+          TmsServerMatchLoadEvent matchLoadEvent = TmsServerMatchLoadEvent.fromJsonString(json: json);
           _loadedMatchNumbers = matchLoadEvent.gameMatchNumbers;
           notifyListeners();
         } catch (e) {
@@ -57,7 +58,7 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
       }
     });
 
-    subscribeToEvent(TmsServerSocketEvent.MATCH_UNLOAD_EVENT, (event) {
+    subscribeToEvent(TmsServerSocketEvent.matchUnloadEvent, (event) {
       try {
         _loadedMatchNumbers = [];
         notifyListeners();

@@ -2548,20 +2548,10 @@ name = "tms-infra"
 version = "0.1.0"
 dependencies = [
  "flutter_rust_bridge",
- "serde",
- "serde_json",
- "tms-infra-schema",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "tms-infra-schema"
-version = "0.1.0"
-dependencies = [
- "echo-tree-infra",
  "schemars",
  "serde",
  "serde_json",
+ "wasm-bindgen",
 ]
 
 [[package]]

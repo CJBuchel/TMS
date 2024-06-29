@@ -3,12 +3,26 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
+import 'infra.dart';
+import 'infra/database_schemas/date_time.dart';
+import 'infra/database_schemas/game_match.dart';
+import 'infra/database_schemas/game_table.dart';
+import 'infra/database_schemas/judging_pod.dart';
+import 'infra/database_schemas/judging_session.dart';
+import 'infra/database_schemas/team.dart';
+import 'infra/database_schemas/tournament_config.dart';
+import 'infra/database_schemas/user.dart';
+import 'infra/network_schemas/errors.dart';
+import 'infra/network_schemas/login_requests.dart';
+import 'infra/network_schemas/register_requests.dart';
+import 'infra/network_schemas/robot_game_requests.dart';
+import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
+import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 /// Main entrypoint of the Rust API
@@ -47,7 +61,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   @override
   Future<void> executeRustInitializers() async {
-    await api.crateApiSimpleInitApp();
+    await api.crateInfraInitApp();
   }
 
   @override
@@ -58,7 +72,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.0.0';
 
   @override
-  int get rustContentHash => 1664648024;
+  int get rustContentHash => -522100785;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -69,11 +83,228 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  Future<void> crateApiSimpleInitApp();
+  Future<void> crateInfraInitApp();
 
-  TestStruct crateApiSimpleTestStructFromJson({required String json});
+  TmsTreeRole crateInfraTmsTreeRoleFromJsonString({required String json});
 
-  String crateApiSimpleTestStructToJson({required TestStruct that});
+  String crateInfraTmsTreeRoleToJsonString({required TmsTreeRole that});
+
+  String crateInfraTmsTreeRoleToSchema();
+
+  TmsDateTime crateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonString(
+      {required String json});
+
+  String crateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonString(
+      {required TmsDateTime that});
+
+  String crateInfraDatabaseSchemasDateTimeTmsDateTimeToSchema();
+
+  GameMatch crateInfraDatabaseSchemasGameMatchGameMatchFromJsonString(
+      {required String json});
+
+  String crateInfraDatabaseSchemasGameMatchGameMatchToJsonString(
+      {required GameMatch that});
+
+  String crateInfraDatabaseSchemasGameMatchGameMatchToSchema();
+
+  GameTable crateInfraDatabaseSchemasGameTableGameTableFromJsonString(
+      {required String json});
+
+  String crateInfraDatabaseSchemasGameTableGameTableToJsonString(
+      {required GameTable that});
+
+  String crateInfraDatabaseSchemasGameTableGameTableToSchema();
+
+  JudgingPod crateInfraDatabaseSchemasJudgingPodJudgingPodFromJsonString(
+      {required String json});
+
+  String crateInfraDatabaseSchemasJudgingPodJudgingPodToJsonString(
+      {required JudgingPod that});
+
+  String crateInfraDatabaseSchemasJudgingPodJudgingPodToSchema();
+
+  JudgingSession
+      crateInfraDatabaseSchemasJudgingSessionJudgingSessionFromJsonString(
+          {required String json});
+
+  String crateInfraDatabaseSchemasJudgingSessionJudgingSessionToJsonString(
+      {required JudgingSession that});
+
+  String crateInfraDatabaseSchemasJudgingSessionJudgingSessionToSchema();
+
+  Team crateInfraDatabaseSchemasTeamTeamFromJsonString({required String json});
+
+  String crateInfraDatabaseSchemasTeamTeamToJsonString({required Team that});
+
+  String crateInfraDatabaseSchemasTeamTeamToSchema();
+
+  TournamentConfig
+      crateInfraDatabaseSchemasTournamentConfigTournamentConfigFromJsonString(
+          {required String json});
+
+  String crateInfraDatabaseSchemasTournamentConfigTournamentConfigToJsonString(
+      {required TournamentConfig that});
+
+  String crateInfraDatabaseSchemasTournamentConfigTournamentConfigToSchema();
+
+  User crateInfraDatabaseSchemasUserUserFromJsonString({required String json});
+
+  String crateInfraDatabaseSchemasUserUserToJsonString({required User that});
+
+  String crateInfraDatabaseSchemasUserUserToSchema();
+
+  ErrorMessage crateInfraNetworkSchemasErrorsErrorMessageFromJsonString(
+      {required String json});
+
+  String crateInfraNetworkSchemasErrorsErrorMessageToJsonString(
+      {required ErrorMessage that});
+
+  String crateInfraNetworkSchemasErrorsErrorMessageToSchema();
+
+  LoginRequest crateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonString(
+      {required String json});
+
+  String crateInfraNetworkSchemasLoginRequestsLoginRequestToJsonString(
+      {required LoginRequest that});
+
+  String crateInfraNetworkSchemasLoginRequestsLoginRequestToSchema();
+
+  LoginResponse
+      crateInfraNetworkSchemasLoginRequestsLoginResponseFromJsonString(
+          {required String json});
+
+  String crateInfraNetworkSchemasLoginRequestsLoginResponseToJsonString(
+      {required LoginResponse that});
+
+  String crateInfraNetworkSchemasLoginRequestsLoginResponseToSchema();
+
+  RegisterRequest
+      crateInfraNetworkSchemasRegisterRequestsRegisterRequestFromJsonString(
+          {required String json});
+
+  String crateInfraNetworkSchemasRegisterRequestsRegisterRequestToJsonString(
+      {required RegisterRequest that});
+
+  String crateInfraNetworkSchemasRegisterRequestsRegisterRequestToSchema();
+
+  RegisterResponse
+      crateInfraNetworkSchemasRegisterRequestsRegisterResponseFromJsonString(
+          {required String json});
+
+  String crateInfraNetworkSchemasRegisterRequestsRegisterResponseToJsonString(
+      {required RegisterResponse that});
+
+  String crateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchema();
+
+  RobotGamesLoadMatchRequest
+      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonString(
+          {required RobotGamesLoadMatchRequest that});
+
+  String
+      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema();
+
+  TmsServerMatchLoadEvent
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonString(
+          {required TmsServerMatchLoadEvent that});
+
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchema();
+
+  TmsServerMatchTimerTimeEvent
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonString(
+          {required TmsServerMatchTimerTimeEvent that});
+
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchema();
+
+  TmsServerSocketMessage
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToJsonString(
+          {required TmsServerSocketMessage that});
+
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchema();
+
+  TournamentConfigSetBackupIntervalRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToJsonString(
+          {required TournamentConfigSetBackupIntervalRequest that});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToSchema();
+
+  TournamentConfigSetEndgameTimerLengthRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToJsonString(
+          {required TournamentConfigSetEndgameTimerLengthRequest that});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToSchema();
+
+  TournamentConfigSetNameRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToJsonString(
+          {required TournamentConfigSetNameRequest that});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToSchema();
+
+  TournamentConfigSetRetainBackupsRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToJsonString(
+          {required TournamentConfigSetRetainBackupsRequest that});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToSchema();
+
+  TournamentConfigSetSeasonRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToJsonString(
+          {required TournamentConfigSetSeasonRequest that});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchema();
+
+  TournamentConfigSetTimerLengthRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToJsonString(
+          {required TournamentConfigSetTimerLengthRequest that});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchema();
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -85,81 +316,1951 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  Future<void> crateApiSimpleInitApp() {
+  Future<void> crateInfraInitApp() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 3, port: port_);
+            funcId: 4, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_unit,
         decodeErrorData: null,
       ),
-      constMeta: kCrateApiSimpleInitAppConstMeta,
+      constMeta: kCrateInfraInitAppConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSimpleInitAppConstMeta => const TaskConstMeta(
+  TaskConstMeta get kCrateInfraInitAppConstMeta => const TaskConstMeta(
         debugName: "init_app",
         argNames: [],
       );
 
   @override
-  TestStruct crateApiSimpleTestStructFromJson({required String json}) {
+  TmsTreeRole crateInfraTmsTreeRoleFromJsonString({required String json}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_test_struct,
-        decodeErrorData: sse_decode_AnyhowException,
+        decodeSuccessData: sse_decode_tms_tree_role,
+        decodeErrorData: null,
       ),
-      constMeta: kCrateApiSimpleTestStructFromJsonConstMeta,
+      constMeta: kCrateInfraTmsTreeRoleFromJsonStringConstMeta,
       argValues: [json],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSimpleTestStructFromJsonConstMeta =>
+  TaskConstMeta get kCrateInfraTmsTreeRoleFromJsonStringConstMeta =>
       const TaskConstMeta(
-        debugName: "test_struct_from_json",
+        debugName: "tms_tree_role_from_json_string",
         argNames: ["json"],
       );
 
   @override
-  String crateApiSimpleTestStructToJson({required TestStruct that}) {
+  String crateInfraTmsTreeRoleToJsonString({required TmsTreeRole that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_test_struct(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+        sse_encode_box_autoadd_tms_tree_role(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
-      constMeta: kCrateApiSimpleTestStructToJsonConstMeta,
+      constMeta: kCrateInfraTmsTreeRoleToJsonStringConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
-  TaskConstMeta get kCrateApiSimpleTestStructToJsonConstMeta =>
+  TaskConstMeta get kCrateInfraTmsTreeRoleToJsonStringConstMeta =>
       const TaskConstMeta(
-        debugName: "test_struct_to_json",
+        debugName: "tms_tree_role_to_json_string",
         argNames: ["that"],
       );
 
-  @protected
-  AnyhowException dco_decode_AnyhowException(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return AnyhowException(raw as String);
+  @override
+  String crateInfraTmsTreeRoleToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraTmsTreeRoleToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
   }
+
+  TaskConstMeta get kCrateInfraTmsTreeRoleToSchemaConstMeta =>
+      const TaskConstMeta(
+        debugName: "tms_tree_role_to_schema",
+        argNames: [],
+      );
+
+  @override
+  TmsDateTime crateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonString(
+      {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_date_time,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_date_time_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonString(
+      {required TmsDateTime that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_date_time(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_date_time_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasDateTimeTmsDateTimeToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasDateTimeTmsDateTimeToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasDateTimeTmsDateTimeToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_date_time_to_schema",
+            argNames: [],
+          );
+
+  @override
+  GameMatch crateInfraDatabaseSchemasGameMatchGameMatchFromJsonString(
+      {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_game_match,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasGameMatchGameMatchFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasGameMatchGameMatchFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "game_match_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasGameMatchGameMatchToJsonString(
+      {required GameMatch that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_game_match(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasGameMatchGameMatchToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasGameMatchGameMatchToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "game_match_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasGameMatchGameMatchToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasGameMatchGameMatchToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasGameMatchGameMatchToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "game_match_to_schema",
+            argNames: [],
+          );
+
+  @override
+  GameTable crateInfraDatabaseSchemasGameTableGameTableFromJsonString(
+      {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_game_table,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasGameTableGameTableFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasGameTableGameTableFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "game_table_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasGameTableGameTableToJsonString(
+      {required GameTable that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_game_table(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasGameTableGameTableToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasGameTableGameTableToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "game_table_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasGameTableGameTableToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasGameTableGameTableToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasGameTableGameTableToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "game_table_to_schema",
+            argNames: [],
+          );
+
+  @override
+  JudgingPod crateInfraDatabaseSchemasJudgingPodJudgingPodFromJsonString(
+      {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_pod,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasJudgingPodJudgingPodFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasJudgingPodJudgingPodFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasJudgingPodJudgingPodToJsonString(
+      {required JudgingPod that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_judging_pod(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasJudgingPodJudgingPodToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasJudgingPodJudgingPodToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasJudgingPodJudgingPodToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasJudgingPodJudgingPodToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasJudgingPodJudgingPodToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_to_schema",
+            argNames: [],
+          );
+
+  @override
+  JudgingSession
+      crateInfraDatabaseSchemasJudgingSessionJudgingSessionFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_session,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasJudgingSessionJudgingSessionFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasJudgingSessionJudgingSessionFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasJudgingSessionJudgingSessionToJsonString(
+      {required JudgingSession that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_judging_session(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasJudgingSessionJudgingSessionToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasJudgingSessionJudgingSessionToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasJudgingSessionJudgingSessionToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasJudgingSessionJudgingSessionToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasJudgingSessionJudgingSessionToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Team crateInfraDatabaseSchemasTeamTeamFromJsonString({required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_team,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasTeamTeamFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateInfraDatabaseSchemasTeamTeamFromJsonStringConstMeta =>
+      const TaskConstMeta(
+        debugName: "team_from_json_string",
+        argNames: ["json"],
+      );
+
+  @override
+  String crateInfraDatabaseSchemasTeamTeamToJsonString({required Team that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_team(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasTeamTeamToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateInfraDatabaseSchemasTeamTeamToJsonStringConstMeta =>
+      const TaskConstMeta(
+        debugName: "team_to_json_string",
+        argNames: ["that"],
+      );
+
+  @override
+  String crateInfraDatabaseSchemasTeamTeamToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasTeamTeamToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateInfraDatabaseSchemasTeamTeamToSchemaConstMeta =>
+      const TaskConstMeta(
+        debugName: "team_to_schema",
+        argNames: [],
+      );
+
+  @override
+  TournamentConfig
+      crateInfraDatabaseSchemasTournamentConfigTournamentConfigFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tournament_config,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasTournamentConfigTournamentConfigFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasTournamentConfigTournamentConfigFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasTournamentConfigTournamentConfigToJsonString(
+      {required TournamentConfig that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasTournamentConfigTournamentConfigToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasTournamentConfigTournamentConfigToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraDatabaseSchemasTournamentConfigTournamentConfigToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasTournamentConfigTournamentConfigToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasTournamentConfigTournamentConfigToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_to_schema",
+            argNames: [],
+          );
+
+  @override
+  User crateInfraDatabaseSchemasUserUserFromJsonString({required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_user,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasUserUserFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateInfraDatabaseSchemasUserUserFromJsonStringConstMeta =>
+      const TaskConstMeta(
+        debugName: "user_from_json_string",
+        argNames: ["json"],
+      );
+
+  @override
+  String crateInfraDatabaseSchemasUserUserToJsonString({required User that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_user(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasUserUserToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateInfraDatabaseSchemasUserUserToJsonStringConstMeta =>
+      const TaskConstMeta(
+        debugName: "user_to_json_string",
+        argNames: ["that"],
+      );
+
+  @override
+  String crateInfraDatabaseSchemasUserUserToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraDatabaseSchemasUserUserToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta get kCrateInfraDatabaseSchemasUserUserToSchemaConstMeta =>
+      const TaskConstMeta(
+        debugName: "user_to_schema",
+        argNames: [],
+      );
+
+  @override
+  ErrorMessage crateInfraNetworkSchemasErrorsErrorMessageFromJsonString(
+      {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_error_message,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasErrorsErrorMessageFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasErrorsErrorMessageFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "error_message_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasErrorsErrorMessageToJsonString(
+      {required ErrorMessage that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_error_message(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasErrorsErrorMessageToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasErrorsErrorMessageToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "error_message_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasErrorsErrorMessageToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kCrateInfraNetworkSchemasErrorsErrorMessageToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasErrorsErrorMessageToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "error_message_to_schema",
+            argNames: [],
+          );
+
+  @override
+  LoginRequest crateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonString(
+      {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_login_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "login_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasLoginRequestsLoginRequestToJsonString(
+      {required LoginRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_login_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasLoginRequestsLoginRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasLoginRequestsLoginRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "login_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasLoginRequestsLoginRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasLoginRequestsLoginRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasLoginRequestsLoginRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "login_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  LoginResponse
+      crateInfraNetworkSchemasLoginRequestsLoginResponseFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_login_response,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasLoginRequestsLoginResponseFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasLoginRequestsLoginResponseFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "login_response_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasLoginRequestsLoginResponseToJsonString(
+      {required LoginResponse that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_login_response(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasLoginRequestsLoginResponseToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasLoginRequestsLoginResponseToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "login_response_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasLoginRequestsLoginResponseToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasLoginRequestsLoginResponseToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasLoginRequestsLoginResponseToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "login_response_to_schema",
+            argNames: [],
+          );
+
+  @override
+  RegisterRequest
+      crateInfraNetworkSchemasRegisterRequestsRegisterRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_register_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRegisterRequestsRegisterRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRegisterRequestsRegisterRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "register_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasRegisterRequestsRegisterRequestToJsonString(
+      {required RegisterRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_register_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRegisterRequestsRegisterRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRegisterRequestsRegisterRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "register_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasRegisterRequestsRegisterRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRegisterRequestsRegisterRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRegisterRequestsRegisterRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "register_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  RegisterResponse
+      crateInfraNetworkSchemasRegisterRequestsRegisterResponseFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_register_response,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRegisterRequestsRegisterResponseFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRegisterRequestsRegisterResponseFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "register_response_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasRegisterRequestsRegisterResponseToJsonString(
+      {required RegisterResponse that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_register_response(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRegisterRequestsRegisterResponseToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRegisterRequestsRegisterResponseToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "register_response_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String crateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "register_response_to_schema",
+            argNames: [],
+          );
+
+  @override
+  RobotGamesLoadMatchRequest
+      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_games_load_match_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_games_load_match_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonString(
+          {required RobotGamesLoadMatchRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_games_load_match_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_games_load_match_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_games_load_match_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TmsServerMatchLoadEvent
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_server_match_load_event,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_match_load_event_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonString(
+          {required TmsServerMatchLoadEvent that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_server_match_load_event(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_match_load_event_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_match_load_event_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TmsServerMatchTimerTimeEvent
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_server_match_timer_time_event,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_match_timer_time_event_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonString(
+          {required TmsServerMatchTimerTimeEvent that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_server_match_timer_time_event(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_match_timer_time_event_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_match_timer_time_event_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TmsServerSocketMessage
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_server_socket_message,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_socket_message_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToJsonString(
+          {required TmsServerSocketMessage that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_server_socket_message(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_socket_message_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_server_socket_message_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TournamentConfigSetBackupIntervalRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_tournament_config_set_backup_interval_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_backup_interval_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToJsonString(
+          {required TournamentConfigSetBackupIntervalRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config_set_backup_interval_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_backup_interval_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_backup_interval_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TournamentConfigSetEndgameTimerLengthRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_tournament_config_set_endgame_timer_length_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_endgame_timer_length_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToJsonString(
+          {required TournamentConfigSetEndgameTimerLengthRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config_set_endgame_timer_length_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_endgame_timer_length_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_endgame_timer_length_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TournamentConfigSetNameRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tournament_config_set_name_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_name_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToJsonString(
+          {required TournamentConfigSetNameRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config_set_name_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_name_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_name_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TournamentConfigSetRetainBackupsRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_tournament_config_set_retain_backups_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_retain_backups_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToJsonString(
+          {required TournamentConfigSetRetainBackupsRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config_set_retain_backups_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_retain_backups_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 70)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_retain_backups_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TournamentConfigSetSeasonRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tournament_config_set_season_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_season_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToJsonString(
+          {required TournamentConfigSetSeasonRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config_set_season_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_season_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_season_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  TournamentConfigSetTimerLengthRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_tournament_config_set_timer_length_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_timer_length_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToJsonString(
+          {required TournamentConfigSetTimerLengthRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config_set_timer_length_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_timer_length_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_timer_length_request_to_schema",
+            argNames: [],
+          );
 
   @protected
   String dco_decode_String(dynamic raw) {
@@ -168,15 +2269,236 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  ToJson dco_decode_TraitDef_ToJson(dynamic raw) {
+  DataSchemeExtensions dco_decode_TraitDef_DataSchemeExtensions(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     throw UnimplementedError();
   }
 
   @protected
-  TestStruct dco_decode_box_autoadd_test_struct(dynamic raw) {
+  bool dco_decode_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_test_struct(raw);
+    return raw as bool;
+  }
+
+  @protected
+  ErrorMessage dco_decode_box_autoadd_error_message(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_error_message(raw);
+  }
+
+  @protected
+  GameMatch dco_decode_box_autoadd_game_match(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_game_match(raw);
+  }
+
+  @protected
+  GameTable dco_decode_box_autoadd_game_table(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_game_table(raw);
+  }
+
+  @protected
+  JudgingPod dco_decode_box_autoadd_judging_pod(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_judging_pod(raw);
+  }
+
+  @protected
+  JudgingSession dco_decode_box_autoadd_judging_session(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_judging_session(raw);
+  }
+
+  @protected
+  LoginRequest dco_decode_box_autoadd_login_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_login_request(raw);
+  }
+
+  @protected
+  LoginResponse dco_decode_box_autoadd_login_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_login_response(raw);
+  }
+
+  @protected
+  RegisterRequest dco_decode_box_autoadd_register_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_register_request(raw);
+  }
+
+  @protected
+  RegisterResponse dco_decode_box_autoadd_register_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_register_response(raw);
+  }
+
+  @protected
+  RobotGamesLoadMatchRequest
+      dco_decode_box_autoadd_robot_games_load_match_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_robot_games_load_match_request(raw);
+  }
+
+  @protected
+  Team dco_decode_box_autoadd_team(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_team(raw);
+  }
+
+  @protected
+  TmsDate dco_decode_box_autoadd_tms_date(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tms_date(raw);
+  }
+
+  @protected
+  TmsDateTime dco_decode_box_autoadd_tms_date_time(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tms_date_time(raw);
+  }
+
+  @protected
+  TmsServerMatchLoadEvent dco_decode_box_autoadd_tms_server_match_load_event(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tms_server_match_load_event(raw);
+  }
+
+  @protected
+  TmsServerMatchTimerTimeEvent
+      dco_decode_box_autoadd_tms_server_match_timer_time_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tms_server_match_timer_time_event(raw);
+  }
+
+  @protected
+  TmsServerSocketMessage dco_decode_box_autoadd_tms_server_socket_message(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tms_server_socket_message(raw);
+  }
+
+  @protected
+  TmsTime dco_decode_box_autoadd_tms_time(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tms_time(raw);
+  }
+
+  @protected
+  TmsTreeRole dco_decode_box_autoadd_tms_tree_role(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tms_tree_role(raw);
+  }
+
+  @protected
+  TournamentConfig dco_decode_box_autoadd_tournament_config(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config(raw);
+  }
+
+  @protected
+  TournamentConfigSetBackupIntervalRequest
+      dco_decode_box_autoadd_tournament_config_set_backup_interval_request(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config_set_backup_interval_request(raw);
+  }
+
+  @protected
+  TournamentConfigSetEndgameTimerLengthRequest
+      dco_decode_box_autoadd_tournament_config_set_endgame_timer_length_request(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config_set_endgame_timer_length_request(raw);
+  }
+
+  @protected
+  TournamentConfigSetNameRequest
+      dco_decode_box_autoadd_tournament_config_set_name_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config_set_name_request(raw);
+  }
+
+  @protected
+  TournamentConfigSetRetainBackupsRequest
+      dco_decode_box_autoadd_tournament_config_set_retain_backups_request(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config_set_retain_backups_request(raw);
+  }
+
+  @protected
+  TournamentConfigSetSeasonRequest
+      dco_decode_box_autoadd_tournament_config_set_season_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config_set_season_request(raw);
+  }
+
+  @protected
+  TournamentConfigSetTimerLengthRequest
+      dco_decode_box_autoadd_tournament_config_set_timer_length_request(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config_set_timer_length_request(raw);
+  }
+
+  @protected
+  User dco_decode_box_autoadd_user(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_user(raw);
+  }
+
+  @protected
+  ErrorMessage dco_decode_error_message(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return ErrorMessage(
+      code: dco_decode_u_16(arr[0]),
+      message: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  GameMatch dco_decode_game_match(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return GameMatch(
+      matchNumber: dco_decode_String(arr[0]),
+      startTime: dco_decode_tms_date_time(arr[1]),
+      endTime: dco_decode_tms_date_time(arr[2]),
+      gameMatchTables: dco_decode_list_game_match_table(arr[3]),
+      completed: dco_decode_bool(arr[4]),
+    );
+  }
+
+  @protected
+  GameMatchTable dco_decode_game_match_table(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return GameMatchTable(
+      table: dco_decode_String(arr[0]),
+      teamNumber: dco_decode_String(arr[1]),
+      scoreSubmitted: dco_decode_bool(arr[2]),
+    );
+  }
+
+  @protected
+  GameTable dco_decode_game_table(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return GameTable(
+      tableName: dco_decode_String(arr[0]),
+    );
   }
 
   @protected
@@ -186,21 +2508,363 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  JudgingPod dco_decode_judging_pod(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return JudgingPod(
+      podName: dco_decode_String(arr[0]),
+    );
+  }
+
+  @protected
+  JudgingSession dco_decode_judging_session(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return JudgingSession(
+      sessionNumber: dco_decode_String(arr[0]),
+      startTime: dco_decode_tms_date_time(arr[1]),
+      endTime: dco_decode_tms_date_time(arr[2]),
+      judgingSessionPods: dco_decode_list_judging_session_pod(arr[3]),
+    );
+  }
+
+  @protected
+  JudgingSessionPod dco_decode_judging_session_pod(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return JudgingSessionPod(
+      pod: dco_decode_String(arr[0]),
+      teamNumber: dco_decode_String(arr[1]),
+      coreValuesSubmitted: dco_decode_bool(arr[2]),
+      innovationSubmitted: dco_decode_bool(arr[3]),
+      robotDesignSubmitted: dco_decode_bool(arr[4]),
+    );
+  }
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<GameMatchTable> dco_decode_list_game_match_table(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_game_match_table).toList();
+  }
+
+  @protected
+  List<JudgingSessionPod> dco_decode_list_judging_session_pod(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_judging_session_pod).toList();
+  }
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as Uint8List;
   }
 
   @protected
-  TestStruct dco_decode_test_struct(dynamic raw) {
+  List<TmsTreeRole> dco_decode_list_tms_tree_role(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_tms_tree_role).toList();
+  }
+
+  @protected
+  LoginRequest dco_decode_login_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 2)
       throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return TestStruct(
-      name: dco_decode_String(arr[0]),
-      age: dco_decode_i_32(arr[1]),
+    return LoginRequest(
+      username: dco_decode_String(arr[0]),
+      password: dco_decode_String(arr[1]),
     );
+  }
+
+  @protected
+  LoginResponse dco_decode_login_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return LoginResponse(
+      roles: dco_decode_list_tms_tree_role(arr[0]),
+    );
+  }
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_String(raw);
+  }
+
+  @protected
+  TmsDate? dco_decode_opt_box_autoadd_tms_date(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_tms_date(raw);
+  }
+
+  @protected
+  TmsTime? dco_decode_opt_box_autoadd_tms_time(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_tms_time(raw);
+  }
+
+  @protected
+  RegisterRequest dco_decode_register_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return RegisterRequest(
+      username: dco_decode_opt_String(arr[0]),
+      password: dco_decode_opt_String(arr[1]),
+    );
+  }
+
+  @protected
+  RegisterResponse dco_decode_register_response(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return RegisterResponse(
+      authToken: dco_decode_String(arr[0]),
+      uuid: dco_decode_String(arr[1]),
+      url: dco_decode_String(arr[2]),
+      serverIp: dco_decode_String(arr[3]),
+      roles: dco_decode_list_tms_tree_role(arr[4]),
+    );
+  }
+
+  @protected
+  RobotGamesLoadMatchRequest dco_decode_robot_games_load_match_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return RobotGamesLoadMatchRequest(
+      gameMatchNumbers: dco_decode_list_String(arr[0]),
+    );
+  }
+
+  @protected
+  Team dco_decode_team(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return Team(
+      cloudId: dco_decode_String(arr[0]),
+      number: dco_decode_String(arr[1]),
+      name: dco_decode_String(arr[2]),
+      affiliation: dco_decode_String(arr[3]),
+      ranking: dco_decode_u_32(arr[4]),
+    );
+  }
+
+  @protected
+  TmsDate dco_decode_tms_date(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return TmsDate(
+      year: dco_decode_i_32(arr[0]),
+      month: dco_decode_u_32(arr[1]),
+      day: dco_decode_u_32(arr[2]),
+    );
+  }
+
+  @protected
+  TmsDateTime dco_decode_tms_date_time(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return TmsDateTime(
+      date: dco_decode_opt_box_autoadd_tms_date(arr[0]),
+      time: dco_decode_opt_box_autoadd_tms_time(arr[1]),
+    );
+  }
+
+  @protected
+  TmsServerMatchLoadEvent dco_decode_tms_server_match_load_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TmsServerMatchLoadEvent(
+      gameMatchNumbers: dco_decode_list_String(arr[0]),
+    );
+  }
+
+  @protected
+  TmsServerMatchTimerTimeEvent dco_decode_tms_server_match_timer_time_event(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TmsServerMatchTimerTimeEvent(
+      time: dco_decode_u_32(arr[0]),
+    );
+  }
+
+  @protected
+  TmsServerSocketEvent dco_decode_tms_server_socket_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TmsServerSocketEvent.values[raw as int];
+  }
+
+  @protected
+  TmsServerSocketMessage dco_decode_tms_server_socket_message(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return TmsServerSocketMessage(
+      authToken: dco_decode_String(arr[0]),
+      messageEvent: dco_decode_tms_server_socket_event(arr[1]),
+      message: dco_decode_opt_String(arr[2]),
+    );
+  }
+
+  @protected
+  TmsTime dco_decode_tms_time(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return TmsTime(
+      hour: dco_decode_u_32(arr[0]),
+      minute: dco_decode_u_32(arr[1]),
+      second: dco_decode_u_32(arr[2]),
+    );
+  }
+
+  @protected
+  TmsTreeRole dco_decode_tms_tree_role(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return TmsTreeRole(
+      roleId: dco_decode_String(arr[0]),
+      password: dco_decode_String(arr[1]),
+      readEchoTrees: dco_decode_list_String(arr[2]),
+      readWriteEchoTrees: dco_decode_list_String(arr[3]),
+    );
+  }
+
+  @protected
+  TournamentConfig dco_decode_tournament_config(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return TournamentConfig(
+      name: dco_decode_String(arr[0]),
+      backupInterval: dco_decode_u_32(arr[1]),
+      retainBackups: dco_decode_u_32(arr[2]),
+      endGameTimerLength: dco_decode_u_32(arr[3]),
+      timerLength: dco_decode_u_32(arr[4]),
+      season: dco_decode_String(arr[5]),
+    );
+  }
+
+  @protected
+  TournamentConfigSetBackupIntervalRequest
+      dco_decode_tournament_config_set_backup_interval_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TournamentConfigSetBackupIntervalRequest(
+      interval: dco_decode_u_32(arr[0]),
+    );
+  }
+
+  @protected
+  TournamentConfigSetEndgameTimerLengthRequest
+      dco_decode_tournament_config_set_endgame_timer_length_request(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TournamentConfigSetEndgameTimerLengthRequest(
+      timerLength: dco_decode_u_32(arr[0]),
+    );
+  }
+
+  @protected
+  TournamentConfigSetNameRequest dco_decode_tournament_config_set_name_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TournamentConfigSetNameRequest(
+      name: dco_decode_String(arr[0]),
+    );
+  }
+
+  @protected
+  TournamentConfigSetRetainBackupsRequest
+      dco_decode_tournament_config_set_retain_backups_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TournamentConfigSetRetainBackupsRequest(
+      retainBackups: dco_decode_u_32(arr[0]),
+    );
+  }
+
+  @protected
+  TournamentConfigSetSeasonRequest
+      dco_decode_tournament_config_set_season_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TournamentConfigSetSeasonRequest(
+      season: dco_decode_String(arr[0]),
+    );
+  }
+
+  @protected
+  TournamentConfigSetTimerLengthRequest
+      dco_decode_tournament_config_set_timer_length_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TournamentConfigSetTimerLengthRequest(
+      timerLength: dco_decode_u_32(arr[0]),
+    );
+  }
+
+  @protected
+  int dco_decode_u_16(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
+  int dco_decode_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
   }
 
   @protected
@@ -216,10 +2880,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_String(deserializer);
-    return AnyhowException(inner);
+  User dco_decode_user(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return User(
+      username: dco_decode_String(arr[0]),
+      password: dco_decode_String(arr[1]),
+      roles: dco_decode_list_String(arr[2]),
+    );
   }
 
   @protected
@@ -230,15 +2900,322 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  TestStruct sse_decode_box_autoadd_test_struct(SseDeserializer deserializer) {
+  bool sse_decode_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_test_struct(deserializer));
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  ErrorMessage sse_decode_box_autoadd_error_message(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_error_message(deserializer));
+  }
+
+  @protected
+  GameMatch sse_decode_box_autoadd_game_match(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_game_match(deserializer));
+  }
+
+  @protected
+  GameTable sse_decode_box_autoadd_game_table(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_game_table(deserializer));
+  }
+
+  @protected
+  JudgingPod sse_decode_box_autoadd_judging_pod(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_judging_pod(deserializer));
+  }
+
+  @protected
+  JudgingSession sse_decode_box_autoadd_judging_session(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_judging_session(deserializer));
+  }
+
+  @protected
+  LoginRequest sse_decode_box_autoadd_login_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_login_request(deserializer));
+  }
+
+  @protected
+  LoginResponse sse_decode_box_autoadd_login_response(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_login_response(deserializer));
+  }
+
+  @protected
+  RegisterRequest sse_decode_box_autoadd_register_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_register_request(deserializer));
+  }
+
+  @protected
+  RegisterResponse sse_decode_box_autoadd_register_response(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_register_response(deserializer));
+  }
+
+  @protected
+  RobotGamesLoadMatchRequest
+      sse_decode_box_autoadd_robot_games_load_match_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_robot_games_load_match_request(deserializer));
+  }
+
+  @protected
+  Team sse_decode_box_autoadd_team(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_team(deserializer));
+  }
+
+  @protected
+  TmsDate sse_decode_box_autoadd_tms_date(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tms_date(deserializer));
+  }
+
+  @protected
+  TmsDateTime sse_decode_box_autoadd_tms_date_time(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tms_date_time(deserializer));
+  }
+
+  @protected
+  TmsServerMatchLoadEvent sse_decode_box_autoadd_tms_server_match_load_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tms_server_match_load_event(deserializer));
+  }
+
+  @protected
+  TmsServerMatchTimerTimeEvent
+      sse_decode_box_autoadd_tms_server_match_timer_time_event(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tms_server_match_timer_time_event(deserializer));
+  }
+
+  @protected
+  TmsServerSocketMessage sse_decode_box_autoadd_tms_server_socket_message(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tms_server_socket_message(deserializer));
+  }
+
+  @protected
+  TmsTime sse_decode_box_autoadd_tms_time(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tms_time(deserializer));
+  }
+
+  @protected
+  TmsTreeRole sse_decode_box_autoadd_tms_tree_role(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tms_tree_role(deserializer));
+  }
+
+  @protected
+  TournamentConfig sse_decode_box_autoadd_tournament_config(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config(deserializer));
+  }
+
+  @protected
+  TournamentConfigSetBackupIntervalRequest
+      sse_decode_box_autoadd_tournament_config_set_backup_interval_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config_set_backup_interval_request(
+        deserializer));
+  }
+
+  @protected
+  TournamentConfigSetEndgameTimerLengthRequest
+      sse_decode_box_autoadd_tournament_config_set_endgame_timer_length_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config_set_endgame_timer_length_request(
+        deserializer));
+  }
+
+  @protected
+  TournamentConfigSetNameRequest
+      sse_decode_box_autoadd_tournament_config_set_name_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config_set_name_request(deserializer));
+  }
+
+  @protected
+  TournamentConfigSetRetainBackupsRequest
+      sse_decode_box_autoadd_tournament_config_set_retain_backups_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config_set_retain_backups_request(
+        deserializer));
+  }
+
+  @protected
+  TournamentConfigSetSeasonRequest
+      sse_decode_box_autoadd_tournament_config_set_season_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config_set_season_request(deserializer));
+  }
+
+  @protected
+  TournamentConfigSetTimerLengthRequest
+      sse_decode_box_autoadd_tournament_config_set_timer_length_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config_set_timer_length_request(
+        deserializer));
+  }
+
+  @protected
+  User sse_decode_box_autoadd_user(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_user(deserializer));
+  }
+
+  @protected
+  ErrorMessage sse_decode_error_message(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_code = sse_decode_u_16(deserializer);
+    var var_message = sse_decode_String(deserializer);
+    return ErrorMessage(code: var_code, message: var_message);
+  }
+
+  @protected
+  GameMatch sse_decode_game_match(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_matchNumber = sse_decode_String(deserializer);
+    var var_startTime = sse_decode_tms_date_time(deserializer);
+    var var_endTime = sse_decode_tms_date_time(deserializer);
+    var var_gameMatchTables = sse_decode_list_game_match_table(deserializer);
+    var var_completed = sse_decode_bool(deserializer);
+    return GameMatch(
+        matchNumber: var_matchNumber,
+        startTime: var_startTime,
+        endTime: var_endTime,
+        gameMatchTables: var_gameMatchTables,
+        completed: var_completed);
+  }
+
+  @protected
+  GameMatchTable sse_decode_game_match_table(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_table = sse_decode_String(deserializer);
+    var var_teamNumber = sse_decode_String(deserializer);
+    var var_scoreSubmitted = sse_decode_bool(deserializer);
+    return GameMatchTable(
+        table: var_table,
+        teamNumber: var_teamNumber,
+        scoreSubmitted: var_scoreSubmitted);
+  }
+
+  @protected
+  GameTable sse_decode_game_table(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_tableName = sse_decode_String(deserializer);
+    return GameTable(tableName: var_tableName);
   }
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
+  }
+
+  @protected
+  JudgingPod sse_decode_judging_pod(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_podName = sse_decode_String(deserializer);
+    return JudgingPod(podName: var_podName);
+  }
+
+  @protected
+  JudgingSession sse_decode_judging_session(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_sessionNumber = sse_decode_String(deserializer);
+    var var_startTime = sse_decode_tms_date_time(deserializer);
+    var var_endTime = sse_decode_tms_date_time(deserializer);
+    var var_judgingSessionPods =
+        sse_decode_list_judging_session_pod(deserializer);
+    return JudgingSession(
+        sessionNumber: var_sessionNumber,
+        startTime: var_startTime,
+        endTime: var_endTime,
+        judgingSessionPods: var_judgingSessionPods);
+  }
+
+  @protected
+  JudgingSessionPod sse_decode_judging_session_pod(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_pod = sse_decode_String(deserializer);
+    var var_teamNumber = sse_decode_String(deserializer);
+    var var_coreValuesSubmitted = sse_decode_bool(deserializer);
+    var var_innovationSubmitted = sse_decode_bool(deserializer);
+    var var_robotDesignSubmitted = sse_decode_bool(deserializer);
+    return JudgingSessionPod(
+        pod: var_pod,
+        teamNumber: var_teamNumber,
+        coreValuesSubmitted: var_coreValuesSubmitted,
+        innovationSubmitted: var_innovationSubmitted,
+        robotDesignSubmitted: var_robotDesignSubmitted);
+  }
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<GameMatchTable> sse_decode_list_game_match_table(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <GameMatchTable>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_game_match_table(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<JudgingSessionPod> sse_decode_list_judging_session_pod(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <JudgingSessionPod>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_judging_session_pod(deserializer));
+    }
+    return ans_;
   }
 
   @protected
@@ -249,11 +3226,274 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  TestStruct sse_decode_test_struct(SseDeserializer deserializer) {
+  List<TmsTreeRole> sse_decode_list_tms_tree_role(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <TmsTreeRole>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_tms_tree_role(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  LoginRequest sse_decode_login_request(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_username = sse_decode_String(deserializer);
+    var var_password = sse_decode_String(deserializer);
+    return LoginRequest(username: var_username, password: var_password);
+  }
+
+  @protected
+  LoginResponse sse_decode_login_response(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_roles = sse_decode_list_tms_tree_role(deserializer);
+    return LoginResponse(roles: var_roles);
+  }
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_String(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  TmsDate? sse_decode_opt_box_autoadd_tms_date(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_tms_date(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  TmsTime? sse_decode_opt_box_autoadd_tms_time(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_tms_time(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  RegisterRequest sse_decode_register_request(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_username = sse_decode_opt_String(deserializer);
+    var var_password = sse_decode_opt_String(deserializer);
+    return RegisterRequest(username: var_username, password: var_password);
+  }
+
+  @protected
+  RegisterResponse sse_decode_register_response(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_authToken = sse_decode_String(deserializer);
+    var var_uuid = sse_decode_String(deserializer);
+    var var_url = sse_decode_String(deserializer);
+    var var_serverIp = sse_decode_String(deserializer);
+    var var_roles = sse_decode_list_tms_tree_role(deserializer);
+    return RegisterResponse(
+        authToken: var_authToken,
+        uuid: var_uuid,
+        url: var_url,
+        serverIp: var_serverIp,
+        roles: var_roles);
+  }
+
+  @protected
+  RobotGamesLoadMatchRequest sse_decode_robot_games_load_match_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_gameMatchNumbers = sse_decode_list_String(deserializer);
+    return RobotGamesLoadMatchRequest(gameMatchNumbers: var_gameMatchNumbers);
+  }
+
+  @protected
+  Team sse_decode_team(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_cloudId = sse_decode_String(deserializer);
+    var var_number = sse_decode_String(deserializer);
+    var var_name = sse_decode_String(deserializer);
+    var var_affiliation = sse_decode_String(deserializer);
+    var var_ranking = sse_decode_u_32(deserializer);
+    return Team(
+        cloudId: var_cloudId,
+        number: var_number,
+        name: var_name,
+        affiliation: var_affiliation,
+        ranking: var_ranking);
+  }
+
+  @protected
+  TmsDate sse_decode_tms_date(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_year = sse_decode_i_32(deserializer);
+    var var_month = sse_decode_u_32(deserializer);
+    var var_day = sse_decode_u_32(deserializer);
+    return TmsDate(year: var_year, month: var_month, day: var_day);
+  }
+
+  @protected
+  TmsDateTime sse_decode_tms_date_time(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_date = sse_decode_opt_box_autoadd_tms_date(deserializer);
+    var var_time = sse_decode_opt_box_autoadd_tms_time(deserializer);
+    return TmsDateTime(date: var_date, time: var_time);
+  }
+
+  @protected
+  TmsServerMatchLoadEvent sse_decode_tms_server_match_load_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_gameMatchNumbers = sse_decode_list_String(deserializer);
+    return TmsServerMatchLoadEvent(gameMatchNumbers: var_gameMatchNumbers);
+  }
+
+  @protected
+  TmsServerMatchTimerTimeEvent sse_decode_tms_server_match_timer_time_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_time = sse_decode_u_32(deserializer);
+    return TmsServerMatchTimerTimeEvent(time: var_time);
+  }
+
+  @protected
+  TmsServerSocketEvent sse_decode_tms_server_socket_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return TmsServerSocketEvent.values[inner];
+  }
+
+  @protected
+  TmsServerSocketMessage sse_decode_tms_server_socket_message(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_authToken = sse_decode_String(deserializer);
+    var var_messageEvent = sse_decode_tms_server_socket_event(deserializer);
+    var var_message = sse_decode_opt_String(deserializer);
+    return TmsServerSocketMessage(
+        authToken: var_authToken,
+        messageEvent: var_messageEvent,
+        message: var_message);
+  }
+
+  @protected
+  TmsTime sse_decode_tms_time(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_hour = sse_decode_u_32(deserializer);
+    var var_minute = sse_decode_u_32(deserializer);
+    var var_second = sse_decode_u_32(deserializer);
+    return TmsTime(hour: var_hour, minute: var_minute, second: var_second);
+  }
+
+  @protected
+  TmsTreeRole sse_decode_tms_tree_role(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_roleId = sse_decode_String(deserializer);
+    var var_password = sse_decode_String(deserializer);
+    var var_readEchoTrees = sse_decode_list_String(deserializer);
+    var var_readWriteEchoTrees = sse_decode_list_String(deserializer);
+    return TmsTreeRole(
+        roleId: var_roleId,
+        password: var_password,
+        readEchoTrees: var_readEchoTrees,
+        readWriteEchoTrees: var_readWriteEchoTrees);
+  }
+
+  @protected
+  TournamentConfig sse_decode_tournament_config(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_name = sse_decode_String(deserializer);
-    var var_age = sse_decode_i_32(deserializer);
-    return TestStruct(name: var_name, age: var_age);
+    var var_backupInterval = sse_decode_u_32(deserializer);
+    var var_retainBackups = sse_decode_u_32(deserializer);
+    var var_endGameTimerLength = sse_decode_u_32(deserializer);
+    var var_timerLength = sse_decode_u_32(deserializer);
+    var var_season = sse_decode_String(deserializer);
+    return TournamentConfig(
+        name: var_name,
+        backupInterval: var_backupInterval,
+        retainBackups: var_retainBackups,
+        endGameTimerLength: var_endGameTimerLength,
+        timerLength: var_timerLength,
+        season: var_season);
+  }
+
+  @protected
+  TournamentConfigSetBackupIntervalRequest
+      sse_decode_tournament_config_set_backup_interval_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_interval = sse_decode_u_32(deserializer);
+    return TournamentConfigSetBackupIntervalRequest(interval: var_interval);
+  }
+
+  @protected
+  TournamentConfigSetEndgameTimerLengthRequest
+      sse_decode_tournament_config_set_endgame_timer_length_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_timerLength = sse_decode_u_32(deserializer);
+    return TournamentConfigSetEndgameTimerLengthRequest(
+        timerLength: var_timerLength);
+  }
+
+  @protected
+  TournamentConfigSetNameRequest sse_decode_tournament_config_set_name_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    return TournamentConfigSetNameRequest(name: var_name);
+  }
+
+  @protected
+  TournamentConfigSetRetainBackupsRequest
+      sse_decode_tournament_config_set_retain_backups_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_retainBackups = sse_decode_u_32(deserializer);
+    return TournamentConfigSetRetainBackupsRequest(
+        retainBackups: var_retainBackups);
+  }
+
+  @protected
+  TournamentConfigSetSeasonRequest
+      sse_decode_tournament_config_set_season_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_season = sse_decode_String(deserializer);
+    return TournamentConfigSetSeasonRequest(season: var_season);
+  }
+
+  @protected
+  TournamentConfigSetTimerLengthRequest
+      sse_decode_tournament_config_set_timer_length_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_timerLength = sse_decode_u_32(deserializer);
+    return TournamentConfigSetTimerLengthRequest(timerLength: var_timerLength);
+  }
+
+  @protected
+  int sse_decode_u_16(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint16();
+  }
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint32();
   }
 
   @protected
@@ -268,16 +3508,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
+  User sse_decode_user(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint8() != 0;
-  }
-
-  @protected
-  void sse_encode_AnyhowException(
-      AnyhowException self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.message, serializer);
+    var var_username = sse_decode_String(deserializer);
+    var var_password = sse_decode_String(deserializer);
+    var var_roles = sse_decode_list_String(deserializer);
+    return User(
+        username: var_username, password: var_password, roles: var_roles);
   }
 
   @protected
@@ -287,16 +3524,284 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_box_autoadd_test_struct(
-      TestStruct self, SseSerializer serializer) {
+  void sse_encode_bool(bool self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_test_struct(self, serializer);
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_error_message(
+      ErrorMessage self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_error_message(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_game_match(
+      GameMatch self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_game_match(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_game_table(
+      GameTable self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_game_table(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_judging_pod(
+      JudgingPod self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_judging_pod(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_judging_session(
+      JudgingSession self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_judging_session(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_login_request(
+      LoginRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_login_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_login_response(
+      LoginResponse self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_login_response(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_register_request(
+      RegisterRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_register_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_register_response(
+      RegisterResponse self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_register_response(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_robot_games_load_match_request(
+      RobotGamesLoadMatchRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_robot_games_load_match_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_team(Team self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_team(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tms_date(TmsDate self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_date(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tms_date_time(
+      TmsDateTime self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_date_time(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tms_server_match_load_event(
+      TmsServerMatchLoadEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_server_match_load_event(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tms_server_match_timer_time_event(
+      TmsServerMatchTimerTimeEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_server_match_timer_time_event(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tms_server_socket_message(
+      TmsServerSocketMessage self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_server_socket_message(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tms_time(TmsTime self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_time(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tms_tree_role(
+      TmsTreeRole self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_tree_role(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config(
+      TournamentConfig self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config_set_backup_interval_request(
+      TournamentConfigSetBackupIntervalRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config_set_backup_interval_request(self, serializer);
+  }
+
+  @protected
+  void
+      sse_encode_box_autoadd_tournament_config_set_endgame_timer_length_request(
+          TournamentConfigSetEndgameTimerLengthRequest self,
+          SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config_set_endgame_timer_length_request(
+        self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config_set_name_request(
+      TournamentConfigSetNameRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config_set_name_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config_set_retain_backups_request(
+      TournamentConfigSetRetainBackupsRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config_set_retain_backups_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config_set_season_request(
+      TournamentConfigSetSeasonRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config_set_season_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config_set_timer_length_request(
+      TournamentConfigSetTimerLengthRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config_set_timer_length_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_user(User self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_user(self, serializer);
+  }
+
+  @protected
+  void sse_encode_error_message(ErrorMessage self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_16(self.code, serializer);
+    sse_encode_String(self.message, serializer);
+  }
+
+  @protected
+  void sse_encode_game_match(GameMatch self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.matchNumber, serializer);
+    sse_encode_tms_date_time(self.startTime, serializer);
+    sse_encode_tms_date_time(self.endTime, serializer);
+    sse_encode_list_game_match_table(self.gameMatchTables, serializer);
+    sse_encode_bool(self.completed, serializer);
+  }
+
+  @protected
+  void sse_encode_game_match_table(
+      GameMatchTable self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.table, serializer);
+    sse_encode_String(self.teamNumber, serializer);
+    sse_encode_bool(self.scoreSubmitted, serializer);
+  }
+
+  @protected
+  void sse_encode_game_table(GameTable self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.tableName, serializer);
   }
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
+  }
+
+  @protected
+  void sse_encode_judging_pod(JudgingPod self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.podName, serializer);
+  }
+
+  @protected
+  void sse_encode_judging_session(
+      JudgingSession self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.sessionNumber, serializer);
+    sse_encode_tms_date_time(self.startTime, serializer);
+    sse_encode_tms_date_time(self.endTime, serializer);
+    sse_encode_list_judging_session_pod(self.judgingSessionPods, serializer);
+  }
+
+  @protected
+  void sse_encode_judging_session_pod(
+      JudgingSessionPod self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.pod, serializer);
+    sse_encode_String(self.teamNumber, serializer);
+    sse_encode_bool(self.coreValuesSubmitted, serializer);
+    sse_encode_bool(self.innovationSubmitted, serializer);
+    sse_encode_bool(self.robotDesignSubmitted, serializer);
+  }
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_game_match_table(
+      List<GameMatchTable> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_game_match_table(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_judging_session_pod(
+      List<JudgingSessionPod> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_judging_session_pod(item, serializer);
+    }
   }
 
   @protected
@@ -308,10 +3813,223 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_test_struct(TestStruct self, SseSerializer serializer) {
+  void sse_encode_list_tms_tree_role(
+      List<TmsTreeRole> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_tms_tree_role(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_login_request(LoginRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.username, serializer);
+    sse_encode_String(self.password, serializer);
+  }
+
+  @protected
+  void sse_encode_login_response(LoginResponse self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_tms_tree_role(self.roles, serializer);
+  }
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_tms_date(
+      TmsDate? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_tms_date(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_tms_time(
+      TmsTime? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_tms_time(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_register_request(
+      RegisterRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.username, serializer);
+    sse_encode_opt_String(self.password, serializer);
+  }
+
+  @protected
+  void sse_encode_register_response(
+      RegisterResponse self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.authToken, serializer);
+    sse_encode_String(self.uuid, serializer);
+    sse_encode_String(self.url, serializer);
+    sse_encode_String(self.serverIp, serializer);
+    sse_encode_list_tms_tree_role(self.roles, serializer);
+  }
+
+  @protected
+  void sse_encode_robot_games_load_match_request(
+      RobotGamesLoadMatchRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_String(self.gameMatchNumbers, serializer);
+  }
+
+  @protected
+  void sse_encode_team(Team self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.cloudId, serializer);
+    sse_encode_String(self.number, serializer);
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.affiliation, serializer);
+    sse_encode_u_32(self.ranking, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_date(TmsDate self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.year, serializer);
+    sse_encode_u_32(self.month, serializer);
+    sse_encode_u_32(self.day, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_date_time(TmsDateTime self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_box_autoadd_tms_date(self.date, serializer);
+    sse_encode_opt_box_autoadd_tms_time(self.time, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_server_match_load_event(
+      TmsServerMatchLoadEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_String(self.gameMatchNumbers, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_server_match_timer_time_event(
+      TmsServerMatchTimerTimeEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.time, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_server_socket_event(
+      TmsServerSocketEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_server_socket_message(
+      TmsServerSocketMessage self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.authToken, serializer);
+    sse_encode_tms_server_socket_event(self.messageEvent, serializer);
+    sse_encode_opt_String(self.message, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_time(TmsTime self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.hour, serializer);
+    sse_encode_u_32(self.minute, serializer);
+    sse_encode_u_32(self.second, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_tree_role(TmsTreeRole self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.roleId, serializer);
+    sse_encode_String(self.password, serializer);
+    sse_encode_list_String(self.readEchoTrees, serializer);
+    sse_encode_list_String(self.readWriteEchoTrees, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config(
+      TournamentConfig self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.name, serializer);
-    sse_encode_i_32(self.age, serializer);
+    sse_encode_u_32(self.backupInterval, serializer);
+    sse_encode_u_32(self.retainBackups, serializer);
+    sse_encode_u_32(self.endGameTimerLength, serializer);
+    sse_encode_u_32(self.timerLength, serializer);
+    sse_encode_String(self.season, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config_set_backup_interval_request(
+      TournamentConfigSetBackupIntervalRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.interval, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config_set_endgame_timer_length_request(
+      TournamentConfigSetEndgameTimerLengthRequest self,
+      SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.timerLength, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config_set_name_request(
+      TournamentConfigSetNameRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config_set_retain_backups_request(
+      TournamentConfigSetRetainBackupsRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.retainBackups, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config_set_season_request(
+      TournamentConfigSetSeasonRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.season, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config_set_timer_length_request(
+      TournamentConfigSetTimerLengthRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.timerLength, serializer);
+  }
+
+  @protected
+  void sse_encode_u_16(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint16(self);
+  }
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint32(self);
   }
 
   @protected
@@ -326,8 +4044,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
+  void sse_encode_user(User self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint8(self ? 1 : 0);
+    sse_encode_String(self.username, serializer);
+    sse_encode_String(self.password, serializer);
+    sse_encode_list_String(self.roles, serializer);
   }
 }

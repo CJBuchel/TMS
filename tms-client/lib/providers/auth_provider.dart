@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:tms/generated/infra.dart';
+import 'package:tms/generated/infra/network_schemas/login_requests.dart';
 import 'package:tms/providers/local_storage_provider.dart';
-import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/services/auth_service.dart';
 import 'package:tms/utils/permissions.dart';
 
@@ -16,7 +17,7 @@ class AuthProvider with ChangeNotifier {
   bool get isLoggedIn => TmsLocalStorageProvider().isLoggedIn;
   String get username => TmsLocalStorageProvider().authUsername;
   String get password => TmsLocalStorageProvider().authPassword;
-  List<EchoTreeRole> get roles => TmsLocalStorageProvider().authRoles;
+  List<TmsTreeRole> get roles => TmsLocalStorageProvider().authRoles;
 
   final _localStorage = TmsLocalStorageProvider();
   late final VoidCallback _lsListener;

@@ -1,4 +1,4 @@
-use tms_infra::{DataSchemeExtensions, Team};
+use tms_infra::*;
 
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
@@ -21,7 +21,7 @@ impl TeamExtensions for Database {
 
     match team {
       Some(team) => {
-        Some(Team::from_json(&team))
+        Some(Team::from_json_string(&team))
       }
       None => None,
     }
@@ -30,7 +30,7 @@ impl TeamExtensions for Database {
   async fn get_team_by_number(&self, number: String) -> Option<(String, Team)> {
     let tree = self.inner.read().await.get_tree(TEAMS.to_string()).await;
     let team = tree.iter().find_map(|(id, team)| {
-      let team = Team::from_json(team);
+      let team = Team::from_json_string(team);
       if team.number == number {
         Some((id.clone(), team))
       } else {
@@ -56,11 +56,11 @@ impl TeamExtensions for Database {
     match existing_team {
       Some((team_id, team)) => {
         log::warn!("Team already exists: {}, overwriting with insert...", team_id);
-        self.inner.write().await.insert_entry(TEAMS.to_string(), team_id, team.to_json()).await;
+        self.inner.write().await.insert_entry(TEAMS.to_string(), team_id, team.to_json_string()).await;
         Ok(())
       },
       None => {
-        self.inner.write().await.insert_entry(TEAMS.to_string(), Uuid::new_v4().to_string(), team.to_json()).await;
+        self.inner.write().await.insert_entry(TEAMS.to_string(), Uuid::new_v4().to_string(), team.to_json_string()).await;
         Ok(())
       }
     }

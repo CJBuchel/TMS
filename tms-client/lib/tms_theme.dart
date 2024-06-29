@@ -22,11 +22,11 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color?>(Colors.white),
-      foregroundColor: MaterialStateProperty.all<Color?>(Colors.blue),
-      overlayColor: MaterialStateProperty.all<Color?>(Colors.lightBlue[50]),
+      backgroundColor: WidgetStateProperty.all<Color?>(Colors.white),
+      foregroundColor: WidgetStateProperty.all<Color?>(Colors.blue),
+      overlayColor: WidgetStateProperty.all<Color?>(Colors.lightBlue[50]),
       enableFeedback: true,
-      shape: MaterialStateProperty.all<OutlinedBorder>(
+      shape: WidgetStateProperty.all<OutlinedBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
           side: const BorderSide(color: Colors.blue),
@@ -45,8 +45,8 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all<Color?>(Colors.blue),
-      overlayColor: MaterialStateProperty.all<Color?>(Colors.lightBlue[50]),
+      foregroundColor: WidgetStateProperty.all<Color?>(Colors.blue),
+      overlayColor: WidgetStateProperty.all<Color?>(Colors.lightBlue[50]),
     ),
   ),
   inputDecorationTheme: const InputDecorationTheme(
@@ -98,12 +98,12 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
-      elevation: MaterialStateProperty.all<double>(0.0),
-      backgroundColor: MaterialStateProperty.all<Color?>(Colors.blue),
-      foregroundColor: MaterialStateProperty.all<Color?>(Colors.white),
-      overlayColor: MaterialStateProperty.all<Color?>(Colors.blue[800]),
+      elevation: WidgetStateProperty.all<double>(0.0),
+      backgroundColor: WidgetStateProperty.all<Color?>(Colors.blue),
+      foregroundColor: WidgetStateProperty.all<Color?>(Colors.white),
+      overlayColor: WidgetStateProperty.all<Color?>(Colors.blue[800]),
       enableFeedback: true,
-      shape: MaterialStateProperty.all<OutlinedBorder>(
+      shape: WidgetStateProperty.all<OutlinedBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
@@ -121,8 +121,8 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
-      foregroundColor: MaterialStateProperty.all<Color?>(Colors.blue),
-      overlayColor: MaterialStateProperty.all<Color?>(Colors.lightBlue[50]),
+      foregroundColor: WidgetStateProperty.all<Color?>(Colors.blue),
+      overlayColor: WidgetStateProperty.all<Color?>(Colors.lightBlue[50]),
     ),
   ),
   inputDecorationTheme: const InputDecorationTheme(

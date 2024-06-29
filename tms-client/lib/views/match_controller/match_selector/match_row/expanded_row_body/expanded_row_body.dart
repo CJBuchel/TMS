@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tms/schemas/database_schema.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/expanded_row_body/edit_match_tables.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/expanded_row_body/stage_match_buttons.dart';
 

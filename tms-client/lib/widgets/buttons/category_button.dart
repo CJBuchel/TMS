@@ -26,14 +26,14 @@ class _CategoryButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-        overlayColor: MaterialStateProperty.all<Color>(hoverColor ?? Colors.blueAccent),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        overlayColor: WidgetStateProperty.all<Color>(hoverColor ?? Colors.blueAccent),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0),
             side: const BorderSide(color: Colors.black),
           ),
         ),
-        backgroundColor: MaterialStateProperty.resolveWith((states) {
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (isSelected) {
             return selectedColor;
           }

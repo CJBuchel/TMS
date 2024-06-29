@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:echo_tree_flutter/client/network_service.dart';
 import 'package:echo_tree_flutter/db/db.dart';
@@ -11,13 +10,14 @@ import 'package:flutter/widgets.dart';
 
 class EchoTreeProvider<K, V> extends ChangeNotifier {
   final String tree;
-  final V Function(dynamic) fromJson;
+  final V Function(String) fromJsonString;
   Map<K, V> items = {};
 
   late final StreamSubscription<ManagedTreeEvent> _eventStream;
   ManagedTree managedTree;
 
-  EchoTreeProvider({required this.tree, required this.fromJson}) : managedTree = Database().getTreeMap.getTree(tree) {
+  EchoTreeProvider({required this.tree, required this.fromJsonString})
+      : managedTree = Database().getTreeMap.getTree(tree) {
     // check if connected listener (used to populate data if connection reset)
     EchoTreeClient().state.addListener(_connectedListener);
     // listen and update items in map
@@ -49,12 +49,8 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
   }
 
   V? _entryFromString(String strJson) {
-    return _entryFromJson(jsonDecode(strJson));
-  }
-
-  V? _entryFromJson(dynamic json) {
     try {
-      return fromJson(json);
+      return fromJsonString(strJson);
     } catch (e) {
       EchoTreeLogger().w("Warning parsing data: $e, null entry returned");
       return null;

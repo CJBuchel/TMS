@@ -1,8 +1,8 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
-import 'package:tms/schemas/database_schema.dart';
+import 'package:tms/generated/infra/database_schemas/team.dart';
 
 abstract class _BaseTeamsProvider extends EchoTreeProvider<String, Team> {
-  _BaseTeamsProvider() : super(tree: ":teams", fromJson: (json) => Team.fromJson(json));
+  _BaseTeamsProvider() : super(tree: ":teams", fromJsonString: (json) => Team.fromJsonString(json: json));
 
   List<Team> get teams {
     return this.items.values.toList();
@@ -13,7 +13,7 @@ abstract class _BaseTeamsProvider extends EchoTreeProvider<String, Team> {
     try {
       return teams.firstWhere((t) => t.number == teamNumber);
     } catch (e) {
-      return Team(
+      return const Team(
         affiliation: 'N/A',
         cloudId: '',
         name: 'N/A',

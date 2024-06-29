@@ -1,4 +1,4 @@
-use tms_infra::{DataSchemeExtensions, GameTable};
+use tms_infra::*;
 
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
@@ -21,7 +21,7 @@ impl GameTableExtensions for Database {
 
     match game_table {
       Some(game_table) => {
-        Some(GameTable::from_json(&game_table).table_name)
+        Some(GameTable::from_json_string(&game_table).table_name)
       }
       None => None,
     }
@@ -30,7 +30,7 @@ impl GameTableExtensions for Database {
   async fn get_game_table_by_name(&self, name: String) -> Option<(String, String)> {
     let tree = self.inner.read().await.get_tree(ROBOT_GAME_TABLES.to_string()).await;
     let game_table = tree.iter().find_map(|(id, game_table)| {
-      let game_table = GameTable::from_json(game_table);
+      let game_table = GameTable::from_json_string(game_table);
       if game_table.table_name == name {
         Some((id.clone(), game_table))
       } else {
@@ -59,14 +59,14 @@ impl GameTableExtensions for Database {
         let game_table = GameTable {
           table_name: game_table,
         };
-        self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), game_table_id, game_table.to_json()).await;
+        self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), game_table_id, game_table.to_json_string()).await;
         Ok(())
       }
       None => {
         let game_table = GameTable {
           table_name: game_table,
         };
-        self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), Uuid::new_v4().to_string(), game_table.to_json()).await;
+        self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), Uuid::new_v4().to_string(), game_table.to_json_string()).await;
         Ok(())
       }
     }

@@ -1,4 +1,4 @@
-use tms_infra::{DataSchemeExtensions, JudgingPod};
+use tms_infra::*;
 
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
@@ -20,7 +20,7 @@ impl JudgingPodExtensions for Database {
 
     match judging_pod {
       Some(judging_pod) => {
-        Some(JudgingPod::from_json(&judging_pod).pod_name)
+        Some(JudgingPod::from_json_string(&judging_pod).pod_name)
       }
       None => None,
     }
@@ -29,7 +29,7 @@ impl JudgingPodExtensions for Database {
   async fn get_judging_pod_by_name(&self, name: String) -> Option<(String, String)> {
     let tree = self.inner.read().await.get_tree(JUDGING_PODS.to_string()).await;
     let judging_pod = tree.iter().find_map(|(id, judging_pod)| {
-      let judging_pod = JudgingPod::from_json(judging_pod);
+      let judging_pod = JudgingPod::from_json_string(judging_pod);
       if judging_pod.pod_name == name {
         Some((id.clone(), judging_pod))
       } else {
@@ -58,14 +58,14 @@ impl JudgingPodExtensions for Database {
         let judging_pod = JudgingPod {
           pod_name: judging_pod,
         };
-        self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), judging_pod_id, judging_pod.to_json()).await;
+        self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), judging_pod_id, judging_pod.to_json_string()).await;
         Ok(())
       }
       None => {
         let judging_pod = JudgingPod {
           pod_name: judging_pod,
         };
-        self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), Uuid::new_v4().to_string(), judging_pod.to_json()).await;
+        self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), Uuid::new_v4().to_string(), judging_pod.to_json_string()).await;
         Ok(())
       }
     }

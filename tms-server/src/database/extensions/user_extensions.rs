@@ -1,5 +1,5 @@
-use echo_tree_infra::EchoTreeRole;
-use tms_infra::{DataSchemeExtensions, User};
+use infra::TmsTreeRole;
+use tms_infra::*;
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
 
@@ -10,7 +10,7 @@ pub trait UserExtensions {
   async fn get_user(&self, user_id: String) -> Option<User>;
   async fn get_user_by_username(&self, username: String) -> Option<(String, User)>;
   async fn insert_user(&self, user: User, user_id: Option<String>) -> Result<(), String>;
-  async fn get_user_roles(&self, user_id: String) -> Vec<EchoTreeRole>;
+  async fn get_user_roles(&self, user_id: String) -> Vec<TmsTreeRole>;
   async fn remove_user(&self, user_id: String) -> Result<(), String>;
 }
 
@@ -23,7 +23,7 @@ impl UserExtensions for Database {
 
     match user {
       Some(user) => {
-        Some(User::from_json(&user))
+        Some(User::from_json_string(&user))
       }
       None => None,
     }
@@ -32,7 +32,7 @@ impl UserExtensions for Database {
   async fn get_user_by_username(&self, username: String) -> Option<(String, User)> {
     let tree = self.inner.read().await.get_tree(USERS.to_string()).await;
     let user = tree.iter().find_map(|(id, user)| {
-      let user = User::from_json(user);
+      let user = User::from_json_string(user);
       if user.username == username {
         Some((id.clone(), user))
       } else {
@@ -58,26 +58,38 @@ impl UserExtensions for Database {
     match existing_user {
       Some((user_id, user)) => {
         log::warn!("User already exists: {}, overwriting with insert...", user_id);
-        self.inner.write().await.insert_entry(USERS.to_string(), user_id, user.to_json()).await;
+        self.inner.write().await.insert_entry(USERS.to_string(), user_id, user.to_json_string()).await;
         return Ok(());
       },
       None => {
-        self.inner.write().await.insert_entry(USERS.to_string(), Uuid::new_v4().to_string(), user.to_json()).await;
+        self.inner.write().await.insert_entry(USERS.to_string(), Uuid::new_v4().to_string(), user.to_json_string()).await;
         return Ok(());
       },
     }
   }
 
-  async fn get_user_roles(&self, user_id: String) -> Vec<EchoTreeRole> {
+  async fn get_user_roles(&self, user_id: String) -> Vec<TmsTreeRole> {
     let user = self.get_user(user_id.clone()).await;
 
     match user {
       Some(user) => {
-        let roles: Vec<EchoTreeRole> = user.roles.iter().filter_map(|role| {
+        let roles: Vec<TmsTreeRole> = user.roles.iter().filter_map(|role| {
           let role = futures::executor::block_on(async {
             self.inner.read().await.get_role_manager().await.get_role(role.clone())
           });
-          role
+          
+          // translate echo tree role into tms tree role
+          match role {
+            Some(role) => {
+              Some(TmsTreeRole {
+                role_id: role.role_id.clone(),
+                password: role.password.clone(),
+                read_echo_trees: role.read_echo_trees.clone(),
+                read_write_echo_trees: role.read_write_echo_trees.clone(),
+              })
+            }
+            None => None,
+          }
         }).collect();
 
         roles
@@ -92,7 +104,7 @@ impl UserExtensions for Database {
 
     match user {
       Some(user) => {
-        log::warn!("Removing user: {}", User::from_json(&user).username);
+        log::warn!("Removing user: {}", User::from_json_string(&user).username);
         self.inner.write().await.remove_entry(USERS.to_string(), user_id).await;
         Ok(())
       }

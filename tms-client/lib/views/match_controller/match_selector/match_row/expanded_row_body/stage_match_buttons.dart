@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/game_match_provider.dart';
-import 'package:tms/schemas/database_schema.dart';
 
 class StageMatchButtons extends StatelessWidget {
   final GameMatch match;
@@ -17,8 +17,8 @@ class StageMatchButtons extends StatelessWidget {
         Provider.of<GameMatchProvider>(context, listen: false).clearStagedMatches();
       },
       style: ButtonStyle(
-        backgroundColor: const MaterialStatePropertyAll(Colors.white),
-        overlayColor: MaterialStatePropertyAll(Colors.grey.shade200),
+        backgroundColor: const WidgetStatePropertyAll(Colors.white),
+        overlayColor: WidgetStatePropertyAll(Colors.grey.shade200),
         splashFactory: NoSplash.splashFactory,
       ),
       icon: const Icon(
@@ -38,8 +38,8 @@ class StageMatchButtons extends StatelessWidget {
         Provider.of<GameMatchProvider>(context, listen: false).stageMatches([match.matchNumber]);
       },
       style: const ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(Colors.blue),
-        overlayColor: MaterialStatePropertyAll(Colors.blueAccent),
+        backgroundColor: WidgetStatePropertyAll(Colors.blue),
+        overlayColor: WidgetStatePropertyAll(Colors.blueAccent),
         splashFactory: NoSplash.splashFactory,
       ),
       icon: const Icon(

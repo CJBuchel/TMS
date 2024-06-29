@@ -1,4 +1,4 @@
-use tms_infra::{DataSchemeExtensions, JudgingSession};
+use tms_infra::*;
 
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
@@ -20,7 +20,7 @@ impl JudgingSessionExtensions for Database {
 
     match judging_session {
       Some(judging_session) => {
-        Some(JudgingSession::from_json(&judging_session))
+        Some(JudgingSession::from_json_string(&judging_session))
       }
       None => None,
     }
@@ -29,7 +29,7 @@ impl JudgingSessionExtensions for Database {
   async fn get_judging_session_by_number(&self, number: String) -> Option<(String, JudgingSession)> {
     let tree = self.inner.read().await.get_tree(JUDGING_SESSIONS.to_string()).await;
     let judging_session = tree.iter().find_map(|(id, judging_session)| {
-      let judging_session = JudgingSession::from_json(judging_session);
+      let judging_session = JudgingSession::from_json_string(judging_session);
       if judging_session.session_number == number {
         Some((id.clone(), judging_session))
       } else {
@@ -55,11 +55,11 @@ impl JudgingSessionExtensions for Database {
     match existing_judging_session {
       Some((judging_session_id, judging_session)) => {
         log::warn!("JudgingSession already exists: {}, overwriting with insert...", judging_session_id);
-        self.inner.write().await.insert_entry(JUDGING_SESSIONS.to_string(), judging_session_id, judging_session.to_json()).await;
+        self.inner.write().await.insert_entry(JUDGING_SESSIONS.to_string(), judging_session_id, judging_session.to_json_string()).await;
         Ok(())
       }
       None => {
-        self.inner.write().await.insert_entry(JUDGING_SESSIONS.to_string(), Uuid::new_v4().to_string(), judging_session.to_json()).await;
+        self.inner.write().await.insert_entry(JUDGING_SESSIONS.to_string(), Uuid::new_v4().to_string(), judging_session.to_json_string()).await;
         Ok(())
       }
     }

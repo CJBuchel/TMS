@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/views/match_controller/match_controls/load_match_button.dart';
+import 'package:tms/views/match_controller/match_controls/ready_match_button.dart';
 import 'package:tms/widgets/timers/MatchLiveScheduleTimer.dart';
 
 class MatchControls extends StatelessWidget {
@@ -39,19 +40,7 @@ class MatchControls extends StatelessWidget {
         ),
 
         // Ready/Not Ready button
-        Expanded(
-          flex: 1,
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-              ),
-            ),
-            child: const Center(
-              child: Text('Ready/Not Ready'),
-            ),
-          ),
-        ),
+        ReadyMatchButton(),
       ],
     );
   }

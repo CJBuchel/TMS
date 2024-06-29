@@ -19,7 +19,6 @@ pub struct Database {
   trees: TreeMap,
   role_manager: RoleManager,
   db: sled::Db,
-  pub config: DatabaseConfig,
 }
 
 impl Database {
@@ -36,7 +35,6 @@ impl Database {
       hierarchy,
       trees,
       role_manager,
-      config,
       db,
     }
   }

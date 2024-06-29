@@ -1,14 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:tms/generated/infra/network_schemas/register_requests.dart';
 import 'package:tms/network/http_client.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/utils/http_status_to_message.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
-import 'package:tms/schemas/network_schema.dart' as nts;
 
-typedef ServerResponse = (bool, int, dynamic); // success, status code, response
+typedef ServerResponse = (bool, int, String); // success, status code, response
 
 class HttpController {
   final NetworkConnectivity _connectivity = NetworkConnectivity();
@@ -48,14 +47,14 @@ class HttpController {
   Future<bool> connect() async {
     _connectivity.state = NetworkConnectionState.connecting;
     String addr = TmsLocalStorageProvider().serverAddress;
-    var request = nts.RegisterRequest(
+    var request = RegisterRequest(
       username: TmsLocalStorageProvider().authUsername,
       password: TmsLocalStorageProvider().authPassword,
     );
 
     var response = await _client.post(
       Uri.parse("$addr/register"),
-      body: jsonEncode(request.toJson()),
+      body: request.toJsonString(),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -63,7 +62,7 @@ class HttpController {
 
     if (response.statusCode == HttpStatus.ok) {
       TmsLogger().d("Registered with TMS server");
-      nts.RegisterResponse res = nts.RegisterResponse.fromJson(jsonDecode(response.body));
+      RegisterResponse res = RegisterResponse.fromJsonString(json: response.body);
 
       TmsLocalStorageProvider().serverExternalIp = res.serverIp;
       TmsLocalStorageProvider().wsConnectionString = res.url;
@@ -107,12 +106,12 @@ class HttpController {
   }
 
   // success, status code, response
-  Future<ServerResponse> httpPost(String route, dynamic body, bool encode, {bool retry = true}) async {
+  Future<ServerResponse> httpPost(String route, dynamic body, {bool retry = true}) async {
     try {
       String addr = TmsLocalStorageProvider().serverAddress;
       final response = await _client.post(
         Uri.parse("$addr$route"),
-        body: encode ? jsonEncode(body) : body,
+        body: body,
         headers: {
           "X-Client-Id": TmsLocalStorageProvider().uuid,
           "X-Auth-Token": TmsLocalStorageProvider().authToken,
@@ -120,30 +119,20 @@ class HttpController {
         },
       );
 
-      dynamic responseBody;
-      if (response.body.isNotEmpty) {
-        try {
-          responseBody = jsonDecode(response.body);
-        } catch (e) {
-          TmsLogger().w("Failed to decode response body: $e, using raw response");
-          responseBody = response.body;
-        }
-      }
-
       if (response.statusCode == HttpStatus.ok) {
-        return (true, response.statusCode, responseBody);
+        return (true, response.statusCode, response.body);
       } else if (response.statusCode == HttpStatus.networkAuthenticationRequired && retry) {
         TmsLogger().e("Failed to post to $route: Network Authentication Required (511) - retrying");
         await connect();
-        return httpPost(route, body, encode, retry: false);
+        return httpPost(route, body, retry: false);
       } else {
         String message = HttpStatusToMessage().getMessage(response.statusCode);
         TmsLogger().e("Failed to post to $route: $message");
-        return (false, response.statusCode, responseBody);
+        return (false, response.statusCode, response.body);
       }
     } catch (e) {
       TmsLogger().e("Caught failure. Failed to post to $route: $e");
-      return (false, HttpStatus.internalServerError, e);
+      return (false, HttpStatus.internalServerError, e.toString());
     }
   }
 
@@ -159,18 +148,8 @@ class HttpController {
         },
       );
 
-      dynamic responseBody;
-      if (response.body.isNotEmpty) {
-        try {
-          responseBody = jsonDecode(response.body);
-        } catch (e) {
-          TmsLogger().w("Failed to decode response body: $e, using raw response");
-          responseBody = response.body;
-        }
-      }
-
       if (response.statusCode == HttpStatus.ok) {
-        return (true, response.statusCode, responseBody);
+        return (true, response.statusCode, response.body);
       } else if (response.statusCode == HttpStatus.networkAuthenticationRequired && retry) {
         TmsLogger().e("Failed to get from $route: Network Authentication Required (511) - retrying");
         await connect();
@@ -178,20 +157,20 @@ class HttpController {
       } else {
         String message = HttpStatusToMessage().getMessage(response.statusCode);
         TmsLogger().e("Failed to get from $route: $message");
-        return (false, response.statusCode, responseBody);
+        return (false, response.statusCode, response.body);
       }
     } catch (e) {
       TmsLogger().e("Caught failure. Failed to get from $route: $e");
-      return (false, HttpStatus.internalServerError, e);
+      return (false, HttpStatus.internalServerError, e.toString());
     }
   }
 
-  Future<ServerResponse> httpDelete(String route, dynamic body, bool encode, {bool retry = true}) async {
+  Future<ServerResponse> httpDelete(String route, dynamic body, {bool retry = true}) async {
     try {
       String addr = TmsLocalStorageProvider().serverAddress;
       final response = await _client.delete(
         Uri.parse("$addr$route"),
-        body: encode ? jsonEncode(body) : body,
+        body: body,
         headers: {
           "X-Client-Id": TmsLocalStorageProvider().uuid,
           "X-Auth-Token": TmsLocalStorageProvider().authToken,
@@ -199,30 +178,20 @@ class HttpController {
         },
       );
 
-      dynamic responseBody;
-      if (response.body.isNotEmpty) {
-        try {
-          responseBody = jsonDecode(response.body);
-        } catch (e) {
-          TmsLogger().w("Failed to decode response body: $e, using raw response");
-          responseBody = response.body;
-        }
-      }
-
       if (response.statusCode == HttpStatus.ok) {
-        return (true, response.statusCode, responseBody);
+        return (true, response.statusCode, response.body);
       } else if (response.statusCode == HttpStatus.networkAuthenticationRequired && retry) {
         TmsLogger().e("Failed to delete from $route: Network Authentication Required (511) - retrying");
         await connect();
-        return httpDelete(route, body, encode, retry: false);
+        return httpDelete(route, body, retry: false);
       } else {
         String message = HttpStatusToMessage().getMessage(response.statusCode);
         TmsLogger().e("Failed to delete from $route: $message");
-        return (false, response.statusCode, responseBody);
+        return (false, response.statusCode, response.body);
       }
     } catch (e) {
       TmsLogger().e("Caught failure. Failed to delete from $route: $e");
-      return (false, HttpStatus.internalServerError, e);
+      return (false, HttpStatus.internalServerError, e.toString());
     }
   }
 }

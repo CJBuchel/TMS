@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/game_match_provider.dart';
-import 'package:tms/schemas/database_schema.dart';
 import 'package:tms/utils/sorter_util.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 

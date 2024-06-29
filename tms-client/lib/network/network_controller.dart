@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/providers/local_storage_provider.dart';
-import 'package:tms/schemas/network_schema.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/network/db.dart';
@@ -133,11 +133,9 @@ class NetworkController {
   }
 
   // http
-  Future<ServerResponse> httpPost(String route, dynamic body, bool encode) =>
-      _httpController.httpPost(route, body, encode);
+  Future<ServerResponse> httpPost(String route, dynamic body) => _httpController.httpPost(route, body);
   Future<ServerResponse> httpGet(String route) => _httpController.httpGet(route);
-  Future<ServerResponse> httpDelete(String route, dynamic body, bool encode) =>
-      _httpController.httpDelete(route, body, encode);
+  Future<ServerResponse> httpDelete(String route, dynamic body) => _httpController.httpDelete(route, body);
 
   // websocket
   void subscribe(TmsServerSocketEvent event, TmsEventHandler handler) {

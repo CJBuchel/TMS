@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tms/schemas/database_schema.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/utils/color_modifiers.dart';
 
 class TableItem extends StatelessWidget {

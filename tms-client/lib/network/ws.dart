@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:tms/schemas/network_schema.dart';
+import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -30,9 +28,13 @@ class WebsocketController {
   void _listen() async {
     try {
       _channel?.stream.listen((event) {
-        final json = jsonDecode(event);
-        TmsServerSocketMessage message = TmsServerSocketMessage.fromJson(json);
-        _handleMessage(message);
+        try {
+          TmsLogger().d("Received event message: $event");
+          var message = TmsServerSocketMessage.fromJsonString(json: event);
+          _handleMessage(message);
+        } catch (e) {
+          TmsLogger().e("Error parsing message: $e");
+        }
       }, onDone: () {
         TmsLogger().w("Websocket  connection closed");
         _connectivity.state = NetworkConnectionState.disconnected;

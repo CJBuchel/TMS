@@ -64,7 +64,7 @@ stages:
       - script: wasm-pack build tms-infra --target no-modules --out-dir tms-client/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
         displayName: 'Run Wasm Pre-Codegen'
       # run the wasm codegen
-      - script: (cd $(pwd)/tms-client && dart run flutter_rust_bridge build-web --rust-root ../tms-infra)
+      - script: (cd $(pwd)/tms-client && dart run flutter_rust_bridge build-web --dart-root . --rust-root ../tms-infra)
         displayName: 'Run Wasm Codegen'
 
 

@@ -10,7 +10,6 @@ stages:
     displayName: 'Setup and Codegen'
     pool:
       vmImage: 'ubuntu-latest'
-      environment: 'rust-flutter-nightly-vm'
     steps:
       # install nightly toolchain
       - task: Rustup@1

@@ -1,4 +1,4 @@
-use tms_infra::{TmsServerMatchLoadEvent, TmsServerMatchTimerTimeEvent, TmsServerSocketEvent, TmsServerSocketMessage};
+use tms_infra::{DataSchemeExtensions, TmsServerMatchLoadEvent, TmsServerMatchTimerTimeEvent, TmsServerSocketEvent, TmsServerSocketMessage};
 
 use super::{client::Client, ClientHashMap};
 
@@ -73,16 +73,20 @@ impl ClientPublish for Client {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
       message_event: TmsServerSocketEvent::MatchTimerTimeEvent,
-      message: Some(serde_json::to_string(&msg_payload).unwrap_or_default()),
+      message: Some(msg_payload.to_json_string()),
     };
     self.publish_message(msg);
   }
 
   fn publish_endgame_timer(&self, endgame_time: u32) {
+    let msg_payload = TmsServerMatchTimerTimeEvent {
+      time: endgame_time,
+    };
+
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
       message_event: TmsServerSocketEvent::MatchTimerEndgameEvent,
-      message: Some(endgame_time.to_string()),
+      message: Some(msg_payload.to_json_string()),
     };
     self.publish_message(msg);
   }
@@ -125,7 +129,7 @@ impl ClientPublish for Client {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
       message_event: TmsServerSocketEvent::MatchLoadEvent,
-      message: Some(serde_json::to_string(&msg_payload).unwrap_or_default()),
+      message: Some(msg_payload.to_json_string()),
     };
     self.publish_message(msg);
   }

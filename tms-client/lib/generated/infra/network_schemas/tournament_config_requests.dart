@@ -17,16 +17,16 @@ class TournamentConfigSetBackupIntervalRequest {
 
   static TournamentConfigSetBackupIntervalRequest fromJsonString(
           {required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToSchema();
 
   @override
@@ -49,16 +49,16 @@ class TournamentConfigSetEndgameTimerLengthRequest {
 
   static TournamentConfigSetEndgameTimerLengthRequest fromJsonString(
           {required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToSchema();
 
   @override
@@ -81,16 +81,16 @@ class TournamentConfigSetNameRequest {
 
   static TournamentConfigSetNameRequest fromJsonString(
           {required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToSchema();
 
   @override
@@ -113,16 +113,16 @@ class TournamentConfigSetRetainBackupsRequest {
 
   static TournamentConfigSetRetainBackupsRequest fromJsonString(
           {required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToSchema();
 
   @override
@@ -145,16 +145,16 @@ class TournamentConfigSetSeasonRequest {
 
   static TournamentConfigSetSeasonRequest fromJsonString(
           {required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchema();
 
   @override
@@ -177,16 +177,16 @@ class TournamentConfigSetTimerLengthRequest {
 
   static TournamentConfigSetTimerLengthRequest fromJsonString(
           {required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchema();
 
   @override

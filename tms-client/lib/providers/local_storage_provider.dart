@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tms/generated/infra.dart';
@@ -101,13 +99,13 @@ class TmsLocalStorageProvider extends _TmsLocalStorageBase {
   String get authPassword => getString("authPassword") ?? "";
 
   set authRoles(List<TmsTreeRole> value) {
-    List<String> roles = value.map((e) => jsonEncode(e.toJsonString())).toList();
+    List<String> roles = value.map((e) => e.toJsonString()).toList();
     setStringList("authRoles", roles);
   }
 
   List<TmsTreeRole> get authRoles {
     List<String>? roles = getStringList("authRoles");
-    return roles?.map((e) => TmsTreeRole.fromJsonString(json: jsonDecode(e))).toList() ?? [];
+    return roles?.map((e) => TmsTreeRole.fromJsonString(json: e)).toList() ?? [];
   }
 
   set isLoggedIn(bool value) => setBool("isLoggedIn", value);

@@ -16,16 +16,16 @@ class RobotGamesLoadMatchRequest {
   });
 
   static RobotGamesLoadMatchRequest fromJsonString({required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema();
 
   @override

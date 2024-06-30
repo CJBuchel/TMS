@@ -24,16 +24,16 @@ class GameMatch {
     required this.completed,
   });
 
-  static GameMatch fromJsonString({required String json}) => RustLib
+  static GameMatch fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraDatabaseSchemasGameMatchGameMatchFromJsonString(json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasGameMatchGameMatchToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasGameMatchGameMatchToSchema();
 
   @override

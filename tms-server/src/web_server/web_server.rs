@@ -82,11 +82,14 @@ impl WebServer {
     F: warp::Filter<Extract = R, Error = warp::Rejection> + Clone + Send + Sync + 'static,
     R: warp::Reply,
   {
-
     // static files for web hosting, (add cache control header for 24 hours)
     let ui_static_files_path = PathBuf::from("tms-client").join("build").join("web");
     let ui_static_files = warp::fs::dir(ui_static_files_path).map(|reply| {
-      warp::reply::with_header(reply, "Cache-Control", "public, max-age=86400")
+      // headers
+      let reply = warp::reply::with_header(reply, "Cache-Control", "public, max-age=86400");
+      let reply = warp::reply::with_header(reply, "Cross-Origin-Opener-Policy", "same-origin");
+      let reply = warp::reply::with_header(reply, "Cross-Origin-Embedder-Policy", "require-corp");
+      reply
     });
     let ui_route = warp::path("ui").and(ui_static_files);
 

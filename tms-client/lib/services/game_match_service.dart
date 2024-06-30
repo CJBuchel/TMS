@@ -23,7 +23,7 @@ class GameMatchService {
 
   Future<int> unloadMatches() async {
     try {
-      var response = await Network().networkPost("/robot_game/matches/unload_matches", {});
+      var response = await Network().networkPost("/robot_game/matches/unload_matches", null);
       if (response.$1) {
         TmsLogger().i("Unloaded game matches");
         return HttpStatus.ok;

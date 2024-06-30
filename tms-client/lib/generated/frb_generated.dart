@@ -26,15 +26,16 @@ import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 /// Main entrypoint of the Rust API
-class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
+class TmsRustLib
+    extends BaseEntrypoint<TmsRustLibApi, TmsRustLibApiImpl, TmsRustLibWire> {
   @internal
-  static final instance = RustLib._();
+  static final instance = TmsRustLib._();
 
-  RustLib._();
+  TmsRustLib._();
 
   /// Initialize flutter_rust_bridge
   static Future<void> init({
-    RustLibApi? api,
+    TmsRustLibApi? api,
     BaseHandler? handler,
     ExternalLibrary? externalLibrary,
   }) async {
@@ -52,12 +53,12 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   static void dispose() => instance.disposeImpl();
 
   @override
-  ApiImplConstructor<RustLibApiImpl, RustLibWire> get apiImplConstructor =>
-      RustLibApiImpl.new;
+  ApiImplConstructor<TmsRustLibApiImpl, TmsRustLibWire>
+      get apiImplConstructor => TmsRustLibApiImpl.new;
 
   @override
-  WireConstructor<RustLibWire> get wireConstructor =>
-      RustLibWire.fromExternalLibrary;
+  WireConstructor<TmsRustLibWire> get wireConstructor =>
+      TmsRustLibWire.fromExternalLibrary;
 
   @override
   Future<void> executeRustInitializers() async {
@@ -82,7 +83,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   );
 }
 
-abstract class RustLibApi extends BaseApi {
+abstract class TmsRustLibApi extends BaseApi {
   Future<void> crateInfraInitApp();
 
   TmsTreeRole crateInfraTmsTreeRoleFromJsonString({required String json});
@@ -307,8 +308,9 @@ abstract class RustLibApi extends BaseApi {
       crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchema();
 }
 
-class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
-  RustLibApiImpl({
+class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
+    implements TmsRustLibApi {
+  TmsRustLibApiImpl({
     required super.handler,
     required super.wire,
     required super.generalizedFrbRustBinding,

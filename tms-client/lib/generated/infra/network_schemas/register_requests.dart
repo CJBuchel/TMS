@@ -18,17 +18,17 @@ class RegisterRequest {
     this.password,
   });
 
-  static RegisterRequest fromJsonString({required String json}) => RustLib
+  static RegisterRequest fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraNetworkSchemasRegisterRequestsRegisterRequestFromJsonString(
           json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasRegisterRequestsRegisterRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRegisterRequestsRegisterRequestToSchema();
 
   @override
@@ -58,17 +58,17 @@ class RegisterResponse {
     required this.roles,
   });
 
-  static RegisterResponse fromJsonString({required String json}) => RustLib
+  static RegisterResponse fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraNetworkSchemasRegisterRequestsRegisterResponseFromJsonString(
           json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasRegisterRequestsRegisterResponseToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchema();
 
   @override

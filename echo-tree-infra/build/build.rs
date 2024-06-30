@@ -57,7 +57,7 @@ fn get_workspace_path() -> std::io::Result<PathBuf> {
 fn generate_schema<T: JsonSchema>(schema_name: &str) {
   let workspace_path = get_workspace_path().expect("Unable to get workspace path");
   let schema = schemars::schema_for!(T);
-  let schema_file = std::path::Path::new(&workspace_path).join(format!("schemas/{}.json", schema_name));
+  let schema_file = std::path::Path::new(&workspace_path).join(format!("echo-tree-flutter/rust_schemas/{}.json", schema_name));
   let json = serde_json::to_string_pretty(&schema).unwrap_or_default();
   fs::write(schema_file, json).expect("Unable to write schema file");
 }

@@ -26,15 +26,15 @@ class TmsTreeRole {
   });
 
   static TmsTreeRole fromJsonString({required String json}) =>
-      RustLib.instance.api.crateInfraTmsTreeRoleFromJsonString(json: json);
+      TmsRustLib.instance.api.crateInfraTmsTreeRoleFromJsonString(json: json);
 
   String toJsonString() =>
-      RustLib.instance.api.crateInfraTmsTreeRoleToJsonString(
+      TmsRustLib.instance.api.crateInfraTmsTreeRoleToJsonString(
         that: this,
       );
 
   static String toSchema() =>
-      RustLib.instance.api.crateInfraTmsTreeRoleToSchema();
+      TmsRustLib.instance.api.crateInfraTmsTreeRoleToSchema();
 
   @override
   int get hashCode =>

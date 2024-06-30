@@ -103,7 +103,7 @@ class AppWrapper extends StatelessWidget {
 }
 
 void main() async {
-  await RustLib.init();
+  await TmsRustLib.init();
   HttpOverrides.global = TmsHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
 

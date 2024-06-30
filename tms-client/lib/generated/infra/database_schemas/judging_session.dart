@@ -23,16 +23,16 @@ class JudgingSession {
   });
 
   static JudgingSession fromJsonString({required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraDatabaseSchemasJudgingSessionJudgingSessionFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasJudgingSessionJudgingSessionToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasJudgingSessionJudgingSessionToSchema();
 
   @override

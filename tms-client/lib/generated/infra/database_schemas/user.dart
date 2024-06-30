@@ -19,16 +19,16 @@ class User {
     required this.roles,
   });
 
-  static User fromJsonString({required String json}) => RustLib.instance.api
+  static User fromJsonString({required String json}) => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasUserUserFromJsonString(json: json);
 
   String toJsonString() =>
-      RustLib.instance.api.crateInfraDatabaseSchemasUserUserToJsonString(
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserToJsonString(
         that: this,
       );
 
   static String toSchema() =>
-      RustLib.instance.api.crateInfraDatabaseSchemasUserUserToSchema();
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserToSchema();
 
   @override
   int get hashCode => username.hashCode ^ password.hashCode ^ roles.hashCode;

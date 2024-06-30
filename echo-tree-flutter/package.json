@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "prepare": "quicktype -l dart -s schema ../schemas/echoTreeSchema.json -o lib/schemas/echo_tree_schema.dart"
+    "prepare": "quicktype -l dart -s schema rust_schemas/echoTreeSchema.json -o lib/schemas/echo_tree_schema.dart"
   },
   "keywords": [],
   "author": "",

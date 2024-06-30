@@ -23,16 +23,16 @@ class Team {
     required this.ranking,
   });
 
-  static Team fromJsonString({required String json}) => RustLib.instance.api
+  static Team fromJsonString({required String json}) => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTeamTeamFromJsonString(json: json);
 
   String toJsonString() =>
-      RustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToJsonString(
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToJsonString(
         that: this,
       );
 
   static String toSchema() =>
-      RustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToSchema();
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToSchema();
 
   @override
   int get hashCode =>

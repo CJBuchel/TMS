@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
@@ -46,8 +44,7 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
     subscribeToEvent(TmsServerSocketEvent.matchLoadEvent, (event) {
       if (event.message != null) {
         try {
-          final json = jsonDecode(event.message!);
-          TmsServerMatchLoadEvent matchLoadEvent = TmsServerMatchLoadEvent.fromJsonString(json: json);
+          TmsServerMatchLoadEvent matchLoadEvent = TmsServerMatchLoadEvent.fromJsonString(json: event.message!);
           _loadedMatchNumbers = matchLoadEvent.gameMatchNumbers;
           notifyListeners();
         } catch (e) {

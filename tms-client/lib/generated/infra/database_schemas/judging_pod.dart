@@ -15,16 +15,16 @@ class JudgingPod {
     required this.podName,
   });
 
-  static JudgingPod fromJsonString({required String json}) => RustLib
+  static JudgingPod fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraDatabaseSchemasJudgingPodJudgingPodFromJsonString(json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasJudgingPodJudgingPodToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasJudgingPodJudgingPodToSchema();
 
   @override

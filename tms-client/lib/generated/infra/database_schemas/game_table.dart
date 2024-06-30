@@ -15,16 +15,16 @@ class GameTable {
     required this.tableName,
   });
 
-  static GameTable fromJsonString({required String json}) => RustLib
+  static GameTable fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraDatabaseSchemasGameTableGameTableFromJsonString(json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasGameTableGameTableToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasGameTableGameTableToSchema();
 
   @override

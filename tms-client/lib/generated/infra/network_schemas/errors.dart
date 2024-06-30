@@ -18,16 +18,16 @@ class ErrorMessage {
   });
 
   static ErrorMessage fromJsonString({required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasErrorsErrorMessageFromJsonString(json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasErrorsErrorMessageToJsonString(
         that: this,
       );
 
-  static String toSchema() =>
-      RustLib.instance.api.crateInfraNetworkSchemasErrorsErrorMessageToSchema();
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasErrorsErrorMessageToSchema();
 
   @override
   int get hashCode => code.hashCode ^ message.hashCode;

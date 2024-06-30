@@ -25,17 +25,17 @@ class TournamentConfig {
     required this.season,
   });
 
-  static TournamentConfig fromJsonString({required String json}) => RustLib
+  static TournamentConfig fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraDatabaseSchemasTournamentConfigTournamentConfigFromJsonString(
           json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTournamentConfigTournamentConfigToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTournamentConfigTournamentConfigToSchema();
 
   @override

@@ -18,17 +18,17 @@ class LoginRequest {
     required this.password,
   });
 
-  static LoginRequest fromJsonString({required String json}) => RustLib
-      .instance.api
-      .crateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonString(
-          json: json);
+  static LoginRequest fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonString(
+              json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasLoginRequestsLoginRequestToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasLoginRequestsLoginRequestToSchema();
 
   @override
@@ -51,16 +51,16 @@ class LoginResponse {
   });
 
   static LoginResponse fromJsonString({required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasLoginRequestsLoginResponseFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasLoginRequestsLoginResponseToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasLoginRequestsLoginResponseToSchema();
 
   @override

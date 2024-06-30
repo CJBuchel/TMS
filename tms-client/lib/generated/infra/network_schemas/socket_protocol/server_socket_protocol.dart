@@ -15,17 +15,17 @@ class TmsServerMatchLoadEvent {
     required this.gameMatchNumbers,
   });
 
-  static TmsServerMatchLoadEvent fromJsonString({required String json}) => RustLib
-      .instance.api
-      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonString(
-          json: json);
+  static TmsServerMatchLoadEvent fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonString(
+              json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchema();
 
   @override
@@ -47,16 +47,16 @@ class TmsServerMatchTimerTimeEvent {
   });
 
   static TmsServerMatchTimerTimeEvent fromJsonString({required String json}) =>
-      RustLib.instance.api
+      TmsRustLib.instance.api
           .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonString(
               json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchema();
 
   @override
@@ -95,17 +95,17 @@ class TmsServerSocketMessage {
     this.message,
   });
 
-  static TmsServerSocketMessage fromJsonString({required String json}) => RustLib
-      .instance.api
-      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonString(
-          json: json);
+  static TmsServerSocketMessage fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonString(
+              json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchema();
 
   @override

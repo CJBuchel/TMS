@@ -41,16 +41,16 @@ class TmsDateTime {
     this.time,
   });
 
-  static TmsDateTime fromJsonString({required String json}) => RustLib
+  static TmsDateTime fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonString(json: json);
 
-  String toJsonString() => RustLib.instance.api
+  String toJsonString() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonString(
         that: this,
       );
 
-  static String toSchema() => RustLib.instance.api
+  static String toSchema() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasDateTimeTmsDateTimeToSchema();
 
   @override

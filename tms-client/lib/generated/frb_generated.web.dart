@@ -26,8 +26,8 @@ import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 
-abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
-  RustLibApiImplPlatform({
+abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
+  TmsRustLibApiImplPlatform({
     required super.handler,
     required super.wire,
     required super.generalizedFrbRustBinding,
@@ -787,13 +787,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
 // Section: wire_class
 
-class RustLibWire implements BaseWire {
-  RustLibWire.fromExternalLibrary(ExternalLibrary lib);
+class TmsRustLibWire implements BaseWire {
+  TmsRustLibWire.fromExternalLibrary(ExternalLibrary lib);
 }
 
 @JS('wasm_bindgen')
-external RustLibWasmModule get wasmModule;
+external TmsRustLibWasmModule get wasmModule;
 
 @JS()
 @anonymous
-extension type RustLibWasmModule._(JSObject _) implements JSObject {}
+extension type TmsRustLibWasmModule._(JSObject _) implements JSObject {}

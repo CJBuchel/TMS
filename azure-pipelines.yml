@@ -49,6 +49,14 @@ stages:
           echo "Installing flutter_rust_bridge_codegen"
           cargo install flutter_rust_bridge_codegen
         displayName: 'Install FRB'
+      # Flutter install
+      - task: FlutterInstall@0
+        displayName: 'Install flutter'
+        inputs:
+          mode: 'auto'
+          channel: 'stable'
+          version: 'custom'
+          customVersion: '3.22.2'
       # run the codegen
       - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root tms-infra --dart-output tms-client/lib/generated
         displayName: 'Run Codegen'

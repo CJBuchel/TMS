@@ -1,0 +1,12 @@
+
+resources: 
+- repo: self
+
+stages:
+- stage: Setup
+- stage: Codegen
+- stage: Build
+- stage: Test
+- stage: Release
+  environment:
+    name: 'TMS-Release'

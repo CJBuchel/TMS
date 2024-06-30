@@ -73,7 +73,6 @@ stages:
           rustupCommand: '+nightly'
           rustupCommandArguments: 'target add wasm32-unknown-unknown'
           verbose: false
-      # install wasm pack (cargo task uses manifest, using script instead)
       # Install wasm pack (check if already installed)
       - script: |
           if ! command -v wasm-pack &> /dev/null; then
@@ -92,8 +91,12 @@ stages:
           verbose: false
       # install FRB (cargo task uses manifest, using script instead)
       - script: |
-          echo "Installing flutter_rust_bridge_codegen"
-          cargo install flutter_rust_bridge_codegen
+          if ! command -v flutter_rust_bridge_codegen &> /dev/null; then
+            echo "Installing FRB"
+            cargo install flutter_rust_bridge_codegen
+          else
+            echo "FRB already installed"
+          fi
         displayName: 'Install FRB'
       # Flutter install
       - task: FlutterInstall@0

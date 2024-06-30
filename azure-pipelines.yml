@@ -35,7 +35,7 @@ stages:
       - task: Cargo@1
         displayName: 'Install wasm-pack'
         inputs:
-          cargoCommand: 'install wasm-pack'
+          cargoCommand: 'install wasm-pack --'
           verbose: false
       # rustup default to nightly for codegen (needed for wasm)
       - task: Rustup@1
@@ -48,7 +48,7 @@ stages:
       - task: Cargo@1
         displayName: 'Install flutter_rust_bridge_codegen'
         inputs:
-          cargoCommand: 'install flutter_rust_bridge_codegen'
+          cargoCommand: 'install flutter_rust_bridge_codegen --'
           verbose: false
       # run the codegen
       - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root tms-infra --dart-output tms-client/lib/generated

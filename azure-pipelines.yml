@@ -3,10 +3,64 @@ resources:
 - repo: self
 
 stages:
-- stage: Setup
 - stage: Codegen
+  displayName: 'Code Generation'
+  jobs:
+  - job: SetupAndCodegen
+    displayName: 'Setup and Codegen'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # install nightly toolchain
+      - task: Rustup@1
+        displayName: 'Install nightly toolchain'
+        inputs:
+          rustupCommand: 'toolchain'
+          rustupCommandArguments: 'install nightly'
+          verbose: false
+      # add rust-src for codegen
+      - task: Rustup@1
+        displayName: 'Add rust-src for codegen'
+        inputs:
+          rustupCommand: '+nightly'
+          rustupCommandArguments: 'component add rust-src'
+          verbose: false
+      # add wasm target for web codegen
+      - task: Rustup@1
+        displayName: 'Add wasm target for web codegen'
+        inputs:
+          rustupCommand: '+nightly'
+          rustupCommandArguments: 'target add wasm32-unknown-unknown'
+          verbose: false
+      - task: Cargo@1
+        displayName: 'Install wasm-pack'
+        inputs:
+          cargoCommand: 'install wasm-pack'
+          verbose: false
+      # rustup default to nightly for codegen (needed for wasm)
+      - task: Rustup@1
+        displayName: 'Set default toolchain to nightly'
+        inputs:
+          rustupCommand: 'default'
+          rustupCommandArguments: 'nightly'
+          verbose: false
+      # install the flutter rust bridge for codegen
+      - task: Cargo@1
+        displayName: 'Install flutter_rust_bridge_codegen'
+        inputs:
+          cargoCommand: 'install flutter_rust_bridge_codegen'
+          verbose: false
+      # run the codegen
+      - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root tms-infra --dart-output tms-client/lib/generated
+        displayName: 'Run Codegen'
+      # run the wasm pre codegen
+      - script: wasm-pack build tms-infra --target no-modules --out-dir tms-client/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
+        displayName: 'Run Wasm Pre-Codegen'
+      # run the wasm codegen
+      - script: (cd $(pwd)/tms-client && dart run flutter_rust_bridge build-web --rust-root ../tms-infra)
+        displayName: 'Run Wasm Codegen'
+
+
 - stage: Build
 - stage: Test
 - stage: Release
-  environment:
-    name: 'TMS-Release'

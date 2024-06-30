@@ -61,6 +61,6 @@ stages:
         displayName: 'Run Wasm Codegen'
 
 
-- stage: Build
-- stage: Test
-- stage: Release
+# - stage: Build
+# - stage: Test
+# - stage: Release

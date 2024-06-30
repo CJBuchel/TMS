@@ -39,6 +39,18 @@ stages:
           restoreKeys: 'rust-toolchain | "$(Agent.OS)"'
           path: $(HOME)/.rustup/toolchains
         displayName: 'Cache Rust Toolchain'
+      
+      # Cache Cargo bin
+      - task: Cache@2
+        inputs:
+          key: 'cargo-bin | "$(Agent.OS)"'
+          restoreKeys: 'cargo-bin | "$(Agent.OS)"'
+          path: $(HOME)/.cargo/bin
+        displayName: 'Cache Cargo Bin'
+      
+      #
+      # Install/Building
+      #
 
       # install nightly toolchain
       - task: Rustup@1

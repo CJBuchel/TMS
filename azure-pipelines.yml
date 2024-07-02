@@ -47,14 +47,6 @@ stages:
           restoreKeys: 'cargo-bin | "$(Agent.OS)"'
           path: $(HOME)/.cargo/bin
         displayName: 'Cache Cargo Bin'
-
-      # Cache flutter
-      - task: Cache@2
-        displayName: 'Cache Flutter Dependencies'
-        inputs:
-          key: 'flutter | "$(Agent.OS)"'
-          restoreKeys: 'flutter | "$(Agent.OS)"'
-          path: $(Pipeline.Workspace)/.pub-cache
       
       #
       # Install/Building

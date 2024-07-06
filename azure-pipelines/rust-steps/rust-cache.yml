@@ -1,14 +1,42 @@
+variables:
+  # Define a variable for the Cargo path based on the OS
+  - name: cargoPath
+    ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+      value: $(UserProfile)/.cargo
+    ${{ if ne(variables['Agent.OS'], 'Windows_NT') }}:
+      value: $(HOME)/.cargo
+
+  # Define a variable for the Rust toolchain path based on the OS
+  - name: rustupPath
+    ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+      value: $(UserProfile)/.rustup
+    ${{ if ne(variables['Agent.OS'], 'Windows_NT') }}:
+      value: $(HOME)/.rustup
+
 # 
 # Caching for Rust dependencies and build artifacts.
 # 
 steps:
-  # Cache Cargo registry
   - task: Cache@2
     inputs:
       key: 'cargo-registry | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
       restoreKeys: 'cargo-registry | "$(Agent.OS)"'
-      path: $(HOME)/.cargo/registry
+      path: $(cargoPath)/registry
     displayName: 'Cache Cargo Registry'
+
+  - task: Cache@2
+    inputs:
+      key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
+      restoreKeys: 'cargo-bin | "$(Agent.OS)"'
+      path: $(cargoPath)/bin
+    displayName: 'Cache Cargo Bin'
+
+  - task: Cache@2
+    inputs:
+      key: 'rust-toolchain | "$(Agent.OS)" | $(rustc -V)'
+      restoreKeys: 'rust-toolchain | "$(Agent.OS)"'
+      path: $(rustupPath)/.rustup/toolchains
+    displayName: 'Cache Rust Toolchain'
 
   # Cache Cargo build
   - task: Cache@2
@@ -17,19 +45,3 @@ steps:
       restoreKeys: 'cargo-build | "$(Agent.OS)"'
       path: $(Build.SourcesDirectory)/target
     displayName: 'Cache Cargo Build'
-
-  # Cache Rust toolchain
-  - task: Cache@2
-    inputs:
-      key: 'rust-toolchain | "$(Agent.OS)" | $(rustc -V)'
-      restoreKeys: 'rust-toolchain | "$(Agent.OS)"'
-      path: $(HOME)/.rustup/toolchains
-    displayName: 'Cache Rust Toolchain'
-
-  # Cache Cargo bin
-  - task: Cache@2
-    inputs:
-      key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
-      restoreKeys: 'cargo-bin | "$(Agent.OS)"'
-      path: $(HOME)/.cargo/bin
-    displayName: 'Cache Cargo Bin'

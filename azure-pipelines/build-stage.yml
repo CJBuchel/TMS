@@ -26,8 +26,12 @@ jobs:
     pool:
       vmImage: 'windows-latest'
     steps:
-      # Get cache if available
+      # Get rust cache if available
       - template: rust-steps/rust-cache.yml
+        parameters:
+          cargoPath: $(UserProfile)/.cargo 
+          rustupPath: $(UserProfile)/.rustup
+      # Flutter cache
       - template: flutter-steps/flutter-cache.yml
       # Install requirements for rust & flutter
       - template: rust-steps/install-rust.yml

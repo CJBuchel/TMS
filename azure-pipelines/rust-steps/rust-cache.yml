@@ -1,17 +1,8 @@
-variables:
-  # Define a variable for the Cargo path based on the OS
+parameters:
   - name: cargoPath
-    ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
-      value: $(UserProfile)/.cargo
-    ${{ if ne(variables['Agent.OS'], 'Windows_NT') }}:
-      value: $(HOME)/.cargo
-
-  # Define a variable for the Rust toolchain path based on the OS
+    default: $(HOME)/.cargo
   - name: rustupPath
-    ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
-      value: $(UserProfile)/.rustup
-    ${{ if ne(variables['Agent.OS'], 'Windows_NT') }}:
-      value: $(HOME)/.rustup
+    default: $(HOME)/.rustup
 
 # 
 # Caching for Rust dependencies and build artifacts.

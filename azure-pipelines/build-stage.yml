@@ -1,6 +1,6 @@
 jobs:
   - job: LinuxBuild
-    displayName: 'Setup and Codegen'
+    displayName: 'Linux Build'
     pool:
       vmImage: 'ubuntu-latest'
     steps:

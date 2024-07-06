@@ -10,3 +10,9 @@ steps:
       channel: 'stable'
       version: 'custom'
       customVersion: '3.22.2'
+  # Get Flutter dependencies
+  - task: FlutterCommand@0
+    displayName: 'Install Flutter dependencies'
+    inputs:
+      projectDirectory: 'tms-client'
+      arguments: 'pub get'

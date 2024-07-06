@@ -21,7 +21,7 @@ steps:
   # Cache Rust toolchain
   - task: Cache@2
     inputs:
-      key: 'rust-toolchain | "$(Agent.OS)"'
+      key: 'rust-toolchain | "$(Agent.OS)" | $(rustc -V)'
       restoreKeys: 'rust-toolchain | "$(Agent.OS)"'
       path: $(HOME)/.rustup/toolchains
     displayName: 'Cache Rust Toolchain'
@@ -29,7 +29,7 @@ steps:
   # Cache Cargo bin
   - task: Cache@2
     inputs:
-      key: 'cargo-bin | "$(Agent.OS)"'
-      restoreKeys: 'cargo-bin | "$(Agent.OS)"'
+      key: 'cargo-build | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
+      restoreKeys: 'cargo-build | "$(Agent.OS)"'
       path: $(HOME)/.cargo/bin
     displayName: 'Cache Cargo Bin'

@@ -1,3 +1,18 @@
 #
 # Build release for each target
 #
+steps:
+  - task: FlutterBuild@0
+    displayName: "Build Flutter Web (NO CDN)"
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    inputs:
+      target: 'web'
+      projectDirectory: 'tms-client'
+      debugMode: false
+      profileMode: false
+      iosCodesign: false
+      extraArgs: '--release --no-web-resources-cdn --web-renderer canvaskit'
+
+      # build
+      # buildName: $(version) # replace with actual version
+      # buildNumber: $(Build.BuildNumber) # auto increment

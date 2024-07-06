@@ -4,7 +4,7 @@
 steps:
   # run the codegen
   - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root tms-infra --dart-output tms-client/lib/generated
-    displayName: 'Run Codegen'
+    displayName: 'Run Rust to Dart Codegen'
   # run the wasm pre codegen
   - script: wasm-pack build tms-infra --target no-modules --out-dir tms-client/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
     displayName: 'Run Wasm Pre-Codegen'

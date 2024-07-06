@@ -18,3 +18,5 @@ jobs:
       - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
       - template: rust-steps/build-release.yml
+      # build the Flutter web app
+      - template: flutter-steps/build-release.yml

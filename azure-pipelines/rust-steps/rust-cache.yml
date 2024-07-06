@@ -29,7 +29,7 @@ steps:
   # Cache Cargo bin
   - task: Cache@2
     inputs:
-      key: 'cargo-build | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
-      restoreKeys: 'cargo-build | "$(Agent.OS)"'
+      key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
+      restoreKeys: 'cargo-bin | "$(Agent.OS)"'
       path: $(HOME)/.cargo/bin
     displayName: 'Cache Cargo Bin'

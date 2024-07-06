@@ -7,7 +7,7 @@ steps:
     displayName: 'Build Rust Server for Linux'
     condition: eq( variables['Agent.OS'], 'Linux' )
     inputs:
-      cargoCommand: 'build --target x86_64-unknown-linux-gnu --release'
+      cargoCommand: 'build --target x86_64-unknown-linux-musl --release'
       verbose: true
   # Build the Rust server for Windows
   - task: Cargo@1

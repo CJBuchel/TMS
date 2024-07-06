@@ -23,3 +23,10 @@ steps:
       rustupCommand: 'default'
       rustupCommandArguments: 'nightly'
       verbose: false
+  # install nasm for windows
+  - task: ChocolateyCommand@0
+    displayName: 'Install nasm for windows'
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
+    inputs:
+      command: 'install'
+      installPackageId: 'nasm'

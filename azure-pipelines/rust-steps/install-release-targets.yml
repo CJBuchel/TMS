@@ -3,6 +3,11 @@
 # (Should install the static type of the target for release)
 #
 steps:
+  # Install musl for linux
+  - script: |
+        sudo apt-get install -qq -y musl-tools musl-dev
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    displayName: 'Install musl libs for linux'
   # Install the portable target for a static linux binary
   - task: Rustup@1
     displayName: 'Install portable musl target for linux'

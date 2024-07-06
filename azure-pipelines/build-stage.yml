@@ -1,0 +1,16 @@
+jobs:
+  - job: LinuxBuild
+    displayName: 'Setup and Codegen'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # Get cache if available
+      - template: rust-steps/rust-cache.yml
+      - template: flutter-steps/flutter-cache.yml
+      # Install requirements for rust & flutter
+      - template: rust-steps/install-rust.yml
+      - template: flutter-steps/install-flutter.yml
+      # install wasm target and codegen
+      - template: rust-steps/install-wasm.yml
+      # Generate the Dart code from the Rust code
+      - template: rust-steps/generate-dart-code.yml

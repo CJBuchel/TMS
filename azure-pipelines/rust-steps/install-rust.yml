@@ -1,0 +1,25 @@
+#
+# Install requirements for rust (rust base task is already installed)
+#
+steps:
+  # install nightly toolchain
+  - task: Rustup@1
+    displayName: 'Install nightly toolchain'
+    inputs:
+      rustupCommand: 'toolchain'
+      rustupCommandArguments: 'install nightly'
+      verbose: false
+  # add rust-src for codegen
+  - task: Rustup@1
+    displayName: 'Add rust-src for codegen'
+    inputs:
+      rustupCommand: '+nightly'
+      rustupCommandArguments: 'component add rust-src'
+      verbose: false
+  # rustup default to nightly for codegen (needed for wasm)
+  - task: Rustup@1
+    displayName: 'Set default toolchain to nightly'
+    inputs:
+      rustupCommand: 'default'
+      rustupCommandArguments: 'nightly'
+      verbose: false

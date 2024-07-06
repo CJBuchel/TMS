@@ -1,0 +1,35 @@
+# 
+# Caching for Rust dependencies and build artifacts.
+# 
+steps:
+  # Cache Cargo registry
+  - task: Cache@2
+    inputs:
+      key: 'cargo-registry | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
+      restoreKeys: 'cargo-registry | "$(Agent.OS)"'
+      path: $(HOME)/.cargo/registry
+    displayName: 'Cache Cargo Registry'
+
+  # Cache Cargo build
+  - task: Cache@2
+    inputs:
+      key: 'cargo-build | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
+      restoreKeys: 'cargo-build | "$(Agent.OS)"'
+      path: $(Build.SourcesDirectory)/target
+    displayName: 'Cache Cargo Build'
+
+  # Cache Rust toolchain
+  - task: Cache@2
+    inputs:
+      key: 'rust-toolchain | "$(Agent.OS)"'
+      restoreKeys: 'rust-toolchain | "$(Agent.OS)"'
+      path: $(HOME)/.rustup/toolchains
+    displayName: 'Cache Rust Toolchain'
+
+  # Cache Cargo bin
+  - task: Cache@2
+    inputs:
+      key: 'cargo-bin | "$(Agent.OS)"'
+      restoreKeys: 'cargo-bin | "$(Agent.OS)"'
+      path: $(HOME)/.cargo/bin
+    displayName: 'Cache Cargo Bin'

@@ -1,0 +1,29 @@
+#
+# Install requirements for wasm & codegen
+#
+steps:
+  # add wasm target for web codegen
+  - task: Rustup@1
+    displayName: 'Add wasm target for web codegen'
+    inputs:
+      rustupCommand: '+nightly'
+      rustupCommandArguments: 'target add wasm32-unknown-unknown'
+      verbose: false
+  # Install wasm pack (check if already installed)
+  - script: |
+      if ! command -v wasm-pack &> /dev/null; then
+        echo "Installing wasm-pack"
+        cargo install wasm-pack
+      else
+        echo "wasm-pack is already installed"
+      fi
+    displayName: 'Install wasm-pack'
+  # install FRB (cargo task uses manifest, using script instead)
+  - script: |
+      if ! command -v flutter_rust_bridge_codegen &> /dev/null; then
+        echo "Installing FRB"
+        cargo install flutter_rust_bridge_codegen
+      else
+        echo "FRB already installed"
+      fi
+    displayName: 'Install FRB'

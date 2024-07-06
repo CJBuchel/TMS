@@ -1,0 +1,19 @@
+#
+# Caching for Flutter dependencies and build artifacts.
+#
+steps:
+  # Cache Flutter dependencies
+  - task: Cache@2
+    displayName: 'Cache Flutter Dependencies'
+    inputs:
+      key: 'flutter | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
+      restoreKeys: 'flutter | "$(Agent.OS)"'
+      path: $(Pipeline.Workspace)/.pub-cache
+
+  # Cache flutter build
+  - task: Cache@2
+    displayName: 'Cache Flutter Build'
+    inputs:
+      key: 'flutter | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
+      restoreKeys: 'flutter | "$(Agent.OS)"'
+      path: $(Build.SourcesDirectory)/tms-client/build

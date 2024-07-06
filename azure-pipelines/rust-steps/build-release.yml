@@ -8,7 +8,6 @@ steps:
     condition: eq( variables['Agent.OS'], 'Linux' )
     inputs:
       cargoCommand: 'build --target x86_64-unknown-linux-gnu --release'
-      cargoWorkingDir: './server'
       verbose: true
   # Build the Rust server for Windows
   - task: Cargo@1
@@ -16,7 +15,6 @@ steps:
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     inputs:
       cargoCommand: 'build --target x86_64-pc-windows-msvc --release'
-      cargoWorkingDir: './server'
       verbose: true
   # Build the Rust server for Mac
   - task: Cargo@1
@@ -24,5 +22,4 @@ steps:
     condition: eq( variables['Agent.OS'], 'Darwin' )
     inputs:
       cargoCommand: 'build --target x86_64-apple-darwin --release'
-      cargoWorkingDir: './server'
       verbose: true

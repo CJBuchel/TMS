@@ -34,7 +34,7 @@ jobs:
       # Flutter cache
       - template: flutter-steps/flutter-cache.yml
         parameters:
-          pubCachePath: $env:USERPROFILE\AppData\Local\Pub\Cache
+          pubCachePath: $(UserProfile)/AppData/Local/Pub/Cache
       # Install requirements for rust & flutter
       # - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml

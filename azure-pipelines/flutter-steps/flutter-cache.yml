@@ -1,6 +1,7 @@
 
 parameters:
   - name: pubCachePath
+    type: string
     default: $(Pipeline.Workspace)/.pub-cache
 #
 # Caching for Flutter dependencies and build artifacts.
@@ -12,7 +13,7 @@ steps:
     inputs:
       key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
       restoreKeys: 'flutter-pub | "$(Agent.OS)"'
-      path: $(pubCachePath)
+      path: ${{ parameters.pubCachePath }}
 
   # Cache flutter build
   - task: Cache@2

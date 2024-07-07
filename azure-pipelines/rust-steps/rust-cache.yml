@@ -1,7 +1,9 @@
 parameters:
   - name: cargoPath
+    type: string
     default: $(HOME)/.cargo
   - name: rustupPath
+    type: string
     default: $(HOME)/.rustup
 
 # 
@@ -12,21 +14,21 @@ steps:
     inputs:
       key: 'cargo-registry | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
       restoreKeys: 'cargo-registry | "$(Agent.OS)"'
-      path: $(cargoPath)/registry
+      path: ${{ parameters.cargoPath }}/registry
     displayName: 'Cache Cargo Registry'
 
   - task: Cache@2
     inputs:
       key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock'
       restoreKeys: 'cargo-bin | "$(Agent.OS)"'
-      path: $(cargoPath)/bin
+      path: ${{ parameters.cargoPath }}/bin
     displayName: 'Cache Cargo Bin'
 
   - task: Cache@2
     inputs:
       key: 'rust-toolchain | "$(Agent.OS)" | $(rustc -V)'
       restoreKeys: 'rust-toolchain | "$(Agent.OS)"'
-      path: $(rustupPath)/toolchains
+      path: ${{ parameters.rustupPath }}/toolchains
     displayName: 'Cache Rust Toolchain'
 
   # Cache Cargo build

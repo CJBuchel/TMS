@@ -29,12 +29,12 @@ jobs:
       # Get rust cache if available
       # - template: rust-steps/rust-cache.yml
       #   parameters:
-      #     cargoPath: $(UserProfile)\.cargo
-      #     rustupPath: $(UserProfile)\.rustup
+      #     cargoPath: $(UserProfile)/.cargo
+      #     rustupPath: $(UserProfile)/.rustup
       # Flutter cache
       - template: flutter-steps/flutter-cache.yml
         parameters:
-          pubCachePath: $(UserProfile)/AppData/Local/Pub/Cache
+          pubCachePath: $env:USERPROFILE\AppData\Local\Pub\Cache
       # Install requirements for rust & flutter
       # - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml

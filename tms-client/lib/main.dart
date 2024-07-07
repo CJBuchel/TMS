@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:app_links/app_links.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,46 +23,12 @@ import 'package:tms/network/network.dart';
 import 'package:tms/providers/auth_provider.dart';
 
 class NetworkObserver extends WidgetsBindingObserver {
-  final _appLinks = AppLinks();
-  StreamSubscription<Uri>? _appLinkSubscription;
-
-  void handleLink(Uri link) {
-    if (link.host == 'connect') {
-      String? ip = link.queryParameters['ip'];
-      String? port = link.queryParameters['port'];
-
-      TmsLogger().i('Received Deep Link to $ip:$port');
-      if (!TmsLocalStorageProvider().isReady) {
-        TmsLocalStorageProvider().init().then((_) {
-          TmsLocalStorageProvider().serverIp = ip ?? '';
-          TmsLocalStorageProvider().serverPort = int.tryParse(port ?? '') ?? defaultServerPort;
-        });
-      } else {
-        TmsLocalStorageProvider().serverIp = ip ?? '';
-        TmsLocalStorageProvider().serverPort = int.tryParse(port ?? '') ?? defaultServerPort;
-      }
-    }
-  }
-
-  Future<void> initAppLinks() async {
-    var link = await _appLinks.getInitialAppLink();
-    if (link != null) {
-      handleLink(link);
-    }
-    _appLinkSubscription = _appLinks.uriLinkStream.listen(handleLink);
-  }
-
-  void disposeAppLinks() {
-    _appLinkSubscription?.cancel();
-  }
-
   void networkStartup() async {
     Network().start();
   }
 
   @override
   Future<AppExitResponse> didRequestAppExit() {
-    disposeAppLinks();
     Network().stop();
     return super.didRequestAppExit();
   }
@@ -72,10 +37,9 @@ class NetworkObserver extends WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
-      disposeAppLinks();
       Network().stop();
     } else if (state == AppLifecycleState.resumed) {
-      initAppLinks().then((_) => Network().start());
+      Network().start();
     }
   }
 }
@@ -120,9 +84,7 @@ void main() async {
   // initialize the network observers (async, don't wait up)
   final observer = NetworkObserver();
   WidgetsBinding.instance.addObserver(observer);
-  observer.initAppLinks().then((_) {
-    observer.networkStartup();
-  });
+  observer.networkStartup();
 
   // set imperative API and start app
   GoRouter.optionURLReflectsImperativeAPIs = true;

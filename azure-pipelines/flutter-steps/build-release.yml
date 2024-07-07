@@ -4,7 +4,6 @@
 steps:
   - task: FlutterBuild@0
     displayName: "Build Flutter Web (NO CDN)"
-    condition: eq( variables['Agent.OS'], 'Linux' )
     inputs:
       target: 'web'
       projectDirectory: 'tms-client'

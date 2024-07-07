@@ -503,13 +503,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  rust_lib_my_app:
-    dependency: "direct main"
-    description:
-      path: rust_builder
-      relative: true
-    source: path
-    version: "0.0.1"
   shared_preferences:
     dependency: "direct main"
     description:

@@ -1,36 +1,7 @@
 {
 	"folders": [
 		{
-			"path": ".",
-			"name": "TMS"
-		},
-		{
-			"path": "./tms-client",
-			"name": "tms-client"
-		},
-		{
-			"path": "./tms-server",
-			"name": "tms-server"
-		},
-		{
-			"path": "./tms-infra",
-			"name": "tms-infra"
-		},
-		{
-			"path": "./echo-tree-rs",
-			"name": "echo-tree-rs"
-		},
-		{
-			"path": "./echo-tree-infra",
-			"name": "echo-tree-infra"
-		},
-		{
-			"path": "./echo-tree-flutter",
-			"name": "echo-tree-flutter"
-		},
-		{
-			"path": "./tms-schedule-handler",
-			"name": "tms-schedule-handler"
+			"path": "."
 		}
 	],
 	"settings": {

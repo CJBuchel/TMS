@@ -49,7 +49,9 @@ jobs:
       # Build the Rust server
       - template: rust-steps/build-server.yml
       # build the Flutter web app
-      - template: flutter-steps/build-web.yml
+      - template: flutter-steps/build-client-target.yml
+        parameters:
+          target: 'web'
 
   - job: IosBuild
     displayName: 'iOS Client'

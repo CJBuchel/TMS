@@ -1,0 +1,57 @@
+parameters:
+  - name: target
+    type: string
+    values:
+      - 'ios'
+      - 'web'
+      - 'android'
+      - 'macos'
+      - 'linux'
+      - 'windows'
+  
+  - name: buildVersion
+    type: string
+    default: '1.0.0'
+
+#
+# Build release for each target
+#
+steps:
+  # generate icons for platforms
+  - task: FlutterCommand@0
+    displayName: 'Generate Icons for Flutter Client'
+    inputs:
+      projectDirectory: 'tms-client'
+      arguments: 'pub run flutter_launcher_icons'
+
+  # Build for web platform
+  - task: FlutterBuild@0
+    displayName: "Build Flutter Web (NO CDN)"
+    condition: eq('${{ parameters.target }}', 'web')
+    inputs:
+      target: 'web'
+      projectDirectory: 'tms-client'
+      debugMode: false
+      profileMode: false
+      iosCodesign: false
+      extraArgs: '--release --no-web-resources-cdn --web-renderer canvaskit'
+
+      # build
+      buildName: ${{ parameters.buildVersion }}
+      buildNumber: $(Build.BuildNumber) # auto increment
+
+  # Build for native platforms
+  - task: FlutterBuild@0
+    displayName: "Build Flutter Web (NO CDN)"
+    condition: ne('${{ parameters.target }}', 'web')
+    inputs:
+      target: '${{ parameters.target }}'
+      projectDirectory: 'tms-client'
+      debugMode: false
+      profileMode: false
+      iosCodesign: false
+      extraArgs: '--release --no-web-resources-cdn --web-renderer canvaskit'
+
+      # build
+      buildName: ${{ parameters.buildVersion }}
+      buildNumber: $(Build.BuildNumber) # auto increment

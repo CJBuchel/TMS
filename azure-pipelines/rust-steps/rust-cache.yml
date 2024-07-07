@@ -26,7 +26,7 @@ steps:
     inputs:
       key: 'rust-toolchain | "$(Agent.OS)" | $(rustc -V)'
       restoreKeys: 'rust-toolchain | "$(Agent.OS)"'
-      path: $(rustupPath)/.rustup/toolchains
+      path: $(rustupPath)/toolchains
     displayName: 'Cache Rust Toolchain'
 
   # Cache Cargo build

@@ -9,10 +9,24 @@ steps:
   # Cache Flutter dependencies (not windows for now)
   - task: Cache@2
     displayName: 'Cache Flutter Dependencies'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
     inputs:
       key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
       restoreKeys: 'flutter-pub | "$(Agent.OS)"'
       path: $(pubCachePath)
+
+  # list out all the directory locations where pub cache could be
+  - powershell: |
+      dir $(pubCachePath)
+      dir $(UserProfile)
+      dir $(UserProfile)/AppData
+      dir $(UserProfile)/AppData/Local
+      dir $(UserProfile)/AppData/Local/Pub
+      dir $(Agent.ToolsDirectory)
+      dir $(Agent.TempDirectory)
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
+
+
 
   # Cache flutter build
   - task: Cache@2

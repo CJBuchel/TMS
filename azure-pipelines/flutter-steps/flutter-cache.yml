@@ -8,7 +8,7 @@ steps:
     inputs:
       key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
       restoreKeys: 'flutter-pub | "$(Agent.OS)"'
-      path: $(HOME)/.pub-cache
+      path: $(Pipeline.Workspace)/.pub-cache
 
   # Cache flutter build
   - task: Cache@2

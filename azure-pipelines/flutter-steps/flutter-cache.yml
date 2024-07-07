@@ -15,18 +15,6 @@ steps:
       restoreKeys: 'flutter-pub | "$(Agent.OS)"'
       path: $(pubCachePath)
 
-  # list out all the directory locations where pub cache could be
-  - powershell: |
-      dir $env:USERPROFILE
-      dir $env:USERPROFILE\AppData
-      dir $env:USERPROFILE\AppData\Local
-      dir $env:USERPROFILE\AppData\Local\Pub
-      dir $env:AGENT_TOOLSDIRECTORY
-      dir $env:AGENT_TEMPDIRECTORY
-    condition: eq(variables['Agent.OS'], 'Windows_NT')
-
-
-
   # Cache flutter build
   - task: Cache@2
     displayName: 'Cache Flutter Build'

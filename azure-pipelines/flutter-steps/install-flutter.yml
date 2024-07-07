@@ -16,3 +16,14 @@ steps:
     inputs:
       projectDirectory: 'tms-client'
       arguments: 'pub get'
+  
+  # list out all the directory locations where pub cache could be
+  - powershell: |
+      dir $env:AGENT_TOOLSDIRECTORY
+      dir $env:AGENT_TEMPDIRECTORY
+      dir $env:AGENT_WORKFOLDER
+      dir $env:USERPROFILE
+      dir $env:USERPROFILE\AppData
+      dir $env:USERPROFILE\AppData\Local
+      dir $env:USERPROFILE\AppData\Local\Pub
+    condition: eq(variables['Agent.OS'], 'Windows_NT')

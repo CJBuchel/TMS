@@ -19,9 +19,9 @@ steps:
   
   # list out all the directory locations where pub cache could be
   - powershell: |
-      dir $env:AGENT_TOOLSDIRECTORY
+      dir $env:AGENT_TOOLSDIRECTORY\Flutter
       dir $env:AGENT_TEMPDIRECTORY
-      dir $env:AGENT_WORKFOLDER
+      dir $env:AGENT_WORKFOLDER\_temp
       dir $env:USERPROFILE
       dir $env:USERPROFILE\AppData
       dir $env:USERPROFILE\AppData\Local

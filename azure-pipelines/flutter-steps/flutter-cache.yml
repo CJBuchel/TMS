@@ -6,10 +6,9 @@ parameters:
 # Caching for Flutter dependencies and build artifacts.
 #
 steps:
-  # Cache Flutter dependencies (not windows for now)
+  # Cache Flutter dependencies
   - task: Cache@2
     displayName: 'Cache Flutter Dependencies'
-    condition: ne(variables['Agent.OS'], 'Windows_NT')
     inputs:
       key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
       restoreKeys: 'flutter-pub | "$(Agent.OS)"'

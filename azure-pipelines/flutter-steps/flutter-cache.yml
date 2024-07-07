@@ -17,13 +17,12 @@ steps:
 
   # list out all the directory locations where pub cache could be
   - powershell: |
-      dir $(pubCachePath)
-      dir $(UserProfile)
-      dir $(UserProfile)/AppData
-      dir $(UserProfile)/AppData/Local
-      dir $(UserProfile)/AppData/Local/Pub
-      dir $(Agent.ToolsDirectory)
-      dir $(Agent.TempDirectory)
+      dir $env:USERPROFILE
+      dir $env:USERPROFILE\AppData
+      dir $env:USERPROFILE\AppData\Local
+      dir $env:USERPROFILE\AppData\Local\Pub
+      dir $env:AGENT_TOOLSDIRECTORY
+      dir $env:AGENT_TEMPDIRECTORY
     condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 

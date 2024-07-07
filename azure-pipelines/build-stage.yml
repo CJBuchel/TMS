@@ -50,7 +50,7 @@ jobs:
       - template: flutter-steps/build-web.yml
 
   - job: IosBuild
-    displayName: 'iOS Client Build'
+    displayName: 'iOS Client'
     pool:
       vmImage: 'macos-12'
     steps:

@@ -2,13 +2,23 @@
 # Caching for Flutter dependencies and build artifacts.
 #
 steps:
-  # Cache Flutter dependencies
+  # Cache Flutter dependencies (not windows)
   - task: Cache@2
     displayName: 'Cache Flutter Dependencies'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
     inputs:
       key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
       restoreKeys: 'flutter-pub | "$(Agent.OS)"'
       path: $(Pipeline.Workspace)/.pub-cache
+
+  # Cache Flutter dependencies (windows, has a different path)
+  - task: Cache@2
+    displayName: 'Cache Flutter Dependencies'
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
+    inputs:
+      key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock"'
+      restoreKeys: 'flutter-pub | "$(Agent.OS)"'
+      path: $(Agent.ToolsDirectory)\flutter\.pub-cache
 
   # Cache flutter build
   - task: Cache@2

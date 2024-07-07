@@ -2,6 +2,13 @@
 # Build release for each target
 #
 steps:
+  # generate icons for platforms
+  - task: FlutterCommand@0
+    displayName: 'Generate Icons for Flutter Client'
+    inputs:
+      projectDirectory: 'tms-client'
+      arguments: 'pub run flutter_launcher_icons'
+
   - task: FlutterBuild@0
     displayName: "Build Flutter Web (NO CDN)"
     inputs:

@@ -27,24 +27,24 @@ jobs:
       vmImage: 'windows-latest'
     steps:
       # Get rust cache if available
-      - template: rust-steps/rust-cache.yml
-        parameters:
-          cargoPath: $(UserProfile)\.cargo
-          rustupPath: $(UserProfile)\.rustup
+      # - template: rust-steps/rust-cache.yml
+      #   parameters:
+      #     cargoPath: $(UserProfile)\.cargo
+      #     rustupPath: $(UserProfile)\.rustup
       # Flutter cache
       - template: flutter-steps/flutter-cache.yml
         parameters:
-          pubCachePath: $(UserProfile)\AppData\Local\Pub\Cache
+          pubCachePath: $(UserProfile)\AppData\Local\Pub
       # Install requirements for rust & flutter
-      - template: rust-steps/install-rust.yml
+      # - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml
       # install wasm target and codegen
-      - template: rust-steps/install-wasm.yml
+      # - template: rust-steps/install-wasm.yml
       # install release targets
-      - template: rust-steps/install-release-targets.yml
+      # - template: rust-steps/install-release-targets.yml
       # Generate the Dart code from the Rust code
-      - template: rust-steps/generate-dart-code.yml
+      # - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
-      - template: rust-steps/build-release.yml
+      # - template: rust-steps/build-release.yml
       # build the Flutter web app
-      - template: flutter-steps/build-release.yml
+      # - template: flutter-steps/build-release.yml

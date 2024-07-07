@@ -1,6 +1,6 @@
 jobs:
   - job: LinuxBuild
-    displayName: 'Linux Build'
+    displayName: 'Linux Server'
     pool:
       vmImage: 'ubuntu-latest'
     steps:
@@ -11,7 +11,7 @@ jobs:
       - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml
       # install wasm target and codegen
-      - template: rust-steps/install-wasm.yml
+      - template: rust-steps/install-codegen.yml
       # install release targets
       - template: rust-steps/install-release-targets.yml
       # Generate the Dart code from the Rust code
@@ -19,10 +19,10 @@ jobs:
       # Build the Rust server
       - template: rust-steps/build-release.yml
       # build the Flutter web app
-      - template: flutter-steps/build-release.yml
+      - template: flutter-steps/build-web.yml
 
   - job: WindowsBuild
-    displayName: 'Windows Build'
+    displayName: 'Windows Server'
     pool:
       vmImage: 'windows-latest'
     steps:
@@ -39,7 +39,7 @@ jobs:
       - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml
       # install wasm target and codegen
-      - template: rust-steps/install-wasm.yml
+      - template: rust-steps/install-codegen.yml
       # install release targets
       - template: rust-steps/install-release-targets.yml
       # Generate the Dart code from the Rust code
@@ -47,4 +47,23 @@ jobs:
       # Build the Rust server
       - template: rust-steps/build-release.yml
       # build the Flutter web app
-      - template: flutter-steps/build-release.yml
+      - template: flutter-steps/build-web.yml
+
+  - job: IosBuild
+    displayName: 'iOS Client Build'
+    pool:
+      vmImage: 'macos-12'
+    steps:
+      # Get rust cache if available
+      - template: rust-steps/rust-cache.yml
+      # Flutter cache
+      - template: flutter-steps/flutter-cache.yml
+      # Install requirements for rust & flutter
+      - template: rust-steps/install-rust.yml
+      - template: flutter-steps/install-flutter.yml
+      # install wasm target and codegen
+      - template: rust-steps/install-codegen.yml
+      # Generate the Dart code from the Rust code
+      - template: rust-steps/generate-dart-code.yml
+      # build the Flutter web app
+      - template: flutter-steps/build-web.yml

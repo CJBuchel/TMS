@@ -10,7 +10,6 @@ steps:
       rustupCommandArguments: 'target add wasm32-unknown-unknown'
       verbose: false
 
-
   # Install wasm pack (check if already installed)
   - script: |
       if ! command -v wasm-pack &> /dev/null; then
@@ -20,7 +19,6 @@ steps:
         echo "wasm-pack is already installed"
       fi
     condition: ne(variables['Agent.OS'], 'Windows_NT')
-
     displayName: 'Install wasm-pack (Unix)'
 
   - powershell: |

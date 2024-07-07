@@ -2,7 +2,7 @@
 parameters:
   - name: pubCachePath
     type: string
-    default: $(Pipeline.Workspace)/.pub-cache
+    default: $(HOME)/.pub-cache
 #
 # Caching for Flutter dependencies and build artifacts.
 #

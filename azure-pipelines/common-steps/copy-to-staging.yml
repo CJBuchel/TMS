@@ -1,0 +1,14 @@
+parameters:
+  - name: sourcePath
+    type: string
+  - name: flattenFolders
+    type: boolean
+    default: false
+
+steps:
+  - task: CopyFiles@2
+    displayName: 'Copy ${{ sourcePath }} to staging directory'
+    inputs:
+      contents: '${{ sourcePath }}'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+      flattenFolders: ${{ parameters.flattenFolders }}

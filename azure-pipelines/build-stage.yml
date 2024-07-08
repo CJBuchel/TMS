@@ -94,3 +94,12 @@ jobs:
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'apk'
+      # Copy the APK to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: '**/flutter-apk/**/*.apk'
+          flattenFolders: true
+      # publish the APK as an artifact
+      - template: common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'android-apk'

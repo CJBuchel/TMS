@@ -17,7 +17,7 @@ parameters:
 
 steps:
   - task: ArchiveFiles@2
-    displayName: 'Archive ${{ artifactName }}'
+    displayName: 'Archive ${{ parameters.artifactName }}'
     condition: eq('${{ parameters.shouldArchive }}', true)
     inputs:
       rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
@@ -28,7 +28,7 @@ steps:
       archiveFile: ${{ parameters.archiveFile }}
 
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish ${{ artifactName }}'
+    displayName: 'Publish ${{ parameters.artifactName }}'
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: ${{ artifactName }}
+      ArtifactName: ${{ parameters.artifactName }}

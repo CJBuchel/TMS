@@ -18,10 +18,27 @@ jobs:
       - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
       - template: rust-steps/build-server.yml
+      # copy the server binary to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: '**/tms_server'
+          flattenFolders: true
       # build the Flutter web app
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'web'
+      # copy the web build to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: 'tms-client/build/web'
+      # publish
+      - template: common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'tms'
+          shouldArchive: true
+          archiveType: 'tar'
+          tarCompression: 'gz'
+          archiveFile: 'tms.tar.gz'
 
   - job: WindowsBuild
     displayName: 'Windows Server'
@@ -48,10 +65,26 @@ jobs:
       - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
       - template: rust-steps/build-server.yml
+      # copy the server binary to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: '**/tms_server.exe'
+          flattenFolders: true
       # build the Flutter web app
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'web'
+      # copy the web build to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: 'tms-client/build/web'
+      # publish
+      - template: common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'tms'
+          shouldArchive: true
+          archiveType: 'zip'
+          archiveFile: 'tms.zip'
 
   - job: IosBuild
     displayName: 'iOS Client'
@@ -73,6 +106,15 @@ jobs:
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'ios'
+      # Copy the iOS build to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: '**/*.ipa'
+          flattenFolders: true
+      # publish the IPA as an artifact
+      - template: common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'ios-ipa'
 
   - job: AndroidBuild
     displayName: 'Android Client'

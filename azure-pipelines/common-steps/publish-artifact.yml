@@ -8,6 +8,9 @@ parameters:
   - name: archiveType
     type: string
     default: 'zip'
+    values:
+      - 'zip'
+      - 'tar'
   - name: tarCompression
     type: string
     default: 'gz'

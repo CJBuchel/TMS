@@ -73,3 +73,24 @@ jobs:
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'ios'
+
+  - job: AndroidBuild
+    displayName: 'Android Client'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # Get rust cache if available
+      - template: rust-steps/rust-cache.yml
+      # Flutter cache
+      - template: flutter-steps/flutter-cache.yml
+      # Install requirements for rust & flutter
+      - template: rust-steps/install-rust.yml
+      - template: flutter-steps/install-flutter.yml
+      # install wasm target and codegen
+      - template: rust-steps/install-codegen.yml
+      # Generate the Dart code from the Rust code
+      - template: rust-steps/generate-dart-code.yml
+      # build the Flutter web app
+      - template: flutter-steps/build-client-target.yml
+        parameters:
+          target: 'apk'

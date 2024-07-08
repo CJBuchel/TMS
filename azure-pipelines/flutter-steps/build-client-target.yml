@@ -4,7 +4,7 @@ parameters:
     values:
       - 'ios'
       - 'web'
-      - 'android'
+      - 'apk'
       - 'macos'
       - 'linux'
       - 'windows'

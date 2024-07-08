@@ -12,29 +12,29 @@ parameters:
 steps:
   - task: Cache@2
     inputs:
-      key: 'cargo-registry | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(Build.JobId)'
-      restoreKeys: 'cargo-registry | "$(Agent.OS)" | $(Build.JobId)'
+      key: 'cargo-registry | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(System.JobName)'
+      restoreKeys: 'cargo-registry | "$(Agent.OS)" | $(System.JobName)'
       path: ${{ parameters.cargoPath }}/registry
     displayName: 'Cache Cargo Registry'
 
   - task: Cache@2
     inputs:
-      key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(Build.JobId)'
-      restoreKeys: 'cargo-bin | "$(Agent.OS)" | $(Build.JobId)'
+      key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(System.JobName)'
+      restoreKeys: 'cargo-bin | "$(Agent.OS)" | $(System.JobName)'
       path: ${{ parameters.cargoPath }}/bin
     displayName: 'Cache Cargo Bin'
 
   - task: Cache@2
     inputs:
-      key: 'rust-toolchain | "$(Agent.OS)" | $(rustc -V) | $(Build.JobId)'
-      restoreKeys: 'rust-toolchain | "$(Agent.OS)" | $(Build.JobId)'
+      key: 'rust-toolchain | "$(Agent.OS)" | $(rustc -V) | $(System.JobName)'
+      restoreKeys: 'rust-toolchain | "$(Agent.OS)" | $(System.JobName)'
       path: ${{ parameters.rustupPath }}/toolchains
     displayName: 'Cache Rust Toolchain'
 
   # Cache Cargo build
   - task: Cache@2
     inputs:
-      key: 'cargo-build | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(Build.JobId)'
-      restoreKeys: 'cargo-build | "$(Agent.OS)" | $(Build.JobId)'
+      key: 'cargo-build | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(System.JobName)'
+      restoreKeys: 'cargo-build | "$(Agent.OS)" | $(System.JobName)'
       path: $(Build.SourcesDirectory)/target
     displayName: 'Cache Cargo Build'

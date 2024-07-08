@@ -7,8 +7,8 @@ parameters:
 
 steps:
   - task: CopyFiles@2
-    displayName: 'Copy artifact to staging directory'
+    displayName: 'Copy ${{ parameters.sourcePath }} to staging directory'
     inputs:
-      contents: '${{ sourcePath }}'
+      contents: '${{ parameters.sourcePath }}'
       targetFolder: $(Build.ArtifactStagingDirectory)
       flattenFolders: ${{ parameters.flattenFolders }}

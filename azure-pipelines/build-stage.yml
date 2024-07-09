@@ -107,7 +107,7 @@ jobs:
       # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:
-          target: 'ipa'
+          target: 'ios'
       # Copy the iOS build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:

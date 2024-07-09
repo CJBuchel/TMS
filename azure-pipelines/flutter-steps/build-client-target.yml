@@ -16,7 +16,7 @@ parameters:
   
   - name: iosCodesign
     type: boolean
-    default: true
+    default: false
 
 #
 # Build release for each target

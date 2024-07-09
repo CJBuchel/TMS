@@ -5,6 +5,7 @@ parameters:
       - 'ios'
       - 'web'
       - 'apk'
+      - 'ipa'
       - 'macos'
       - 'linux'
       - 'windows'

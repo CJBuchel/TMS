@@ -2,6 +2,9 @@
 resources: 
 - repo: self
 
+variables:
+- group: 'apple-variables'
+
 stages:
 - stage: Build
   displayName: 'Generate & Build'

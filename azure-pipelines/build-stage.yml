@@ -23,7 +23,7 @@ jobs:
         parameters:
           sourcePath: '**/tms_server'
           flattenFolders: true
-      # build the Flutter web app
+      # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'web'
@@ -70,7 +70,7 @@ jobs:
         parameters:
           sourcePath: '**/tms_server.exe'
           flattenFolders: true
-      # build the Flutter web app
+      # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'web'
@@ -102,7 +102,9 @@ jobs:
       - template: rust-steps/install-codegen.yml
       # Generate the Dart code from the Rust code
       - template: rust-steps/generate-dart-code.yml
-      # build the Flutter web app
+      # install certs
+      - template: common-steps/install-apple-certs.yml
+      # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'ipa'
@@ -132,7 +134,7 @@ jobs:
       - template: rust-steps/install-codegen.yml
       # Generate the Dart code from the Rust code
       - template: rust-steps/generate-dart-code.yml
-      # build the Flutter web app
+      # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'apk'

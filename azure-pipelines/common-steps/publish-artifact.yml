@@ -29,9 +29,18 @@ steps:
       archiveType: ${{ parameters.archiveType }}
       tarCompression: ${{ parameters.tarCompression }}
       archiveFile: ${{ parameters.archiveFile }}
+  
+  # only publish the archive if it was created
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Archive ${{ parameters.artifactName }}'
+    condition: eq('${{ parameters.shouldArchive }}', true)
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}.*'
+      ArtifactName: ${{ parameters.artifactName }}
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish ${{ parameters.artifactName }}'
+    condition: ne('${{ parameters.shouldArchive }}', true)
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: ${{ parameters.artifactName }}

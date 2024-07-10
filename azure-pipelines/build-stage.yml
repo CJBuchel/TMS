@@ -30,7 +30,7 @@ jobs:
       # copy the web build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: 'tms-client/build/web'
+          sourcePath: 'tms-client/build/web/**'
       # publish
       - template: common-steps/publish-artifact.yml
         parameters:
@@ -77,7 +77,7 @@ jobs:
       # copy the web build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: 'tms-client/build/web'
+          sourcePath: 'tms-client/build/web/**'
       # publish
       - template: common-steps/publish-artifact.yml
         parameters:

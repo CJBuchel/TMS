@@ -3,18 +3,13 @@
 #
 steps:
   # run the codegen
-  - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root tms-infra --dart-output tms-client/lib/generated
+  - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root $(Build.SourcesDirectory)/tms-infra --dart-output $(Build.SourcesDirectory)/tms-client/lib/generated
     displayName: 'Run Rust to Dart Codegen'
   # run the wasm pre codegen
-  - script: wasm-pack build tms-infra --target no-modules --out-dir tms-client/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
+  - script: wasm-pack build $(Build.SourcesDirectory)/tms-infra --target no-modules --out-dir $(Build.SourcesDirectory)/tms-client/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
     displayName: 'Run Wasm Pre-Codegen'
   # run the wasm codegen
-  - script: (cd tms-client && dart run flutter_rust_bridge build-web --dart-root . --rust-root ../tms-infra)
-    displayName: 'Run Wasm Codegen (Unix)'
-    condition: ne(variables['Agent.OS'], 'Windows_NT')
-  # run the wasm codegen (windows)
-  - powershell: |
+  - script: |
       cd tms-client
-      dart run flutter_rust_bridge build-web --dart-root . --rust-root ..\tms-infra
+      dart run flutter_rust_bridge build-web --dart-root $(Build.SourcesDirectory)/tms-client --rust-root $(Build.SourcesDirectory)/tms-infra
     displayName: 'Run Wasm Codegen (Windows)'
-    condition: eq(variables['Agent.OS'], 'Windows_NT')

@@ -34,7 +34,7 @@ jobs:
       # publish
       - template: common-steps/publish-artifact.yml
         parameters:
-          artifactName: 'tms'
+          artifactName: 'tms-linux'
           shouldArchive: true
           archiveType: 'tar'
           tarCompression: 'gz'
@@ -81,7 +81,7 @@ jobs:
       # publish
       - template: common-steps/publish-artifact.yml
         parameters:
-          artifactName: 'tms'
+          artifactName: 'tms-windows'
           shouldArchive: true
           archiveType: 'zip'
           archiveFile: 'tms.zip'

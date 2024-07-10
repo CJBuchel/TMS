@@ -28,7 +28,7 @@ steps:
       replaceExistingArchive: true
       archiveType: ${{ parameters.archiveType }}
       tarCompression: ${{ parameters.tarCompression }}
-      archiveFile: ${{ parameters.archiveFile }}
+      archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish ${{ parameters.artifactName }}'

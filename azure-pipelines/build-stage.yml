@@ -23,6 +23,10 @@ jobs:
         parameters:
           sourcePath: '**/tms_server'
           flattenFolders: true
+      # copy log config to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: 'log_config/**'
       # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:
@@ -70,6 +74,10 @@ jobs:
         parameters:
           sourcePath: '**/tms_server.exe'
           flattenFolders: true
+      # copy log config to the staging directory
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: 'log_config/**'
       # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:

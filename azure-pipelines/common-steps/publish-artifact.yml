@@ -28,7 +28,7 @@ steps:
       replaceExistingArchive: true
       archiveType: ${{ parameters.archiveType }}
       tarCompression: ${{ parameters.tarCompression }}
-      archiveFile: ${{ parameters.archiveFile }}
+      archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
 
   # list dir only when it's linux
   - script: 'ls -la $(Build.ArtifactStagingDirectory)'
@@ -37,16 +37,16 @@ steps:
     condition: eq( variables['Agent.OS'], 'Linux')
   
   # only publish the archive if it was created
-  # - task: PublishBuildArtifacts@1
-  #   displayName: 'Publish Archive ${{ parameters.artifactName }}'
-  #   condition: eq('${{ parameters.shouldArchive }}', true)
-  #   inputs:
-  #     PathToPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
-  #     ArtifactName: ${{ parameters.artifactName }}
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Archive ${{ parameters.artifactName }}'
+    condition: eq('${{ parameters.shouldArchive }}', true)
+    inputs:
+      PathToPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
+      ArtifactName: ${{ parameters.artifactName }}
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish ${{ parameters.artifactName }}'
-    # condition: ne('${{ parameters.shouldArchive }}', true)
+    condition: ne('${{ parameters.shouldArchive }}', true)
     inputs:
       PathToPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: ${{ parameters.artifactName }}

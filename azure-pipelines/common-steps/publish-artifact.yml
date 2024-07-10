@@ -29,6 +29,12 @@ steps:
       archiveType: ${{ parameters.archiveType }}
       tarCompression: ${{ parameters.tarCompression }}
       archiveFile: ${{ parameters.archiveFile }}
+
+  # list dir only when it's linux
+  - script: 'ls -la $(Build.ArtifactStagingDirectory)'
+    displayName: 'List Archive Contents'
+    # condition when it's linux
+    condition: eq( variables['Agent.OS'], 'Linux')
   
   # only publish the archive if it was created
   - task: PublishBuildArtifacts@1

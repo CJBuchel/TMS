@@ -18,6 +18,12 @@ jobs:
       - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
       - template: rust-steps/build-server.yml
+      # build the Flutter app
+      - template: flutter-steps/build-client-target.yml
+        parameters:
+          target: 'web'
+
+      # copy and publish block
       # copy the server binary to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
@@ -27,10 +33,6 @@ jobs:
       - template: common-steps/copy-to-staging.yml
         parameters:
           sourcePath: 'log_config/**'
-      # build the Flutter app
-      - template: flutter-steps/build-client-target.yml
-        parameters:
-          target: 'web'
       # copy the web build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
@@ -69,6 +71,12 @@ jobs:
       - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
       - template: rust-steps/build-server.yml
+      # build the Flutter app
+      - template: flutter-steps/build-client-target.yml
+        parameters:
+          target: 'web'
+
+      # copy and publish block
       # copy the server binary to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
@@ -78,10 +86,6 @@ jobs:
       - template: common-steps/copy-to-staging.yml
         parameters:
           sourcePath: 'log_config/**'
-      # build the Flutter app
-      - template: flutter-steps/build-client-target.yml
-        parameters:
-          target: 'web'
       # copy the web build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
@@ -118,6 +122,8 @@ jobs:
           target: 'ios'
       # build the signed upa
       - template: apple-steps/build-signed-ipa.yml
+
+      # copy and publish block
       # Copy the iOS build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
@@ -148,6 +154,8 @@ jobs:
       - template: flutter-steps/build-client-target.yml
         parameters:
           target: 'apk'
+
+      # copy and publish block
       # Copy the APK to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:

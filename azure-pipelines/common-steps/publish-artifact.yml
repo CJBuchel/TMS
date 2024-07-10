@@ -35,12 +35,12 @@ steps:
     displayName: 'Publish Archive ${{ parameters.artifactName }}'
     condition: eq('${{ parameters.shouldArchive }}', true)
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
+      PathToPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
       ArtifactName: ${{ parameters.artifactName }}
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish ${{ parameters.artifactName }}'
     condition: ne('${{ parameters.shouldArchive }}', true)
     inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)'
+      PathToPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: ${{ parameters.artifactName }}

@@ -44,16 +44,6 @@ steps:
       # build
       buildName: ${{ parameters.buildVersion }}
       buildNumber: $(Build.BuildNumber) # auto increment
-  
-  # list files in web dir
-  - script: dir tms-client/build/web
-    displayName: 'List files in web directory'
-    condition: eq('${{ parameters.target }}', 'web')
-
-  # list files in web dir
-  - script: dir tms-client/web
-    displayName: 'List files in web directory'
-    condition: eq('${{ parameters.target }}', 'web')
 
   # Build for native platforms
   - task: FlutterBuild@0

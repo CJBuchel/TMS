@@ -4,8 +4,13 @@ resources:
 
 variables:
 - group: 'apple-variables'
+- template: vars.yml
 
 stages:
+- stage: Env
+  displayName: 'Setup Environment'
+  jobs:
+    - template: azure-pipelines/env-stage.yml
 - stage: Build
   displayName: 'Generate & Build'
   jobs:

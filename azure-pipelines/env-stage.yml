@@ -7,7 +7,7 @@ jobs:
       # Create env file
       - script: |
           echo 'Creating .env file'
-          echo '$(tms_version)' > .env
+          echo 'TMS_VERSION=$(tms_version)' > .env
           cat .env
       # Copy to staging
       - template: common-steps/copy-to-staging.yml

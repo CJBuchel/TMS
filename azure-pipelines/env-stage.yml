@@ -9,6 +9,18 @@ jobs:
           echo 'Creating .env file'
           echo 'TMS_VERSION=$(tms_version)' > .env
           cat .env
+      # replace version in pubspec.yaml
+      - bash: |
+          version_number="$(tms_version)"
+          build_number=$(echo "$(Build.BuildNumber)" | awk -F. '{print $NF}') # Extracts the last number after the dot
+          sed -i "s/version: [0-9]\+\.[0-9]\+\.[0-9]\++[0-9]\+/version: $version_number+$build_number/" tms-client/pubspec.yaml
+          cat tms-client/pubspec.yaml
+        displayName: 'Update version in pubspec.yaml'
+      # copy yaml to staging
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: 'tms-client/pubspec.yaml'
+          flattenFolders: true
       # Copy to staging
       - template: common-steps/copy-to-staging.yml
         parameters:
@@ -17,4 +29,4 @@ jobs:
       # Publish artifact
       - template: common-steps/publish-artifact.yml
         parameters:
-          artifactName: 'env-file'
+          artifactName: 'env-files'

@@ -1,7 +1,7 @@
 name: tms
 description: "Tournament Management System Client, for scoring and managing FLL events"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+1
+version: 0.0.0+0 # this is replaced in azure pipelines during release
 
 environment:
   sdk: '>=3.3.1 <4.0.0'

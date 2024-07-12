@@ -4,6 +4,8 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+      # pre build steps
+      - template: common-steps/get-env-files.yml
       # Get cache if available
       - template: rust-steps/rust-cache.yml
       - template: flutter-steps/flutter-cache.yml
@@ -51,6 +53,8 @@ jobs:
     pool:
       vmImage: 'windows-latest'
     steps:
+      # pre build steps
+      - template: common-steps/get-env-files.yml
       # Get rust cache if available
       - template: rust-steps/rust-cache.yml
         parameters:
@@ -103,6 +107,8 @@ jobs:
     pool:
       vmImage: 'macos-12'
     steps:
+      # pre build steps
+      - template: common-steps/get-env-files.yml
       # Get rust cache if available
       - template: rust-steps/rust-cache.yml
       # Flutter cache
@@ -139,6 +145,8 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+      # pre build steps
+      - template: common-steps/get-env-files.yml
       # Get rust cache if available
       - template: rust-steps/rust-cache.yml
       # Flutter cache

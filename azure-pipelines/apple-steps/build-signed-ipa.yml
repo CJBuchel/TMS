@@ -1,4 +1,17 @@
 steps:
+  - script: |
+      echo Mac OS version:
+      sw_vers -productVersion
+      echo Installed Xcode versions:
+      ls /Applications | grep 'Xcode'
+      echo currently selected xcode:
+      xcrun xcode-select --print-path
+      echo selecting latest xcode...
+      sudo xcode-select -s /Applications/Xcode_15.2.app
+      xcrun xcode-select --print-path
+      xcodebuild -version
+    displayName: 'Select Xcode Version'
+
   - task: Xcode@5
     displayName: "Generate IPA"
     inputs:

@@ -1,28 +1,23 @@
 
 resources: 
-- repo: self
+  - repo: self
 
 variables:
-- group: 'apple-variables'
-- template: vars.yml
+  - group: 'apple-variables'
+  - template: vars.yml
 
 stages:
-- stage: Env
-  displayName: 'Setup Environment'
-  jobs:
-    - template: azure-pipelines/env-stage.yml
-- stage: Build
-  displayName: 'Generate & Build'
-  jobs:
-    - template: azure-pipelines/build-stage.yml
-- stage: Release
-  dependsOn: Build
-  # add condition later
-  displayName: 'Release & Publish'
-  jobs:
-    - template: azure-pipelines/release-stage.yml
-
-
-# - stage: Build
-# - stage: Test
-# - stage: Release
+  - stage: Env
+    displayName: 'Setup Environment'
+    jobs:
+      - template: azure-pipelines/env-stage.yml
+  - stage: Build
+    displayName: 'Generate & Build'
+    jobs:
+      - template: azure-pipelines/build-stage.yml
+  - stage: Release
+    dependsOn: Build
+    # add condition later
+    displayName: 'Release & Publish'
+    jobs:
+      - template: azure-pipelines/release-stage.yml

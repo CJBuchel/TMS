@@ -4,16 +4,18 @@
 steps:
   # Download all the artifacts
   - task: DownloadBuildArtifacts@1
+    displayName: 'Download Build Artifacts'
     inputs:
       downloadPath: '$(System.ArtifactsDirectory)'
       buildType: 'current'
       downloadType: 'all'
 
-  # - script: |
-  #     python generate_release_notes.py $(version)
-  #   displayName: 'Generate Release Notes'
+  - script: |
+      python generate_release_notes.py $(version)
+    displayName: 'Generate Release Notes'
 
   - task: GitHubRelease@1
+    displayName: 'Create GitHub Release'
     inputs:
       gitHubConnection: 'github.com_CJBuchel'
       repositoryName: '$(Build.Repository.Name)'
@@ -26,9 +28,9 @@ steps:
       isPreRelease: false
 
       # change logs
-      addChangeLog: false
-      # releaseNotesSource: 'filePath'
-      # releaseNotesFilePath: 'RELEASE_NOTES.md'
+      addChangeLog: false # we are using release notes with change log instead
+      releaseNotesSource: 'filePath'
+      releaseNotesFilePath: 'RELEASE_NOTES.md'
       assets: |
         $(System.ArtifactsDirectory)/**/*.zip
         $(System.ArtifactsDirectory)/**/*.tar.gz

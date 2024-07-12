@@ -1,3 +1,8 @@
+# azure pipelines
+!azure-pipelines.yml
+!azure-pipelines/**
+RELEASE_NOTES.md
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

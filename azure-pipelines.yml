@@ -16,6 +16,7 @@ stages:
   jobs:
     - template: azure-pipelines/build-stage.yml
 - stage: Release
+  dependsOn: Build
   # add condition later
   displayName: 'Release & Publish'
   jobs:

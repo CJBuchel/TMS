@@ -5,4 +5,11 @@ jobs:
       vmImage: 'ubuntu-latest'
     steps:
       # Release to github
-      - template: github-steps/publish-artifacts-to-github.yml
+      - template: github-steps/publish-all-to-github.yml
+  - job: iOSRelease
+    displayName: 'Publish to TestFlight'
+    pool:
+      vmImage: 'macOS-latest'
+    steps:
+      # Release to test flight
+      - template: apple-steps/publish-to-testflight.yml

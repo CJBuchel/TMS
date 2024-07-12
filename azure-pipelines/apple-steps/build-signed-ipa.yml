@@ -15,6 +15,9 @@ steps:
   - task: Xcode@5
     displayName: "Generate IPA"
     inputs:
+      # xcode version 15
+      xcodeVersion: '15'
+
       # build options
       actions: 'build'
       xcWorkspacePath: '$(Build.SourcesDirectory)/tms-client/ios/Runner.xcworkspace'

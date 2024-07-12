@@ -12,14 +12,14 @@ parameters:
 steps:
   - task: Cache@2
     inputs:
-      key: 'cargo-registry | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.toml | $(Agent.JobName)'
+      key: 'cargo-registry | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(Agent.JobName)'
       restoreKeys: 'cargo-registry | "$(Agent.OS)" | $(Agent.JobName)'
       path: ${{ parameters.cargoPath }}/registry
     displayName: 'Cache Cargo Registry'
 
   - task: Cache@2
     inputs:
-      key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.toml | $(Agent.JobName)'
+      key: 'cargo-bin | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(Agent.JobName)'
       restoreKeys: 'cargo-bin | "$(Agent.OS)" | $(Agent.JobName)'
       path: ${{ parameters.cargoPath }}/bin
     displayName: 'Cache Cargo Bin'
@@ -34,7 +34,7 @@ steps:
   # Cache Cargo build
   - task: Cache@2
     inputs:
-      key: 'cargo-build | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.toml | $(Agent.JobName)'
+      key: 'cargo-build | "$(Agent.OS)" | $(Build.SourcesDirectory)/Cargo.lock | $(Agent.JobName)'
       restoreKeys: 'cargo-build | "$(Agent.OS)" | $(Agent.JobName)'
       path: $(Build.SourcesDirectory)/target
     displayName: 'Cache Cargo Build'

@@ -1,0 +1,8 @@
+jobs:
+  - job: GithubRelease
+    displayName: 'Publish to Github'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # Release to github
+      - template: github-steps/publish-artifacts-to-github.yml

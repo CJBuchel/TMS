@@ -15,6 +15,11 @@ stages:
   displayName: 'Generate & Build'
   jobs:
     - template: azure-pipelines/build-stage.yml
+- stage: Release
+  # add condition later
+  displayName: 'Release & Publish'
+  jobs:
+    - template: azure-pipelines/release-stage.yml
 
 
 # - stage: Build

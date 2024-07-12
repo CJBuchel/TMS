@@ -16,6 +16,13 @@ steps:
       rustupCommand: '+nightly'
       rustupCommandArguments: 'component add rust-src'
       verbose: false
+  # add rustfmt for codegen
+  - task: Rustup@1
+    displayName: 'Add rustfmt for codegen'
+    inputs:
+      rustupCommand: '+nightly'
+      rustupCommandArguments: 'component add rustfmt'
+      verbose: false
   # rustup default to nightly for codegen (needed for wasm)
   - task: Rustup@1
     displayName: 'Set default toolchain to nightly'

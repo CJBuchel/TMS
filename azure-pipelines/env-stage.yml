@@ -9,6 +9,7 @@ jobs:
           echo 'Creating .env file'
           echo 'TMS_VERSION=$(tms_version)' > .env
           cat .env
+        displayName: 'Create .env file'
       # replace version in pubspec.yaml
       - bash: |
           version_number="$(tms_version)"

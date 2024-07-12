@@ -13,6 +13,7 @@ steps:
       SourceFolder: '$(Pipeline.Workspace)/env-files'
       Contents: '.env'
       TargetFolder: '$(Pipeline.Workspace)/tms-client'
+      OverWrite: true
   # copy .env to root
   - task: CopyFiles@2
     displayName: 'Copy .env to workspace'
@@ -20,6 +21,7 @@ steps:
       SourceFolder: '$(Pipeline.Workspace)/env-files'
       Contents: '.env'
       TargetFolder: '$(Pipeline.Workspace)'
+      OverWrite: true
   # copy and replace pubspec.yaml
   - task: CopyFiles@2
     displayName: 'Copy pubspec.yaml to tms-client'
@@ -27,3 +29,4 @@ steps:
       SourceFolder: '$(Pipeline.Workspace)/env-files'
       Contents: 'pubspec.yaml'
       TargetFolder: '$(Pipeline.Workspace)/tms-client'
+      OverWrite: true

@@ -22,11 +22,3 @@ steps:
       Contents: '.env'
       TargetFolder: '$(Pipeline.Workspace)'
       OverWrite: true
-  # copy and replace pubspec.yaml
-  - task: CopyFiles@2
-    displayName: 'Copy pubspec.yaml to tms-client'
-    inputs:
-      SourceFolder: '$(Pipeline.Workspace)/env-files'
-      Contents: 'pubspec.yaml'
-      TargetFolder: '$(Pipeline.Workspace)/tms-client'
-      OverWrite: true

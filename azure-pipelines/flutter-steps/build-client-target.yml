@@ -12,7 +12,7 @@ parameters:
   
   - name: buildVersion
     type: string
-    default: '1.0.0'
+    default: '$(tms_version)'
   
   - name: iosCodesign
     type: boolean

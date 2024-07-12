@@ -109,6 +109,10 @@ jobs:
     steps:
       # pre build steps
       - template: common-steps/get-env-files.yml
+      # print out contents of pubpsec.yaml
+      - script: |
+          cat tms-client/pubspec.yaml
+        displayName: 'Print pubspec.yaml'
       # Get rust cache if available
       - template: rust-steps/rust-cache.yml
       # Flutter cache

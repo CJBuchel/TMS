@@ -11,9 +11,5 @@ jobs:
     pool:
       vmImage: 'macOS-latest'
     steps:
-      # print out contents of pubpsec.yaml
-      - script: |
-          cat tms-client/pubspec.yaml
-        displayName: 'Print pubspec.yaml'
       # Release to test flight
       - template: apple-steps/publish-to-testflight.yml

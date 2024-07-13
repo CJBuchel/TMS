@@ -1,4 +1,3 @@
-
 resources: 
   - repo: self
 
@@ -7,14 +6,20 @@ variables:
   - template: vars.yml
 
 stages:
+  # Environment setup
   - stage: Env
     displayName: 'Setup Environment'
     jobs:
       - template: azure-pipelines/env-stage.yml
+
+  # Build Stage
   - stage: Build
+    dependsOn: Env
     displayName: 'Generate & Build'
     jobs:
       - template: azure-pipelines/build-stage.yml
+
+  # Release Stage
   - stage: Release
     dependsOn: Build
     # add condition later

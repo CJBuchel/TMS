@@ -105,7 +105,7 @@ jobs:
   - job: IosBuild
     displayName: 'iOS Client'
     pool:
-      vmImage: 'macos-14'
+      vmImage: 'macos-14' # macos-latest isn't always latest (we need xcode 15)
     steps:
       # pre build steps
       - template: common-steps/get-env-files.yml

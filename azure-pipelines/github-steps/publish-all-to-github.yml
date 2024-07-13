@@ -26,7 +26,7 @@ steps:
       # change logs
       addChangeLog: false # we are using release notes with change log instead
       releaseNotesSource: 'filePath'
-      releaseNotesFilePath: 'RELEASE_NOTES.md'
+      releaseNotesFilePath: 'release-notes/RELEASE_NOTES.md'
       assets: |
         $(System.ArtifactsDirectory)/**/*.zip
         $(System.ArtifactsDirectory)/**/*.tar.gz

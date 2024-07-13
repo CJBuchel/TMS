@@ -105,7 +105,7 @@ jobs:
   - job: IosBuild
     displayName: 'iOS Client'
     pool:
-      vmImage: 'macos-latest'
+      vmImage: 'macos-14'
     steps:
       # pre build steps
       - template: common-steps/get-env-files.yml

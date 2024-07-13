@@ -6,11 +6,9 @@ steps:
       ls /Applications | grep 'Xcode'
       echo currently selected xcode:
       xcrun xcode-select --print-path
-      echo selecting latest xcode...
-      sudo xcode-select -s /Applications/Xcode_15.2.app
       xcrun xcode-select --print-path
       xcodebuild -version
-    displayName: 'Select Xcode Version'
+    displayName: 'Check Xcode Versions'
 
   - task: Xcode@5
     displayName: "Generate IPA"

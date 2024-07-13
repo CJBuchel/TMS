@@ -4,6 +4,8 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+      # get repo artifact
+      - template: common-steps/get-repo-artifact.yml
       # pre build steps
       - template: common-steps/get-env-files.yml
       # Get cache if available
@@ -12,12 +14,8 @@ jobs:
       # Install requirements for rust & flutter
       - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml
-      # install wasm target and codegen
-      - template: rust-steps/install-codegen.yml
       # install release targets
       - template: rust-steps/install-release-targets.yml
-      # Generate the Dart code from the Rust code
-      - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
       - template: rust-steps/build-server.yml
       # build the Flutter app
@@ -53,6 +51,8 @@ jobs:
     pool:
       vmImage: 'windows-latest'
     steps:
+      # get repo artifact
+      - template: common-steps/get-repo-artifact.yml
       # pre build steps
       - template: common-steps/get-env-files.yml
       # Get rust cache if available
@@ -67,12 +67,8 @@ jobs:
       # Install requirements for rust & flutter
       - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml
-      # install wasm target and codegen
-      - template: rust-steps/install-codegen.yml
       # install release targets
       - template: rust-steps/install-release-targets.yml
-      # Generate the Dart code from the Rust code
-      - template: rust-steps/generate-dart-code.yml
       # Build the Rust server
       - template: rust-steps/build-server.yml
       # build the Flutter app
@@ -107,6 +103,8 @@ jobs:
     pool:
       vmImage: 'macos-14' # macos-latest isn't always latest (we need xcode 15)
     steps:
+      # get repo artifact
+      - template: common-steps/get-repo-artifact.yml
       # pre build steps
       - template: common-steps/get-env-files.yml
       # print out contents of pubpsec.yaml
@@ -120,10 +118,6 @@ jobs:
       # Install requirements for rust & flutter
       - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml
-      # install wasm target and codegen
-      - template: rust-steps/install-codegen.yml
-      # Generate the Dart code from the Rust code
-      - template: rust-steps/generate-dart-code.yml
       # install certs
       - template: apple-steps/install-apple-certs.yml
       # build the Flutter app
@@ -149,6 +143,8 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+      # get repo artifact
+      - template: common-steps/get-repo-artifact.yml
       # pre build steps
       - template: common-steps/get-env-files.yml
       # Get rust cache if available
@@ -158,10 +154,6 @@ jobs:
       # Install requirements for rust & flutter
       - template: rust-steps/install-rust.yml
       - template: flutter-steps/install-flutter.yml
-      # install wasm target and codegen
-      - template: rust-steps/install-codegen.yml
-      # Generate the Dart code from the Rust code
-      - template: rust-steps/generate-dart-code.yml
       # build the Flutter app
       - template: flutter-steps/build-client-target.yml
         parameters:

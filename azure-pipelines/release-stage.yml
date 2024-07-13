@@ -1,7 +1,7 @@
 jobs:
   # Deploy artifacts to Github
   - deployment: DeployGithub
-    displayName: 'Deploy TMS'
+    displayName: 'Deploy to Github'
     pool:
       vmImage: 'ubuntu-latest'
     environment: 'tms-prod'

@@ -1,20 +1,32 @@
+trigger:
+- master
+- ci-cd
+
 resources: 
   - repo: self
 
 variables:
   - group: 'apple-variables'
   - template: vars.yml
+  - name: 'isProd'
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/ci-cd'))]
 
 stages:
   # Environment setup
-  - stage: Env
-    displayName: 'Setup Environment'
+  - stage: Setup
+    displayName: 'Setup & Environment'
     jobs:
-      - template: azure-pipelines/env-stage.yml
+      - template: azure-pipelines/setup-stage.yml
+
+  - stage: Infra
+    dependsOn: Setup
+    displayName: 'Generate Infrastructure'
+    jobs:
+      - template: azure-pipelines/infra-stage.yml
 
   # Build Stage
   - stage: Build
-    dependsOn: Env
+    dependsOn: Infra
     displayName: 'Generate & Build'
     jobs:
       - template: azure-pipelines/build-stage.yml
@@ -22,7 +34,7 @@ stages:
   # Release Stage
   - stage: Release
     dependsOn: Build
-    # add condition later
+    condition: and(succeeded(), eq(variables['isProd'], true))
     displayName: 'Release & Publish'
     jobs:
       - template: azure-pipelines/release-stage.yml

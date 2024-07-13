@@ -1,0 +1,11 @@
+#
+# Instead of checking out the repository, we download the repository artifact
+#
+steps:
+  - checkout: none # disable automatic checkout
+  # download the artifact
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Repo Artifact'
+    inputs:
+      artifact: 'repo-artifact'
+      targetPath: '$(Build.SourcesDirectory)'

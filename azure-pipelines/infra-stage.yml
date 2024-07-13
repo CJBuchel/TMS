@@ -1,0 +1,25 @@
+jobs:
+  - job: Infra
+    displayName: 'Generate Infrastructure'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # pre build steps
+      - template: common-steps/get-env-files.yml
+      # Get cache if available
+      - template: rust-steps/rust-cache.yml
+      # Install requirements for rust
+      - template: rust-steps/install-rust.yml
+      # install wasm target and codegen
+      - template: rust-steps/install-codegen.yml
+      # Generate the Dart code from the Rust code
+      - template: rust-steps/generate-dart-code.yml
+      # Copy to staging
+      - template: common-steps/copy-to-staging.yml
+        parameters:
+          sourcePath: '$(Build.SourcesDirectory)' # Path to the entire repository
+          flattenFolders: false
+      # Publish artifact
+      - template: common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'repo-artifact'

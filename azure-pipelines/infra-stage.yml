@@ -21,7 +21,7 @@ jobs:
       # Copy to staging
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: '$(Build.SourcesDirectory)/**' # Path to the entire repository
+          sourcePath: '$(Build.SourcesDirectory)/**, !target/**' # Path to the entire repository (except target)
           flattenFolders: false
       # Publish artifact
       - template: common-steps/publish-artifact.yml

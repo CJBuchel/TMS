@@ -10,10 +10,6 @@ steps:
       buildType: 'current'
       downloadType: 'all'
 
-  - script: |
-      python generate_release_notes.py $(tms_version)
-    displayName: 'Generate Release Notes'
-
   - task: GitHubRelease@1
     displayName: 'Create GitHub Release'
     inputs:

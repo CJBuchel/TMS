@@ -4,12 +4,12 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-      # pre build steps
-      - template: common-steps/get-env-files.yml
       # Get cache if available
       - template: rust-steps/rust-cache.yml
-      # Install requirements for rust
+      - template: flutter-steps/flutter-cache.yml
+      # Install requirements for rust & flutter
       - template: rust-steps/install-rust.yml
+      - template: flutter-steps/install-flutter.yml
       # install wasm target and codegen
       - template: rust-steps/install-codegen.yml
       # Generate the Dart code from the Rust code

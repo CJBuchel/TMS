@@ -1,7 +1,6 @@
 parameters:
   - name: sourcePath
     type: string
-    default: '$(Build.SourcesDirectory)'
   - name: contents
     type: string
     default: '**'

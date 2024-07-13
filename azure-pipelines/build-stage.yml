@@ -27,16 +27,16 @@ jobs:
       # copy the server binary to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: '**/tms_server'
+          contents: '**/tms_server'
           flattenFolders: true
       # copy log config to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: 'log_config/**'
+          contents: 'log_config/**'
       # copy the web build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: 'tms-client/build/web/**'
+          contents: 'tms-client/build/web/**'
       # publish
       - template: common-steps/publish-artifact.yml
         parameters:
@@ -80,16 +80,16 @@ jobs:
       # copy the server binary to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: '**/tms_server.exe'
+          contents: '**/tms_server.exe'
           flattenFolders: true
       # copy log config to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: 'log_config/**'
+          contents: 'log_config/**'
       # copy the web build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: 'tms-client/build/web/**'
+          contents: 'tms-client/build/web/**'
       # publish
       - template: common-steps/publish-artifact.yml
         parameters:
@@ -131,7 +131,7 @@ jobs:
       # Copy the iOS build to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: '**/*.ipa'
+          contents: '**/*.ipa'
           flattenFolders: true
       # publish the IPA as an artifact
       - template: common-steps/publish-artifact.yml
@@ -163,7 +163,7 @@ jobs:
       # Copy the APK to the staging directory
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: '**/flutter-apk/**/*.apk'
+          contents: '**/flutter-apk/**/*.apk'
           flattenFolders: true
       # publish the APK as an artifact
       - template: common-steps/publish-artifact.yml

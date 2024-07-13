@@ -21,7 +21,6 @@ jobs:
       # Copy to staging
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: '$(Build.SourcesDirectory)/**'
           contents: | # grab everything except build dirs
             **
             !tms-client/build/**

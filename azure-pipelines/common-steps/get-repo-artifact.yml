@@ -5,7 +5,7 @@ steps:
   - checkout: none # disable automatic checkout
   # download the artifact
   - task: DownloadPipelineArtifact@2
-    displayName: 'Download Repo Artifact'
+    displayName: 'Download Repo'
     inputs:
       artifact: 'repo-artifact'
       targetPath: '$(Build.SourcesDirectory)'

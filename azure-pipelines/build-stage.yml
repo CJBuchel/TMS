@@ -107,16 +107,9 @@ jobs:
       - template: common-steps/get-repo-artifact.yml
       # pre build steps
       - template: common-steps/get-env-files.yml
-      # print out contents of pubpsec.yaml
-      - script: |
-          cat tms-client/pubspec.yaml
-        displayName: 'Print pubspec.yaml'
-      # Get rust cache if available
-      - template: rust-steps/rust-cache.yml
       # Flutter cache
       - template: flutter-steps/flutter-cache.yml
-      # Install requirements for rust & flutter
-      - template: rust-steps/install-rust.yml
+      # Install requirements for flutter
       - template: flutter-steps/install-flutter.yml
       # install certs
       - template: apple-steps/install-apple-certs.yml
@@ -147,12 +140,9 @@ jobs:
       - template: common-steps/get-repo-artifact.yml
       # pre build steps
       - template: common-steps/get-env-files.yml
-      # Get rust cache if available
-      - template: rust-steps/rust-cache.yml
       # Flutter cache
       - template: flutter-steps/flutter-cache.yml
-      # Install requirements for rust & flutter
-      - template: rust-steps/install-rust.yml
+      # Install requirements for flutter
       - template: flutter-steps/install-flutter.yml
       # build the Flutter app
       - template: flutter-steps/build-client-target.yml

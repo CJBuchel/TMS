@@ -1,21 +1,7 @@
 steps:
-  - script: |
-      echo Mac OS version:
-      sw_vers -productVersion
-      echo Installed Xcode versions:
-      ls /Applications | grep 'Xcode'
-      echo currently selected xcode:
-      xcrun xcode-select --print-path
-      xcrun xcode-select --print-path
-      xcodebuild -version
-    displayName: 'Check Xcode Versions'
-
   - task: Xcode@5
     displayName: "Generate IPA"
     inputs:
-      # xcode version 15
-      xcodeVersion: '15'
-
       # build options
       actions: 'build'
       xcWorkspacePath: '$(Build.SourcesDirectory)/tms-client/ios/Runner.xcworkspace'

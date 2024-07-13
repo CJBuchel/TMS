@@ -7,8 +7,12 @@ jobs:
       # Get cache if available
       - template: rust-steps/rust-cache.yml
       - template: flutter-steps/flutter-cache.yml
+        parameters:
+          cacheBuild: false # we're not building the app here
       # Install requirements for rust & flutter
       - template: rust-steps/install-rust.yml
+        parameters:
+          rustToolchain: 'nightly'
       - template: flutter-steps/install-flutter.yml
       # install wasm target and codegen
       - template: rust-steps/install-codegen.yml

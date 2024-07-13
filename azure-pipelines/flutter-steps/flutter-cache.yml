@@ -1,8 +1,10 @@
-
 parameters:
   - name: pubCachePath
     type: string
     default: $(HOME)/.pub-cache
+  - name: cacheBuild
+    type: boolean
+    default: true
 #
 # Caching for Flutter dependencies and build artifacts.
 #
@@ -18,6 +20,7 @@ steps:
   # Cache flutter build
   - task: Cache@2
     displayName: 'Cache Flutter Build'
+    condition: ${{ parameters.cacheBuild }}
     inputs:
       key: 'flutter-build | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock" | $(Agent.JobName)'
       restoreKeys: 'flutter-build | "$(Agent.OS)" | $(Agent.JobName)'

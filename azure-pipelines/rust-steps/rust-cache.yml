@@ -5,6 +5,9 @@ parameters:
   - name: rustupPath
     type: string
     default: $(HOME)/.rustup
+  - name: cacheBuild
+    type: boolean
+    default: true
 
 # 
 # Caching for Rust dependencies and build artifacts.

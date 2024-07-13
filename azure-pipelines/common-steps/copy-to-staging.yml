@@ -1,6 +1,9 @@
 parameters:
   - name: sourcePath
     type: string
+  - name: contents
+    type: string
+    default: '**'
   - name: flattenFolders
     type: boolean
     default: false

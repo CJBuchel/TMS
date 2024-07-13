@@ -21,7 +21,11 @@ jobs:
       # Copy to staging
       - template: common-steps/copy-to-staging.yml
         parameters:
-          sourcePath: '$(Build.SourcesDirectory)/**, !target/**' # Path to the entire repository (except target)
+          sourcePath: '$(Build.SourcesDirectory)/**'
+          contents: | # grab everything except build dirs
+            **
+            !tms-client/build/**
+            !**/target/**
           flattenFolders: false
       # Publish artifact
       - template: common-steps/publish-artifact.yml

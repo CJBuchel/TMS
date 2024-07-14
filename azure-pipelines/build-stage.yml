@@ -1,4 +1,14 @@
 jobs:
+  - job: DockerBuild
+    displayName: 'Docker Image'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # docker build template
+      - template: templates/server-build-template.yml
+      # run docker build
+      - template: templates/steps/docker-steps/build-docker-image.yml
+
   - job: LinuxBuild
     displayName: 'Linux Server'
     pool:
@@ -47,7 +57,7 @@ jobs:
       # publish artifacts template
       - template: templates/client-artifact-template.yml
         parameters:
-          clientBinaryPath: '***/*.ipa'
+          clientBinaryPath: '**/*.ipa'
           artifactName: 'ios-ipa'
 
   - job: AndroidBuild

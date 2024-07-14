@@ -36,7 +36,7 @@ steps:
   # Install requirements for flutter
   - template: steps/flutter-steps/install-flutter.yml
   # install certs
-  - ${{ if eq(parameters.installAppleCerts, true) }}:
+  - ${{ if eq(parameters.buildIpa, true) }}:
     - template: steps/apple-steps/install-apple-certs.yml
   # build the Flutter app
   - template: steps/flutter-steps/build-client-target.yml

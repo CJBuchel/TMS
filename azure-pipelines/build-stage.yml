@@ -11,7 +11,7 @@ jobs:
       # create tarball and publish
       - template: templates/steps/docker-steps/save-image-tar.yml
         parameters:
-          dockerFileName: 'docker-image.tar'
+          dockerFile: 'docker-image.tar'
       # copy to staging
       - template: templates/steps/common-steps/copy-to-staging.yml
         parameters:

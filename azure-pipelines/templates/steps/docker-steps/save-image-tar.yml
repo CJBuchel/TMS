@@ -1,5 +1,5 @@
 parameters:
-  - name: dockerFileName
+  - name: dockerFile
     type: string
 
 steps:

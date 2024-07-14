@@ -4,5 +4,5 @@ parameters:
 
 steps:
   - script: |
-      docker save -o $(Pipeline.Workspace)/${{ parameters.dockerFileName }} $(dockerRepository):latest
+      docker save -o $(Pipeline.Workspace)/${{ parameters.dockerFile }} $(dockerRepository):latest
     displayName: 'Save Docker Image'

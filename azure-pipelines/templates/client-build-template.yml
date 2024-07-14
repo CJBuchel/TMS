@@ -36,8 +36,8 @@ steps:
   # Install requirements for flutter
   - template: steps/flutter-steps/install-flutter.yml
   # install certs
-  - template: steps/apple-steps/install-apple-certs.yml
-    condition: ${{ parameters.installAppleCerts }}
+  - ${{ if eq(parameters.installAppleCerts, true) }}:
+    - template: steps/apple-steps/install-apple-certs.yml
   # build the Flutter app
   - template: steps/flutter-steps/build-client-target.yml
     parameters:
@@ -45,5 +45,5 @@ steps:
       buildVersion: ${{ parameters.flutterBuildVersion }}
       iosCodesign: ${{ parameters.flutterIosCodesign }}
   # build the signed ipa
-  - template: steps/apple-steps/build-signed-ipa.yml
-    condition: ${{ parameters.buildIpa }}
+  - ${{ if eq(parameters.buildIpa, true) }}:
+    - template: steps/apple-steps/build-signed-ipa.yml

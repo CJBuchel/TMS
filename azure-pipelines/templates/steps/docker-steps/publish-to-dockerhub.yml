@@ -33,5 +33,5 @@ steps:
       repository: $(dockerRepository)
       containerRegistry: $(dockerRegistryServiceConnection)
       tags: |
-        $(version)
+        $(tms_version)
         latest

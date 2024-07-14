@@ -43,7 +43,7 @@ steps:
 
       # build
       buildName: ${{ parameters.buildVersion }}
-      buildNumber: '$(Build.BuildNumber)$(Build.BuildId)'
+      buildNumber: $(Build.BuildNumber)
 
   # Build for native platforms
   - task: FlutterBuild@0

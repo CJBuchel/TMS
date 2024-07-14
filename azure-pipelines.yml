@@ -2,6 +2,9 @@ trigger:
 - master
 - ci-cd
 
+# custom build number, (previous was 20240714.2) we want (202407142)
+name: $(Date:yyyyMMdd)$(Rev:r)
+
 resources: 
   - repo: self
 

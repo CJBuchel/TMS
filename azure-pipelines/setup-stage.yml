@@ -7,6 +7,7 @@ jobs:
     steps:
       # Create env file
       - script: |
+          echo 'Build: $(Build.BuildNumber)'
           echo 'Creating .env file'
           echo 'TMS_VERSION=$(tms_version)' > .env
           cat .env

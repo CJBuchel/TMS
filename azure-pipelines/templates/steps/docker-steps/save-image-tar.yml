@@ -1,0 +1,8 @@
+parameters:
+  - name: dockerFileName
+    type: string
+
+steps:
+  - script: |
+      docker save -o $(Pipeline.Workspace)/${{ parameters.dockerFileName }} $(dockerRepository):latest
+    displayName: 'Save Docker Image'

@@ -1,0 +1,12 @@
+steps:
+  # download the artifact
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Docker Image'
+    inputs:
+      artifact: 'docker-image'
+      targetPath: '$(Pipeline.Workspace)/docker-image'
+  
+  # load docker image from tarball
+  - script: |
+      docker load -i $(Pipeline.Workspace)/docker-image/docker_image.tar
+    displayName: 'Load Docker Image'

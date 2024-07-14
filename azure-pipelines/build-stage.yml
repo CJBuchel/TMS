@@ -9,9 +9,14 @@ jobs:
       # run docker build
       - template: templates/steps/docker-steps/build-docker-image.yml
       # create tarball and publish
-      - script: |
-          docker save -o $(Build.ArtifactStagingDirectory)/docker_image.tar $(dockerRepository):latest
-        displayName: 'Save Docker Image'
+      - template: templates/steps/docker-steps/save-image-tar.yml
+        parameters:
+          dockerFileName: 'docker-image.tar'
+      # copy to staging
+      - template: templates/steps/common-steps/copy-to-staging.yml
+        parameters:
+          contents: '$(Pipeline.Workspace)/docker-image.tar'
+          flattenFolders: true
       # publish artifact
       - template: templates/steps/common-steps/publish-artifact.yml
         parameters:

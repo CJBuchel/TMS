@@ -24,14 +24,14 @@ jobs:
             # Release to test flight
             - template: templates/steps/apple-steps/publish-to-testflight.yml
   # Deploy to DockerHub
-  # - deployment: DeployDocker
-  #   displayName: 'Deploy to DockerHub'
-  #   pool:
-  #     vmImage: 'ubuntu-latest'
-  #   environment: 'tms-prod'
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #           # Release to dockerhub
-  #           - template: templates/steps/docker-steps/publish-to-dockerhub.yml
+  - deployment: DeployDocker
+    displayName: 'Deploy to DockerHub'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'tms-prod'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            # Release to dockerhub
+            - template: templates/steps/docker-steps/publish-to-dockerhub.yml

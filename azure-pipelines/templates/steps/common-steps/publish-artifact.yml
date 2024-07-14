@@ -30,8 +30,8 @@ steps:
         tarCompression: ${{ parameters.tarCompression }}
         archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
   
+  # only publish the archive if it was created
   - ${{ if eq(parameters.shouldArchive, true) }}:
-    # only publish the archive if it was created
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Archive ${{ parameters.artifactName }}'
       inputs:

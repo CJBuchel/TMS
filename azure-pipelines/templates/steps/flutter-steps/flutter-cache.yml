@@ -18,10 +18,10 @@ steps:
       path: ${{ parameters.pubCachePath }}
 
   # Cache flutter build
-  - task: Cache@2
-    displayName: 'Cache Flutter Build'
-    condition: ${{ parameters.cacheBuild }}
-    inputs:
-      key: 'flutter-build | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock" | $(Agent.JobName)'
-      restoreKeys: 'flutter-build | "$(Agent.OS)" | $(Agent.JobName)'
-      path: $(Build.SourcesDirectory)/tms-client/build
+  - ${{ if eq(parameters.cacheBuild, true) }}:
+    - task: Cache@2
+      displayName: 'Cache Flutter Build'
+      inputs:
+        key: 'flutter-build | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock" | $(Agent.JobName)'
+        restoreKeys: 'flutter-build | "$(Agent.OS)" | $(Agent.JobName)'
+        path: $(Build.SourcesDirectory)/tms-client/build

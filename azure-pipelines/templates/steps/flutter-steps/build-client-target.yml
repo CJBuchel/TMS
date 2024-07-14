@@ -30,33 +30,33 @@ steps:
       arguments: 'pub run flutter_launcher_icons'
 
   # Build for web platform
-  - task: FlutterBuild@0
-    displayName: "Build Flutter Web (NO CDN)"
-    condition: eq('${{ parameters.target }}', 'web')
-    inputs:
-      target: 'web'
-      projectDirectory: 'tms-client'
-      debugMode: false
-      profileMode: false
-      iosCodesign: false
-      extraArgs: '--release --no-web-resources-cdn --web-renderer canvaskit'
+  - ${{ if eq(parameters.target, 'web') }}:
+    - task: FlutterBuild@0
+      displayName: "Build Flutter Web (NO CDN)"
+      inputs:
+        target: 'web'
+        projectDirectory: 'tms-client'
+        debugMode: false
+        profileMode: false
+        iosCodesign: false
+        extraArgs: '--release --no-web-resources-cdn --web-renderer canvaskit'
 
-      # build
-      buildName: ${{ parameters.buildVersion }}
-      buildNumber: $(Build.BuildNumber)
+        # build
+        buildName: ${{ parameters.buildVersion }}
+        buildNumber: $(Build.BuildNumber)
 
   # Build for native platforms
-  - task: FlutterBuild@0
-    displayName: "Build Flutter ${{ parameters.target }}"
-    condition: ne('${{ parameters.target }}', 'web')
-    inputs:
-      target: '${{ parameters.target }}'
-      projectDirectory: 'tms-client'
-      debugMode: false
-      profileMode: false
-      iosCodesign: ${{ parameters.iosCodesign }}
-      extraArgs: '--release'
+  - ${{ if ne(parameters.target, 'web') }}:
+    - task: FlutterBuild@0
+      displayName: "Build Flutter ${{ parameters.target }}"
+      inputs:
+        target: '${{ parameters.target }}'
+        projectDirectory: 'tms-client'
+        debugMode: false
+        profileMode: false
+        iosCodesign: ${{ parameters.iosCodesign }}
+        extraArgs: '--release'
 
-      # build
-      buildName: ${{ parameters.buildVersion }}
-      buildNumber: $(Build.BuildNumber) # auto increment
+        # build
+        buildName: ${{ parameters.buildVersion }}
+        buildNumber: $(Build.BuildNumber) # auto increment

@@ -39,9 +39,10 @@ stages:
       - template: azure-pipelines/build-stage.yml
 
   # Release Stage
-  - stage: Release
-    dependsOn: Build
-    condition: and(succeeded(), eq(variables['isProd'], true))
-    displayName: 'Release'
-    jobs:
-      - template: azure-pipelines/release-stage.yml
+  - ${{ if eq(variables['isProd'], true) }}:
+    - stage: Release
+      dependsOn: Build
+      condition: succeeded()
+      displayName: 'Release'
+      jobs:
+        - template: azure-pipelines/release-stage.yml

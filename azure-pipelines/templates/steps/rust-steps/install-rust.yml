@@ -11,13 +11,13 @@ parameters:
 
 steps:
   # install nightly toolchain
-  - task: Rustup@1
-    displayName: 'Install nightly toolchain'
-    condition: eq(variables['rustToolchain'], 'nightly')
-    inputs:
-      rustupCommand: 'toolchain'
-      rustupCommandArguments: 'install nightly'
-      verbose: false
+  - ${{ if eq(parameters.rustToolchain, 'nightly') }}:
+    - task: Rustup@1
+      displayName: 'Install nightly toolchain'
+      inputs:
+        rustupCommand: 'toolchain'
+        rustupCommandArguments: 'install nightly'
+        verbose: false
   # add rust-src for codegen
   - task: Rustup@1
     displayName: 'Add rust-src for codegen'
@@ -40,9 +40,9 @@ steps:
       rustupCommandArguments: '${{ parameters.rustToolchain }}'
       verbose: false
   # install nasm for windows
-  - task: ChocolateyCommand@0
-    displayName: 'Install nasm for windows'
-    condition: eq(variables['Agent.OS'], 'Windows_NT')
-    inputs:
-      command: 'install'
-      installPackageId: 'nasm'
+  - ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+    - task: ChocolateyCommand@0
+      displayName: 'Install nasm for windows'
+      inputs:
+        command: 'install'
+        installPackageId: 'nasm'

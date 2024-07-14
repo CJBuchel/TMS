@@ -8,6 +8,14 @@ jobs:
       - template: templates/server-build-template.yml
       # run docker build
       - template: templates/steps/docker-steps/build-docker-image.yml
+      # create tarball and publish
+      - script: |
+          docker save -o $(Build.ArtifactStagingDirectory)/docker_image.tar $(dockerRepository):latest
+        displayName: 'Save Docker Image'
+      # publish artifact
+      - template: templates/steps/common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'docker-image'
 
   - job: LinuxBuild
     displayName: 'Linux Server'

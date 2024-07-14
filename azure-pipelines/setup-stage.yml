@@ -22,7 +22,7 @@ jobs:
           artifactName: 'env-files'
   # create the release notes
   - job: ReleaseNotes
-    displayName: 'Generate Release Notes'
+    displayName: 'Create Release Notes'
     pool:
       vmImage: 'ubuntu-latest'
     steps:

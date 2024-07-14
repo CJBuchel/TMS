@@ -27,7 +27,7 @@ stages:
   # Build Stage
   - stage: Build
     dependsOn: Infra
-    displayName: 'Generate & Build'
+    displayName: 'Build'
     jobs:
       - template: azure-pipelines/build-stage.yml
 
@@ -35,6 +35,6 @@ stages:
   - stage: Release
     dependsOn: Build
     condition: and(succeeded(), eq(variables['isProd'], true))
-    displayName: 'Release & Publish'
+    displayName: 'Release'
     jobs:
       - template: azure-pipelines/release-stage.yml

@@ -12,11 +12,7 @@ jobs:
       - template: templates/steps/docker-steps/save-image-tar.yml
         parameters:
           dockerFile: 'docker-image.tar'
-      # copy to staging
-      - template: templates/steps/common-steps/copy-to-staging.yml
-        parameters:
-          contents: '$(Pipeline.Workspace)/docker-image.tar'
-          flattenFolders: true
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
       # publish artifact
       - template: templates/steps/common-steps/publish-artifact.yml
         parameters:

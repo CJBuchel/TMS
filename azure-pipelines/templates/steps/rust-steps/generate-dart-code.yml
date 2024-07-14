@@ -12,4 +12,4 @@ steps:
   - script: |
       cd tms-client
       dart run flutter_rust_bridge build-web --dart-root $(Build.SourcesDirectory)/tms-client --rust-root $(Build.SourcesDirectory)/tms-infra
-    displayName: 'Run Wasm Codegen (Windows)'
+    displayName: 'Run Wasm Codegen'

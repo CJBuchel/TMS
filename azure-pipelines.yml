@@ -13,6 +13,13 @@ variables:
   - template: vars.yml
   - name: 'isProd'
     value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/ci-cd'))]
+  - name: dockerRepository
+    value: 'cjbuchel/tms'
+  - name: dockerfilePath
+    value: '**/Dockerfile'
+  - name: dockerRegistryServiceConnection
+    value: 'CJBuchel-Dockerhub1'
+
 
 stages:
   # Environment setup

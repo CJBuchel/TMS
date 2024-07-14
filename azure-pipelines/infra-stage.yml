@@ -5,21 +5,21 @@ jobs:
       vmImage: 'ubuntu-latest'
     steps:
       # Get cache if available
-      - template: rust-steps/rust-cache.yml
-      - template: flutter-steps/flutter-cache.yml
+      - template: templates/steps/rust-steps/rust-cache.yml
+      - template: templates/steps/flutter-steps/flutter-cache.yml
         parameters:
           cacheBuild: false # we're not building the app here
       # Install requirements for rust & flutter
-      - template: rust-steps/install-rust.yml
+      - template: templates/steps/rust-steps/install-rust.yml
         parameters:
           rustToolchain: 'nightly'
-      - template: flutter-steps/install-flutter.yml
+      - template: templates/steps/flutter-steps/install-flutter.yml
       # install wasm target and codegen
-      - template: rust-steps/install-codegen.yml
+      - template: templates/steps/rust-steps/install-codegen.yml
       # Generate the Dart code from the Rust code
-      - template: rust-steps/generate-dart-code.yml
+      - template: templates/steps/rust-steps/generate-dart-code.yml
       # Copy to staging
-      - template: common-steps/copy-to-staging.yml
+      - template: templates/steps/common-steps/copy-to-staging.yml
         parameters:
           contents: | # grab everything except build dirs
             **
@@ -27,6 +27,6 @@ jobs:
             !**/target/**
           flattenFolders: false
       # Publish artifact
-      - template: common-steps/publish-artifact.yml
+      - template: templates/steps/common-steps/publish-artifact.yml
         parameters:
           artifactName: 'repo-artifact'

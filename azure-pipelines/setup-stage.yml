@@ -7,18 +7,17 @@ jobs:
     steps:
       # Create env file
       - script: |
-          echo 'Build: $(Build.BuildNumber)'
           echo 'Creating .env file'
           echo 'TMS_VERSION=$(tms_version)' > .env
           cat .env
         displayName: 'Generate .env file'
       # Copy to staging
-      - template: common-steps/copy-to-staging.yml
+      - template: templates/steps/common-steps/copy-to-staging.yml
         parameters:
           contents: '.env'
           flattenFolders: true
       # Publish artifact
-      - template: common-steps/publish-artifact.yml
+      - template: templates/steps/common-steps/publish-artifact.yml
         parameters:
           artifactName: 'env-files'
   # create the release notes
@@ -31,11 +30,11 @@ jobs:
           python generate_release_notes.py $(tms_version)
         displayName: 'Generate Release Notes'
       # Copy to staging
-      - template: common-steps/copy-to-staging.yml
+      - template: templates/steps/common-steps/copy-to-staging.yml
         parameters:
           contents: 'RELEASE_NOTES.md'
           flattenFolders: true
       # Publish artifact
-      - template: common-steps/publish-artifact.yml
+      - template: templates/steps/common-steps/publish-artifact.yml
         parameters:
           artifactName: 'release-notes'

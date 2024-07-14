@@ -10,7 +10,7 @@ jobs:
         deploy:
           steps:
             # Release to github
-            - template: github-steps/publish-all-to-github.yml
+            - template: templates/steps/github-steps/publish-all-to-github.yml
   # Deploy iOS app to TestFlight
   - deployment: DeployTestFlight
     displayName: 'Deploy to TestFlight'
@@ -22,4 +22,16 @@ jobs:
         deploy:
           steps:
             # Release to test flight
-            - template: apple-steps/publish-to-testflight.yml
+            - template: templates/steps/apple-steps/publish-to-testflight.yml
+  # Deploy to DockerHub
+  # - deployment: DeployDocker
+  #   displayName: 'Deploy to DockerHub'
+  #   pool:
+  #     vmImage: 'ubuntu-latest'
+  #   environment: 'tms-prod'
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #           # Release to dockerhub
+  #           - template: templates/steps/docker-steps/publish-to-dockerhub.yml

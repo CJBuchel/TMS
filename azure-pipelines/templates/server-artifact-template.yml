@@ -1,0 +1,43 @@
+parameters:
+  - name: serverBinaryPath
+    type: string
+
+  - name: artifactName
+    type: string
+
+  - name: archiveType
+    type: string
+
+  - name: tarCompression
+    type: string
+    default: 'gz'
+
+  - name: archiveFile
+    type: string
+
+
+steps:
+  # copy server binary to staging
+  - template: steps/common-steps/copy-to-staging.yml
+    parameters:
+      contents: ${{ parameters.serverBinaryPath }}
+      flattenFolders: true
+  
+  # copy log config to the staging directory (don't flatten)
+  - template: steps/common-steps/copy-to-staging.yml
+    parameters:
+      contents: 'log_config/**'
+  
+  # copy the web build to the staging directory (don't flatten)
+  - template: steps/common-steps/copy-to-staging.yml
+    parameters:
+      contents: 'tms-client/build/web/**'
+  
+  # publish the artifact
+  - template: steps/common-steps/publish-artifact.yml
+    parameters:
+      artifactName: ${{ parameters.artifactName }}
+      shouldArchive: true
+      archiveType: ${{ parameters.archiveType }}
+      tarCompression: ${{ parameters.tarCompression }}
+      archiveFile: ${{ parameters.archiveFile }}

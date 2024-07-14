@@ -1,0 +1,53 @@
+#
+# Install requirements for wasm & codegen
+#
+steps:
+  # add wasm target for web codegen
+  - task: Rustup@1
+    displayName: 'Add wasm target for web codegen'
+    inputs:
+      rustupCommand: '+nightly'
+      rustupCommandArguments: 'target add wasm32-unknown-unknown'
+      verbose: false
+
+  # Install wasm pack (check if already installed)
+  - ${{ if ne(variables['Agent.OS'], 'Windows_NT') }}:
+    - script: |
+        if ! command -v wasm-pack &> /dev/null; then
+          echo "Installing wasm-pack"
+          cargo install wasm-pack
+        else
+          echo "wasm-pack is already installed"
+        fi
+      displayName: 'Install wasm-pack (Unix)'
+
+  - ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+    - powershell: |
+        if (-not (Get-Command wasm-pack -ErrorAction SilentlyContinue)) {
+          Write-Output "Installing wasm-pack"
+          cargo install wasm-pack
+        } else {
+          Write-Output "wasm-pack is already installed"
+        }
+      displayName: 'Install wasm-pack (Windows)'
+
+  # install FRB (cargo task uses manifest, using script instead)
+  - ${{ if ne(variables['Agent.OS'], 'Windows_NT') }}:
+    - script: |
+        if ! command -v flutter_rust_bridge_codegen &> /dev/null; then
+          echo "Installing FRB"
+          cargo install flutter_rust_bridge_codegen
+        else
+          echo "FRB already installed"
+        fi
+      displayName: 'Install FRB (Unix)'
+
+  - ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+    - powershell: |
+        if (-not (Get-Command flutter_rust_bridge_codegen -ErrorAction SilentlyContinue)) {
+          Write-Output "Installing FRB"
+          cargo install flutter_rust_bridge_codegen
+        } else {
+          Write-Output "FRB already installed"
+        }
+      displayName: 'Install FRB (Windows)'

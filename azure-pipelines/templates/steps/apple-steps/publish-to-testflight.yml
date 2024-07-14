@@ -1,0 +1,22 @@
+#
+# Publish the iOS app to TestFlight
+#
+steps:
+  # download the artifact
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download IPA Artifact'
+    inputs:
+      artifact: 'ios-ipa'
+      targetPath: '$(Pipeline.Workspace)/ios-ipa'
+
+  # release to TestFlight
+  - task: AppStoreRelease@1
+    displayName: 'Publish to TestFlight'
+    inputs:
+      serviceEndpoint: 'App Store Connect'
+      releaseTrack: 'TestFlight'
+      appIdentifier: 'a.loose.screw.tms'
+      appType: 'iOS'
+      shouldSubmitForReview: true
+      shouldAutoRelease: true
+      ipaPath: '$(Pipeline.Workspace)/**/*.ipa'

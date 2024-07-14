@@ -1,0 +1,49 @@
+parameters:
+  - name: pubCachePath
+    type: string
+    default: $(HOME)/.pub-cache
+  - name: cacheFlutterBuild
+    type: boolean
+    default: true
+  # apple params
+  - name: installAppleCerts
+    type: boolean
+    default: false
+  # build params
+  - name: flutterTarget
+    type: string
+    default: 'ios'
+  - name: flutterBuildVersion
+    type: string
+    default: '$(tms_version)'
+  - name: flutterIosCodesign
+    type: boolean
+    default: false
+  - name: buildIpa
+    type: boolean
+    default: false
+
+steps:
+  # get repo artifact
+  - template: steps/common-steps/get-repo-artifact.yml
+  # pre build steps
+  - template: steps/common-steps/get-env-files.yml
+  # cache tasks
+  - template: steps/flutter-steps/flutter-cache.yml
+    parameters:
+      pubCachePath: ${{ parameters.pubCachePath }}
+      cacheBuild: ${{ parameters.cacheFlutterBuild }}
+  # Install requirements for flutter
+  - template: steps/flutter-steps/install-flutter.yml
+  # install certs
+  - ${{ if eq(parameters.buildIpa, true) }}:
+    - template: steps/apple-steps/install-apple-certs.yml
+  # build the Flutter app
+  - template: steps/flutter-steps/build-client-target.yml
+    parameters:
+      target: ${{ parameters.flutterTarget }}
+      buildVersion: ${{ parameters.flutterBuildVersion }}
+      iosCodesign: ${{ parameters.flutterIosCodesign }}
+  # build the signed ipa
+  - ${{ if eq(parameters.buildIpa, true) }}:
+    - template: steps/apple-steps/build-signed-ipa.yml

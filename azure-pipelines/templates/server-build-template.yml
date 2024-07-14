@@ -1,0 +1,63 @@
+parameters:
+  # rust cache params
+  - name: cargoPath
+    type: string
+    default: $(HOME)/.cargo
+  - name: rustupPath
+    type: string
+    default: $(HOME)/.rustup
+  - name: cacheRustBuild
+    type: boolean
+    default: true
+
+  # flutter cache params
+  - name: pubCachePath
+    type: string
+    default: $(HOME)/.pub-cache
+  - name: cacheFlutterBuild
+    type: boolean
+    default: true
+  
+  # rust install params
+  - name: rustToolchain
+    type: string
+    default: 'stable'
+
+  # flutter build params
+  - name: flutterBuildVersion
+    type: string
+    default: '$(tms_version)'
+  - name: flutterIosCodesign
+    type: boolean
+    default: false
+
+steps:
+  # get repo artifact
+  - template: steps/common-steps/get-repo-artifact.yml
+  # pre build steps
+  - template: steps/common-steps/get-env-files.yml
+  # cache tasks
+  - template: steps/rust-steps/rust-cache.yml
+    parameters:
+      cargoPath: ${{ parameters.cargoPath }}
+      rustupPath: ${{ parameters.rustupPath }}
+      cacheBuild: ${{ parameters.cacheRustBuild }}
+  - template: steps/flutter-steps/flutter-cache.yml
+    parameters:
+      pubCachePath: ${{ parameters.pubCachePath }}
+      cacheBuild: ${{ parameters.cacheFlutterBuild }}
+  # Install requirements for rust & flutter
+  - template: steps/rust-steps/install-rust.yml
+    parameters:
+      rustToolchain: ${{ parameters.rustToolchain }}
+  - template: steps/flutter-steps/install-flutter.yml
+  # install release targets
+  - template: steps/rust-steps/install-release-targets.yml
+  # Build the Rust server
+  - template: steps/rust-steps/build-server.yml
+  # build the Flutter app
+  - template: steps/flutter-steps/build-client-target.yml
+    parameters:
+      target: 'web'
+      buildVersion: ${{ parameters.flutterBuildVersion }}
+      iosCodesign: ${{ parameters.flutterIosCodesign }}

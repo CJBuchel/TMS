@@ -1,0 +1,48 @@
+#
+# Install requirements for rust (rust base task is already installed)
+#
+parameters:
+  - name: rustToolchain
+    type: string
+    default: 'stable'
+    values:
+      - 'stable'
+      - 'nightly'
+
+steps:
+  # install nightly toolchain
+  - ${{ if eq(parameters.rustToolchain, 'nightly') }}:
+    - task: Rustup@1
+      displayName: 'Install nightly toolchain'
+      inputs:
+        rustupCommand: 'toolchain'
+        rustupCommandArguments: 'install nightly'
+        verbose: false
+  # add rust-src for codegen
+  - task: Rustup@1
+    displayName: 'Add rust-src for codegen'
+    inputs:
+      rustupCommand: '+${{ parameters.rustToolchain }}'
+      rustupCommandArguments: 'component add rust-src'
+      verbose: false
+  # add rustfmt for codegen
+  - task: Rustup@1
+    displayName: 'Add rustfmt for codegen'
+    inputs:
+      rustupCommand: '+${{ parameters.rustToolchain }}'
+      rustupCommandArguments: 'component add rustfmt'
+      verbose: false
+  # rustup default to nightly for codegen (needed for wasm)
+  - task: Rustup@1
+    displayName: 'Set default toolchain to ${{ parameters.rustToolchain }}'
+    inputs:
+      rustupCommand: 'default'
+      rustupCommandArguments: '${{ parameters.rustToolchain }}'
+      verbose: false
+  # install nasm for windows
+  - ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
+    - task: ChocolateyCommand@0
+      displayName: 'Install nasm for windows'
+      inputs:
+        command: 'install'
+        installPackageId: 'nasm'

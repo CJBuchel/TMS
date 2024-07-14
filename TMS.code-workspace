@@ -34,9 +34,6 @@
 		}
 	],
 	"settings": {
-		// "files.exclude": {
-		// 	"**/android": true,
-		// },
 		"search.exclude": {
 			"**/android": true,
 		},
@@ -47,6 +44,5 @@
 		"cSpell.words": [
 			"tmsapplicationscheme"
 		],
-		"circleci.persistedProjectSelection": []
 	}
 }

@@ -8,5 +8,5 @@ members = [
   "tms-server",
 ]
 
-[patch.crates-io]
-warp = { git = "https://github.com/CJBuchel/warp.git" }
+# [patch.crates-io]
+# warp = { git = "https://github.com/CJBuchel/warp.git" }

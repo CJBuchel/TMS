@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:tms/widgets/app_bar/actions/connection_action.dart';
+import 'package:tms/widgets/app_bar/actions/settings_action.dart';
 import 'package:tms/widgets/app_bar/leading.dart';
 import 'package:tms/widgets/app_bar/actions/login_action.dart';
 import 'package:tms/widgets/app_bar/actions/theme_action.dart';
@@ -23,7 +23,7 @@ class TmsAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.more_vert),
           itemBuilder: (context) => [
             const PopupMenuItem(child: TmsAppBarThemeAction()),
-            PopupMenuItem(child: TmsAppBarConnectionAction(state: state)),
+            PopupMenuItem(child: TmsAppBarSettingsAction(state: state)),
             PopupMenuItem(child: TmsAppBarLoginAction(state: state)),
           ],
         ),
@@ -31,7 +31,7 @@ class TmsAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else {
       return [
         const TmsAppBarThemeAction(),
-        TmsAppBarConnectionAction(state: state),
+        TmsAppBarSettingsAction(state: state),
         TmsAppBarLoginAction(state: state),
       ];
     }

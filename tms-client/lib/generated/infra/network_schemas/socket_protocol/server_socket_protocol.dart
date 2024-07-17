@@ -6,36 +6,51 @@
 import '../../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `default`, `default`, `default`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `default`, `default`, `default`
 
-class TmsServerMatchLoadEvent {
+enum TmsServerMatchState {
+  running,
+  ready,
+  load,
+  unload,
+  ;
+}
+
+class TmsServerMatchStateEvent {
+  final TmsServerMatchState state;
+  final List<(String, bool)> gameMatchTables;
   final List<String> gameMatchNumbers;
 
-  const TmsServerMatchLoadEvent({
+  const TmsServerMatchStateEvent({
+    required this.state,
+    required this.gameMatchTables,
     required this.gameMatchNumbers,
   });
 
-  static TmsServerMatchLoadEvent fromJsonString({required String json}) =>
+  static TmsServerMatchStateEvent fromJsonString({required String json}) =>
       TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonString(
+          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonString(
               json: json);
 
   String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonString(
+          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonString(
         that: this,
       );
 
   static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchema();
+      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchema();
 
   @override
-  int get hashCode => gameMatchNumbers.hashCode;
+  int get hashCode =>
+      state.hashCode ^ gameMatchTables.hashCode ^ gameMatchNumbers.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TmsServerMatchLoadEvent &&
+      other is TmsServerMatchStateEvent &&
           runtimeType == other.runtimeType &&
+          state == other.state &&
+          gameMatchTables == other.gameMatchTables &&
           gameMatchNumbers == other.gameMatchNumbers;
 }
 
@@ -79,8 +94,7 @@ enum TmsServerSocketEvent {
   matchTimerEndEvent,
   matchTimerStopEvent,
   matchTimerReloadEvent,
-  matchLoadEvent,
-  matchUnloadEvent,
+  matchStateEvent,
   ;
 }
 

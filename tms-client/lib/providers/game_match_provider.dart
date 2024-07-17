@@ -41,26 +41,41 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
     Network().innerNetworkStates().$2.notifier.addListener(_networkListener);
     Network().innerNetworkStates().$3.notifier.addListener(_networkListener);
 
-    subscribeToEvent(TmsServerSocketEvent.matchLoadEvent, (event) {
+    subscribeToEvent(TmsServerSocketEvent.matchStateEvent, (event) {
       if (event.message != null) {
         try {
-          TmsServerMatchLoadEvent matchLoadEvent = TmsServerMatchLoadEvent.fromJsonString(json: event.message!);
-          _loadedMatchNumbers = matchLoadEvent.gameMatchNumbers;
+          TmsServerMatchStateEvent matchStateEvent = TmsServerMatchStateEvent.fromJsonString(json: event.message!);
+          switch (matchStateEvent.state) {
+            // stage 1
+            case TmsServerMatchState.unload:
+              _loadedMatchNumbers = [];
+              _isMatchesReady = false;
+              break;
+            // stage 2
+            case TmsServerMatchState.load:
+              _loadedMatchNumbers = matchStateEvent.gameMatchNumbers;
+              _isMatchesReady = false;
+              break;
+            // stage 3
+            case TmsServerMatchState.ready:
+              _loadedMatchNumbers = matchStateEvent.gameMatchNumbers;
+              _isMatchesReady = true;
+              break;
+            // stage 4
+            case TmsServerMatchState.running:
+              _loadedMatchNumbers = matchStateEvent.gameMatchNumbers;
+              break;
+            default:
+              TmsLogger().e("Unknown match state event: ${matchStateEvent.state}");
+              break;
+          }
+          _loadedMatchNumbers = matchStateEvent.gameMatchNumbers;
           notifyListeners();
         } catch (e) {
           TmsLogger().e("Error parsing match load event: $e");
         }
       } else {
         TmsLogger().e("Error parsing match load event: message is null");
-      }
-    });
-
-    subscribeToEvent(TmsServerSocketEvent.matchUnloadEvent, (event) {
-      try {
-        _loadedMatchNumbers = [];
-        notifyListeners();
-      } catch (e) {
-        TmsLogger().e("Error parsing match unload event: $e");
       }
     });
   }
@@ -133,7 +148,6 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
   //
   // -- Load/Unload Matches --
   //
-
   List<String> _loadedMatchNumbers = [];
 
   bool isMatchLoaded(String matchNumber) {
@@ -145,7 +159,7 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
   }
 
   bool get canUnload {
-    return _loadedMatchNumbers.isNotEmpty;
+    return _loadedMatchNumbers.isNotEmpty && !_isMatchesReady;
   }
 
   List<GameMatch> get loadedMatches {
@@ -163,5 +177,18 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
 
   Future<int> unloadMatches() async {
     return await _service.unloadMatches();
+  }
+
+  //
+  // -- Ready/Unready Matches --
+  //
+  bool _isMatchesReady = false;
+
+  bool get canReady {
+    return _loadedMatchNumbers.isNotEmpty && !_isMatchesReady;
+  }
+
+  bool get canUnready {
+    return _isMatchesReady;
   }
 }

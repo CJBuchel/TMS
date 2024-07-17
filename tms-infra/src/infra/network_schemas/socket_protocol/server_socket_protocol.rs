@@ -14,13 +14,27 @@ impl Default for TmsServerMatchTimerTimeEvent {
 }
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, JsonSchema)]
-pub struct TmsServerMatchLoadEvent {
+pub enum TmsServerMatchState {
+  Running, // match running
+  Ready, // loaded, ready to start
+  Load, // loaded match
+  Unload, // unload event, remove matches
+}
+
+#[derive(serde::Deserialize, serde::Serialize, Clone, JsonSchema)]
+pub struct TmsServerMatchStateEvent {
+  pub state: TmsServerMatchState, // match state
+  pub game_match_tables: Vec<(String, bool)>, // game tables (table, ready/not ready)
   pub game_match_numbers: Vec<String>, // game match numbers
 }
 
-impl Default for TmsServerMatchLoadEvent {
+impl Default for TmsServerMatchStateEvent {
   fn default() -> Self {
-    Self { game_match_numbers: vec![] }
+    Self { 
+      state: TmsServerMatchState::Load,
+      game_match_tables: vec![],
+      game_match_numbers: vec![] 
+    }
   }
 }
 
@@ -38,8 +52,7 @@ pub enum TmsServerSocketEvent {
   MatchTimerReloadEvent, // reload the timer (no message)
 
   // match events
-  MatchLoadEvent, // game match numbers
-  MatchUnloadEvent, // unload matches (no message)
+  MatchStateEvent, // (running, ready, load, unload, table_ready vec, game match numbers)
 }
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, JsonSchema)]
@@ -60,5 +73,5 @@ impl Default for TmsServerSocketMessage {
 }
 
 impl DataSchemeExtensions for TmsServerMatchTimerTimeEvent {}
-impl DataSchemeExtensions for TmsServerMatchLoadEvent {}
+impl DataSchemeExtensions for TmsServerMatchStateEvent {}
 impl DataSchemeExtensions for TmsServerSocketMessage {}

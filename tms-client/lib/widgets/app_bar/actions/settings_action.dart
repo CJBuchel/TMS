@@ -4,25 +4,28 @@ import 'package:provider/provider.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/providers/connection_provider.dart';
 
-class TmsAppBarConnectionAction extends StatelessWidget {
+class TmsAppBarSettingsAction extends StatelessWidget {
   final GoRouterState state;
 
-  const TmsAppBarConnectionAction({
+  const TmsAppBarSettingsAction({
     Key? key,
     required this.state,
   }) : super(key: key);
 
   Icon _state2Wifi(NetworkConnectionState state) {
+    IconData icon = Icons.settings;
+    Color color = Colors.white;
+
     switch (state) {
       case NetworkConnectionState.disconnected:
-        return const Icon(Icons.signal_wifi_bad, color: Colors.red);
+        color = Colors.red;
       case NetworkConnectionState.connecting:
-        return const Icon(Icons.signal_wifi_statusbar_connected_no_internet_4, color: Colors.orange);
+        color = Colors.orange;
       case NetworkConnectionState.connected:
-        return const Icon(Icons.signal_wifi_4_bar, color: Colors.white);
-      default:
-        return const Icon(Icons.signal_wifi_off, color: Colors.red);
+        color = Colors.white;
     }
+
+    return Icon(icon, color: color);
   }
 
   @override

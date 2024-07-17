@@ -1,4 +1,4 @@
-use tms_infra::{DataSchemeExtensions, TmsServerMatchLoadEvent, TmsServerMatchTimerTimeEvent, TmsServerSocketEvent, TmsServerSocketMessage};
+use tms_infra::{DataSchemeExtensions, TmsServerMatchState, TmsServerMatchStateEvent, TmsServerMatchTimerTimeEvent, TmsServerSocketEvent, TmsServerSocketMessage};
 
 use super::{client::Client, ClientHashMap};
 
@@ -122,23 +122,31 @@ impl ClientPublish for Client {
   // Matches
   //
   fn publish_load_matches(&self, game_match_numbers: Vec<String>) {
-    let msg_payload = TmsServerMatchLoadEvent {
+    let msg_payload = TmsServerMatchStateEvent {
+      state: TmsServerMatchState::Load,
       game_match_numbers,
+      game_match_tables: vec![],
     };
 
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchLoadEvent,
+      message_event: TmsServerSocketEvent::MatchStateEvent,
       message: Some(msg_payload.to_json_string()),
     };
     self.publish_message(msg);
   }
 
   fn publish_unload_matches(&self) {
+    let msd_payload = TmsServerMatchStateEvent {
+      state: TmsServerMatchState::Unload,
+      game_match_numbers: vec![],
+      game_match_tables: vec![],
+    };
+
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchUnloadEvent,
-      message: None,
+      message_event: TmsServerSocketEvent::MatchStateEvent,
+      message: Some(msd_payload.to_json_string()),
     };
     self.publish_message(msg);
   }

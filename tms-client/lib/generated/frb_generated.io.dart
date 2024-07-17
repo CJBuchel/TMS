@@ -82,7 +82,7 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsDateTime dco_decode_box_autoadd_tms_date_time(dynamic raw);
 
   @protected
-  TmsServerMatchLoadEvent dco_decode_box_autoadd_tms_server_match_load_event(
+  TmsServerMatchStateEvent dco_decode_box_autoadd_tms_server_match_state_event(
       dynamic raw);
 
   @protected
@@ -170,6 +170,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<(String, bool)> dco_decode_list_record_string_bool(dynamic raw);
+
+  @protected
   List<TmsTreeRole> dco_decode_list_tms_tree_role(dynamic raw);
 
   @protected
@@ -186,6 +189,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   TmsTime? dco_decode_opt_box_autoadd_tms_time(dynamic raw);
+
+  @protected
+  (String, bool) dco_decode_record_string_bool(dynamic raw);
 
   @protected
   RegisterRequest dco_decode_register_request(dynamic raw);
@@ -207,7 +213,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsDateTime dco_decode_tms_date_time(dynamic raw);
 
   @protected
-  TmsServerMatchLoadEvent dco_decode_tms_server_match_load_event(dynamic raw);
+  TmsServerMatchState dco_decode_tms_server_match_state(dynamic raw);
+
+  @protected
+  TmsServerMatchStateEvent dco_decode_tms_server_match_state_event(dynamic raw);
 
   @protected
   TmsServerMatchTimerTimeEvent dco_decode_tms_server_match_timer_time_event(
@@ -323,7 +332,7 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  TmsServerMatchLoadEvent sse_decode_box_autoadd_tms_server_match_load_event(
+  TmsServerMatchStateEvent sse_decode_box_autoadd_tms_server_match_state_event(
       SseDeserializer deserializer);
 
   @protected
@@ -419,6 +428,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<(String, bool)> sse_decode_list_record_string_bool(
+      SseDeserializer deserializer);
+
+  @protected
   List<TmsTreeRole> sse_decode_list_tms_tree_role(SseDeserializer deserializer);
 
   @protected
@@ -435,6 +448,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   TmsTime? sse_decode_opt_box_autoadd_tms_time(SseDeserializer deserializer);
+
+  @protected
+  (String, bool) sse_decode_record_string_bool(SseDeserializer deserializer);
 
   @protected
   RegisterRequest sse_decode_register_request(SseDeserializer deserializer);
@@ -456,7 +472,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsDateTime sse_decode_tms_date_time(SseDeserializer deserializer);
 
   @protected
-  TmsServerMatchLoadEvent sse_decode_tms_server_match_load_event(
+  TmsServerMatchState sse_decode_tms_server_match_state(
+      SseDeserializer deserializer);
+
+  @protected
+  TmsServerMatchStateEvent sse_decode_tms_server_match_state_event(
       SseDeserializer deserializer);
 
   @protected
@@ -581,8 +601,8 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       TmsDateTime self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_tms_server_match_load_event(
-      TmsServerMatchLoadEvent self, SseSerializer serializer);
+  void sse_encode_box_autoadd_tms_server_match_state_event(
+      TmsServerMatchStateEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_tms_server_match_timer_time_event(
@@ -675,6 +695,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       Uint8List self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_record_string_bool(
+      List<(String, bool)> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_tms_tree_role(
       List<TmsTreeRole> self, SseSerializer serializer);
 
@@ -694,6 +718,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_tms_time(
       TmsTime? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_bool(
+      (String, bool) self, SseSerializer serializer);
 
   @protected
   void sse_encode_register_request(
@@ -717,8 +745,12 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_tms_date_time(TmsDateTime self, SseSerializer serializer);
 
   @protected
-  void sse_encode_tms_server_match_load_event(
-      TmsServerMatchLoadEvent self, SseSerializer serializer);
+  void sse_encode_tms_server_match_state(
+      TmsServerMatchState self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tms_server_match_state_event(
+      TmsServerMatchStateEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_tms_server_match_timer_time_event(

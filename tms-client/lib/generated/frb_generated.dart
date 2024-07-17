@@ -73,7 +73,7 @@ class TmsRustLib
   String get codegenVersion => '2.0.0';
 
   @override
-  int get rustContentHash => -522100785;
+  int get rustContentHash => 1749990834;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -208,16 +208,16 @@ abstract class TmsRustLibApi extends BaseApi {
   String
       crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema();
 
-  TmsServerMatchLoadEvent
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonString(
+  TmsServerMatchStateEvent
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonString(
-          {required TmsServerMatchLoadEvent that});
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonString(
+          {required TmsServerMatchStateEvent that});
 
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchema();
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchema();
 
   TmsServerMatchTimerTimeEvent
       crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonString(
@@ -1506,8 +1506,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  TmsServerMatchLoadEvent
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonString(
+  TmsServerMatchStateEvent
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonString(
           {required String json}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -1516,31 +1516,31 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_tms_server_match_load_event,
+        decodeSuccessData: sse_decode_tms_server_match_state_event,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonStringConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonStringConstMeta,
       argValues: [json],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventFromJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "tms_server_match_load_event_from_json_string",
+            debugName: "tms_server_match_state_event_from_json_string",
             argNames: ["json"],
           );
 
   @override
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonString(
-          {required TmsServerMatchLoadEvent that}) {
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonString(
+          {required TmsServerMatchStateEvent that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_tms_server_match_load_event(that, serializer);
+        sse_encode_box_autoadd_tms_server_match_state_event(that, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51)!;
       },
       codec: SseCodec(
@@ -1548,22 +1548,22 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonStringConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonStringConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "tms_server_match_load_event_to_json_string",
+            debugName: "tms_server_match_state_event_to_json_string",
             argNames: ["that"],
           );
 
   @override
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchema() {
+      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchema() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -1574,16 +1574,16 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchemaConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchemaConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchLoadEventToSchemaConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchemaConstMeta =>
           const TaskConstMeta(
-            debugName: "tms_server_match_load_event_to_schema",
+            debugName: "tms_server_match_state_event_to_schema",
             argNames: [],
           );
 
@@ -2362,10 +2362,10 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchLoadEvent dco_decode_box_autoadd_tms_server_match_load_event(
+  TmsServerMatchStateEvent dco_decode_box_autoadd_tms_server_match_state_event(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_tms_server_match_load_event(raw);
+    return dco_decode_tms_server_match_state_event(raw);
   }
 
   @protected
@@ -2574,6 +2574,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  List<(String, bool)> dco_decode_list_record_string_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_record_string_bool).toList();
+  }
+
+  @protected
   List<TmsTreeRole> dco_decode_list_tms_tree_role(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_tms_tree_role).toList();
@@ -2618,6 +2624,19 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   TmsTime? dco_decode_opt_box_autoadd_tms_time(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_tms_time(raw);
+  }
+
+  @protected
+  (String, bool) dco_decode_record_string_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) {
+      throw Exception('Expected 2 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_String(arr[0]),
+      dco_decode_bool(arr[1]),
+    );
   }
 
   @protected
@@ -2700,13 +2719,22 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchLoadEvent dco_decode_tms_server_match_load_event(dynamic raw) {
+  TmsServerMatchState dco_decode_tms_server_match_state(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TmsServerMatchState.values[raw as int];
+  }
+
+  @protected
+  TmsServerMatchStateEvent dco_decode_tms_server_match_state_event(
+      dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 1)
-      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return TmsServerMatchLoadEvent(
-      gameMatchNumbers: dco_decode_list_String(arr[0]),
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return TmsServerMatchStateEvent(
+      state: dco_decode_tms_server_match_state(arr[0]),
+      gameMatchTables: dco_decode_list_record_string_bool(arr[1]),
+      gameMatchNumbers: dco_decode_list_String(arr[2]),
     );
   }
 
@@ -2995,10 +3023,10 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchLoadEvent sse_decode_box_autoadd_tms_server_match_load_event(
+  TmsServerMatchStateEvent sse_decode_box_autoadd_tms_server_match_state_event(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_tms_server_match_load_event(deserializer));
+    return (sse_decode_tms_server_match_state_event(deserializer));
   }
 
   @protected
@@ -3228,6 +3256,19 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  List<(String, bool)> sse_decode_list_record_string_bool(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <(String, bool)>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_record_string_bool(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<TmsTreeRole> sse_decode_list_tms_tree_role(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -3286,6 +3327,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     } else {
       return null;
     }
+  }
+
+  @protected
+  (String, bool) sse_decode_record_string_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_String(deserializer);
+    var var_field1 = sse_decode_bool(deserializer);
+    return (var_field0, var_field1);
   }
 
   @protected
@@ -3354,11 +3403,24 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchLoadEvent sse_decode_tms_server_match_load_event(
+  TmsServerMatchState sse_decode_tms_server_match_state(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return TmsServerMatchState.values[inner];
+  }
+
+  @protected
+  TmsServerMatchStateEvent sse_decode_tms_server_match_state_event(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_state = sse_decode_tms_server_match_state(deserializer);
+    var var_gameMatchTables = sse_decode_list_record_string_bool(deserializer);
     var var_gameMatchNumbers = sse_decode_list_String(deserializer);
-    return TmsServerMatchLoadEvent(gameMatchNumbers: var_gameMatchNumbers);
+    return TmsServerMatchStateEvent(
+        state: var_state,
+        gameMatchTables: var_gameMatchTables,
+        gameMatchNumbers: var_gameMatchNumbers);
   }
 
   @protected
@@ -3621,10 +3683,10 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_box_autoadd_tms_server_match_load_event(
-      TmsServerMatchLoadEvent self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_tms_server_match_state_event(
+      TmsServerMatchStateEvent self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_tms_server_match_load_event(self, serializer);
+    sse_encode_tms_server_match_state_event(self, serializer);
   }
 
   @protected
@@ -3815,6 +3877,16 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_list_record_string_bool(
+      List<(String, bool)> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_record_string_bool(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_tms_tree_role(
       List<TmsTreeRole> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -3870,6 +3942,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_record_string_bool(
+      (String, bool) self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.$1, serializer);
+    sse_encode_bool(self.$2, serializer);
+  }
+
+  @protected
   void sse_encode_register_request(
       RegisterRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -3921,9 +4001,18 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_tms_server_match_load_event(
-      TmsServerMatchLoadEvent self, SseSerializer serializer) {
+  void sse_encode_tms_server_match_state(
+      TmsServerMatchState self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_server_match_state_event(
+      TmsServerMatchStateEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tms_server_match_state(self.state, serializer);
+    sse_encode_list_record_string_bool(self.gameMatchTables, serializer);
     sse_encode_list_String(self.gameMatchNumbers, serializer);
   }
 

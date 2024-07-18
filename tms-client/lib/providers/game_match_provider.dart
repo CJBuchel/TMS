@@ -1,6 +1,7 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/generated/infra/network_schemas/socket_protocol/match_state_event.dart';
 import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/mixins/server_event_subscriber_mixin.dart';
 import 'package:tms/network/connectivity.dart';
@@ -33,6 +34,7 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
     _networkListener = () {
       if (Network().state != NetworkConnectionState.connected) {
         clearLoadedMatches();
+        _isMatchesReady = false;
       }
     };
 
@@ -190,5 +192,13 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
 
   bool get canUnready {
     return _isMatchesReady;
+  }
+
+  Future<int> readyMatches() async {
+    return await _service.readyMatches();
+  }
+
+  Future<int> unreadyMatches() async {
+    return await _service.unreadyMatches();
   }
 }

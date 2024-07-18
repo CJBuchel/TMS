@@ -6,16 +6,20 @@ import 'package:tms/providers/game_match_provider.dart';
 import 'package:tms/widgets/buttons/barber_pole_button.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
+const _inactiveColor = Color(0xFF9E9E9E);
+const _backgroundColor = Color(0xFFD55C00);
+const _overlayColor = Color(0xFFFF6F00);
+
 class LoadMatchButton extends StatelessWidget {
-  final WidgetStateProperty<Color?> _inactiveColor = const WidgetStatePropertyAll(Colors.grey);
-  final WidgetStateProperty<Color?> _backgroundColor = const WidgetStatePropertyAll(Color(0xFFD55C00));
-  final WidgetStateProperty<Color?> _overlayColor = const WidgetStatePropertyAll(Color(0xFFFF6F00));
+  final WidgetStateProperty<Color?> _inactiveColorState = const WidgetStatePropertyAll(_inactiveColor);
+  final WidgetStateProperty<Color?> _backgroundColorState = const WidgetStatePropertyAll(_backgroundColor);
+  final WidgetStateProperty<Color?> _overlayColorState = const WidgetStatePropertyAll(_overlayColor);
 
   Widget _loadButton(BuildContext context, {bool active = true}) {
     return ElevatedButton(
       style: ButtonStyle(
-        backgroundColor: active ? _backgroundColor : _inactiveColor,
-        overlayColor: active ? _overlayColor : _inactiveColor,
+        backgroundColor: active ? _backgroundColorState : _inactiveColorState,
+        overlayColor: active ? _overlayColorState : _inactiveColorState,
         textStyle: WidgetStateProperty.all(const TextStyle(color: Colors.white)),
       ),
       onPressed: () {
@@ -42,7 +46,7 @@ class LoadMatchButton extends StatelessWidget {
     return BarberPoleButton(
       backgroundColor: Colors.grey[800],
       overlayColor: Colors.grey[700],
-      stripeColor: const Color(0xFFD55C00),
+      stripeColor: active ? _backgroundColor : _inactiveColor,
       onPressed: () {
         if (active) {
           Provider.of<GameMatchProvider>(context, listen: false).unloadMatches().then((status) {
@@ -66,17 +70,20 @@ class LoadMatchButton extends StatelessWidget {
   // Widget _
 
   Widget _button(BuildContext context) {
-    return Selector<GameMatchProvider, ({bool canLoad, bool canUnload})>(
+    return Selector<GameMatchProvider, ({bool canLoad, bool canUnload, bool canUnready})>(
       selector: (context, provider) {
         return (
           canLoad: provider.canLoad,
           canUnload: provider.canUnload,
+          canUnready: provider.canUnready,
         );
       },
       builder: (context, data, _) {
         if (data.canLoad) {
           return _loadButton(context, active: data.canLoad);
         } else if (data.canUnload) {
+          return _unloadButton(context, active: data.canUnload);
+        } else if (data.canUnready) {
           return _unloadButton(context, active: data.canUnload);
         } else {
           return _loadButton(context, active: data.canLoad);

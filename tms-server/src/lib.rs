@@ -5,6 +5,7 @@ pub mod services;
 pub mod multicast_dns;
 pub mod network;
 pub mod web_server;
+pub mod types;
 
 #[derive(Debug, StructOpt)]
 pub struct ServerArgs {

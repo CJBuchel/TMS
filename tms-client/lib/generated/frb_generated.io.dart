@@ -20,6 +20,8 @@ import 'infra/network_schemas/errors.dart';
 import 'infra/network_schemas/login_requests.dart';
 import 'infra/network_schemas/register_requests.dart';
 import 'infra/network_schemas/robot_game_requests.dart';
+import 'infra/network_schemas/socket_protocol/match_state_event.dart';
+import 'infra/network_schemas/socket_protocol/match_time_event.dart';
 import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
@@ -86,8 +88,8 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dynamic raw);
 
   @protected
-  TmsServerMatchTimerTimeEvent
-      dco_decode_box_autoadd_tms_server_match_timer_time_event(dynamic raw);
+  TmsServerMatchTimerEvent dco_decode_box_autoadd_tms_server_match_timer_event(
+      dynamic raw);
 
   @protected
   TmsServerSocketMessage dco_decode_box_autoadd_tms_server_socket_message(
@@ -129,6 +131,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TournamentConfigSetTimerLengthRequest
       dco_decode_box_autoadd_tournament_config_set_timer_length_request(
           dynamic raw);
+
+  @protected
+  int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
   User dco_decode_box_autoadd_user(dynamic raw);
@@ -191,6 +196,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsTime? dco_decode_opt_box_autoadd_tms_time(dynamic raw);
 
   @protected
+  int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+
+  @protected
   (String, bool) dco_decode_record_string_bool(dynamic raw);
 
   @protected
@@ -219,8 +227,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsServerMatchStateEvent dco_decode_tms_server_match_state_event(dynamic raw);
 
   @protected
-  TmsServerMatchTimerTimeEvent dco_decode_tms_server_match_timer_time_event(
-      dynamic raw);
+  TmsServerMatchTimerEvent dco_decode_tms_server_match_timer_event(dynamic raw);
+
+  @protected
+  TmsServerMatchTimerState dco_decode_tms_server_match_timer_state(dynamic raw);
 
   @protected
   TmsServerSocketEvent dco_decode_tms_server_socket_event(dynamic raw);
@@ -336,9 +346,8 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  TmsServerMatchTimerTimeEvent
-      sse_decode_box_autoadd_tms_server_match_timer_time_event(
-          SseDeserializer deserializer);
+  TmsServerMatchTimerEvent sse_decode_box_autoadd_tms_server_match_timer_event(
+      SseDeserializer deserializer);
 
   @protected
   TmsServerSocketMessage sse_decode_box_autoadd_tms_server_socket_message(
@@ -384,6 +393,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TournamentConfigSetTimerLengthRequest
       sse_decode_box_autoadd_tournament_config_set_timer_length_request(
           SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
   User sse_decode_box_autoadd_user(SseDeserializer deserializer);
@@ -450,6 +462,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsTime? sse_decode_opt_box_autoadd_tms_time(SseDeserializer deserializer);
 
   @protected
+  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
   (String, bool) sse_decode_record_string_bool(SseDeserializer deserializer);
 
   @protected
@@ -480,7 +495,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  TmsServerMatchTimerTimeEvent sse_decode_tms_server_match_timer_time_event(
+  TmsServerMatchTimerEvent sse_decode_tms_server_match_timer_event(
+      SseDeserializer deserializer);
+
+  @protected
+  TmsServerMatchTimerState sse_decode_tms_server_match_timer_state(
       SseDeserializer deserializer);
 
   @protected
@@ -605,8 +624,8 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       TmsServerMatchStateEvent self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_tms_server_match_timer_time_event(
-      TmsServerMatchTimerTimeEvent self, SseSerializer serializer);
+  void sse_encode_box_autoadd_tms_server_match_timer_event(
+      TmsServerMatchTimerEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_tms_server_socket_message(
@@ -648,6 +667,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_tournament_config_set_timer_length_request(
       TournamentConfigSetTimerLengthRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_user(User self, SseSerializer serializer);
@@ -720,6 +742,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       TmsTime? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_record_string_bool(
       (String, bool) self, SseSerializer serializer);
 
@@ -753,8 +778,12 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       TmsServerMatchStateEvent self, SseSerializer serializer);
 
   @protected
-  void sse_encode_tms_server_match_timer_time_event(
-      TmsServerMatchTimerTimeEvent self, SseSerializer serializer);
+  void sse_encode_tms_server_match_timer_event(
+      TmsServerMatchTimerEvent self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tms_server_match_timer_state(
+      TmsServerMatchTimerState self, SseSerializer serializer);
 
   @protected
   void sse_encode_tms_server_socket_event(

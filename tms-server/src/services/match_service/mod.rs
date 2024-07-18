@@ -1,4 +1,4 @@
-use crate::{database::SharedDatabase, network::ClientMap};
+use crate::{database::SharedDatabase, network::ClientMap, types::{AtomicRefBool, AtomicRefStrVec}};
 
 mod controls_sub_service;
 pub use controls_sub_service::*;
@@ -13,6 +13,7 @@ pub struct MatchService {
   loaded_matches: AtomicRefStrVec,
   is_timer_running: AtomicRefBool,
   is_matches_loaded: AtomicRefBool,
+  is_matches_ready: AtomicRefBool,
 }
 
 impl MatchService {
@@ -23,6 +24,7 @@ impl MatchService {
       loaded_matches: std::sync::Arc::new(tokio::sync::RwLock::new(Vec::new())),
       is_timer_running: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
       is_matches_loaded: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
+      is_matches_ready: std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false)),
     }
   }
 }

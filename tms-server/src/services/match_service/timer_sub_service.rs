@@ -1,9 +1,6 @@
-use crate::{database::*, network::{client_publish::*, ClientMap}};
+use crate::{database::*, network::{client_publish::*, ClientMap}, types::{AtomicRefBool, AtomicRefStrVec}};
 
 use super::MatchService;
-
-pub type AtomicRefBool = std::sync::Arc<std::sync::atomic::AtomicBool>;
-pub type AtomicRefStrVec = std::sync::Arc<tokio::sync::RwLock<Vec<String>>>;
 
 #[async_trait::async_trait]
 pub trait TimerSubService {

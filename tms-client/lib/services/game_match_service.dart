@@ -35,4 +35,34 @@ class GameMatchService {
       return HttpStatus.badRequest;
     }
   }
+
+  Future<int> readyMatches() async {
+    try {
+      var response = await Network().networkPost("/robot_game/matches/ready_matches", null);
+      if (response.$1) {
+        TmsLogger().i("Ready game matches");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
+
+  Future<int> unreadyMatches() async {
+    try {
+      var response = await Network().networkPost("/robot_game/matches/unready_matches", null);
+      if (response.$1) {
+        TmsLogger().i("Unready game matches");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
 }

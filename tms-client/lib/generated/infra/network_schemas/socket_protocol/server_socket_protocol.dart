@@ -6,94 +6,11 @@
 import '../../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `default`, `default`, `default`
-
-enum TmsServerMatchState {
-  running,
-  ready,
-  load,
-  unload,
-  ;
-}
-
-class TmsServerMatchStateEvent {
-  final TmsServerMatchState state;
-  final List<(String, bool)> gameMatchTables;
-  final List<String> gameMatchNumbers;
-
-  const TmsServerMatchStateEvent({
-    required this.state,
-    required this.gameMatchTables,
-    required this.gameMatchNumbers,
-  });
-
-  static TmsServerMatchStateEvent fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonString(
-              json: json);
-
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonString(
-        that: this,
-      );
-
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchema();
-
-  @override
-  int get hashCode =>
-      state.hashCode ^ gameMatchTables.hashCode ^ gameMatchNumbers.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TmsServerMatchStateEvent &&
-          runtimeType == other.runtimeType &&
-          state == other.state &&
-          gameMatchTables == other.gameMatchTables &&
-          gameMatchNumbers == other.gameMatchNumbers;
-}
-
-class TmsServerMatchTimerTimeEvent {
-  final int time;
-
-  const TmsServerMatchTimerTimeEvent({
-    required this.time,
-  });
-
-  static TmsServerMatchTimerTimeEvent fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonString(
-              json: json);
-
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonString(
-        that: this,
-      );
-
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchema();
-
-  @override
-  int get hashCode => time.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TmsServerMatchTimerTimeEvent &&
-          runtimeType == other.runtimeType &&
-          time == other.time;
-}
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `default`
 
 enum TmsServerSocketEvent {
   purgeEvent,
-  matchTimerStartCountdownEvent,
-  matchTimerStartEvent,
-  matchTimerTimeEvent,
-  matchTimerEndgameEvent,
-  matchTimerEndEvent,
-  matchTimerStopEvent,
-  matchTimerReloadEvent,
+  matchTimerEvent,
   matchStateEvent,
   ;
 }

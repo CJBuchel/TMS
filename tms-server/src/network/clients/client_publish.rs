@@ -1,4 +1,4 @@
-use tms_infra::{DataSchemeExtensions, TmsServerMatchState, TmsServerMatchStateEvent, TmsServerMatchTimerTimeEvent, TmsServerSocketEvent, TmsServerSocketMessage};
+use tms_infra::{DataSchemeExtensions, TmsServerMatchState, TmsServerMatchStateEvent, TmsServerMatchTimerEvent, TmsServerMatchTimerState, TmsServerSocketEvent, TmsServerSocketMessage};
 
 use super::{client::Client, ClientHashMap};
 
@@ -21,6 +21,7 @@ pub trait ClientPublish {
   // publish match events
   fn publish_load_matches(&self, game_match_numbers: Vec<String>);
   fn publish_unload_matches(&self);
+  fn publish_ready_matches(&self, game_match_numbers: Vec<String>);
 }
 
 impl ClientPublish for Client {
@@ -50,8 +51,11 @@ impl ClientPublish for Client {
   fn publish_start_countdown(&self) {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchTimerStartCountdownEvent,
-      message: None,
+      message_event: TmsServerSocketEvent::MatchTimerEvent,
+      message: Some(TmsServerMatchTimerEvent {
+        state: TmsServerMatchTimerState::StartWithCountdown,
+        ..Default::default()
+      }.to_json_string()),
     };
     self.publish_message(msg);
   }
@@ -59,33 +63,38 @@ impl ClientPublish for Client {
   fn publish_start_timer(&self) {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchTimerStartEvent,
-      message: None,
+      message_event: TmsServerSocketEvent::MatchTimerEvent,
+      message: Some(TmsServerMatchTimerEvent {
+        state: TmsServerMatchTimerState::Start,
+        ..Default::default()
+      }.to_json_string()),
     };
     self.publish_message(msg);
   }
 
   fn publish_time_timer(&self, time: u32) {
-    let msg_payload = TmsServerMatchTimerTimeEvent {
-      time,
+    let msg_payload = TmsServerMatchTimerEvent {
+      time: Some(time),
+      state: TmsServerMatchTimerState::Time,
     };
 
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchTimerTimeEvent,
+      message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(msg_payload.to_json_string()),
     };
     self.publish_message(msg);
   }
 
   fn publish_endgame_timer(&self, endgame_time: u32) {
-    let msg_payload = TmsServerMatchTimerTimeEvent {
-      time: endgame_time,
+    let msg_payload = TmsServerMatchTimerEvent {
+      time: Some(endgame_time),
+      state: TmsServerMatchTimerState::Endgame,
     };
 
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchTimerEndgameEvent,
+      message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(msg_payload.to_json_string()),
     };
     self.publish_message(msg);
@@ -94,8 +103,11 @@ impl ClientPublish for Client {
   fn publish_end_timer(&self) {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchTimerEndEvent,
-      message: None,
+      message_event: TmsServerSocketEvent::MatchTimerEvent,
+      message: Some(TmsServerMatchTimerEvent {
+        state: TmsServerMatchTimerState::End,
+        ..Default::default()
+      }.to_json_string()),
     };
     self.publish_message(msg);
   }
@@ -103,8 +115,11 @@ impl ClientPublish for Client {
   fn publish_stop_timer(&self) {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchTimerStopEvent,
-      message: None,
+      message_event: TmsServerSocketEvent::MatchTimerEvent,
+      message: Some(TmsServerMatchTimerEvent {
+        state: TmsServerMatchTimerState::Stop,
+        ..Default::default()
+      }.to_json_string()),
     };
     self.publish_message(msg);
   }
@@ -112,8 +127,11 @@ impl ClientPublish for Client {
   fn publish_reload_timer(&self) {
     let msg = TmsServerSocketMessage {
       auth_token: self.auth_token.clone(),
-      message_event: TmsServerSocketEvent::MatchTimerReloadEvent,
-      message: None,
+      message_event: TmsServerSocketEvent::MatchTimerEvent,
+      message: Some(TmsServerMatchTimerEvent {
+        state: TmsServerMatchTimerState::Reload,
+        ..Default::default()
+      }.to_json_string()),
     };
     self.publish_message(msg);
   }
@@ -147,6 +165,21 @@ impl ClientPublish for Client {
       auth_token: self.auth_token.clone(),
       message_event: TmsServerSocketEvent::MatchStateEvent,
       message: Some(msd_payload.to_json_string()),
+    };
+    self.publish_message(msg);
+  }
+
+  fn publish_ready_matches(&self, game_match_numbers: Vec<String>) {
+    let msg_payload = TmsServerMatchStateEvent {
+      state: TmsServerMatchState::Ready,
+      game_match_numbers,
+      game_match_tables: vec![],
+    };
+
+    let msg = TmsServerSocketMessage {
+      auth_token: self.auth_token.clone(),
+      message_event: TmsServerSocketEvent::MatchStateEvent,
+      message: Some(msg_payload.to_json_string()),
     };
     self.publish_message(msg);
   }
@@ -231,5 +264,9 @@ impl ClientPublish for ClientHashMap {
     }
   }
 
-
+  fn publish_ready_matches(&self, game_match_numbers: Vec<String>) {
+    for client in self.values() {
+      client.publish_ready_matches(game_match_numbers.clone());
+    }
+  }
 }

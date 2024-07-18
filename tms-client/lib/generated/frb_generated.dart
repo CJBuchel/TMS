@@ -21,6 +21,8 @@ import 'infra/network_schemas/errors.dart';
 import 'infra/network_schemas/login_requests.dart';
 import 'infra/network_schemas/register_requests.dart';
 import 'infra/network_schemas/robot_game_requests.dart';
+import 'infra/network_schemas/socket_protocol/match_state_event.dart';
+import 'infra/network_schemas/socket_protocol/match_time_event.dart';
 import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
@@ -73,7 +75,7 @@ class TmsRustLib
   String get codegenVersion => '2.0.0';
 
   @override
-  int get rustContentHash => 1749990834;
+  int get rustContentHash => -1757559329;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -209,26 +211,26 @@ abstract class TmsRustLibApi extends BaseApi {
       crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema();
 
   TmsServerMatchStateEvent
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonString(
+      crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonString(
+      crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToJsonString(
           {required TmsServerMatchStateEvent that});
 
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchema();
+      crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToSchema();
 
-  TmsServerMatchTimerTimeEvent
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonString(
+  TmsServerMatchTimerEvent
+      crateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonString(
-          {required TmsServerMatchTimerTimeEvent that});
+      crateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToJsonString(
+          {required TmsServerMatchTimerEvent that});
 
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchema();
+      crateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToSchema();
 
   TmsServerSocketMessage
       crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonString(
@@ -1507,7 +1509,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
   @override
   TmsServerMatchStateEvent
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonString(
+      crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventFromJsonString(
           {required String json}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -1520,14 +1522,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonStringConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventFromJsonStringConstMeta,
       argValues: [json],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventFromJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventFromJsonStringConstMeta =>
           const TaskConstMeta(
             debugName: "tms_server_match_state_event_from_json_string",
             argNames: ["json"],
@@ -1535,7 +1537,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
   @override
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonString(
+      crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToJsonString(
           {required TmsServerMatchStateEvent that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -1548,14 +1550,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonStringConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToJsonStringConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToJsonStringConstMeta =>
           const TaskConstMeta(
             debugName: "tms_server_match_state_event_to_json_string",
             argNames: ["that"],
@@ -1563,7 +1565,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
   @override
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchema() {
+      crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToSchema() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -1574,22 +1576,22 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchemaConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToSchemaConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchStateEventToSchemaConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToSchemaConstMeta =>
           const TaskConstMeta(
             debugName: "tms_server_match_state_event_to_schema",
             argNames: [],
           );
 
   @override
-  TmsServerMatchTimerTimeEvent
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonString(
+  TmsServerMatchTimerEvent
+      crateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventFromJsonString(
           {required String json}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -1598,32 +1600,31 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_tms_server_match_timer_time_event,
+        decodeSuccessData: sse_decode_tms_server_match_timer_event,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonStringConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventFromJsonStringConstMeta,
       argValues: [json],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventFromJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventFromJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "tms_server_match_timer_time_event_from_json_string",
+            debugName: "tms_server_match_timer_event_from_json_string",
             argNames: ["json"],
           );
 
   @override
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonString(
-          {required TmsServerMatchTimerTimeEvent that}) {
+      crateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToJsonString(
+          {required TmsServerMatchTimerEvent that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_tms_server_match_timer_time_event(
-            that, serializer);
+        sse_encode_box_autoadd_tms_server_match_timer_event(that, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54)!;
       },
       codec: SseCodec(
@@ -1631,22 +1632,22 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonStringConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToJsonStringConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "tms_server_match_timer_time_event_to_json_string",
+            debugName: "tms_server_match_timer_event_to_json_string",
             argNames: ["that"],
           );
 
   @override
   String
-      crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchema() {
+      crateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToSchema() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
@@ -1657,16 +1658,16 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchemaConstMeta,
+          kCrateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToSchemaConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerMatchTimerTimeEventToSchemaConstMeta =>
+      get kCrateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventToSchemaConstMeta =>
           const TaskConstMeta(
-            debugName: "tms_server_match_timer_time_event_to_schema",
+            debugName: "tms_server_match_timer_event_to_schema",
             argNames: [],
           );
 
@@ -2369,10 +2370,10 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchTimerTimeEvent
-      dco_decode_box_autoadd_tms_server_match_timer_time_event(dynamic raw) {
+  TmsServerMatchTimerEvent dco_decode_box_autoadd_tms_server_match_timer_event(
+      dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_tms_server_match_timer_time_event(raw);
+    return dco_decode_tms_server_match_timer_event(raw);
   }
 
   @protected
@@ -2444,6 +2445,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_tournament_config_set_timer_length_request(raw);
+  }
+
+  @protected
+  int dco_decode_box_autoadd_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
   }
 
   @protected
@@ -2627,6 +2634,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  int? dco_decode_opt_box_autoadd_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_u_32(raw);
+  }
+
+  @protected
   (String, bool) dco_decode_record_string_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -2739,15 +2752,23 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchTimerTimeEvent dco_decode_tms_server_match_timer_time_event(
+  TmsServerMatchTimerEvent dco_decode_tms_server_match_timer_event(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 1)
-      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return TmsServerMatchTimerTimeEvent(
-      time: dco_decode_u_32(arr[0]),
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return TmsServerMatchTimerEvent(
+      time: dco_decode_opt_box_autoadd_u_32(arr[0]),
+      state: dco_decode_tms_server_match_timer_state(arr[1]),
     );
+  }
+
+  @protected
+  TmsServerMatchTimerState dco_decode_tms_server_match_timer_state(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TmsServerMatchTimerState.values[raw as int];
   }
 
   @protected
@@ -3030,11 +3051,10 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchTimerTimeEvent
-      sse_decode_box_autoadd_tms_server_match_timer_time_event(
-          SseDeserializer deserializer) {
+  TmsServerMatchTimerEvent sse_decode_box_autoadd_tms_server_match_timer_event(
+      SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_tms_server_match_timer_time_event(deserializer));
+    return (sse_decode_tms_server_match_timer_event(deserializer));
   }
 
   @protected
@@ -3114,6 +3134,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_tournament_config_set_timer_length_request(
         deserializer));
+  }
+
+  @protected
+  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_u_32(deserializer));
   }
 
   @protected
@@ -3330,6 +3356,17 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_u_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   (String, bool) sse_decode_record_string_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_field0 = sse_decode_String(deserializer);
@@ -3424,11 +3461,20 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TmsServerMatchTimerTimeEvent sse_decode_tms_server_match_timer_time_event(
+  TmsServerMatchTimerEvent sse_decode_tms_server_match_timer_event(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_time = sse_decode_u_32(deserializer);
-    return TmsServerMatchTimerTimeEvent(time: var_time);
+    var var_time = sse_decode_opt_box_autoadd_u_32(deserializer);
+    var var_state = sse_decode_tms_server_match_timer_state(deserializer);
+    return TmsServerMatchTimerEvent(time: var_time, state: var_state);
+  }
+
+  @protected
+  TmsServerMatchTimerState sse_decode_tms_server_match_timer_state(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return TmsServerMatchTimerState.values[inner];
   }
 
   @protected
@@ -3690,10 +3736,10 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_box_autoadd_tms_server_match_timer_time_event(
-      TmsServerMatchTimerTimeEvent self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_tms_server_match_timer_event(
+      TmsServerMatchTimerEvent self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_tms_server_match_timer_time_event(self, serializer);
+    sse_encode_tms_server_match_timer_event(self, serializer);
   }
 
   @protected
@@ -3766,6 +3812,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       TournamentConfigSetTimerLengthRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_tournament_config_set_timer_length_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self, serializer);
   }
 
   @protected
@@ -3942,6 +3994,16 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_u_32(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_record_string_bool(
       (String, bool) self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -4017,10 +4079,18 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_tms_server_match_timer_time_event(
-      TmsServerMatchTimerTimeEvent self, SseSerializer serializer) {
+  void sse_encode_tms_server_match_timer_event(
+      TmsServerMatchTimerEvent self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_u_32(self.time, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.time, serializer);
+    sse_encode_tms_server_match_timer_state(self.state, serializer);
+  }
+
+  @protected
+  void sse_encode_tms_server_match_timer_state(
+      TmsServerMatchTimerState self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected

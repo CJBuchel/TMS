@@ -34,7 +34,7 @@ use flutter_rust_bridge::{Handler, IntoIntoDart};
 
 flutter_rust_bridge::frb_generated_boilerplate!(default_stream_sink_codec = SseCodec, default_rust_opaque = RustOpaqueMoi, default_rust_auto_opaque = RustAutoOpaqueMoi,);
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1749990834;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1757559329;
 
 // Section: executor
 
@@ -1064,7 +1064,7 @@ fn wire__crate__infra__network_schemas__robot_game_requests__robot_games_load_ma
     },
   )
 }
-fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_state_event_from_json_string_impl(
+fn wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_from_json_string_impl(
   ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
   rust_vec_len_: i32,
   data_len_: i32,
@@ -1081,13 +1081,13 @@ fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol_
       let api_json = <String>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent::from_json_string(&api_json))?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent::from_json_string(&api_json))?;
         Ok(output_ok)
       })())
     },
   )
 }
-fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_state_event_to_json_string_impl(
+fn wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_json_string_impl(
   ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
   rust_vec_len_: i32,
   data_len_: i32,
@@ -1101,16 +1101,16 @@ fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol_
     move || {
       let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-      let api_that = <crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent>::sse_decode(&mut deserializer);
+      let api_that = <crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent::to_json_string(&api_that))?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent::to_json_string(&api_that))?;
         Ok(output_ok)
       })())
     },
   )
 }
-fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_state_event_to_schema_impl(
+fn wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_schema_impl(
   ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
   rust_vec_len_: i32,
   data_len_: i32,
@@ -1126,20 +1126,20 @@ fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol_
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent::to_schema())?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent::to_schema())?;
         Ok(output_ok)
       })())
     },
   )
 }
-fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_timer_time_event_from_json_string_impl(
+fn wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_from_json_string_impl(
   ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
   rust_vec_len_: i32,
   data_len_: i32,
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
   FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
     flutter_rust_bridge::for_generated::TaskInfo {
-      debug_name: "tms_server_match_timer_time_event_from_json_string",
+      debug_name: "tms_server_match_timer_event_from_json_string",
       port: None,
       mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
     },
@@ -1149,43 +1149,43 @@ fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol_
       let api_json = <String>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent::from_json_string(&api_json))?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent::from_json_string(&api_json))?;
         Ok(output_ok)
       })())
     },
   )
 }
-fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_timer_time_event_to_json_string_impl(
+fn wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_json_string_impl(
   ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
   rust_vec_len_: i32,
   data_len_: i32,
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
   FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
     flutter_rust_bridge::for_generated::TaskInfo {
-      debug_name: "tms_server_match_timer_time_event_to_json_string",
+      debug_name: "tms_server_match_timer_event_to_json_string",
       port: None,
       mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
     },
     move || {
       let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-      let api_that = <crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent>::sse_decode(&mut deserializer);
+      let api_that = <crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent::to_json_string(&api_that))?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent::to_json_string(&api_that))?;
         Ok(output_ok)
       })())
     },
   )
 }
-fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_timer_time_event_to_schema_impl(
+fn wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_schema_impl(
   ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
   rust_vec_len_: i32,
   data_len_: i32,
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
   FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
     flutter_rust_bridge::for_generated::TaskInfo {
-      debug_name: "tms_server_match_timer_time_event_to_schema",
+      debug_name: "tms_server_match_timer_event_to_schema",
       port: None,
       mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
     },
@@ -1194,7 +1194,7 @@ fn wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol_
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent::to_schema())?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent::to_schema())?;
         Ok(output_ok)
       })())
     },
@@ -1917,6 +1917,17 @@ impl SseDecode for Option<crate::infra::database_schemas::date_time::TmsTime> {
   }
 }
 
+impl SseDecode for Option<u32> {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+    if (<bool>::sse_decode(deserializer)) {
+      return Some(<u32>::sse_decode(deserializer));
+    } else {
+      return None;
+    }
+  }
+}
+
 impl SseDecode for (String, bool) {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2005,27 +2016,27 @@ impl SseDecode for crate::infra::database_schemas::date_time::TmsDateTime {
   }
 }
 
-impl SseDecode for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState {
+impl SseDecode for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
     let mut inner = <i32>::sse_decode(deserializer);
     return match inner {
-      0 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Running,
-      1 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Ready,
-      2 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Load,
-      3 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Unload,
+      0 => crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Running,
+      1 => crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Ready,
+      2 => crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Load,
+      3 => crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Unload,
       _ => unreachable!("Invalid variant for TmsServerMatchState: {}", inner),
     };
   }
 }
 
-impl SseDecode for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent {
+impl SseDecode for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-    let mut var_state = <crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState>::sse_decode(deserializer);
+    let mut var_state = <crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState>::sse_decode(deserializer);
     let mut var_gameMatchTables = <Vec<(String, bool)>>::sse_decode(deserializer);
     let mut var_gameMatchNumbers = <Vec<String>>::sse_decode(deserializer);
-    return crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent {
+    return crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent {
       state: var_state,
       game_match_tables: var_gameMatchTables,
       game_match_numbers: var_gameMatchNumbers,
@@ -2033,11 +2044,29 @@ impl SseDecode for crate::infra::network_schemas::socket_protocol::server_socket
   }
 }
 
-impl SseDecode for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent {
+impl SseDecode for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-    let mut var_time = <u32>::sse_decode(deserializer);
-    return crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent { time: var_time };
+    let mut var_time = <Option<u32>>::sse_decode(deserializer);
+    let mut var_state = <crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState>::sse_decode(deserializer);
+    return crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent { time: var_time, state: var_state };
+  }
+}
+
+impl SseDecode for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+    let mut inner = <i32>::sse_decode(deserializer);
+    return match inner {
+      0 => crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::StartWithCountdown,
+      1 => crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Start,
+      2 => crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Stop,
+      3 => crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::End,
+      4 => crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Time,
+      5 => crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Endgame,
+      6 => crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Reload,
+      _ => unreachable!("Invalid variant for TmsServerMatchTimerState: {}", inner),
+    };
   }
 }
 
@@ -2047,14 +2076,8 @@ impl SseDecode for crate::infra::network_schemas::socket_protocol::server_socket
     let mut inner = <i32>::sse_decode(deserializer);
     return match inner {
       0 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::PurgeEvent,
-      1 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerStartCountdownEvent,
-      2 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerStartEvent,
-      3 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerTimeEvent,
-      4 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerEndgameEvent,
-      5 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerEndEvent,
-      6 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerStopEvent,
-      7 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerReloadEvent,
-      8 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchStateEvent,
+      1 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerEvent,
+      2 => crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchStateEvent,
       _ => unreachable!("Invalid variant for TmsServerSocketEvent: {}", inner),
     };
   }
@@ -2268,12 +2291,12 @@ fn pde_ffi_dispatcher_sync_impl(func_id: i32, ptr: flutter_rust_bridge::for_gene
     47 => wire__crate__infra__network_schemas__robot_game_requests__robot_games_load_match_request_from_json_string_impl(ptr, rust_vec_len, data_len),
     48 => wire__crate__infra__network_schemas__robot_game_requests__robot_games_load_match_request_to_json_string_impl(ptr, rust_vec_len, data_len),
     49 => wire__crate__infra__network_schemas__robot_game_requests__robot_games_load_match_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    50 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_state_event_from_json_string_impl(ptr, rust_vec_len, data_len),
-    51 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_state_event_to_json_string_impl(ptr, rust_vec_len, data_len),
-    52 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_state_event_to_schema_impl(ptr, rust_vec_len, data_len),
-    53 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_timer_time_event_from_json_string_impl(ptr, rust_vec_len, data_len),
-    54 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_timer_time_event_to_json_string_impl(ptr, rust_vec_len, data_len),
-    55 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_match_timer_time_event_to_schema_impl(ptr, rust_vec_len, data_len),
+    50 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_from_json_string_impl(ptr, rust_vec_len, data_len),
+    51 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_json_string_impl(ptr, rust_vec_len, data_len),
+    52 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_schema_impl(ptr, rust_vec_len, data_len),
+    53 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_from_json_string_impl(ptr, rust_vec_len, data_len),
+    54 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_json_string_impl(ptr, rust_vec_len, data_len),
+    55 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_schema_impl(ptr, rust_vec_len, data_len),
     56 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_from_json_string_impl(ptr, rust_vec_len, data_len),
     57 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_to_json_string_impl(ptr, rust_vec_len, data_len),
     58 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_to_schema_impl(ptr, rust_vec_len, data_len),
@@ -2516,7 +2539,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::infra::database_schemas::date_time
   }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState {
+impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState {
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
     match self {
       Self::Running => 0.into_dart(),
@@ -2527,14 +2550,14 @@ impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_pro
     }
   }
 }
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState {}
-impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState> for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState {
-  fn into_into_dart(self) -> crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState {
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState {}
+impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState> for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState {
+  fn into_into_dart(self) -> crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState {
     self
   }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent {
+impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent {
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
     [
       self.state.into_into_dart().into_dart(),
@@ -2544,23 +2567,42 @@ impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_pro
     .into_dart()
   }
 }
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent {}
-impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent> for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent {
-  fn into_into_dart(self) -> crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent {
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent {}
+impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent> for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent {
+  fn into_into_dart(self) -> crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent {
     self
   }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent {
+impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent {
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-    [self.time.into_into_dart().into_dart()].into_dart()
+    [self.time.into_into_dart().into_dart(), self.state.into_into_dart().into_dart()].into_dart()
   }
 }
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent {}
-impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent>
-  for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent
-{
-  fn into_into_dart(self) -> crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent {
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent {}
+impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent> for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent {
+  fn into_into_dart(self) -> crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent {
+    self
+  }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState {
+  fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+    match self {
+      Self::StartWithCountdown => 0.into_dart(),
+      Self::Start => 1.into_dart(),
+      Self::Stop => 2.into_dart(),
+      Self::End => 3.into_dart(),
+      Self::Time => 4.into_dart(),
+      Self::Endgame => 5.into_dart(),
+      Self::Reload => 6.into_dart(),
+      _ => unreachable!(),
+    }
+  }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState {}
+impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState> for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState {
+  fn into_into_dart(self) -> crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState {
     self
   }
 }
@@ -2569,14 +2611,8 @@ impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::socket_pro
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
     match self {
       Self::PurgeEvent => 0.into_dart(),
-      Self::MatchTimerStartCountdownEvent => 1.into_dart(),
-      Self::MatchTimerStartEvent => 2.into_dart(),
-      Self::MatchTimerTimeEvent => 3.into_dart(),
-      Self::MatchTimerEndgameEvent => 4.into_dart(),
-      Self::MatchTimerEndEvent => 5.into_dart(),
-      Self::MatchTimerStopEvent => 6.into_dart(),
-      Self::MatchTimerReloadEvent => 7.into_dart(),
-      Self::MatchStateEvent => 8.into_dart(),
+      Self::MatchTimerEvent => 1.into_dart(),
+      Self::MatchStateEvent => 2.into_dart(),
       _ => unreachable!(),
     }
   }
@@ -2929,6 +2965,16 @@ impl SseEncode for Option<crate::infra::database_schemas::date_time::TmsTime> {
   }
 }
 
+impl SseEncode for Option<u32> {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+    <bool>::sse_encode(self.is_some(), serializer);
+    if let Some(value) = self {
+      <u32>::sse_encode(value, serializer);
+    }
+  }
+}
+
 impl SseEncode for (String, bool) {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2991,15 +3037,15 @@ impl SseEncode for crate::infra::database_schemas::date_time::TmsDateTime {
   }
 }
 
-impl SseEncode for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState {
+impl SseEncode for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
     <i32>::sse_encode(
       match self {
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Running => 0,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Ready => 1,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Load => 2,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState::Unload => 3,
+        crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Running => 0,
+        crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Ready => 1,
+        crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Load => 2,
+        crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState::Unload => 3,
         _ => {
           unimplemented!("");
         }
@@ -3009,19 +3055,41 @@ impl SseEncode for crate::infra::network_schemas::socket_protocol::server_socket
   }
 }
 
-impl SseEncode for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchStateEvent {
+impl SseEncode for crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchStateEvent {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-    <crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchState>::sse_encode(self.state, serializer);
+    <crate::infra::network_schemas::socket_protocol::match_state_event::TmsServerMatchState>::sse_encode(self.state, serializer);
     <Vec<(String, bool)>>::sse_encode(self.game_match_tables, serializer);
     <Vec<String>>::sse_encode(self.game_match_numbers, serializer);
   }
 }
 
-impl SseEncode for crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerMatchTimerTimeEvent {
+impl SseEncode for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerEvent {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-    <u32>::sse_encode(self.time, serializer);
+    <Option<u32>>::sse_encode(self.time, serializer);
+    <crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState>::sse_encode(self.state, serializer);
+  }
+}
+
+impl SseEncode for crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+    <i32>::sse_encode(
+      match self {
+        crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::StartWithCountdown => 0,
+        crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Start => 1,
+        crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Stop => 2,
+        crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::End => 3,
+        crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Time => 4,
+        crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Endgame => 5,
+        crate::infra::network_schemas::socket_protocol::match_time_event::TmsServerMatchTimerState::Reload => 6,
+        _ => {
+          unimplemented!("");
+        }
+      },
+      serializer,
+    );
   }
 }
 
@@ -3031,14 +3099,8 @@ impl SseEncode for crate::infra::network_schemas::socket_protocol::server_socket
     <i32>::sse_encode(
       match self {
         crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::PurgeEvent => 0,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerStartCountdownEvent => 1,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerStartEvent => 2,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerTimeEvent => 3,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerEndgameEvent => 4,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerEndEvent => 5,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerStopEvent => 6,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerReloadEvent => 7,
-        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchStateEvent => 8,
+        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchTimerEvent => 1,
+        crate::infra::network_schemas::socket_protocol::server_socket_protocol::TmsServerSocketEvent::MatchStateEvent => 2,
         _ => {
           unimplemented!("");
         }

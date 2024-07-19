@@ -29,7 +29,6 @@ class WebsocketController {
     try {
       _channel?.stream.listen((event) {
         try {
-          TmsLogger().d("Received event message: $event");
           var message = TmsServerSocketMessage.fromJsonString(json: event);
           _handleMessage(message);
         } catch (e) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/views/match_controller/match_controls/match_controls.dart';
 import 'package:tms/views/match_controller/match_selector/match_selection.dart';
 import 'package:tms/views/match_controller/match_stage/match_stage.dart';
+import 'package:tms/views/match_controller/timer_controls/timer_controls.dart';
 
 class MatchController extends StatelessWidget {
   const MatchController({Key? key}) : super(key: key);
@@ -23,29 +24,20 @@ class MatchController extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  child: MatchStage(),
+                  child: const MatchStage(),
                 ),
               ),
 
               // match control
-              Expanded(
+              const Expanded(
                 flex: 1,
                 child: MatchControls(),
               ),
 
               // timer controls
-              Expanded(
+              const Expanded(
                 flex: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text('Timer Controllers'),
-                  ),
-                ),
+                child: TimerControls(),
               ),
             ],
           ),

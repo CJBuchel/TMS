@@ -67,7 +67,7 @@ class LoadMatchButton extends StatelessWidget {
     );
   }
 
-  // Widget _
+  // Widget
 
   Widget _button(BuildContext context) {
     return Selector<GameMatchProvider, ({bool canLoad, bool canUnload, bool canUnready})>(

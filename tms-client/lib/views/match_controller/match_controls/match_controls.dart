@@ -4,6 +4,8 @@ import 'package:tms/views/match_controller/match_controls/ready_match_button.dar
 import 'package:tms/widgets/timers/MatchLiveScheduleTimer.dart';
 
 class MatchControls extends StatelessWidget {
+  const MatchControls({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(

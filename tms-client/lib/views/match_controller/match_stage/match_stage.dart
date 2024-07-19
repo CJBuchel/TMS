@@ -9,6 +9,8 @@ import 'package:tms/views/match_controller/match_stage/loaded_table.dart';
 import 'package:tms/views/match_controller/match_stage/stage_table.dart';
 
 class MatchStage extends StatelessWidget {
+  const MatchStage({Key? key}) : super(key: key);
+
   Widget _matchStageTables(BuildContext context) {
     return Selector<GameMatchProvider, ({List<GameMatch> stagedMatches, List<GameMatch> loadedMatches})>(
       selector: (_, provider) {

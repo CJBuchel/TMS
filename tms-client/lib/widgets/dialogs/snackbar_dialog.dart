@@ -26,10 +26,13 @@ class SnackBarDialog extends BaseDialog {
     return SnackBarDialog(message: message, type: DialogType.warn);
   }
 
-  factory SnackBarDialog.fromStatus({required String message, required int status}) {
+  factory SnackBarDialog.fromStatus({required String message, required int status, String? reason = ""}) {
     String statusMessage = HttpStatusToMessage().getMessage(status);
     if (status != HttpStatus.ok) {
       String errorMessage = "Failed: [$message], with status: $statusMessage";
+      if (reason != null && reason.isNotEmpty) {
+        errorMessage += ", reason: $reason";
+      }
       return SnackBarDialog.error(message: errorMessage);
     } else {
       String successMessage = "Success: $message";

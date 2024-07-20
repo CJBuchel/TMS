@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/game_timer_provider.dart';
+import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class StartButtons extends StatelessWidget {
   Widget _countdownButton(BuildContext context) {
@@ -12,7 +15,11 @@ class StartButtons extends StatelessWidget {
         padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 12)),
       ),
       onPressed: () {
-        Provider.of<GameTimerProvider>(context, listen: false).startTimerWithCountdown();
+        Provider.of<GameTimerProvider>(context, listen: false).startTimerWithCountdown().then((status) {
+          if (status != HttpStatus.ok) {
+            SnackBarDialog.fromStatus(message: "Countdown", status: status).show(context);
+          }
+        });
       },
       icon: const Icon(Icons.timer, size: 40, color: Colors.white),
       label: const Text('Countdown', style: TextStyle(fontSize: 20, color: Colors.white)),
@@ -28,7 +35,11 @@ class StartButtons extends StatelessWidget {
         padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 12)),
       ),
       onPressed: () {
-        Provider.of<GameTimerProvider>(context, listen: false).startTimer();
+        Provider.of<GameTimerProvider>(context, listen: false).startTimer().then((status) {
+          if (status != HttpStatus.ok) {
+            SnackBarDialog.fromStatus(message: "Start", status: status).show(context);
+          }
+        });
       },
       icon: const Icon(Icons.play_arrow, size: 40, color: Colors.white),
       label: const Text('Start', style: TextStyle(fontSize: 20, color: Colors.white)),

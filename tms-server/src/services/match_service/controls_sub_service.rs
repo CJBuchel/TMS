@@ -6,15 +6,12 @@ use super::{AtomicRefBool, MatchService};
 pub trait ControlsSubService {
   async fn load_matches_loop_sender(is_matches_loaded: AtomicRefBool, is_ready: AtomicRefBool, is_running: AtomicRefBool, loaded_matches: Vec<String>, clients: ClientMap);
   // load
-  async fn load_matches(&self, game_match_numbers: Vec<String>);
-  async fn unload_matches(&self);
+  async fn load_matches(&self, game_match_numbers: Vec<String>) -> Result<(), String>;
+  async fn unload_matches(&self) -> Result<(), String>;
 
   // ready
-  async fn ready_matches(&self);
-  async fn unready_matches(&self);
-
-  // run
-  async fn set_matches_to_run_state(&self);
+  async fn ready_matches(&self) -> Result<(), String>;
+  async fn unready_matches(&self) -> Result<(), String>;
 }
 
 #[async_trait::async_trait]
@@ -36,7 +33,7 @@ impl ControlsSubService for MatchService {
     }
   }
 
-  async fn load_matches(&self, game_match_numbers: Vec<String>) {
+  async fn load_matches(&self, game_match_numbers: Vec<String>) -> Result<(), String> {
     let is_loaded = self.is_matches_loaded.load(std::sync::atomic::Ordering::Relaxed);
     let is_ready = self.is_matches_ready.load(std::sync::atomic::Ordering::Relaxed);
 
@@ -56,12 +53,15 @@ impl ControlsSubService for MatchService {
       tokio::spawn(async move {
         MatchService::load_matches_loop_sender(is_matches_loaded, is_matches_ready, is_matches_running, game_matches, clients).await;
       });
+
+      Ok(())
     } else {
       log::warn!("Matches can't be loaded");
+      Err("Matches can't be loaded".to_string())
     }
   }
 
-  async fn unload_matches(&self) {
+  async fn unload_matches(&self) -> Result<(), String> {
     let is_loaded = self.is_matches_loaded.load(std::sync::atomic::Ordering::Relaxed);
     let is_ready = self.is_matches_ready.load(std::sync::atomic::Ordering::Relaxed);
 
@@ -72,12 +72,14 @@ impl ControlsSubService for MatchService {
       self.loaded_matches.write().await.clear();
 
       self.clients.read().await.publish_unload_matches();
+      Ok(())
     } else {
       log::warn!("Matches can't be unloaded");
+      Err("Matches can't be unloaded".to_string())
     }
   }
 
-  async fn ready_matches(&self) {
+  async fn ready_matches(&self) -> Result<(), String> {
     // if matches are loaded and not ready
     let is_loaded = self.is_matches_loaded.load(std::sync::atomic::Ordering::Relaxed);
     let is_ready = self.is_matches_ready.load(std::sync::atomic::Ordering::Relaxed);
@@ -87,12 +89,14 @@ impl ControlsSubService for MatchService {
       self.is_matches_ready.store(true, std::sync::atomic::Ordering::Relaxed);
       // send ready matches to clients as well (for instant update)
       self.clients.read().await.publish_ready_matches(self.loaded_matches.read().await.clone());
+      Ok(())
     } else {
       log::warn!("Can't ready matches");
+      Err("Can't ready matches".to_string())
     }
   }
 
-  async fn unready_matches(&self) {
+  async fn unready_matches(&self) -> Result<(), String> {
     // if matches are loaded and ready
     let is_loaded = self.is_matches_loaded.load(std::sync::atomic::Ordering::Relaxed);
     let is_ready = self.is_matches_ready.load(std::sync::atomic::Ordering::Relaxed);
@@ -103,21 +107,10 @@ impl ControlsSubService for MatchService {
       // send unready matches to clients as well (for instant update)
       // unready is just the loaded state yet to be ready again.
       self.clients.read().await.publish_load_matches(self.loaded_matches.read().await.clone());
+      Ok(())
     } else {
       log::warn!("Can't unready matches");
-    }
-  }
-
-  async fn set_matches_to_run_state(&self) {
-    // if matches are loaded and ready
-    let is_loaded = self.is_matches_loaded.load(std::sync::atomic::Ordering::Relaxed);
-    let is_ready = self.is_matches_ready.load(std::sync::atomic::Ordering::Relaxed);
-
-    if is_loaded && is_ready {
-      log::info!("Running Matches");
-      self.clients.read().await.publish_running_matches(self.loaded_matches.read().await.clone());
-    } else {
-      log::warn!("Can't run matches");
+      Err("Can't unready matches".to_string())
     }
   }
 }

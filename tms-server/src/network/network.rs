@@ -2,7 +2,7 @@ use warp::Filter;
 
 use crate::{database::SharedDatabase, services::SharedServices};
 
-use super::{filters::{pulse_filter::pulse_filter, register_filter::registration_filter, websocket_filter::websocket_filter}, handlers::handle_rejection, login_filter::login_filter, robot_game_matches_filter::robot_game_matches_filter, tournament_config_filter::tournament_config_filter, tournament_schedule_filter::tournament_schedule_filter, ClientMap};
+use super::{filters::{pulse_filter::pulse_filter, register_filter::registration_filter, websocket_filter::websocket_filter}, handlers::handle_rejection, login_filter::login_filter, robot_game_matches_filter::robot_game_matches_filter, robot_game_timer_filter::robot_game_timer_filter, tournament_config_filter::tournament_config_filter, tournament_schedule_filter::tournament_schedule_filter, ClientMap};
 pub struct Network {
   db: SharedDatabase,
   clients: ClientMap,
@@ -30,6 +30,7 @@ impl Network {
       .or(tournament_config_filter(self.clients.clone(), self.db.clone()))
       .or(login_filter(self.clients.clone(), self.db.clone()))
       .or(robot_game_matches_filter(self.clients.clone(), self.db.clone(), self.services.clone()))
+      .or(robot_game_timer_filter(self.clients.clone(), self.db.clone(), self.services.clone()))
 
       // core filters
       .or(registration_filter(self.clients.clone(), self.db.clone(), self.local_ip.clone(), self.tls, self.port))

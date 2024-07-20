@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/views/match_controller/match_controls/load_match_button.dart';
 import 'package:tms/views/match_controller/match_controls/ready_match_button.dart';
-import 'package:tms/widgets/timers/MatchLiveScheduleTimer.dart';
+import 'package:tms/widgets/timers/match_live_schedule_timer.dart';
 
 class MatchControls extends StatelessWidget {
   const MatchControls({Key? key}) : super(key: key);

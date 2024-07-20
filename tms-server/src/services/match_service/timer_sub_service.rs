@@ -37,12 +37,10 @@ impl TimerSubService for MatchService {
   ) {
     log::info!("Timer Running");
 
-    let read_clients = clients.read().await;
-
     // send the start message
-    read_clients.publish_start_timer();
+    clients.read().await.publish_start_timer();
     // send time message
-    read_clients.publish_time_timer(time);
+    clients.read().await.publish_time_timer(time);
 
     // initial wait
     tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
@@ -56,11 +54,11 @@ impl TimerSubService for MatchService {
       }
 
       // send time message
-      read_clients.publish_time_timer(i);
+      clients.read().await.publish_time_timer(i);
 
       // check if timer is endgame, send the endgame signal once
       if i == endgame_time {
-        read_clients.publish_endgame_timer(endgame_time);
+        clients.read().await.publish_endgame_timer(endgame_time);
       }
 
       let elapsed_epoch = start_epoch.elapsed();
@@ -70,7 +68,7 @@ impl TimerSubService for MatchService {
     }
 
     // countdown finished, send end message
-    read_clients.publish_end_timer();
+    clients.read().await.publish_end_timer();
 
     // if timer still running, set database matches to complete
     if timer_running.load(std::sync::atomic::Ordering::Relaxed) {
@@ -91,14 +89,15 @@ impl TimerSubService for MatchService {
       }
 
       // unload the matches
-      read_clients.publish_unload_matches();
+      clients.read().await.publish_unload_matches();
     }
 
     // finally set timer no longer running
     timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
 
-    // reload clocks
-    read_clients.publish_reload_timer();
+    // reload clocks (may need to wait for a bit)
+    tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+    clients.read().await.publish_reload_timer();
   }
 
   async fn start_timer(&mut self) {
@@ -148,12 +147,11 @@ impl TimerSubService for MatchService {
     timer_running: AtomicRefBool,
   ) {
     let countdown_time: u32 = 5; // 5 second countdown
-    let read_clients = clients.read().await;
     
     // send the start message
-    read_clients.publish_start_countdown();
+    clients.read().await.publish_start_countdown();
     // send time message
-    read_clients.publish_time_timer(countdown_time);
+    clients.read().await.publish_time_timer(countdown_time);
 
     // initial wait
     tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
@@ -167,7 +165,7 @@ impl TimerSubService for MatchService {
       }
 
       // send time message
-      read_clients.publish_time_timer(i);
+      clients.read().await.publish_time_timer(i);
 
       let elapsed_epoch = start_epoch.elapsed();
       if let Some(sleep_duration) = std::time::Duration::from_secs(1).checked_sub(elapsed_epoch) {
@@ -220,14 +218,13 @@ impl TimerSubService for MatchService {
     let clients = self.clients.clone();
     let is_timer_running = self.is_timer_running.clone();
 
-    let read_clients = clients.read().await;
     if is_timer_running.load(std::sync::atomic::Ordering::Relaxed) {
       log::warn!("Stopping Timer");
       is_timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
     } else {
       log::warn!("Timer not running");
       // reload clocks
-      read_clients.publish_reload_timer();
+      clients.read().await.publish_reload_timer();
     }
   }
 }

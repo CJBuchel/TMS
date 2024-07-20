@@ -25,7 +25,7 @@ class AuthService {
 
   Future<int> logout() async {
     try {
-      var response = await Network().networkPost("/logout", {});
+      var response = await Network().networkPost("/logout", null);
 
       if (response.$1) {
         TmsLogger().i("Logout successful");

@@ -26,7 +26,7 @@ class _TableStatusState extends State<TableStatus> with SingleTickerProviderStat
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 50),
+      duration: const Duration(milliseconds: 100),
       vsync: this,
     )..repeat(reverse: true);
   }

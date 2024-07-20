@@ -6,7 +6,7 @@ import 'package:tms/utils/logger.dart';
 class GameTimerService {
   Future<int> startTimer() async {
     try {
-      var response = await Network().networkPost("/robot_game/timer/start_timer", null);
+      var response = await Network().networkPost("/robot_game/timer/start", null);
       if (response.$1) {
         TmsLogger().i("Started timer");
         return HttpStatus.ok;
@@ -36,7 +36,7 @@ class GameTimerService {
 
   Future<int> stopTimer() async {
     try {
-      var response = await Network().networkPost("/robot_game/timer/stop_timer", null);
+      var response = await Network().networkPost("/robot_game/timer/stop", null);
       if (response.$1) {
         TmsLogger().i("Stopped timer");
         return HttpStatus.ok;

@@ -53,6 +53,9 @@ class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNot
               break;
             case TmsServerMatchTimerState.time:
               TmsLogger().t("Timer time: ${timerEvent.time}");
+              if (_timerState == TimerRunState.idle) {
+                _timerState = TimerRunState.running;
+              }
               _setTimer(timerEvent.time);
               break;
             case TmsServerMatchTimerState.endgame:
@@ -91,4 +94,13 @@ class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNot
   Future<int> stopTimer() async {
     return _gameTimerService.stopTimer();
   }
+
+  bool get canStart => _timerState == TimerRunState.idle;
+  bool get canStop {
+    return _timerState != TimerRunState.idle &&
+        _timerState != TimerRunState.ended &&
+        _timerState != TimerRunState.stopped;
+  }
+
+  bool get canReload => _timerState == TimerRunState.ended || _timerState == TimerRunState.stopped;
 }

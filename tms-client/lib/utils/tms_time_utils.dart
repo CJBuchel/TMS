@@ -63,10 +63,27 @@ String _padTime(int value, int length) {
 
 // to string
 String secondsToTimeString(int seconds) {
-  String hourTime = _padTime(seconds.abs() ~/ 3600, 2);
-  String minuteTime = _padTime((seconds.abs() % 3600) ~/ 60, 2);
-  String secondTime = _padTime(seconds.abs() % 60, 2);
-  return "$hourTime:$minuteTime:$secondTime";
+  // Calculate hours, minutes, and seconds
+  int hours = seconds.abs() ~/ 3600;
+  int minutes = (seconds.abs() % 3600) ~/ 60;
+  int secs = seconds.abs() % 60;
+
+  // Build time string based on the presence of hours and minutes
+  String timeString = '';
+  if (hours > 0) {
+    timeString += _padTime(hours, 2) + ':';
+  }
+  if (minutes > 0 || hours > 0) {
+    // Include minutes if there are hours
+    timeString += _padTime(minutes, 2) + ':';
+  }
+  if (seconds >= 10) {
+    timeString += _padTime(secs, 2);
+  } else {
+    timeString += secs.toString();
+  }
+
+  return timeString;
 }
 
 // convert DateTime obj to TmsDateTime obj

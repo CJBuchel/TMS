@@ -31,6 +31,7 @@ pub mod websocket_filter;
 pub mod tournament_config_filter;
 pub mod tournament_schedule_filter;
 pub mod robot_game_matches_filter;
+pub mod robot_game_timer_filter;
 
 #[derive(Debug)]
 pub struct UnauthorizedToken;

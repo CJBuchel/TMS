@@ -19,13 +19,12 @@ impl ControlsSubService for MatchService {
   async fn load_matches_loop_sender(is_matches_loaded: AtomicRefBool, is_ready: AtomicRefBool, loaded_matches: Vec<String>, clients: ClientMap) {
     // tokio loop selector
     while is_matches_loaded.load(std::sync::atomic::Ordering::Relaxed) {
-      let read_clients = clients.read().await;
 
       // if ready
       if is_ready.load(std::sync::atomic::Ordering::Relaxed) {
-        read_clients.publish_ready_matches(loaded_matches.clone());
+        clients.read().await.publish_ready_matches(loaded_matches.clone());
       } else {
-        read_clients.publish_load_matches(loaded_matches.clone());
+        clients.read().await.publish_load_matches(loaded_matches.clone());
       }
       // delay
       tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
@@ -66,8 +65,7 @@ impl ControlsSubService for MatchService {
       self.is_matches_loaded.store(false, std::sync::atomic::Ordering::Relaxed);
       self.loaded_matches.write().await.clear();
 
-      let read_clients = self.clients.read().await;
-      read_clients.publish_unload_matches();
+      self.clients.read().await.publish_unload_matches();
     } else {
       log::warn!("Matches can't be unloaded");
     }
@@ -82,8 +80,7 @@ impl ControlsSubService for MatchService {
       log::info!("Ready Matches");
       self.is_matches_ready.store(true, std::sync::atomic::Ordering::Relaxed);
       // send ready matches to clients as well (for instant update)
-      let read_clients = self.clients.read().await;
-      read_clients.publish_ready_matches(self.loaded_matches.read().await.clone());
+      self.clients.read().await.publish_ready_matches(self.loaded_matches.read().await.clone());
     } else {
       log::warn!("Can't ready matches");
     }
@@ -98,9 +95,8 @@ impl ControlsSubService for MatchService {
       log::info!("Unready Matches");
       self.is_matches_ready.store(false, std::sync::atomic::Ordering::Relaxed);
       // send unready matches to clients as well (for instant update)
-      let read_clients = self.clients.read().await;
       // unready is just the loaded state yet to be ready again.
-      read_clients.publish_load_matches(self.loaded_matches.read().await.clone());
+      self.clients.read().await.publish_load_matches(self.loaded_matches.read().await.clone());
     } else {
       log::warn!("Can't unready matches");
     }

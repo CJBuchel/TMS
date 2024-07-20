@@ -18,3 +18,6 @@ pub use tournament_schedule_handler::*;
 
 mod robot_game_matches_handler;
 pub use robot_game_matches_handler::*;
+
+mod robot_game_timer_handler;
+pub use robot_game_timer_handler::*;

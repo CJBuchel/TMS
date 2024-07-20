@@ -3,13 +3,23 @@ import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/utils/color_modifiers.dart';
 
 class TableItem extends StatelessWidget {
+  final bool isMatchComplete;
   final GameMatchTable table;
   final Color? backgroundColor;
 
   const TableItem({
+    required this.isMatchComplete,
     required this.table,
     this.backgroundColor,
   });
+
+  Color _getBackgroundColor() {
+    if (isMatchComplete) {
+      return table.scoreSubmitted ? Colors.green : Colors.red;
+    } else {
+      return backgroundColor ?? Colors.blueGrey;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +32,7 @@ class TableItem extends StatelessWidget {
           // border: Border.all(color: Colors.blue),
           border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.circular(8),
-          color: lighten(backgroundColor ?? Colors.blueGrey, 0.05),
+          color: lighten(_getBackgroundColor(), 0.05),
         ),
         child: Column(
           children: [

@@ -70,12 +70,13 @@ class LoadMatchButton extends StatelessWidget {
   // Widget
 
   Widget _button(BuildContext context) {
-    return Selector<GameMatchProvider, ({bool canLoad, bool canUnload, bool canUnready})>(
+    return Selector<GameMatchProvider, ({bool canLoad, bool canUnload, bool canUnready, bool isRunning})>(
       selector: (context, provider) {
         return (
           canLoad: provider.canLoad,
           canUnload: provider.canUnload,
           canUnready: provider.canUnready,
+          isRunning: provider.isMatchesRunning,
         );
       },
       builder: (context, data, _) {
@@ -84,6 +85,8 @@ class LoadMatchButton extends StatelessWidget {
         } else if (data.canUnload) {
           return _unloadButton(context, active: data.canUnload);
         } else if (data.canUnready) {
+          return _unloadButton(context, active: data.canUnload);
+        } else if (data.isRunning) {
           return _unloadButton(context, active: data.canUnload);
         } else {
           return _loadButton(context, active: data.canLoad);

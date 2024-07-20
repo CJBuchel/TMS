@@ -13,7 +13,7 @@ pub trait ClientPublish {
   fn publish_start_countdown(&self);
   fn publish_start_timer(&self);
   fn publish_time_timer(&self, time: u32);
-  fn publish_endgame_timer(&self, endgame_time: u32);
+  fn publish_endgame_timer(&self);
   fn publish_end_timer(&self);
   fn publish_stop_timer(&self);
   fn publish_reload_timer(&self);
@@ -22,6 +22,7 @@ pub trait ClientPublish {
   fn publish_load_matches(&self, game_match_numbers: Vec<String>);
   fn publish_unload_matches(&self);
   fn publish_ready_matches(&self, game_match_numbers: Vec<String>);
+  fn publish_running_matches(&self, game_match_numbers: Vec<String>);
 }
 
 impl ClientPublish for Client {
@@ -86,9 +87,9 @@ impl ClientPublish for Client {
     self.publish_message(msg);
   }
 
-  fn publish_endgame_timer(&self, endgame_time: u32) {
+  fn publish_endgame_timer(&self) {
     let msg_payload = TmsServerMatchTimerEvent {
-      time: Some(endgame_time),
+      time: None,
       state: TmsServerMatchTimerState::Endgame,
     };
 
@@ -183,6 +184,23 @@ impl ClientPublish for Client {
     };
     self.publish_message(msg);
   }
+
+
+  fn publish_running_matches(&self, game_match_numbers: Vec<String>) {
+    let msg_payload = TmsServerMatchStateEvent {
+      state: TmsServerMatchState::Running,
+      game_match_numbers,
+      game_match_tables: vec![],
+    };
+
+    let msg = TmsServerSocketMessage {
+      auth_token: self.auth_token.clone(),
+      message_event: TmsServerSocketEvent::MatchStateEvent,
+      message: Some(msg_payload.to_json_string()),
+    };
+    self.publish_message(msg);
+  
+  }
 }
 
 impl ClientPublish for ClientHashMap {
@@ -219,9 +237,9 @@ impl ClientPublish for ClientHashMap {
     }
   }
 
-  fn publish_endgame_timer(&self, endgame_time: u32) {
+  fn publish_endgame_timer(&self) {
     for client in self.values() {
-      client.publish_endgame_timer(endgame_time);
+      client.publish_endgame_timer();
     }
   }
 
@@ -267,6 +285,12 @@ impl ClientPublish for ClientHashMap {
   fn publish_ready_matches(&self, game_match_numbers: Vec<String>) {
     for client in self.values() {
       client.publish_ready_matches(game_match_numbers.clone());
+    }
+  }
+
+  fn publish_running_matches(&self, game_match_numbers: Vec<String>) {
+    for client in self.values() {
+      client.publish_running_matches(game_match_numbers.clone());
     }
   }
 }

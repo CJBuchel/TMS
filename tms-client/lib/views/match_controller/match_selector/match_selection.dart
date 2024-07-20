@@ -27,8 +27,8 @@ class MatchSelection extends StatelessWidget {
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, match, _) {
         // alternating background colors
-        Color evenBackground = Theme.of(context).cardColor;
-        Color oddBackground = lighten(Theme.of(context).cardColor, 0.05);
+        Color evenBackground = match.completed ? Colors.green : Theme.of(context).cardColor;
+        Color oddBackground = lighten(match.completed ? Colors.green : Theme.of(context).cardColor, 0.05);
 
         Color backgroundColor = listIndex.isEven ? evenBackground : oddBackground;
 

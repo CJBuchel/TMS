@@ -19,8 +19,27 @@ class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNot
   TimerRunState _timerState = TimerRunState.idle;
   int _timer = 150; // in seconds
 
+  // list of callbacks
+  List<Function(TimerRunState state)> _callbacks = [];
+
+  void onTimerStateChange(Function(TimerRunState state) callback) {
+    _callbacks.add(callback);
+  }
+
+  void _triggerCallbacks(TimerRunState state) {
+    _callbacks.forEach((callback) {
+      callback(state);
+    });
+  }
+
   void _setTimer(int? time) {
     _timer = time ?? _timer;
+  }
+
+  @override
+  void dispose() {
+    _callbacks.clear();
+    super.dispose();
   }
 
   GameTimerProvider() {
@@ -34,39 +53,38 @@ class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNot
           TmsServerMatchTimerEvent timerEvent = TmsServerMatchTimerEvent.fromJsonString(json: event.message!);
           switch (timerEvent.state) {
             case TmsServerMatchTimerState.startWithCountdown:
-              TmsLogger().i("Timer started with countdown: ${timerEvent.time}");
               _setTimer(timerEvent.time);
               _timerState = TimerRunState.countdown;
+              _triggerCallbacks(_timerState);
               break;
             case TmsServerMatchTimerState.start:
-              TmsLogger().i("Timer started: ${timerEvent.time}");
               _setTimer(timerEvent.time);
               _timerState = TimerRunState.running;
+              _triggerCallbacks(_timerState);
               break;
             case TmsServerMatchTimerState.stop:
-              TmsLogger().i("Timer stopped: ${timerEvent.time}");
               _timerState = TimerRunState.stopped;
+              _triggerCallbacks(_timerState);
               break;
             case TmsServerMatchTimerState.end:
-              TmsLogger().i("Timer ended: ${timerEvent.time}");
               _timerState = TimerRunState.ended;
+              _triggerCallbacks(_timerState);
               break;
             case TmsServerMatchTimerState.time:
-              TmsLogger().t("Timer time: ${timerEvent.time}");
               if (_timerState == TimerRunState.idle) {
                 _timerState = TimerRunState.running;
               }
               _setTimer(timerEvent.time);
               break;
             case TmsServerMatchTimerState.endgame:
-              TmsLogger().i("Timer endgame: ${timerEvent.time}");
               _setTimer(timerEvent.time);
               _timerState = TimerRunState.endgame;
+              _triggerCallbacks(_timerState);
               break;
             case TmsServerMatchTimerState.reload:
-              TmsLogger().i("Timer reload: ${timerEvent.time}");
               _setTimer(timerLength);
               _timerState = TimerRunState.idle;
+              _triggerCallbacks(_timerState);
               break;
             default:
               TmsLogger().w("Unknown timer event state: ${timerEvent.state}");

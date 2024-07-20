@@ -1,25 +1,20 @@
-use crate::{database::*, network::{client_publish::*, ClientMap}, types::{AtomicRefBool, AtomicRefStrVec}};
+use crate::{
+  database::*,
+  network::{client_publish::*, ClientMap},
+  types::{AtomicRefBool, AtomicRefStrVec},
+};
 
+use super::ControlsSubService;
 use super::MatchService;
 
 #[async_trait::async_trait]
 pub trait TimerSubService {
   // main timers
-  async fn timer(
-    time: u32, 
-    endgame_time: u32, 
-    loaded_matches: AtomicRefStrVec,
-    timer_running: AtomicRefBool,
-    clients: ClientMap,
-    db: SharedDatabase,
-  );
+  async fn timer(time: u32, endgame_time: u32, loaded_matches: AtomicRefStrVec, timer_running: AtomicRefBool, is_matches_loaded: AtomicRefBool, is_matches_ready: AtomicRefBool, clients: ClientMap, db: SharedDatabase);
   async fn start_timer(&mut self);
 
   // countdown timer
-  async fn countdown_timer(
-    clients: ClientMap,
-    timer_running: AtomicRefBool,
-  );
+  async fn countdown_timer(clients: ClientMap, timer_running: AtomicRefBool);
   async fn start_countdown_timer(&mut self);
 
   async fn stop_timer(&self);
@@ -27,14 +22,7 @@ pub trait TimerSubService {
 
 #[async_trait::async_trait]
 impl TimerSubService for MatchService {
-  async fn timer(
-    time: u32, 
-    endgame_time: u32, 
-    loaded_matches: AtomicRefStrVec,
-    timer_running: AtomicRefBool,
-    clients: ClientMap,
-    db: SharedDatabase,
-  ) {
+  async fn timer(time: u32, endgame_time: u32, loaded_matches: AtomicRefStrVec, timer_running: AtomicRefBool, is_matches_loaded: AtomicRefBool, is_matches_ready: AtomicRefBool, clients: ClientMap, db: SharedDatabase) {
     log::info!("Timer Running");
 
     // send the start message
@@ -58,7 +46,12 @@ impl TimerSubService for MatchService {
 
       // check if timer is endgame, send the endgame signal once
       if i == endgame_time {
-        clients.read().await.publish_endgame_timer(endgame_time);
+        clients.read().await.publish_endgame_timer();
+      }
+
+      // countdown finished, send end message
+      if i <= 0 {
+        clients.read().await.publish_end_timer();
       }
 
       let elapsed_epoch = start_epoch.elapsed();
@@ -67,12 +60,8 @@ impl TimerSubService for MatchService {
       }
     }
 
-    // countdown finished, send end message
-    clients.read().await.publish_end_timer();
-
     // if timer still running, set database matches to complete
     if timer_running.load(std::sync::atomic::Ordering::Relaxed) {
-
       // get loaded matches and set the to complete
       let loaded_matches = loaded_matches.read().await;
       let write_db = db.write().await;
@@ -88,7 +77,9 @@ impl TimerSubService for MatchService {
         }
       }
 
-      // unload the matches
+      // unready & unload matches
+      is_matches_ready.store(false, std::sync::atomic::Ordering::Relaxed);
+      is_matches_loaded.store(false, std::sync::atomic::Ordering::Relaxed);
       clients.read().await.publish_unload_matches();
     }
 
@@ -102,6 +93,11 @@ impl TimerSubService for MatchService {
 
   async fn start_timer(&mut self) {
     if !self.is_timer_running.load(std::sync::atomic::Ordering::Relaxed) {
+      if !self.is_matches_ready.load(std::sync::atomic::Ordering::Relaxed) {
+        log::warn!("No matches ready, can't start timer");
+        return;
+      }
+
       log::info!("Starting Timer");
       self.is_timer_running.store(true, std::sync::atomic::Ordering::Relaxed);
       let read_db = self.db.read().await;
@@ -123,31 +119,24 @@ impl TimerSubService for MatchService {
       // clone for move
       let timer_flag = self.is_timer_running.clone();
       let loaded_matches = self.loaded_matches.clone();
+      let is_matches_loaded = self.is_matches_loaded.clone();
+      let is_matches_ready = self.is_matches_ready.clone();
       let clients = self.clients.clone();
       let db = self.db.clone();
 
-      // spawn timer thread
+      // spawn timer thread & set matches to run state
+      self.set_matches_to_run_state().await;
       tokio::spawn(async move {
-        MatchService::timer(
-          timer_length,
-          endgame_timer_length,
-          loaded_matches,
-          timer_flag,
-          clients,
-          db,
-        ).await;
+        MatchService::timer(timer_length, endgame_timer_length, loaded_matches, timer_flag, is_matches_loaded, is_matches_ready, clients, db).await;
       });
     } else {
       log::warn!("Timer already running");
     }
   }
 
-  async fn countdown_timer(
-    clients: ClientMap,
-    timer_running: AtomicRefBool,
-  ) {
+  async fn countdown_timer(clients: ClientMap, timer_running: AtomicRefBool) {
     let countdown_time: u32 = 5; // 5 second countdown
-    
+
     // send the start message
     clients.read().await.publish_start_countdown();
     // send time message
@@ -176,6 +165,11 @@ impl TimerSubService for MatchService {
 
   async fn start_countdown_timer(&mut self) {
     if !self.is_timer_running.load(std::sync::atomic::Ordering::Relaxed) {
+      if !self.is_matches_ready.load(std::sync::atomic::Ordering::Relaxed) {
+        log::warn!("No matches ready, can't start timer");
+        return;
+      }
+
       log::info!("Starting Countdown Timer");
       self.is_timer_running.store(true, std::sync::atomic::Ordering::Relaxed);
 
@@ -200,14 +194,17 @@ impl TimerSubService for MatchService {
       let clients = self.clients.clone();
       let timer_flag = self.is_timer_running.clone();
       let loaded_matches = self.loaded_matches.clone();
+      let is_matches_loaded = self.is_matches_loaded.clone();
+      let is_matches_ready = self.is_matches_ready.clone();
       let db = self.db.clone();
 
-      // spawn timer thread
+      // spawn timer thread & set matches to run state
+      self.set_matches_to_run_state().await;
       tokio::spawn(async move {
         // countdown timer
         MatchService::countdown_timer(clients.clone(), timer_flag.clone()).await;
         // start main timer
-        MatchService::timer(timer_length, endgame_timer, loaded_matches, timer_flag, clients, db).await;
+        MatchService::timer(timer_length, endgame_timer, loaded_matches, timer_flag, is_matches_loaded, is_matches_ready, clients, db).await;
       });
     } else {
       log::warn!("Timer already running");

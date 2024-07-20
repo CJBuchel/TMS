@@ -16,6 +16,7 @@ class TimerControls extends StatelessWidget {
           child: Center(
             child: MatchTimer.full(
               fontSize: 100,
+              soundEnabled: true,
             ),
           ),
         ),

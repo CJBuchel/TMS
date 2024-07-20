@@ -46,7 +46,7 @@ class ReadyMatchButton extends StatelessWidget {
     return BarberPoleButton(
       backgroundColor: Colors.grey[800],
       overlayColor: Colors.grey[700],
-      stripeColor: _overlayColor,
+      stripeColor: active ? _overlayColor : _inactiveColor,
       onPressed: () {
         if (active) {
           Provider.of<GameMatchProvider>(context, listen: false).unreadyMatches().then((status) {
@@ -68,11 +68,12 @@ class ReadyMatchButton extends StatelessWidget {
   }
 
   Widget _buttons(BuildContext context) {
-    return Selector<GameMatchProvider, ({bool canReady, bool canUnready})>(
+    return Selector<GameMatchProvider, ({bool canReady, bool canUnready, bool isRunning})>(
       selector: (context, provider) {
         return (
           canReady: provider.canReady,
           canUnready: provider.canUnready,
+          isRunning: provider.isMatchesRunning,
         );
       },
       builder: (context, data, _) {
@@ -80,6 +81,8 @@ class ReadyMatchButton extends StatelessWidget {
           return _readyButton(context);
         } else if (data.canUnready) {
           return _unreadyButton(context);
+        } else if (data.isRunning) {
+          return _unreadyButton(context, active: false);
         } else {
           return _readyButton(context, active: false);
         }

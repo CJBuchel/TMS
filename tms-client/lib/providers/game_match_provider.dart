@@ -52,20 +52,25 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
             case TmsServerMatchState.unload:
               _loadedMatchNumbers = [];
               _isMatchesReady = false;
+              _isMatchesRunning = false;
               break;
             // stage 2
             case TmsServerMatchState.load:
               _loadedMatchNumbers = matchStateEvent.gameMatchNumbers;
               _isMatchesReady = false;
+              _isMatchesRunning = false;
               break;
             // stage 3
             case TmsServerMatchState.ready:
               _loadedMatchNumbers = matchStateEvent.gameMatchNumbers;
               _isMatchesReady = true;
+              _isMatchesRunning = false;
               break;
             // stage 4
             case TmsServerMatchState.running:
               _loadedMatchNumbers = matchStateEvent.gameMatchNumbers;
+              _isMatchesReady = true;
+              _isMatchesRunning = true;
               break;
             default:
               TmsLogger().e("Unknown match state event: ${matchStateEvent.state}");
@@ -191,7 +196,7 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
   }
 
   bool get canUnready {
-    return _isMatchesReady;
+    return _isMatchesReady && !_isMatchesRunning;
   }
 
   Future<int> readyMatches() async {
@@ -201,4 +206,14 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
   Future<int> unreadyMatches() async {
     return await _service.unreadyMatches();
   }
+
+  //
+  // -- Running Matches --
+  //
+  bool _isMatchesRunning = false;
+  bool isMatchRunning(String matchNumber) {
+    return _loadedMatchNumbers.contains(matchNumber) && _isMatchesRunning;
+  }
+
+  bool get isMatchesRunning => _isMatchesRunning;
 }

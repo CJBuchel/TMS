@@ -66,47 +66,62 @@ class MatchTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<GameTimerProvider, TimerRunState>(
+    Provider.of<GameTimerProvider>(context, listen: false).onTimerStateChange((state) {
+      if (soundEnabled) {
+        switch (state) {
+          case TimerRunState.running:
+            _playAudio("assets/audio/start.mp3");
+            break;
+          case TimerRunState.endgame:
+            _playAudio("assets/audio/end-game.mp3");
+            break;
+          case TimerRunState.stopped:
+            _playAudio("assets/audio/stop.mp3");
+            break;
+          case TimerRunState.ended:
+            _playAudio("assets/audio/end.mp3");
+            break;
+          default:
+            break;
+        }
+      }
+    });
+
+    return Selector<GameTimerProvider, ({TimerRunState state, int timer})>(
       selector: (context, provider) {
-        return provider.timerState;
+        return (
+          state: provider.timerState,
+          timer: provider.timer,
+        );
       },
       builder: (context, value, _) {
         TextStyle style;
 
-        switch (value) {
+        switch (value.state) {
           case TimerRunState.idle:
             style = idleStyle;
             break;
           case TimerRunState.countdown:
             style = endgameStyle;
-            _playAudio("assets/audio/short-beep.mp3");
+            if (soundEnabled) _playAudio("assets/audio/short-beep.mp3");
             break;
           case TimerRunState.running:
-            _playAudio("assets/audio/start.mp3");
             style = activeStyle;
             break;
           case TimerRunState.endgame:
-            _playAudio("assets/audio/end-game.mp3");
             style = endgameStyle;
             break;
           case TimerRunState.stopped:
-            _playAudio("assets/audio/stop.mp3");
             style = stoppedStyle;
             break;
           case TimerRunState.ended:
-            _playAudio("assets/audio/end.mp3");
             style = stoppedStyle;
             break;
         }
 
-        return Selector<GameTimerProvider, int>(
-          selector: (context, provider) => provider.timer,
-          builder: (context, timer, _) {
-            return Text(
-              secondsToTimeString(timer),
-              style: style,
-            );
-          },
+        return Text(
+          secondsToTimeString(value.timer),
+          style: style,
         );
       },
     );

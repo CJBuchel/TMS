@@ -76,6 +76,7 @@ class MatchExpandableRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: match.gameMatchTables.map((table) {
         return TableItem(
+          isMatchComplete: match.completed,
           table: table,
           backgroundColor: backgroundColor,
         );
@@ -144,18 +145,22 @@ class MatchExpandableRow extends StatelessWidget {
           ({
             bool isMatchStaged,
             bool isMatchLoaded,
+            bool isMatchRunning,
             List<GameMatch> loadedMatches,
           })>(
         selector: (context, provider) {
           return (
             isMatchStaged: provider.isMatchStaged(match.matchNumber),
             isMatchLoaded: provider.isMatchLoaded(match.matchNumber),
+            isMatchRunning: provider.isMatchRunning(match.matchNumber),
             loadedMatches: provider.loadedMatches,
           );
         },
         builder: (context, data, child) {
           MatchRowState state = MatchRowState.STAGED;
-          if (data.isMatchLoaded) {
+          if (data.isMatchRunning) {
+            state = MatchRowState.RUNNING;
+          } else if (data.isMatchLoaded) {
             state = MatchRowState.LOADED;
           } else if (data.isMatchStaged) {
             state = MatchRowState.STAGED;

@@ -22,8 +22,12 @@ class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNot
   // list of callbacks
   List<Function(TimerRunState state)> _callbacks = [];
 
-  void onTimerStateChange(Function(TimerRunState state) callback) {
+  void addTimerStateChangeListener(Function(TimerRunState state) callback) {
     _callbacks.add(callback);
+  }
+
+  void removeTimerStateChangeListener(Function(TimerRunState state) callback) {
+    _callbacks.remove(callback);
   }
 
   void _triggerCallbacks(TimerRunState state) {

@@ -35,6 +35,7 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
       if (Network().state != NetworkConnectionState.connected) {
         clearLoadedMatches();
         _isMatchesReady = false;
+        _isMatchesRunning = false;
       }
     };
 
@@ -190,6 +191,8 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
   // -- Ready/Unready Matches --
   //
   bool _isMatchesReady = false;
+
+  bool get isReady => _isMatchesReady;
 
   bool get canReady {
     return _loadedMatchNumbers.isNotEmpty && !_isMatchesReady;

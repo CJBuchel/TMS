@@ -4,13 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/game_timer_provider.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 
-class MatchTimer extends StatelessWidget {
-  // idle style
-  final bool soundEnabled;
+class MatchTimer extends StatefulWidget {
   final TextStyle idleStyle;
   final TextStyle activeStyle;
   final TextStyle endgameStyle;
   final TextStyle stoppedStyle;
+  final bool soundEnabled;
 
   const MatchTimer({
     Key? key,
@@ -29,13 +28,6 @@ class MatchTimer extends StatelessWidget {
       stoppedStyle: style,
       soundEnabled: soundEnabled,
     );
-  }
-
-  void _playAudio(String assetAudio) async {
-    var player = AudioPlayer();
-    player.setAsset(assetAudio).then((_) {
-      player.play();
-    });
   }
 
   factory MatchTimer.full({double? fontSize = 50, bool soundEnabled = false}) {
@@ -65,28 +57,52 @@ class MatchTimer extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Provider.of<GameTimerProvider>(context, listen: false).onTimerStateChange((state) {
-      if (soundEnabled) {
-        switch (state) {
-          case TimerRunState.running:
-            _playAudio("assets/audio/start.mp3");
-            break;
-          case TimerRunState.endgame:
-            _playAudio("assets/audio/end-game.mp3");
-            break;
-          case TimerRunState.stopped:
-            _playAudio("assets/audio/stop.mp3");
-            break;
-          case TimerRunState.ended:
-            _playAudio("assets/audio/end.mp3");
-            break;
-          default:
-            break;
-        }
-      }
-    });
+  _MatchTimer createState() => _MatchTimer();
+}
 
+class _MatchTimer extends State<MatchTimer> {
+  void _playAudio(String assetAudio) async {
+    var player = AudioPlayer();
+    player.setAsset(assetAudio).then((_) {
+      player.play();
+    });
+  }
+
+  void _stateChangeAudio(TimerRunState state) {
+    if (widget.soundEnabled) {
+      switch (state) {
+        case TimerRunState.running:
+          _playAudio("assets/audio/start.wav");
+          break;
+        case TimerRunState.endgame:
+          _playAudio("assets/audio/end-game.wav");
+          break;
+        case TimerRunState.stopped:
+          _playAudio("assets/audio/stop.wav");
+          break;
+        case TimerRunState.ended:
+          _playAudio("assets/audio/end.wav");
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<GameTimerProvider>(context, listen: false).addTimerStateChangeListener(_stateChangeAudio);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Provider.of<GameTimerProvider>(context, listen: false).removeTimerStateChangeListener(_stateChangeAudio);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Selector<GameTimerProvider, ({TimerRunState state, int timer})>(
       selector: (context, provider) {
         return (
@@ -99,23 +115,23 @@ class MatchTimer extends StatelessWidget {
 
         switch (value.state) {
           case TimerRunState.idle:
-            style = idleStyle;
+            style = widget.idleStyle;
             break;
           case TimerRunState.countdown:
-            style = endgameStyle;
-            if (soundEnabled) _playAudio("assets/audio/short-beep.mp3");
+            style = widget.endgameStyle;
+            if (widget.soundEnabled) _playAudio("assets/audio/short-beep.wav");
             break;
           case TimerRunState.running:
-            style = activeStyle;
+            style = widget.activeStyle;
             break;
           case TimerRunState.endgame:
-            style = endgameStyle;
+            style = widget.endgameStyle;
             break;
           case TimerRunState.stopped:
-            style = stoppedStyle;
+            style = widget.stoppedStyle;
             break;
           case TimerRunState.ended:
-            style = stoppedStyle;
+            style = widget.stoppedStyle;
             break;
         }
 

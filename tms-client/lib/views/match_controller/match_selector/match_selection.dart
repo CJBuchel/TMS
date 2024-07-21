@@ -26,27 +26,40 @@ class MatchSelection extends StatelessWidget {
       selector: (_, provider) => provider.matches[listIndex],
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, match, _) {
+        Color evenCompletedBackground = Colors.green[500] ?? Colors.green;
+        Color oddCompletedBackground = Colors.green[300] ?? Colors.green;
         // alternating background colors
-        Color evenBackground = match.completed ? Colors.green : Theme.of(context).cardColor;
-        Color oddBackground = lighten(match.completed ? Colors.green : Theme.of(context).cardColor, 0.05);
+        Color evenBackground = match.completed ? evenCompletedBackground : Theme.of(context).cardColor;
+        Color oddBackground = match.completed ? oddCompletedBackground : lighten(Theme.of(context).cardColor, 0.05);
 
         Color backgroundColor = listIndex.isEven ? evenBackground : oddBackground;
 
         // listenable builder for the expanded index
-        return MatchExpandableRow(
-          match: match,
-          isMultiMatch: isMultiMatch,
-          controller: _controllers[listIndex],
-          onChangeExpand: (isExpanded) {
-            if (isExpanded) {
-              _controllers.forEach((element) {
-                if (element != _controllers[listIndex]) {
-                  element.collapse();
-                }
-              });
-            }
-          },
-          backgroundColor: backgroundColor,
+        return Theme(
+          data: Theme.of(context).copyWith(
+            iconTheme: Theme.of(context).iconTheme.copyWith(
+                  color: match.completed ? Colors.black : null,
+                ),
+            textTheme: Theme.of(context).textTheme.apply(
+                  bodyColor: match.completed ? Colors.black : null,
+                  displayColor: match.completed ? Colors.black : null,
+                ),
+          ),
+          child: MatchExpandableRow(
+            match: match,
+            isMultiMatch: isMultiMatch,
+            controller: _controllers[listIndex],
+            onChangeExpand: (isExpanded) {
+              if (isExpanded) {
+                _controllers.forEach((element) {
+                  if (element != _controllers[listIndex]) {
+                    element.collapse();
+                  }
+                });
+              }
+            },
+            backgroundColor: backgroundColor,
+          ),
         );
       },
     );

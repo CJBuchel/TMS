@@ -205,7 +205,10 @@ impl TimerSubService for MatchService {
         // countdown timer
         MatchService::countdown_timer(clients.clone(), timer_flag.clone()).await;
         // start main timer
-        MatchService::timer(timer_length, endgame_timer, loaded_matches, timer_flag, is_matches_loaded, is_matches_ready, clients, db).await;
+        // just in case someone aborted during the countdown
+        if timer_flag.load(std::sync::atomic::Ordering::Relaxed) {
+          MatchService::timer(timer_length, endgame_timer, loaded_matches, timer_flag, is_matches_loaded, is_matches_ready, clients, db).await;
+        }
       });
       return Ok(());
     } else {
@@ -220,7 +223,14 @@ impl TimerSubService for MatchService {
 
     if is_timer_running.load(std::sync::atomic::Ordering::Relaxed) {
       log::warn!("Stopping Timer");
+      // set all match values to false
       is_timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
+      self.clients.read().await.publish_ready_matches(self.loaded_matches.read().await.clone());
+      // publish the stop
+      clients.read().await.publish_stop_timer();
+      // reload clocks after a bit
+      tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+      clients.read().await.publish_reload_timer();
     } else {
       // reload clocks
       clients.read().await.publish_reload_timer();

@@ -3,23 +3,23 @@
 #
 steps:
   # Build the Rust server for Linux
-  - ${{ if eq(variables['Agent.OS'], 'Linux') }}:
-    - task: Cargo@1
-      displayName: 'Build Rust Server for Linux'
-      inputs:
-        cargoCommand: 'build --target x86_64-unknown-linux-musl --release'
-        verbose: true
+  - task: Cargo@1
+    displayName: 'Build Rust Server for Linux'
+    condition: eq(variables['Agent.OS'], 'Linux')
+    inputs:
+      cargoCommand: 'build --target x86_64-unknown-linux-musl --release'
+      verbose: true
   # Build the Rust server for Windows
-  - ${{ if eq(variables['Agent.OS'], 'Windows_NT') }}:
-    - task: Cargo@1
-      displayName: 'Build Rust Server for Windows'
-      inputs:
-        cargoCommand: 'build --target x86_64-pc-windows-msvc --release'
-        verbose: true
+  - task: Cargo@1
+    displayName: 'Build Rust Server for Windows'
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
+    inputs:
+      cargoCommand: 'build --target x86_64-pc-windows-msvc --release'
+      verbose: true
   # Build the Rust server for Mac
-  - ${{ if eq(variables['Agent.OS'], 'Darwin') }}:
-    - task: Cargo@1
-      displayName: 'Build Rust Server for Mac'
-      inputs:
-        cargoCommand: 'build --target x86_64-apple-darwin --release'
-        verbose: true
+  - task: Cargo@1
+    displayName: 'Build Rust Server for Mac'
+    condition: eq(variables['Agent.OS'], 'Darwin')
+    inputs:
+      cargoCommand: 'build --target x86_64-apple-darwin --release'
+      verbose: true

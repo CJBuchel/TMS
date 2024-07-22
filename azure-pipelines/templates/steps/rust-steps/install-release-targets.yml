@@ -4,35 +4,35 @@
 #
 steps:
   # Install musl for linux
-  - ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
-    - script: |
-          sudo apt-get install -qq -y musl-tools musl-dev
-      displayName: 'Install musl libs for linux'
+  - script: |
+        sudo apt-get install -qq -y musl-tools musl-dev
+    displayName: 'Install musl libs for linux'
+    condition: eq(variables['Agent.OS'], 'Linux')
   # Install the portable target for a static linux binary
-  - ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
-    - task: Rustup@1
-      displayName: 'Install portable musl target for linux'
-      inputs:
-        rustupCommand: 'target install x86_64-unknown-linux-musl'
-        verbose: false
+  - task: Rustup@1
+    displayName: 'Install portable musl target for linux'
+    condition: eq(variables['Agent.OS'], 'Linux')
+    inputs:
+      rustupCommand: 'target install x86_64-unknown-linux-musl'
+      verbose: false
   # Install the portable target for a static windows binary
-  - ${{ if eq( variables['Agent.OS'], 'Windows_NT' ) }}:
-    - task: Rustup@1
-      displayName: 'Install portable msvc target for windows'
-      inputs:
-        rustupCommand: 'target install x86_64-pc-windows-msvc'
-        verbose: false
+  - task: Rustup@1
+    displayName: 'Install portable msvc target for windows'
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
+    inputs:
+      rustupCommand: 'target install x86_64-pc-windows-msvc'
+      verbose: false
   # Install the portable target for a static mac binary
-  - ${{ if eq( variables['Agent.OS'], 'Darwin' ) }}:
-    - task: Rustup@1
-      displayName: 'Install portable apple target for mac'
-      inputs:
-        rustupCommand: 'target install x86_64-apple-darwin'
-        verbose: false
+  - task: Rustup@1
+    displayName: 'Install portable apple target for mac'
+    condition: eq(variables['Agent.OS'], 'Darwin')
+    inputs:
+      rustupCommand: 'target install x86_64-apple-darwin'
+      verbose: false
   # Install the portable target for a static mac silicon binary
-  - ${{ if eq( variables['Agent.OS'], 'Darwin' ) }}:
-    - task: Rustup@1
-      displayName: 'Install portable apple silicon target for mac'
-      inputs:
-        rustupCommand: 'target install aarch64-apple-darwin'
-        verbose: false
+  - task: Rustup@1
+    displayName: 'Install portable apple silicon target for mac'
+    condition: eq(variables['Agent.OS'], 'Darwin')
+    inputs:
+      rustupCommand: 'target install aarch64-apple-darwin'
+      verbose: false

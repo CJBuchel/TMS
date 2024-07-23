@@ -10,31 +10,35 @@ class MatchControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        LoadMatchButton(),
-
-        // TTL Timer
-        Expanded(
-          flex: 1,
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
+        Container(
+          decoration: const BoxDecoration(
+            // top and bottom border
+            border: Border(
+              bottom: BorderSide(
                 color: Colors.white,
+                width: 2,
               ),
             ),
-            child: const Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: MatchLiveScheduleTimer(
-                  positiveStyle: TextStyle(
-                    color: Colors.green,
-                    fontSize: 50,
-                    fontFamily: "lcdbold",
-                  ),
-                  negativeStyle: TextStyle(
-                    color: Colors.red,
-                    fontSize: 50,
-                    fontFamily: "lcdbold",
-                  ),
+          ),
+          child: LoadMatchButton(),
+        ),
+
+        // TTL Timer
+        const Expanded(
+          flex: 1,
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: MatchLiveScheduleTimer(
+                positiveStyle: TextStyle(
+                  color: Colors.green,
+                  fontSize: 50,
+                  fontFamily: "lcdbold",
+                ),
+                negativeStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 50,
+                  fontFamily: "lcdbold",
                 ),
               ),
             ),
@@ -42,7 +46,18 @@ class MatchControls extends StatelessWidget {
         ),
 
         // Ready/Not Ready button
-        ReadyMatchButton(),
+        Container(
+          decoration: const BoxDecoration(
+            // top and bottom border
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.white,
+                width: 2,
+              ),
+            ),
+          ),
+          child: ReadyMatchButton(),
+        ),
       ],
     );
   }

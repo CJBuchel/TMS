@@ -11,21 +11,14 @@ class MatchController extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
+        const Expanded(
           flex: 1,
           child: Column(
             children: [
               // stage
               Expanded(
                 flex: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                  ),
-                  child: const MatchStage(),
-                ),
+                child: MatchStage(),
               ),
 
               // match control

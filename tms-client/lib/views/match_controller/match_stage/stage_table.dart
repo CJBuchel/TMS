@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/teams_provider.dart';
+import 'package:tms/widgets/tables/base_table.dart';
+import 'package:tms/widgets/tables/edit_row_table.dart';
 
 class StageTable extends StatelessWidget {
   final List<GameMatch> stagedMatches;
@@ -12,59 +14,93 @@ class StageTable extends StatelessWidget {
     required this.stagedMatches,
   }) : super(key: key);
 
-  Widget _cell(BuildContext context, String label) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        // only top and bottom borders
-        border: Border(
-          bottom: BorderSide(color: Theme.of(context).dividerColor),
+  Widget _header(String text) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      child: Center(
-        child: Text(label, overflow: TextOverflow.ellipsis),
-      ),
-    );
-  }
-
-  Widget _tableRow(BuildContext context, GameMatchTable table) {
-    return Selector<TeamsProvider, Team>(
-      selector: (_, provider) => provider.getTeam(table.teamNumber),
-      builder: (context, team, _) {
-        return Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(
-              flex: 1,
-              child: _cell(context, table.table),
-            ),
-            Expanded(
-              flex: 1,
-              child: _cell(context, table.teamNumber),
-            ),
-            Expanded(
-              flex: 2,
-              child: _cell(context, team.name),
-            ),
-          ],
-        );
-      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    List<GameMatchTable> tables = [];
+    List<({GameMatchTable table, String matchNumber})> tableSegments = [];
 
     for (GameMatch match in stagedMatches) {
-      tables.addAll(match.gameMatchTables);
+      for (GameMatchTable table in match.gameMatchTables) {
+        tableSegments.add((
+          matchNumber: match.matchNumber,
+          table: table,
+        ));
+      }
     }
 
-    return ListView.builder(
-      itemCount: tables.length,
-      itemBuilder: (context, index) {
-        return _tableRow(context, tables[index]);
-      },
+    // create rows
+    List<EditTableRow> rows = [];
+
+    for (var segment in tableSegments) {
+      rows.add(
+        EditTableRow(
+          cells: [
+            BaseTableCell(
+              child: Center(child: Text(segment.matchNumber)),
+            ),
+            BaseTableCell(
+              child: Center(child: Text(segment.table.table)),
+            ),
+            BaseTableCell(
+              child: Center(child: Text(segment.table.teamNumber)),
+            ),
+            BaseTableCell(
+              child: Center(
+                child: Selector<TeamsProvider, Team>(
+                  selector: (_, provider) => provider.getTeam(segment.table.teamNumber),
+                  builder: (context, team, _) {
+                    return Text(team.name);
+                  },
+                ),
+              ),
+              flex: 2,
+            )
+          ],
+          key: segment.table.table,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: Theme.of(context).dividerColor),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return EditTable(
+      headers: [
+        BaseTableCell(
+          child: _header("Match"),
+        ),
+        BaseTableCell(
+          child: _header("Table"),
+        ),
+        BaseTableCell(
+          child: _header("Team Number"),
+        ),
+        BaseTableCell(
+          child: _header("Team Name"),
+          flex: 2,
+        ),
+      ],
+      rows: rows,
+      headerDecoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).dividerColor),
+        ),
+      ),
     );
   }
 }

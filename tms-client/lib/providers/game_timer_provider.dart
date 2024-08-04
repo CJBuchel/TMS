@@ -23,11 +23,13 @@ class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNot
   List<Function(TimerRunState state)> _callbacks = [];
 
   void addTimerStateChangeListener(Function(TimerRunState state) callback) {
+    TmsLogger().i("Adding callback to GameTimerProvider");
     _callbacks.add(callback);
   }
 
   void removeTimerStateChangeListener(Function(TimerRunState state) callback) {
     _callbacks.remove(callback);
+    TmsLogger().w("Removing callback from GameTimerProvider callbacks: ${_callbacks.length}");
   }
 
   void _triggerCallbacks(TimerRunState state) {
@@ -43,6 +45,7 @@ class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNot
   @override
   void dispose() {
     _callbacks.clear();
+    TmsLogger().w("GameTimerProvider disposed, callbacks clear");
     super.dispose();
   }
 

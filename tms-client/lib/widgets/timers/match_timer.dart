@@ -61,6 +61,8 @@ class MatchTimer extends StatefulWidget {
 }
 
 class _MatchTimer extends State<MatchTimer> {
+  late GameTimerProvider _timerProvider;
+
   void _playAudio(String assetAudio) async {
     var player = AudioPlayer();
     player.setAsset(assetAudio).then((_) {
@@ -92,13 +94,14 @@ class _MatchTimer extends State<MatchTimer> {
   @override
   void initState() {
     super.initState();
-    Provider.of<GameTimerProvider>(context, listen: false).addTimerStateChangeListener(_stateChangeAudio);
+    _timerProvider = Provider.of<GameTimerProvider>(context, listen: false);
+    _timerProvider.addTimerStateChangeListener(_stateChangeAudio);
   }
 
   @override
   void dispose() {
+    _timerProvider.removeTimerStateChangeListener(_stateChangeAudio);
     super.dispose();
-    Provider.of<GameTimerProvider>(context, listen: false).removeTimerStateChangeListener(_stateChangeAudio);
   }
 
   @override

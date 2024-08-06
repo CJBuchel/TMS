@@ -8,36 +8,32 @@ import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 class ScheduleSetup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Consumer<ScheduleProvider>(
-          builder: (context, provider, child) {
-            return InputSetter(
-              label: "Upload schedule:",
-              onSet: () async {
-                await provider.uploadSchedule().then((res) {
-                  SnackBarDialog.fromStatus(message: "Upload CSV Schedule", status: res).show(context);
-                });
-              },
-              confirmDialogStyle: ConfirmDialogStyle.warn(
-                title: "Confirm Upload?",
-                message: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Uploading a schedule can overwrite existing teams, matches and judging sessions"),
-                  ],
-                ),
-              ),
-              input: ElevatedButton(
-                onPressed: () async {
-                  await provider.selectCSV();
-                },
-                child: Text(provider.result == null ? "Select CSV" : provider.result?.files.first.name ?? ""),
-              ),
-            );
+    return Consumer<ScheduleProvider>(
+      builder: (context, provider, child) {
+        return InputSetter(
+          label: "Upload schedule:",
+          onSet: () async {
+            await provider.uploadSchedule().then((res) {
+              SnackBarDialog.fromStatus(message: "Upload CSV Schedule", status: res).show(context);
+            });
           },
-        ),
-      ],
+          confirmDialogStyle: ConfirmDialogStyle.warn(
+            title: "Confirm Upload?",
+            message: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Uploading a schedule can overwrite existing teams, matches and judging sessions"),
+              ],
+            ),
+          ),
+          input: ElevatedButton(
+            onPressed: () async {
+              await provider.selectCSV();
+            },
+            child: Text(provider.result == null ? "Select CSV" : provider.result?.files.first.name ?? ""),
+          ),
+        );
+      },
     );
   }
 }

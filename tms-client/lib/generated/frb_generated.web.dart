@@ -107,6 +107,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TournamentConfig dco_decode_box_autoadd_tournament_config(dynamic raw);
 
   @protected
+  TournamentConfigSetAdminPasswordRequest
+      dco_decode_box_autoadd_tournament_config_set_admin_password_request(
+          dynamic raw);
+
+  @protected
   TournamentConfigSetBackupIntervalRequest
       dco_decode_box_autoadd_tournament_config_set_backup_interval_request(
           dynamic raw);
@@ -250,6 +255,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TournamentConfig dco_decode_tournament_config(dynamic raw);
 
   @protected
+  TournamentConfigSetAdminPasswordRequest
+      dco_decode_tournament_config_set_admin_password_request(dynamic raw);
+
+  @protected
   TournamentConfigSetBackupIntervalRequest
       dco_decode_tournament_config_set_backup_interval_request(dynamic raw);
 
@@ -365,6 +374,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   TournamentConfig sse_decode_box_autoadd_tournament_config(
       SseDeserializer deserializer);
+
+  @protected
+  TournamentConfigSetAdminPasswordRequest
+      sse_decode_box_autoadd_tournament_config_set_admin_password_request(
+          SseDeserializer deserializer);
 
   @protected
   TournamentConfigSetBackupIntervalRequest
@@ -522,6 +536,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TournamentConfig sse_decode_tournament_config(SseDeserializer deserializer);
 
   @protected
+  TournamentConfigSetAdminPasswordRequest
+      sse_decode_tournament_config_set_admin_password_request(
+          SseDeserializer deserializer);
+
+  @protected
   TournamentConfigSetBackupIntervalRequest
       sse_decode_tournament_config_set_backup_interval_request(
           SseDeserializer deserializer);
@@ -643,6 +662,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_tournament_config(
       TournamentConfig self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config_set_admin_password_request(
+      TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_tournament_config_set_backup_interval_request(
@@ -804,6 +827,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_tournament_config(
       TournamentConfig self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tournament_config_set_admin_password_request(
+      TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_tournament_config_set_backup_interval_request(

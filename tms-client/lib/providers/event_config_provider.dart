@@ -55,6 +55,12 @@ class EventConfigProvider extends EchoTreeProvider<String, TournamentConfig> {
     return status;
   }
 
+  Future<int> setAdminPassword(String password) async {
+    TmsLogger().d("Setting admin password");
+    int status = await _service.setAdminPassword(password);
+    return status;
+  }
+
   Future<int> purgeEvent() async {
     TmsLogger().d("Purging event");
     int status = await _service.purge();

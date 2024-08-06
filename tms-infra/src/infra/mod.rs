@@ -3,6 +3,7 @@ use serde::{de::DeserializeOwned, Serialize};
 
 pub mod network_schemas;
 pub mod database_schemas;
+pub mod fll_infra;
 
 pub trait DataSchemeExtensions: Default + Serialize + JsonSchema + DeserializeOwned {
   #[flutter_rust_bridge::frb(sync)]

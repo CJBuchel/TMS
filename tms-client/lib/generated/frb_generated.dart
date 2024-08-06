@@ -75,7 +75,7 @@ class TmsRustLib
   String get codegenVersion => '2.0.0';
 
   @override
-  int get rustContentHash => -1757559329;
+  int get rustContentHash => -1703084643;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -242,6 +242,17 @@ abstract class TmsRustLibApi extends BaseApi {
 
   String
       crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchema();
+
+  TournamentConfigSetAdminPasswordRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToJsonString(
+          {required TournamentConfigSetAdminPasswordRequest that});
+
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToSchema();
 
   TournamentConfigSetBackupIntervalRequest
       crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonString(
@@ -1754,6 +1765,92 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
+  TournamentConfigSetAdminPasswordRequest
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData:
+            sse_decode_tournament_config_set_admin_password_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_admin_password_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToJsonString(
+          {required TournamentConfigSetAdminPasswordRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tournament_config_set_admin_password_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName:
+                "tournament_config_set_admin_password_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "tournament_config_set_admin_password_request_to_schema",
+            argNames: [],
+          );
+
+  @override
   TournamentConfigSetBackupIntervalRequest
       crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonString(
           {required String json}) {
@@ -1761,7 +1858,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -1792,7 +1889,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_backup_interval_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1819,7 +1916,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1848,7 +1945,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -1879,7 +1976,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_endgame_timer_length_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1906,7 +2003,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1935,7 +2032,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config_set_name_request,
@@ -1964,7 +2061,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_name_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -1990,7 +2087,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 70)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2018,7 +2115,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2049,7 +2146,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_retain_backups_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2076,7 +2173,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 70)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2104,7 +2201,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config_set_season_request,
@@ -2133,7 +2230,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_season_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2159,7 +2256,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2187,7 +2284,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 77)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -2218,7 +2315,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_timer_length_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 78)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2245,7 +2342,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 79)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2399,6 +2496,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   TournamentConfig dco_decode_box_autoadd_tournament_config(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_tournament_config(raw);
+  }
+
+  @protected
+  TournamentConfigSetAdminPasswordRequest
+      dco_decode_box_autoadd_tournament_config_set_admin_password_request(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_tournament_config_set_admin_password_request(raw);
   }
 
   @protected
@@ -2829,7 +2934,19 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       retainBackups: dco_decode_u_32(arr[2]),
       endGameTimerLength: dco_decode_u_32(arr[3]),
       timerLength: dco_decode_u_32(arr[4]),
-      season: dco_decode_String(arr[5]),
+      season: dco_decode_opt_String(arr[5]),
+    );
+  }
+
+  @protected
+  TournamentConfigSetAdminPasswordRequest
+      dco_decode_tournament_config_set_admin_password_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TournamentConfigSetAdminPasswordRequest(
+      adminPassword: dco_decode_String(arr[0]),
     );
   }
 
@@ -3082,6 +3199,15 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_tournament_config(deserializer));
+  }
+
+  @protected
+  TournamentConfigSetAdminPasswordRequest
+      sse_decode_box_autoadd_tournament_config_set_admin_password_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_tournament_config_set_admin_password_request(
+        deserializer));
   }
 
   @protected
@@ -3529,7 +3655,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     var var_retainBackups = sse_decode_u_32(deserializer);
     var var_endGameTimerLength = sse_decode_u_32(deserializer);
     var var_timerLength = sse_decode_u_32(deserializer);
-    var var_season = sse_decode_String(deserializer);
+    var var_season = sse_decode_opt_String(deserializer);
     return TournamentConfig(
         name: var_name,
         backupInterval: var_backupInterval,
@@ -3537,6 +3663,16 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         endGameTimerLength: var_endGameTimerLength,
         timerLength: var_timerLength,
         season: var_season);
+  }
+
+  @protected
+  TournamentConfigSetAdminPasswordRequest
+      sse_decode_tournament_config_set_admin_password_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_adminPassword = sse_decode_String(deserializer);
+    return TournamentConfigSetAdminPasswordRequest(
+        adminPassword: var_adminPassword);
   }
 
   @protected
@@ -3767,6 +3903,13 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       TournamentConfig self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_tournament_config(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_tournament_config_set_admin_password_request(
+      TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_tournament_config_set_admin_password_request(self, serializer);
   }
 
   @protected
@@ -4135,7 +4278,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     sse_encode_u_32(self.retainBackups, serializer);
     sse_encode_u_32(self.endGameTimerLength, serializer);
     sse_encode_u_32(self.timerLength, serializer);
-    sse_encode_String(self.season, serializer);
+    sse_encode_opt_String(self.season, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_config_set_admin_password_request(
+      TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.adminPassword, serializer);
   }
 
   @protected

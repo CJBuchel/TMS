@@ -120,7 +120,7 @@ impl TournamentConfigExtensions for Database {
     match config {
       Some(config) => {
         let config = TournamentConfig::from_json_string(&config);
-        Some(config.season)
+        config.season
       },
       None => None
     }
@@ -131,12 +131,12 @@ impl TournamentConfigExtensions for Database {
     match existing_config {
       Some(config) => {
         let mut config = TournamentConfig::from_json_string(&config);
-        config.season = season;
+        config.season = Some(season);
         self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json_string()).await;
       },
       None => {
         let config = TournamentConfig {
-          season,
+          season: Some(season),
           ..Default::default()
         };
         self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json_string()).await;

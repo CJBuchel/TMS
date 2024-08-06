@@ -14,7 +14,7 @@ class TournamentConfig {
   final int retainBackups;
   final int endGameTimerLength;
   final int timerLength;
-  final String season;
+  final String? season;
 
   const TournamentConfig({
     required this.name,
@@ -22,7 +22,7 @@ class TournamentConfig {
     required this.retainBackups,
     required this.endGameTimerLength,
     required this.timerLength,
-    required this.season,
+    this.season,
   });
 
   static TournamentConfig fromJsonString({required String json}) => TmsRustLib

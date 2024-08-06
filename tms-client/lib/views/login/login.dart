@@ -20,13 +20,6 @@ class Login extends StatelessWidget {
         title: 'Login Failed',
         message: status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status",
       ).show(context);
-      // showDialog(
-      //   context: context,
-      //   builder: (context) => ErrorDialog(
-      //     title: 'Login Failed',
-      //     message: status == HttpStatus.unauthorized ? "Incorrect Username or Password" : "Server Error: $status",
-      //   ),
-      // );
     }
   }
 
@@ -73,7 +66,7 @@ class Login extends StatelessWidget {
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Password',
-            hintText: 'Enter password, e.g `password1!`',
+            hintText: 'Enter password, e.g `admin`',
           ),
         ),
       ),

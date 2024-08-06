@@ -101,6 +101,22 @@ class EventConfigService {
     }
   }
 
+  Future<int> setAdminPassword(String password) async {
+    try {
+      var request = TournamentConfigSetAdminPasswordRequest(adminPassword: password).toJsonString();
+      var response = await Network().networkPost("/tournament/config/admin_password", request);
+      if (response.$1) {
+        TmsLogger().i("Admin password set");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
+
   Future<int> purge() async {
     try {
       var response = await Network().networkPost("/tournament/config/purge", null);

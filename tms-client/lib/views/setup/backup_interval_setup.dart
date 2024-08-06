@@ -14,30 +14,26 @@ class BackupIntervalSetup extends StatelessWidget {
     EchoTreeClient().subscribe([":tournament:config"]);
     return EchoTreeLifetime(
       trees: [":tournament:config"],
-      child: Column(
-        children: [
-          Consumer<EventConfigProvider>(
-            builder: (context, provider, child) {
-              _controller.text = provider.backupInterval.toString();
-              return InputSetter(
-                label: "Set backup interval:",
-                onSet: () async {
-                  await provider.setBackupInterval(int.parse(_controller.text)).then((res) {
-                    SnackBarDialog.fromStatus(message: "Set Backup Interval", status: res).show(context);
-                  });
-                },
-                input: TextField(
-                  controller: _controller,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Backup Interval (minutes)",
-                  ),
-                ),
-              );
+      child: Consumer<EventConfigProvider>(
+        builder: (context, provider, _) {
+          _controller.text = provider.backupInterval.toString();
+          return InputSetter(
+            label: "Set backup interval:",
+            onSet: () async {
+              await provider.setBackupInterval(int.parse(_controller.text)).then((res) {
+                SnackBarDialog.fromStatus(message: "Set Backup Interval", status: res).show(context);
+              });
             },
-          ),
-        ],
+            input: TextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Backup Interval (minutes)",
+              ),
+            ),
+          );
+        },
       ),
     );
   }

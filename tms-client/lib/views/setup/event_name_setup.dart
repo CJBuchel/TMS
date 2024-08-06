@@ -14,29 +14,25 @@ class EventNameSetup extends StatelessWidget {
     EchoTreeClient().subscribe([":tournament:config"]);
     return EchoTreeLifetime(
       trees: [":tournament:config"],
-      child: Column(
-        children: [
-          Consumer<EventConfigProvider>(
-            builder: (context, provider, child) {
-              _controller.text = provider.eventName;
-              return InputSetter(
-                label: "Set event name:",
-                onSet: () async {
-                  await provider.setEventName(_controller.text).then((res) {
-                    SnackBarDialog.fromStatus(message: "Set Event Name", status: res).show(context);
-                  });
-                },
-                input: TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Event Name",
-                  ),
-                ),
-              );
+      child: Consumer<EventConfigProvider>(
+        builder: (context, provider, child) {
+          _controller.text = provider.eventName;
+          return InputSetter(
+            label: "Set event name:",
+            onSet: () async {
+              await provider.setEventName(_controller.text).then((res) {
+                SnackBarDialog.fromStatus(message: "Set Event Name", status: res).show(context);
+              });
             },
-          ),
-        ],
+            input: TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Event Name",
+              ),
+            ),
+          );
+        },
       ),
     );
   }

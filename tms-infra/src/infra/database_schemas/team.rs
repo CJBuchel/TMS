@@ -6,7 +6,6 @@ use crate::infra::DataSchemeExtensions;
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Team {
-  pub cloud_id: String,
   pub number: String,
   pub name: String,
   pub affiliation: String,
@@ -16,7 +15,6 @@ pub struct Team {
 impl Default for Team {
   fn default() -> Self {
     Self {
-      cloud_id: "".to_string(),
       number: "".to_string(),
       name: "".to_string(),
       affiliation: "".to_string(),

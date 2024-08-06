@@ -10,7 +10,7 @@ pub struct TournamentConfig {
   pub retain_backups: u32, // number of backups retained
   pub end_game_timer_length: u32, // in seconds
   pub timer_length: u32, // in seconds
-  pub season: String,
+  pub season: Option<String>, // season year (none for no season/agnostic)
 }
 
 impl Default for TournamentConfig {
@@ -21,7 +21,7 @@ impl Default for TournamentConfig {
       retain_backups: 5,
       end_game_timer_length: 30,
       timer_length: 150,
-      season: "".to_string(),
+      season: None,
     }
   }
 }

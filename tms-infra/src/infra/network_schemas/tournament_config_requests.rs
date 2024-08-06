@@ -82,9 +82,23 @@ impl Default for TournamentConfigSetSeasonRequest {
   }
 }
 
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct TournamentConfigSetAdminPasswordRequest {
+  pub admin_password: String,
+}
+
+impl Default for TournamentConfigSetAdminPasswordRequest {
+  fn default() -> Self {
+    Self {
+      admin_password: "".to_string(),
+    }
+  }
+}
+
 
 impl DataSchemeExtensions for TournamentConfigSetNameRequest {}
 impl DataSchemeExtensions for TournamentConfigSetSeasonRequest {}
+impl DataSchemeExtensions for TournamentConfigSetAdminPasswordRequest {}
 impl DataSchemeExtensions for TournamentConfigSetBackupIntervalRequest {}
 impl DataSchemeExtensions for TournamentConfigSetRetainBackupsRequest {}
 impl DataSchemeExtensions for TournamentConfigSetTimerLengthRequest {}

@@ -88,10 +88,10 @@ class StageTable extends StatelessWidget {
           child: _header("Table"),
         ),
         BaseTableCell(
-          child: _header("Team Number"),
+          child: _header("Team"),
         ),
         BaseTableCell(
-          child: _header("Team Name"),
+          child: _header("Name"),
           flex: 2,
         ),
       ],

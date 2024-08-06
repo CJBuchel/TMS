@@ -6,7 +6,39 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `default`, `default`, `default`, `default`, `default`, `default`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `default`, `default`, `default`, `default`, `default`, `default`, `default`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
+
+class TournamentConfigSetAdminPasswordRequest {
+  final String adminPassword;
+
+  const TournamentConfigSetAdminPasswordRequest({
+    required this.adminPassword,
+  });
+
+  static TournamentConfigSetAdminPasswordRequest fromJsonString(
+          {required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestFromJsonString(
+              json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToSchema();
+
+  @override
+  int get hashCode => adminPassword.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TournamentConfigSetAdminPasswordRequest &&
+          runtimeType == other.runtimeType &&
+          adminPassword == other.adminPassword;
+}
 
 class TournamentConfigSetBackupIntervalRequest {
   final int interval;

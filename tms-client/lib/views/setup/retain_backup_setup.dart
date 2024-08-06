@@ -14,30 +14,26 @@ class BackupRetentionSetup extends StatelessWidget {
     EchoTreeClient().subscribe([":tournament:config"]);
     return EchoTreeLifetime(
       trees: [":tournament:config"],
-      child: Column(
-        children: [
-          Consumer<EventConfigProvider>(
-            builder: (context, provider, child) {
-              _controller.text = provider.retainBackups.toString();
-              return InputSetter(
-                label: "Set number of backups to retain:",
-                onSet: () async {
-                  await provider.setRetainBackups(int.parse(_controller.text)).then((value) {
-                    SnackBarDialog.fromStatus(message: "Set Backup Retention", status: value).show(context);
-                  });
-                },
-                input: TextField(
-                  controller: _controller,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Backup Retention",
-                  ),
-                ),
-              );
+      child: Consumer<EventConfigProvider>(
+        builder: (context, provider, child) {
+          _controller.text = provider.retainBackups.toString();
+          return InputSetter(
+            label: "Set number of backups to retain:",
+            onSet: () async {
+              await provider.setRetainBackups(int.parse(_controller.text)).then((value) {
+                SnackBarDialog.fromStatus(message: "Set Backup Retention", status: value).show(context);
+              });
             },
-          ),
-        ],
+            input: TextField(
+              controller: _controller,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Backup Retention",
+              ),
+            ),
+          );
+        },
       ),
     );
   }

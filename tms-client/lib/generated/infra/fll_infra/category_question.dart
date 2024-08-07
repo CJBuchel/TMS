@@ -6,68 +6,62 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`
 
-            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`
+class CategoricalOption {
+  final String label;
+  final int score;
 
+  const CategoricalOption({
+    required this.label,
+    required this.score,
+  });
 
-            
+  @override
+  int get hashCode => label.hashCode ^ score.hashCode;
 
-            class CategoricalOption  {
-                final String label;
-final int score;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CategoricalOption &&
+          runtimeType == other.runtimeType &&
+          label == other.label &&
+          score == other.score;
+}
 
-                const CategoricalOption({required this.label ,required this.score ,});
+class CategoricalQuestion {
+  final List<CategoricalOption> options;
+  final String defaultOption;
 
-                
-                
+  const CategoricalQuestion({
+    required this.options,
+    required this.defaultOption,
+  });
 
-                
-        @override
-        int get hashCode => label.hashCode^score.hashCode;
-        
+  static Future<CategoricalQuestion> default_() => TmsRustLib.instance.api
+      .crateInfraFllInfraCategoryQuestionCategoricalQuestionDefault();
 
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is CategoricalOption &&
-                runtimeType == other.runtimeType
-                && label == other.label&& score == other.score;
-        
-            }
+  static CategoricalQuestion fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraFllInfraCategoryQuestionCategoricalQuestionFromJsonString(
+              json: json);
 
-class CategoricalQuestion  {
-                final List<CategoricalOption> options;
-final String defaultOption;
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraFllInfraCategoryQuestionCategoricalQuestionToJsonString(
+        that: this,
+      );
 
-                const CategoricalQuestion({required this.options ,required this.defaultOption ,});
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraFllInfraCategoryQuestionCategoricalQuestionToSchema();
 
-                static Future<CategoricalQuestion>  default_()=>TmsRustLib.instance.api.crateInfraFllInfraCategoryQuestionCategoricalQuestionDefault();
+  @override
+  int get hashCode => options.hashCode ^ defaultOption.hashCode;
 
-
-static CategoricalQuestion  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraFllInfraCategoryQuestionCategoricalQuestionFromJsonString(json: json);
-
-
- String  toJsonString()=>TmsRustLib.instance.api.crateInfraFllInfraCategoryQuestionCategoricalQuestionToJsonString(that: this, );
-
-
-static String  toSchema()=>TmsRustLib.instance.api.crateInfraFllInfraCategoryQuestionCategoricalQuestionToSchema();
-
-
-                
-
-                
-        @override
-        int get hashCode => options.hashCode^defaultOption.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is CategoricalQuestion &&
-                runtimeType == other.runtimeType
-                && options == other.options&& defaultOption == other.defaultOption;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CategoricalQuestion &&
+          runtimeType == other.runtimeType &&
+          options == other.options &&
+          defaultOption == other.defaultOption;
+}

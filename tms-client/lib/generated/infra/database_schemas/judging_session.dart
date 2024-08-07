@@ -7,73 +7,86 @@ import '../../frb_generated.dart';
 import 'date_time.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`
 
-            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`
+class JudgingSession {
+  final String sessionNumber;
+  final TmsDateTime startTime;
+  final TmsDateTime endTime;
+  final List<JudgingSessionPod> judgingSessionPods;
 
+  const JudgingSession({
+    required this.sessionNumber,
+    required this.startTime,
+    required this.endTime,
+    required this.judgingSessionPods,
+  });
 
-            
+  static Future<JudgingSession> default_() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasJudgingSessionJudgingSessionDefault();
 
-            class JudgingSession  {
-                final String sessionNumber;
-final TmsDateTime startTime;
-final TmsDateTime endTime;
-final List<JudgingSessionPod> judgingSessionPods;
+  static JudgingSession fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasJudgingSessionJudgingSessionFromJsonString(
+              json: json);
 
-                const JudgingSession({required this.sessionNumber ,required this.startTime ,required this.endTime ,required this.judgingSessionPods ,});
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasJudgingSessionJudgingSessionToJsonString(
+        that: this,
+      );
 
-                static Future<JudgingSession>  default_()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasJudgingSessionJudgingSessionDefault();
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasJudgingSessionJudgingSessionToSchema();
 
+  @override
+  int get hashCode =>
+      sessionNumber.hashCode ^
+      startTime.hashCode ^
+      endTime.hashCode ^
+      judgingSessionPods.hashCode;
 
-static JudgingSession  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraDatabaseSchemasJudgingSessionJudgingSessionFromJsonString(json: json);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is JudgingSession &&
+          runtimeType == other.runtimeType &&
+          sessionNumber == other.sessionNumber &&
+          startTime == other.startTime &&
+          endTime == other.endTime &&
+          judgingSessionPods == other.judgingSessionPods;
+}
 
+class JudgingSessionPod {
+  final String pod;
+  final String teamNumber;
+  final bool coreValuesSubmitted;
+  final bool innovationSubmitted;
+  final bool robotDesignSubmitted;
 
- String  toJsonString()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasJudgingSessionJudgingSessionToJsonString(that: this, );
+  const JudgingSessionPod({
+    required this.pod,
+    required this.teamNumber,
+    required this.coreValuesSubmitted,
+    required this.innovationSubmitted,
+    required this.robotDesignSubmitted,
+  });
 
+  @override
+  int get hashCode =>
+      pod.hashCode ^
+      teamNumber.hashCode ^
+      coreValuesSubmitted.hashCode ^
+      innovationSubmitted.hashCode ^
+      robotDesignSubmitted.hashCode;
 
-static String  toSchema()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasJudgingSessionJudgingSessionToSchema();
-
-
-                
-
-                
-        @override
-        int get hashCode => sessionNumber.hashCode^startTime.hashCode^endTime.hashCode^judgingSessionPods.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is JudgingSession &&
-                runtimeType == other.runtimeType
-                && sessionNumber == other.sessionNumber&& startTime == other.startTime&& endTime == other.endTime&& judgingSessionPods == other.judgingSessionPods;
-        
-            }
-
-class JudgingSessionPod  {
-                final String pod;
-final String teamNumber;
-final bool coreValuesSubmitted;
-final bool innovationSubmitted;
-final bool robotDesignSubmitted;
-
-                const JudgingSessionPod({required this.pod ,required this.teamNumber ,required this.coreValuesSubmitted ,required this.innovationSubmitted ,required this.robotDesignSubmitted ,});
-
-                
-                
-
-                
-        @override
-        int get hashCode => pod.hashCode^teamNumber.hashCode^coreValuesSubmitted.hashCode^innovationSubmitted.hashCode^robotDesignSubmitted.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is JudgingSessionPod &&
-                runtimeType == other.runtimeType
-                && pod == other.pod&& teamNumber == other.teamNumber&& coreValuesSubmitted == other.coreValuesSubmitted&& innovationSubmitted == other.innovationSubmitted&& robotDesignSubmitted == other.robotDesignSubmitted;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is JudgingSessionPod &&
+          runtimeType == other.runtimeType &&
+          pod == other.pod &&
+          teamNumber == other.teamNumber &&
+          coreValuesSubmitted == other.coreValuesSubmitted &&
+          innovationSubmitted == other.innovationSubmitted &&
+          robotDesignSubmitted == other.robotDesignSubmitted;
+}

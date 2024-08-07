@@ -178,7 +178,6 @@ impl CsvToTmsSchedule for V1 {
     if let Some(teams_block) = v1.teams_block {
       for team in teams_block.teams {
         schedule.teams.push(Team {
-          cloud_id: "".to_string(),
           number: team.number,
           name: team.name,
           affiliation: team.affiliation,

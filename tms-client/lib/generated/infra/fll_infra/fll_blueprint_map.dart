@@ -4,26 +4,28 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
-import 'fll_game.dart';
+import 'fll_blueprint.dart';
 import 'mission.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'question.dart';
 
 // These functions are ignored (category: IgnoreBecauseExplicitAttribute): `get_fll_game`, `get_seasons`
 
-class FllGameMap {
-  const FllGameMap();
+class FllBlueprintMap {
+  const FllBlueprintMap();
 
   Future<int> calculateScore(
-          {required FllGame fllGame, required List<QuestionAnswer> answers}) =>
+          {required FllBlueprint blueprint,
+          required List<QuestionAnswer> answers}) =>
       TmsRustLib.instance.api
-          .crateInfraFllInfraFllSeasonMapFllGameMapCalculateScore(
-              that: this, fllGame: fllGame, answers: answers);
+          .crateInfraFllInfraFllBlueprintMapFllBlueprintMapCalculateScore(
+              that: this, blueprint: blueprint, answers: answers);
 
   Future<List<QuestionValidationError>?> validate(
           {required String season, required List<QuestionAnswer> answers}) =>
-      TmsRustLib.instance.api.crateInfraFllInfraFllSeasonMapFllGameMapValidate(
-          that: this, season: season, answers: answers);
+      TmsRustLib.instance.api
+          .crateInfraFllInfraFllBlueprintMapFllBlueprintMapValidate(
+              that: this, season: season, answers: answers);
 
   @override
   int get hashCode => 0;
@@ -31,5 +33,5 @@ class FllGameMap {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is FllGameMap && runtimeType == other.runtimeType;
+      other is FllBlueprintMap && runtimeType == other.runtimeType;
 }

@@ -6,43 +6,39 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
 
-            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
+class RobotGamesLoadMatchRequest {
+  final List<String> gameMatchNumbers;
 
+  const RobotGamesLoadMatchRequest({
+    required this.gameMatchNumbers,
+  });
 
-            
+  static Future<RobotGamesLoadMatchRequest> default_() => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestDefault();
 
-            class RobotGamesLoadMatchRequest  {
-                final List<String> gameMatchNumbers;
+  static RobotGamesLoadMatchRequest fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonString(
+              json: json);
 
-                const RobotGamesLoadMatchRequest({required this.gameMatchNumbers ,});
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonString(
+        that: this,
+      );
 
-                static Future<RobotGamesLoadMatchRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestDefault();
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema();
 
+  @override
+  int get hashCode => gameMatchNumbers.hashCode;
 
-static RobotGamesLoadMatchRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonString(json: json);
-
-
- String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonString(that: this, );
-
-
-static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema();
-
-
-                
-
-                
-        @override
-        int get hashCode => gameMatchNumbers.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is RobotGamesLoadMatchRequest &&
-                runtimeType == other.runtimeType
-                && gameMatchNumbers == other.gameMatchNumbers;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RobotGamesLoadMatchRequest &&
+          runtimeType == other.runtimeType &&
+          gameMatchNumbers == other.gameMatchNumbers;
+}

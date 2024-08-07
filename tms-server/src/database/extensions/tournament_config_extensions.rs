@@ -16,6 +16,10 @@ pub trait TournamentConfigExtensions {
   async fn get_tournament_season(&self) -> Option<String>;
   async fn set_tournament_season(&mut self, season: String);
 
+  async fn set_tournament_season_type(&mut self, season_type: SeasonType);
+  async fn get_tournament_season_type(&self) -> Option<SeasonType>;
+
+
   async fn get_tournament_backup_interval(&self) -> Option<u32>;
   async fn set_tournament_backup_interval(&mut self, interval: u32);
 
@@ -141,6 +145,35 @@ impl TournamentConfigExtensions for Database {
         };
         self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json_string()).await;
       }
+    }
+  }
+
+  async fn set_tournament_season_type(&mut self, season_type: SeasonType) {
+    let existing_config = self.inner.read().await.get_tree(TOURNAMENT_CONFIG.to_string()).await.get("config").cloned();
+    match existing_config {
+      Some(config) => {
+        let mut config = TournamentConfig::from_json_string(&config);
+        config.season_type = season_type;
+        self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json_string()).await;
+      },
+      None => {
+        let config = TournamentConfig {
+          season_type,
+          ..Default::default()
+        };
+        self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json_string()).await;
+      }
+    }
+  }
+
+  async fn get_tournament_season_type(&self) -> Option<SeasonType> {
+    let config = self.inner.read().await.get_tree(TOURNAMENT_CONFIG.to_string()).await.get("config").cloned();
+    match config {
+      Some(config) => {
+        let config = TournamentConfig::from_json_string(&config);
+        Some(config.season_type)
+      },
+      None => None
     }
   }
 

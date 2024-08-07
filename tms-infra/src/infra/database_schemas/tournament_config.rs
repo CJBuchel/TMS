@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::infra::DataSchemeExtensions;
+use crate::{infra::DataSchemeExtensions, SeasonType};
 
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct TournamentConfig {
@@ -11,6 +11,7 @@ pub struct TournamentConfig {
   pub end_game_timer_length: u32, // in seconds
   pub timer_length: u32, // in seconds
   pub season: Option<String>, // season year (none for no season/agnostic)
+  pub season_type: SeasonType,
 }
 
 impl Default for TournamentConfig {
@@ -21,6 +22,7 @@ impl Default for TournamentConfig {
       retain_backups: 5,
       end_game_timer_length: 30,
       timer_length: 150,
+      season_type: SeasonType::Agnostic,
       season: None,
     }
   }

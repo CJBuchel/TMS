@@ -4,29 +4,31 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../../frb_generated.dart';
-import '../fll_game.dart';
+import '../fll_blueprint.dart';
 import '../mission.dart';
 import '../question.dart';
-import '../seasons.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `validate`
 
-            // These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `validate`
+class MasterPiece {
+  const MasterPiece();
 
+  Future<FllBlueprint> getFllGame() => TmsRustLib.instance.api
+          .crateInfraFllInfraSeasonsFll2023MasterPieceGetFllGame(
+        that: this,
+      );
 
-            
+  Future<String> getSeason() => TmsRustLib.instance.api
+          .crateInfraFllInfraSeasonsFll2023MasterPieceGetSeason(
+        that: this,
+      );
 
-            
-                // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MasterPiece>>
-                abstract class MasterPiece implements RustOpaqueInterface, BaseSeason {
-                     Future<FllGame>  getFllGame();
+  @override
+  int get hashCode => 0;
 
-
- Future<String>  getSeason();
-
-
-
-                    
-                }
-                
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MasterPiece && runtimeType == other.runtimeType;
+}

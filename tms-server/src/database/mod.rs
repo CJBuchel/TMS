@@ -127,6 +127,7 @@ impl Database {
     log::info!("Creating trees...");
 
     self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
+    self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), FllBlueprint::to_schema()).await;
     self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_TABLES.to_string(), GameTable::to_schema()).await;

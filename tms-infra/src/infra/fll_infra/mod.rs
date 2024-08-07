@@ -10,8 +10,8 @@ pub use question::*;
 pub mod mission;
 pub use mission::*;
 
-pub mod fll_game;
-pub use fll_game::*;
+pub mod fll_blueprint;
+pub use fll_blueprint::*;
 
-pub mod fll_season_map;
-pub use fll_season_map::*;
+pub mod fll_blueprint_map;
+pub use fll_blueprint_map::*;

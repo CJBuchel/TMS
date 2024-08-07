@@ -1,13 +1,9 @@
 use std::vec;
 
-use flutter_rust_bridge::frb;
-use serde::{Deserialize, Serialize};
-
-use crate::infra::fll_infra::{FllGame, QuestionAnswer, QuestionValidationError};
+use crate::{infra::fll_infra::{QuestionAnswer, QuestionValidationError}, FllBlueprint};
 
 use super::BaseSeason;
 
-#[flutter_rust_bridge::frb(opaque)]
 pub struct MasterPiece {}
 
 impl BaseSeason for MasterPiece {
@@ -19,7 +15,7 @@ impl BaseSeason for MasterPiece {
     "2023".to_string()
   }
 
-  fn get_fll_game(&self) -> FllGame {
-    FllGame::default() // TODO: Implement this
+  fn get_fll_game(&self) -> FllBlueprint {
+    FllBlueprint::default() // TODO: Implement this
   }
 }

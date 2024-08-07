@@ -15,7 +15,6 @@ abstract class _BaseTeamsProvider extends EchoTreeProvider<String, Team> {
     } catch (e) {
       return const Team(
         affiliation: 'N/A',
-        cloudId: '',
         name: 'N/A',
         number: 'N/A',
         ranking: 0,

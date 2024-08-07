@@ -70,14 +70,22 @@ impl Default for TournamentConfigSetRetainBackupsRequest {
 }
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub enum SeasonType {
+  Agnostic,
+  Seasonal
+}
+
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub struct TournamentConfigSetSeasonRequest {
-  pub season: String,
+  pub season_type: SeasonType,
+  pub season: Option<String>,
 }
 
 impl Default for TournamentConfigSetSeasonRequest {
   fn default() -> Self {
     Self {
-      season: "".to_string(),
+      season_type: SeasonType::Agnostic,
+      season: None,
     }
   }
 }

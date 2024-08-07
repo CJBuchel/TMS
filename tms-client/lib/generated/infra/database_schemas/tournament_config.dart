@@ -4,50 +4,66 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import '../network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
 
-            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
+class TournamentConfig {
+  final String name;
+  final int backupInterval;
+  final int retainBackups;
+  final int endGameTimerLength;
+  final int timerLength;
+  final String? season;
+  final SeasonType seasonType;
 
+  const TournamentConfig({
+    required this.name,
+    required this.backupInterval,
+    required this.retainBackups,
+    required this.endGameTimerLength,
+    required this.timerLength,
+    this.season,
+    required this.seasonType,
+  });
 
-            
+  static Future<TournamentConfig> default_() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasTournamentConfigTournamentConfigDefault();
 
-            class TournamentConfig  {
-                final String name;
-final int backupInterval;
-final int retainBackups;
-final int endGameTimerLength;
-final int timerLength;
-final String? season;
+  static TournamentConfig fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraDatabaseSchemasTournamentConfigTournamentConfigFromJsonString(
+          json: json);
 
-                const TournamentConfig({required this.name ,required this.backupInterval ,required this.retainBackups ,required this.endGameTimerLength ,required this.timerLength ,this.season ,});
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasTournamentConfigTournamentConfigToJsonString(
+        that: this,
+      );
 
-                static Future<TournamentConfig>  default_()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTournamentConfigTournamentConfigDefault();
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasTournamentConfigTournamentConfigToSchema();
 
+  @override
+  int get hashCode =>
+      name.hashCode ^
+      backupInterval.hashCode ^
+      retainBackups.hashCode ^
+      endGameTimerLength.hashCode ^
+      timerLength.hashCode ^
+      season.hashCode ^
+      seasonType.hashCode;
 
-static TournamentConfig  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTournamentConfigTournamentConfigFromJsonString(json: json);
-
-
- String  toJsonString()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTournamentConfigTournamentConfigToJsonString(that: this, );
-
-
-static String  toSchema()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTournamentConfigTournamentConfigToSchema();
-
-
-                
-
-                
-        @override
-        int get hashCode => name.hashCode^backupInterval.hashCode^retainBackups.hashCode^endGameTimerLength.hashCode^timerLength.hashCode^season.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is TournamentConfig &&
-                runtimeType == other.runtimeType
-                && name == other.name&& backupInterval == other.backupInterval&& retainBackups == other.retainBackups&& endGameTimerLength == other.endGameTimerLength&& timerLength == other.timerLength&& season == other.season;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TournamentConfig &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          backupInterval == other.backupInterval &&
+          retainBackups == other.retainBackups &&
+          endGameTimerLength == other.endGameTimerLength &&
+          timerLength == other.timerLength &&
+          season == other.season &&
+          seasonType == other.seasonType;
+}

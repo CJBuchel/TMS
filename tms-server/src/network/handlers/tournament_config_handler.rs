@@ -79,7 +79,7 @@ pub async fn tournament_config_get_retain_backups(db: SharedDatabase) -> Result<
 pub async fn tournament_config_set_season(request: TournamentConfigSetSeasonRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
   let mut write_db = db.write().await;
 
-  write_db.set_tournament_season_type(request.season_type).await;
+  write_db.set_tournament_blueprint_type(request.blueprint_type).await;
 
   match request.season {
     Some(season) => {

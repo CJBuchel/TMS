@@ -9,7 +9,7 @@ const SEASONS: &[(&str, &'static dyn BaseSeason)] = &[
 pub struct FllBlueprintMap {}
 
 impl FllBlueprintMap {
-  pub fn validate(&self, season: String, answers: Vec<QuestionAnswer>) -> Option<Vec<QuestionValidationError>> {
+  pub fn validate(season: String, answers: Vec<QuestionAnswer>) -> Option<Vec<QuestionValidationError>> {
     // match_season!(season, validate(answers))
     match SEASONS.iter().find(|(s, _)| *s == season) {
       Some((_, season)) => Some(season.validate(answers)),
@@ -17,7 +17,7 @@ impl FllBlueprintMap {
     }
   }
 
-  pub fn calculate_score(&self, blueprint: FllBlueprint, answers: Vec<QuestionAnswer>) -> i32 {
+  pub fn calculate_score(blueprint: FllBlueprint, answers: Vec<QuestionAnswer>) -> i32 {
     let mut score = 0;
     for answer in answers {
       let question = blueprint.robot_game_questions.iter().find(|q| q.id == answer.question_id);
@@ -33,7 +33,7 @@ impl FllBlueprintMap {
 
   // this doesn't get FRB annotations to avoid frontend confusion. (Flutter gets game from server db)
   #[flutter_rust_bridge::frb(ignore)]
-  pub fn get_fll_game(&self, season: String) -> Option<FllBlueprint> {
+  pub fn get_fll_blueprint(season: String) -> Option<FllBlueprint> {
     // match_season!(season, get_fll_game())
     match SEASONS.iter().find(|(s, _)| *s == season) {
       Some((_, season)) => Some(season.get_fll_game()),
@@ -43,7 +43,7 @@ impl FllBlueprintMap {
 
   // this doesn't get FRB annotations to avoid frontend confusion. (Flutter gets game from server db)
   #[flutter_rust_bridge::frb(ignore)]
-  pub fn get_seasons(&self) -> Vec<String> {
+  pub fn get_seasons() -> Vec<String> {
     SEASONS.iter().map(|(s, _)| s.to_string()).collect()
   }
 }

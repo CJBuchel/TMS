@@ -8,7 +8,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
-enum SeasonType {
+enum BlueprintType {
   agnostic,
   seasonal,
   ;
@@ -195,11 +195,11 @@ class TournamentConfigSetRetainBackupsRequest {
 }
 
 class TournamentConfigSetSeasonRequest {
-  final SeasonType seasonType;
+  final BlueprintType blueprintType;
   final String? season;
 
   const TournamentConfigSetSeasonRequest({
-    required this.seasonType,
+    required this.blueprintType,
     this.season,
   });
 
@@ -222,14 +222,14 @@ class TournamentConfigSetSeasonRequest {
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchema();
 
   @override
-  int get hashCode => seasonType.hashCode ^ season.hashCode;
+  int get hashCode => blueprintType.hashCode ^ season.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TournamentConfigSetSeasonRequest &&
           runtimeType == other.runtimeType &&
-          seasonType == other.seasonType &&
+          blueprintType == other.blueprintType &&
           season == other.season;
 }
 

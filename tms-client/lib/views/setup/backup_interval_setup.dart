@@ -2,7 +2,7 @@ import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tms/providers/event_config_provider.dart';
+import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/views/setup/input_setter.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
@@ -14,7 +14,7 @@ class BackupIntervalSetup extends StatelessWidget {
     EchoTreeClient().subscribe([":tournament:config"]);
     return EchoTreeLifetime(
       trees: [":tournament:config"],
-      child: Consumer<EventConfigProvider>(
+      child: Consumer<TournamentConfigProvider>(
         builder: (context, provider, _) {
           _controller.text = provider.backupInterval.toString();
           return InputSetter(

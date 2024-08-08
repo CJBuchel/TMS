@@ -1,7 +1,7 @@
 import 'package:tms/generated/infra/network_schemas/socket_protocol/match_time_event.dart';
 import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/mixins/server_event_subscriber_mixin.dart';
-import 'package:tms/providers/event_config_provider.dart';
+import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/services/game_timer_service.dart';
 import 'package:tms/utils/logger.dart';
 
@@ -14,7 +14,7 @@ enum TimerRunState {
   stopped,
 }
 
-class GameTimerProvider extends EventConfigProvider with ServerEventSubscribeNotifierMixin {
+class GameTimerProvider extends TournamentConfigProvider with ServerEventSubscribeNotifierMixin {
   GameTimerService _gameTimerService = GameTimerService();
   TimerRunState _timerState = TimerRunState.idle;
   int _timer = 150; // in seconds

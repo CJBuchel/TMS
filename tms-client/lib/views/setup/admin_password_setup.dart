@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tms/providers/event_config_provider.dart';
+import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/views/setup/input_setter.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
@@ -9,7 +9,7 @@ class AdminPasswordSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EventConfigProvider>(
+    return Consumer<TournamentConfigProvider>(
       builder: (context, provider, _) {
         return InputSetter(
           label: "Set admin password:",

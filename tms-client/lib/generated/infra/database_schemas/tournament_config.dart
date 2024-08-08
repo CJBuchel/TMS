@@ -16,7 +16,7 @@ class TournamentConfig {
   final int endGameTimerLength;
   final int timerLength;
   final String? season;
-  final SeasonType seasonType;
+  final BlueprintType blueprintType;
 
   const TournamentConfig({
     required this.name,
@@ -25,7 +25,7 @@ class TournamentConfig {
     required this.endGameTimerLength,
     required this.timerLength,
     this.season,
-    required this.seasonType,
+    required this.blueprintType,
   });
 
   static Future<TournamentConfig> default_() => TmsRustLib.instance.api
@@ -52,7 +52,7 @@ class TournamentConfig {
       endGameTimerLength.hashCode ^
       timerLength.hashCode ^
       season.hashCode ^
-      seasonType.hashCode;
+      blueprintType.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -65,5 +65,5 @@ class TournamentConfig {
           endGameTimerLength == other.endGameTimerLength &&
           timerLength == other.timerLength &&
           season == other.season &&
-          seasonType == other.seasonType;
+          blueprintType == other.blueprintType;
 }

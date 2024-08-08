@@ -21,6 +21,3 @@ pub use robot_game_matches_handler::*;
 
 mod robot_game_timer_handler;
 pub use robot_game_timer_handler::*;
-
-mod season_handler;
-pub use season_handler::*;

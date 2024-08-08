@@ -9,23 +9,23 @@ import 'mission.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'question.dart';
 
-// These functions are ignored (category: IgnoreBecauseExplicitAttribute): `get_fll_game`, `get_seasons`
+// These functions are ignored (category: IgnoreBecauseExplicitAttribute): `get_fll_blueprint`, `get_seasons`
 
 class FllBlueprintMap {
   const FllBlueprintMap();
 
-  Future<int> calculateScore(
+  static Future<int> calculateScore(
           {required FllBlueprint blueprint,
           required List<QuestionAnswer> answers}) =>
       TmsRustLib.instance.api
           .crateInfraFllInfraFllBlueprintMapFllBlueprintMapCalculateScore(
-              that: this, blueprint: blueprint, answers: answers);
+              blueprint: blueprint, answers: answers);
 
-  Future<List<QuestionValidationError>?> validate(
+  static Future<List<QuestionValidationError>?> validate(
           {required String season, required List<QuestionAnswer> answers}) =>
       TmsRustLib.instance.api
           .crateInfraFllInfraFllBlueprintMapFllBlueprintMapValidate(
-              that: this, season: season, answers: answers);
+              season: season, answers: answers);
 
   @override
   int get hashCode => 0;

@@ -16,8 +16,8 @@ pub trait TournamentConfigExtensions {
   async fn get_tournament_season(&self) -> Option<String>;
   async fn set_tournament_season(&mut self, season: String);
 
-  async fn set_tournament_season_type(&mut self, season_type: SeasonType);
-  async fn get_tournament_season_type(&self) -> Option<SeasonType>;
+  async fn set_tournament_blueprint_type(&mut self, season_type: BlueprintType);
+  async fn get_tournament_blueprint_type(&self) -> Option<BlueprintType>;
 
 
   async fn get_tournament_backup_interval(&self) -> Option<u32>;
@@ -148,17 +148,17 @@ impl TournamentConfigExtensions for Database {
     }
   }
 
-  async fn set_tournament_season_type(&mut self, season_type: SeasonType) {
+  async fn set_tournament_blueprint_type(&mut self, blueprint_type: BlueprintType) {
     let existing_config = self.inner.read().await.get_tree(TOURNAMENT_CONFIG.to_string()).await.get("config").cloned();
     match existing_config {
       Some(config) => {
         let mut config = TournamentConfig::from_json_string(&config);
-        config.season_type = season_type;
+        config.blueprint_type = blueprint_type;
         self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json_string()).await;
       },
       None => {
         let config = TournamentConfig {
-          season_type,
+          blueprint_type,
           ..Default::default()
         };
         self.inner.write().await.insert_entry(TOURNAMENT_CONFIG.to_string(), "config".to_string(), config.to_json_string()).await;
@@ -166,12 +166,12 @@ impl TournamentConfigExtensions for Database {
     }
   }
 
-  async fn get_tournament_season_type(&self) -> Option<SeasonType> {
+  async fn get_tournament_blueprint_type(&self) -> Option<BlueprintType> {
     let config = self.inner.read().await.get_tree(TOURNAMENT_CONFIG.to_string()).await.get("config").cloned();
     match config {
       Some(config) => {
         let config = TournamentConfig::from_json_string(&config);
-        Some(config.season_type)
+        Some(config.blueprint_type)
       },
       None => None
     }

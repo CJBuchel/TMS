@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/network/connectivity.dart';
 import 'package:tms/providers/connection_provider.dart';
-import 'package:tms/providers/event_config_provider.dart';
+import 'package:tms/providers/tournament_config_provider.dart';
 
 class TmsAppBarTitle extends StatelessWidget {
   TmsAppBarTitle({super.key});
@@ -47,7 +47,7 @@ class TmsAppBarTitle extends StatelessWidget {
   }
 
   Widget _eventTitle() {
-    return Selector<EventConfigProvider, String>(
+    return Selector<TournamentConfigProvider, String>(
       selector: (_, configProvider) => configProvider.eventName,
       builder: (_, eventName, __) {
         return Text(eventName, overflow: TextOverflow.ellipsis);

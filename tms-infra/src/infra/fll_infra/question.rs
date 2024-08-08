@@ -3,14 +3,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::DataSchemeExtensions;
 
-use super::CategoricalQuestion;
+use super::{CategoricalQuestion, QuestionRule};
 
 pub struct QuestionValidationError {
   pub question_ids: String,
   pub message: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct QuestionAnswer {
   pub question_id: String,
   pub answer: String,
@@ -26,18 +26,19 @@ impl Default for QuestionAnswer {
 }
 
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub enum QuestionType {
   Categorical,
 }
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Question {
   pub id: String,
   pub label: String,
   pub label_short: String,
   pub question_type: QuestionType,
   pub question_input_def: String, // JSON string (based on question type)
+  pub question_rule: Option<QuestionRule>,
 }
 
 impl Question {
@@ -63,6 +64,7 @@ impl Default for Question {
       label_short: "".to_string(),
       question_type: QuestionType::Categorical,
       question_input_def: "".to_string(),
+      question_rule: None,
     }
   }
 }

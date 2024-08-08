@@ -3,8 +3,8 @@ import 'package:tms/generated/infra/database_schemas/tournament_config.dart';
 import 'package:tms/services/event_config_service.dart';
 import 'package:tms/utils/logger.dart';
 
-class EventConfigProvider extends EchoTreeProvider<String, TournamentConfig> {
-  EventConfigProvider()
+class TournamentConfigProvider extends EchoTreeProvider<String, TournamentConfig> {
+  TournamentConfigProvider()
       : super(
           tree: ":tournament:config",
           fromJsonString: (json) => TournamentConfig.fromJsonString(json: json),

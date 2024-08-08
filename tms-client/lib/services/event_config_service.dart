@@ -87,7 +87,10 @@ class EventConfigService {
 
   Future<int> setSeason(String season) async {
     try {
-      var request = TournamentConfigSetSeasonRequest(season: season, seasonType: SeasonType.seasonal).toJsonString();
+      var request = TournamentConfigSetSeasonRequest(
+        season: season,
+        blueprintType: BlueprintType.seasonal,
+      ).toJsonString();
       var response = await Network().networkPost("/tournament/config/season", request);
       if (response.$1) {
         TmsLogger().i("Season set to $season");
@@ -103,7 +106,9 @@ class EventConfigService {
 
   Future<int> setSeasonAgnostic() async {
     try {
-      var request = const TournamentConfigSetSeasonRequest(seasonType: SeasonType.agnostic).toJsonString();
+      var request = const TournamentConfigSetSeasonRequest(
+        blueprintType: BlueprintType.agnostic,
+      ).toJsonString();
       var response = await Network().networkPost("/tournament/config/season", request);
       if (response.$1) {
         TmsLogger().i("Season set to agnostic");

@@ -56,8 +56,7 @@ async fn main() {
 
   // create database
   let db = SharedDatabase::new_instance(ip.clone(), ServerArgs::get_port(), DEFAULT_DB_PATH.to_string(), ServerArgs::get_addr());
-  db.write().await.create_trees().await;
-  db.write().await.create_roles().await;
+  db.write().await.initial_setup().await;
 
   // startup the backup service
   db.write().await.start_backup_service();

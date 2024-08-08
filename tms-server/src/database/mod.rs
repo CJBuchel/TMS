@@ -127,13 +127,48 @@ impl Database {
     log::info!("Creating trees...");
 
     self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
-    self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), FllBlueprint::to_schema()).await;
+    self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), TournamentBlueprint::to_schema()).await;
     self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_TABLES.to_string(), GameTable::to_schema()).await;
     self.inner.read().await.add_tree_schema(JUDGING_SESSIONS.to_string(), JudgingSession::to_schema()).await;
     self.inner.read().await.add_tree_schema(JUDGING_PODS.to_string(), JudgingPod::to_schema()).await;
     self.inner.read().await.add_tree_schema(USERS.to_string(), User::to_schema()).await;
+  }
+
+  pub async fn setup_blueprints(&mut self) {
+    log::info!("Setting up blueprints...");
+    let seasons = FllBlueprintMap::get_seasons();
+
+    for season in seasons {
+      match self.get_blueprint_by_title(season.clone()).await {
+        Some(_) => {
+          log::warn!("Blueprint already exists: {}, skipping insert...", season);
+          continue;
+        }
+        None => {
+          match FllBlueprintMap::get_fll_blueprint(season.clone()) {
+            Some(blueprint) => {
+              let tournament_blueprint = TournamentBlueprint {
+                title: season.clone(),
+                blueprint,
+              };
+              match self.insert_blueprint(tournament_blueprint, None).await {
+                Ok(_) => log::info!("Inserted blueprint: {}", season),
+                Err(e) => log::error!("Failed to insert blueprint: {}", e),
+              }
+            }
+            None => log::error!("Failed to get blueprint: {}", season),
+          }
+        }
+      }
+    }
+  }
+
+  pub async fn initial_setup(&mut self) {
+    self.create_roles().await;
+    self.create_trees().await;
+    self.setup_blueprints().await;
   }
 
   pub async fn get_echo_tree_routes(&self, tls: bool) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {

@@ -5,8 +5,9 @@
 
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'rule_engine.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`
 
 class Question {
   final String id;
@@ -14,6 +15,7 @@ class Question {
   final String labelShort;
   final QuestionType questionType;
   final String questionInputDef;
+  final List<QuestionRule> rules;
 
   const Question({
     required this.id,
@@ -21,6 +23,7 @@ class Question {
     required this.labelShort,
     required this.questionType,
     required this.questionInputDef,
+    required this.rules,
   });
 
   static Future<Question> default_() =>
@@ -30,9 +33,9 @@ class Question {
       TmsRustLib.instance.api
           .crateInfraFllInfraQuestionQuestionFromJsonString(json: json);
 
-  Future<int> getScore({required QuestionAnswer answer}) => TmsRustLib
+  Future<int> getScore({required List<QuestionAnswer> answers}) => TmsRustLib
       .instance.api
-      .crateInfraFllInfraQuestionQuestionGetScore(that: this, answer: answer);
+      .crateInfraFllInfraQuestionQuestionGetScore(that: this, answers: answers);
 
   String toJsonString() =>
       TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionToJsonString(
@@ -48,7 +51,8 @@ class Question {
       label.hashCode ^
       labelShort.hashCode ^
       questionType.hashCode ^
-      questionInputDef.hashCode;
+      questionInputDef.hashCode ^
+      rules.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -59,7 +63,8 @@ class Question {
           label == other.label &&
           labelShort == other.labelShort &&
           questionType == other.questionType &&
-          questionInputDef == other.questionInputDef;
+          questionInputDef == other.questionInputDef &&
+          rules == other.rules;
 }
 
 class QuestionAnswer {

@@ -1,6 +1,6 @@
 use std::vec;
 
-use crate::{infra::fll_infra::{QuestionAnswer, QuestionValidationError}, CategoricalOption, CategoricalQuestion, DataSchemeExtensions, FllBlueprint, Mission, Question, QuestionType};
+use crate::{infra::fll_infra::{QuestionAnswer, QuestionValidationError}, CategoricalOption, CategoricalQuestion, DataSchemeExtensions, FllBlueprint, Mission, Question, QuestionRule, QuestionType};
 
 use super::BaseSeason;
 
@@ -147,6 +147,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -167,12 +168,13 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
           id: "m02a".to_string(),
-          label: "If your theater's red flag is down and the active scene colour is:".to_string(),
-          label_short: "Flag down + colour?".to_string(),
+          label: "If your theater's red flag is down and the active scene color is:".to_string(),
+          label_short: "Flag down + color?".to_string(),
           question_type: QuestionType::Categorical,
           question_input_def: CategoricalQuestion {
             options: vec![
@@ -195,6 +197,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -215,6 +218,20 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![
+            QuestionRule {
+              condition: "m02a == Blue".to_string(),
+              output: 20,
+            },
+            QuestionRule {
+              condition: "m02a == Pink".to_string(),
+              output: 30,
+            },
+            QuestionRule {
+              condition: "m02a == Orange".to_string(),
+              output: 10,
+            },
+          ],
         },
 
         Question {
@@ -230,11 +247,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 20,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -250,11 +268,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -275,6 +294,12 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![
+            QuestionRule {
+              condition: "m04a == Yes".to_string(),
+              output: 20,
+            },
+          ],
         },
 
         Question {
@@ -290,11 +315,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 30,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -310,11 +336,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -330,11 +357,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -349,12 +377,13 @@ impl BaseSeason for MasterPiece {
                 score: 0,
               },
               CategoricalOption {
-                label: "No".to_string(),
-                score: 0,
+                label: "Yes".to_string(),
+                score: 20,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -366,23 +395,24 @@ impl BaseSeason for MasterPiece {
             options: vec![
               CategoricalOption {
                 label: "None".to_string(),
-                score: 1,
+                score: 0,
               },
               CategoricalOption {
                 label: "Dark blue".to_string(),
-                score: 0,
+                score: 10,
               },
               CategoricalOption {
                 label: "Dark & medium blue".to_string(),
-                score: 0,
+                score: 20,
               },
               CategoricalOption {
                 label: "Dark, medium & light blue".to_string(),
-                score: 0,
+                score: 30,
               },
             ],
             default_option: "None".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -398,11 +428,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -418,11 +449,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -438,19 +470,20 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "1".to_string(),
-                score: 0,
+                score: 10,
               },
               CategoricalOption {
                 label: "2".to_string(),
-                score: 0,
+                score: 20,
               },
               CategoricalOption {
                 label: "3".to_string(),
-                score: 0,
+                score: 30,
               },
             ],
             default_option: "0".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -466,19 +499,20 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yellow".to_string(),
-                score: 0,
+                score: 10,
               },
               CategoricalOption {
                 label: "Green".to_string(),
-                score: 0,
+                score: 20,
               },
               CategoricalOption {
                 label: "Blue".to_string(),
-                score: 0,
+                score: 30,
               },
             ],
             default_option: "None".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -494,11 +528,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -519,6 +554,12 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![
+            QuestionRule {
+              condition: "m12a == Yes".to_string(),
+              output: 20,
+            },
+          ],
         },
 
         Question {
@@ -534,11 +575,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -554,11 +596,12 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "Yes".to_string(),
-                score: 0,
+                score: 10,
               },
             ],
             default_option: "No".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -574,35 +617,36 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "1".to_string(),
-                score: 0,
+                score: 5,
               },
               CategoricalOption {
                 label: "2".to_string(),
-                score: 0,
+                score: 10,
               },
               CategoricalOption {
                 label: "3".to_string(),
-                score: 0,
+                score: 15,
               },
               CategoricalOption {
-                label: "4".to_string(),
-                score: 0,
+                label: "4".to_string(), // heh, 420
+                score: 20,
               },
               CategoricalOption {
                 label: "5".to_string(),
-                score: 0,
+                score: 25,
               },
               CategoricalOption {
                 label: "6".to_string(),
-                score: 0,
+                score: 30,
               },
               CategoricalOption {
                 label: "7".to_string(),
-                score: 0,
+                score: 35,
               },
             ],
             default_option: "0".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -618,35 +662,36 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "1".to_string(),
-                score: 0,
+                score: 5,
               },
               CategoricalOption {
                 label: "2".to_string(),
-                score: 0,
+                score: 10,
               },
               CategoricalOption {
                 label: "3".to_string(),
-                score: 0,
+                score: 15,
               },
               CategoricalOption {
                 label: "4".to_string(),
-                score: 0,
+                score: 20,
               },
               CategoricalOption {
                 label: "5".to_string(),
-                score: 0,
+                score: 25,
               },
               CategoricalOption {
                 label: "6".to_string(),
-                score: 0,
+                score: 30,
               },
               CategoricalOption {
                 label: "7".to_string(),
-                score: 0,
+                score: 35,
               },
             ],
             default_option: "0".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -662,27 +707,28 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "1".to_string(),
-                score: 0,
+                score: 10,
               },
               CategoricalOption {
                 label: "2".to_string(),
-                score: 0,
+                score: 20,
               },
               CategoricalOption {
                 label: "3".to_string(),
-                score: 0,
+                score: 30,
               },
               CategoricalOption {
                 label: "4".to_string(),
-                score: 0,
+                score: 40,
               },
               CategoricalOption {
                 label: "5".to_string(),
-                score: 0,
+                score: 50,
               },
             ],
             default_option: "0".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -698,31 +744,32 @@ impl BaseSeason for MasterPiece {
               },
               CategoricalOption {
                 label: "1".to_string(),
-                score: 0,
+                score: 10,
               },
               CategoricalOption {
                 label: "2".to_string(),
-                score: 0,
+                score: 15,
               },
               CategoricalOption {
                 label: "3".to_string(),
-                score: 0,
+                score: 25,
               },
               CategoricalOption {
                 label: "4".to_string(),
-                score: 0,
+                score: 35,
               },
               CategoricalOption {
                 label: "5".to_string(),
-                score: 0,
+                score: 50,
               },
               CategoricalOption {
                 label: "6".to_string(),
-                score: 0,
+                score: 50,
               },
             ],
             default_option: "6".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
 
         Question {
@@ -747,6 +794,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "3 - Accomplished".to_string(),
           }.to_json_string(),
+          rules: vec![],
         },
       ],
     }

@@ -24,6 +24,7 @@ import 'infra/fll_infra/fll_blueprint.dart';
 import 'infra/fll_infra/fll_blueprint_map.dart';
 import 'infra/fll_infra/mission.dart';
 import 'infra/fll_infra/question.dart';
+import 'infra/fll_infra/rule_engine.dart';
 import 'infra/fll_infra/seasons.dart';
 import 'infra/fll_infra/seasons/fll_2023.dart';
 import 'infra/network_schemas/errors.dart';
@@ -97,6 +98,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   QuestionAnswer dco_decode_box_autoadd_question_answer(dynamic raw);
+
+  @protected
+  QuestionRule dco_decode_box_autoadd_question_rule(dynamic raw);
 
   @protected
   RegisterRequest dco_decode_box_autoadd_register_request(dynamic raw);
@@ -241,6 +245,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   List<QuestionAnswer> dco_decode_list_question_answer(dynamic raw);
 
   @protected
+  List<QuestionRule> dco_decode_list_question_rule(dynamic raw);
+
+  @protected
   List<QuestionValidationError> dco_decode_list_question_validation_error(
       dynamic raw);
 
@@ -283,6 +290,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   QuestionAnswer dco_decode_question_answer(dynamic raw);
+
+  @protected
+  QuestionRule dco_decode_question_rule(dynamic raw);
 
   @protected
   QuestionType dco_decode_question_type(dynamic raw);
@@ -439,6 +449,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   QuestionAnswer sse_decode_box_autoadd_question_answer(
+      SseDeserializer deserializer);
+
+  @protected
+  QuestionRule sse_decode_box_autoadd_question_rule(
       SseDeserializer deserializer);
 
   @protected
@@ -599,6 +613,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<QuestionRule> sse_decode_list_question_rule(
+      SseDeserializer deserializer);
+
+  @protected
   List<QuestionValidationError> sse_decode_list_question_validation_error(
       SseDeserializer deserializer);
 
@@ -642,6 +660,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   QuestionAnswer sse_decode_question_answer(SseDeserializer deserializer);
+
+  @protected
+  QuestionRule sse_decode_question_rule(SseDeserializer deserializer);
 
   @protected
   QuestionType sse_decode_question_type(SseDeserializer deserializer);
@@ -818,6 +839,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       QuestionAnswer self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_question_rule(
+      QuestionRule self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_register_request(
       RegisterRequest self, SseSerializer serializer);
 
@@ -974,6 +999,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       List<QuestionAnswer> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_question_rule(
+      List<QuestionRule> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_question_validation_error(
       List<QuestionValidationError> self, SseSerializer serializer);
 
@@ -1021,6 +1050,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_question_answer(
       QuestionAnswer self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_question_rule(QuestionRule self, SseSerializer serializer);
 
   @protected
   void sse_encode_question_type(QuestionType self, SseSerializer serializer);

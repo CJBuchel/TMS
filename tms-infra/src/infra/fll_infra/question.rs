@@ -38,12 +38,18 @@ pub struct Question {
   pub label_short: String,
   pub question_type: QuestionType,
   pub question_input_def: String, // JSON string (based on question type)
-  pub question_rule: Option<QuestionRule>,
+  pub rules: Vec<QuestionRule>, // set of json rules used to modify score, i.e m00a == 1, output += 10
 }
 
 impl Question {
-  pub fn get_score(&self, answer: QuestionAnswer) -> i32 {
-    match self.question_type {
+  pub fn get_score(&self, answers: Vec<QuestionAnswer>) -> i32 {
+    let answer = match answers.iter().find(|a| a.question_id == self.id) {
+      Some(a) => a,
+      None => return 0,
+    };
+
+    // apply regular answer score
+    let mut score = match self.question_type {
       QuestionType::Categorical => {
         let q = CategoricalQuestion::from_json_string(&self.question_input_def);
         let answer_option = q.options.iter().find(|o| o.label == answer.answer);
@@ -52,7 +58,16 @@ impl Question {
           None => 0,
         }
       }
+    };
+
+    // get the first matching rule (if any) and return that instead
+    for rule in self.rules.iter() {
+      if rule.evaluate(answers.clone()) {
+        score = rule.apply(answers.clone());
+      }
     }
+
+    score
   }
 }
 
@@ -64,7 +79,7 @@ impl Default for Question {
       label_short: "".to_string(),
       question_type: QuestionType::Categorical,
       question_input_def: "".to_string(),
-      question_rule: None,
+      rules: vec![],
     }
   }
 }

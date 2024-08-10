@@ -19,15 +19,11 @@ impl FllBlueprintMap {
 
   pub fn calculate_score(blueprint: FllBlueprint, answers: Vec<QuestionAnswer>) -> i32 {
     let mut score = 0;
-    for answer in answers {
-      let question = blueprint.robot_game_questions.iter().find(|q| q.id == answer.question_id);
-      match question {
-        Some(q) => {
-          score += q.get_score(answer);
-        }
-        None => {}
-      }
+
+    for question in blueprint.robot_game_questions.iter() {
+      score += question.get_score(answers.clone());
     }
+
     score
   }
 

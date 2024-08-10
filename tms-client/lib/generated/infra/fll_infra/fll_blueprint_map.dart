@@ -8,6 +8,7 @@ import 'fll_blueprint.dart';
 import 'mission.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'question.dart';
+import 'rule_engine.dart';
 
 // These functions are ignored (category: IgnoreBecauseExplicitAttribute): `get_fll_blueprint`, `get_seasons`
 

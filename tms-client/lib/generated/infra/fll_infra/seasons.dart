@@ -8,6 +8,7 @@ import 'fll_blueprint.dart';
 import 'mission.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'question.dart';
+import 'rule_engine.dart';
 
 abstract class BaseSeason {
   Future<FllBlueprint> getFllGame();

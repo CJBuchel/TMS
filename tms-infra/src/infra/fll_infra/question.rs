@@ -25,10 +25,10 @@ impl Default for QuestionAnswer {
   }
 }
 
-
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
-pub enum QuestionType {
-  Categorical,
+pub enum QuestionInput {
+  Categorical(CategoricalQuestion),
+  // Numerical(i32),
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -36,8 +36,7 @@ pub struct Question {
   pub id: String,
   pub label: String,
   pub label_short: String,
-  pub question_type: QuestionType,
-  pub question_input_def: String, // JSON string (based on question type)
+  pub input: QuestionInput,
   pub rules: Vec<QuestionRule>, // set of json rules used to modify score, i.e m00a == 1, output += 10
 }
 
@@ -49,9 +48,8 @@ impl Question {
     };
 
     // apply regular answer score
-    let mut score = match self.question_type {
-      QuestionType::Categorical => {
-        let q = CategoricalQuestion::from_json_string(&self.question_input_def);
+    let mut score = match &self.input {
+      QuestionInput::Categorical(q) => {
         let answer_option = q.options.iter().find(|o| o.label == answer.answer);
         match answer_option {
           Some(option) => option.score,
@@ -77,8 +75,7 @@ impl Default for Question {
       id: "".to_string(),
       label: "".to_string(),
       label_short: "".to_string(),
-      question_type: QuestionType::Categorical,
-      question_input_def: "".to_string(),
+      input: QuestionInput::Categorical(CategoricalQuestion::default()),
       rules: vec![],
     }
   }

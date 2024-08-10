@@ -6,88 +6,94 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`
 
-class TmsDate {
-  final int year;
-  final int month;
-  final int day;
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`
 
-  const TmsDate({
-    required this.year,
-    required this.month,
-    required this.day,
-  });
 
-  @override
-  int get hashCode => year.hashCode ^ month.hashCode ^ day.hashCode;
+            
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TmsDate &&
-          runtimeType == other.runtimeType &&
-          year == other.year &&
-          month == other.month &&
-          day == other.day;
-}
+            class TmsDate  {
+                final int year;
+final int month;
+final int day;
 
-class TmsDateTime {
-  final TmsDate? date;
-  final TmsTime? time;
+                const TmsDate({required this.year ,required this.month ,required this.day ,});
 
-  const TmsDateTime({
-    this.date,
-    this.time,
-  });
+                
+                
 
-  static Future<TmsDateTime> default_() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasDateTimeTmsDateTimeDefault();
+                
+        @override
+        int get hashCode => year.hashCode^month.hashCode^day.hashCode;
+        
 
-  static TmsDateTime fromJsonString({required String json}) => TmsRustLib
-      .instance.api
-      .crateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonString(json: json);
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TmsDate &&
+                runtimeType == other.runtimeType
+                && year == other.year&& month == other.month&& day == other.day;
+        
+            }
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonString(
-        that: this,
-      );
+class TmsDateTime  {
+                final TmsDate? date;
+final TmsTime? time;
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasDateTimeTmsDateTimeToSchema();
+                const TmsDateTime({this.date ,this.time ,});
 
-  @override
-  int get hashCode => date.hashCode ^ time.hashCode;
+                static Future<TmsDateTime>  default_()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateTimeDefault();
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TmsDateTime &&
-          runtimeType == other.runtimeType &&
-          date == other.date &&
-          time == other.time;
-}
 
-class TmsTime {
-  final int hour;
-  final int minute;
-  final int second;
+static TmsDateTime  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonString(json: json);
 
-  const TmsTime({
-    required this.hour,
-    required this.minute,
-    required this.second,
-  });
 
-  @override
-  int get hashCode => hour.hashCode ^ minute.hashCode ^ second.hashCode;
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonString(that: this, );
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TmsTime &&
-          runtimeType == other.runtimeType &&
-          hour == other.hour &&
-          minute == other.minute &&
-          second == other.second;
-}
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateTimeToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => date.hashCode^time.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TmsDateTime &&
+                runtimeType == other.runtimeType
+                && date == other.date&& time == other.time;
+        
+            }
+
+class TmsTime  {
+                final int hour;
+final int minute;
+final int second;
+
+                const TmsTime({required this.hour ,required this.minute ,required this.second ,});
+
+                
+                
+
+                
+        @override
+        int get hashCode => hour.hashCode^minute.hashCode^second.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TmsTime &&
+                runtimeType == other.runtimeType
+                && hour == other.hour&& minute == other.minute&& second == other.second;
+        
+            }
+            

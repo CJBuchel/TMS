@@ -7,79 +7,72 @@ import '../../frb_generated.dart';
 import 'date_time.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`
 
-class GameMatch {
-  final String matchNumber;
-  final TmsDateTime startTime;
-  final TmsDateTime endTime;
-  final List<GameMatchTable> gameMatchTables;
-  final bool completed;
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`
 
-  const GameMatch({
-    required this.matchNumber,
-    required this.startTime,
-    required this.endTime,
-    required this.gameMatchTables,
-    required this.completed,
-  });
 
-  static Future<GameMatch> default_() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasGameMatchGameMatchDefault();
+            
 
-  static GameMatch fromJsonString({required String json}) => TmsRustLib
-      .instance.api
-      .crateInfraDatabaseSchemasGameMatchGameMatchFromJsonString(json: json);
+            class GameMatch  {
+                final String matchNumber;
+final TmsDateTime startTime;
+final TmsDateTime endTime;
+final List<GameMatchTable> gameMatchTables;
+final bool completed;
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraDatabaseSchemasGameMatchGameMatchToJsonString(
-        that: this,
-      );
+                const GameMatch({required this.matchNumber ,required this.startTime ,required this.endTime ,required this.gameMatchTables ,required this.completed ,});
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasGameMatchGameMatchToSchema();
+                static Future<GameMatch>  default_()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameMatchGameMatchDefault();
 
-  @override
-  int get hashCode =>
-      matchNumber.hashCode ^
-      startTime.hashCode ^
-      endTime.hashCode ^
-      gameMatchTables.hashCode ^
-      completed.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is GameMatch &&
-          runtimeType == other.runtimeType &&
-          matchNumber == other.matchNumber &&
-          startTime == other.startTime &&
-          endTime == other.endTime &&
-          gameMatchTables == other.gameMatchTables &&
-          completed == other.completed;
-}
+static GameMatch  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameMatchGameMatchFromJsonString(json: json);
 
-class GameMatchTable {
-  final String table;
-  final String teamNumber;
-  final bool scoreSubmitted;
 
-  const GameMatchTable({
-    required this.table,
-    required this.teamNumber,
-    required this.scoreSubmitted,
-  });
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameMatchGameMatchToJsonString(that: this, );
 
-  @override
-  int get hashCode =>
-      table.hashCode ^ teamNumber.hashCode ^ scoreSubmitted.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is GameMatchTable &&
-          runtimeType == other.runtimeType &&
-          table == other.table &&
-          teamNumber == other.teamNumber &&
-          scoreSubmitted == other.scoreSubmitted;
-}
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameMatchGameMatchToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => matchNumber.hashCode^startTime.hashCode^endTime.hashCode^gameMatchTables.hashCode^completed.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is GameMatch &&
+                runtimeType == other.runtimeType
+                && matchNumber == other.matchNumber&& startTime == other.startTime&& endTime == other.endTime&& gameMatchTables == other.gameMatchTables&& completed == other.completed;
+        
+            }
+
+class GameMatchTable  {
+                final String table;
+final String teamNumber;
+final bool scoreSubmitted;
+
+                const GameMatchTable({required this.table ,required this.teamNumber ,required this.scoreSubmitted ,});
+
+                
+                
+
+                
+        @override
+        int get hashCode => table.hashCode^teamNumber.hashCode^scoreSubmitted.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is GameMatchTable &&
+                runtimeType == other.runtimeType
+                && table == other.table&& teamNumber == other.teamNumber&& scoreSubmitted == other.scoreSubmitted;
+        
+            }
+            

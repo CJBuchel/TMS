@@ -6,53 +6,54 @@
 import '../../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`
 
-enum TmsServerMatchState {
-  running,
-  ready,
-  load,
-  unload,
-  ;
-}
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`
 
-class TmsServerMatchStateEvent {
-  final TmsServerMatchState state;
-  final List<(String, bool)> gameMatchTables;
-  final List<String> gameMatchNumbers;
 
-  const TmsServerMatchStateEvent({
-    required this.state,
-    required this.gameMatchTables,
-    required this.gameMatchNumbers,
-  });
+            
 
-  static Future<TmsServerMatchStateEvent> default_() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventDefault();
+            enum TmsServerMatchState {
+                    running,
+ready,
+load,
+unload,
+                    ;
+                    
+                }
 
-  static TmsServerMatchStateEvent fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventFromJsonString(
-              json: json);
+class TmsServerMatchStateEvent  {
+                final TmsServerMatchState state;
+final List<(String,bool)> gameMatchTables;
+final List<String> gameMatchNumbers;
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToJsonString(
-        that: this,
-      );
+                const TmsServerMatchStateEvent({required this.state ,required this.gameMatchTables ,required this.gameMatchNumbers ,});
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToSchema();
+                static Future<TmsServerMatchStateEvent>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventDefault();
 
-  @override
-  int get hashCode =>
-      state.hashCode ^ gameMatchTables.hashCode ^ gameMatchNumbers.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TmsServerMatchStateEvent &&
-          runtimeType == other.runtimeType &&
-          state == other.state &&
-          gameMatchTables == other.gameMatchTables &&
-          gameMatchNumbers == other.gameMatchNumbers;
-}
+static TmsServerMatchStateEvent  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => state.hashCode^gameMatchTables.hashCode^gameMatchNumbers.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TmsServerMatchStateEvent &&
+                runtimeType == other.runtimeType
+                && state == other.state&& gameMatchTables == other.gameMatchTables&& gameMatchNumbers == other.gameMatchNumbers;
+        
+            }
+            

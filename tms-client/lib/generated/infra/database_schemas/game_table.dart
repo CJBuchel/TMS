@@ -6,37 +6,43 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
-class GameTable {
-  final String tableName;
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
-  const GameTable({
-    required this.tableName,
-  });
 
-  static Future<GameTable> default_() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasGameTableGameTableDefault();
+            
 
-  static GameTable fromJsonString({required String json}) => TmsRustLib
-      .instance.api
-      .crateInfraDatabaseSchemasGameTableGameTableFromJsonString(json: json);
+            class GameTable  {
+                final String tableName;
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraDatabaseSchemasGameTableGameTableToJsonString(
-        that: this,
-      );
+                const GameTable({required this.tableName ,});
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasGameTableGameTableToSchema();
+                static Future<GameTable>  default_()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameTableGameTableDefault();
 
-  @override
-  int get hashCode => tableName.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is GameTable &&
-          runtimeType == other.runtimeType &&
-          tableName == other.tableName;
-}
+static GameTable  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameTableGameTableFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameTableGameTableToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasGameTableGameTableToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => tableName.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is GameTable &&
+                runtimeType == other.runtimeType
+                && tableName == other.tableName;
+        
+            }
+            

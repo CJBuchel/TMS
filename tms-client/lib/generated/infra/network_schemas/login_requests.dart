@@ -7,73 +7,77 @@ import '../../frb_generated.dart';
 import '../../infra.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-class LoginRequest {
-  final String username;
-  final String password;
 
-  const LoginRequest({
-    required this.username,
-    required this.password,
-  });
+            
 
-  static Future<LoginRequest> default_() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasLoginRequestsLoginRequestDefault();
+            
 
-  static LoginRequest fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonString(
-              json: json);
+            class LoginRequest  {
+                final String username;
+final String password;
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasLoginRequestsLoginRequestToJsonString(
-        that: this,
-      );
+                const LoginRequest({required this.username ,required this.password ,});
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasLoginRequestsLoginRequestToSchema();
+                static Future<LoginRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginRequestDefault();
 
-  @override
-  int get hashCode => username.hashCode ^ password.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LoginRequest &&
-          runtimeType == other.runtimeType &&
-          username == other.username &&
-          password == other.password;
-}
+static LoginRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginRequestFromJsonString(json: json);
 
-class LoginResponse {
-  final List<TmsTreeRole> roles;
 
-  const LoginResponse({
-    required this.roles,
-  });
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginRequestToJsonString(that: this, );
 
-  static Future<LoginResponse> default_() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasLoginRequestsLoginResponseDefault();
 
-  static LoginResponse fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasLoginRequestsLoginResponseFromJsonString(
-              json: json);
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginRequestToSchema();
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasLoginRequestsLoginResponseToJsonString(
-        that: this,
-      );
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasLoginRequestsLoginResponseToSchema();
+                
 
-  @override
-  int get hashCode => roles.hashCode;
+                
+        @override
+        int get hashCode => username.hashCode^password.hashCode;
+        
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LoginResponse &&
-          runtimeType == other.runtimeType &&
-          roles == other.roles;
-}
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is LoginRequest &&
+                runtimeType == other.runtimeType
+                && username == other.username&& password == other.password;
+        
+            }
+
+class LoginResponse  {
+                final List<TmsTreeRole> roles;
+
+                const LoginResponse({required this.roles ,});
+
+                static Future<LoginResponse>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginResponseDefault();
+
+
+static LoginResponse  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginResponseFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginResponseToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasLoginRequestsLoginResponseToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => roles.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is LoginResponse &&
+                runtimeType == other.runtimeType
+                && roles == other.roles;
+        
+            }
+            

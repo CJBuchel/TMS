@@ -6,40 +6,44 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
 
-class ErrorMessage {
-  final int code;
-  final String message;
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
 
-  const ErrorMessage({
-    required this.code,
-    required this.message,
-  });
 
-  static Future<ErrorMessage> default_() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasErrorsErrorMessageDefault();
+            
 
-  static ErrorMessage fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasErrorsErrorMessageFromJsonString(json: json);
+            class ErrorMessage  {
+                final int code;
+final String message;
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasErrorsErrorMessageToJsonString(
-        that: this,
-      );
+                const ErrorMessage({required this.code ,required this.message ,});
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasErrorsErrorMessageToSchema();
+                static Future<ErrorMessage>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasErrorsErrorMessageDefault();
 
-  @override
-  int get hashCode => code.hashCode ^ message.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ErrorMessage &&
-          runtimeType == other.runtimeType &&
-          code == other.code &&
-          message == other.message;
-}
+static ErrorMessage  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasErrorsErrorMessageFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasErrorsErrorMessageToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasErrorsErrorMessageToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => code.hashCode^message.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is ErrorMessage &&
+                runtimeType == other.runtimeType
+                && code == other.code&& message == other.message;
+        
+            }
+            

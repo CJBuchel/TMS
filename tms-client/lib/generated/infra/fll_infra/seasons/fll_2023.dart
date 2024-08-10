@@ -4,32 +4,44 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../../frb_generated.dart';
+import '../category_question.dart';
 import '../fll_blueprint.dart';
 import '../mission.dart';
 import '../question.dart';
 import '../rule_engine.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `validate`
 
-class MasterPiece {
-  const MasterPiece();
+            // These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `validate`
 
-  Future<FllBlueprint> getFllGame() => TmsRustLib.instance.api
-          .crateInfraFllInfraSeasonsFll2023MasterPieceGetFllGame(
-        that: this,
-      );
 
-  Future<String> getSeason() => TmsRustLib.instance.api
-          .crateInfraFllInfraSeasonsFll2023MasterPieceGetSeason(
-        that: this,
-      );
+            
 
-  @override
-  int get hashCode => 0;
+            class MasterPiece  {
+                
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MasterPiece && runtimeType == other.runtimeType;
-}
+                const MasterPiece();
+
+                 Future<FllBlueprint>  getFllGame()=>TmsRustLib.instance.api.crateInfraFllInfraSeasonsFll2023MasterPieceGetFllGame(that: this, );
+
+
+ Future<String>  getSeason()=>TmsRustLib.instance.api.crateInfraFllInfraSeasonsFll2023MasterPieceGetSeason(that: this, );
+
+
+                
+
+                
+        @override
+        int get hashCode => 0;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is MasterPiece &&
+                runtimeType == other.runtimeType
+                ;
+        
+            }
+            

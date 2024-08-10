@@ -6,265 +6,255 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
-enum BlueprintType {
-  agnostic,
-  seasonal,
-  ;
-}
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
-class TournamentConfigSetAdminPasswordRequest {
-  final String adminPassword;
 
-  const TournamentConfigSetAdminPasswordRequest({
-    required this.adminPassword,
-  });
+            
 
-  static Future<TournamentConfigSetAdminPasswordRequest> default_() => TmsRustLib
-      .instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestDefault();
+            enum BlueprintType {
+                    agnostic,
+seasonal,
+                    ;
+                    
+                }
 
-  static TournamentConfigSetAdminPasswordRequest fromJsonString(
-          {required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestFromJsonString(
-              json: json);
+class TournamentConfigSetAdminPasswordRequest  {
+                final String adminPassword;
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToJsonString(
-        that: this,
-      );
+                const TournamentConfigSetAdminPasswordRequest({required this.adminPassword ,});
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToSchema();
+                static Future<TournamentConfigSetAdminPasswordRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestDefault();
 
-  @override
-  int get hashCode => adminPassword.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TournamentConfigSetAdminPasswordRequest &&
-          runtimeType == other.runtimeType &&
-          adminPassword == other.adminPassword;
-}
+static TournamentConfigSetAdminPasswordRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestFromJsonString(json: json);
 
-class TournamentConfigSetBackupIntervalRequest {
-  final int interval;
 
-  const TournamentConfigSetBackupIntervalRequest({
-    required this.interval,
-  });
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToJsonString(that: this, );
 
-  static Future<TournamentConfigSetBackupIntervalRequest> default_() => TmsRustLib
-      .instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestDefault();
 
-  static TournamentConfigSetBackupIntervalRequest fromJsonString(
-          {required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonString(
-              json: json);
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestToSchema();
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToJsonString(
-        that: this,
-      );
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToSchema();
+                
 
-  @override
-  int get hashCode => interval.hashCode;
+                
+        @override
+        int get hashCode => adminPassword.hashCode;
+        
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TournamentConfigSetBackupIntervalRequest &&
-          runtimeType == other.runtimeType &&
-          interval == other.interval;
-}
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TournamentConfigSetAdminPasswordRequest &&
+                runtimeType == other.runtimeType
+                && adminPassword == other.adminPassword;
+        
+            }
 
-class TournamentConfigSetEndgameTimerLengthRequest {
-  final int timerLength;
+class TournamentConfigSetBackupIntervalRequest  {
+                final int interval;
 
-  const TournamentConfigSetEndgameTimerLengthRequest({
-    required this.timerLength,
-  });
+                const TournamentConfigSetBackupIntervalRequest({required this.interval ,});
 
-  static Future<TournamentConfigSetEndgameTimerLengthRequest> default_() =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestDefault();
+                static Future<TournamentConfigSetBackupIntervalRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestDefault();
 
-  static TournamentConfigSetEndgameTimerLengthRequest fromJsonString(
-          {required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestFromJsonString(
-              json: json);
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToJsonString(
-        that: this,
-      );
+static TournamentConfigSetBackupIntervalRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestFromJsonString(json: json);
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToSchema();
 
-  @override
-  int get hashCode => timerLength.hashCode;
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToJsonString(that: this, );
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TournamentConfigSetEndgameTimerLengthRequest &&
-          runtimeType == other.runtimeType &&
-          timerLength == other.timerLength;
-}
 
-class TournamentConfigSetNameRequest {
-  final String name;
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestToSchema();
 
-  const TournamentConfigSetNameRequest({
-    required this.name,
-  });
 
-  static Future<TournamentConfigSetNameRequest> default_() => TmsRustLib
-      .instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestDefault();
+                
 
-  static TournamentConfigSetNameRequest fromJsonString(
-          {required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestFromJsonString(
-              json: json);
+                
+        @override
+        int get hashCode => interval.hashCode;
+        
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToJsonString(
-        that: this,
-      );
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TournamentConfigSetBackupIntervalRequest &&
+                runtimeType == other.runtimeType
+                && interval == other.interval;
+        
+            }
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToSchema();
+class TournamentConfigSetEndgameTimerLengthRequest  {
+                final int timerLength;
 
-  @override
-  int get hashCode => name.hashCode;
+                const TournamentConfigSetEndgameTimerLengthRequest({required this.timerLength ,});
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TournamentConfigSetNameRequest &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
-}
+                static Future<TournamentConfigSetEndgameTimerLengthRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestDefault();
 
-class TournamentConfigSetRetainBackupsRequest {
-  final int retainBackups;
 
-  const TournamentConfigSetRetainBackupsRequest({
-    required this.retainBackups,
-  });
+static TournamentConfigSetEndgameTimerLengthRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestFromJsonString(json: json);
 
-  static Future<TournamentConfigSetRetainBackupsRequest> default_() => TmsRustLib
-      .instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestDefault();
 
-  static TournamentConfigSetRetainBackupsRequest fromJsonString(
-          {required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestFromJsonString(
-              json: json);
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToJsonString(that: this, );
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToJsonString(
-        that: this,
-      );
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToSchema();
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestToSchema();
 
-  @override
-  int get hashCode => retainBackups.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TournamentConfigSetRetainBackupsRequest &&
-          runtimeType == other.runtimeType &&
-          retainBackups == other.retainBackups;
-}
+                
 
-class TournamentConfigSetSeasonRequest {
-  final BlueprintType blueprintType;
-  final String? season;
+                
+        @override
+        int get hashCode => timerLength.hashCode;
+        
 
-  const TournamentConfigSetSeasonRequest({
-    required this.blueprintType,
-    this.season,
-  });
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TournamentConfigSetEndgameTimerLengthRequest &&
+                runtimeType == other.runtimeType
+                && timerLength == other.timerLength;
+        
+            }
 
-  static Future<TournamentConfigSetSeasonRequest> default_() => TmsRustLib
-      .instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestDefault();
+class TournamentConfigSetNameRequest  {
+                final String name;
 
-  static TournamentConfigSetSeasonRequest fromJsonString(
-          {required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestFromJsonString(
-              json: json);
+                const TournamentConfigSetNameRequest({required this.name ,});
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToJsonString(
-        that: this,
-      );
+                static Future<TournamentConfigSetNameRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestDefault();
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchema();
 
-  @override
-  int get hashCode => blueprintType.hashCode ^ season.hashCode;
+static TournamentConfigSetNameRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestFromJsonString(json: json);
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TournamentConfigSetSeasonRequest &&
-          runtimeType == other.runtimeType &&
-          blueprintType == other.blueprintType &&
-          season == other.season;
-}
 
-class TournamentConfigSetTimerLengthRequest {
-  final int timerLength;
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToJsonString(that: this, );
 
-  const TournamentConfigSetTimerLengthRequest({
-    required this.timerLength,
-  });
 
-  static Future<TournamentConfigSetTimerLengthRequest> default_() => TmsRustLib
-      .instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestDefault();
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestToSchema();
 
-  static TournamentConfigSetTimerLengthRequest fromJsonString(
-          {required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestFromJsonString(
-              json: json);
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToJsonString(
-        that: this,
-      );
+                
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchema();
+                
+        @override
+        int get hashCode => name.hashCode;
+        
 
-  @override
-  int get hashCode => timerLength.hashCode;
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TournamentConfigSetNameRequest &&
+                runtimeType == other.runtimeType
+                && name == other.name;
+        
+            }
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TournamentConfigSetTimerLengthRequest &&
-          runtimeType == other.runtimeType &&
-          timerLength == other.timerLength;
-}
+class TournamentConfigSetRetainBackupsRequest  {
+                final int retainBackups;
+
+                const TournamentConfigSetRetainBackupsRequest({required this.retainBackups ,});
+
+                static Future<TournamentConfigSetRetainBackupsRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestDefault();
+
+
+static TournamentConfigSetRetainBackupsRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => retainBackups.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TournamentConfigSetRetainBackupsRequest &&
+                runtimeType == other.runtimeType
+                && retainBackups == other.retainBackups;
+        
+            }
+
+class TournamentConfigSetSeasonRequest  {
+                final BlueprintType blueprintType;
+final String? season;
+
+                const TournamentConfigSetSeasonRequest({required this.blueprintType ,this.season ,});
+
+                static Future<TournamentConfigSetSeasonRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestDefault();
+
+
+static TournamentConfigSetSeasonRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => blueprintType.hashCode^season.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TournamentConfigSetSeasonRequest &&
+                runtimeType == other.runtimeType
+                && blueprintType == other.blueprintType&& season == other.season;
+        
+            }
+
+class TournamentConfigSetTimerLengthRequest  {
+                final int timerLength;
+
+                const TournamentConfigSetTimerLengthRequest({required this.timerLength ,});
+
+                static Future<TournamentConfigSetTimerLengthRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestDefault();
+
+
+static TournamentConfigSetTimerLengthRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => timerLength.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TournamentConfigSetTimerLengthRequest &&
+                runtimeType == other.runtimeType
+                && timerLength == other.timerLength;
+        
+            }
+            

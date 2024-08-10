@@ -6,52 +6,53 @@
 import '../../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`
 
-enum TmsServerSocketEvent {
-  purgeEvent,
-  matchTimerEvent,
-  matchStateEvent,
-  ;
-}
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`
 
-class TmsServerSocketMessage {
-  final String authToken;
-  final TmsServerSocketEvent messageEvent;
-  final String? message;
 
-  const TmsServerSocketMessage({
-    required this.authToken,
-    required this.messageEvent,
-    this.message,
-  });
+            
 
-  static Future<TmsServerSocketMessage> default_() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageDefault();
+            enum TmsServerSocketEvent {
+                    purgeEvent,
+matchTimerEvent,
+matchStateEvent,
+                    ;
+                    
+                }
 
-  static TmsServerSocketMessage fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonString(
-              json: json);
+class TmsServerSocketMessage  {
+                final String authToken;
+final TmsServerSocketEvent messageEvent;
+final String? message;
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToJsonString(
-        that: this,
-      );
+                const TmsServerSocketMessage({required this.authToken ,required this.messageEvent ,this.message ,});
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchema();
+                static Future<TmsServerSocketMessage>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageDefault();
 
-  @override
-  int get hashCode =>
-      authToken.hashCode ^ messageEvent.hashCode ^ message.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TmsServerSocketMessage &&
-          runtimeType == other.runtimeType &&
-          authToken == other.authToken &&
-          messageEvent == other.messageEvent &&
-          message == other.message;
-}
+static TmsServerSocketMessage  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => authToken.hashCode^messageEvent.hashCode^message.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is TmsServerSocketMessage &&
+                runtimeType == other.runtimeType
+                && authToken == other.authToken&& messageEvent == other.messageEvent&& message == other.message;
+        
+            }
+            

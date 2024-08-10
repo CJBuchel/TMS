@@ -4,127 +4,123 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import 'category_question.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 import 'rule_engine.dart';
+part 'question.freezed.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`
 
-class Question {
-  final String id;
-  final String label;
-  final String labelShort;
-  final QuestionType questionType;
-  final String questionInputDef;
-  final List<QuestionRule> rules;
 
-  const Question({
-    required this.id,
-    required this.label,
-    required this.labelShort,
-    required this.questionType,
-    required this.questionInputDef,
-    required this.rules,
-  });
+            
 
-  static Future<Question> default_() =>
-      TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionDefault();
+            class Question  {
+                final String id;
+final String label;
+final String labelShort;
+final QuestionInput input;
+final List<QuestionRule> rules;
 
-  static Question fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraFllInfraQuestionQuestionFromJsonString(json: json);
+                const Question({required this.id ,required this.label ,required this.labelShort ,required this.input ,required this.rules ,});
 
-  Future<int> getScore({required List<QuestionAnswer> answers}) => TmsRustLib
-      .instance.api
-      .crateInfraFllInfraQuestionQuestionGetScore(that: this, answers: answers);
+                static Future<Question>  default_()=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionDefault();
 
-  String toJsonString() =>
-      TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionToJsonString(
-        that: this,
-      );
 
-  static String toSchema() =>
-      TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionToSchema();
+static Question  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionFromJsonString(json: json);
 
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      label.hashCode ^
-      labelShort.hashCode ^
-      questionType.hashCode ^
-      questionInputDef.hashCode ^
-      rules.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Question &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          label == other.label &&
-          labelShort == other.labelShort &&
-          questionType == other.questionType &&
-          questionInputDef == other.questionInputDef &&
-          rules == other.rules;
-}
+ Future<int>  getScore({required List<QuestionAnswer> answers })=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionGetScore(that: this, answers: answers);
 
-class QuestionAnswer {
-  final String questionId;
-  final String answer;
 
-  const QuestionAnswer({
-    required this.questionId,
-    required this.answer,
-  });
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionToJsonString(that: this, );
 
-  static Future<QuestionAnswer> default_() =>
-      TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionAnswerDefault();
 
-  static QuestionAnswer fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraFllInfraQuestionQuestionAnswerFromJsonString(json: json);
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionToSchema();
 
-  String toJsonString() => TmsRustLib.instance.api
-          .crateInfraFllInfraQuestionQuestionAnswerToJsonString(
-        that: this,
-      );
 
-  static String toSchema() => TmsRustLib.instance.api
-      .crateInfraFllInfraQuestionQuestionAnswerToSchema();
+                
 
-  @override
-  int get hashCode => questionId.hashCode ^ answer.hashCode;
+                
+        @override
+        int get hashCode => id.hashCode^label.hashCode^labelShort.hashCode^input.hashCode^rules.hashCode;
+        
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is QuestionAnswer &&
-          runtimeType == other.runtimeType &&
-          questionId == other.questionId &&
-          answer == other.answer;
-}
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is Question &&
+                runtimeType == other.runtimeType
+                && id == other.id&& label == other.label&& labelShort == other.labelShort&& input == other.input&& rules == other.rules;
+        
+            }
 
-enum QuestionType {
-  categorical,
-  ;
-}
+class QuestionAnswer  {
+                final String questionId;
+final String answer;
 
-class QuestionValidationError {
-  final String questionIds;
-  final String message;
+                const QuestionAnswer({required this.questionId ,required this.answer ,});
 
-  const QuestionValidationError({
-    required this.questionIds,
-    required this.message,
-  });
+                static Future<QuestionAnswer>  default_()=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionAnswerDefault();
 
-  @override
-  int get hashCode => questionIds.hashCode ^ message.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is QuestionValidationError &&
-          runtimeType == other.runtimeType &&
-          questionIds == other.questionIds &&
-          message == other.message;
-}
+static QuestionAnswer  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionAnswerFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionAnswerToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionAnswerToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => questionId.hashCode^answer.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is QuestionAnswer &&
+                runtimeType == other.runtimeType
+                && questionId == other.questionId&& answer == other.answer;
+        
+            }
+
+@freezed
+                sealed class QuestionInput with _$QuestionInput  {
+                    const QuestionInput._();
+
+                     const factory QuestionInput.categorical(  CategoricalQuestion field0,) = QuestionInput_Categorical;
+
+                    
+                }
+
+class QuestionValidationError  {
+                final String questionIds;
+final String message;
+
+                const QuestionValidationError({required this.questionIds ,required this.message ,});
+
+                
+                
+
+                
+        @override
+        int get hashCode => questionIds.hashCode^message.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is QuestionValidationError &&
+                runtimeType == other.runtimeType
+                && questionIds == other.questionIds&& message == other.message;
+        
+            }
+            

@@ -35,1149 +35,678 @@ import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 
-abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
-  TmsRustLibApiImplPlatform({
-    required super.handler,
-    required super.wire,
-    required super.generalizedFrbRustBinding,
-    required super.portManager,
-  });
 
-  @protected
-  String dco_decode_String(dynamic raw);
 
-  @protected
-  BaseSeason dco_decode_TraitDef_BaseSeason(dynamic raw);
 
-  @protected
-  DataSchemeExtensions dco_decode_TraitDef_DataSchemeExtensions(dynamic raw);
+                abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
+                  TmsRustLibApiImplPlatform({
+                    required super.handler,
+                    required super.wire,
+                    required super.generalizedFrbRustBinding,
+                    required super.portManager,
+                  });
 
-  @protected
-  BlueprintType dco_decode_blueprint_type(dynamic raw);
+                  
 
-  @protected
-  bool dco_decode_bool(dynamic raw);
+                  @protected String dco_decode_String(dynamic raw);
 
-  @protected
-  CategoricalQuestion dco_decode_box_autoadd_categorical_question(dynamic raw);
+@protected BaseSeason dco_decode_TraitDef_BaseSeason(dynamic raw);
 
-  @protected
-  ErrorMessage dco_decode_box_autoadd_error_message(dynamic raw);
+@protected DataSchemeExtensions dco_decode_TraitDef_DataSchemeExtensions(dynamic raw);
 
-  @protected
-  FllBlueprint dco_decode_box_autoadd_fll_blueprint(dynamic raw);
+@protected BlueprintType dco_decode_blueprint_type(dynamic raw);
 
-  @protected
-  GameMatch dco_decode_box_autoadd_game_match(dynamic raw);
+@protected bool dco_decode_bool(dynamic raw);
 
-  @protected
-  GameTable dco_decode_box_autoadd_game_table(dynamic raw);
+@protected CategoricalQuestion dco_decode_box_autoadd_categorical_question(dynamic raw);
 
-  @protected
-  JudgingPod dco_decode_box_autoadd_judging_pod(dynamic raw);
+@protected ErrorMessage dco_decode_box_autoadd_error_message(dynamic raw);
 
-  @protected
-  JudgingSession dco_decode_box_autoadd_judging_session(dynamic raw);
+@protected FllBlueprint dco_decode_box_autoadd_fll_blueprint(dynamic raw);
 
-  @protected
-  LoginRequest dco_decode_box_autoadd_login_request(dynamic raw);
+@protected GameMatch dco_decode_box_autoadd_game_match(dynamic raw);
 
-  @protected
-  LoginResponse dco_decode_box_autoadd_login_response(dynamic raw);
+@protected GameTable dco_decode_box_autoadd_game_table(dynamic raw);
 
-  @protected
-  MasterPiece dco_decode_box_autoadd_master_piece(dynamic raw);
+@protected JudgingPod dco_decode_box_autoadd_judging_pod(dynamic raw);
 
-  @protected
-  Mission dco_decode_box_autoadd_mission(dynamic raw);
+@protected JudgingSession dco_decode_box_autoadd_judging_session(dynamic raw);
 
-  @protected
-  Question dco_decode_box_autoadd_question(dynamic raw);
+@protected LoginRequest dco_decode_box_autoadd_login_request(dynamic raw);
 
-  @protected
-  QuestionAnswer dco_decode_box_autoadd_question_answer(dynamic raw);
+@protected LoginResponse dco_decode_box_autoadd_login_response(dynamic raw);
 
-  @protected
-  QuestionRule dco_decode_box_autoadd_question_rule(dynamic raw);
+@protected MasterPiece dco_decode_box_autoadd_master_piece(dynamic raw);
 
-  @protected
-  RegisterRequest dco_decode_box_autoadd_register_request(dynamic raw);
+@protected Mission dco_decode_box_autoadd_mission(dynamic raw);
 
-  @protected
-  RegisterResponse dco_decode_box_autoadd_register_response(dynamic raw);
+@protected Question dco_decode_box_autoadd_question(dynamic raw);
 
-  @protected
-  RobotGamesLoadMatchRequest
-      dco_decode_box_autoadd_robot_games_load_match_request(dynamic raw);
+@protected QuestionAnswer dco_decode_box_autoadd_question_answer(dynamic raw);
 
-  @protected
-  Team dco_decode_box_autoadd_team(dynamic raw);
+@protected QuestionRule dco_decode_box_autoadd_question_rule(dynamic raw);
 
-  @protected
-  TmsDate dco_decode_box_autoadd_tms_date(dynamic raw);
+@protected RegisterRequest dco_decode_box_autoadd_register_request(dynamic raw);
 
-  @protected
-  TmsDateTime dco_decode_box_autoadd_tms_date_time(dynamic raw);
+@protected RegisterResponse dco_decode_box_autoadd_register_response(dynamic raw);
 
-  @protected
-  TmsServerMatchStateEvent dco_decode_box_autoadd_tms_server_match_state_event(
-      dynamic raw);
+@protected RobotGamesLoadMatchRequest dco_decode_box_autoadd_robot_games_load_match_request(dynamic raw);
 
-  @protected
-  TmsServerMatchTimerEvent dco_decode_box_autoadd_tms_server_match_timer_event(
-      dynamic raw);
+@protected Team dco_decode_box_autoadd_team(dynamic raw);
 
-  @protected
-  TmsServerSocketMessage dco_decode_box_autoadd_tms_server_socket_message(
-      dynamic raw);
+@protected TmsDate dco_decode_box_autoadd_tms_date(dynamic raw);
 
-  @protected
-  TmsTime dco_decode_box_autoadd_tms_time(dynamic raw);
+@protected TmsDateTime dco_decode_box_autoadd_tms_date_time(dynamic raw);
 
-  @protected
-  TmsTreeRole dco_decode_box_autoadd_tms_tree_role(dynamic raw);
+@protected TmsServerMatchStateEvent dco_decode_box_autoadd_tms_server_match_state_event(dynamic raw);
 
-  @protected
-  TournamentBlueprint dco_decode_box_autoadd_tournament_blueprint(dynamic raw);
+@protected TmsServerMatchTimerEvent dco_decode_box_autoadd_tms_server_match_timer_event(dynamic raw);
 
-  @protected
-  TournamentConfig dco_decode_box_autoadd_tournament_config(dynamic raw);
+@protected TmsServerSocketMessage dco_decode_box_autoadd_tms_server_socket_message(dynamic raw);
 
-  @protected
-  TournamentConfigSetAdminPasswordRequest
-      dco_decode_box_autoadd_tournament_config_set_admin_password_request(
-          dynamic raw);
+@protected TmsTime dco_decode_box_autoadd_tms_time(dynamic raw);
 
-  @protected
-  TournamentConfigSetBackupIntervalRequest
-      dco_decode_box_autoadd_tournament_config_set_backup_interval_request(
-          dynamic raw);
+@protected TmsTreeRole dco_decode_box_autoadd_tms_tree_role(dynamic raw);
 
-  @protected
-  TournamentConfigSetEndgameTimerLengthRequest
-      dco_decode_box_autoadd_tournament_config_set_endgame_timer_length_request(
-          dynamic raw);
+@protected TournamentBlueprint dco_decode_box_autoadd_tournament_blueprint(dynamic raw);
 
-  @protected
-  TournamentConfigSetNameRequest
-      dco_decode_box_autoadd_tournament_config_set_name_request(dynamic raw);
+@protected TournamentConfig dco_decode_box_autoadd_tournament_config(dynamic raw);
 
-  @protected
-  TournamentConfigSetRetainBackupsRequest
-      dco_decode_box_autoadd_tournament_config_set_retain_backups_request(
-          dynamic raw);
+@protected TournamentConfigSetAdminPasswordRequest dco_decode_box_autoadd_tournament_config_set_admin_password_request(dynamic raw);
 
-  @protected
-  TournamentConfigSetSeasonRequest
-      dco_decode_box_autoadd_tournament_config_set_season_request(dynamic raw);
+@protected TournamentConfigSetBackupIntervalRequest dco_decode_box_autoadd_tournament_config_set_backup_interval_request(dynamic raw);
 
-  @protected
-  TournamentConfigSetTimerLengthRequest
-      dco_decode_box_autoadd_tournament_config_set_timer_length_request(
-          dynamic raw);
+@protected TournamentConfigSetEndgameTimerLengthRequest dco_decode_box_autoadd_tournament_config_set_endgame_timer_length_request(dynamic raw);
 
-  @protected
-  int dco_decode_box_autoadd_u_32(dynamic raw);
+@protected TournamentConfigSetNameRequest dco_decode_box_autoadd_tournament_config_set_name_request(dynamic raw);
 
-  @protected
-  User dco_decode_box_autoadd_user(dynamic raw);
+@protected TournamentConfigSetRetainBackupsRequest dco_decode_box_autoadd_tournament_config_set_retain_backups_request(dynamic raw);
 
-  @protected
-  CategoricalOption dco_decode_categorical_option(dynamic raw);
+@protected TournamentConfigSetSeasonRequest dco_decode_box_autoadd_tournament_config_set_season_request(dynamic raw);
 
-  @protected
-  CategoricalQuestion dco_decode_categorical_question(dynamic raw);
+@protected TournamentConfigSetTimerLengthRequest dco_decode_box_autoadd_tournament_config_set_timer_length_request(dynamic raw);
 
-  @protected
-  ErrorMessage dco_decode_error_message(dynamic raw);
+@protected int dco_decode_box_autoadd_u_32(dynamic raw);
 
-  @protected
-  FllBlueprint dco_decode_fll_blueprint(dynamic raw);
+@protected User dco_decode_box_autoadd_user(dynamic raw);
 
-  @protected
-  FllBlueprintMap dco_decode_fll_blueprint_map(dynamic raw);
+@protected CategoricalOption dco_decode_categorical_option(dynamic raw);
 
-  @protected
-  GameMatch dco_decode_game_match(dynamic raw);
+@protected CategoricalQuestion dco_decode_categorical_question(dynamic raw);
 
-  @protected
-  GameMatchTable dco_decode_game_match_table(dynamic raw);
+@protected ErrorMessage dco_decode_error_message(dynamic raw);
 
-  @protected
-  GameTable dco_decode_game_table(dynamic raw);
+@protected FllBlueprint dco_decode_fll_blueprint(dynamic raw);
 
-  @protected
-  int dco_decode_i_32(dynamic raw);
+@protected FllBlueprintMap dco_decode_fll_blueprint_map(dynamic raw);
 
-  @protected
-  JudgingPod dco_decode_judging_pod(dynamic raw);
+@protected GameMatch dco_decode_game_match(dynamic raw);
 
-  @protected
-  JudgingSession dco_decode_judging_session(dynamic raw);
+@protected GameMatchTable dco_decode_game_match_table(dynamic raw);
 
-  @protected
-  JudgingSessionPod dco_decode_judging_session_pod(dynamic raw);
+@protected GameTable dco_decode_game_table(dynamic raw);
 
-  @protected
-  List<String> dco_decode_list_String(dynamic raw);
+@protected int dco_decode_i_32(dynamic raw);
 
-  @protected
-  List<CategoricalOption> dco_decode_list_categorical_option(dynamic raw);
+@protected JudgingPod dco_decode_judging_pod(dynamic raw);
 
-  @protected
-  List<GameMatchTable> dco_decode_list_game_match_table(dynamic raw);
+@protected JudgingSession dco_decode_judging_session(dynamic raw);
 
-  @protected
-  List<JudgingSessionPod> dco_decode_list_judging_session_pod(dynamic raw);
+@protected JudgingSessionPod dco_decode_judging_session_pod(dynamic raw);
 
-  @protected
-  List<Mission> dco_decode_list_mission(dynamic raw);
+@protected List<String> dco_decode_list_String(dynamic raw);
 
-  @protected
-  Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+@protected List<CategoricalOption> dco_decode_list_categorical_option(dynamic raw);
 
-  @protected
-  List<Question> dco_decode_list_question(dynamic raw);
+@protected List<GameMatchTable> dco_decode_list_game_match_table(dynamic raw);
 
-  @protected
-  List<QuestionAnswer> dco_decode_list_question_answer(dynamic raw);
+@protected List<JudgingSessionPod> dco_decode_list_judging_session_pod(dynamic raw);
 
-  @protected
-  List<QuestionRule> dco_decode_list_question_rule(dynamic raw);
+@protected List<Mission> dco_decode_list_mission(dynamic raw);
 
-  @protected
-  List<QuestionValidationError> dco_decode_list_question_validation_error(
-      dynamic raw);
+@protected Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
-  @protected
-  List<(String, bool)> dco_decode_list_record_string_bool(dynamic raw);
+@protected List<Question> dco_decode_list_question(dynamic raw);
 
-  @protected
-  List<TmsTreeRole> dco_decode_list_tms_tree_role(dynamic raw);
+@protected List<QuestionAnswer> dco_decode_list_question_answer(dynamic raw);
 
-  @protected
-  LoginRequest dco_decode_login_request(dynamic raw);
+@protected List<QuestionRule> dco_decode_list_question_rule(dynamic raw);
 
-  @protected
-  LoginResponse dco_decode_login_response(dynamic raw);
+@protected List<QuestionValidationError> dco_decode_list_question_validation_error(dynamic raw);
 
-  @protected
-  MasterPiece dco_decode_master_piece(dynamic raw);
+@protected List<(String,bool)> dco_decode_list_record_string_bool(dynamic raw);
 
-  @protected
-  Mission dco_decode_mission(dynamic raw);
+@protected List<TmsTreeRole> dco_decode_list_tms_tree_role(dynamic raw);
 
-  @protected
-  String? dco_decode_opt_String(dynamic raw);
+@protected LoginRequest dco_decode_login_request(dynamic raw);
 
-  @protected
-  TmsDate? dco_decode_opt_box_autoadd_tms_date(dynamic raw);
+@protected LoginResponse dco_decode_login_response(dynamic raw);
 
-  @protected
-  TmsTime? dco_decode_opt_box_autoadd_tms_time(dynamic raw);
+@protected MasterPiece dco_decode_master_piece(dynamic raw);
 
-  @protected
-  int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
+@protected Mission dco_decode_mission(dynamic raw);
 
-  @protected
-  List<QuestionValidationError>? dco_decode_opt_list_question_validation_error(
-      dynamic raw);
+@protected String? dco_decode_opt_String(dynamic raw);
 
-  @protected
-  Question dco_decode_question(dynamic raw);
+@protected TmsDate? dco_decode_opt_box_autoadd_tms_date(dynamic raw);
 
-  @protected
-  QuestionAnswer dco_decode_question_answer(dynamic raw);
+@protected TmsTime? dco_decode_opt_box_autoadd_tms_time(dynamic raw);
 
-  @protected
-  QuestionRule dco_decode_question_rule(dynamic raw);
+@protected int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
 
-  @protected
-  QuestionType dco_decode_question_type(dynamic raw);
+@protected List<QuestionValidationError>? dco_decode_opt_list_question_validation_error(dynamic raw);
 
-  @protected
-  QuestionValidationError dco_decode_question_validation_error(dynamic raw);
+@protected Question dco_decode_question(dynamic raw);
 
-  @protected
-  (String, bool) dco_decode_record_string_bool(dynamic raw);
+@protected QuestionAnswer dco_decode_question_answer(dynamic raw);
 
-  @protected
-  RegisterRequest dco_decode_register_request(dynamic raw);
+@protected QuestionInput dco_decode_question_input(dynamic raw);
 
-  @protected
-  RegisterResponse dco_decode_register_response(dynamic raw);
+@protected QuestionRule dco_decode_question_rule(dynamic raw);
 
-  @protected
-  RobotGamesLoadMatchRequest dco_decode_robot_games_load_match_request(
-      dynamic raw);
+@protected QuestionValidationError dco_decode_question_validation_error(dynamic raw);
 
-  @protected
-  Team dco_decode_team(dynamic raw);
+@protected (String,bool) dco_decode_record_string_bool(dynamic raw);
 
-  @protected
-  TmsDate dco_decode_tms_date(dynamic raw);
+@protected RegisterRequest dco_decode_register_request(dynamic raw);
 
-  @protected
-  TmsDateTime dco_decode_tms_date_time(dynamic raw);
+@protected RegisterResponse dco_decode_register_response(dynamic raw);
 
-  @protected
-  TmsServerMatchState dco_decode_tms_server_match_state(dynamic raw);
+@protected RobotGamesLoadMatchRequest dco_decode_robot_games_load_match_request(dynamic raw);
 
-  @protected
-  TmsServerMatchStateEvent dco_decode_tms_server_match_state_event(dynamic raw);
+@protected Team dco_decode_team(dynamic raw);
 
-  @protected
-  TmsServerMatchTimerEvent dco_decode_tms_server_match_timer_event(dynamic raw);
+@protected TmsDate dco_decode_tms_date(dynamic raw);
 
-  @protected
-  TmsServerMatchTimerState dco_decode_tms_server_match_timer_state(dynamic raw);
+@protected TmsDateTime dco_decode_tms_date_time(dynamic raw);
 
-  @protected
-  TmsServerSocketEvent dco_decode_tms_server_socket_event(dynamic raw);
+@protected TmsServerMatchState dco_decode_tms_server_match_state(dynamic raw);
 
-  @protected
-  TmsServerSocketMessage dco_decode_tms_server_socket_message(dynamic raw);
+@protected TmsServerMatchStateEvent dco_decode_tms_server_match_state_event(dynamic raw);
 
-  @protected
-  TmsTime dco_decode_tms_time(dynamic raw);
+@protected TmsServerMatchTimerEvent dco_decode_tms_server_match_timer_event(dynamic raw);
 
-  @protected
-  TmsTreeRole dco_decode_tms_tree_role(dynamic raw);
+@protected TmsServerMatchTimerState dco_decode_tms_server_match_timer_state(dynamic raw);
 
-  @protected
-  TournamentBlueprint dco_decode_tournament_blueprint(dynamic raw);
+@protected TmsServerSocketEvent dco_decode_tms_server_socket_event(dynamic raw);
 
-  @protected
-  TournamentConfig dco_decode_tournament_config(dynamic raw);
+@protected TmsServerSocketMessage dco_decode_tms_server_socket_message(dynamic raw);
 
-  @protected
-  TournamentConfigSetAdminPasswordRequest
-      dco_decode_tournament_config_set_admin_password_request(dynamic raw);
+@protected TmsTime dco_decode_tms_time(dynamic raw);
 
-  @protected
-  TournamentConfigSetBackupIntervalRequest
-      dco_decode_tournament_config_set_backup_interval_request(dynamic raw);
+@protected TmsTreeRole dco_decode_tms_tree_role(dynamic raw);
 
-  @protected
-  TournamentConfigSetEndgameTimerLengthRequest
-      dco_decode_tournament_config_set_endgame_timer_length_request(
-          dynamic raw);
+@protected TournamentBlueprint dco_decode_tournament_blueprint(dynamic raw);
 
-  @protected
-  TournamentConfigSetNameRequest dco_decode_tournament_config_set_name_request(
-      dynamic raw);
+@protected TournamentConfig dco_decode_tournament_config(dynamic raw);
 
-  @protected
-  TournamentConfigSetRetainBackupsRequest
-      dco_decode_tournament_config_set_retain_backups_request(dynamic raw);
+@protected TournamentConfigSetAdminPasswordRequest dco_decode_tournament_config_set_admin_password_request(dynamic raw);
 
-  @protected
-  TournamentConfigSetSeasonRequest
-      dco_decode_tournament_config_set_season_request(dynamic raw);
+@protected TournamentConfigSetBackupIntervalRequest dco_decode_tournament_config_set_backup_interval_request(dynamic raw);
 
-  @protected
-  TournamentConfigSetTimerLengthRequest
-      dco_decode_tournament_config_set_timer_length_request(dynamic raw);
+@protected TournamentConfigSetEndgameTimerLengthRequest dco_decode_tournament_config_set_endgame_timer_length_request(dynamic raw);
 
-  @protected
-  int dco_decode_u_16(dynamic raw);
+@protected TournamentConfigSetNameRequest dco_decode_tournament_config_set_name_request(dynamic raw);
 
-  @protected
-  int dco_decode_u_32(dynamic raw);
+@protected TournamentConfigSetRetainBackupsRequest dco_decode_tournament_config_set_retain_backups_request(dynamic raw);
 
-  @protected
-  int dco_decode_u_8(dynamic raw);
+@protected TournamentConfigSetSeasonRequest dco_decode_tournament_config_set_season_request(dynamic raw);
 
-  @protected
-  void dco_decode_unit(dynamic raw);
+@protected TournamentConfigSetTimerLengthRequest dco_decode_tournament_config_set_timer_length_request(dynamic raw);
 
-  @protected
-  User dco_decode_user(dynamic raw);
+@protected int dco_decode_u_16(dynamic raw);
 
-  @protected
-  String sse_decode_String(SseDeserializer deserializer);
+@protected int dco_decode_u_32(dynamic raw);
 
-  @protected
-  BlueprintType sse_decode_blueprint_type(SseDeserializer deserializer);
+@protected int dco_decode_u_8(dynamic raw);
 
-  @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+@protected void dco_decode_unit(dynamic raw);
 
-  @protected
-  CategoricalQuestion sse_decode_box_autoadd_categorical_question(
-      SseDeserializer deserializer);
+@protected User dco_decode_user(dynamic raw);
 
-  @protected
-  ErrorMessage sse_decode_box_autoadd_error_message(
-      SseDeserializer deserializer);
+@protected String sse_decode_String(SseDeserializer deserializer);
 
-  @protected
-  FllBlueprint sse_decode_box_autoadd_fll_blueprint(
-      SseDeserializer deserializer);
+@protected BlueprintType sse_decode_blueprint_type(SseDeserializer deserializer);
 
-  @protected
-  GameMatch sse_decode_box_autoadd_game_match(SseDeserializer deserializer);
+@protected bool sse_decode_bool(SseDeserializer deserializer);
 
-  @protected
-  GameTable sse_decode_box_autoadd_game_table(SseDeserializer deserializer);
+@protected CategoricalQuestion sse_decode_box_autoadd_categorical_question(SseDeserializer deserializer);
 
-  @protected
-  JudgingPod sse_decode_box_autoadd_judging_pod(SseDeserializer deserializer);
+@protected ErrorMessage sse_decode_box_autoadd_error_message(SseDeserializer deserializer);
 
-  @protected
-  JudgingSession sse_decode_box_autoadd_judging_session(
-      SseDeserializer deserializer);
+@protected FllBlueprint sse_decode_box_autoadd_fll_blueprint(SseDeserializer deserializer);
 
-  @protected
-  LoginRequest sse_decode_box_autoadd_login_request(
-      SseDeserializer deserializer);
+@protected GameMatch sse_decode_box_autoadd_game_match(SseDeserializer deserializer);
 
-  @protected
-  LoginResponse sse_decode_box_autoadd_login_response(
-      SseDeserializer deserializer);
+@protected GameTable sse_decode_box_autoadd_game_table(SseDeserializer deserializer);
 
-  @protected
-  MasterPiece sse_decode_box_autoadd_master_piece(SseDeserializer deserializer);
+@protected JudgingPod sse_decode_box_autoadd_judging_pod(SseDeserializer deserializer);
 
-  @protected
-  Mission sse_decode_box_autoadd_mission(SseDeserializer deserializer);
+@protected JudgingSession sse_decode_box_autoadd_judging_session(SseDeserializer deserializer);
 
-  @protected
-  Question sse_decode_box_autoadd_question(SseDeserializer deserializer);
+@protected LoginRequest sse_decode_box_autoadd_login_request(SseDeserializer deserializer);
 
-  @protected
-  QuestionAnswer sse_decode_box_autoadd_question_answer(
-      SseDeserializer deserializer);
+@protected LoginResponse sse_decode_box_autoadd_login_response(SseDeserializer deserializer);
 
-  @protected
-  QuestionRule sse_decode_box_autoadd_question_rule(
-      SseDeserializer deserializer);
+@protected MasterPiece sse_decode_box_autoadd_master_piece(SseDeserializer deserializer);
 
-  @protected
-  RegisterRequest sse_decode_box_autoadd_register_request(
-      SseDeserializer deserializer);
+@protected Mission sse_decode_box_autoadd_mission(SseDeserializer deserializer);
 
-  @protected
-  RegisterResponse sse_decode_box_autoadd_register_response(
-      SseDeserializer deserializer);
+@protected Question sse_decode_box_autoadd_question(SseDeserializer deserializer);
 
-  @protected
-  RobotGamesLoadMatchRequest
-      sse_decode_box_autoadd_robot_games_load_match_request(
-          SseDeserializer deserializer);
+@protected QuestionAnswer sse_decode_box_autoadd_question_answer(SseDeserializer deserializer);
 
-  @protected
-  Team sse_decode_box_autoadd_team(SseDeserializer deserializer);
+@protected QuestionRule sse_decode_box_autoadd_question_rule(SseDeserializer deserializer);
 
-  @protected
-  TmsDate sse_decode_box_autoadd_tms_date(SseDeserializer deserializer);
+@protected RegisterRequest sse_decode_box_autoadd_register_request(SseDeserializer deserializer);
 
-  @protected
-  TmsDateTime sse_decode_box_autoadd_tms_date_time(
-      SseDeserializer deserializer);
+@protected RegisterResponse sse_decode_box_autoadd_register_response(SseDeserializer deserializer);
 
-  @protected
-  TmsServerMatchStateEvent sse_decode_box_autoadd_tms_server_match_state_event(
-      SseDeserializer deserializer);
+@protected RobotGamesLoadMatchRequest sse_decode_box_autoadd_robot_games_load_match_request(SseDeserializer deserializer);
 
-  @protected
-  TmsServerMatchTimerEvent sse_decode_box_autoadd_tms_server_match_timer_event(
-      SseDeserializer deserializer);
+@protected Team sse_decode_box_autoadd_team(SseDeserializer deserializer);
 
-  @protected
-  TmsServerSocketMessage sse_decode_box_autoadd_tms_server_socket_message(
-      SseDeserializer deserializer);
+@protected TmsDate sse_decode_box_autoadd_tms_date(SseDeserializer deserializer);
 
-  @protected
-  TmsTime sse_decode_box_autoadd_tms_time(SseDeserializer deserializer);
+@protected TmsDateTime sse_decode_box_autoadd_tms_date_time(SseDeserializer deserializer);
 
-  @protected
-  TmsTreeRole sse_decode_box_autoadd_tms_tree_role(
-      SseDeserializer deserializer);
+@protected TmsServerMatchStateEvent sse_decode_box_autoadd_tms_server_match_state_event(SseDeserializer deserializer);
 
-  @protected
-  TournamentBlueprint sse_decode_box_autoadd_tournament_blueprint(
-      SseDeserializer deserializer);
+@protected TmsServerMatchTimerEvent sse_decode_box_autoadd_tms_server_match_timer_event(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfig sse_decode_box_autoadd_tournament_config(
-      SseDeserializer deserializer);
+@protected TmsServerSocketMessage sse_decode_box_autoadd_tms_server_socket_message(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetAdminPasswordRequest
-      sse_decode_box_autoadd_tournament_config_set_admin_password_request(
-          SseDeserializer deserializer);
+@protected TmsTime sse_decode_box_autoadd_tms_time(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetBackupIntervalRequest
-      sse_decode_box_autoadd_tournament_config_set_backup_interval_request(
-          SseDeserializer deserializer);
+@protected TmsTreeRole sse_decode_box_autoadd_tms_tree_role(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetEndgameTimerLengthRequest
-      sse_decode_box_autoadd_tournament_config_set_endgame_timer_length_request(
-          SseDeserializer deserializer);
+@protected TournamentBlueprint sse_decode_box_autoadd_tournament_blueprint(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetNameRequest
-      sse_decode_box_autoadd_tournament_config_set_name_request(
-          SseDeserializer deserializer);
+@protected TournamentConfig sse_decode_box_autoadd_tournament_config(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetRetainBackupsRequest
-      sse_decode_box_autoadd_tournament_config_set_retain_backups_request(
-          SseDeserializer deserializer);
+@protected TournamentConfigSetAdminPasswordRequest sse_decode_box_autoadd_tournament_config_set_admin_password_request(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetSeasonRequest
-      sse_decode_box_autoadd_tournament_config_set_season_request(
-          SseDeserializer deserializer);
+@protected TournamentConfigSetBackupIntervalRequest sse_decode_box_autoadd_tournament_config_set_backup_interval_request(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetTimerLengthRequest
-      sse_decode_box_autoadd_tournament_config_set_timer_length_request(
-          SseDeserializer deserializer);
+@protected TournamentConfigSetEndgameTimerLengthRequest sse_decode_box_autoadd_tournament_config_set_endgame_timer_length_request(SseDeserializer deserializer);
 
-  @protected
-  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
+@protected TournamentConfigSetNameRequest sse_decode_box_autoadd_tournament_config_set_name_request(SseDeserializer deserializer);
 
-  @protected
-  User sse_decode_box_autoadd_user(SseDeserializer deserializer);
+@protected TournamentConfigSetRetainBackupsRequest sse_decode_box_autoadd_tournament_config_set_retain_backups_request(SseDeserializer deserializer);
 
-  @protected
-  CategoricalOption sse_decode_categorical_option(SseDeserializer deserializer);
+@protected TournamentConfigSetSeasonRequest sse_decode_box_autoadd_tournament_config_set_season_request(SseDeserializer deserializer);
 
-  @protected
-  CategoricalQuestion sse_decode_categorical_question(
-      SseDeserializer deserializer);
+@protected TournamentConfigSetTimerLengthRequest sse_decode_box_autoadd_tournament_config_set_timer_length_request(SseDeserializer deserializer);
 
-  @protected
-  ErrorMessage sse_decode_error_message(SseDeserializer deserializer);
+@protected int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
-  @protected
-  FllBlueprint sse_decode_fll_blueprint(SseDeserializer deserializer);
+@protected User sse_decode_box_autoadd_user(SseDeserializer deserializer);
 
-  @protected
-  FllBlueprintMap sse_decode_fll_blueprint_map(SseDeserializer deserializer);
+@protected CategoricalOption sse_decode_categorical_option(SseDeserializer deserializer);
 
-  @protected
-  GameMatch sse_decode_game_match(SseDeserializer deserializer);
+@protected CategoricalQuestion sse_decode_categorical_question(SseDeserializer deserializer);
 
-  @protected
-  GameMatchTable sse_decode_game_match_table(SseDeserializer deserializer);
+@protected ErrorMessage sse_decode_error_message(SseDeserializer deserializer);
 
-  @protected
-  GameTable sse_decode_game_table(SseDeserializer deserializer);
+@protected FllBlueprint sse_decode_fll_blueprint(SseDeserializer deserializer);
 
-  @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
+@protected FllBlueprintMap sse_decode_fll_blueprint_map(SseDeserializer deserializer);
 
-  @protected
-  JudgingPod sse_decode_judging_pod(SseDeserializer deserializer);
+@protected GameMatch sse_decode_game_match(SseDeserializer deserializer);
 
-  @protected
-  JudgingSession sse_decode_judging_session(SseDeserializer deserializer);
+@protected GameMatchTable sse_decode_game_match_table(SseDeserializer deserializer);
 
-  @protected
-  JudgingSessionPod sse_decode_judging_session_pod(
-      SseDeserializer deserializer);
+@protected GameTable sse_decode_game_table(SseDeserializer deserializer);
 
-  @protected
-  List<String> sse_decode_list_String(SseDeserializer deserializer);
+@protected int sse_decode_i_32(SseDeserializer deserializer);
 
-  @protected
-  List<CategoricalOption> sse_decode_list_categorical_option(
-      SseDeserializer deserializer);
+@protected JudgingPod sse_decode_judging_pod(SseDeserializer deserializer);
 
-  @protected
-  List<GameMatchTable> sse_decode_list_game_match_table(
-      SseDeserializer deserializer);
+@protected JudgingSession sse_decode_judging_session(SseDeserializer deserializer);
 
-  @protected
-  List<JudgingSessionPod> sse_decode_list_judging_session_pod(
-      SseDeserializer deserializer);
+@protected JudgingSessionPod sse_decode_judging_session_pod(SseDeserializer deserializer);
 
-  @protected
-  List<Mission> sse_decode_list_mission(SseDeserializer deserializer);
+@protected List<String> sse_decode_list_String(SseDeserializer deserializer);
 
-  @protected
-  Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+@protected List<CategoricalOption> sse_decode_list_categorical_option(SseDeserializer deserializer);
 
-  @protected
-  List<Question> sse_decode_list_question(SseDeserializer deserializer);
+@protected List<GameMatchTable> sse_decode_list_game_match_table(SseDeserializer deserializer);
 
-  @protected
-  List<QuestionAnswer> sse_decode_list_question_answer(
-      SseDeserializer deserializer);
+@protected List<JudgingSessionPod> sse_decode_list_judging_session_pod(SseDeserializer deserializer);
 
-  @protected
-  List<QuestionRule> sse_decode_list_question_rule(
-      SseDeserializer deserializer);
+@protected List<Mission> sse_decode_list_mission(SseDeserializer deserializer);
 
-  @protected
-  List<QuestionValidationError> sse_decode_list_question_validation_error(
-      SseDeserializer deserializer);
+@protected Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
-  @protected
-  List<(String, bool)> sse_decode_list_record_string_bool(
-      SseDeserializer deserializer);
+@protected List<Question> sse_decode_list_question(SseDeserializer deserializer);
 
-  @protected
-  List<TmsTreeRole> sse_decode_list_tms_tree_role(SseDeserializer deserializer);
+@protected List<QuestionAnswer> sse_decode_list_question_answer(SseDeserializer deserializer);
 
-  @protected
-  LoginRequest sse_decode_login_request(SseDeserializer deserializer);
+@protected List<QuestionRule> sse_decode_list_question_rule(SseDeserializer deserializer);
 
-  @protected
-  LoginResponse sse_decode_login_response(SseDeserializer deserializer);
+@protected List<QuestionValidationError> sse_decode_list_question_validation_error(SseDeserializer deserializer);
 
-  @protected
-  MasterPiece sse_decode_master_piece(SseDeserializer deserializer);
+@protected List<(String,bool)> sse_decode_list_record_string_bool(SseDeserializer deserializer);
 
-  @protected
-  Mission sse_decode_mission(SseDeserializer deserializer);
+@protected List<TmsTreeRole> sse_decode_list_tms_tree_role(SseDeserializer deserializer);
 
-  @protected
-  String? sse_decode_opt_String(SseDeserializer deserializer);
+@protected LoginRequest sse_decode_login_request(SseDeserializer deserializer);
 
-  @protected
-  TmsDate? sse_decode_opt_box_autoadd_tms_date(SseDeserializer deserializer);
+@protected LoginResponse sse_decode_login_response(SseDeserializer deserializer);
 
-  @protected
-  TmsTime? sse_decode_opt_box_autoadd_tms_time(SseDeserializer deserializer);
+@protected MasterPiece sse_decode_master_piece(SseDeserializer deserializer);
 
-  @protected
-  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+@protected Mission sse_decode_mission(SseDeserializer deserializer);
 
-  @protected
-  List<QuestionValidationError>? sse_decode_opt_list_question_validation_error(
-      SseDeserializer deserializer);
+@protected String? sse_decode_opt_String(SseDeserializer deserializer);
 
-  @protected
-  Question sse_decode_question(SseDeserializer deserializer);
+@protected TmsDate? sse_decode_opt_box_autoadd_tms_date(SseDeserializer deserializer);
 
-  @protected
-  QuestionAnswer sse_decode_question_answer(SseDeserializer deserializer);
+@protected TmsTime? sse_decode_opt_box_autoadd_tms_time(SseDeserializer deserializer);
 
-  @protected
-  QuestionRule sse_decode_question_rule(SseDeserializer deserializer);
+@protected int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
 
-  @protected
-  QuestionType sse_decode_question_type(SseDeserializer deserializer);
+@protected List<QuestionValidationError>? sse_decode_opt_list_question_validation_error(SseDeserializer deserializer);
 
-  @protected
-  QuestionValidationError sse_decode_question_validation_error(
-      SseDeserializer deserializer);
+@protected Question sse_decode_question(SseDeserializer deserializer);
 
-  @protected
-  (String, bool) sse_decode_record_string_bool(SseDeserializer deserializer);
+@protected QuestionAnswer sse_decode_question_answer(SseDeserializer deserializer);
 
-  @protected
-  RegisterRequest sse_decode_register_request(SseDeserializer deserializer);
+@protected QuestionInput sse_decode_question_input(SseDeserializer deserializer);
 
-  @protected
-  RegisterResponse sse_decode_register_response(SseDeserializer deserializer);
+@protected QuestionRule sse_decode_question_rule(SseDeserializer deserializer);
 
-  @protected
-  RobotGamesLoadMatchRequest sse_decode_robot_games_load_match_request(
-      SseDeserializer deserializer);
+@protected QuestionValidationError sse_decode_question_validation_error(SseDeserializer deserializer);
 
-  @protected
-  Team sse_decode_team(SseDeserializer deserializer);
+@protected (String,bool) sse_decode_record_string_bool(SseDeserializer deserializer);
 
-  @protected
-  TmsDate sse_decode_tms_date(SseDeserializer deserializer);
+@protected RegisterRequest sse_decode_register_request(SseDeserializer deserializer);
 
-  @protected
-  TmsDateTime sse_decode_tms_date_time(SseDeserializer deserializer);
+@protected RegisterResponse sse_decode_register_response(SseDeserializer deserializer);
 
-  @protected
-  TmsServerMatchState sse_decode_tms_server_match_state(
-      SseDeserializer deserializer);
+@protected RobotGamesLoadMatchRequest sse_decode_robot_games_load_match_request(SseDeserializer deserializer);
 
-  @protected
-  TmsServerMatchStateEvent sse_decode_tms_server_match_state_event(
-      SseDeserializer deserializer);
+@protected Team sse_decode_team(SseDeserializer deserializer);
 
-  @protected
-  TmsServerMatchTimerEvent sse_decode_tms_server_match_timer_event(
-      SseDeserializer deserializer);
+@protected TmsDate sse_decode_tms_date(SseDeserializer deserializer);
 
-  @protected
-  TmsServerMatchTimerState sse_decode_tms_server_match_timer_state(
-      SseDeserializer deserializer);
+@protected TmsDateTime sse_decode_tms_date_time(SseDeserializer deserializer);
 
-  @protected
-  TmsServerSocketEvent sse_decode_tms_server_socket_event(
-      SseDeserializer deserializer);
+@protected TmsServerMatchState sse_decode_tms_server_match_state(SseDeserializer deserializer);
 
-  @protected
-  TmsServerSocketMessage sse_decode_tms_server_socket_message(
-      SseDeserializer deserializer);
+@protected TmsServerMatchStateEvent sse_decode_tms_server_match_state_event(SseDeserializer deserializer);
 
-  @protected
-  TmsTime sse_decode_tms_time(SseDeserializer deserializer);
+@protected TmsServerMatchTimerEvent sse_decode_tms_server_match_timer_event(SseDeserializer deserializer);
 
-  @protected
-  TmsTreeRole sse_decode_tms_tree_role(SseDeserializer deserializer);
+@protected TmsServerMatchTimerState sse_decode_tms_server_match_timer_state(SseDeserializer deserializer);
 
-  @protected
-  TournamentBlueprint sse_decode_tournament_blueprint(
-      SseDeserializer deserializer);
+@protected TmsServerSocketEvent sse_decode_tms_server_socket_event(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfig sse_decode_tournament_config(SseDeserializer deserializer);
+@protected TmsServerSocketMessage sse_decode_tms_server_socket_message(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetAdminPasswordRequest
-      sse_decode_tournament_config_set_admin_password_request(
-          SseDeserializer deserializer);
+@protected TmsTime sse_decode_tms_time(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetBackupIntervalRequest
-      sse_decode_tournament_config_set_backup_interval_request(
-          SseDeserializer deserializer);
+@protected TmsTreeRole sse_decode_tms_tree_role(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetEndgameTimerLengthRequest
-      sse_decode_tournament_config_set_endgame_timer_length_request(
-          SseDeserializer deserializer);
+@protected TournamentBlueprint sse_decode_tournament_blueprint(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetNameRequest sse_decode_tournament_config_set_name_request(
-      SseDeserializer deserializer);
+@protected TournamentConfig sse_decode_tournament_config(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetRetainBackupsRequest
-      sse_decode_tournament_config_set_retain_backups_request(
-          SseDeserializer deserializer);
+@protected TournamentConfigSetAdminPasswordRequest sse_decode_tournament_config_set_admin_password_request(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetSeasonRequest
-      sse_decode_tournament_config_set_season_request(
-          SseDeserializer deserializer);
+@protected TournamentConfigSetBackupIntervalRequest sse_decode_tournament_config_set_backup_interval_request(SseDeserializer deserializer);
 
-  @protected
-  TournamentConfigSetTimerLengthRequest
-      sse_decode_tournament_config_set_timer_length_request(
-          SseDeserializer deserializer);
+@protected TournamentConfigSetEndgameTimerLengthRequest sse_decode_tournament_config_set_endgame_timer_length_request(SseDeserializer deserializer);
 
-  @protected
-  int sse_decode_u_16(SseDeserializer deserializer);
+@protected TournamentConfigSetNameRequest sse_decode_tournament_config_set_name_request(SseDeserializer deserializer);
 
-  @protected
-  int sse_decode_u_32(SseDeserializer deserializer);
+@protected TournamentConfigSetRetainBackupsRequest sse_decode_tournament_config_set_retain_backups_request(SseDeserializer deserializer);
 
-  @protected
-  int sse_decode_u_8(SseDeserializer deserializer);
+@protected TournamentConfigSetSeasonRequest sse_decode_tournament_config_set_season_request(SseDeserializer deserializer);
 
-  @protected
-  void sse_decode_unit(SseDeserializer deserializer);
+@protected TournamentConfigSetTimerLengthRequest sse_decode_tournament_config_set_timer_length_request(SseDeserializer deserializer);
 
-  @protected
-  User sse_decode_user(SseDeserializer deserializer);
+@protected int sse_decode_u_16(SseDeserializer deserializer);
 
-  @protected
-  void sse_encode_String(String self, SseSerializer serializer);
+@protected int sse_decode_u_32(SseDeserializer deserializer);
 
-  @protected
-  void sse_encode_blueprint_type(BlueprintType self, SseSerializer serializer);
+@protected int sse_decode_u_8(SseDeserializer deserializer);
 
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+@protected void sse_decode_unit(SseDeserializer deserializer);
 
-  @protected
-  void sse_encode_box_autoadd_categorical_question(
-      CategoricalQuestion self, SseSerializer serializer);
+@protected User sse_decode_user(SseDeserializer deserializer);
 
-  @protected
-  void sse_encode_box_autoadd_error_message(
-      ErrorMessage self, SseSerializer serializer);
+@protected void sse_encode_String(String self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_fll_blueprint(
-      FllBlueprint self, SseSerializer serializer);
+@protected void sse_encode_blueprint_type(BlueprintType self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_game_match(
-      GameMatch self, SseSerializer serializer);
+@protected void sse_encode_bool(bool self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_game_table(
-      GameTable self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_categorical_question(CategoricalQuestion self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_judging_pod(
-      JudgingPod self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_error_message(ErrorMessage self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_judging_session(
-      JudgingSession self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_fll_blueprint(FllBlueprint self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_login_request(
-      LoginRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_game_match(GameMatch self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_login_response(
-      LoginResponse self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_game_table(GameTable self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_master_piece(
-      MasterPiece self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_judging_pod(JudgingPod self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_mission(Mission self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_judging_session(JudgingSession self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_question(Question self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_login_request(LoginRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_question_answer(
-      QuestionAnswer self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_login_response(LoginResponse self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_question_rule(
-      QuestionRule self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_master_piece(MasterPiece self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_register_request(
-      RegisterRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_mission(Mission self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_register_response(
-      RegisterResponse self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_question(Question self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_robot_games_load_match_request(
-      RobotGamesLoadMatchRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_question_answer(QuestionAnswer self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_team(Team self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_question_rule(QuestionRule self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tms_date(TmsDate self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_register_request(RegisterRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tms_date_time(
-      TmsDateTime self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_register_response(RegisterResponse self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tms_server_match_state_event(
-      TmsServerMatchStateEvent self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_robot_games_load_match_request(RobotGamesLoadMatchRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tms_server_match_timer_event(
-      TmsServerMatchTimerEvent self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_team(Team self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tms_server_socket_message(
-      TmsServerSocketMessage self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tms_date(TmsDate self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tms_time(TmsTime self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tms_date_time(TmsDateTime self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tms_tree_role(
-      TmsTreeRole self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tms_server_match_state_event(TmsServerMatchStateEvent self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_blueprint(
-      TournamentBlueprint self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tms_server_match_timer_event(TmsServerMatchTimerEvent self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_config(
-      TournamentConfig self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tms_server_socket_message(TmsServerSocketMessage self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_config_set_admin_password_request(
-      TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tms_time(TmsTime self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_config_set_backup_interval_request(
-      TournamentConfigSetBackupIntervalRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tms_tree_role(TmsTreeRole self, SseSerializer serializer);
 
-  @protected
-  void
-      sse_encode_box_autoadd_tournament_config_set_endgame_timer_length_request(
-          TournamentConfigSetEndgameTimerLengthRequest self,
-          SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_blueprint(TournamentBlueprint self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_config_set_name_request(
-      TournamentConfigSetNameRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config(TournamentConfig self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_config_set_retain_backups_request(
-      TournamentConfigSetRetainBackupsRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config_set_admin_password_request(TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_config_set_season_request(
-      TournamentConfigSetSeasonRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config_set_backup_interval_request(TournamentConfigSetBackupIntervalRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_tournament_config_set_timer_length_request(
-      TournamentConfigSetTimerLengthRequest self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config_set_endgame_timer_length_request(TournamentConfigSetEndgameTimerLengthRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config_set_name_request(TournamentConfigSetNameRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_box_autoadd_user(User self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config_set_retain_backups_request(TournamentConfigSetRetainBackupsRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_categorical_option(
-      CategoricalOption self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config_set_season_request(TournamentConfigSetSeasonRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_categorical_question(
-      CategoricalQuestion self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_tournament_config_set_timer_length_request(TournamentConfigSetTimerLengthRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_error_message(ErrorMessage self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_fll_blueprint(FllBlueprint self, SseSerializer serializer);
+@protected void sse_encode_box_autoadd_user(User self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_fll_blueprint_map(
-      FllBlueprintMap self, SseSerializer serializer);
+@protected void sse_encode_categorical_option(CategoricalOption self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_game_match(GameMatch self, SseSerializer serializer);
+@protected void sse_encode_categorical_question(CategoricalQuestion self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_game_match_table(
-      GameMatchTable self, SseSerializer serializer);
+@protected void sse_encode_error_message(ErrorMessage self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_game_table(GameTable self, SseSerializer serializer);
+@protected void sse_encode_fll_blueprint(FllBlueprint self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_i_32(int self, SseSerializer serializer);
+@protected void sse_encode_fll_blueprint_map(FllBlueprintMap self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_judging_pod(JudgingPod self, SseSerializer serializer);
+@protected void sse_encode_game_match(GameMatch self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_judging_session(
-      JudgingSession self, SseSerializer serializer);
+@protected void sse_encode_game_match_table(GameMatchTable self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_judging_session_pod(
-      JudgingSessionPod self, SseSerializer serializer);
+@protected void sse_encode_game_table(GameTable self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+@protected void sse_encode_i_32(int self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_categorical_option(
-      List<CategoricalOption> self, SseSerializer serializer);
+@protected void sse_encode_judging_pod(JudgingPod self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_game_match_table(
-      List<GameMatchTable> self, SseSerializer serializer);
+@protected void sse_encode_judging_session(JudgingSession self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_judging_session_pod(
-      List<JudgingSessionPod> self, SseSerializer serializer);
+@protected void sse_encode_judging_session_pod(JudgingSessionPod self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_mission(List<Mission> self, SseSerializer serializer);
+@protected void sse_encode_list_String(List<String> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_prim_u_8_strict(
-      Uint8List self, SseSerializer serializer);
+@protected void sse_encode_list_categorical_option(List<CategoricalOption> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_question(List<Question> self, SseSerializer serializer);
+@protected void sse_encode_list_game_match_table(List<GameMatchTable> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_question_answer(
-      List<QuestionAnswer> self, SseSerializer serializer);
+@protected void sse_encode_list_judging_session_pod(List<JudgingSessionPod> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_question_rule(
-      List<QuestionRule> self, SseSerializer serializer);
+@protected void sse_encode_list_mission(List<Mission> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_question_validation_error(
-      List<QuestionValidationError> self, SseSerializer serializer);
+@protected void sse_encode_list_prim_u_8_strict(Uint8List self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_record_string_bool(
-      List<(String, bool)> self, SseSerializer serializer);
+@protected void sse_encode_list_question(List<Question> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_list_tms_tree_role(
-      List<TmsTreeRole> self, SseSerializer serializer);
+@protected void sse_encode_list_question_answer(List<QuestionAnswer> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_login_request(LoginRequest self, SseSerializer serializer);
+@protected void sse_encode_list_question_rule(List<QuestionRule> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_login_response(LoginResponse self, SseSerializer serializer);
+@protected void sse_encode_list_question_validation_error(List<QuestionValidationError> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_master_piece(MasterPiece self, SseSerializer serializer);
+@protected void sse_encode_list_record_string_bool(List<(String,bool)> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_mission(Mission self, SseSerializer serializer);
+@protected void sse_encode_list_tms_tree_role(List<TmsTreeRole> self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_opt_String(String? self, SseSerializer serializer);
+@protected void sse_encode_login_request(LoginRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_opt_box_autoadd_tms_date(
-      TmsDate? self, SseSerializer serializer);
+@protected void sse_encode_login_response(LoginResponse self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_opt_box_autoadd_tms_time(
-      TmsTime? self, SseSerializer serializer);
+@protected void sse_encode_master_piece(MasterPiece self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+@protected void sse_encode_mission(Mission self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_opt_list_question_validation_error(
-      List<QuestionValidationError>? self, SseSerializer serializer);
+@protected void sse_encode_opt_String(String? self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_question(Question self, SseSerializer serializer);
+@protected void sse_encode_opt_box_autoadd_tms_date(TmsDate? self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_question_answer(
-      QuestionAnswer self, SseSerializer serializer);
+@protected void sse_encode_opt_box_autoadd_tms_time(TmsTime? self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_question_rule(QuestionRule self, SseSerializer serializer);
+@protected void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_question_type(QuestionType self, SseSerializer serializer);
+@protected void sse_encode_opt_list_question_validation_error(List<QuestionValidationError>? self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_question_validation_error(
-      QuestionValidationError self, SseSerializer serializer);
+@protected void sse_encode_question(Question self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_record_string_bool(
-      (String, bool) self, SseSerializer serializer);
+@protected void sse_encode_question_answer(QuestionAnswer self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_register_request(
-      RegisterRequest self, SseSerializer serializer);
+@protected void sse_encode_question_input(QuestionInput self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_register_response(
-      RegisterResponse self, SseSerializer serializer);
+@protected void sse_encode_question_rule(QuestionRule self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_robot_games_load_match_request(
-      RobotGamesLoadMatchRequest self, SseSerializer serializer);
+@protected void sse_encode_question_validation_error(QuestionValidationError self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_team(Team self, SseSerializer serializer);
+@protected void sse_encode_record_string_bool((String,bool) self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_date(TmsDate self, SseSerializer serializer);
+@protected void sse_encode_register_request(RegisterRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_date_time(TmsDateTime self, SseSerializer serializer);
+@protected void sse_encode_register_response(RegisterResponse self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_server_match_state(
-      TmsServerMatchState self, SseSerializer serializer);
+@protected void sse_encode_robot_games_load_match_request(RobotGamesLoadMatchRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_server_match_state_event(
-      TmsServerMatchStateEvent self, SseSerializer serializer);
+@protected void sse_encode_team(Team self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_server_match_timer_event(
-      TmsServerMatchTimerEvent self, SseSerializer serializer);
+@protected void sse_encode_tms_date(TmsDate self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_server_match_timer_state(
-      TmsServerMatchTimerState self, SseSerializer serializer);
+@protected void sse_encode_tms_date_time(TmsDateTime self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_server_socket_event(
-      TmsServerSocketEvent self, SseSerializer serializer);
+@protected void sse_encode_tms_server_match_state(TmsServerMatchState self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_server_socket_message(
-      TmsServerSocketMessage self, SseSerializer serializer);
+@protected void sse_encode_tms_server_match_state_event(TmsServerMatchStateEvent self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_time(TmsTime self, SseSerializer serializer);
+@protected void sse_encode_tms_server_match_timer_event(TmsServerMatchTimerEvent self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tms_tree_role(TmsTreeRole self, SseSerializer serializer);
+@protected void sse_encode_tms_server_match_timer_state(TmsServerMatchTimerState self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_blueprint(
-      TournamentBlueprint self, SseSerializer serializer);
+@protected void sse_encode_tms_server_socket_event(TmsServerSocketEvent self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config(
-      TournamentConfig self, SseSerializer serializer);
+@protected void sse_encode_tms_server_socket_message(TmsServerSocketMessage self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config_set_admin_password_request(
-      TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer);
+@protected void sse_encode_tms_time(TmsTime self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config_set_backup_interval_request(
-      TournamentConfigSetBackupIntervalRequest self, SseSerializer serializer);
+@protected void sse_encode_tms_tree_role(TmsTreeRole self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config_set_endgame_timer_length_request(
-      TournamentConfigSetEndgameTimerLengthRequest self,
-      SseSerializer serializer);
+@protected void sse_encode_tournament_blueprint(TournamentBlueprint self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config_set_name_request(
-      TournamentConfigSetNameRequest self, SseSerializer serializer);
+@protected void sse_encode_tournament_config(TournamentConfig self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config_set_retain_backups_request(
-      TournamentConfigSetRetainBackupsRequest self, SseSerializer serializer);
+@protected void sse_encode_tournament_config_set_admin_password_request(TournamentConfigSetAdminPasswordRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config_set_season_request(
-      TournamentConfigSetSeasonRequest self, SseSerializer serializer);
+@protected void sse_encode_tournament_config_set_backup_interval_request(TournamentConfigSetBackupIntervalRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_tournament_config_set_timer_length_request(
-      TournamentConfigSetTimerLengthRequest self, SseSerializer serializer);
+@protected void sse_encode_tournament_config_set_endgame_timer_length_request(TournamentConfigSetEndgameTimerLengthRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_u_16(int self, SseSerializer serializer);
+@protected void sse_encode_tournament_config_set_name_request(TournamentConfigSetNameRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_u_32(int self, SseSerializer serializer);
+@protected void sse_encode_tournament_config_set_retain_backups_request(TournamentConfigSetRetainBackupsRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_u_8(int self, SseSerializer serializer);
+@protected void sse_encode_tournament_config_set_season_request(TournamentConfigSetSeasonRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_unit(void self, SseSerializer serializer);
+@protected void sse_encode_tournament_config_set_timer_length_request(TournamentConfigSetTimerLengthRequest self, SseSerializer serializer);
 
-  @protected
-  void sse_encode_user(User self, SseSerializer serializer);
-}
+@protected void sse_encode_u_16(int self, SseSerializer serializer);
+
+@protected void sse_encode_u_32(int self, SseSerializer serializer);
+
+@protected void sse_encode_u_8(int self, SseSerializer serializer);
+
+@protected void sse_encode_unit(void self, SseSerializer serializer);
+
+@protected void sse_encode_user(User self, SseSerializer serializer);
+                }
+                
+
 
 // Section: wire_class
 
-class TmsRustLibWire implements BaseWire {
-  factory TmsRustLibWire.fromExternalLibrary(ExternalLibrary lib) =>
-      TmsRustLibWire(lib.ffiDynamicLibrary);
 
-  /// Holds the symbol lookup function.
-  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-      _lookup;
+        class TmsRustLibWire implements BaseWire {
 
-  /// The symbols are looked up in [dynamicLibrary].
-  TmsRustLibWire(ffi.DynamicLibrary dynamicLibrary)
-      : _lookup = dynamicLibrary.lookup;
-}
+            factory TmsRustLibWire.fromExternalLibrary(ExternalLibrary lib) =>
+              TmsRustLibWire(lib.ffiDynamicLibrary);
+        
+            /// Holds the symbol lookup function.
+            final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+                _lookup;
+  
+            /// The symbols are looked up in [dynamicLibrary].
+            TmsRustLibWire(ffi.DynamicLibrary dynamicLibrary)
+                : _lookup = dynamicLibrary.lookup;
+
+            
+        }
+        

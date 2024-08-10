@@ -6,46 +6,46 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
-class Team {
-  final String number;
-  final String name;
-  final String affiliation;
-  final int ranking;
+            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
-  const Team({
-    required this.number,
-    required this.name,
-    required this.affiliation,
-    required this.ranking,
-  });
 
-  static Future<Team> default_() =>
-      TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamDefault();
+            
 
-  static Team fromJsonString({required String json}) => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasTeamTeamFromJsonString(json: json);
+            class Team  {
+                final String number;
+final String name;
+final String affiliation;
+final int ranking;
 
-  String toJsonString() =>
-      TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToJsonString(
-        that: this,
-      );
+                const Team({required this.number ,required this.name ,required this.affiliation ,required this.ranking ,});
 
-  static String toSchema() =>
-      TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToSchema();
+                static Future<Team>  default_()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamDefault();
 
-  @override
-  int get hashCode =>
-      number.hashCode ^ name.hashCode ^ affiliation.hashCode ^ ranking.hashCode;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Team &&
-          runtimeType == other.runtimeType &&
-          number == other.number &&
-          name == other.name &&
-          affiliation == other.affiliation &&
-          ranking == other.ranking;
-}
+static Team  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamFromJsonString(json: json);
+
+
+ String  toJsonString()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToJsonString(that: this, );
+
+
+static String  toSchema()=>TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamToSchema();
+
+
+                
+
+                
+        @override
+        int get hashCode => number.hashCode^name.hashCode^affiliation.hashCode^ranking.hashCode;
+        
+
+                
+        @override
+        bool operator ==(Object other) =>
+            identical(this, other) ||
+            other is Team &&
+                runtimeType == other.runtimeType
+                && number == other.number&& name == other.name&& affiliation == other.affiliation&& ranking == other.ranking;
+        
+            }
+            

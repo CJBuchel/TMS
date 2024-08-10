@@ -11,22 +11,11 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'question.dart';
 import 'rule_engine.dart';
 
+abstract class BaseSeason {
+  Future<FllBlueprint> getFllGame();
 
-            
+  Future<String> getSeason();
 
-            
-
-            
-                abstract class BaseSeason {
-                     Future<FllBlueprint>  getFllGame();
-
-
- Future<String>  getSeason();
-
-
- Future<List<QuestionValidationError>>  validate({required List<QuestionAnswer> answers });
-
-
-                }
-                
-            
+  Future<List<QuestionValidationError>> validate(
+      {required List<QuestionAnswer> answers});
+}

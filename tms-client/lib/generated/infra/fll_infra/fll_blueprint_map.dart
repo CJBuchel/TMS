@@ -11,37 +11,29 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'question.dart';
 import 'rule_engine.dart';
 
+// These functions are ignored (category: IgnoreBecauseExplicitAttribute): `get_fll_blueprint`, `get_seasons`
 
-            // These functions are ignored (category: IgnoreBecauseExplicitAttribute): `get_fll_blueprint`, `get_seasons`
+class FllBlueprintMap {
+  const FllBlueprintMap();
 
+  static Future<int> calculateScore(
+          {required FllBlueprint blueprint,
+          required List<QuestionAnswer> answers}) =>
+      TmsRustLib.instance.api
+          .crateInfraFllInfraFllBlueprintMapFllBlueprintMapCalculateScore(
+              blueprint: blueprint, answers: answers);
 
-            
+  static Future<List<QuestionValidationError>?> validate(
+          {required String season, required List<QuestionAnswer> answers}) =>
+      TmsRustLib.instance.api
+          .crateInfraFllInfraFllBlueprintMapFllBlueprintMapValidate(
+              season: season, answers: answers);
 
-            class FllBlueprintMap  {
-                
+  @override
+  int get hashCode => 0;
 
-                const FllBlueprintMap();
-
-                static Future<int>  calculateScore({required FllBlueprint blueprint , required List<QuestionAnswer> answers })=>TmsRustLib.instance.api.crateInfraFllInfraFllBlueprintMapFllBlueprintMapCalculateScore(blueprint: blueprint, answers: answers);
-
-
-static Future<List<QuestionValidationError>?>  validate({required String season , required List<QuestionAnswer> answers })=>TmsRustLib.instance.api.crateInfraFllInfraFllBlueprintMapFllBlueprintMapValidate(season: season, answers: answers);
-
-
-                
-
-                
-        @override
-        int get hashCode => 0;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is FllBlueprintMap &&
-                runtimeType == other.runtimeType
-                ;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FllBlueprintMap && runtimeType == other.runtimeType;
+}

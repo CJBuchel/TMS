@@ -54,6 +54,19 @@ impl Database {
     rand::thread_rng().sample_iter(&Alphanumeric).take(30).map(char::from).collect()
   }
 
+  pub async fn create_trees(&mut self) {
+    log::info!("Creating trees...");
+
+    self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
+    self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), TournamentBlueprint::to_schema()).await;
+    self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
+    self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
+    self.inner.read().await.add_tree_schema(ROBOT_GAME_TABLES.to_string(), GameTable::to_schema()).await;
+    self.inner.read().await.add_tree_schema(JUDGING_SESSIONS.to_string(), JudgingSession::to_schema()).await;
+    self.inner.read().await.add_tree_schema(JUDGING_PODS.to_string(), JudgingPod::to_schema()).await;
+    self.inner.read().await.add_tree_schema(USERS.to_string(), User::to_schema()).await;
+  }
+
   async fn check_insert_role(&self, role: &str, password: &str, read_echo_trees: Vec<&str>, read_write_echo_trees: Vec<&str>) {
     match self.inner.read().await.get_role_manager().await.get_role(role.to_string()) {
       Some(_) => {
@@ -123,19 +136,6 @@ impl Database {
     }
   }
 
-  pub async fn create_trees(&mut self) {
-    log::info!("Creating trees...");
-
-    self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
-    self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), TournamentBlueprint::to_schema()).await;
-    self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
-    self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
-    self.inner.read().await.add_tree_schema(ROBOT_GAME_TABLES.to_string(), GameTable::to_schema()).await;
-    self.inner.read().await.add_tree_schema(JUDGING_SESSIONS.to_string(), JudgingSession::to_schema()).await;
-    self.inner.read().await.add_tree_schema(JUDGING_PODS.to_string(), JudgingPod::to_schema()).await;
-    self.inner.read().await.add_tree_schema(USERS.to_string(), User::to_schema()).await;
-  }
-
   pub async fn setup_blueprints(&mut self) {
     log::info!("Setting up blueprints...");
     let seasons = FllBlueprintMap::get_seasons();
@@ -166,8 +166,8 @@ impl Database {
   }
 
   pub async fn initial_setup(&mut self) {
-    self.create_roles().await;
     self.create_trees().await;
+    self.create_roles().await;
     self.setup_blueprints().await;
   }
 

@@ -13,3 +13,6 @@ flutter_rust_bridge_codegen generate --dart-entrypoint-class-name $TMS_FLUTTER_E
 # build wasm logic
 wasm-pack build $TMS_INFRA --target no-modules --out-dir $TMS_FLUTTER/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
 (cd $TMS_FLUTTER && dart run flutter_rust_bridge build-web --dart-root $TMS_FLUTTER --rust-root $TMS_INFRA)
+
+# run flutter code gen (freezed)
+(cd $TMS_FLUTTER && flutter pub run build_runner build --delete-conflicting-outputs)

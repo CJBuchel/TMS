@@ -13,3 +13,7 @@ steps:
       cd tms-client
       dart run flutter_rust_bridge build-web --dart-root $(Build.SourcesDirectory)/tms-client --rust-root $(Build.SourcesDirectory)/tms-infra
     displayName: 'Run Wasm Codegen'
+
+  # run flutter code gen (freezed)
+  - script: flutter pub run build_runner build --delete-conflicting-outputs
+    displayName: 'Run Flutter (Freezed) Codegen'

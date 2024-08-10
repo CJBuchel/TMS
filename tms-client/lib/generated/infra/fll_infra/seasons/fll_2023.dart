@@ -11,37 +11,26 @@ import '../question.dart';
 import '../rule_engine.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `validate`
 
-            // These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `validate`
+class MasterPiece {
+  const MasterPiece();
 
+  Future<FllBlueprint> getFllGame() => TmsRustLib.instance.api
+          .crateInfraFllInfraSeasonsFll2023MasterPieceGetFllGame(
+        that: this,
+      );
 
-            
+  Future<String> getSeason() => TmsRustLib.instance.api
+          .crateInfraFllInfraSeasonsFll2023MasterPieceGetSeason(
+        that: this,
+      );
 
-            class MasterPiece  {
-                
+  @override
+  int get hashCode => 0;
 
-                const MasterPiece();
-
-                 Future<FllBlueprint>  getFllGame()=>TmsRustLib.instance.api.crateInfraFllInfraSeasonsFll2023MasterPieceGetFllGame(that: this, );
-
-
- Future<String>  getSeason()=>TmsRustLib.instance.api.crateInfraFllInfraSeasonsFll2023MasterPieceGetSeason(that: this, );
-
-
-                
-
-                
-        @override
-        int get hashCode => 0;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is MasterPiece &&
-                runtimeType == other.runtimeType
-                ;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MasterPiece && runtimeType == other.runtimeType;
+}

@@ -7,81 +7,90 @@ import '../../frb_generated.dart';
 import '../../infra.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+class RegisterRequest {
+  final String? username;
+  final String? password;
 
-            
+  const RegisterRequest({
+    this.username,
+    this.password,
+  });
 
-            
+  static Future<RegisterRequest> default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRegisterRequestsRegisterRequestDefault();
 
-            class RegisterRequest  {
-                final String? username;
-final String? password;
+  static RegisterRequest fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasRegisterRequestsRegisterRequestFromJsonString(
+          json: json);
 
-                const RegisterRequest({this.username ,this.password ,});
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRegisterRequestsRegisterRequestToJsonString(
+        that: this,
+      );
 
-                static Future<RegisterRequest>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterRequestDefault();
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRegisterRequestsRegisterRequestToSchema();
 
+  @override
+  int get hashCode => username.hashCode ^ password.hashCode;
 
-static RegisterRequest  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterRequestFromJsonString(json: json);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RegisterRequest &&
+          runtimeType == other.runtimeType &&
+          username == other.username &&
+          password == other.password;
+}
 
+class RegisterResponse {
+  final String authToken;
+  final String uuid;
+  final String url;
+  final String serverIp;
+  final List<TmsTreeRole> roles;
 
- String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterRequestToJsonString(that: this, );
+  const RegisterResponse({
+    required this.authToken,
+    required this.uuid,
+    required this.url,
+    required this.serverIp,
+    required this.roles,
+  });
 
+  static Future<RegisterResponse> default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRegisterRequestsRegisterResponseDefault();
 
-static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterRequestToSchema();
+  static RegisterResponse fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasRegisterRequestsRegisterResponseFromJsonString(
+          json: json);
 
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRegisterRequestsRegisterResponseToJsonString(
+        that: this,
+      );
 
-                
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchema();
 
-                
-        @override
-        int get hashCode => username.hashCode^password.hashCode;
-        
+  @override
+  int get hashCode =>
+      authToken.hashCode ^
+      uuid.hashCode ^
+      url.hashCode ^
+      serverIp.hashCode ^
+      roles.hashCode;
 
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is RegisterRequest &&
-                runtimeType == other.runtimeType
-                && username == other.username&& password == other.password;
-        
-            }
-
-class RegisterResponse  {
-                final String authToken;
-final String uuid;
-final String url;
-final String serverIp;
-final List<TmsTreeRole> roles;
-
-                const RegisterResponse({required this.authToken ,required this.uuid ,required this.url ,required this.serverIp ,required this.roles ,});
-
-                static Future<RegisterResponse>  default_()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterResponseDefault();
-
-
-static RegisterResponse  fromJsonString({required String json })=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterResponseFromJsonString(json: json);
-
-
- String  toJsonString()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterResponseToJsonString(that: this, );
-
-
-static String  toSchema()=>TmsRustLib.instance.api.crateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchema();
-
-
-                
-
-                
-        @override
-        int get hashCode => authToken.hashCode^uuid.hashCode^url.hashCode^serverIp.hashCode^roles.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is RegisterResponse &&
-                runtimeType == other.runtimeType
-                && authToken == other.authToken&& uuid == other.uuid&& url == other.url&& serverIp == other.serverIp&& roles == other.roles;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RegisterResponse &&
+          runtimeType == other.runtimeType &&
+          authToken == other.authToken &&
+          uuid == other.uuid &&
+          url == other.url &&
+          serverIp == other.serverIp &&
+          roles == other.roles;
+}

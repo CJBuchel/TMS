@@ -16,6 +16,28 @@ pub async fn tournament_config_get_name_handler(db: SharedDatabase) -> Result<im
   }
 }
 
+pub async fn tournament_config_set_admin_password(request: TournamentConfigSetAdminPasswordRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
+  let read_db = db.read().await;
+  log::info!("Setting admin password to: {}", request.admin_password);
+
+  let admin_user = User {
+    username: "admin".to_string(),
+    password: request.admin_password.clone(),
+    roles: vec!["admin".to_string()],
+  };
+
+  match read_db.insert_user(admin_user, None).await {
+    Ok(_) => {
+      log::info!("Admin password set");
+      Ok(warp::http::StatusCode::OK)
+    },
+    Err(e) => {
+      log::error!("Failed to set admin password: {}", e);
+      Ok(warp::http::StatusCode::INTERNAL_SERVER_ERROR)
+    },
+  }
+}
+
 pub async fn tournament_config_set_timer_length(request: TournamentConfigSetTimerLengthRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
   let mut write_db = db.write().await;
   log::info!("Setting tournament timer length to: {}", request.timer_length);

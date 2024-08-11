@@ -53,7 +53,7 @@ impl JudgingSessionExtensions for Database {
     };
 
     match existing_judging_session {
-      Some((judging_session_id, judging_session)) => {
+      Some((judging_session_id, _)) => {
         log::warn!("JudgingSession already exists: {}, overwriting with insert...", judging_session_id);
         self.inner.write().await.insert_entry(JUDGING_SESSIONS.to_string(), judging_session_id, judging_session.to_json_string()).await;
         Ok(())

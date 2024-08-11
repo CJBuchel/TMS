@@ -11,12 +11,12 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 class Mission {
   final String id;
   final String label;
-  final String imageUrl;
+  final String? imageUrl;
 
   const Mission({
     required this.id,
     required this.label,
-    required this.imageUrl,
+    this.imageUrl,
   });
 
   static Future<Mission> default_() =>

@@ -7,7 +7,7 @@ use crate::DataSchemeExtensions;
 pub struct Mission {
   pub id: String,
   pub label: String,
-  pub image_url: String,
+  pub image_url: Option<String>,
 }
 
 impl Default for Mission {
@@ -15,7 +15,7 @@ impl Default for Mission {
     Self {
       id: "".to_string(),
       label: "".to_string(),
-      image_url: "".to_string(),
+      image_url: None,
     }
   }
 }

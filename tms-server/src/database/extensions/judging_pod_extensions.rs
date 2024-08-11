@@ -53,7 +53,7 @@ impl JudgingPodExtensions for Database {
     };
 
     match existing_judging_pod {
-      Some((judging_pod_id, judging_pod)) => {
+      Some((judging_pod_id, _)) => {
         log::warn!("JudgingPod already exists: {}, overwriting with insert...", judging_pod_id);
         let judging_pod = JudgingPod {
           pod_name: judging_pod,

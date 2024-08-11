@@ -54,7 +54,7 @@ impl GameTableExtensions for Database {
     };
 
     match existing_game_table {
-      Some((game_table_id, game_table)) => {
+      Some((game_table_id, _)) => {
         log::warn!("GameTable already exists: {}, overwriting with insert...", game_table_id);
         let game_table = GameTable {
           table_name: game_table,

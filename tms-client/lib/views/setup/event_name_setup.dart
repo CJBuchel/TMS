@@ -1,4 +1,3 @@
-import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +10,6 @@ class EventNameSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EchoTreeClient().subscribe([":tournament:config"]);
     return EchoTreeLifetime(
       trees: [":tournament:config"],
       child: Consumer<TournamentConfigProvider>(

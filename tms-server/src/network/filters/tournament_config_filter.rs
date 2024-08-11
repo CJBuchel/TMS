@@ -26,6 +26,16 @@ pub fn tournament_config_filter(clients: ClientMap, db: SharedDatabase) -> impl 
     .and(check_auth_token_filter(clients.clone()))
     .and_then(tournament_config_get_name_handler);
 
+  let tournament_admin_password_path = tournament_config_path.and(warp::path("admin_password"));
+
+  let set_admin_password = tournament_admin_password_path
+    .and(warp::post())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["admin"]))
+    .and_then(tournament_config_set_admin_password);
+
   let tournament_timer_length_path = tournament_config_path.and(warp::path("timer_length"));
 
   let set_timer_length = tournament_timer_length_path
@@ -117,6 +127,8 @@ pub fn tournament_config_filter(clients: ClientMap, db: SharedDatabase) -> impl 
     .and_then(tournament_config_purge);
 
   set_name.or(get_name)
+    .or(set_admin_password)
+
     .or(set_timer_length)
     .or(get_timer_length)
     

@@ -4,10 +4,7 @@ import 'package:tms/generated/infra/fll_infra/fll_blueprint.dart';
 
 class TournamentBlueprintProvider extends EchoTreeProvider<String, TournamentBlueprint> {
   TournamentBlueprintProvider()
-      : super(
-          tree: ":tournament:blueprint",
-          fromJsonString: (json) => TournamentBlueprint.fromJsonString(json: json),
-        );
+      : super(tree: ":tournament:blueprint", fromJsonString: (json) => TournamentBlueprint.fromJsonString(json: json));
 
   List<TournamentBlueprint> get blueprints {
     return this.items.values.toList();

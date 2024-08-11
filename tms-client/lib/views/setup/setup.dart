@@ -8,6 +8,7 @@ import 'package:tms/views/setup/retain_backup_setup.dart';
 import 'package:tms/views/setup/schedule_setup.dart';
 import 'package:tms/views/setup/season_setup.dart';
 import 'package:tms/views/setup/timer_length_setup.dart';
+import 'package:tms/views/setup/blueprint_setup.dart';
 
 class Setup extends StatelessWidget {
   @override
@@ -40,11 +41,19 @@ class Setup extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Text(
-                  "Game Scoring Setup",
+                  "Season Setup",
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
               SeasonSetup(),
+              BlueprintSetup(),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Text(
+                  "Game Scoring Setup",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ),
               TimerLengthSetup(),
               EndgameTimerLengthSetup(),
 

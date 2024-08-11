@@ -56,7 +56,7 @@ impl UserExtensions for Database {
     };
 
     match existing_user {
-      Some((user_id, user)) => {
+      Some((user_id, _)) => {
         log::warn!("User already exists: {}, overwriting with insert...", user_id);
         self.inner.write().await.insert_entry(USERS.to_string(), user_id, user.to_json_string()).await;
         return Ok(());

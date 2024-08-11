@@ -54,7 +54,7 @@ impl GameMatchExtensions for Database {
     };
 
     match existing_game_match {
-      Some((game_match_id, game_match)) => {
+      Some((game_match_id, _)) => {
         log::warn!("GameMatch already exists: {}, overwriting with insert...", game_match_id);
         self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json_string()).await;
         Ok(())

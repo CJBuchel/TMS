@@ -282,6 +282,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
 
   @protected
+  List<QuestionRule>? dco_decode_opt_list_question_rule(dynamic raw);
+
+  @protected
   List<QuestionValidationError>? dco_decode_opt_list_question_validation_error(
       dynamic raw);
 
@@ -650,6 +653,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
+
+  @protected
+  List<QuestionRule>? sse_decode_opt_list_question_rule(
+      SseDeserializer deserializer);
 
   @protected
   List<QuestionValidationError>? sse_decode_opt_list_question_validation_error(
@@ -1039,6 +1046,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_list_question_rule(
+      List<QuestionRule>? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_list_question_validation_error(

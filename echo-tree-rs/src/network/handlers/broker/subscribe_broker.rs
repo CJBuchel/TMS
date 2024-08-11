@@ -36,7 +36,7 @@ pub async fn subscribe_broker(uuid: String, msg: EchoTreeClientSocketMessage, cl
     let tree = match read_db.get_tree_map().await.get_tree(tree_name.clone()) {
       Some(v) => v,
       None => {
-        debug!("{}: tree not found", uuid);
+        log::error!("{}: tree not found", uuid);
         continue;
       }
     };

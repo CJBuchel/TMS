@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class CRC32 {
   static const int _polynomial = 0xEDB88320;
   late List<int> _table;
@@ -21,15 +23,19 @@ class CRC32 {
     }
   }
 
-  int calculateChecksum(Map<String, String> data) {
+  Future<int> calculateChecksum(Map<String, String> data) async {
     int crc = 0xFFFFFFFF;
-    data.forEach((key, value) {
-      final bytes = [...key.codeUnits, ...value.codeUnits];
-      for (var byte in bytes) {
-        final byteIndex = (crc ^ byte) & 0xFF;
-        crc = _table[byteIndex] ^ (crc >> 8);
+    for (var entry in data.entries) {
+      final keyBytes = utf8.encode(entry.key);
+      final valueBytes = utf8.encode(entry.value);
+      final byteSteam = Stream.fromIterable([keyBytes, valueBytes]);
+      await for (var chunk in byteSteam) {
+        for (var byte in chunk) {
+          final byteIndex = (crc ^ byte) & 0xFF;
+          crc = _table[byteIndex] ^ (crc >> 8);
+        }
       }
-    });
+    }
     return ~crc;
   }
 }

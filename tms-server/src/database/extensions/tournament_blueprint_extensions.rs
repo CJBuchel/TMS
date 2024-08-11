@@ -66,7 +66,7 @@ impl TournamentBlueprintExtensions for Database {
     }; 
 
     match existing_blueprint {
-      Some((blueprint_id, blueprint)) => {
+      Some((blueprint_id, _)) => {
         log::warn!("Blueprint already exists: {}, overwriting with insert...", blueprint_id);
         self.inner.write().await.insert_entry(TOURNAMENT_BLUEPRINT.to_string(), blueprint_id, blueprint.to_json_string()).await;
         Ok(())

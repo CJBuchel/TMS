@@ -46,7 +46,9 @@ class ManagedTree {
     if (data.isEmpty) {
       _checksum = 0;
     } else {
-      _checksum = _crc32.calculateChecksum(data).toUnsigned(32);
+      _crc32.calculateChecksum(data).then((value) {
+        _checksum = value.toUnsigned(32);
+      });
     }
   }
 

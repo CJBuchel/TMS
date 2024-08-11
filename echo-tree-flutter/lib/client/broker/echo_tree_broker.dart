@@ -29,6 +29,7 @@ class EchoTreeBroker {
     List<Future> futures = [];
     for (EchoTreeEventTree tree in trees) {
       EchoTreeLogger().d("Got tree insertion request from server: ${tree.treeName}");
+
       if (tree.tree.isEmpty) {
         futures.add(_clearTree(tree.treeName));
       } else {

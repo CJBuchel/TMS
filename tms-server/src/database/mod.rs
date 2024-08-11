@@ -95,7 +95,6 @@ impl Database {
     // :judge
     // :judge_advisor
 
-    // Future me, maybe make passwords auto generated, then have a login method which verifies the user and gives back the generated password for their role.
     self.check_insert_role("public", "", vec![TOURNAMENT_CONFIG], vec![]).await;
     self.check_insert_role("admin", &self.generate_password(), vec![":"], vec![":"]).await;
     self.check_insert_role("referee", &self.generate_password(), vec![], vec![]).await;
@@ -141,26 +140,18 @@ impl Database {
     let seasons = FllBlueprintMap::get_seasons();
 
     for season in seasons {
-      match self.get_blueprint_by_title(season.clone()).await {
-        Some(_) => {
-          log::warn!("Blueprint already exists: {}, skipping insert...", season);
-          continue;
-        }
-        None => {
-          match FllBlueprintMap::get_fll_blueprint(season.clone()) {
-            Some(blueprint) => {
-              let tournament_blueprint = TournamentBlueprint {
-                title: season.clone(),
-                blueprint,
-              };
-              match self.insert_blueprint(tournament_blueprint, None).await {
-                Ok(_) => log::info!("Inserted blueprint: {}", season),
-                Err(e) => log::error!("Failed to insert blueprint: {}", e),
-              }
-            }
-            None => log::error!("Failed to get blueprint: {}", season),
+      match FllBlueprintMap::get_fll_blueprint(season.clone()) {
+        Some(blueprint) => {
+          let tournament_blueprint = TournamentBlueprint {
+            title: season.clone(),
+            blueprint: blueprint,
+          };
+          match self.insert_blueprint(tournament_blueprint, None).await {
+            Ok(_) => log::info!("Inserted blueprint: {}", season),
+            Err(e) => log::error!("Failed to insert blueprint: {}", e),
           }
         }
+        None => log::error!("Failed to get blueprint: {}", season),
       }
     }
   }

@@ -28,7 +28,7 @@ impl Default for QuestionAnswer {
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub enum QuestionInput {
   Categorical(CategoricalQuestion),
-  // Numerical(i32),
+  // Numerical(i32), // one day :(
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -37,7 +37,7 @@ pub struct Question {
   pub label: String,
   pub label_short: String,
   pub input: QuestionInput,
-  pub rules: Vec<QuestionRule>, // set of json rules used to modify score, i.e m00a == 1, output += 10
+  pub rules: Option<Vec<QuestionRule>>, // set of json rules used to modify score, i.e m00a == 1, output = 10
 }
 
 impl Question {
@@ -59,9 +59,11 @@ impl Question {
     };
 
     // get the first matching rule (if any) and return that instead
-    for rule in self.rules.iter() {
-      if rule.evaluate(answers.clone()) {
-        score = rule.apply(answers.clone());
+    if let Some(rules) = &self.rules {
+      for rule in rules {
+        if rule.evaluate(answers.clone()) {
+          score = rule.apply(answers.clone());
+        }
       }
     }
 
@@ -76,7 +78,7 @@ impl Default for Question {
       label: "".to_string(),
       label_short: "".to_string(),
       input: QuestionInput::Categorical(CategoricalQuestion::default()),
-      rules: vec![],
+      rules: None,
     }
   }
 }

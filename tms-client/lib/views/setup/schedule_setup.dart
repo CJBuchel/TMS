@@ -30,7 +30,7 @@ class ScheduleSetup extends StatelessWidget {
             onPressed: () async {
               await provider.selectCSV();
             },
-            child: Text(provider.result == null ? "Select CSV" : provider.result?.files.first.name ?? ""),
+            child: Text(provider.result == null ? "Select Schedule (CSV)" : provider.result?.files.first.name ?? ""),
           ),
         );
       },

@@ -54,7 +54,7 @@ impl TeamExtensions for Database {
     }; 
 
     match existing_team {
-      Some((team_id, team)) => {
+      Some((team_id, _)) => {
         log::warn!("Team already exists: {}, overwriting with insert...", team_id);
         self.inner.write().await.insert_entry(TEAMS.to_string(), team_id, team.to_json_string()).await;
         Ok(())

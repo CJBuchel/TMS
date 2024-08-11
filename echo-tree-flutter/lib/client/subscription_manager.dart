@@ -19,7 +19,6 @@ class EchoTreeSubscriptionManager {
   }
 
   void subscribe(List<String> trees) {
-    // EchoTreeLogger().d("Subscribing to: $topics");
     for (var tree in trees) {
       if (_topicList.containsKey(tree)) {
         _topicList[tree] = _topicList[tree]! + 1;
@@ -33,7 +32,6 @@ class EchoTreeSubscriptionManager {
   }
 
   void unsubscribe(List<String> trees) {
-    // EchoTreeLogger().d("Unsubscribing from: $topics");
     for (var tree in trees) {
       if (_topicList.containsKey(tree)) {
         _topicList[tree] = _topicList[tree]! - 1;

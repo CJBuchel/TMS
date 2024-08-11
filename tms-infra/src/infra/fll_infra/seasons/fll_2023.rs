@@ -147,7 +147,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -167,7 +167,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -195,7 +195,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -215,7 +215,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: Some(vec![
+          rules: vec![
             QuestionRule {
               condition: "m02a == Blue".to_string(),
               output: 20,
@@ -228,7 +228,7 @@ impl BaseSeason for MasterPiece {
               condition: "m02a == Orange".to_string(),
               output: 10,
             },
-          ]),
+          ],
         },
 
         Question {
@@ -248,7 +248,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -268,7 +268,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -288,12 +288,12 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: Some(vec![
+          rules: vec![
             QuestionRule {
               condition: "m04a == Yes".to_string(),
               output: 20,
             },
-          ]),
+          ],
         },
 
         Question {
@@ -313,7 +313,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -333,7 +333,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -353,7 +353,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -373,7 +373,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -401,7 +401,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "None".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -421,7 +421,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -441,7 +441,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -469,7 +469,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "0".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -497,7 +497,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "None".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -517,7 +517,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -537,12 +537,12 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: Some(vec![
+          rules: vec![
             QuestionRule {
               condition: "m12a == Yes".to_string(),
               output: 20,
             },
-          ]),
+          ],
         },
 
         Question {
@@ -562,7 +562,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -582,7 +582,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "No".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -626,7 +626,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "0".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -670,7 +670,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "0".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -706,7 +706,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "0".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -746,7 +746,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "6".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
 
         Question {
@@ -770,7 +770,7 @@ impl BaseSeason for MasterPiece {
             ],
             default_option: "3 - Accomplished".to_string(),
           }),
-          rules: None,
+          rules: vec![],
         },
       ],
     }

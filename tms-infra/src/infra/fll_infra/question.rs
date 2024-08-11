@@ -37,7 +37,7 @@ pub struct Question {
   pub label: String,
   pub label_short: String,
   pub input: QuestionInput,
-  pub rules: Option<Vec<QuestionRule>>, // set of json rules used to modify score, i.e m00a == 1, output = 10
+  pub rules: Vec<QuestionRule>, // set of json rules used to modify score, i.e m00a == 1, output = 10
 }
 
 impl Question {
@@ -59,11 +59,9 @@ impl Question {
     };
 
     // get the first matching rule (if any) and return that instead
-    if let Some(rules) = &self.rules {
-      for rule in rules {
-        if rule.evaluate(answers.clone()) {
-          score = rule.apply(answers.clone());
-        }
+    for rule in self.rules.iter() {
+      if rule.evaluate(answers.clone()) {
+        score = rule.apply(answers.clone());
       }
     }
 
@@ -78,7 +76,7 @@ impl Default for Question {
       label: "".to_string(),
       label_short: "".to_string(),
       input: QuestionInput::Categorical(CategoricalQuestion::default()),
-      rules: None,
+      rules: vec![],
     }
   }
 }

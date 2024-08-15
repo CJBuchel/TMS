@@ -243,7 +243,6 @@ impl TournamentConfigExtensions for Database {
     self.inner.write().await.clear().await;
 
     // add the trees and roles again
-    self.create_trees().await;
-    self.create_roles().await;
+    self.initial_setup().await;
   }
 }

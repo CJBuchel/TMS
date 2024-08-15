@@ -3491,17 +3491,6 @@ impl SseDecode for Option<u32> {
   }
 }
 
-impl SseDecode for Option<Vec<crate::infra::fll_infra::rule_engine::QuestionRule>> {
-  // Codec=Sse (Serialization based), see doc to use other codecs
-  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-    if (<bool>::sse_decode(deserializer)) {
-      return Some(<Vec<crate::infra::fll_infra::rule_engine::QuestionRule>>::sse_decode(deserializer));
-    } else {
-      return None;
-    }
-  }
-}
-
 impl SseDecode for Option<Vec<crate::infra::fll_infra::question::QuestionValidationError>> {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3520,7 +3509,7 @@ impl SseDecode for crate::infra::fll_infra::question::Question {
     let mut var_label = <String>::sse_decode(deserializer);
     let mut var_labelShort = <String>::sse_decode(deserializer);
     let mut var_input = <crate::infra::fll_infra::question::QuestionInput>::sse_decode(deserializer);
-    let mut var_rules = <Option<Vec<crate::infra::fll_infra::rule_engine::QuestionRule>>>::sse_decode(deserializer);
+    let mut var_rules = <Vec<crate::infra::fll_infra::rule_engine::QuestionRule>>::sse_decode(deserializer);
     return crate::infra::fll_infra::question::Question {
       id: var_id,
       label: var_label,
@@ -5016,16 +5005,6 @@ impl SseEncode for Option<u32> {
   }
 }
 
-impl SseEncode for Option<Vec<crate::infra::fll_infra::rule_engine::QuestionRule>> {
-  // Codec=Sse (Serialization based), see doc to use other codecs
-  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-    <bool>::sse_encode(self.is_some(), serializer);
-    if let Some(value) = self {
-      <Vec<crate::infra::fll_infra::rule_engine::QuestionRule>>::sse_encode(value, serializer);
-    }
-  }
-}
-
 impl SseEncode for Option<Vec<crate::infra::fll_infra::question::QuestionValidationError>> {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -5043,7 +5022,7 @@ impl SseEncode for crate::infra::fll_infra::question::Question {
     <String>::sse_encode(self.label, serializer);
     <String>::sse_encode(self.label_short, serializer);
     <crate::infra::fll_infra::question::QuestionInput>::sse_encode(self.input, serializer);
-    <Option<Vec<crate::infra::fll_infra::rule_engine::QuestionRule>>>::sse_encode(self.rules, serializer);
+    <Vec<crate::infra::fll_infra::rule_engine::QuestionRule>>::sse_encode(self.rules, serializer);
   }
 }
 

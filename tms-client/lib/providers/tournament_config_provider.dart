@@ -1,6 +1,6 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_config.dart';
-import 'package:tms/services/event_config_service.dart';
+import 'package:tms/services/tournament_config_service.dart';
 import 'package:tms/utils/logger.dart';
 
 class TournamentConfigProvider extends EchoTreeProvider<String, TournamentConfig> {
@@ -52,6 +52,12 @@ class TournamentConfigProvider extends EchoTreeProvider<String, TournamentConfig
   Future<int> setSeason(String season) async {
     TmsLogger().d("Setting season to $season");
     int status = await _service.setSeason(season);
+    return status;
+  }
+
+  Future<int> setSeasonAgnostic() async {
+    TmsLogger().d("Setting season to Agnostic");
+    int status = await _service.setSeasonAgnostic();
     return status;
   }
 

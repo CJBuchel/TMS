@@ -4577,12 +4577,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  List<QuestionRule>? dco_decode_opt_list_question_rule(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null ? null : dco_decode_list_question_rule(raw);
-  }
-
-  @protected
   List<QuestionValidationError>? dco_decode_opt_list_question_validation_error(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -4600,7 +4594,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       label: dco_decode_String(arr[1]),
       labelShort: dco_decode_String(arr[2]),
       input: dco_decode_question_input(arr[3]),
-      rules: dco_decode_opt_list_question_rule(arr[4]),
+      rules: dco_decode_list_question_rule(arr[4]),
     );
   }
 
@@ -5602,18 +5596,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  List<QuestionRule>? sse_decode_opt_list_question_rule(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    if (sse_decode_bool(deserializer)) {
-      return (sse_decode_list_question_rule(deserializer));
-    } else {
-      return null;
-    }
-  }
-
-  @protected
   List<QuestionValidationError>? sse_decode_opt_list_question_validation_error(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -5632,7 +5614,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     var var_label = sse_decode_String(deserializer);
     var var_labelShort = sse_decode_String(deserializer);
     var var_input = sse_decode_question_input(deserializer);
-    var var_rules = sse_decode_opt_list_question_rule(deserializer);
+    var var_rules = sse_decode_list_question_rule(deserializer);
     return Question(
         id: var_id,
         label: var_label,
@@ -6509,17 +6491,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_opt_list_question_rule(
-      List<QuestionRule>? self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    sse_encode_bool(self != null, serializer);
-    if (self != null) {
-      sse_encode_list_question_rule(self, serializer);
-    }
-  }
-
-  @protected
   void sse_encode_opt_list_question_validation_error(
       List<QuestionValidationError>? self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -6537,7 +6508,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     sse_encode_String(self.label, serializer);
     sse_encode_String(self.labelShort, serializer);
     sse_encode_question_input(self.input, serializer);
-    sse_encode_opt_list_question_rule(self.rules, serializer);
+    sse_encode_list_question_rule(self.rules, serializer);
   }
 
   @protected

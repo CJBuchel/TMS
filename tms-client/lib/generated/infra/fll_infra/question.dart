@@ -17,14 +17,14 @@ class Question {
   final String label;
   final String labelShort;
   final QuestionInput input;
-  final List<QuestionRule>? rules;
+  final List<QuestionRule> rules;
 
   const Question({
     required this.id,
     required this.label,
     required this.labelShort,
     required this.input,
-    this.rules,
+    required this.rules,
   });
 
   static Future<Question> default_() =>

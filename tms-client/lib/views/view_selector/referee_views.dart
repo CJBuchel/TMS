@@ -28,7 +28,26 @@ class RefereeViews extends StatelessWidget {
 
         Row(
           children: [
-            // Setup card
+            // Referee card
+            Flexible(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: ImageButtonCard(
+                  title: "Referee Scoring",
+                  subTitle: "REFEREE",
+                  color: const Color(0xff6CB28E),
+                  textColor: const Color(0xff3F414E),
+                  image: const Image(
+                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+                  ),
+                  onPressed: () {
+                    context.go('/referee/scoring');
+                  },
+                ),
+              ),
+            ),
+            // Head referee card
             Flexible(
               flex: 1,
               child: Padding(

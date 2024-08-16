@@ -5,6 +5,7 @@ import 'package:tms/views/connection/connection.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/match_controller/match_controller.dart';
+import 'package:tms/views/referee_scoring/referee_scoring.dart';
 import 'package:tms/views/setup/setup.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
 import 'package:tms/widgets/base_responsive.dart';
@@ -35,6 +36,11 @@ final _protectedRoutes = <GoRoute>[
         path: 'match_controller',
         name: 'match_controller',
         builder: (context, state) => BaseScaffoldDrawerRouter(state: state, child: const MatchController()),
+      ),
+      GoRoute(
+        path: 'scoring',
+        name: 'scoring',
+        builder: (context, state) => BaseScaffoldDrawerRouter(state: state, child: const RefereeScoring()),
       ),
     ],
     redirect: (context, state) {

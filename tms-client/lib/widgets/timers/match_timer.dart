@@ -34,8 +34,8 @@ class MatchTimer extends StatefulWidget {
     return MatchTimer(
       soundEnabled: soundEnabled,
       idleStyle: TextStyle(
+        // use default color (in theme with the rest of the app)
         fontSize: fontSize,
-        color: Colors.white,
         fontFamily: "lcdbold",
       ),
       activeStyle: TextStyle(

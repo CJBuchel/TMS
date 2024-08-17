@@ -8,7 +8,7 @@ import 'package:tms/network/connectivity.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/services/game_match_service.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/utils/tms_time_utils.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch> {
   _BaseGameMatchProvider()
@@ -17,12 +17,7 @@ abstract class _BaseGameMatchProvider extends EchoTreeProvider<String, GameMatch
   List<GameMatch> get matches {
     // order matches by start time
     List<GameMatch> matches = this.items.values.toList();
-    matches.sort((a, b) {
-      // sort by start time
-      return tmsDateTimeCompare(a.startTime, b.startTime);
-    });
-
-    return matches;
+    return sortMatchesByTime(matches);
   }
 }
 
@@ -219,4 +214,50 @@ class GameMatchProvider extends _BaseGameMatchProvider with ServerEventSubscribe
   }
 
   bool get isMatchesRunning => _isMatchesRunning;
+
+  //
+  // -- Table Matches --
+  //
+  List<GameMatch> getTableMatches(String table) {
+    return matches.where((match) {
+      return match.gameMatchTables.any((t) => t.table == table);
+    }).toList();
+  }
+
+  GameMatch? getNextTableMatch(String table) {
+    List<GameMatch> tableMatches = getTableMatches(table);
+    tableMatches = sortMatchesByTime(tableMatches);
+    if (tableMatches.isEmpty) {
+      return null;
+    }
+
+    // find the next match for this table
+
+    // check if any matches are loaded first (they take priority)
+    for (GameMatch match in tableMatches) {
+      if (isMatchLoaded(match.matchNumber)) {
+        return match;
+      }
+    }
+
+    // check if any matches are completed but not submitted (they take next priority)
+    for (GameMatch match in tableMatches) {
+      if (match.completed) {
+        // check if table submitted
+        bool tableSubmitted = match.gameMatchTables.any((t) => t.table == table && t.scoreSubmitted);
+        if (!tableSubmitted) {
+          return match;
+        }
+      }
+    }
+
+    // get the next match which is either incomplete
+    for (GameMatch match in tableMatches) {
+      if (!match.completed) {
+        return match;
+      }
+    }
+
+    return null;
+  }
 }

@@ -21,6 +21,12 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> {
     TmsLocalStorageProvider().addListener(_onStorageChange);
   }
 
+  @override
+  void dispose() {
+    TmsLocalStorageProvider().removeListener(_onStorageChange);
+    super.dispose();
+  }
+
   List<GameTable> get tables => this.items.values.toList();
   List<String> get tableNames => this.items.values.map((e) => e.tableName).toList();
 

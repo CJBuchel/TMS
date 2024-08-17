@@ -113,4 +113,7 @@ class TmsLocalStorageProvider extends _TmsLocalStorageBase {
 
   set themeMode(ThemeMode value) => setInt("themeMode", value.index);
   ThemeMode get themeMode => ThemeMode.values[getInt("themeMode") ?? 0]; // default to system theme
+
+  set gameTable(String table) => setString("gameTable", table);
+  String get gameTable => getString("gameTable") ?? "";
 }

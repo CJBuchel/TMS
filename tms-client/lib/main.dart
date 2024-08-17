@@ -8,22 +8,13 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:logger/web.dart';
-import 'package:provider/provider.dart';
 import 'package:tms/app.dart';
 import 'package:tms/generated/frb_generated.dart';
 import 'package:tms/network/http_client.dart';
-import 'package:tms/providers/connection_provider.dart';
-import 'package:tms/providers/game_scoring_provider.dart';
-import 'package:tms/providers/tournament_blueprint_provider.dart';
-import 'package:tms/providers/tournament_config_provider.dart';
-import 'package:tms/providers/game_timer_provider.dart';
+import 'package:tms/provider_map.dart';
 import 'package:tms/providers/local_storage_provider.dart';
-import 'package:tms/providers/game_match_provider.dart';
-import 'package:tms/providers/schedule_provider.dart';
-import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/network.dart';
-import 'package:tms/providers/auth_provider.dart';
 
 class NetworkObserver extends WidgetsBindingObserver {
   void networkStartup() async {
@@ -44,31 +35,6 @@ class NetworkObserver extends WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
       Network().start();
     }
-  }
-}
-
-class AppWrapper extends StatelessWidget {
-  final Widget child;
-
-  const AppWrapper({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TmsLocalStorageProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ConnectionProvider()),
-        ChangeNotifierProvider(create: (_) => ScheduleProvider()),
-        ChangeNotifierProvider(create: (_) => TournamentConfigProvider()),
-        ChangeNotifierProvider(create: (_) => GameMatchProvider()),
-        ChangeNotifierProvider(create: (_) => GameTimerProvider()),
-        ChangeNotifierProvider(create: (_) => TeamsProvider()),
-        ChangeNotifierProvider(create: (_) => TournamentBlueprintProvider()),
-        ChangeNotifierProvider(create: (_) => GameScoringProvider()),
-      ],
-      child: child,
-    );
   }
 }
 
@@ -95,5 +61,5 @@ void main() async {
   // set imperative API and start app
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
-  runApp(const AppWrapper(child: TMSApp()));
+  runApp(const ProviderMap(app: TMSApp()));
 }

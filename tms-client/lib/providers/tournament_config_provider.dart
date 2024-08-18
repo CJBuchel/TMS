@@ -1,5 +1,6 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_config.dart';
+import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
 import 'package:tms/services/tournament_config_service.dart';
 import 'package:tms/utils/logger.dart';
 
@@ -18,6 +19,7 @@ class TournamentConfigProvider extends EchoTreeProvider<String, TournamentConfig
   int get backupInterval => this.items["config"]?.backupInterval ?? 5;
   int get retainBackups => this.items["config"]?.retainBackups ?? 5;
   String get season => this.items["config"]?.season ?? "";
+  BlueprintType get blueprintType => this.items["config"]?.blueprintType ?? BlueprintType.agnostic;
 
   Future<int> setEventName(String name) async {
     TmsLogger().d("Setting event name to $name");

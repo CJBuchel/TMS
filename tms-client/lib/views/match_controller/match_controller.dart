@@ -37,15 +37,7 @@ class MatchController extends StatelessWidget {
         ),
         Expanded(
           flex: 1,
-          child: FutureBuilder(
-            future: Future.delayed(const Duration(milliseconds: 500)),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox.shrink();
-              }
-              return MatchSelection();
-            },
-          ),
+          child: MatchSelection(),
         ),
       ],
     );

@@ -1,4 +1,3 @@
-import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
@@ -42,44 +41,47 @@ class WithNextGameScoring extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EchoTreeLifetime(
-      trees: [":robot_game:tables", ":robot_game:matches", ":teams"],
-      child: Selector3<GameTableProvider, GameMatchProvider, TeamsProvider, _NextData>(
-        selector: (context, gameTableProvider, gameMatchProvider, teamsProvider) {
-          final gameTable = gameTableProvider.localGameTable;
-          final gameMatch = gameMatchProvider.getNextTableMatch(gameTable);
+    return Selector3<GameTableProvider, GameMatchProvider, TeamsProvider, _NextData>(
+      selector: (context, gameTableProvider, gameMatchProvider, teamsProvider) {
+        final gameTable = gameTableProvider.localGameTable;
+        final gameMatch = gameMatchProvider.getNextTableMatch(gameTable);
 
-          final gameMatchTable = gameMatch?.gameMatchTables.firstWhere((e) => e.table == gameTable);
-          final teamNumber = gameMatchTable?.teamNumber;
+        final gameMatchTable = gameMatch?.gameMatchTables.firstWhere((e) => e.table == gameTable);
+        final teamNumber = gameMatchTable?.teamNumber;
 
-          int lengthMatches = gameMatchProvider.matches.length;
-          int round = 0;
+        int lengthMatches = gameMatchProvider.matches.length;
+        int round = 0;
 
-          if (teamNumber != null) {
-            final team = teamsProvider.getTeam(teamNumber);
-            // get the round number for this team
-            // based on how many times it's popped up until this match
-            if (gameMatch != null) round = getRound(teamNumber, gameMatch.matchNumber, gameMatchProvider.matches);
+        if (teamNumber != null) {
+          final team = teamsProvider.getTeam(teamNumber);
+          // get the round number for this team
+          // based on how many times it's popped up until this match
+          if (gameMatch != null) round = getRound(teamNumber, gameMatch.matchNumber, gameMatchProvider.matches);
 
-            return _NextData(
-              nextMatch: gameMatch,
-              nextTeam: team,
-              lengthMatches: lengthMatches,
-              round: round,
-            );
-          } else {
-            return _NextData(
-              nextMatch: null,
-              nextTeam: null,
-              lengthMatches: lengthMatches,
-              round: round,
-            );
-          }
-        },
-        builder: (context, data, _) {
-          return builder(context, data.nextMatch, data.nextTeam, data.lengthMatches, data.round);
-        },
-      ),
+          return _NextData(
+            nextMatch: gameMatch,
+            nextTeam: team,
+            lengthMatches: lengthMatches,
+            round: round,
+          );
+        } else {
+          return _NextData(
+            nextMatch: null,
+            nextTeam: null,
+            lengthMatches: lengthMatches,
+            round: round,
+          );
+        }
+      },
+      shouldRebuild: (previous, next) {
+        return previous.nextMatch != next.nextMatch ||
+            previous.nextTeam != next.nextTeam ||
+            previous.lengthMatches != next.lengthMatches ||
+            previous.round != next.round;
+      },
+      builder: (context, data, _) {
+        return builder(context, data.nextMatch, data.nextTeam, data.lengthMatches, data.round);
+      },
     );
   }
 }

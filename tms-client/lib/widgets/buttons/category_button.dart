@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class _CategoryButtonWidget extends StatelessWidget {
+class CategoryButtonWidget extends StatelessWidget {
   final String category;
   final bool isSelected;
   final IconData? leadingIcon;
@@ -10,7 +10,7 @@ class _CategoryButtonWidget extends StatelessWidget {
   final Color? hoverColor;
   final Function(bool)? onSelected;
 
-  const _CategoryButtonWidget({
+  const CategoryButtonWidget({
     Key? key,
     required this.category,
     required this.isSelected,
@@ -108,7 +108,7 @@ class CategoryButtons extends StatelessWidget {
       child: ValueListenableBuilder<CategoryButton>(
         valueListenable: _selectedCategory,
         builder: (context, selected, child) {
-          return _CategoryButtonWidget(
+          return CategoryButtonWidget(
             category: button.category,
             leadingIcon: button.leadingIcon,
             trailingIcon: button.trailingIcon,

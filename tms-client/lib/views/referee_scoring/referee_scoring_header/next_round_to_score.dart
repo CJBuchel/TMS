@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:tms/widgets/game_scoring/with_next_game_scoring.dart';
 
 class NextRoundToScore extends StatelessWidget {
+  final int round;
+
+  const NextRoundToScore({
+    Key? key,
+    this.round = 0,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return WithNextGameScoring(
-      builder: (context, _, __, ___, round) {
-        return Text(
-          "Round: $round",
-          style: const TextStyle(
-            fontSize: 16,
-          ),
-        );
-      },
+    return Text(
+      "Round: $round",
+      style: const TextStyle(
+        fontSize: 16,
+      ),
     );
   }
 }

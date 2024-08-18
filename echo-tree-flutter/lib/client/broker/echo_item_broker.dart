@@ -21,7 +21,6 @@ class EchoItemBroker {
 
   Future<void> _insert(String treeName, String key, String data) async {
     // insert the item
-    EchoTreeLogger().d("Got insertion request from server: $key");
     var t = await Database().getTreeMap.getTree(treeName);
     await t.insert(key, data);
   }

@@ -4,16 +4,21 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/game_table_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 
-class SelectGameTable extends StatelessWidget {
+class SelectGameTable extends StatefulWidget {
+  const SelectGameTable({Key? key}) : super(key: key);
+
+  @override
+  State<SelectGameTable> createState() => _SelectGameTableState();
+}
+
+class _SelectGameTableState extends State<SelectGameTable> {
   final ValueNotifier<String> selectedTable = ValueNotifier<String>("");
-  final ValueNotifier<bool> isDialogShowing = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> showDialog = ValueNotifier<bool>(false);
 
   void selectTable(BuildContext context, String currentTable, List<String> tables) {
-    if (tables.isEmpty || isDialogShowing.value) {
+    if (tables.isEmpty) {
       return;
     }
-
-    isDialogShowing.value = true;
 
     if (tables.contains(currentTable)) {
       selectedTable.value = currentTable;
@@ -44,12 +49,14 @@ class SelectGameTable extends StatelessWidget {
       ),
       onConfirm: () {
         Provider.of<GameTableProvider>(context, listen: false).localGameTable = selectedTable.value;
-        isDialogShowing.value = false;
-      },
-      onCancel: () {
-        isDialogShowing.value = false;
       },
     ).show(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    showDialog.value = true;
   }
 
   @override
@@ -65,23 +72,31 @@ class SelectGameTable extends StatelessWidget {
           );
         },
         builder: (context, data, _) {
-          // select table micro task (only if not already showing the dialog)
-          if (!data.isTableSet && !isDialogShowing.value) {
-            Future.microtask(() {
-              selectTable(context, data.currentTableName, data.tableNames);
-            });
-          }
+          return ValueListenableBuilder(
+            valueListenable: this.showDialog,
+            builder: (context, show, _) {
+              if (show) {
+                // check if we need to show dialog
+                Future.microtask(() {
+                  if (data.tableNames.isEmpty || data.currentTableName.isEmpty) {
+                    showDialog.value = false;
+                    selectTable(context, data.currentTableName, data.tableNames);
+                  }
+                });
+              }
 
-          return TextButton(
-            onPressed: () {
-              selectTable(context, data.currentTableName, data.tableNames);
+              return TextButton(
+                onPressed: () {
+                  selectTable(context, data.currentTableName, data.tableNames);
+                },
+                child: Text(
+                  data.isTableSet ? data.currentTableName : "No Table Selected",
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              );
             },
-            child: Text(
-              data.isTableSet ? data.currentTableName : "No Table Selected",
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
           );
         },
       ),

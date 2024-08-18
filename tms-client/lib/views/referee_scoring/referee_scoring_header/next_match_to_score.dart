@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:tms/widgets/game_scoring/with_next_game_scoring.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
 
 class NextMatchToScore extends StatelessWidget {
+  final GameMatch? nextMatch;
+  final int totalMatches;
+
+  const NextMatchToScore({Key? key, this.nextMatch, this.totalMatches = 0}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return WithNextGameScoring(
-      builder: (context, nextMatch, nextTeam, totalMatches, _) {
-        return Text(
-          "Match: ${nextMatch?.matchNumber}/${totalMatches}",
-          style: const TextStyle(
-            fontSize: 16,
-          ),
-        );
-      },
+    return Text(
+      "Match: ${nextMatch?.matchNumber}/${totalMatches}",
+      style: const TextStyle(
+        fontSize: 16,
+      ),
     );
   }
 }

@@ -19,3 +19,9 @@ steps:
       cd tms-client
       flutter pub run build_runner build --delete-conflicting-outputs
     displayName: 'Run Flutter (Freezed) Codegen'
+
+  # run android code gen
+  - script: |
+      cd tms-infra
+      cargo ndk -o $(Build.SourcesDirectory)/tms-client/android/app/src/main/jniLibs build
+    displayName: 'Run Android Codegen'

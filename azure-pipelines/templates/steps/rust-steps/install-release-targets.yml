@@ -36,3 +36,10 @@ steps:
     inputs:
       rustupCommand: 'target install aarch64-apple-darwin'
       verbose: false
+  # Install the portable target for a static android binary
+  - task: Rustup@1
+    displayName: 'Install portable android target'
+    condition: eq(variables['Agent.OS'], 'Linux')
+    inputs:
+      rustupCommand: 'target install aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android'
+      verbose: false

@@ -51,3 +51,11 @@ steps:
       }
     displayName: 'Install FRB (Windows)'
     condition: eq(variables['Agent.OS'], 'Windows_NT')
+  
+  # install cargo ndk
+  - task: Cargo@1
+    displayName: 'Install cargo ndk'
+    inputs:
+      command: 'install'
+      crate: 'cargo-ndk'
+      verbose: false

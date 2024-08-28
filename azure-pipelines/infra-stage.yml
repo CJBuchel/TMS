@@ -15,9 +15,9 @@ jobs:
           rustToolchain: 'nightly'
       - template: templates/steps/flutter-steps/install-flutter.yml
       # install wasm target and codegen
-      - template: templates/steps/rust-steps/install-codegen.yml
+      - template: templates/steps/rust-steps/install-ffi-deps.yml
       # Generate the Dart code from the Rust code
-      - template: templates/steps/rust-steps/generate-dart-code.yml
+      - template: templates/steps/rust-steps/generate-ffi-outputs.yml
       # Copy to staging
       - template: templates/steps/common-steps/copy-to-staging.yml
         parameters:

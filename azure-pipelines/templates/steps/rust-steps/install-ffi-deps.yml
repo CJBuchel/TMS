@@ -53,9 +53,22 @@ steps:
     condition: eq(variables['Agent.OS'], 'Windows_NT')
   
   # install cargo ndk
-  - task: Cargo@1
-    displayName: 'Install cargo ndk'
-    inputs:
-      command: 'install'
-      crate: 'cargo-ndk'
-      verbose: false
+  - script: |
+      if ! command -v cargo-ndk &> /dev/null; then
+        echo "Installing cargo-ndk"
+        cargo install cargo-ndk
+      else
+        echo "cargo-ndk already installed"
+      fi
+    displayName: 'Install cargo-ndk (Unix)'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
+  
+  - powershell: |
+      if (-not (Get-Command cargo-ndk -ErrorAction SilentlyContinue)) {
+        Write-Output "Installing cargo-ndk"
+        cargo install cargo-ndk
+      } else {
+        Write-Output "cargo-ndk already installed"
+      }
+    displayName: 'Install cargo-ndk (Windows)'
+    condition: eq(variables['Agent.OS'], 'Windows_NT')

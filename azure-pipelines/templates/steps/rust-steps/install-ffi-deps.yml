@@ -9,6 +9,14 @@ steps:
       rustupCommand: '+nightly'
       rustupCommandArguments: 'target add wasm32-unknown-unknown'
       verbose: false
+  
+  # Install android targets for codegen
+  - task: Rustup@1
+    displayName: 'Add android targets for codegen'
+    condition: eq(variables['Agent.OS'], 'Linux')
+    inputs:
+      rustupCommand: 'target install aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android'
+      verbose: false
 
   # Install wasm pack (check if already installed)
   - script: |

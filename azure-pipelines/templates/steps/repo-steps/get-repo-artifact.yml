@@ -1,0 +1,37 @@
+parameters:
+  - name: target
+    type: string
+    default: 'web'
+    values:
+      - 'web'
+      - 'ios'
+      - 'apk'
+
+#
+# Instead of checking out the repository, we download the repository artifact
+#
+steps:
+  - checkout: none # disable automatic checkout
+  # download the artifact web
+  - ${{ if eq(parameters.target, 'web') }}:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Repo'
+      inputs:
+        artifact: 'web-repo-artifact'
+        targetPath: '$(Build.SourcesDirectory)'
+  
+  # download the artifact ios
+  - ${{ if eq(parameters.target, 'ios') }}:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Repo'
+      inputs:
+        artifact: 'ios-repo-artifact'
+        targetPath: '$(Build.SourcesDirectory)'
+  
+  # download the artifact apk
+  - ${{ if eq(parameters.target, 'apk') }}:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Repo'
+      inputs:
+        artifact: 'apk-repo-artifact'
+        targetPath: '$(Build.SourcesDirectory)'

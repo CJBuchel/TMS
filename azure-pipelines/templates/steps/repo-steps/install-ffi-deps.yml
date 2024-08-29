@@ -1,0 +1,129 @@
+parameters:
+  - name: target
+    type: string
+    default: 'web'
+    values:
+      - 'ios'
+      - 'web'
+      - 'apk'
+
+#
+# Install requirements for wasm & codegen
+#
+steps:
+  # install FRB (cargo task uses manifest, using script instead)
+  - script: |
+      if ! command -v flutter_rust_bridge_codegen &> /dev/null; then
+        echo "Installing FRB"
+        cargo install flutter_rust_bridge_codegen
+      else
+        echo "FRB already installed"
+      fi
+    displayName: 'Install FRB (Unix)'
+    condition: ne(variables['Agent.OS'], 'Windows_NT')
+
+  - powershell: |
+      if (-not (Get-Command flutter_rust_bridge_codegen -ErrorAction SilentlyContinue)) {
+        Write-Output "Installing FRB"
+        cargo install flutter_rust_bridge_codegen
+      } else {
+        Write-Output "FRB already installed"
+      }
+    displayName: 'Install FRB (Windows)'
+    condition: eq(variables['Agent.OS'], 'Windows_NT')
+
+  # add wasm target for web codegen
+  - ${{ if eq(parameters.target, 'web') }}:
+    - task: Rustup@1
+      displayName: 'Add wasm target for web codegen'
+      inputs:
+        rustupCommand: '+nightly'
+        rustupCommandArguments: 'target add wasm32-unknown-unknown'
+        verbose: false
+  
+  # Install android targets for codegen
+  - ${{ if eq(parameters.target, 'apk') }}:
+    - task: Rustup@1
+      displayName: 'Add android targets for codegen'
+      condition: eq(variables['Agent.OS'], 'Linux')
+      inputs:
+        rustupCommand: 'target install aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android'
+        verbose: false
+  
+  # Install ios targets for codegen
+  - ${{ if eq(parameters.target, 'ios') }}:
+    - task: Rustup@1
+      displayName: 'Add ios targets for codegen'
+      condition: eq(variables['Agent.OS'], 'Darwin')
+      inputs:
+        rustupCommand: 'target install aarch64-apple-ios armv7-apple-ios i386-apple-ios x86_64-apple-ios'
+        verbose: false
+
+  # Install wasm pack (check if already installed)
+  - ${{ if eq(parameters.target, 'web') }}:
+    - script: |
+        if ! command -v wasm-pack &> /dev/null; then
+          echo "Installing wasm-pack"
+          cargo install wasm-pack
+        else
+          echo "wasm-pack is already installed"
+        fi
+      displayName: 'Install wasm-pack (Unix)'
+      condition: ne(variables['Agent.OS'], 'Windows_NT')
+
+  - ${{ if eq(parameters.target, 'web') }}:
+    - powershell: |
+        if (-not (Get-Command wasm-pack -ErrorAction SilentlyContinue)) {
+          Write-Output "Installing wasm-pack"
+          cargo install wasm-pack
+        } else {
+          Write-Output "wasm-pack is already installed"
+        }
+      displayName: 'Install wasm-pack (Windows)'
+      condition: eq(variables['Agent.OS'], 'Windows_NT')
+  
+  # install cargo ndk (cargo task uses manifest, using script instead)
+  - ${{ if eq(parameters.target, 'apk') }}:
+    - script: |
+        if ! command -v cargo-ndk &> /dev/null; then
+          echo "Installing cargo-ndk"
+          cargo install cargo-ndk
+        else
+          echo "cargo-ndk already installed"
+        fi
+      displayName: 'Install cargo-ndk (Unix)'
+      condition: ne(variables['Agent.OS'], 'Windows_NT')
+
+  - ${{ if eq(parameters.target, 'apk') }}:
+    - powershell: |
+        if (-not (Get-Command cargo-ndk -ErrorAction SilentlyContinue)) {
+          Write-Output "Installing cargo-ndk"
+          cargo install cargo-ndk
+        } else {
+          Write-Output "cargo-ndk already installed"
+        }
+      displayName: 'Install cargo-ndk (Windows)'
+      condition: eq(variables['Agent.OS'], 'Windows_NT')
+  
+  # install cargo lipo (cargo task uses manifest, using script instead)
+  - ${{ if eq(parameters.target, 'ios') }}:
+    - script: |
+        if ! command -v cargo-lipo &> /dev/null; then
+          echo "Installing cargo-lipo"
+          cargo install cargo-lipo
+        else
+          echo "cargo-lipo already installed"
+        fi
+      displayName: 'Install cargo-lipo (Unix)'
+      condition: ne(variables['Agent.OS'], 'Windows_NT')
+  
+  - ${{ if eq(parameters.target, 'ios') }}:
+    - powershell: |
+        if (-not (Get-Command cargo-lipo -ErrorAction SilentlyContinue)) {
+          Write-Output "Installing cargo-lipo"
+          cargo install cargo-lipo
+        } else {
+          Write-Output "cargo-lipo already installed"
+        }
+      displayName: 'Install cargo-lipo (Windows)'
+      condition: eq(variables['Agent.OS'], 'Windows_NT')

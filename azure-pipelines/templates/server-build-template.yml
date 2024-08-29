@@ -33,7 +33,8 @@ parameters:
 
 steps:
   # get repo artifact
-  - template: steps/common-steps/get-repo-artifact.yml
+  - template: steps/repo-steps/get-repo-artifact.yml
+    target: 'web'
   # pre build steps
   - template: steps/common-steps/get-env-files.yml
   # cache tasks

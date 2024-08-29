@@ -1,0 +1,48 @@
+parameters:
+  - name: target
+    type: string
+    default: 'web'
+    values:
+      - 'ios'
+      - 'web'
+      - 'apk'
+
+#
+# This file contains the steps to generate the Dart code from the Rust code.
+#
+steps:
+  # run the codegen
+  - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root $(Build.SourcesDirectory)/tms-infra --dart-output $(Build.SourcesDirectory)/tms-client/lib/generated
+    displayName: 'Run Rust to Dart Codegen'
+
+  # run flutter code gen (freezed)
+  - script: |
+      cd tms-client
+      flutter pub run build_runner build --delete-conflicting-outputs
+    displayName: 'Run Flutter (Freezed) Codegen'
+
+  # run the wasm pre codegen
+  - ${{ if eq(parameters.target, 'web') }}:
+    - script: wasm-pack build $(Build.SourcesDirectory)/tms-infra --target no-modules --out-dir $(Build.SourcesDirectory)/tms-client/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
+      displayName: 'Run Wasm Pre-Codegen'
+  # run the wasm codegen
+  - ${{ if eq(parameters.target, 'web') }}:
+    - script: |
+        cd tms-client
+        dart run flutter_rust_bridge build-web --dart-root $(Build.SourcesDirectory)/tms-client --rust-root $(Build.SourcesDirectory)/tms-infra
+      displayName: 'Run Wasm Codegen'
+
+  # run android code gen
+  - ${{ if eq(parameters.target, 'apk') }}:
+    - script: |
+        cd tms-infra
+        cargo ndk -o $(Build.SourcesDirectory)/tms-client/android/app/src/main/jniLibs build
+      displayName: 'Run Android Codegen'
+  
+  # run ios code gen
+  - ${{ if eq(parameters.target, 'ios') }}:
+    - script: |
+        cd tms-infra
+        cargo lipo --release
+        cp target/universal/release/libtms_infra.a $(Build.SourcesDirectory)/tms-client/ios/Runner
+      displayName: 'Run iOS Codegen'

@@ -51,11 +51,11 @@ jobs:
           rustToolchain: 'nightly'
       - template: templates/steps/flutter-steps/install-flutter.yml
       # install wasm target and codegen
-      - template: templates/steps/ffi-steps/install-ffi-deps.yml
+      - template: templates/steps/repo-steps/install-ffi-deps.yml
         parameters:
           target: 'apk'
       # Generate the Dart code from the Rust code
-      - template: templates/steps/ffi-steps/generate-ffi-outputs.yml
+      - template: templates/steps/repo-steps/generate-ffi-outputs.yml
         parameters:
           target: 'apk'
       # Copy to staging
@@ -87,11 +87,11 @@ jobs:
           rustToolchain: 'nightly'
       - template: templates/steps/flutter-steps/install-flutter.yml
       # install wasm target and codegen
-      - template: templates/steps/ffi-steps/install-ffi-deps.yml
+      - template: templates/steps/repo-steps/install-ffi-deps.yml
         parameters:
           target: 'ios'
       # Generate the Dart code from the Rust code
-      - template: templates/steps/ffi-steps/generate-ffi-outputs.yml
+      - template: templates/steps/repo-steps/generate-ffi-outputs.yml
         parameters:
           target: 'ios'
       # Copy to staging

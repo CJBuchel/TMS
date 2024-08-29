@@ -49,15 +49,6 @@ steps:
       inputs:
         rustupCommand: 'target install aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android'
         verbose: false
-  
-  # Install ios targets for codegen
-  - ${{ if eq(parameters.target, 'ios') }}:
-    - task: Rustup@1
-      displayName: 'Add ios targets for codegen'
-      condition: eq(variables['Agent.OS'], 'Darwin')
-      inputs:
-        rustupCommand: 'target install aarch64-apple-ios i386-apple-ios x86_64-apple-ios'
-        verbose: false
 
   # Install wasm pack (check if already installed)
   - ${{ if eq(parameters.target, 'web') }}:

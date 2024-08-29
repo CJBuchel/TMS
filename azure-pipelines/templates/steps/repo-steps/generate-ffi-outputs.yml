@@ -43,6 +43,6 @@ steps:
   - ${{ if eq(parameters.target, 'ios') }}:
     - script: |
         cd tms-infra
-        cargo lipo --release
+        cargo build --release --target aarch64-apple-ios
         cp target/universal/release/libtms_infra.a $(Build.SourcesDirectory)/tms-client/ios/Runner
       displayName: 'Run iOS Codegen'

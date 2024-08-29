@@ -104,26 +104,3 @@ steps:
         }
       displayName: 'Install cargo-ndk (Windows)'
       condition: eq(variables['Agent.OS'], 'Windows_NT')
-  
-  # install cargo lipo (cargo task uses manifest, using script instead)
-  - ${{ if eq(parameters.target, 'ios') }}:
-    - script: |
-        if ! command -v cargo-lipo &> /dev/null; then
-          echo "Installing cargo-lipo"
-          cargo install cargo-lipo
-        else
-          echo "cargo-lipo already installed"
-        fi
-      displayName: 'Install cargo-lipo (Unix)'
-      condition: ne(variables['Agent.OS'], 'Windows_NT')
-  
-  - ${{ if eq(parameters.target, 'ios') }}:
-    - powershell: |
-        if (-not (Get-Command cargo-lipo -ErrorAction SilentlyContinue)) {
-          Write-Output "Installing cargo-lipo"
-          cargo install cargo-lipo
-        } else {
-          Write-Output "cargo-lipo already installed"
-        }
-      displayName: 'Install cargo-lipo (Windows)'
-      condition: eq(variables['Agent.OS'], 'Windows_NT')

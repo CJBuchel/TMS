@@ -5,16 +5,8 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-# Default to cdylib and rlib for most platforms
-crate-type = ["cdylib", "rlib"]
-
-# Static library for iOS
-[target.'cfg(target_os = "ios")'.lib]
-crate-type = ["staticlib"]
-
-# Ensure cdylib for WebAssembly
-[target.'cfg(target_family = "wasm")'.lib]
-crate-type = ["cdylib"]
+# Default to rlib for most platforms
+crate-type = ["rlib", "cdylib"]
 
 [dependencies]
 flutter_rust_bridge = "=2.3.0"

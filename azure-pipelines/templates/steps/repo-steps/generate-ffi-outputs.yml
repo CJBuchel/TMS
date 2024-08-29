@@ -42,8 +42,9 @@ steps:
   # run ios code gen
   - ${{ if eq(parameters.target, 'ios') }}:
     - script: |
-        cd tms-infra
+        cd tms-infra-static
         cargo build --release --target aarch64-apple-ios
+        ls ../target
         ls
         ls target/
         ls target/aarch64-apple-ios/

@@ -2359,6 +2359,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "tms-infra-static"
+version = "0.1.0"
+dependencies = [
+ "tms-infra",
+]
+
+[[package]]
 name = "tms-schedule-handler"
 version = "0.1.0"
 dependencies = [

@@ -38,7 +38,7 @@ jobs:
   - job: AndroidInfra
     displayName: 'Generate Shared APK Library & Dart'
     pool:
-      vmImage: 'macos-14'
+      vmImage: 'ubuntu-latest'
     steps:
       # Get cache if available
       - template: templates/steps/rust-steps/rust-cache.yml
@@ -74,7 +74,7 @@ jobs:
   - job: IosInfra
     displayName: 'Generate Static IOS Library & Dart'
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'macos-14'
     steps:
       # Get cache if available
       - template: templates/steps/rust-steps/rust-cache.yml

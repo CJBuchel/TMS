@@ -4,7 +4,6 @@ members = [
   "echo-tree-infra",
   "echo-tree-rs",
   "tms-infra",
-  "tms-infra-static",
   "tms-schedule-handler",
   "tms-server",
 ]

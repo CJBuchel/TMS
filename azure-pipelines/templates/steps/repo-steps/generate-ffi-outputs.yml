@@ -46,6 +46,5 @@ steps:
         perl -pi -e 's/"cdylib"/"staticlib"/g' Cargo.toml
         cat Cargo.toml
         cargo build --release --target aarch64-apple-ios
-        ls ../target/aarch64-apple-ios/release/
         cp ../target/aarch64-apple-ios/release/libtms_infra.a $(Build.SourcesDirectory)/tms-client/ios/Runner
       displayName: 'Run iOS Codegen'

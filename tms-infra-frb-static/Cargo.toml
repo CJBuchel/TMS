@@ -10,3 +10,5 @@ crate-type = ["staticlib"]
 
 [dependencies]
 tms-infra = { path = "../tms-infra" }
+flutter_rust_bridge = "=2.3.0"
+wasm-bindgen = "0.2.92"

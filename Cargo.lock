@@ -2355,6 +2355,14 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "tms-infra-dynamic"
+version = "0.1.0"
+dependencies = [
+ "flutter_rust_bridge",
+ "tms-infra",
  "wasm-bindgen",
 ]
 
@@ -2362,7 +2370,9 @@ dependencies = [
 name = "tms-infra-static"
 version = "0.1.0"
 dependencies = [
+ "flutter_rust_bridge",
  "tms-infra",
+ "wasm-bindgen",
 ]
 
 [[package]]

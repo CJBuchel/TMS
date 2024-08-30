@@ -8,7 +8,7 @@ B='\033[0;34m'   #'0;34' is Blue's ANSI color code
 #
 # TMS INFRA bindings
 #
-TMS_INFRA=$(pwd)/tms-infra
+TMS_INFRA=$(pwd)/tms-infra-frb-dynamic
 TMS_FLUTTER=$(pwd)/tms-client
 TMS_CRATES=crate::infra
 TMS_FLUTTER_ENTRY_NAME=TmsRustLib
@@ -25,6 +25,6 @@ wasm-pack build $TMS_INFRA --target no-modules --out-dir $TMS_FLUTTER/web/pkg --
 echo -e "${G}Running freezed for $TMS_FLUTTER"
 (cd $TMS_FLUTTER && flutter pub run build_runner build --delete-conflicting-outputs)
 
-# run android code gen
-echo -e "${G} Running codegen for android"
-(cd $TMS_INFRA && cargo ndk -o $TMS_FLUTTER/android/app/src/main/jniLibs build)
+# # run android code gen
+# echo -e "${G} Running codegen for android"
+# (cd $TMS_INFRA && cargo ndk -o $TMS_FLUTTER/android/app/src/main/jniLibs build)

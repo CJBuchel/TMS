@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 # Default to rlib for most platforms
-crate-type = ["rlib", "cdylib"] # the pipelines replace this with ["staticlib"] for ios binaries
+crate-type = ["rlib", "cdylib"] # the pipelines replace "cdylib" with "staticlib" for ios binaries
 
 [dependencies]
 flutter_rust_bridge = "=2.3.0"

@@ -8,7 +8,7 @@ B='\033[0;34m'   #'0;34' is Blue's ANSI color code
 #
 # TMS INFRA bindings
 #
-TMS_INFRA=$(pwd)/tms-infra-frb-dynamic
+TMS_INFRA=$(pwd)/tms-infra
 TMS_FLUTTER=$(pwd)/tms-client
 TMS_CRATES=crate::infra
 TMS_FLUTTER_ENTRY_NAME=TmsRustLib

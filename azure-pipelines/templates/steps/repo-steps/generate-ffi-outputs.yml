@@ -43,7 +43,7 @@ steps:
   - ${{ if eq(parameters.target, 'ios') }}:
     - script: |
         cd tms-infra
-        sed -i 's/"cdylib"/"staticlib"/g' Cargo.toml
+        perl -pi -e 's/"cdylib"/"staticlib"/g' Cargo.toml
         cat Cargo.toml
         cargo build --release --target aarch64-apple-ios
         ls ../target/aarch64-apple-ios/release/

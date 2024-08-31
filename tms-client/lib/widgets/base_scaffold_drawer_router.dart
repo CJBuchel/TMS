@@ -30,17 +30,17 @@ class _DrawStack extends StatelessWidget {
               height: 80,
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
-                border: Border(
-                  right: BorderSide(
-                    color: borderColor,
+                border: const Border(
+                  top: BorderSide(
+                    color: Colors.black,
                     width: 1,
                   ),
                   bottom: BorderSide(
-                    color: borderColor,
+                    color: Colors.black,
                     width: 1,
                   ),
-                  top: BorderSide(
-                    color: borderColor,
+                  right: BorderSide(
+                    color: Colors.black,
                     width: 1,
                   ),
                 ),

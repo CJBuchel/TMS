@@ -38,7 +38,8 @@ class RefereeScoringHeader extends StatelessWidget {
         // bottom border only
         border: Border(
           bottom: BorderSide(
-            color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
+            color: Colors.black,
+            // color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
             width: 1,
           ),
         ),

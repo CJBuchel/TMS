@@ -31,7 +31,7 @@ class _MissionImageState extends State<MissionImage> {
 
     // default image
     _image = Image(
-      image: const AssetImage('images/FIRST_LOGO.png'),
+      image: const AssetImage('assets/images/FIRST_LOGO.png'),
       width: widget.width,
       height: widget.height,
       fit: BoxFit.fill,
@@ -52,7 +52,7 @@ class _MissionImageState extends State<MissionImage> {
 
   void _fetchImage() async {
     // fetch image from assets
-    final String imagePath = 'images/missions/${widget.season}/${widget.mission.id}.png';
+    final String imagePath = 'assets/images/missions/${widget.season}/${widget.mission.id}.png';
 
     if (await _assetExists(imagePath)) {
       setState(() {

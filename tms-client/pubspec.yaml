@@ -65,6 +65,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/missions/2023/
     - assets/logos/
     - assets/audio/
 

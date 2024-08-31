@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 ///
 /// Light theme
@@ -12,10 +13,12 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
   secondaryHeaderColor: const Color(0xFFEEEEEE),
   canvasColor: const Color(0xFFEEEEEE),
   cardColor: const Color(0xFFE1F5FE),
-  appBarTheme: AppBarTheme(
-    backgroundColor: Colors.blue[900],
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Color(0xFF0D47A1),
+    surfaceTintColor: Colors.transparent,
     foregroundColor: Colors.white,
-    titleTextStyle: const TextStyle(
+    iconTheme: IconThemeData(color: Colors.white),
+    titleTextStyle: TextStyle(
       color: Colors.white,
       fontSize: 20,
     ),
@@ -85,13 +88,13 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: const Color(0xFF212332),
   secondaryHeaderColor: const Color(0xFF2A2D3E),
   canvasColor: const Color(0xFF2A2D3E),
-  // cardColor: const Color.fromARGB(255, 69, 80, 100),
   cardColor: const Color(0xFF121212),
-  appBarTheme: AppBarTheme(
-    backgroundColor: Colors.blueGrey[800],
-    surfaceTintColor: Colors.blue,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Color(0xFF37474F),
+    surfaceTintColor: Colors.transparent,
     foregroundColor: Colors.white,
-    titleTextStyle: const TextStyle(
+    iconTheme: IconThemeData(color: Colors.white),
+    titleTextStyle: TextStyle(
       color: Colors.white,
       fontSize: 20,
     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
+import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/mission_image.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/question/question.dart';
@@ -54,7 +55,10 @@ class MissionWidget extends StatelessWidget {
   }
 
   Color getMissionColor(BuildContext context) {
-    Color darkColor = const Color(0xFF100023);
+    // Color darkColor = const Color(0xFF100023);
+    // get number out of the mission.id
+    Color darkColor = lighten(Theme.of(context).cardColor, 0.05);
+    // Color darkColor = lighten(Theme.of(context).cardColor, 0.05);
     Color lightColor = Theme.of(context).cardColor;
     return Theme.of(context).brightness == Brightness.dark ? darkColor : lightColor;
   }
@@ -77,7 +81,7 @@ class MissionWidget extends StatelessWidget {
         ),
         border: Border.all(
           width: 1,
-          color: Theme.of(context).dividerColor,
+          color: Colors.black,
         ),
       ),
       child: Column(

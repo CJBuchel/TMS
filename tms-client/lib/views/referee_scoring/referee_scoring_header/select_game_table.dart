@@ -85,27 +85,30 @@ class _SelectGameTableState extends State<SelectGameTable> {
                 });
               }
 
-              return TextButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                  padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(10, 2, 10, 2)),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: const BorderSide(
-                        color: Colors.white,
-                        width: 1,
+              return Container(
+                margin: const EdgeInsets.only(top: 8, bottom: 8),
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                    padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(10, 0, 10, 0)),
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(
+                          color: Colors.white,
+                          width: 1,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                onPressed: () {
-                  selectTable(context, data.currentTableName, data.tableNames);
-                },
-                child: Text(
-                  data.isTableSet ? data.currentTableName : "No Table Selected",
-                  style: const TextStyle(
-                    fontSize: 16,
+                  onPressed: () {
+                    selectTable(context, data.currentTableName, data.tableNames);
+                  },
+                  child: Text(
+                    data.isTableSet ? data.currentTableName : "No Table Selected",
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               );

@@ -2,11 +2,12 @@ import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_blueprint.dart';
+import 'package:tms/generated/infra/fll_infra/mission.dart';
+import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:tms/providers/tournament_config_provider.dart';
-import 'package:tms/utils/logger.dart';
-import 'package:tms/widgets/game_scoring/game_scoring_widget/question/question.dart';
+import 'package:tms/widgets/game_scoring/game_scoring_widget/mission.dart';
 
 class _BlueprintData {
   final BlueprintType type;
@@ -34,13 +35,16 @@ class GameScoringWidget extends StatelessWidget {
             );
           } else {
             return ListView.builder(
-              itemCount: data.blueprint?.blueprint.robotGameQuestions.length,
+              shrinkWrap: true,
+              itemCount: data.blueprint?.blueprint.robotGameMissions.length,
               itemBuilder: (context, index) {
-                return QuestionWidget(
-                  question: data.blueprint!.blueprint.robotGameQuestions[index],
-                  onAnswer: (a) {
-                    TmsLogger().i('Answered question: ${a.questionId} with answer: ${a.answer}');
-                  },
+                Mission mission = data.blueprint!.blueprint.robotGameMissions[index];
+                List<Question> allQuestions = data.blueprint!.blueprint.robotGameQuestions;
+                List<Question> missionQuestions = allQuestions.where((q) => q.id.startsWith(mission.id)).toList();
+                return MissionWidget(
+                  mission: mission,
+                  missionQuestions: missionQuestions,
+                  season: data.blueprint!.title,
                 );
               },
             );

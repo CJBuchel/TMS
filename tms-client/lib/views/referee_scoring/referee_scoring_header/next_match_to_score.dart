@@ -13,6 +13,7 @@ class NextMatchToScore extends StatelessWidget {
       "Match: ${nextMatch?.matchNumber}/${totalMatches}",
       style: const TextStyle(
         fontSize: 16,
+        color: Colors.white,
       ),
     );
   }

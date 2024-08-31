@@ -26,7 +26,7 @@ class QuestionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(

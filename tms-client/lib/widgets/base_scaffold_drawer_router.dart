@@ -12,6 +12,7 @@ class _DrawStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double buttonWidth = ResponsiveBreakpoints.of(context).isMobile ? 20 : 30;
+    Color borderColor = Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black;
     return Stack(
       children: [
         // inserted child
@@ -29,6 +30,20 @@ class _DrawStack extends StatelessWidget {
               height: 80,
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
+                border: Border(
+                  right: BorderSide(
+                    color: borderColor,
+                    width: 1,
+                  ),
+                  bottom: BorderSide(
+                    color: borderColor,
+                    width: 1,
+                  ),
+                  top: BorderSide(
+                    color: borderColor,
+                    width: 1,
+                  ),
+                ),
                 borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(10),
                   bottomRight: Radius.circular(10),

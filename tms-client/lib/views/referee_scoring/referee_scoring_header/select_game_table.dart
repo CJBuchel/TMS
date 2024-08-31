@@ -86,6 +86,19 @@ class _SelectGameTableState extends State<SelectGameTable> {
               }
 
               return TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                  padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(10, 2, 10, 2)),
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: const BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                ),
                 onPressed: () {
                   selectTable(context, data.currentTableName, data.tableNames);
                 },

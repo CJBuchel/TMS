@@ -14,6 +14,7 @@ class NextRoundToScore extends StatelessWidget {
       "Round: $round",
       style: const TextStyle(
         fontSize: 16,
+        color: Colors.white,
       ),
     );
   }

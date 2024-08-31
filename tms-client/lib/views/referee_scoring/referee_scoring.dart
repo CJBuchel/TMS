@@ -11,20 +11,22 @@ class RefereeScoring extends StatelessWidget {
   Widget build(BuildContext context) {
     return EchoTreeLifetime(
       trees: [":robot_game:tables", ":robot_game:matches", ":teams"],
-      child: Column(
-        children: [
-          // header
-          const RefereeScoringHeader(),
-          // expanded scrollable list
-          const Expanded(
-            child: Center(
-              child: GameScoringWidget(),
+      child: Container(
+        child: Column(
+          children: [
+            // header
+            const RefereeScoringHeader(),
+            // expanded scrollable list
+            const Expanded(
+              child: Center(
+                child: GameScoringWidget(),
+              ),
             ),
-          ),
 
-          // footer
-          RefereeScoringFooter(),
-        ],
+            // footer
+            RefereeScoringFooter(),
+          ],
+        ),
       ),
     );
   }

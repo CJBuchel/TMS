@@ -11,7 +11,7 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
   scaffoldBackgroundColor: const Color(0xFFFFFFFF),
   secondaryHeaderColor: const Color(0xFFEEEEEE),
   canvasColor: const Color(0xFFEEEEEE),
-  cardColor: const Color.fromRGBO(225, 245, 254, 1),
+  cardColor: const Color(0xFFE1F5FE),
   appBarTheme: AppBarTheme(
     backgroundColor: Colors.blue[900],
     foregroundColor: Colors.white,
@@ -81,7 +81,7 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
   textTheme: ThemeData.dark().textTheme.apply(fontFamily: 'Poppins'),
   colorScheme: const ColorScheme.dark(),
   brightness: Brightness.dark,
-  primaryColor: const Color.fromARGB(255, 76, 119, 159),
+  primaryColor: const Color(0xFF4C779F),
   scaffoldBackgroundColor: const Color(0xFF212332),
   secondaryHeaderColor: const Color(0xFF2A2D3E),
   canvasColor: const Color(0xFF2A2D3E),

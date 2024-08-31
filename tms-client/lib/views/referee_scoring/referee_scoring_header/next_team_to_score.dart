@@ -15,6 +15,7 @@ class NextTeamToScore extends StatelessWidget {
       "${nextTeam?.number} | ${nextTeam?.name}",
       style: const TextStyle(
         fontSize: 16,
+        color: Colors.white,
       ),
     );
   }

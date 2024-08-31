@@ -15,7 +15,7 @@ class RefereeScoringHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // table name
-            SelectGameTable(),
+            const SelectGameTable(),
             // next team to score
             NextTeamToScore(nextTeam: nextTeam),
             // next match to score
@@ -33,11 +33,12 @@ class RefereeScoringHeader extends StatelessWidget {
     return Container(
       height: 45,
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark ? Colors.transparent : Theme.of(context).cardColor,
+        // color: Theme.of(context).brightness == Brightness.dark ? Colors.transparent : Theme.of(context).cardColor,
+        color: Theme.of(context).appBarTheme.backgroundColor,
         // bottom border only
         border: Border(
           bottom: BorderSide(
-            color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.transparent,
+            color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
             width: 1,
           ),
         ),

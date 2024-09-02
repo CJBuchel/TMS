@@ -12,7 +12,6 @@ class _DrawStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double buttonWidth = ResponsiveBreakpoints.of(context).isMobile ? 20 : 30;
-    Color borderColor = Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black;
     return Stack(
       children: [
         // inserted child

@@ -5,7 +5,12 @@ import 'package:tms/providers/game_table_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 
 class SelectGameTable extends StatefulWidget {
-  const SelectGameTable({Key? key}) : super(key: key);
+  final double fontSize;
+
+  const SelectGameTable({
+    Key? key,
+    this.fontSize = 16,
+  }) : super(key: key);
 
   @override
   State<SelectGameTable> createState() => _SelectGameTableState();
@@ -106,8 +111,8 @@ class _SelectGameTableState extends State<SelectGameTable> {
                   },
                   child: Text(
                     data.isTableSet ? data.currentTableName : "No Table Selected",
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: widget.fontSize,
                     ),
                   ),
                 ),

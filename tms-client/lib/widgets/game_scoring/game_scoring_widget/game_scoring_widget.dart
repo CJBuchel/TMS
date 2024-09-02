@@ -7,7 +7,8 @@ import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:tms/providers/tournament_config_provider.dart';
-import 'package:tms/widgets/game_scoring/game_scoring_widget/mission.dart';
+import 'package:tms/widgets/game_scoring/game_scoring_widget/agnostic_scoring/agnostic_scoring.dart';
+import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/mission.dart';
 
 class _BlueprintData {
   final BlueprintType type;
@@ -30,9 +31,7 @@ class GameScoringWidget extends StatelessWidget {
         },
         builder: (context, data, child) {
           if (data.type == BlueprintType.agnostic) {
-            return Container(
-              child: const Text('Agnostic Scoring'),
-            );
+            return AgnosticScoringWidget();
           } else {
             return ListView.builder(
               shrinkWrap: true,

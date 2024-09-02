@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
+import 'package:tms/utils/logger.dart';
 
 class MissionImage extends StatefulWidget {
   final Mission mission;
@@ -23,7 +24,12 @@ class MissionImage extends StatefulWidget {
 }
 
 class _MissionImageState extends State<MissionImage> {
-  late Image _image;
+  Image _image = const Image(
+    image: const AssetImage('assets/images/FIRST_LOGO.png'),
+    width: 160,
+    height: 90,
+    fit: BoxFit.fill,
+  );
 
   @override
   void initState() {
@@ -37,7 +43,6 @@ class _MissionImageState extends State<MissionImage> {
       fit: BoxFit.fill,
     );
 
-    // fetch image
     _fetchImage();
   }
 
@@ -46,24 +51,27 @@ class _MissionImageState extends State<MissionImage> {
       await rootBundle.load(path);
       return true;
     } catch (e) {
+      TmsLogger().e('Image not found: $path');
       return false;
     }
   }
 
-  void _fetchImage() async {
+  void _fetchImage() {
     // fetch image from assets
     final String imagePath = 'assets/images/missions/${widget.season}/${widget.mission.id}.png';
 
-    if (await _assetExists(imagePath)) {
-      setState(() {
-        _image = Image(
-          image: AssetImage(imagePath),
-          width: widget.width,
-          height: widget.height,
-          fit: BoxFit.fill,
-        );
-      });
-    }
+    _assetExists(imagePath).then((exists) {
+      if (exists && mounted) {
+        setState(() {
+          _image = Image(
+            image: AssetImage(imagePath),
+            width: widget.width,
+            height: widget.height,
+            fit: BoxFit.fill,
+          );
+        });
+      }
+    });
   }
 
   @override

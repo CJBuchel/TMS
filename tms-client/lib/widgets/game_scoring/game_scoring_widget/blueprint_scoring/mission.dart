@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/widgets/game_scoring/game_scoring_widget/mission_image.dart';
-import 'package:tms/widgets/game_scoring/game_scoring_widget/question/question.dart';
+import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/mission_image.dart';
+import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/question.dart';
 
 class MissionWidget extends StatelessWidget {
   final Mission mission;
@@ -19,6 +20,23 @@ class MissionWidget extends StatelessWidget {
   }) : super(key: key);
 
   List<Widget> getMissionHeader(BuildContext context) {
+    double width = 160;
+    double height = 90;
+    double fontSize = 10;
+
+    if (ResponsiveBreakpoints.of(context).isDesktop) {
+      width = 240;
+      height = 140;
+      fontSize = 16;
+    } else if (ResponsiveBreakpoints.of(context).isTablet) {
+      width = 200;
+      height = 120;
+      fontSize = 12;
+    } else {
+      width = 160;
+      height = 90;
+    }
+
     return [
       Container(
         decoration: const BoxDecoration(
@@ -33,21 +51,21 @@ class MissionWidget extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
           child: Text(
             mission.label,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
-              fontSize: 10,
+              fontSize: fontSize,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
       ),
       Container(
-        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
         child: MissionImage(
           mission: mission,
           season: season,
-          width: 160,
-          height: 90,
+          width: width,
+          height: height,
           borderRadius: 10,
         ),
       ),

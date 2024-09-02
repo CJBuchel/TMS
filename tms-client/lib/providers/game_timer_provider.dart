@@ -17,7 +17,7 @@ enum TimerRunState {
 class GameTimerProvider extends TournamentConfigProvider with ServerEventSubscribeNotifierMixin {
   GameTimerService _gameTimerService = GameTimerService();
   TimerRunState _timerState = TimerRunState.idle;
-  int _timer = 150; // in seconds
+  int _timer = 150; // in seconds (default)
 
   // list of callbacks
   List<Function(TimerRunState state)> _callbacks = [];
@@ -50,8 +50,8 @@ class GameTimerProvider extends TournamentConfigProvider with ServerEventSubscri
   }
 
   GameTimerProvider() {
-    _timer = timerLength;
     _timerState = TimerRunState.idle;
+    _timer = super.timerLength;
 
     subscribeToEvent(TmsServerSocketEvent.matchTimerEvent, (event) {
       if (event.message != null) {
@@ -105,7 +105,7 @@ class GameTimerProvider extends TournamentConfigProvider with ServerEventSubscri
     });
   }
 
-  int get timer => _timer;
+  int get timer => _timerState == TimerRunState.idle ? timerLength : _timer;
   TimerRunState get timerState => _timerState;
 
   Future<int> startTimer() async {

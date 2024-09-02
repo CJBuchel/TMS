@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
-import 'package:tms/widgets/game_scoring/game_scoring_widget/question/categorical_question.dart';
+import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/categorical_question.dart';
 
 class QuestionWidget extends StatelessWidget {
   final Question question;
@@ -40,7 +40,7 @@ class QuestionWidget extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              Expanded(
                 child: Text(
                   question.label,
                   style: const TextStyle(fontSize: 12),

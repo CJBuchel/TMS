@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/next_match_to_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/next_round_to_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/next_team_to_score.dart';
@@ -8,20 +9,30 @@ import 'package:tms/widgets/game_scoring/with_next_game_scoring.dart';
 class RefereeScoringHeader extends StatelessWidget {
   const RefereeScoringHeader({Key? key}) : super(key: key);
 
-  Widget _headerRow() {
+  Widget _headerRow(BuildContext context) {
+    double fontSize = 16;
+
+    if (ResponsiveBreakpoints.of(context).isDesktop) {
+      fontSize = 16;
+    } else if (ResponsiveBreakpoints.of(context).isTablet) {
+      fontSize = 12;
+    } else {
+      fontSize = 10;
+    }
+
     return WithNextGameScoring(
       builder: (context, nextMatch, nextTeam, totalMatches, round) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // table name
-            const SelectGameTable(),
+            SelectGameTable(fontSize: fontSize),
             // next team to score
-            NextTeamToScore(nextTeam: nextTeam),
+            NextTeamToScore(nextTeam: nextTeam, fontSize: fontSize),
             // next match to score
-            NextMatchToScore(nextMatch: nextMatch, totalMatches: totalMatches),
+            NextMatchToScore(nextMatch: nextMatch, totalMatches: totalMatches, fontSize: fontSize),
             // next round to score
-            NextRoundToScore(round: round),
+            NextRoundToScore(round: round, fontSize: fontSize),
           ],
         );
       },
@@ -36,7 +47,7 @@ class RefereeScoringHeader extends StatelessWidget {
         // color: Theme.of(context).brightness == Brightness.dark ? Colors.transparent : Theme.of(context).cardColor,
         color: Theme.of(context).appBarTheme.backgroundColor,
         // bottom border only
-        border: Border(
+        border: const Border(
           bottom: BorderSide(
             color: Colors.black,
             // color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
@@ -50,7 +61,7 @@ class RefereeScoringHeader extends StatelessWidget {
       ),
 
       // row of widgets
-      child: _headerRow(),
+      child: _headerRow(context),
     );
   }
 }

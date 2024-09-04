@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AgnosticScoringWidget extends StatelessWidget {
-  AgnosticScoringWidget({Key? key}) : super(key: key);
+  final Function(int) onScoreChanged;
+
+  AgnosticScoringWidget({
+    Key? key,
+    required this.onScoreChanged,
+  }) : super(key: key);
 
   final TextEditingController _scoreController = TextEditingController();
 
@@ -27,6 +32,9 @@ class AgnosticScoringWidget extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: TextField(
             controller: _scoreController,
+            onChanged: (value) {
+              onScoreChanged(int.tryParse(value) ?? 0);
+            },
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,

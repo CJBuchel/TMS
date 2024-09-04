@@ -8,6 +8,18 @@ import 'package:tms/utils/logger.dart';
 import 'package:tms/views/setup/input_setter.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
+class _BlueprintData {
+  final BlueprintType bpType;
+  final String selectedBlueprint;
+  final List<String> blueprintTitles;
+
+  _BlueprintData({
+    required this.bpType,
+    required this.selectedBlueprint,
+    required this.blueprintTitles,
+  });
+}
+
 class SeasonSetup extends StatelessWidget {
   SeasonSetup({Key? key}) : super(key: key);
 
@@ -62,27 +74,31 @@ class SeasonSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    availableSeasons.value = Provider.of<TournamentBlueprintProvider>(context).blueprintTitles;
+    availableSeasons.value = Provider.of<TournamentBlueprintProvider>(context, listen: false).blueprintTitles;
 
     return EchoTreeLifetime(
       trees: [":tournament:blueprint", ":tournament:config"],
-      child: Selector<TournamentBlueprintProvider, List<String>>(
-        selector: (context, provider) => provider.blueprintTitles,
+      child: Selector<TournamentBlueprintProvider, _BlueprintData>(
+        selector: (context, provider) {
+          return _BlueprintData(
+            bpType: provider.blueprintType,
+            selectedBlueprint: provider.season,
+            blueprintTitles: provider.blueprintTitles,
+          );
+        },
         builder: (context, blueprints, _) {
-          availableSeasons.value = blueprints;
+          availableSeasons.value = blueprints.blueprintTitles;
+          if (blueprints.bpType == BlueprintType.agnostic) {
+            selectedBlueprint.value = "Agnostic";
+          } else {
+            if (availableSeasons.value.contains(blueprints.selectedBlueprint)) {
+              selectedBlueprint.value = blueprints.selectedBlueprint;
+            } else {
+              selectedBlueprint.value = "Agnostic";
+            }
+          }
           return Consumer<TournamentConfigProvider>(
             builder: (context, config, _) {
-              // check season type
-              if (config.blueprintType == BlueprintType.agnostic) {
-                selectedBlueprint.value = "Agnostic";
-              } else {
-                if (availableSeasons.value.contains(config.season)) {
-                  selectedBlueprint.value = config.season;
-                } else {
-                  selectedBlueprint.value = "Agnostic";
-                }
-              }
-
               return input(context, config);
             },
           );

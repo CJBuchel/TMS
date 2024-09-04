@@ -17,5 +17,5 @@ abstract class BaseSeason {
   Future<String> getSeason();
 
   Future<List<QuestionValidationError>> validate(
-      {required List<QuestionAnswer> answers});
+      {required Map<String, QuestionAnswer> answers});
 }

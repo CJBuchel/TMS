@@ -3,7 +3,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/mission_image.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/question.dart';
 
@@ -109,9 +108,6 @@ class MissionWidget extends StatelessWidget {
           ...missionQuestions.map((q) {
             return QuestionWidget(
               question: q,
-              onAnswer: (a) {
-                TmsLogger().i('Answered question: ${a.questionId} with answer: ${a.answer}');
-              },
             );
           }).toList(),
 

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -41,8 +43,8 @@ pub struct Question {
 }
 
 impl Question {
-  pub fn get_score(&self, answers: Vec<QuestionAnswer>) -> i32 {
-    let answer = match answers.iter().find(|a| a.question_id == self.id) {
+  pub fn get_score(&self, answers: &HashMap<String, QuestionAnswer>) -> i32 {
+    let answer = match answers.get(&self.id) {
       Some(a) => a,
       None => return 0,
     };
@@ -50,19 +52,16 @@ impl Question {
     // apply regular answer score
     let mut score = match &self.input {
       QuestionInput::Categorical(q) => {
-        let answer_option = q.options.iter().find(|o| o.label == answer.answer);
-        match answer_option {
-          Some(option) => option.score,
-          None => 0,
-        }
+        q.options.iter().find(|o| o.label == answer.answer).map_or(0, |o| o.score)
       }
     };
 
     // get the first matching rule (if any) and return that instead
     for rule in self.rules.iter() {
-      if rule.evaluate(answers.clone()) {
-        score = rule.apply(answers.clone());
-      }
+      score = match rule.apply(answers) {
+        Ok(s) => s,
+        Err(_) => score,
+      };
     }
 
     score

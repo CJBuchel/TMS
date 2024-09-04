@@ -1,6 +1,8 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:tms/providers/game_scoring_provider.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/floating_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/referee_scoring_footer.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/referee_scoring_header.dart';
@@ -43,7 +45,12 @@ class RefereeScoring extends StatelessWidget {
             ),
           ),
           // floating score
-          FloatingScore(score: 50, left: 0, bottom: footerHeight),
+          Selector<GameScoringProvider, int>(
+            selector: (context, gs) => gs.score,
+            builder: (context, score, child) {
+              return FloatingScore(score: score, left: 0, bottom: footerHeight);
+            },
+          ),
         ],
       ),
     );

@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+
+use lazy_static::lazy_static;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -20,18 +23,13 @@ impl QuestionRule {
     }
   }
 
-  fn id_substitution(input: String, answers: Vec<QuestionAnswer>) -> String {
-    // e.g if input is m00a, then find the answer for m00a
-    let answer = answers.iter().find(|a| a.question_id == input);
-    match answer {
-      Some(a) => a.answer.clone(),
-      None => input.to_string(),
-    }
+  fn id_substitution(input: &str, answers: &HashMap<String, QuestionAnswer>) -> String {
+    answers.get(input).map_or(input.to_string(), |a| a.answer.clone())
   }
 
-  fn evaluate_condition(left: &str, operator: &str, right: &str, answers: Vec<QuestionAnswer>) -> bool {
-    let left = Self::id_substitution(left.to_string(), answers.clone());
-    let right = Self::id_substitution(right.to_string(), answers.clone());
+  fn evaluate_condition(left: &str, operator: &str, right: &str, answers: &HashMap<String, QuestionAnswer>) -> bool {
+    let left = Self::id_substitution(left, answers);
+    let right = Self::id_substitution(right, answers);
 
     match operator {
       "==" => left == right,
@@ -45,13 +43,12 @@ impl QuestionRule {
   }
 
   fn parse_condition(condition: &str) -> Result<(String, String, String), String> {
-    let re = match Regex::new(r"(\w+)\s*(==|!=|>|<|>=|<=)\s*(\w+)") {
-      Ok(re) => re,
-      Err(_) => return Err("Invalid condition, must be simple `m00a == 2`".to_string()),
-    };
+    lazy_static! {
+      static ref RE: Regex = Regex::new(r"(\w+)\s*(==|!=|>|<|>=|<=)\s*(\w+)").unwrap();
+    }
 
 
-    let caps = match re.captures(condition) {
+    let caps = match RE.captures(condition) {
       Some(caps) => caps,
       None => return Err("Invalid condition, must be simple `m00a == 2`".to_string()),
     };
@@ -81,7 +78,7 @@ impl QuestionRule {
     None
   }
 
-  fn evaluate_expression(expression: &str, answers: Vec<QuestionAnswer>) -> bool {
+  fn evaluate_expression(expression: &str, answers: &HashMap<String, QuestionAnswer>) -> bool {
     let expression = expression.trim();
 
     // Handle parentheses by evaluating the expression inside first
@@ -91,12 +88,12 @@ impl QuestionRule {
 
     // Split by '||' (OR)
     if let Some((left, right)) = Self::split_expression(expression, "||") {
-      return Self::evaluate_expression(&left, answers.clone()) || Self::evaluate_expression(&right, answers);
+      return Self::evaluate_expression(&left, answers) || Self::evaluate_expression(&right, answers);
     }
 
     // Split by '&&' (AND)
     if let Some((left, right)) = Self::split_expression(expression, "&&") {
-      return Self::evaluate_expression(&left, answers.clone()) && Self::evaluate_expression(&right, answers);
+      return Self::evaluate_expression(&left, answers) && Self::evaluate_expression(&right, answers);
     }
 
     // Otherwise, evaluate the basic condition
@@ -107,15 +104,15 @@ impl QuestionRule {
     false
   }
 
-  pub fn evaluate(&self, answers: Vec<QuestionAnswer>) -> bool {
+  pub fn evaluate(&self, answers: &HashMap<String, QuestionAnswer>) -> bool {
     Self::evaluate_expression(&self.condition, answers)
   }
 
-  pub fn apply(&self, answers: Vec<QuestionAnswer>) -> i32 {
+  pub fn apply(&self, answers: &HashMap<String, QuestionAnswer>) -> Result<i32, ()> {
     if self.evaluate(answers) {
-      self.output
+      Ok(self.output)
     } else {
-      0
+      Err(())
     }
   }
 }

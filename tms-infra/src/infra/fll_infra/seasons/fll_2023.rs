@@ -1,4 +1,4 @@
-use std::vec;
+use std::{collections::HashMap, vec};
 
 use crate::{infra::fll_infra::{QuestionAnswer, QuestionValidationError}, CategoricalOption, CategoricalQuestion, FllBlueprint, Mission, Question, QuestionInput, QuestionRule};
 
@@ -7,9 +7,38 @@ use super::BaseSeason;
 pub struct MasterPiece {}
 
 impl BaseSeason for MasterPiece {
-  fn validate(&self, _: Vec<QuestionAnswer>) -> Vec<QuestionValidationError> {
-    // TODO: Implement this
-    vec![]
+  fn validate(&self, answers: &HashMap<String, QuestionAnswer>) -> Vec<QuestionValidationError> {
+    let mut errors: Vec<QuestionValidationError> = vec![];
+    let mut empty_q_ids: Vec<String> = vec![];
+
+    // Iterate over the HashMap and collect question IDs with empty answers
+    let n_empty_ids = answers.values().filter(|r| r.answer.is_empty()).count();
+
+    for (question_id, answer) in answers.iter() {
+        if answer.answer.is_empty() {
+            empty_q_ids.push(question_id.clone());
+        }
+    }
+
+    if n_empty_ids > 0 {
+        errors.push(QuestionValidationError {
+            question_ids: empty_q_ids.join(","),
+            message: format!("{} empty answers", n_empty_ids),
+        });
+    }
+
+    // Retrieve specific answers directly from the HashMap
+    let m14a = answers.get("m14a").map_or("".to_string(), |r| r.answer.clone());
+    let m14b = answers.get("m14b").map_or("".to_string(), |r| r.answer.clone());
+
+    if m14a != "0" && m14b == "0" {
+        errors.push(QuestionValidationError {
+            question_ids: "m14a,m14b".to_string(),
+            message: "Audiences delivered, but no destinations set!".to_string(),
+        });
+    }
+
+    errors
   }
 
   fn get_season(&self) -> String {
@@ -217,15 +246,15 @@ impl BaseSeason for MasterPiece {
           }),
           rules: vec![
             QuestionRule {
-              condition: "m02a == Blue".to_string(),
+              condition: "m02b == Yes && m02a == Blue".to_string(),
               output: 20,
             },
             QuestionRule {
-              condition: "m02a == Pink".to_string(),
+              condition: "m02b == Yes && m02a == Pink".to_string(),
               output: 30,
             },
             QuestionRule {
-              condition: "m02a == Orange".to_string(),
+              condition: "m02b == Yes && m02a == Orange".to_string(),
               output: 10,
             },
           ],
@@ -290,7 +319,7 @@ impl BaseSeason for MasterPiece {
           }),
           rules: vec![
             QuestionRule {
-              condition: "m04a == Yes".to_string(),
+              condition: "m04b == Yes && m04a == Yes".to_string(),
               output: 20,
             },
           ],
@@ -539,7 +568,7 @@ impl BaseSeason for MasterPiece {
           }),
           rules: vec![
             QuestionRule {
-              condition: "m12a == Yes".to_string(),
+              condition: "m12b == Yes && m12a == Yes".to_string(),
               output: 20,
             },
           ],

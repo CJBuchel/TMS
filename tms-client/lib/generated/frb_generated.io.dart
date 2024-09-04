@@ -44,6 +44,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   });
 
   @protected
+  Map<String, QuestionAnswer> dco_decode_Map_String_question_answer(
+      dynamic raw);
+
+  @protected
   String dco_decode_String(dynamic raw);
 
   @protected
@@ -253,6 +257,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   List<(String, bool)> dco_decode_list_record_string_bool(dynamic raw);
 
   @protected
+  List<(String, QuestionAnswer)> dco_decode_list_record_string_question_answer(
+      dynamic raw);
+
+  @protected
   List<TmsTreeRole> dco_decode_list_tms_tree_role(dynamic raw);
 
   @protected
@@ -300,6 +308,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   (String, bool) dco_decode_record_string_bool(dynamic raw);
+
+  @protected
+  (String, QuestionAnswer) dco_decode_record_string_question_answer(
+      dynamic raw);
 
   @protected
   RegisterRequest dco_decode_register_request(dynamic raw);
@@ -393,6 +405,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   User dco_decode_user(dynamic raw);
+
+  @protected
+  Map<String, QuestionAnswer> sse_decode_Map_String_question_answer(
+      SseDeserializer deserializer);
 
   @protected
   String sse_decode_String(SseDeserializer deserializer);
@@ -623,6 +639,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  List<(String, QuestionAnswer)> sse_decode_list_record_string_question_answer(
+      SseDeserializer deserializer);
+
+  @protected
   List<TmsTreeRole> sse_decode_list_tms_tree_role(SseDeserializer deserializer);
 
   @protected
@@ -671,6 +691,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   (String, bool) sse_decode_record_string_bool(SseDeserializer deserializer);
+
+  @protected
+  (String, QuestionAnswer) sse_decode_record_string_question_answer(
+      SseDeserializer deserializer);
 
   @protected
   RegisterRequest sse_decode_register_request(SseDeserializer deserializer);
@@ -776,6 +800,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   User sse_decode_user(SseDeserializer deserializer);
+
+  @protected
+  void sse_encode_Map_String_question_answer(
+      Map<String, QuestionAnswer> self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -1009,6 +1037,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       List<(String, bool)> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_record_string_question_answer(
+      List<(String, QuestionAnswer)> self, SseSerializer serializer);
+
+  @protected
   void sse_encode_list_tms_tree_role(
       List<TmsTreeRole> self, SseSerializer serializer);
 
@@ -1062,6 +1094,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_record_string_bool(
       (String, bool) self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_record_string_question_answer(
+      (String, QuestionAnswer) self, SseSerializer serializer);
 
   @protected
   void sse_encode_register_request(

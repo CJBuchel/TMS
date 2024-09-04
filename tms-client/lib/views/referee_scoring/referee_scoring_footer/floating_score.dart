@@ -25,7 +25,7 @@ class FloatingScore extends StatelessWidget {
       top: top,
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: Colors.black,

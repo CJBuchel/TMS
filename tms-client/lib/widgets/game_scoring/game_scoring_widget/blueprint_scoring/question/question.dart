@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
+import 'package:tms/providers/game_scoring_provider.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/categorical_question.dart';
 
 class QuestionWidget extends StatelessWidget {
   final Question question;
-  final Function(QuestionAnswer)? onAnswer;
 
   const QuestionWidget({
     Key? key,
     required this.question,
-    this.onAnswer,
   }) : super(key: key);
 
-  Widget _questionInput() {
+  Widget _questionInput(BuildContext context) {
     return question.input.when(
       categorical: (input) {
         return CategoricalQuestionWidget(
           catQuestion: input,
-          onAnswer: (a) => onAnswer?.call(QuestionAnswer(questionId: question.id, answer: a)),
+          onAnswer: (a) => Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
+            QuestionAnswer(questionId: question.id, answer: a),
+          ),
+          // onAnswer: (a) => {},
         );
       },
     );
@@ -51,21 +54,29 @@ class QuestionWidget extends StatelessWidget {
               const SizedBox(width: 8),
 
               Expanded(
-                child: _questionInput(),
+                child: _questionInput(context),
               ),
             ],
           ),
 
           // validation error (@TODO)
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Validation Error @TODO",
-                style: const TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
+          Selector<GameScoringProvider, String>(
+            selector: (context, provider) => provider.getValidationErrorMessage(question.id),
+            builder: (context, errorMessage, child) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
+              );
+            },
+          )
         ],
       ),
     );

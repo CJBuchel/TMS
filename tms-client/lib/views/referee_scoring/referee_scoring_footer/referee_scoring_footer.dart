@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/clear_answers_button.dart';
-import 'package:tms/views/referee_scoring/referee_scoring_footer/floating_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/no_show_button.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/submit_answers_button.dart';
 
@@ -57,8 +56,9 @@ class RefereeScoringFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: footerHeight,
-      decoration: const BoxDecoration(
-        border: Border(
+      decoration: BoxDecoration(
+        color: Theme.of(context).canvasColor,
+        border: const Border(
           top: BorderSide(
             color: Colors.black,
             width: 1,

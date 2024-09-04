@@ -34,9 +34,9 @@ class Question {
       TmsRustLib.instance.api
           .crateInfraFllInfraQuestionQuestionFromJsonString(json: json);
 
-  Future<int> getScore({required List<QuestionAnswer> answers}) => TmsRustLib
-      .instance.api
-      .crateInfraFllInfraQuestionQuestionGetScore(that: this, answers: answers);
+  Future<int> getScore({required Map<String, QuestionAnswer> answers}) =>
+      TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionGetScore(
+          that: this, answers: answers);
 
   String toJsonString() =>
       TmsRustLib.instance.api.crateInfraFllInfraQuestionQuestionToJsonString(

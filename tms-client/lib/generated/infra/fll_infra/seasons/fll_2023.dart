@@ -11,8 +11,6 @@ import '../question.dart';
 import '../rule_engine.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions have error during generation (see debug logs or enable `stop_on_error: true` for more details): `validate`
-
 class MasterPiece {
   const MasterPiece();
 
@@ -25,6 +23,12 @@ class MasterPiece {
           .crateInfraFllInfraSeasonsFll2023MasterPieceGetSeason(
         that: this,
       );
+
+  Future<List<QuestionValidationError>> validate(
+          {required Map<String, QuestionAnswer> answers}) =>
+      TmsRustLib.instance.api
+          .crateInfraFllInfraSeasonsFll2023MasterPieceValidate(
+              that: this, answers: answers);
 
   @override
   int get hashCode => 0;

@@ -6,7 +6,6 @@ import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
-import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/agnostic_scoring/agnostic_scoring.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/mission.dart';
 
@@ -24,14 +23,16 @@ class GameScoringWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return EchoTreeLifetime(
       trees: [":tournament:blueprint", ":tournament:config"],
-      child: Selector2<TournamentBlueprintProvider, TournamentConfigProvider, _BlueprintData>(
-        selector: (context, bp, cp) {
-          String blueprintTitle = cp.season;
-          return _BlueprintData(type: cp.blueprintType, blueprint: bp.getBlueprint(blueprintTitle));
+      child: Selector<TournamentBlueprintProvider, _BlueprintData>(
+        selector: (context, bp) {
+          String blueprintTitle = bp.season;
+          return _BlueprintData(type: bp.blueprintType, blueprint: bp.getBlueprint(blueprintTitle));
         },
         builder: (context, data, child) {
           if (data.type == BlueprintType.agnostic) {
-            return AgnosticScoringWidget();
+            return AgnosticScoringWidget(
+              onScoreChanged: (score) {},
+            );
           } else {
             return ListView.builder(
               shrinkWrap: true,

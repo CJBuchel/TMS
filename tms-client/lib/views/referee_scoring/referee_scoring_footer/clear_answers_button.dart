@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tms/providers/game_scoring_provider.dart';
 
 class ClearAnswersButton extends StatelessWidget {
   final double buttonHeight;
@@ -15,7 +17,7 @@ class ClearAnswersButton extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10, right: 15),
       child: ElevatedButton.icon(
         icon: const Icon(Icons.clear),
-        onPressed: () {},
+        onPressed: () => Provider.of<GameScoringProvider>(context, listen: false).resetAnswers(),
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           backgroundColor: Colors.red,

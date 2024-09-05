@@ -5,6 +5,7 @@ import 'package:tms/generated/infra/database_schemas/tournament_blueprint.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
+import 'package:tms/providers/game_scoring_provider.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/agnostic_scoring/agnostic_scoring.dart';
@@ -19,7 +20,7 @@ class _BlueprintData {
 }
 
 class GameScoringWidget extends StatelessWidget {
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   final List<GlobalKey> questionKeys = [];
 
   GameScoringWidget({
@@ -28,6 +29,8 @@ class GameScoringWidget extends StatelessWidget {
   }) : super(key: key);
 
   void _scrollToNextQuestion(int currentIndex) {
+    // If the scrollController is null or has no clients, return
+    if (scrollController == null || !(scrollController?.hasClients ?? false)) return;
     if (currentIndex + 1 < questionKeys.length) {
       final nextKey = questionKeys[currentIndex + 1];
       final nextContext = nextKey.currentContext;
@@ -37,14 +40,15 @@ class GameScoringWidget extends StatelessWidget {
         final RenderBox renderBox = nextContext.findRenderObject() as RenderBox;
         final position = renderBox.localToGlobal(
           Offset.zero,
-          ancestor: scrollController.position.context.storageContext.findRenderObject() as RenderObject,
+          ancestor: scrollController!.position.context.storageContext.findRenderObject() as RenderObject,
         );
 
         // Calculate the offset to center the next question
-        final viewportHeight = scrollController.position.viewportDimension;
-        final targetOffset = position.dy + scrollController.offset - (viewportHeight / 2) + (renderBox.size.height / 2);
+        final viewportHeight = scrollController!.position.viewportDimension;
+        final targetOffset =
+            position.dy + scrollController!.offset - (viewportHeight / 2) + (renderBox.size.height / 2);
 
-        scrollController.animateTo(
+        scrollController!.animateTo(
           targetOffset,
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
@@ -67,7 +71,9 @@ class GameScoringWidget extends StatelessWidget {
         builder: (context, data, child) {
           if (data.type == BlueprintType.agnostic) {
             return AgnosticScoringWidget(
-              onScoreChanged: (score) {},
+              onScoreChanged: (score) {
+                Provider.of<GameScoringProvider>(context, listen: false).score = score;
+              },
             );
           } else {
             return ListView.builder(
@@ -89,7 +95,12 @@ class GameScoringWidget extends StatelessWidget {
                     return QuestionWidget(
                       key: key,
                       question: question,
-                      onAnswer: (a) => _scrollToNextQuestion(questionKeys.indexOf(key)),
+                      onAnswer: (a) {
+                        _scrollToNextQuestion(questionKeys.indexOf(key));
+                        Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
+                          QuestionAnswer(questionId: question.id, answer: a),
+                        );
+                      },
                     );
                   }).toList(),
                   season: data.blueprint!.title,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/providers/game_scoring_provider.dart';
-import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/categorical_question.dart';
 
 class QuestionWidget extends StatelessWidget {
@@ -10,7 +9,7 @@ class QuestionWidget extends StatelessWidget {
   final Question question;
   final Function(String) onAnswer;
 
-  QuestionWidget({
+  const QuestionWidget({
     required this.key,
     required this.question,
     required this.onAnswer,
@@ -22,13 +21,7 @@ class QuestionWidget extends StatelessWidget {
         return CategoricalQuestionWidget(
           catQuestion: input,
           answer: answer ?? input.defaultOption,
-          onAnswer: (a) {
-            TmsLogger().d("User selected answer: $a");
-            Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
-              QuestionAnswer(questionId: question.id, answer: a),
-            );
-            onAnswer(a);
-          },
+          onAnswer: onAnswer,
         );
       },
     );

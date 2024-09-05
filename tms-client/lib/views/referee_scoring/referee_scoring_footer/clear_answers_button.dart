@@ -21,11 +21,13 @@ class ClearAnswersButton extends StatelessWidget {
         icon: const Icon(Icons.clear),
         onPressed: () {
           Provider.of<GameScoringProvider>(context, listen: false).resetAnswers();
-          scrollController?.animateTo(
-            0.0,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
+          if (scrollController?.hasClients ?? false) {
+            scrollController?.animateTo(
+              0.0,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,

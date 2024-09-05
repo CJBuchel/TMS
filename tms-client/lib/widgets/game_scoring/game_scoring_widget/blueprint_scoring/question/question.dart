@@ -2,25 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/providers/game_scoring_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/categorical_question.dart';
 
 class QuestionWidget extends StatelessWidget {
+  final GlobalKey key;
   final Question question;
+  final Function(String) onAnswer;
 
-  const QuestionWidget({
-    Key? key,
+  QuestionWidget({
+    required this.key,
     required this.question,
+    required this.onAnswer,
   }) : super(key: key);
 
-  Widget _questionInput(BuildContext context) {
+  Widget _questionInput(BuildContext context, String? answer) {
     return question.input.when(
       categorical: (input) {
         return CategoricalQuestionWidget(
           catQuestion: input,
-          onAnswer: (a) => Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
-            QuestionAnswer(questionId: question.id, answer: a),
-          ),
-          // onAnswer: (a) => {},
+          answer: answer ?? input.defaultOption,
+          onAnswer: (a) {
+            TmsLogger().d("User selected answer: $a");
+            Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
+              QuestionAnswer(questionId: question.id, answer: a),
+            );
+            onAnswer(a);
+          },
         );
       },
     );
@@ -38,46 +46,51 @@ class QuestionWidget extends StatelessWidget {
           ),
         ),
       ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+      child: Selector<GameScoringProvider, ({String? selectedAnswer, String? errorMessage})>(
+        selector: (context, provider) {
+          return (
+            selectedAnswer: provider.getAnswer(question.id),
+            errorMessage: provider.getValidationErrorMessage(question.id),
+          );
+        },
+        builder: (context, questionData, child) {
+          return Column(
             children: [
-              Expanded(
-                child: Text(
-                  question.label,
-                  style: const TextStyle(fontSize: 12),
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      question.label,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+
+                  // spacer
+                  const SizedBox(width: 8),
+
+                  Expanded(
+                    child: _questionInput(context, questionData.selectedAnswer),
+                  ),
+                ],
               ),
 
-              // spacer
-              const SizedBox(width: 8),
-
-              Expanded(
-                child: _questionInput(context),
-              ),
-            ],
-          ),
-
-          // validation error (@TODO)
-          Selector<GameScoringProvider, String>(
-            selector: (context, provider) => provider.getValidationErrorMessage(question.id),
-            builder: (context, errorMessage, child) {
-              return Padding(
+              // validation error (@TODO)
+              Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      errorMessage,
+                      questionData.errorMessage ?? '',
                       style: const TextStyle(color: Colors.red),
                     ),
                   ],
                 ),
-              );
-            },
-          )
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

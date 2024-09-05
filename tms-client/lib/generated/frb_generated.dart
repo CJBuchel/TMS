@@ -270,7 +270,7 @@ abstract class TmsRustLibApi extends BaseApi {
 
   String crateInfraFllInfraQuestionQuestionToSchema();
 
-  Future<int> crateInfraFllInfraRuleEngineQuestionRuleApply(
+  Future<int?> crateInfraFllInfraRuleEngineQuestionRuleApply(
       {required QuestionRule that,
       required Map<String, QuestionAnswer> answers});
 
@@ -2150,7 +2150,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       );
 
   @override
-  Future<int> crateInfraFllInfraRuleEngineQuestionRuleApply(
+  Future<int?> crateInfraFllInfraRuleEngineQuestionRuleApply(
       {required QuestionRule that,
       required Map<String, QuestionAnswer> answers}) {
     return handler.executeNormal(NormalTask(
@@ -2162,8 +2162,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
             funcId: 68, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_i_32,
-        decodeErrorData: sse_decode_unit,
+        decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
+        decodeErrorData: null,
       ),
       constMeta: kCrateInfraFllInfraRuleEngineQuestionRuleApplyConstMeta,
       argValues: [that, answers],
@@ -4146,6 +4146,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  int dco_decode_box_autoadd_i_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
   JudgingPod dco_decode_box_autoadd_judging_pod(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_judging_pod(raw);
@@ -4622,6 +4628,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   String? dco_decode_opt_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_String(raw);
+  }
+
+  @protected
+  int? dco_decode_opt_box_autoadd_i_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_i_32(raw);
   }
 
   @protected
@@ -5115,6 +5127,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   GameTable sse_decode_box_autoadd_game_table(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_game_table(deserializer));
+  }
+
+  @protected
+  int sse_decode_box_autoadd_i_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_i_32(deserializer));
   }
 
   @protected
@@ -5664,6 +5682,17 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_i_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   TmsDate? sse_decode_opt_box_autoadd_tms_date(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -6115,6 +6144,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       GameTable self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_game_table(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self, serializer);
   }
 
   @protected
@@ -6583,6 +6618,16 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_i_32(self, serializer);
     }
   }
 

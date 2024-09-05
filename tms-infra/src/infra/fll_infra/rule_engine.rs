@@ -108,11 +108,11 @@ impl QuestionRule {
     Self::evaluate_expression(&self.condition, answers)
   }
 
-  pub fn apply(&self, answers: &HashMap<String, QuestionAnswer>) -> Result<i32, ()> {
+  pub fn apply(&self, answers: &HashMap<String, QuestionAnswer>) -> Option<i32> {
     if self.evaluate(answers) {
-      Ok(self.output)
+      Some(self.output)
     } else {
-      Err(())
+      None
     }
   }
 }

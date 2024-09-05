@@ -5,13 +5,13 @@ import 'package:tms/widgets/buttons/category_button.dart';
 class CategoricalQuestionWidget extends StatelessWidget {
   final CategoricalQuestion catQuestion;
   final Function(String)? onAnswer;
+  final String answer;
 
-  final ValueNotifier<String?> answer = ValueNotifier(null);
-
-  CategoricalQuestionWidget({
+  const CategoricalQuestionWidget({
     Key? key,
     required this.catQuestion,
     required this.onAnswer,
+    required this.answer,
   }) : super(key: key);
 
   Widget _categoryButton(String label) {
@@ -19,24 +19,11 @@ class CategoricalQuestionWidget extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minWidth: 80),
       child: IntrinsicWidth(
-        child: ValueListenableBuilder(
-          valueListenable: answer,
-          builder: (context, value, child) {
-            bool selected = false;
-            if (value == label) {
-              selected = true;
-            } else if (value == null && catQuestion.defaultOption == label) {
-              selected = true;
-            }
-
-            return CategoryButtonWidget(
-              category: label,
-              isSelected: selected,
-              onSelected: (_) {
-                answer.value = label;
-                onAnswer?.call(label);
-              },
-            );
+        child: CategoryButtonWidget(
+          category: label,
+          isSelected: answer == label,
+          onSelected: (_) {
+            onAnswer?.call(label);
           },
         ),
       ),

@@ -40,7 +40,7 @@ final _protectedRoutes = <GoRoute>[
       GoRoute(
         path: 'scoring',
         name: 'scoring',
-        builder: (context, state) => BaseScaffoldDrawerRouter(state: state, child: const RefereeScoring()),
+        builder: (context, state) => BaseScaffoldDrawerRouter(state: state, child: RefereeScoring()),
       ),
     ],
     redirect: (context, state) {

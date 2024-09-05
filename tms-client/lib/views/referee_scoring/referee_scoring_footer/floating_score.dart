@@ -26,10 +26,19 @@ class FloatingScore extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).canvasColor,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: Colors.black,
-            width: 1,
+          // border only the top right
+          borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(10),
+          ),
+          border: const Border(
+            top: BorderSide(
+              color: Colors.black,
+              width: 2,
+            ),
+            right: BorderSide(
+              color: Colors.black,
+              width: 2,
+            ),
           ),
         ),
         width: 120,

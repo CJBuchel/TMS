@@ -9,7 +9,9 @@ import 'package:tms/views/referee_scoring/referee_scoring_header/referee_scoring
 import 'package:tms/widgets/game_scoring/game_scoring_widget/game_scoring_widget.dart';
 
 class RefereeScoring extends StatelessWidget {
-  const RefereeScoring({Key? key}) : super(key: key);
+  RefereeScoring({Key? key}) : super(key: key);
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +35,17 @@ class RefereeScoring extends StatelessWidget {
                 // header
                 const RefereeScoringHeader(),
                 // expanded scrollable list
-                const Expanded(
+                Expanded(
                   child: Center(
-                    child: GameScoringWidget(),
+                    child: GameScoringWidget(scrollController: _scrollController),
                   ),
                 ),
 
                 // footer
-                RefereeScoringFooter(footerHeight: footerHeight),
+                RefereeScoringFooter(
+                  footerHeight: footerHeight,
+                  scrollController: _scrollController,
+                ),
               ],
             ),
           ),

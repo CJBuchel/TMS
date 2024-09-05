@@ -19,7 +19,7 @@ class QuestionRule {
     required this.output,
   });
 
-  Future<int> apply({required Map<String, QuestionAnswer> answers}) =>
+  Future<int?> apply({required Map<String, QuestionAnswer> answers}) =>
       TmsRustLib.instance.api.crateInfraFllInfraRuleEngineQuestionRuleApply(
           that: this, answers: answers);
 

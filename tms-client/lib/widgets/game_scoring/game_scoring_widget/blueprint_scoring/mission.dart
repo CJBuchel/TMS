@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
-import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/mission_image.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/question.dart';
 
 class MissionWidget extends StatelessWidget {
   final Mission mission;
-  final List<Question> missionQuestions;
+  final List<QuestionWidget> missionQuestions;
   final String season;
 
   const MissionWidget({
@@ -105,11 +104,7 @@ class MissionWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ...getMissionHeader(context),
-          ...missionQuestions.map((q) {
-            return QuestionWidget(
-              question: q,
-            );
-          }).toList(),
+          ...missionQuestions,
 
           // colored bottom segment (just to make it look nice)
           Container(

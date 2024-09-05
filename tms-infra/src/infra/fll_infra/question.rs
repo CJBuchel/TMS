@@ -44,27 +44,25 @@ pub struct Question {
 
 impl Question {
   pub fn get_score(&self, answers: &HashMap<String, QuestionAnswer>) -> i32 {
-    let answer = match answers.get(&self.id) {
-      Some(a) => a,
-      None => return 0,
-    };
-
-    // apply regular answer score
-    let mut score = match &self.input {
-      QuestionInput::Categorical(q) => {
-        q.options.iter().find(|o| o.label == answer.answer).map_or(0, |o| o.score)
-      }
-    };
-
-    // get the first matching rule (if any) and return that instead
-    for rule in self.rules.iter() {
-      score = match rule.apply(answers) {
-        Ok(s) => s,
-        Err(_) => score,
+    if let Some(answer) = answers.get(self.id.as_str()) {
+      // Apply regular answer score
+      let score = match &self.input {
+        QuestionInput::Categorical(q) => {
+          q.options.iter().find(|o| o.label == answer.answer).map_or(0, |o| o.score)
+        }
       };
-    }
 
-    score
+      // Get the first matching rule (if any) and return that instead
+      for rule in &self.rules {
+        if rule.apply(answers).is_some() {
+          return rule.output;
+        }
+      }
+
+      score
+    } else {
+      0
+    }
   }
 }
 

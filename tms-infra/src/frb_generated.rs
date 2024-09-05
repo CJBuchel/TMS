@@ -1498,7 +1498,7 @@ fn wire__crate__infra__fll_infra__rule_engine__question_rule_apply_impl(port_: f
       deserializer.end();
       move |context| {
         transform_result_sse::<_, ()>((move || {
-          let output_ok = crate::infra::fll_infra::rule_engine::QuestionRule::apply(&api_that, &api_answers)?;
+          let output_ok = Result::<_, ()>::Ok(crate::infra::fll_infra::rule_engine::QuestionRule::apply(&api_that, &api_answers))?;
           Ok(output_ok)
         })())
       }
@@ -3505,6 +3505,17 @@ impl SseDecode for Option<String> {
   }
 }
 
+impl SseDecode for Option<i32> {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+    if (<bool>::sse_decode(deserializer)) {
+      return Some(<i32>::sse_decode(deserializer));
+    } else {
+      return None;
+    }
+  }
+}
+
 impl SseDecode for Option<crate::infra::database_schemas::date_time::TmsDate> {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -5045,6 +5056,16 @@ impl SseEncode for Option<String> {
     <bool>::sse_encode(self.is_some(), serializer);
     if let Some(value) = self {
       <String>::sse_encode(value, serializer);
+    }
+  }
+}
+
+impl SseEncode for Option<i32> {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+    <bool>::sse_encode(self.is_some(), serializer);
+    if let Some(value) = self {
+      <i32>::sse_encode(value, serializer);
     }
   }
 }

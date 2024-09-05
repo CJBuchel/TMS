@@ -25,9 +25,9 @@ impl FllBlueprintMap {
     // switch to hashmap, for faster lookup
     let answers_map: HashMap<String, QuestionAnswer> = answers.iter().map(|a| (a.question_id.clone(), a.clone())).collect();
     
-    blueprint.robot_game_questions.iter().fold(0, |acc, question| {
-      acc + question.get_score(&answers_map)
-    })
+    blueprint.robot_game_questions.iter()
+      .map(|q| q.get_score(&answers_map))
+      .sum()
   }
 
   // this doesn't get FRB annotations to avoid frontend confusion. (Flutter gets game from server db)

@@ -6,10 +6,12 @@ import 'package:tms/views/referee_scoring/referee_scoring_footer/submit_answers_
 
 class RefereeScoringFooter extends StatelessWidget {
   final double footerHeight;
+  final ScrollController? scrollController;
 
   RefereeScoringFooter({
     Key? key,
     this.footerHeight = 120,
+    this.scrollController,
   }) : super(key: key);
 
   Widget _buttons(BuildContext context) {
@@ -33,7 +35,13 @@ class RefereeScoringFooter extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(flex: 1, child: NoShowButton(buttonHeight: buttonHeight)),
-              Expanded(flex: 1, child: ClearAnswersButton(buttonHeight: buttonHeight)),
+              Expanded(
+                flex: 1,
+                child: ClearAnswersButton(
+                  buttonHeight: buttonHeight,
+                  scrollController: scrollController,
+                ),
+              ),
             ],
           ),
         ),
@@ -56,16 +64,25 @@ class RefereeScoringFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: footerHeight,
-      decoration: BoxDecoration(
-        color: Theme.of(context).canvasColor,
-        border: const Border(
-          top: BorderSide(
-            color: Colors.black,
-            width: 1,
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+            ),
+            child: _buttons(context),
           ),
-        ),
+          Positioned(
+            left: 118,
+            right: 0,
+            top: 0,
+            child: Container(
+              height: 2,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
-      child: _buttons(context),
     );
   }
 }

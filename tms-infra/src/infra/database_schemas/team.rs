@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Team {
   pub number: String,

@@ -1,9 +1,9 @@
 use schemars::JsonSchema;
 use serde::{de::DeserializeOwned, Serialize};
 
-pub mod network_schemas;
 pub mod database_schemas;
 pub mod fll_infra;
+pub mod network_schemas;
 
 pub trait DataSchemeExtensions: Default + Serialize + JsonSchema + DeserializeOwned {
   #[flutter_rust_bridge::frb(sync)]
@@ -23,12 +23,11 @@ pub trait DataSchemeExtensions: Default + Serialize + JsonSchema + DeserializeOw
   }
 }
 
-
 #[derive(serde::Deserialize, serde::Serialize, Clone, JsonSchema)]
 pub struct TmsTreeRole {
   pub role_id: String,
   pub password: String,
-  pub read_echo_trees: Vec<String>, // list of topics/trees the role can read from
+  pub read_echo_trees: Vec<String>,       // list of topics/trees the role can read from
   pub read_write_echo_trees: Vec<String>, // list of topics/trees the role can write to
 }
 

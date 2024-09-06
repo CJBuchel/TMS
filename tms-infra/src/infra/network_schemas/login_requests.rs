@@ -25,9 +25,7 @@ pub struct LoginResponse {
 
 impl Default for LoginResponse {
   fn default() -> Self {
-    Self {
-      roles: Vec::new(),
-    }
+    Self { roles: Vec::new() }
   }
 }
 

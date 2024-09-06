@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct User {
   pub username: String,

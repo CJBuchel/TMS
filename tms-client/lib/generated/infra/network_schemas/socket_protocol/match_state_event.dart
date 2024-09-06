@@ -18,12 +18,10 @@ enum TmsServerMatchState {
 
 class TmsServerMatchStateEvent {
   final TmsServerMatchState state;
-  final List<(String, bool)> gameMatchTables;
   final List<String> gameMatchNumbers;
 
   const TmsServerMatchStateEvent({
     required this.state,
-    required this.gameMatchTables,
     required this.gameMatchNumbers,
   });
 
@@ -44,8 +42,7 @@ class TmsServerMatchStateEvent {
       .crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventToSchema();
 
   @override
-  int get hashCode =>
-      state.hashCode ^ gameMatchTables.hashCode ^ gameMatchNumbers.hashCode;
+  int get hashCode => state.hashCode ^ gameMatchNumbers.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -53,6 +50,5 @@ class TmsServerMatchStateEvent {
       other is TmsServerMatchStateEvent &&
           runtimeType == other.runtimeType &&
           state == other.state &&
-          gameMatchTables == other.gameMatchTables &&
           gameMatchNumbers == other.gameMatchNumbers;
 }

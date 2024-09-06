@@ -1,9 +1,8 @@
 use tms_infra::*;
 
+use crate::database::{Database, TEAMS};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
-use crate::database::{Database, TEAMS};
-
 
 #[async_trait::async_trait]
 pub trait TeamExtensions {
@@ -20,9 +19,7 @@ impl TeamExtensions for Database {
     let team = tree.get(&team_id).cloned();
 
     match team {
-      Some(team) => {
-        Some(Team::from_json_string(&team))
-      }
+      Some(team) => Some(Team::from_json_string(&team)),
       None => None,
     }
   }
@@ -39,9 +36,7 @@ impl TeamExtensions for Database {
     });
 
     match team {
-      Some((id, team)) => {
-        Some((id, team))
-      }
+      Some((id, team)) => Some((id, team)),
       None => None,
     }
   }
@@ -51,14 +46,14 @@ impl TeamExtensions for Database {
     let existing_team: Option<(String, Team)> = match team_id {
       Some(team_id) => self.get_team(team_id.clone()).await.map(|team| (team_id, team)),
       None => self.get_team_by_number(team.clone().number).await,
-    }; 
+    };
 
     match existing_team {
       Some((team_id, _)) => {
         log::warn!("Team already exists: {}, overwriting with insert...", team_id);
         self.inner.write().await.insert_entry(TEAMS.to_string(), team_id, team.to_json_string()).await;
         Ok(())
-      },
+      }
       None => {
         self.inner.write().await.insert_entry(TEAMS.to_string(), Uuid::new_v4().to_string(), team.to_json_string()).await;
         Ok(())
@@ -75,9 +70,7 @@ impl TeamExtensions for Database {
         self.inner.write().await.remove_entry(TEAMS.to_string(), team_id).await;
         Ok(())
       }
-      None => {
-        Err(format!("Team with id {} not found", team_id))
-      }
+      None => Err(format!("Team with id {} not found", team_id)),
     }
   }
 }

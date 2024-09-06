@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::{DataSchemeExtensions, TmsTreeRole};
 
-
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct RegisterRequest {
   pub username: Option<String>, // optionally log in with username/password
@@ -12,10 +11,7 @@ pub struct RegisterRequest {
 
 impl Default for RegisterRequest {
   fn default() -> Self {
-    Self {
-      username: None,
-      password: None,
-    }
+    Self { username: None, password: None }
   }
 }
 

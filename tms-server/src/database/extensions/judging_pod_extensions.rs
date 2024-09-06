@@ -1,8 +1,8 @@
 use tms_infra::*;
 
+use crate::database::{Database, JUDGING_PODS};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
-use crate::database::{Database, JUDGING_PODS};
 
 #[async_trait::async_trait]
 pub trait JudgingPodExtensions {
@@ -19,9 +19,7 @@ impl JudgingPodExtensions for Database {
     let judging_pod = tree.get(&judging_pod_id).cloned();
 
     match judging_pod {
-      Some(judging_pod) => {
-        Some(JudgingPod::from_json_string(&judging_pod).pod_name)
-      }
+      Some(judging_pod) => Some(JudgingPod::from_json_string(&judging_pod).pod_name),
       None => None,
     }
   }
@@ -38,9 +36,7 @@ impl JudgingPodExtensions for Database {
     });
 
     match judging_pod {
-      Some((id, judging_pod)) => {
-        Some((id, judging_pod.pod_name))
-      }
+      Some((id, judging_pod)) => Some((id, judging_pod.pod_name)),
       None => None,
     }
   }
@@ -55,16 +51,12 @@ impl JudgingPodExtensions for Database {
     match existing_judging_pod {
       Some((judging_pod_id, _)) => {
         log::warn!("JudgingPod already exists: {}, overwriting with insert...", judging_pod_id);
-        let judging_pod = JudgingPod {
-          pod_name: judging_pod,
-        };
+        let judging_pod = JudgingPod { pod_name: judging_pod };
         self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), judging_pod_id, judging_pod.to_json_string()).await;
         Ok(())
       }
       None => {
-        let judging_pod = JudgingPod {
-          pod_name: judging_pod,
-        };
+        let judging_pod = JudgingPod { pod_name: judging_pod };
         self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), Uuid::new_v4().to_string(), judging_pod.to_json_string()).await;
         Ok(())
       }
@@ -80,9 +72,7 @@ impl JudgingPodExtensions for Database {
         self.inner.write().await.remove_entry(JUDGING_PODS.to_string(), judging_pod_id).await;
         Ok(())
       }
-      None => {
-        Err("JudgingPod does not exist".to_string())
-      }
+      None => Err("JudgingPod does not exist".to_string()),
     }
   }
 }

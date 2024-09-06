@@ -12,19 +12,9 @@ impl MulticastDnsBroadcaster {
     let host_name = format!("{}.local.", local_ip);
     let properties = [("tls", tls)];
 
-    let service = ServiceInfo::new(
-      service_type,
-      instance_name,
-      &host_name,
-      &local_ip,
-      advertise_port,
-      &properties[..],
-    ).ok();
+    let service = ServiceInfo::new(service_type, instance_name, &host_name, &local_ip, advertise_port, &properties[..]).ok();
 
-    Self {
-      service_info: service,
-      m_dns: None,
-    }
+    Self { service_info: service, m_dns: None }
   }
 
   pub fn start(&mut self) {
@@ -33,14 +23,12 @@ impl MulticastDnsBroadcaster {
     self.m_dns = ServiceDaemon::new().ok();
 
     match &self.m_dns {
-      Some(m_dns) => {
-        match &self.service_info {
-          Some(service_info) => {
-            m_dns.register(service_info.clone()).ok();
-          },
-          None => {
-            log::error!("Service info not found");
-          }
+      Some(m_dns) => match &self.service_info {
+        Some(service_info) => {
+          m_dns.register(service_info.clone()).ok();
+        }
+        None => {
+          log::error!("Service info not found");
         }
       },
       None => {
@@ -53,14 +41,12 @@ impl MulticastDnsBroadcaster {
     log::info!("Stopping Multicast DNS Service");
 
     match &self.m_dns {
-      Some(m_dns) => {
-        match m_dns.shutdown() {
-          Ok(_) => {
-            log::info!("Service daemon stopped");
-          },
-          Err(e) => {
-            log::error!("Service daemon failed to stop: {:?}", e);
-          }
+      Some(m_dns) => match m_dns.shutdown() {
+        Ok(_) => {
+          log::info!("Service daemon stopped");
+        }
+        Err(e) => {
+          log::error!("Service daemon failed to stop: {:?}", e);
         }
       },
       None => {

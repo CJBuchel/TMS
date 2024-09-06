@@ -1,7 +1,6 @@
-
 pub struct CertificateKeys {
   pub cert: String, // actual cert, not the path
-  pub key: String, // actual key, not the path
+  pub key: String,  // actual key, not the path
 }
 
 impl CertificateKeys {
@@ -26,14 +25,14 @@ impl CertificateKeys {
         return CertificateKeys {
           cert: std::fs::read_to_string(cert_path).unwrap_or_default(),
           key: std::fs::read_to_string(key_path).unwrap_or_default(),
-        }
+        };
       }
     }
 
     // generate self signed
     log::info!("Generating self-signed certificate");
     let subject_alt_names = vec![
-      "localhost".to_string(), // local machine
+      "localhost".to_string(),                     // local machine
       local_ip.unwrap_or("127.0.0.1".to_string()), // local IP
     ];
 
@@ -44,7 +43,7 @@ impl CertificateKeys {
     return CertificateKeys {
       cert: certificate.cert.pem(),
       key: certificate.key_pair.serialize_pem(),
-    }
+    };
   }
 
   pub fn write_to_location(&self, cert_path: &str, key_path: &str) {

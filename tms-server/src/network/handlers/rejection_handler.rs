@@ -29,7 +29,6 @@ pub async fn handle_rejection(err: warp::Rejection) -> Result<impl warp::Reply, 
     code = StatusCode::NETWORK_AUTHENTICATION_REQUIRED;
     message = "Authentication Required";
   }
-
   // fallback to a generic message for unhandled errors
   else {
     code = StatusCode::INTERNAL_SERVER_ERROR;

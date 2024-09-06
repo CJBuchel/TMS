@@ -1,6 +1,9 @@
 use futures::{FutureExt, StreamExt};
 
-use crate::{database::SharedDatabase, network::{client::Client, filters::ClientNotFound, ClientMap}};
+use crate::{
+  database::SharedDatabase,
+  network::{clients::*, filters::ClientNotFound, ClientMap},
+};
 
 async fn client_msg(uuid: String, msg: warp::filters::ws::Message, _clients: &ClientMap, _db: &SharedDatabase) {
   log::debug!("{}: message: {:?}", uuid, msg);
@@ -9,7 +12,7 @@ async fn client_msg(uuid: String, msg: warp::filters::ws::Message, _clients: &Cl
 async fn client_connection(ws: warp::ws::WebSocket, uuid: String, clients: ClientMap, mut client: Client, db: SharedDatabase) {
   let (client_ws_tx, mut client_ws_rx) = ws.split();
   let (client_sender, client_receiver) = tokio::sync::mpsc::unbounded_channel();
-  
+
   // spawn messaging task
   let client_receiver = tokio_stream::wrappers::UnboundedReceiverStream::new(client_receiver);
   tokio::task::spawn(client_receiver.forward(client_ws_tx).map(|result| {
@@ -48,7 +51,7 @@ async fn client_connection(ws: warp::ws::WebSocket, uuid: String, clients: Clien
         } else {
           msg
         }
-      },
+      }
       Err(e) => {
         log::error!("{}: websocket error: {}", uuid, e);
         break;
@@ -67,9 +70,7 @@ pub async fn websocket_handler(ws: warp::ws::Ws, uuid: String, clients: ClientMa
   let client_id = uuid.clone();
   let client = clients.read().await.get(&client_id).cloned();
   match client {
-    Some(client) => {
-      Ok(ws.on_upgrade(move |socket| client_connection(socket, uuid, clients, client, db)))
-    },
+    Some(client) => Ok(ws.on_upgrade(move |socket| client_connection(socket, uuid, clients, client, db))),
     None => {
       log::warn!("Client not found: {}", client_id);
       Err(warp::reject::custom(ClientNotFound))

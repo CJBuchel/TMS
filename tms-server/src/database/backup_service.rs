@@ -44,7 +44,7 @@ impl BackupService for Database {
                 let backup_name = format!("{}-backup-{}_{}.kvdb.zip", name, chrono::Local::now().format("%Y-%m-%d"), chrono::Local::now().format("%H-%M-%S"));
                 let backup_name = backup_name.replace(" ", "_").replace(":", "-");
                 let retain_backups: usize = config.retain_backups.try_into().unwrap_or(0);
-                
+
 
                 match inner.read().await.backup_db(&format!("backups/{}", backup_name), retain_backups).await {
                   Ok(_) => {
@@ -73,18 +73,18 @@ impl BackupService for Database {
       match self.stop_signal_sender.send(true) {
         Ok(_) => {
           log::info!("Backup service stopping...")
-        },
+        }
         Err(e) => {
           log::error!("Error stopping backup service: {}", e)
-        },
+        }
       }
       match handle.await {
         Ok(_) => {
           log::info!("Backup service stopped");
-        },
+        }
         Err(e) => {
           log::error!("Failed to join backup service: {}", e);
-        },
+        }
       }
     }
   }
@@ -94,7 +94,7 @@ impl BackupService for Database {
       match self.reset_backups_signal_sender.send(true) {
         Ok(_) => {
           log::info!("Backup service resetting...")
-        },
+        }
         Err(e) => {
           log::error!("Error resetting backup service: {}", e)
         }

@@ -26,5 +26,5 @@ echo -e "${G}Running freezed for $TMS_FLUTTER"
 (cd $TMS_FLUTTER && flutter pub run build_runner build --delete-conflicting-outputs)
 
 # # run android code gen
-# echo -e "${G} Running codegen for android"
-# (cd $TMS_INFRA && cargo ndk -o $TMS_FLUTTER/android/app/src/main/jniLibs build)
+echo -e "${G} Running codegen for android"
+(cd $TMS_INFRA && cargo ndk -o $TMS_FLUTTER/android/app/src/main/jniLibs build)

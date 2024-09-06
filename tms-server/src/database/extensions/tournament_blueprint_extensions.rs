@@ -5,7 +5,6 @@ use crate::database::*;
 pub use echo_tree_rs::core::*;
 use tms_infra::*;
 
-
 #[async_trait::async_trait]
 pub trait TournamentBlueprintExtensions {
   async fn get_blueprint(&self, blueprint_id: String) -> Option<TournamentBlueprint>;
@@ -22,9 +21,7 @@ impl TournamentBlueprintExtensions for Database {
     let blueprint = tree.get(&blueprint_id).cloned();
 
     match blueprint {
-      Some(blueprint) => {
-        Some(TournamentBlueprint::from_json_string(&blueprint))
-      }
+      Some(blueprint) => Some(TournamentBlueprint::from_json_string(&blueprint)),
       None => None,
     }
   }
@@ -41,19 +38,20 @@ impl TournamentBlueprintExtensions for Database {
     });
 
     match blueprint {
-      Some((id, blueprint)) => {
-        Some((id, blueprint))
-      }
+      Some((id, blueprint)) => Some((id, blueprint)),
       None => None,
     }
   }
 
   async fn get_blueprint_titles(&self) -> Vec<String> {
     let tree = self.inner.read().await.get_tree(TOURNAMENT_BLUEPRINT.to_string()).await;
-    let titles = tree.iter().map(|(_, blueprint)| {
-      let blueprint = TournamentBlueprint::from_json_string(blueprint);
-      blueprint.title
-    }).collect();
+    let titles = tree
+      .iter()
+      .map(|(_, blueprint)| {
+        let blueprint = TournamentBlueprint::from_json_string(blueprint);
+        blueprint.title
+      })
+      .collect();
 
     titles
   }
@@ -63,14 +61,14 @@ impl TournamentBlueprintExtensions for Database {
     let existing_blueprint: Option<(String, TournamentBlueprint)> = match blueprint_id {
       Some(blueprint_id) => self.get_blueprint(blueprint_id.clone()).await.map(|blueprint| (blueprint_id, blueprint)),
       None => self.get_blueprint_by_title(blueprint.clone().title).await,
-    }; 
+    };
 
     match existing_blueprint {
       Some((blueprint_id, _)) => {
         log::warn!("Blueprint already exists: {}, overwriting with insert...", blueprint_id);
         self.inner.write().await.insert_entry(TOURNAMENT_BLUEPRINT.to_string(), blueprint_id, blueprint.to_json_string()).await;
         Ok(())
-      },
+      }
       None => {
         self.inner.write().await.insert_entry(TOURNAMENT_BLUEPRINT.to_string(), Uuid::new_v4().to_string(), blueprint.to_json_string()).await;
         Ok(())
@@ -87,7 +85,7 @@ impl TournamentBlueprintExtensions for Database {
         self.inner.write().await.remove_entry(TOURNAMENT_BLUEPRINT.to_string(), blueprint_id).await;
         Ok(())
       }
-      None => Err("Blueprint does not exist".to_string())
+      None => Err("Blueprint does not exist".to_string()),
     }
   }
 }

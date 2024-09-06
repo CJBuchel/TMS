@@ -47,9 +47,7 @@ impl Question {
     if let Some(answer) = answers.get(self.id.as_str()) {
       // Apply regular answer score
       let score = match &self.input {
-        QuestionInput::Categorical(q) => {
-          q.options.iter().find(|o| o.label == answer.answer).map_or(0, |o| o.score)
-        }
+        QuestionInput::Categorical(q) => q.options.iter().find(|o| o.label == answer.answer).map_or(0, |o| o.score),
       };
 
       // Get the first matching rule (if any) and return that instead

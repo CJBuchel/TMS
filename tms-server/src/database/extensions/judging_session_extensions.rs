@@ -1,8 +1,8 @@
 use tms_infra::*;
 
+use crate::database::{Database, JUDGING_SESSIONS};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
-use crate::database::{Database, JUDGING_SESSIONS};
 
 #[async_trait::async_trait]
 pub trait JudgingSessionExtensions {
@@ -19,9 +19,7 @@ impl JudgingSessionExtensions for Database {
     let judging_session = tree.get(&judging_session_id).cloned();
 
     match judging_session {
-      Some(judging_session) => {
-        Some(JudgingSession::from_json_string(&judging_session))
-      }
+      Some(judging_session) => Some(JudgingSession::from_json_string(&judging_session)),
       None => None,
     }
   }
@@ -38,9 +36,7 @@ impl JudgingSessionExtensions for Database {
     });
 
     match judging_session {
-      Some((id, judging_session)) => {
-        Some((id, judging_session))
-      }
+      Some((id, judging_session)) => Some((id, judging_session)),
       None => None,
     }
   }
@@ -74,9 +70,7 @@ impl JudgingSessionExtensions for Database {
         self.inner.write().await.remove_entry(JUDGING_SESSIONS.to_string(), judging_session_id).await;
         Ok(())
       }
-      None => {
-        Err("JudgingSession does not exist".to_string())
-      }
+      None => Err("JudgingSession does not exist".to_string()),
     }
   }
 }

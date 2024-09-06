@@ -24,7 +24,7 @@ pub struct Database {
 pub type SharedDatabase = std::sync::Arc<tokio::sync::RwLock<Database>>;
 
 pub trait SharedDatabaseTrait {
-  fn new_instance(local_ip:String, port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase;
+  fn new_instance(local_ip: String, port: u16, db_path: String, addr: [u8; 4]) -> SharedDatabase;
 }
 
 impl SharedDatabaseTrait for SharedDatabase {
@@ -126,12 +126,10 @@ impl Database {
         log::warn!("User already exists: {}, skipping insert...", user.username);
         return;
       }
-      None => {
-        match self.insert_user(admin_user, None).await {
-          Ok(_) => log::info!("Admin user created"),
-          Err(e) => log::error!("Failed to create admin user: {}", e),
-        }
-      }
+      None => match self.insert_user(admin_user, None).await {
+        Ok(_) => log::info!("Admin user created"),
+        Err(e) => log::error!("Failed to create admin user: {}", e),
+      },
     }
   }
 
@@ -142,10 +140,7 @@ impl Database {
     for season in seasons {
       match FllBlueprintMap::get_fll_blueprint(season.clone()) {
         Some(blueprint) => {
-          let tournament_blueprint = TournamentBlueprint {
-            title: season.clone(),
-            blueprint: blueprint,
-          };
+          let tournament_blueprint = TournamentBlueprint { title: season.clone(), blueprint: blueprint };
           match self.insert_blueprint(tournament_blueprint, None).await {
             Ok(_) => log::info!("Inserted blueprint: {}", season),
             Err(e) => log::error!("Failed to insert blueprint: {}", e),

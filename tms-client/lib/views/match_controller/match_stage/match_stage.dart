@@ -8,17 +8,30 @@ import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/views/match_controller/match_stage/loaded_table.dart';
 import 'package:tms/views/match_controller/match_stage/stage_table.dart';
 
+class _LoadedMatchData {
+  final List<GameMatch> stagedMatches;
+  final List<GameMatch> loadedMatches;
+
+  _LoadedMatchData({
+    required this.stagedMatches,
+    required this.loadedMatches,
+  });
+}
+
 class MatchStage extends StatelessWidget {
   const MatchStage({Key? key}) : super(key: key);
 
-  Widget _matchStageTables(BuildContext context) {
-    return Selector<GameMatchProvider, ({List<GameMatch> stagedMatches, List<GameMatch> loadedMatches})>(
+  Widget _matchStageTables(BuildContext context, List<Team> teams) {
+    return Selector<GameMatchProvider, _LoadedMatchData>(
       selector: (_, provider) {
-        return (stagedMatches: provider.stagedMatches, loadedMatches: provider.loadedMatches);
+        return _LoadedMatchData(
+          stagedMatches: provider.stagedMatches,
+          loadedMatches: provider.loadedMatches,
+        );
       },
       builder: (context, data, _) {
         if (data.loadedMatches.isNotEmpty) {
-          return LoadedTable(loadedMatches: data.loadedMatches);
+          return LoadedTable(loadedMatches: data.loadedMatches, teams: teams);
         } else if (data.stagedMatches.isNotEmpty) {
           return StageTable(stagedMatches: data.stagedMatches);
         } else {
@@ -36,9 +49,8 @@ class MatchStage extends StatelessWidget {
       trees: [":teams"],
       child: Selector<TeamsProvider, List<Team>>(
         selector: (_, provider) => provider.teams,
-        shouldRebuild: (previous, next) => previous.length != next.length,
-        builder: (context, _, __) {
-          return _matchStageTables(context);
+        builder: (context, teams, __) {
+          return _matchStageTables(context, teams);
         },
       ),
     );

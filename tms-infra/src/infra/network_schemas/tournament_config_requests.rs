@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub struct TournamentConfigSetNameRequest {
   pub name: String,
@@ -11,9 +10,7 @@ pub struct TournamentConfigSetNameRequest {
 
 impl Default for TournamentConfigSetNameRequest {
   fn default() -> Self {
-    Self {
-      name: "".to_string(),
-    }
+    Self { name: "".to_string() }
   }
 }
 
@@ -24,9 +21,7 @@ pub struct TournamentConfigSetTimerLengthRequest {
 
 impl Default for TournamentConfigSetTimerLengthRequest {
   fn default() -> Self {
-    Self {
-      timer_length: 0,
-    }
+    Self { timer_length: 0 }
   }
 }
 
@@ -37,9 +32,7 @@ pub struct TournamentConfigSetEndgameTimerLengthRequest {
 
 impl Default for TournamentConfigSetEndgameTimerLengthRequest {
   fn default() -> Self {
-    Self {
-      timer_length: 0,
-    }
+    Self { timer_length: 0 }
   }
 }
 
@@ -50,9 +43,7 @@ pub struct TournamentConfigSetBackupIntervalRequest {
 
 impl Default for TournamentConfigSetBackupIntervalRequest {
   fn default() -> Self {
-    Self {
-      interval: 0,
-    }
+    Self { interval: 0 }
   }
 }
 
@@ -63,16 +54,14 @@ pub struct TournamentConfigSetRetainBackupsRequest {
 
 impl Default for TournamentConfigSetRetainBackupsRequest {
   fn default() -> Self {
-    Self {
-      retain_backups: 0,
-    }
+    Self { retain_backups: 0 }
   }
 }
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub enum BlueprintType {
   Agnostic,
-  Seasonal
+  Seasonal,
 }
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
@@ -97,12 +86,9 @@ pub struct TournamentConfigSetAdminPasswordRequest {
 
 impl Default for TournamentConfigSetAdminPasswordRequest {
   fn default() -> Self {
-    Self {
-      admin_password: "".to_string(),
-    }
+    Self { admin_password: "".to_string() }
   }
 }
-
 
 impl DataSchemeExtensions for TournamentConfigSetNameRequest {}
 impl DataSchemeExtensions for TournamentConfigSetSeasonRequest {}

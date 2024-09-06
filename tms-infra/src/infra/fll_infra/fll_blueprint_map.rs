@@ -1,12 +1,8 @@
-
 use std::collections::HashMap;
 
 use super::{BaseSeason, FllBlueprint, MasterPiece, QuestionAnswer, QuestionValidationError};
 
-const SEASONS: &[(&str, &'static dyn BaseSeason)] = &[
-  ("2023", &MasterPiece {}),
-];
-
+const SEASONS: &[(&str, &'static dyn BaseSeason)] = &[("2023", &MasterPiece {})];
 
 pub struct FllBlueprintMap {}
 
@@ -24,10 +20,8 @@ impl FllBlueprintMap {
   pub fn calculate_score(blueprint: FllBlueprint, answers: Vec<QuestionAnswer>) -> i32 {
     // switch to hashmap, for faster lookup
     let answers_map: HashMap<String, QuestionAnswer> = answers.iter().map(|a| (a.question_id.clone(), a.clone())).collect();
-    
-    blueprint.robot_game_questions.iter()
-      .map(|q| q.get_score(&answers_map))
-      .sum()
+
+    blueprint.robot_game_questions.iter().map(|q| q.get_score(&answers_map)).sum()
   }
 
   // this doesn't get FRB annotations to avoid frontend confusion. (Flutter gets game from server db)

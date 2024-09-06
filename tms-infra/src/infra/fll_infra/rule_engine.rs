@@ -17,10 +17,7 @@ pub struct QuestionRule {
 
 impl QuestionRule {
   pub fn new(condition: String, output: i32) -> QuestionRule {
-    Self {
-      condition,
-      output,
-    }
+    Self { condition, output }
   }
 
   fn id_substitution(input: &str, answers: &HashMap<String, QuestionAnswer>) -> String {
@@ -47,16 +44,15 @@ impl QuestionRule {
       static ref RE: Regex = Regex::new(r"(\w+)\s*(==|!=|>|<|>=|<=)\s*(\w+)").unwrap();
     }
 
-
     let caps = match RE.captures(condition) {
       Some(caps) => caps,
       None => return Err("Invalid condition, must be simple `m00a == 2`".to_string()),
     };
-  
+
     let left = caps.get(1).map_or("", |m| m.as_str()).to_string();
     let operator = caps.get(2).map_or("", |m| m.as_str()).to_string();
     let right = caps.get(3).map_or("", |m| m.as_str()).to_string();
-    
+
     Ok((left, operator, right))
   }
 

@@ -1,19 +1,23 @@
+use std::sync::{atomic::AtomicBool, Arc};
+
+use tokio::sync::RwLock;
+
 use crate::{
   database::*,
-  network::{client_publish::*, ClientMap},
-  types::{AtomicRefBool, AtomicRefStrVec},
+  network::*,
 };
 
 use super::MatchService;
+use crate::services::match_service::*;
 
 #[async_trait::async_trait]
 pub trait TimerSubService {
   // main timers
-  async fn timer(time: u32, endgame_time: u32, loaded_matches: AtomicRefStrVec, timer_running: AtomicRefBool, is_matches_loaded: AtomicRefBool, is_matches_ready: AtomicRefBool, clients: ClientMap, db: SharedDatabase);
+  async fn timer(time: u32, endgame_time: u32, loaded_matches: Arc<RwLock<Vec<String>>>, timer_running: Arc<AtomicBool>, is_matches_loaded: Arc<AtomicBool>, is_matches_ready: Arc<AtomicBool>, clients: ClientMap, db: SharedDatabase);
   async fn start_timer(&mut self) -> Result<(), String>;
 
   // countdown timer
-  async fn countdown_timer(clients: ClientMap, timer_running: AtomicRefBool);
+  async fn countdown_timer(clients: ClientMap, timer_running: Arc<AtomicBool>);
   async fn start_countdown_timer(&mut self) -> Result<(), String>;
 
   async fn stop_timer(&self) -> Result<(), String>;
@@ -21,7 +25,7 @@ pub trait TimerSubService {
 
 #[async_trait::async_trait]
 impl TimerSubService for MatchService {
-  async fn timer(time: u32, endgame_time: u32, loaded_matches: AtomicRefStrVec, timer_running: AtomicRefBool, is_matches_loaded: AtomicRefBool, is_matches_ready: AtomicRefBool, clients: ClientMap, db: SharedDatabase) {
+  async fn timer(time: u32, endgame_time: u32, loaded_matches: Arc<RwLock<Vec<String>>>, timer_running: Arc<AtomicBool>, is_matches_loaded: Arc<AtomicBool>, is_matches_ready: Arc<AtomicBool>, clients: ClientMap, db: SharedDatabase) {
     log::info!("Timer Running");
 
     // send the start message
@@ -96,7 +100,7 @@ impl TimerSubService for MatchService {
         log::warn!("No matches ready, can't start timer");
         return Err("No matches ready".to_string());
       }
-      self.clients.read().await.publish_running_matches(self.loaded_matches.read().await.clone());
+      self.clients.read().await.publish_running_matches(self.get_loaded_game_matches().await);
 
       log::info!("Starting Timer");
       self.is_timer_running.store(true, std::sync::atomic::Ordering::Relaxed);
@@ -118,7 +122,7 @@ impl TimerSubService for MatchService {
 
       // clone for move
       let timer_flag = self.is_timer_running.clone();
-      let loaded_matches = self.loaded_matches.clone();
+      let loaded_matches = self.loaded_game_matches.clone();
       let is_matches_loaded = self.is_matches_loaded.clone();
       let is_matches_ready = self.is_matches_ready.clone();
       let clients = self.clients.clone();
@@ -135,7 +139,7 @@ impl TimerSubService for MatchService {
     }
   }
 
-  async fn countdown_timer(clients: ClientMap, timer_running: AtomicRefBool) {
+  async fn countdown_timer(clients: ClientMap, timer_running: Arc<AtomicBool>) {
     let countdown_time: u32 = 5; // 5 second countdown
 
     // send the start message
@@ -170,7 +174,7 @@ impl TimerSubService for MatchService {
         log::warn!("No matches ready, can't start timer");
         return Err("No matches ready".to_string());
       }
-      self.clients.read().await.publish_running_matches(self.loaded_matches.read().await.clone());
+      self.clients.read().await.publish_running_matches(self.get_loaded_game_matches().await);
 
       log::info!("Starting Countdown Timer");
       self.is_timer_running.store(true, std::sync::atomic::Ordering::Relaxed);
@@ -195,7 +199,7 @@ impl TimerSubService for MatchService {
 
       let clients = self.clients.clone();
       let timer_flag = self.is_timer_running.clone();
-      let loaded_matches = self.loaded_matches.clone();
+      let loaded_matches = self.loaded_game_matches.clone();
       let is_matches_loaded = self.is_matches_loaded.clone();
       let is_matches_ready = self.is_matches_ready.clone();
       let db = self.db.clone();
@@ -225,7 +229,7 @@ impl TimerSubService for MatchService {
       log::warn!("Stopping Timer");
       // set all match values to false
       is_timer_running.store(false, std::sync::atomic::Ordering::Relaxed);
-      self.clients.read().await.publish_ready_matches(self.loaded_matches.read().await.clone());
+      self.clients.read().await.publish_ready_matches(self.get_loaded_game_matches().await);
       // publish the stop
       clients.read().await.publish_stop_timer();
       // reload clocks after a bit

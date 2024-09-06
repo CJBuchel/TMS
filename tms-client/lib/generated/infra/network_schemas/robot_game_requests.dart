@@ -6,7 +6,45 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`
+
+class RobotGameTableSignalRequest {
+  final String table;
+  final String teamNumber;
+
+  const RobotGameTableSignalRequest({
+    required this.table,
+    required this.teamNumber,
+  });
+
+  static Future<RobotGameTableSignalRequest> default_() => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGameTableSignalRequestDefault();
+
+  static RobotGameTableSignalRequest fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGameTableSignalRequestFromJsonString(
+              json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGameTableSignalRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGameTableSignalRequestToSchema();
+
+  @override
+  int get hashCode => table.hashCode ^ teamNumber.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RobotGameTableSignalRequest &&
+          runtimeType == other.runtimeType &&
+          table == other.table &&
+          teamNumber == other.teamNumber;
+}
 
 class RobotGamesLoadMatchRequest {
   final List<String> gameMatchNumbers;

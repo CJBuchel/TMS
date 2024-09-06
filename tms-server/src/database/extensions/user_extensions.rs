@@ -1,6 +1,6 @@
+pub use echo_tree_rs::core::*;
 use infra::TmsTreeRole;
 use tms_infra::*;
-pub use echo_tree_rs::core::*;
 use uuid::Uuid;
 
 use crate::database::{Database, USERS};
@@ -14,7 +14,6 @@ pub trait UserExtensions {
   async fn remove_user(&self, user_id: String) -> Result<(), String>;
 }
 
-
 #[async_trait::async_trait]
 impl UserExtensions for Database {
   async fn get_user(&self, user_id: String) -> Option<User> {
@@ -22,9 +21,7 @@ impl UserExtensions for Database {
     let user = tree.get(&user_id).cloned();
 
     match user {
-      Some(user) => {
-        Some(User::from_json_string(&user))
-      }
+      Some(user) => Some(User::from_json_string(&user)),
       None => None,
     }
   }
@@ -41,9 +38,7 @@ impl UserExtensions for Database {
     });
 
     match user {
-      Some((id, user)) => {
-        Some((id, user))
-      }
+      Some((id, user)) => Some((id, user)),
       None => None,
     }
   }
@@ -60,11 +55,11 @@ impl UserExtensions for Database {
         log::warn!("User already exists: {}, overwriting with insert...", user_id);
         self.inner.write().await.insert_entry(USERS.to_string(), user_id, user.to_json_string()).await;
         return Ok(());
-      },
+      }
       None => {
         self.inner.write().await.insert_entry(USERS.to_string(), Uuid::new_v4().to_string(), user.to_json_string()).await;
         return Ok(());
-      },
+      }
     }
   }
 
@@ -73,24 +68,24 @@ impl UserExtensions for Database {
 
     match user {
       Some(user) => {
-        let roles: Vec<TmsTreeRole> = user.roles.iter().filter_map(|role| {
-          let role = futures::executor::block_on(async {
-            self.inner.read().await.get_role_manager().await.get_role(role.clone())
-          });
-          
-          // translate echo tree role into tms tree role
-          match role {
-            Some(role) => {
-              Some(TmsTreeRole {
+        let roles: Vec<TmsTreeRole> = user
+          .roles
+          .iter()
+          .filter_map(|role| {
+            let role = futures::executor::block_on(async { self.inner.read().await.get_role_manager().await.get_role(role.clone()) });
+
+            // translate echo tree role into tms tree role
+            match role {
+              Some(role) => Some(TmsTreeRole {
                 role_id: role.role_id.clone(),
                 password: role.password.clone(),
                 read_echo_trees: role.read_echo_trees.clone(),
                 read_write_echo_trees: role.read_write_echo_trees.clone(),
-              })
+              }),
+              None => None,
             }
-            None => None,
-          }
-        }).collect();
+          })
+          .collect();
 
         roles
       }

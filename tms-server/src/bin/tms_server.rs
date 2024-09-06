@@ -1,10 +1,10 @@
 use std::env;
 
 use local_ip_address::local_ip;
-use tms_server::network::ClientMap;
 use tms_server::database::*;
-use tms_server::network::*;
 use tms_server::multicast_dns::*;
+use tms_server::network::ClientMap;
+use tms_server::network::*;
 use tms_server::services::SharedServices;
 use tms_server::services::SharedServicesTrait;
 use tms_server::web_server::certificates::CertificateKeys;
@@ -94,7 +94,7 @@ async fn main() {
 
   // combine routes
   let routes = echo_tree_routes.or(network_routes);
-  
+
   // start main web server, including the routes
   let web_server = WebServer::new(web_config, certs);
   web_server.start(routes).await;

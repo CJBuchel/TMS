@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameTable {
   pub table_name: String,
@@ -11,9 +10,7 @@ pub struct GameTable {
 
 impl Default for GameTable {
   fn default() -> Self {
-    Self {
-      table_name: "".to_string(),
-    }
+    Self { table_name: "".to_string() }
   }
 }
 

@@ -7,7 +7,7 @@ pub async fn tournament_blueprint_add_blueprint_handler(request: String, db: Sha
     Ok(tournament_blueprint) => tournament_blueprint,
     Err(e) => {
       log::error!("Failed to parse tournament blueprint: {}", e);
-      return Ok(warp::http::StatusCode::BAD_REQUEST)
+      return Ok(warp::http::StatusCode::BAD_REQUEST);
     }
   };
 

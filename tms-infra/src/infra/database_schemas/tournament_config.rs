@@ -6,11 +6,11 @@ use crate::{infra::DataSchemeExtensions, BlueprintType};
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct TournamentConfig {
   pub name: String,
-  pub backup_interval: u32, // in minutes
-  pub retain_backups: u32, // number of backups retained
+  pub backup_interval: u32,       // in minutes
+  pub retain_backups: u32,        // number of backups retained
   pub end_game_timer_length: u32, // in seconds
-  pub timer_length: u32, // in seconds
-  pub season: Option<String>, // season year (none for no season/agnostic)
+  pub timer_length: u32,          // in seconds
+  pub season: Option<String>,     // season year (none for no season/agnostic)
   pub blueprint_type: BlueprintType,
 }
 

@@ -1,8 +1,5 @@
-use clients::client::Client;
-use rand::Rng;
-use tms_infra::*;
 use crate::{database::*, network::*};
-
+use rand::Rng;
 
 fn generate_auth_token() -> String {
   rand::thread_rng().sample_iter(&rand::distributions::Alphanumeric).take(32).map(char::from).collect()
@@ -73,11 +70,17 @@ pub async fn register_handler(body: RegisterRequest, clients: ClientMap, db: Sha
       log::warn!("Public user not found in database");
     }
   }
-  
+
   // register client normally without username/password
   log::warn!("No default users found, registering blank client");
   register_client(uuid.clone(), auth_token.clone(), "".to_string(), clients).await;
-  return Ok(warp::reply::json(&RegisterResponse { auth_token, uuid, url, server_ip: local_ip, roles: Vec::new()}));
+  return Ok(warp::reply::json(&RegisterResponse {
+    auth_token,
+    uuid,
+    url,
+    server_ip: local_ip,
+    roles: Vec::new(),
+  }));
 }
 
 pub async fn unregister_handler(uuid: String, clients: ClientMap) -> ResponseResult<impl warp::reply::Reply> {

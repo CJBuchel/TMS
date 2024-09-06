@@ -1,9 +1,8 @@
 use tms_infra::*;
 
+use crate::database::{Database, ROBOT_GAME_TABLES};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
-use crate::database::{Database, ROBOT_GAME_TABLES};
-
 
 #[async_trait::async_trait]
 pub trait GameTableExtensions {
@@ -20,9 +19,7 @@ impl GameTableExtensions for Database {
     let game_table = tree.get(&game_table_id).cloned();
 
     match game_table {
-      Some(game_table) => {
-        Some(GameTable::from_json_string(&game_table).table_name)
-      }
+      Some(game_table) => Some(GameTable::from_json_string(&game_table).table_name),
       None => None,
     }
   }
@@ -39,9 +36,7 @@ impl GameTableExtensions for Database {
     });
 
     match game_table {
-      Some((id, game_table)) => {
-        Some((id, game_table.table_name))
-      }
+      Some((id, game_table)) => Some((id, game_table.table_name)),
       None => None,
     }
   }
@@ -56,16 +51,12 @@ impl GameTableExtensions for Database {
     match existing_game_table {
       Some((game_table_id, _)) => {
         log::warn!("GameTable already exists: {}, overwriting with insert...", game_table_id);
-        let game_table = GameTable {
-          table_name: game_table,
-        };
+        let game_table = GameTable { table_name: game_table };
         self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), game_table_id, game_table.to_json_string()).await;
         Ok(())
       }
       None => {
-        let game_table = GameTable {
-          table_name: game_table,
-        };
+        let game_table = GameTable { table_name: game_table };
         self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), Uuid::new_v4().to_string(), game_table.to_json_string()).await;
         Ok(())
       }

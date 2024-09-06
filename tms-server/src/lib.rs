@@ -1,15 +1,14 @@
 use structopt::StructOpt;
 
 pub mod database;
-pub mod services;
 pub mod multicast_dns;
 pub mod network;
+pub mod services;
 pub mod web_server;
-pub mod types;
 
 #[derive(Debug, StructOpt)]
 pub struct ServerArgs {
-  #[structopt(default_value = "0.0.0.0",long = "addr", help = "Address to listen on, --addr 0.0.0.0")]
+  #[structopt(default_value = "0.0.0.0", long = "addr", help = "Address to listen on, --addr 0.0.0.0")]
   pub addr: String,
 
   #[structopt(default_value = "8080", long = "port", help = "Port to listen on, --port 8080")]

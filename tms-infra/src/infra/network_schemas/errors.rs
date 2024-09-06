@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-
 #[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct ErrorMessage {
   pub code: u16,
@@ -12,10 +11,7 @@ pub struct ErrorMessage {
 
 impl Default for ErrorMessage {
   fn default() -> Self {
-    Self {
-      code: 500,
-      message: "".to_string(),
-    }
+    Self { code: 500, message: "".to_string() }
   }
 }
 

@@ -5,7 +5,6 @@ use crate::DataSchemeExtensions;
 
 use super::{Mission, Question};
 
-
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct FllBlueprint {
   pub robot_game_questions: Vec<Question>,

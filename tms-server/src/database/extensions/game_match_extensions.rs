@@ -1,8 +1,7 @@
+use crate::database::{Database, ROBOT_GAME_MATCHES};
 pub use echo_tree_rs::core::*;
 use tms_infra::*;
 use uuid::Uuid;
-use crate::database::{Database, ROBOT_GAME_MATCHES};
-
 
 #[async_trait::async_trait]
 pub trait GameMatchExtensions {
@@ -20,9 +19,7 @@ impl GameMatchExtensions for Database {
     let game_match = tree.get(&game_match_id).cloned();
 
     match game_match {
-      Some(game_match) => {
-        Some(GameMatch::from_json_string(&game_match))
-      }
+      Some(game_match) => Some(GameMatch::from_json_string(&game_match)),
       None => None,
     }
   }
@@ -39,9 +36,7 @@ impl GameMatchExtensions for Database {
     });
 
     match game_match {
-      Some((id, game_match)) => {
-        Some((id, game_match))
-      }
+      Some((id, game_match)) => Some((id, game_match)),
       None => None,
     }
   }
@@ -58,11 +53,11 @@ impl GameMatchExtensions for Database {
         log::warn!("GameMatch already exists: {}, overwriting with insert...", game_match_id);
         self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json_string()).await;
         Ok(())
-      },
+      }
       None => {
         self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), Uuid::new_v4().to_string(), game_match.to_json_string()).await;
         Ok(())
-      },
+      }
     }
   }
 
@@ -75,9 +70,7 @@ impl GameMatchExtensions for Database {
         self.inner.write().await.remove_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id).await;
         Ok(())
       }
-      None => {
-        Err(format!("GameMatch not found: {}", game_match_id))
-      }
+      None => Err(format!("GameMatch not found: {}", game_match_id)),
     }
   }
 
@@ -92,9 +85,7 @@ impl GameMatchExtensions for Database {
         self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json_string()).await;
         Ok(())
       }
-      None => {
-        Err(format!("GameMatch not found: {}", game_match_id))
-      }
+      None => Err(format!("GameMatch not found: {}", game_match_id)),
     }
   }
 }

@@ -6,7 +6,7 @@ use crate::DataSchemeExtensions;
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct CategoricalOption {
   pub label: String, // label for this option e.g "Yes"
-  pub score: i32, // score for this option e.g 1
+  pub score: i32,    // score for this option e.g 1
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-enum TableStatusState {
-  NO_SIG, // No Signal
-  STANDBY, // Standby
-  READY, // Ready
+enum TableSignalState {
+  SIG,
+  STANDBY,
+  READY,
 }
 
 class TableStatus extends StatefulWidget {
-  final String table;
+  final TableSignalState status;
 
   const TableStatus({
     Key? key,
-    required this.table,
+    required this.status,
   }) : super(key: key);
 
   @override
@@ -37,18 +37,18 @@ class _TableStatusState extends State<TableStatus> with SingleTickerProviderStat
     super.dispose();
   }
 
-  Widget _statusText(TableStatusState state) {
+  Widget _statusText(TableSignalState state) {
     Color? color = Colors.red;
     String text = "SIG";
 
     switch (state) {
-      case TableStatusState.NO_SIG:
+      case TableSignalState.SIG:
         color = Colors.red;
         text = "SIG";
-      case TableStatusState.STANDBY:
+      case TableSignalState.STANDBY:
         color = const Color(0xFFCE7500);
         text = "STBY";
-      case TableStatusState.READY:
+      case TableSignalState.READY:
         color = Colors.green;
         text = "RDY";
     }
@@ -57,7 +57,7 @@ class _TableStatusState extends State<TableStatus> with SingleTickerProviderStat
       animation: _controller,
       builder: (context, child) {
         Color? status_color = color;
-        if (state == TableStatusState.NO_SIG) {
+        if (state == TableSignalState.SIG) {
           status_color = _controller.value < 0.5 ? color : Colors.transparent;
         }
 
@@ -75,7 +75,7 @@ class _TableStatusState extends State<TableStatus> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _statusText(TableStatusState.NO_SIG),
+      child: _statusText(widget.status),
     );
   }
 }

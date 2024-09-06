@@ -2,7 +2,6 @@ use tms_infra::LoginRequest;
 
 use crate::{database::*, network::*};
 
-
 pub async fn login_handler(body: LoginRequest, uuid: String, clients: ClientMap, db: SharedDatabase) -> ResponseResult<impl warp::reply::Reply> {
   match db.read().await.get_user_by_username(body.username.clone()).await {
     Some((user_id, user)) => {
@@ -10,12 +9,12 @@ pub async fn login_handler(body: LoginRequest, uuid: String, clients: ClientMap,
         // success, modify client user id
         let mut write_clients = clients.write().await;
         write_clients.get_mut(&uuid).unwrap().user_id = user_id.clone();
-        
+
         // respond with login response and roles
         log::info!("User `{}` logged in", body.username);
         // get roles and their passwords
         let roles = db.read().await.get_user_roles(user_id).await;
-        return Ok(warp::reply::json(&LoginResponse {roles}));
+        return Ok(warp::reply::json(&LoginResponse { roles }));
       } else {
         log::error!("Login attempt failed for `{}`, reason: BAD PASSWORD: `{}`", body.username, body.password);
         Err(warp::reject::custom(UnauthorizedLogin))

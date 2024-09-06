@@ -17,9 +17,12 @@ pub trait ClientAccess {
 
 #[async_trait::async_trait]
 impl ClientAccess for Client {
-
   // check if client has access to any of the provided roles
   async fn has_role_access(&self, db: SharedDatabase, roles: Vec<String>) -> ClientAccessResult {
+    // add admin role (admin should always have access)
+    let mut roles = roles;
+    roles.push("admin".to_string());
+
     let db = db.read().await;
     let user = db.get_inner().read().await.get_entry(":users".to_string(), self.user_id.clone()).await;
     match user {

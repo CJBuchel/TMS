@@ -114,6 +114,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RegisterResponse dco_decode_box_autoadd_register_response(dynamic raw);
 
   @protected
+  RobotGameTableSignalRequest
+      dco_decode_box_autoadd_robot_game_table_signal_request(dynamic raw);
+
+  @protected
   RobotGamesLoadMatchRequest
       dco_decode_box_autoadd_robot_games_load_match_request(dynamic raw);
 
@@ -257,9 +261,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dynamic raw);
 
   @protected
-  List<(String, bool)> dco_decode_list_record_string_bool(dynamic raw);
-
-  @protected
   List<(String, QuestionAnswer)> dco_decode_list_record_string_question_answer(
       dynamic raw);
 
@@ -313,9 +314,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   QuestionValidationError dco_decode_question_validation_error(dynamic raw);
 
   @protected
-  (String, bool) dco_decode_record_string_bool(dynamic raw);
-
-  @protected
   (String, QuestionAnswer) dco_decode_record_string_question_answer(
       dynamic raw);
 
@@ -324,6 +322,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   RegisterResponse dco_decode_register_response(dynamic raw);
+
+  @protected
+  RobotGameTableSignalRequest dco_decode_robot_game_table_signal_request(
+      dynamic raw);
 
   @protected
   RobotGamesLoadMatchRequest dco_decode_robot_games_load_match_request(
@@ -487,6 +489,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  RobotGameTableSignalRequest
+      sse_decode_box_autoadd_robot_game_table_signal_request(
+          SseDeserializer deserializer);
+
+  @protected
   RobotGamesLoadMatchRequest
       sse_decode_box_autoadd_robot_games_load_match_request(
           SseDeserializer deserializer);
@@ -644,10 +651,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  List<(String, bool)> sse_decode_list_record_string_bool(
-      SseDeserializer deserializer);
-
-  @protected
   List<(String, QuestionAnswer)> sse_decode_list_record_string_question_answer(
       SseDeserializer deserializer);
 
@@ -702,9 +705,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  (String, bool) sse_decode_record_string_bool(SseDeserializer deserializer);
-
-  @protected
   (String, QuestionAnswer) sse_decode_record_string_question_answer(
       SseDeserializer deserializer);
 
@@ -713,6 +713,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   RegisterResponse sse_decode_register_response(SseDeserializer deserializer);
+
+  @protected
+  RobotGameTableSignalRequest sse_decode_robot_game_table_signal_request(
+      SseDeserializer deserializer);
 
   @protected
   RobotGamesLoadMatchRequest sse_decode_robot_games_load_match_request(
@@ -892,6 +896,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       RegisterResponse self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_robot_game_table_signal_request(
+      RobotGameTableSignalRequest self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_robot_games_load_match_request(
       RobotGamesLoadMatchRequest self, SseSerializer serializer);
 
@@ -1048,10 +1056,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       List<QuestionValidationError> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_record_string_bool(
-      List<(String, bool)> self, SseSerializer serializer);
-
-  @protected
   void sse_encode_list_record_string_question_answer(
       List<(String, QuestionAnswer)> self, SseSerializer serializer);
 
@@ -1110,10 +1114,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       QuestionValidationError self, SseSerializer serializer);
 
   @protected
-  void sse_encode_record_string_bool(
-      (String, bool) self, SseSerializer serializer);
-
-  @protected
   void sse_encode_record_string_question_answer(
       (String, QuestionAnswer) self, SseSerializer serializer);
 
@@ -1124,6 +1124,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_register_response(
       RegisterResponse self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_robot_game_table_signal_request(
+      RobotGameTableSignalRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_robot_games_load_match_request(

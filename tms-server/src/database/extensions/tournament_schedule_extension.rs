@@ -4,7 +4,6 @@ use crate::database::Database;
 
 use super::{GameMatchExtensions, GameTableExtensions, JudgingPodExtensions, JudgingSessionExtensions, TeamExtensions};
 
-
 #[async_trait::async_trait]
 pub trait TournamentScheduleExtensions {
   async fn set_tournament_schedule(&mut self, schedule: TmsSchedule) -> Result<(), String>;
@@ -18,11 +17,11 @@ impl TournamentScheduleExtensions for Database {
       match self.insert_team(team.clone(), None).await {
         Ok(_) => {
           log::info!("Inserted team: {}, name: {}, affiliation: {}", team.number, team.name, team.affiliation);
-        },
+        }
         Err(e) => {
           log::error!("Error inserting team: {}", e);
           return Err(format!("Error inserting team: {}", e));
-        },
+        }
       }
     }
 
@@ -31,11 +30,11 @@ impl TournamentScheduleExtensions for Database {
       match self.insert_game_table(table.clone(), None).await {
         Ok(_) => {
           log::info!("Inserted table: {}", table);
-        },
+        }
         Err(e) => {
           log::error!("Error inserting table: {}", e);
           return Err(format!("Error inserting table: {}", e));
-        },
+        }
       }
     }
 
@@ -44,11 +43,11 @@ impl TournamentScheduleExtensions for Database {
       match self.insert_game_match(game_match.clone(), None).await {
         Ok(_) => {
           log::info!("Inserted game match: {}", game_match.match_number);
-        },
+        }
         Err(e) => {
           log::error!("Error inserting game match: {}", e);
           return Err(format!("Error inserting game match: {}", e));
-        },
+        }
       }
     }
 
@@ -57,11 +56,11 @@ impl TournamentScheduleExtensions for Database {
       match self.insert_judging_pod(pod.clone(), None).await {
         Ok(_) => {
           log::info!("Inserted judging pod: {}", pod);
-        },
+        }
         Err(e) => {
           log::error!("Error inserting judging pod: {}", e);
           return Err(format!("Error inserting judging pod: {}", e));
-        },
+        }
       }
     }
 
@@ -70,11 +69,11 @@ impl TournamentScheduleExtensions for Database {
       match self.insert_judging_session(session.clone(), None).await {
         Ok(_) => {
           log::info!("Inserted judging session: {}", session.session_number);
-        },
+        }
         Err(e) => {
           log::error!("Error inserting judging session: {}", e);
           return Err(format!("Error inserting judging session: {}", e));
-        },
+        }
       }
     }
 

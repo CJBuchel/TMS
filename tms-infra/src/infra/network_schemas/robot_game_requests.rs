@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::infra::DataSchemeExtensions;
+use crate::{infra::DataSchemeExtensions, QuestionAnswer};
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub struct RobotGamesLoadMatchRequest {
@@ -29,5 +29,45 @@ impl Default for RobotGameTableSignalRequest {
   }
 }
 
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct RobotGameScoreSheetRequest {
+  pub table: String,
+  pub team_number: String,
+  pub referee: String,
+  pub match_number: Option<String>,
+
+  // score sheet headers
+  pub gp: String,
+  pub no_show: bool,
+  pub score: i32,
+  pub round: u32,
+
+  // score sheet data
+  pub is_agnostic: bool,
+  pub score_sheet_answers: Vec<QuestionAnswer>, // populated if not agnostic
+  
+  // referee comments
+  pub private_comment: String,
+}
+
+impl Default for RobotGameScoreSheetRequest {
+  fn default() -> Self {
+    Self {
+      table: "".to_string(),
+      team_number: "".to_string(),
+      referee: "".to_string(),
+      match_number: None,
+      gp: "".to_string(),
+      no_show: false,
+      score: 0,
+      round: 0,
+      is_agnostic: false,
+      score_sheet_answers: vec![],
+      private_comment: "".to_string(),
+    }
+  }
+}
+
 impl DataSchemeExtensions for RobotGamesLoadMatchRequest {}
 impl DataSchemeExtensions for RobotGameTableSignalRequest {}
+impl DataSchemeExtensions for RobotGameScoreSheetRequest {}

@@ -7,11 +7,11 @@ enum TableSignalState {
 }
 
 class TableStatus extends StatefulWidget {
-  final TableSignalState status;
+  final TableSignalState state;
 
   const TableStatus({
     Key? key,
-    required this.status,
+    required this.state,
   }) : super(key: key);
 
   @override
@@ -75,7 +75,7 @@ class _TableStatusState extends State<TableStatus> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _statusText(widget.status),
+      child: _statusText(widget.state),
     );
   }
 }

@@ -1,5 +1,5 @@
 
-mod clients;
+pub mod clients;
 pub use clients::*;
 
 mod filters;

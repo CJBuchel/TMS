@@ -34,4 +34,19 @@ class GameScoringService {
       return HttpStatus.badRequest;
     }
   }
+
+  Future<int> submitScoreSheet(RobotGameScoreSheetRequest scoreSheet) async {
+    try {
+      var request = scoreSheet.toJsonString();
+      var response = await Network().networkPost("/robot_game/score_sheet", request);
+      if (response.$1) {
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
 }

@@ -12,6 +12,7 @@ import 'frb_generated.dart';
 import 'infra.dart';
 import 'infra/database_schemas/date_time.dart';
 import 'infra/database_schemas/game_match.dart';
+import 'infra/database_schemas/game_score_sheet.dart';
 import 'infra/database_schemas/game_table.dart';
 import 'infra/database_schemas/judging_pod.dart';
 import 'infra/database_schemas/judging_session.dart';
@@ -34,6 +35,7 @@ import 'infra/network_schemas/robot_game_requests.dart';
 import 'infra/network_schemas/socket_protocol/match_state_event.dart';
 import 'infra/network_schemas/socket_protocol/match_time_event.dart';
 import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
+import 'infra/network_schemas/socket_protocol/table_state_event.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_web.dart';
 
@@ -77,6 +79,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   GameMatch dco_decode_box_autoadd_game_match(dynamic raw);
 
   @protected
+  GameScoreSheet dco_decode_box_autoadd_game_score_sheet(dynamic raw);
+
+  @protected
   GameTable dco_decode_box_autoadd_game_table(dynamic raw);
 
   @protected
@@ -116,6 +121,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RegisterResponse dco_decode_box_autoadd_register_response(dynamic raw);
 
   @protected
+  RobotGameScoreSheetRequest
+      dco_decode_box_autoadd_robot_game_score_sheet_request(dynamic raw);
+
+  @protected
   RobotGameTableSignalRequest
       dco_decode_box_autoadd_robot_game_table_signal_request(dynamic raw);
 
@@ -142,6 +151,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   TmsServerSocketMessage dco_decode_box_autoadd_tms_server_socket_message(
+      dynamic raw);
+
+  @protected
+  TmsServerTableStateEvent dco_decode_box_autoadd_tms_server_table_state_event(
       dynamic raw);
 
   @protected
@@ -215,6 +228,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   GameMatchTable dco_decode_game_match_table(dynamic raw);
+
+  @protected
+  GameScoreSheet dco_decode_game_score_sheet(dynamic raw);
 
   @protected
   GameTable dco_decode_game_table(dynamic raw);
@@ -326,6 +342,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RegisterResponse dco_decode_register_response(dynamic raw);
 
   @protected
+  RobotGameScoreSheetRequest dco_decode_robot_game_score_sheet_request(
+      dynamic raw);
+
+  @protected
   RobotGameTableSignalRequest dco_decode_robot_game_table_signal_request(
       dynamic raw);
 
@@ -359,6 +379,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   TmsServerSocketMessage dco_decode_tms_server_socket_message(dynamic raw);
+
+  @protected
+  TmsServerTableStateEvent dco_decode_tms_server_table_state_event(dynamic raw);
 
   @protected
   TmsTime dco_decode_tms_time(dynamic raw);
@@ -445,6 +468,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   GameMatch sse_decode_box_autoadd_game_match(SseDeserializer deserializer);
 
   @protected
+  GameScoreSheet sse_decode_box_autoadd_game_score_sheet(
+      SseDeserializer deserializer);
+
+  @protected
   GameTable sse_decode_box_autoadd_game_table(SseDeserializer deserializer);
 
   @protected
@@ -491,6 +518,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  RobotGameScoreSheetRequest
+      sse_decode_box_autoadd_robot_game_score_sheet_request(
+          SseDeserializer deserializer);
+
+  @protected
   RobotGameTableSignalRequest
       sse_decode_box_autoadd_robot_game_table_signal_request(
           SseDeserializer deserializer);
@@ -520,6 +552,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   TmsServerSocketMessage sse_decode_box_autoadd_tms_server_socket_message(
+      SseDeserializer deserializer);
+
+  @protected
+  TmsServerTableStateEvent sse_decode_box_autoadd_tms_server_table_state_event(
       SseDeserializer deserializer);
 
   @protected
@@ -599,6 +635,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   GameMatchTable sse_decode_game_match_table(SseDeserializer deserializer);
+
+  @protected
+  GameScoreSheet sse_decode_game_score_sheet(SseDeserializer deserializer);
 
   @protected
   GameTable sse_decode_game_table(SseDeserializer deserializer);
@@ -717,6 +756,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RegisterResponse sse_decode_register_response(SseDeserializer deserializer);
 
   @protected
+  RobotGameScoreSheetRequest sse_decode_robot_game_score_sheet_request(
+      SseDeserializer deserializer);
+
+  @protected
   RobotGameTableSignalRequest sse_decode_robot_game_table_signal_request(
       SseDeserializer deserializer);
 
@@ -755,6 +798,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   TmsServerSocketMessage sse_decode_tms_server_socket_message(
+      SseDeserializer deserializer);
+
+  @protected
+  TmsServerTableStateEvent sse_decode_tms_server_table_state_event(
       SseDeserializer deserializer);
 
   @protected
@@ -849,6 +896,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       GameMatch self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_game_score_sheet(
+      GameScoreSheet self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_game_table(
       GameTable self, SseSerializer serializer);
 
@@ -898,6 +949,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       RegisterResponse self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_robot_game_score_sheet_request(
+      RobotGameScoreSheetRequest self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_robot_game_table_signal_request(
       RobotGameTableSignalRequest self, SseSerializer serializer);
 
@@ -926,6 +981,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_tms_server_socket_message(
       TmsServerSocketMessage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_tms_server_table_state_event(
+      TmsServerTableStateEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_tms_time(TmsTime self, SseSerializer serializer);
@@ -1002,6 +1061,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_game_match_table(
       GameMatchTable self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_game_score_sheet(
+      GameScoreSheet self, SseSerializer serializer);
 
   @protected
   void sse_encode_game_table(GameTable self, SseSerializer serializer);
@@ -1128,6 +1191,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       RegisterResponse self, SseSerializer serializer);
 
   @protected
+  void sse_encode_robot_game_score_sheet_request(
+      RobotGameScoreSheetRequest self, SseSerializer serializer);
+
+  @protected
   void sse_encode_robot_game_table_signal_request(
       RobotGameTableSignalRequest self, SseSerializer serializer);
 
@@ -1167,6 +1234,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_tms_server_socket_message(
       TmsServerSocketMessage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tms_server_table_state_event(
+      TmsServerTableStateEvent self, SseSerializer serializer);
 
   @protected
   void sse_encode_tms_time(TmsTime self, SseSerializer serializer);

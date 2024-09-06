@@ -12,6 +12,7 @@ enum TmsServerSocketEvent {
   purgeEvent,
   matchTimerEvent,
   matchStateEvent,
+  tableStateEvent,
   ;
 }
 

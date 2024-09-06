@@ -31,8 +31,14 @@ pub use register_filter::*;
 mod robot_game_matches_filter;
 pub use robot_game_matches_filter::*;
 
+mod robot_game_tables_filter;
+pub use robot_game_tables_filter::*;
+
 mod robot_game_timer_filter;
 pub use robot_game_timer_filter::*;
+
+mod robot_game_scoring_filter;
+pub use robot_game_scoring_filter::*;
 
 mod tournament_blueprint_filter;
 pub use tournament_blueprint_filter::*;

@@ -11,12 +11,16 @@ import 'package:tms/views/view_selector/view_selector.dart';
 import 'package:tms/widgets/base_responsive.dart';
 import 'package:tms/widgets/base_scaffold.dart';
 import 'package:tms/widgets/base_scaffold_drawer_router.dart';
+import 'package:tms/widgets/no_mobile_view_wrapper.dart';
 
 final _protectedRoutes = <GoRoute>[
   GoRoute(
     path: '/setup',
     name: 'setup',
-    builder: (context, state) => BaseScaffold(state: state, child: Setup()),
+    builder: (context, state) => BaseScaffold(
+      state: state,
+      child: NoMobileViewWrapper(child: Setup()),
+    ),
     redirect: (context, state) {
       if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
         return '/login';
@@ -35,12 +39,18 @@ final _protectedRoutes = <GoRoute>[
       GoRoute(
         path: 'match_controller',
         name: 'match_controller',
-        builder: (context, state) => BaseScaffoldDrawerRouter(state: state, child: const MatchController()),
+        builder: (context, state) => BaseScaffoldDrawerRouter(
+          state: state,
+          child: const NoMobileViewWrapper(child: MatchController()),
+        ),
       ),
       GoRoute(
         path: 'scoring',
         name: 'scoring',
-        builder: (context, state) => BaseScaffoldDrawerRouter(state: state, child: RefereeScoring()),
+        builder: (context, state) => BaseScaffoldDrawerRouter(
+          state: state,
+          child: NoMobileViewWrapper(child: RefereeScoring()),
+        ),
       ),
     ],
     redirect: (context, state) {

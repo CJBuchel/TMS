@@ -19,6 +19,15 @@ class TmsDate {
     required this.day,
   });
 
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<TmsDate> newInstance(
+          {required int year, required int month, required int day}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateNew(
+          year: year, month: month, day: day);
+
+  static Future<TmsDate> now() =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateNow();
+
   @override
   int get hashCode => year.hashCode ^ month.hashCode ^ day.hashCode;
 
@@ -47,6 +56,14 @@ class TmsDateTime {
   static TmsDateTime fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonString(json: json);
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<TmsDateTime> newInstance({TmsDate? date, TmsTime? time}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateTimeNew(
+          date: date, time: time);
+
+  static Future<TmsDateTime> now() =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateTimeNow();
 
   String toJsonString() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasDateTimeTmsDateTimeToJsonString(
@@ -78,6 +95,15 @@ class TmsTime {
     required this.minute,
     required this.second,
   });
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<TmsTime> newInstance(
+          {required int hour, required int minute, required int second}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsTimeNew(
+          hour: hour, minute: minute, second: second);
+
+  static Future<TmsTime> now() =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsTimeNow();
 
   @override
   int get hashCode => hour.hashCode ^ minute.hashCode ^ second.hashCode;

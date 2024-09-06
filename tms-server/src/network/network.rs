@@ -33,6 +33,8 @@ impl Network {
       .or(login_filter(self.clients.clone(), self.db.clone()))
       .or(robot_game_matches_filter(self.clients.clone(), self.db.clone(), self.services.clone()))
       .or(robot_game_timer_filter(self.clients.clone(), self.db.clone(), self.services.clone()))
+      .or(robot_game_tables_filter(self.clients.clone(), self.db.clone()))
+      .or(robot_game_scoring_filter(self.clients.clone(), self.db.clone()))
       // core filters
       .or(registration_filter(self.clients.clone(), self.db.clone(), self.local_ip.clone(), self.tls, self.port))
       .or(websocket_filter(self.clients.clone(), self.db.clone()))

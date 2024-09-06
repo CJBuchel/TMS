@@ -11,6 +11,9 @@ pub enum TmsServerSocketEvent {
 
   // match events
   MatchStateEvent, // (running, ready, load, unload, table_ready vec, game match numbers)
+
+  // table events
+  TableStateEvent, // (not_ready_signal, ready_signal)
 }
 
 #[derive(serde::Deserialize, serde::Serialize, Clone, JsonSchema)]

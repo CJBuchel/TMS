@@ -6,6 +6,7 @@ import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/providers/connection_provider.dart';
 import 'package:tms/providers/game_scoring_provider.dart';
 import 'package:tms/providers/game_table_provider.dart';
+import 'package:tms/providers/game_table_signal_provider.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/providers/game_timer_provider.dart';
@@ -34,6 +35,7 @@ class ProviderMap extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TournamentBlueprintProvider()),
         ChangeNotifierProvider(create: (_) => GameTableProvider()),
         ChangeNotifierProvider(create: (_) => GameScoringProvider()),
+        ChangeNotifierProvider(create: (_) => GameTableSignalProvider()),
       ],
       child: app,
     );

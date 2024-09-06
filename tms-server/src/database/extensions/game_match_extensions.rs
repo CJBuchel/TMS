@@ -70,7 +70,10 @@ impl GameMatchExtensions for Database {
         self.inner.write().await.remove_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id).await;
         Ok(())
       }
-      None => Err(format!("GameMatch not found: {}", game_match_id)),
+      None => {
+        log::warn!("GameMatch does not exist: {}", game_match_id);
+        Err(format!("GameMatch not found: {}", game_match_id))
+      },
     }
   }
 
@@ -85,7 +88,10 @@ impl GameMatchExtensions for Database {
         self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json_string()).await;
         Ok(())
       }
-      None => Err(format!("GameMatch not found: {}", game_match_id)),
+      None => {
+        log::warn!("GameMatch does not exist: {}", game_match_id);
+        Err(format!("GameMatch not found: {}", game_match_id))
+      },
     }
   }
 }

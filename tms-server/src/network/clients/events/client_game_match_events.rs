@@ -17,7 +17,7 @@ impl ClientGameMatchEvents for Client {
     };
 
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchStateEvent,
       message: Some(msg_payload.to_json_string()),
     };
@@ -31,7 +31,7 @@ impl ClientGameMatchEvents for Client {
     };
 
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchStateEvent,
       message: Some(msd_payload.to_json_string()),
     };
@@ -45,7 +45,7 @@ impl ClientGameMatchEvents for Client {
     };
 
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchStateEvent,
       message: Some(msg_payload.to_json_string()),
     };
@@ -59,7 +59,7 @@ impl ClientGameMatchEvents for Client {
     };
 
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchStateEvent,
       message: Some(msg_payload.to_json_string()),
     };
@@ -70,7 +70,7 @@ impl ClientGameMatchEvents for Client {
 impl ClientGameMatchEvents for ClientHashMap {
   fn publish_load_matches(&self, game_match_numbers: Vec<String>) {
     for client in self.values() {
-      client.publish_load_matches(game_match_numbers.clone());
+      client.publish_load_matches(game_match_numbers.to_owned());
     }
   }
 
@@ -82,13 +82,13 @@ impl ClientGameMatchEvents for ClientHashMap {
 
   fn publish_ready_matches(&self, game_match_numbers: Vec<String>) {
     for client in self.values() {
-      client.publish_ready_matches(game_match_numbers.clone());
+      client.publish_ready_matches(game_match_numbers.to_owned());
     }
   }
 
   fn publish_running_matches(&self, game_match_numbers: Vec<String>) {
     for client in self.values() {
-      client.publish_running_matches(game_match_numbers.clone());
+      client.publish_running_matches(game_match_numbers.to_owned());
     }
   }
 }

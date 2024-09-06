@@ -4,9 +4,86 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import '../fll_infra/question.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`
+
+class RobotGameScoreSheetRequest {
+  final String table;
+  final String teamNumber;
+  final String referee;
+  final String? matchNumber;
+  final String gp;
+  final bool noShow;
+  final int score;
+  final int round;
+  final bool isAgnostic;
+  final List<QuestionAnswer> scoreSheetAnswers;
+  final String privateComment;
+
+  const RobotGameScoreSheetRequest({
+    required this.table,
+    required this.teamNumber,
+    required this.referee,
+    this.matchNumber,
+    required this.gp,
+    required this.noShow,
+    required this.score,
+    required this.round,
+    required this.isAgnostic,
+    required this.scoreSheetAnswers,
+    required this.privateComment,
+  });
+
+  static Future<RobotGameScoreSheetRequest> default_() => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGameScoreSheetRequestDefault();
+
+  static RobotGameScoreSheetRequest fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGameScoreSheetRequestFromJsonString(
+              json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGameScoreSheetRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGameScoreSheetRequestToSchema();
+
+  @override
+  int get hashCode =>
+      table.hashCode ^
+      teamNumber.hashCode ^
+      referee.hashCode ^
+      matchNumber.hashCode ^
+      gp.hashCode ^
+      noShow.hashCode ^
+      score.hashCode ^
+      round.hashCode ^
+      isAgnostic.hashCode ^
+      scoreSheetAnswers.hashCode ^
+      privateComment.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RobotGameScoreSheetRequest &&
+          runtimeType == other.runtimeType &&
+          table == other.table &&
+          teamNumber == other.teamNumber &&
+          referee == other.referee &&
+          matchNumber == other.matchNumber &&
+          gp == other.gp &&
+          noShow == other.noShow &&
+          score == other.score &&
+          round == other.round &&
+          isAgnostic == other.isAgnostic &&
+          scoreSheetAnswers == other.scoreSheetAnswers &&
+          privateComment == other.privateComment;
+}
 
 class RobotGameTableSignalRequest {
   final String table;

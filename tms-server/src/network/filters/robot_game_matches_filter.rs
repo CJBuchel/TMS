@@ -1,6 +1,6 @@
 use crate::{
   database::SharedDatabase,
-  network::{robot_game_matches_load_matches_handler, robot_game_matches_ready_matches_handler, robot_game_matches_unload_matches_handler, robot_game_matches_unready_matches_handler, ClientMap},
+  network::*,
   services::SharedServices,
 };
 use warp::Filter;

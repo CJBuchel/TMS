@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
+import 'package:tms/providers/game_table_signal_provider.dart';
 import 'package:tms/views/match_controller/match_stage/table_status.dart';
 import 'package:collection/collection.dart';
 
@@ -28,7 +30,7 @@ class LoadedTable extends StatelessWidget {
     );
   }
 
-  Widget _tableRow(BuildContext context, GameMatchTable table) {
+  Widget _tableRow(BuildContext context, GameMatchTable table, TableSignalState state) {
     Team? team = teams.firstWhereOrNull((team) => team.number == table.teamNumber);
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -46,8 +48,8 @@ class LoadedTable extends StatelessWidget {
                 bottom: BorderSide(color: Theme.of(context).dividerColor),
               ),
             ),
-            child: const Center(
-              child: TableStatus(status: TableSignalState.SIG),
+            child: Center(
+              child: TableStatus(state: state),
             ),
           ),
         ),
@@ -71,10 +73,26 @@ class LoadedTable extends StatelessWidget {
       tables.addAll(match.gameMatchTables);
     }
 
-    return ListView.builder(
-      itemCount: tables.length,
-      itemBuilder: (context, index) {
-        return _tableRow(context, tables[index]);
+    return Selector<GameTableSignalProvider, Map<String, String>>(
+      selector: (context, provider) => provider.tableSignals,
+      builder: (context, tableSignals, _) {
+        return ListView.builder(
+          itemCount: tables.length,
+          itemBuilder: (context, index) {
+            GameMatchTable table = tables[index];
+            TableSignalState state = TableSignalState.SIG;
+
+            // check if table is in tableSignals
+            if (tableSignals.containsKey(table.table)) {
+              state = TableSignalState.STANDBY;
+              if (tableSignals[table.table] == table.teamNumber) {
+                state = TableSignalState.READY;
+              }
+            }
+
+            return _tableRow(context, table, state);
+          },
+        );
       },
     );
   }

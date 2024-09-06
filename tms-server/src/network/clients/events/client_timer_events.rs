@@ -15,7 +15,7 @@ pub trait ClientTimerEvents {
 impl ClientTimerEvents for Client {
   fn publish_start_countdown(&self) {
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(
         TmsServerMatchTimerEvent {
@@ -30,7 +30,7 @@ impl ClientTimerEvents for Client {
 
   fn publish_start_timer(&self) {
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(
         TmsServerMatchTimerEvent {
@@ -50,7 +50,7 @@ impl ClientTimerEvents for Client {
     };
 
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(msg_payload.to_json_string()),
     };
@@ -64,7 +64,7 @@ impl ClientTimerEvents for Client {
     };
 
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(msg_payload.to_json_string()),
     };
@@ -73,7 +73,7 @@ impl ClientTimerEvents for Client {
 
   fn publish_end_timer(&self) {
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(
         TmsServerMatchTimerEvent {
@@ -88,7 +88,7 @@ impl ClientTimerEvents for Client {
 
   fn publish_stop_timer(&self) {
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(
         TmsServerMatchTimerEvent {
@@ -103,7 +103,7 @@ impl ClientTimerEvents for Client {
 
   fn publish_reload_timer(&self) {
     let msg = TmsServerSocketMessage {
-      auth_token: self.auth_token.clone(),
+      auth_token: self.auth_token.to_owned(),
       message_event: TmsServerSocketEvent::MatchTimerEvent,
       message: Some(
         TmsServerMatchTimerEvent {

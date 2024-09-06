@@ -24,3 +24,6 @@ pub use judging_pod::*;
 
 pub mod tournament_blueprint;
 pub use tournament_blueprint::*;
+
+pub mod game_score_sheet;
+pub use game_score_sheet::*;

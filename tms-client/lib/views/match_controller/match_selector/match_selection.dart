@@ -2,7 +2,7 @@ import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/match_expandable_row.dart';
 import 'package:tms/widgets/buttons/category_button.dart';
@@ -29,10 +29,12 @@ class MatchSelection extends StatelessWidget {
         Color evenCompletedBackground = Colors.green[500] ?? Colors.green;
         Color oddCompletedBackground = Colors.green[300] ?? Colors.green;
         // alternating background colors
+
         Color evenBackground = match.completed ? evenCompletedBackground : Theme.of(context).cardColor;
         Color oddBackground = match.completed ? oddCompletedBackground : lighten(Theme.of(context).cardColor, 0.05);
 
         Color backgroundColor = listIndex.isEven ? evenBackground : oddBackground;
+        Color submittedColor = listIndex.isEven ? evenCompletedBackground : oddCompletedBackground;
 
         // listenable builder for the expanded index
         return Theme(
@@ -59,6 +61,7 @@ class MatchSelection extends StatelessWidget {
               }
             },
             backgroundColor: backgroundColor,
+            submittedColor: submittedColor,
           ),
         );
       },

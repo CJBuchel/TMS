@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/widgets/buttons/barber_pole_button.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
@@ -10,10 +11,28 @@ const _inactiveColor = Color(0xFF9E9E9E);
 const _backgroundColor = Color(0xFFD55C00);
 const _overlayColor = Color(0xFFFF6F00);
 
+class _MatchStatusData {
+  final bool canLoad;
+  final bool canUnload;
+  final bool canUnready;
+  final bool isRunning;
+
+  _MatchStatusData({
+    required this.canLoad,
+    required this.canUnload,
+    required this.canUnready,
+    required this.isRunning,
+  });
+}
+
 class LoadMatchButton extends StatelessWidget {
   final WidgetStateProperty<Color?> _inactiveColorState = const WidgetStatePropertyAll(_inactiveColor);
   final WidgetStateProperty<Color?> _backgroundColorState = const WidgetStatePropertyAll(_backgroundColor);
   final WidgetStateProperty<Color?> _overlayColorState = const WidgetStatePropertyAll(_overlayColor);
+
+  final List<GameMatch> matches;
+
+  const LoadMatchButton({Key? key, required this.matches}) : super(key: key);
 
   Widget _loadButton(BuildContext context, {bool active = true}) {
     return ElevatedButton(
@@ -24,7 +43,7 @@ class LoadMatchButton extends StatelessWidget {
       ),
       onPressed: () {
         if (active) {
-          Provider.of<GameMatchProvider>(context, listen: false).loadMatches().then((status) {
+          Provider.of<GameMatchStatusProvider>(context, listen: false).loadMatches().then((status) {
             if (status != HttpStatus.ok) {
               SnackBarDialog.fromStatus(message: "Load Match", status: status).show(context);
             }
@@ -49,7 +68,7 @@ class LoadMatchButton extends StatelessWidget {
       stripeColor: active ? _backgroundColor : _inactiveColor,
       onPressed: () {
         if (active) {
-          Provider.of<GameMatchProvider>(context, listen: false).unloadMatches().then((status) {
+          Provider.of<GameMatchStatusProvider>(context, listen: false).unloadMatches().then((status) {
             if (status != HttpStatus.ok) {
               SnackBarDialog.fromStatus(message: "Unload Match", status: status).show(context);
             }
@@ -70,13 +89,13 @@ class LoadMatchButton extends StatelessWidget {
   // Widget
 
   Widget _button(BuildContext context) {
-    return Selector<GameMatchProvider, ({bool canLoad, bool canUnload, bool canUnready, bool isRunning})>(
-      selector: (context, provider) {
-        return (
-          canLoad: provider.canLoad,
-          canUnload: provider.canUnload,
-          canUnready: provider.canUnready,
-          isRunning: provider.isMatchesRunning,
+    return Selector<GameMatchStatusProvider, _MatchStatusData>(
+      selector: (context, statusProvider) {
+        return _MatchStatusData(
+          canLoad: statusProvider.canLoad(matches),
+          canUnload: statusProvider.canUnload,
+          canUnready: statusProvider.canUnready,
+          isRunning: statusProvider.isMatchesRunning,
         );
       },
       builder: (context, data, _) {

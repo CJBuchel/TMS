@@ -7,7 +7,6 @@ import 'package:tms/generated/infra/network_schemas/tournament_config_requests.d
 import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:tms/services/game_scoring_service.dart';
-import 'package:tms/utils/logger.dart';
 
 class GameScoringProvider extends TournamentBlueprintProvider {
   final GameScoringService _service = GameScoringService();
@@ -54,7 +53,6 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   void _updateScore(int score) {
     _score = score;
     // @TODO send score to server/clients
-    TmsLogger().i("Score updated: $score");
     notifyListeners();
   }
 

@@ -12,10 +12,10 @@ pub async fn robot_game_scoring_submit_score_sheet(request: RobotGameScoreSheetR
   };
 
   let score_sheet = GameScoreSheet {
-    table: request.table,
+    table: request.table.clone(),
     team_ref_id: team_id,
     referee: request.referee,
-    match_number: request.match_number,
+    match_number: request.match_number.clone(),
     timestamp: TmsDateTime::now(),
 
     gp: request.gp,
@@ -32,11 +32,37 @@ pub async fn robot_game_scoring_submit_score_sheet(request: RobotGameScoreSheetR
     modified_by: None,
   };
 
-  match db.write().await.insert_game_score_sheet(score_sheet, None).await {
-    Ok(_) => log::info!("GameScoreSheet submitted: {}", request.team_number),
+  let read_db = db.read().await;
+
+  match read_db.insert_game_score_sheet(score_sheet, None).await {
+    Ok(_) => {
+      log::info!("GameScoreSheet submitted for team: {}", request.team_number);
+    },
     Err(e) => {
       log::error!("Failed to submit GameScoreSheet: {}", e);
       return Err(warp::reject::custom(BadRequestWithMessage { message: e }));
+    }
+  }
+
+  // if match number is provided, set game match table to score submitted
+  if let Some(game_match_number) = request.match_number {
+    let game_match_id = match read_db.get_game_match_by_number(game_match_number.to_owned()).await {
+      Some((id, _)) => id,
+      None => {
+        log::error!("GameMatch not found: {}, cannot update table", game_match_number);
+        return Err(warp::reject::not_found());
+      }
+    };
+
+    // update game match table score submitted
+    match read_db.set_game_match_table_score_submitted(game_match_id, request.table.clone()).await {
+      Ok(_) => {
+        log::info!("Updated game match: {}, table: {}", game_match_number, request.table.to_owned());
+      },
+      Err(e) => {
+        log::error!("Failed to update GameMatch table score submitted: {}", e);
+        return Err(warp::reject::custom(BadRequestWithMessage { message: e }));
+      }
     }
   }
 

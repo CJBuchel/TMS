@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
-import 'package:tms/providers/game_table_signal_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_table_signal_provider.dart';
 import 'package:tms/views/match_controller/match_stage/table_status.dart';
 import 'package:collection/collection.dart';
 

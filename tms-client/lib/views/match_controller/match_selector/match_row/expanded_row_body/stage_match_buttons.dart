@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 
 class StageMatchButtons extends StatelessWidget {
   final GameMatch match;
@@ -14,7 +14,7 @@ class StageMatchButtons extends StatelessWidget {
   Widget _unstageButton(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () {
-        Provider.of<GameMatchProvider>(context, listen: false).clearStagedMatches();
+        Provider.of<GameMatchStatusProvider>(context, listen: false).clearStagedMatches();
       },
       style: ButtonStyle(
         backgroundColor: const WidgetStatePropertyAll(Colors.white),
@@ -35,7 +35,7 @@ class StageMatchButtons extends StatelessWidget {
   Widget _stageButton(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () {
-        Provider.of<GameMatchProvider>(context, listen: false).stageMatches([match.matchNumber]);
+        Provider.of<GameMatchStatusProvider>(context, listen: false).stageMatches([match.matchNumber]);
       },
       style: const ButtonStyle(
         backgroundColor: WidgetStatePropertyAll(Colors.blue),
@@ -55,7 +55,7 @@ class StageMatchButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<GameMatchProvider, bool>(
+    return Selector<GameMatchStatusProvider, bool>(
       selector: (context, provider) {
         return provider.isMatchStaged(match.matchNumber);
       },

@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/expanded_row_body/expanded_row_body.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/stage_checkbox.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/table_info.dart';
 import 'package:tms/widgets/animated/barber_pole_container.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
+
+class _MatchRowData {
+  final bool isMatchStaged;
+  final bool isMatchLoaded;
+  final bool isMatchRunning;
+  final List<GameMatch> loadedMatches;
+
+  _MatchRowData({
+    required this.isMatchStaged,
+    required this.isMatchLoaded,
+    required this.isMatchRunning,
+    required this.loadedMatches,
+  });
+}
 
 enum MatchRowState {
   IDLE, // default, blank
@@ -20,6 +35,7 @@ class MatchExpandableRow extends StatelessWidget {
   final GameMatch match;
   final bool isMultiMatch;
   final Color? backgroundColor;
+  final Color? submittedColor;
   final Function(bool)? onChangeExpand;
   final Function(bool)? onSelect;
   final ExpansionController? controller;
@@ -29,6 +45,7 @@ class MatchExpandableRow extends StatelessWidget {
     required this.match,
     required this.isMultiMatch,
     this.backgroundColor,
+    this.submittedColor,
     this.controller,
     this.onChangeExpand,
     this.onSelect,
@@ -79,6 +96,7 @@ class MatchExpandableRow extends StatelessWidget {
           isMatchComplete: match.completed,
           table: table,
           backgroundColor: backgroundColor,
+          submittedColor: submittedColor ?? Colors.green,
         );
       }).toList(),
     );
@@ -140,20 +158,13 @@ class MatchExpandableRow extends StatelessWidget {
         side: BorderSide(color: borderColor),
       ),
       // provider selector
-      child: Selector<
-          GameMatchProvider,
-          ({
-            bool isMatchStaged,
-            bool isMatchLoaded,
-            bool isMatchRunning,
-            List<GameMatch> loadedMatches,
-          })>(
-        selector: (context, provider) {
-          return (
-            isMatchStaged: provider.isMatchStaged(match.matchNumber),
-            isMatchLoaded: provider.isMatchLoaded(match.matchNumber),
-            isMatchRunning: provider.isMatchRunning(match.matchNumber),
-            loadedMatches: provider.loadedMatches,
+      child: Selector2<GameMatchStatusProvider, GameMatchProvider, _MatchRowData>(
+        selector: (context, statusProvider, gameMatchProvider) {
+          return _MatchRowData(
+            isMatchStaged: statusProvider.isMatchStaged(match.matchNumber),
+            isMatchLoaded: statusProvider.isMatchLoaded(match.matchNumber),
+            isMatchRunning: statusProvider.isMatchRunning(match.matchNumber),
+            loadedMatches: statusProvider.getLoadedMatches(gameMatchProvider.matches),
           );
         },
         builder: (context, data, child) {

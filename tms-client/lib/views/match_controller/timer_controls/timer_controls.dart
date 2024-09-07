@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/views/match_controller/timer_controls/abort_button.dart';
 import 'package:tms/views/match_controller/timer_controls/start_buttons.dart';
 import 'package:tms/widgets/timers/match_timer.dart';
@@ -10,10 +10,10 @@ class TimerControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<GameMatchProvider, ({bool isReady, bool isRunning})>(
+    return Selector<GameMatchStatusProvider, ({bool isReady, bool isRunning})>(
       selector: (_, provider) {
         return (
-          isReady: provider.isReady,
+          isReady: provider.isMatchesReady,
           isRunning: provider.isMatchesRunning,
         );
       },

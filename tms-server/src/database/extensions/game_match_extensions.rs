@@ -10,6 +10,7 @@ pub trait GameMatchExtensions {
   async fn insert_game_match(&self, game_match: GameMatch, game_match_id: Option<String>) -> Result<(), String>;
   async fn remove_game_match(&self, game_match_id: String) -> Result<(), String>;
   async fn set_game_match_complete(&self, game_match_id: String) -> Result<(), String>;
+  async fn set_game_match_table_score_submitted(&self, game_match_id: String, table: String) -> Result<(), String>;
 }
 
 #[async_trait::async_trait]
@@ -92,6 +93,30 @@ impl GameMatchExtensions for Database {
         log::warn!("GameMatch does not exist: {}", game_match_id);
         Err(format!("GameMatch not found: {}", game_match_id))
       },
+    }
+  }
+
+  async fn set_game_match_table_score_submitted(&self, game_match_id: String, table: String) -> Result<(), String> {
+    let game_match = self.get_game_match(game_match_id.to_owned()).await;
+
+    match game_match {
+      Some(mut game_match) => {
+        let table_index = game_match.game_match_tables.iter().position(|t| t.table == table);
+        match table_index {
+          Some(index) => {
+            game_match.game_match_tables[index].score_submitted = true;
+            self.insert_game_match(game_match, Some(game_match_id)).await
+          }
+          None => {
+            log::warn!("Table does not exist in GameMatch: {}", table);
+            Err(format!("Table not found in GameMatch: {}", table))
+          }
+        }
+      }
+      None => {
+        log::warn!("GameMatch does not exist: {}", game_match_id);
+        Err(format!("GameMatch not found: {}", game_match_id))
+      }
     }
   }
 }

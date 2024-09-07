@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
 
 class StageCheckbox extends StatelessWidget {
@@ -13,11 +14,11 @@ class StageCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<GameMatchProvider, ({bool canStage, bool isStaged})>(
-      selector: (context, provider) {
+    return Selector2<GameMatchStatusProvider, GameMatchProvider, ({bool canStage, bool isStaged})>(
+      selector: (context, statusProvider, gameMatchProvider) {
         return (
-          canStage: provider.canStageMatch(match.matchNumber),
-          isStaged: provider.isMatchStaged(match.matchNumber),
+          canStage: statusProvider.canStageMatch(match.matchNumber, gameMatchProvider.matches),
+          isStaged: statusProvider.isMatchStaged(match.matchNumber),
         );
       },
       builder: (context, data, _) {
@@ -27,9 +28,9 @@ class StageCheckbox extends StatelessWidget {
             defaultValue: data.isStaged,
             onChanged: (value) {
               if (value) {
-                Provider.of<GameMatchProvider>(context, listen: false).addMatchToStage(match.matchNumber);
+                Provider.of<GameMatchStatusProvider>(context, listen: false).addMatchToStage(match.matchNumber);
               } else {
-                Provider.of<GameMatchProvider>(context, listen: false).removeMatchFromStage(match.matchNumber);
+                Provider.of<GameMatchStatusProvider>(context, listen: false).removeMatchFromStage(match.matchNumber);
               }
             },
           );

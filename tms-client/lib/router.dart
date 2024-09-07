@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/auth_provider.dart';
@@ -13,13 +14,33 @@ import 'package:tms/widgets/base_scaffold.dart';
 import 'package:tms/widgets/base_scaffold_drawer_router.dart';
 import 'package:tms/widgets/no_mobile_view_wrapper.dart';
 
+class _DelayedViewWrapper extends StatelessWidget {
+  final Widget child;
+
+  const _DelayedViewWrapper({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Future.delayed(const Duration(milliseconds: 500)),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return child;
+        }
+
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}
+
 final _protectedRoutes = <GoRoute>[
   GoRoute(
     path: '/setup',
     name: 'setup',
     builder: (context, state) => BaseScaffold(
       state: state,
-      child: NoMobileViewWrapper(child: Setup()),
+      child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Setup())),
     ),
     redirect: (context, state) {
       if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
@@ -41,7 +62,7 @@ final _protectedRoutes = <GoRoute>[
         name: 'match_controller',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: const NoMobileViewWrapper(child: MatchController()),
+          child: const _DelayedViewWrapper(child: NoMobileViewWrapper(child: MatchController())),
         ),
       ),
       GoRoute(
@@ -49,7 +70,7 @@ final _protectedRoutes = <GoRoute>[
         name: 'scoring',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: NoMobileViewWrapper(child: RefereeScoring()),
+          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: RefereeScoring())),
         ),
       ),
     ],

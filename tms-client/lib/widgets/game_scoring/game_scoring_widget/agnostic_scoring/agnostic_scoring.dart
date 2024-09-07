@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:tms/providers/game_scoring_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 
 class AgnosticScoringWidget extends StatelessWidget {
   final Function(int) onScoreChanged;

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tms/providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/widgets/buttons/barber_pole_button.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
@@ -24,7 +24,7 @@ class ReadyMatchButton extends StatelessWidget {
       ),
       onPressed: () {
         if (active) {
-          Provider.of<GameMatchProvider>(context, listen: false).readyMatches().then((status) {
+          Provider.of<GameMatchStatusProvider>(context, listen: false).readyMatches().then((status) {
             if (status != HttpStatus.ok) {
               SnackBarDialog.fromStatus(message: "Ready Match", status: status).show(context);
             }
@@ -49,7 +49,7 @@ class ReadyMatchButton extends StatelessWidget {
       stripeColor: active ? _overlayColor : _inactiveColor,
       onPressed: () {
         if (active) {
-          Provider.of<GameMatchProvider>(context, listen: false).unreadyMatches().then((status) {
+          Provider.of<GameMatchStatusProvider>(context, listen: false).unreadyMatches().then((status) {
             if (status != HttpStatus.ok) {
               SnackBarDialog.fromStatus(message: "Unready Match", status: status).show(context);
             }
@@ -68,7 +68,7 @@ class ReadyMatchButton extends StatelessWidget {
   }
 
   Widget _buttons(BuildContext context) {
-    return Selector<GameMatchProvider, ({bool canReady, bool canUnready, bool isRunning})>(
+    return Selector<GameMatchStatusProvider, ({bool canReady, bool canUnready, bool isRunning})>(
       selector: (context, provider) {
         return (
           canReady: provider.canReady,

@@ -1,14 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
-import 'package:tms/providers/game_scoring_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
+import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
+import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 
 class SubmitAnswersButton extends StatelessWidget {
   final double buttonHeight;
   final ScrollController? scrollController;
   final Team? team;
   final GameMatch? match;
+  final int round;
+  final String table;
+  final String referee;
 
   SubmitAnswersButton({
     Key? key,
@@ -16,7 +23,44 @@ class SubmitAnswersButton extends StatelessWidget {
     this.scrollController,
     this.team,
     this.match,
+    required this.round,
+    required this.table,
+    required this.referee,
   }) : super(key: key);
+
+  void _submitAnswersDialog(BuildContext context) {
+    ConfirmFutureDialog(
+      style: ConfirmDialogStyle.success(
+        title: "Submit Answers",
+        message: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Are you sure you want to submit answers for match ${match?.matchNumber}?"),
+            const SizedBox(height: 10),
+            const Text("This action cannot be undone."),
+          ],
+        ),
+      ),
+      onStatusConfirmFuture: () => Provider.of<GameScoringProvider>(context, listen: false).submitScoreSheet(
+        table: table,
+        round: round,
+        teamNumber: team!.number,
+        matchNumber: match!.matchNumber,
+      ),
+      onFinish: (status) {
+        if (status == HttpStatus.ok) {
+          if (scrollController?.hasClients ?? false) {
+            scrollController?.animateTo(
+              0.0,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+            );
+          }
+          Provider.of<GameScoringProvider>(context, listen: false).resetAnswers();
+        }
+      },
+    ).show(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +78,7 @@ class SubmitAnswersButton extends StatelessWidget {
             icon: const Icon(Icons.send),
             onPressed: () {
               if (!isDisabled) {
-                // @TODO send answers to server
+                _submitAnswersDialog(context);
               }
             },
             style: ElevatedButton.styleFrom(

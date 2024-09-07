@@ -5,7 +5,7 @@ import 'package:tms/generated/infra/database_schemas/tournament_blueprint.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
-import 'package:tms/providers/game_scoring_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/agnostic_scoring/agnostic_scoring.dart';
@@ -35,7 +35,6 @@ class GameScoringWidget extends StatelessWidget {
       final nextKey = questionKeys[currentIndex + 1];
       final nextContext = nextKey.currentContext;
 
-      TmsLogger().d("Scrolling to next question");
       if (nextContext != null) {
         final RenderBox renderBox = nextContext.findRenderObject() as RenderBox;
         final position = renderBox.localToGlobal(

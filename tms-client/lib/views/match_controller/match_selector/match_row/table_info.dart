@@ -6,23 +6,29 @@ class TableItem extends StatelessWidget {
   final bool isMatchComplete;
   final GameMatchTable table;
   final Color? backgroundColor;
+  final Color submittedColor;
 
   const TableItem({
     required this.isMatchComplete,
     required this.table,
     this.backgroundColor,
+    this.submittedColor = Colors.green,
   });
 
   Color _getBackgroundColor() {
+    Color defaultColor = backgroundColor ?? Colors.blueGrey;
+
     if (isMatchComplete) {
-      return table.scoreSubmitted ? Colors.green : Colors.red;
+      return table.scoreSubmitted ? submittedColor : Colors.red;
     } else {
-      return backgroundColor ?? Colors.blueGrey;
+      return table.scoreSubmitted ? submittedColor : defaultColor;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Color? fontColor = table.scoreSubmitted ? Colors.black : null;
+
     return Expanded(
       flex: 1,
       child: Container(
@@ -36,9 +42,15 @@ class TableItem extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(table.table),
+            Text(
+              table.table,
+              style: TextStyle(fontSize: 12, color: fontColor),
+            ),
             const SizedBox(height: 10),
-            Text(table.teamNumber, style: const TextStyle(fontSize: 12)),
+            Text(
+              table.teamNumber,
+              style: TextStyle(fontSize: 12, color: fontColor),
+            ),
           ],
         ),
       ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
-import 'package:tms/providers/game_match_provider.dart';
-import 'package:tms/providers/game_table_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
 import 'package:tms/providers/teams_provider.dart';
 
 class _NextData {
@@ -44,7 +44,7 @@ class WithNextGameScoring extends StatelessWidget {
     return Selector3<GameTableProvider, GameMatchProvider, TeamsProvider, _NextData>(
       selector: (context, gameTableProvider, gameMatchProvider, teamsProvider) {
         final gameTable = gameTableProvider.localGameTable;
-        final gameMatch = gameMatchProvider.getNextTableMatch(gameTable);
+        final gameMatch = gameTableProvider.getNextTableMatch(gameMatchProvider.matches);
 
         final gameMatchTable = gameMatch?.gameMatchTables.firstWhere((e) => e.table == gameTable);
         final teamNumber = gameMatchTable?.teamNumber;

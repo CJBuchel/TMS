@@ -38,7 +38,7 @@ class GameScoringService {
   Future<int> submitScoreSheet(RobotGameScoreSheetRequest scoreSheet) async {
     try {
       var request = scoreSheet.toJsonString();
-      var response = await Network().networkPost("/robot_game/score_sheet", request);
+      var response = await Network().networkPost("/robot_game/scoring/submit_score_sheet", request);
       if (response.$1) {
         return HttpStatus.ok;
       } else {

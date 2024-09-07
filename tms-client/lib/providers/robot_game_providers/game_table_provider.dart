@@ -19,8 +19,8 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerE
       notifyListeners();
     }
 
-    if (_localReferee != TmsLocalStorageProvider().referee) {
-      _localReferee = TmsLocalStorageProvider().referee;
+    if (_localReferee != TmsLocalStorageProvider().gameReferee) {
+      _localReferee = TmsLocalStorageProvider().gameReferee;
       notifyListeners();
     }
   }
@@ -38,6 +38,7 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerE
           fromJsonString: (json) => GameTable.fromJsonString(json: json),
         ) {
     _localGameTable = TmsLocalStorageProvider().gameTable;
+    _localReferee = TmsLocalStorageProvider().gameReferee;
     TmsLocalStorageProvider().addListener(_onStorageChange);
 
     subscribeToEvent(TmsServerSocketEvent.matchStateEvent, (event) {
@@ -84,13 +85,8 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerE
     return isTableSet && doesTableExist;
   }
 
-  String get localGameTable {
-    return _localGameTable;
-  }
-
-  String get localReferee {
-    return _localReferee;
-  }
+  String get localGameTable => _localGameTable;
+  String get localReferee => _localReferee;
 
   set localGameTable(String table) {
     _localGameTable = table;
@@ -100,7 +96,15 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerE
 
   set localReferee(String referee) {
     _localReferee = referee;
-    TmsLocalStorageProvider().referee = referee;
+    TmsLocalStorageProvider().gameReferee = referee;
+    notifyListeners();
+  }
+
+  void setLocalTableAndReferee(String table, String referee) {
+    _localGameTable = table;
+    _localReferee = referee;
+    TmsLocalStorageProvider().gameTable = table;
+    TmsLocalStorageProvider().gameReferee = referee;
     notifyListeners();
   }
 
@@ -112,7 +116,7 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerE
 
   void clearLocalReferee() {
     _localReferee = "";
-    TmsLocalStorageProvider().referee = "";
+    TmsLocalStorageProvider().gameReferee = "";
     notifyListeners();
   }
 

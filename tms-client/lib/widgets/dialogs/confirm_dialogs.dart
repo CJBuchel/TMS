@@ -31,7 +31,11 @@ class ConfirmDialog extends BaseDialog {
   final Function? onConfirm;
   final Function? onCancel;
 
-  ConfirmDialog({required this.style, this.onConfirm, this.onCancel});
+  ConfirmDialog({
+    required this.style,
+    this.onConfirm,
+    this.onCancel,
+  });
 
   Widget _buildTitle() {
     IconData iconData;
@@ -102,7 +106,10 @@ class ConfirmDialog extends BaseDialog {
           onConfirm?.call();
           context.pop();
         },
-        child: Text("Confirm", style: TextStyle(color: color)),
+        child: Text(
+          "Confirm",
+          style: TextStyle(color: color),
+        ),
       ),
     ];
   }

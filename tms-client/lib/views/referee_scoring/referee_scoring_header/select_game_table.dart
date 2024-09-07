@@ -2,6 +2,7 @@ import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 
 class _GameTableData {
@@ -49,35 +50,43 @@ class _SelectGameTableState extends State<SelectGameTable> {
     ConfirmDialog(
       style: ConfirmDialogStyle.info(
         title: "Select Table",
-        message: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // dropdown table
-            ValueListenableBuilder<String>(
-              valueListenable: selectedTable,
-              builder: (context, value, _) {
-                return DropdownButton<String>(
-                  value: value,
-                  items: tables.map((e) {
-                    return DropdownMenuItem<String>(
-                      value: e,
-                      child: Text(e),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    if (value != null) selectedTable.value = value;
-                  },
-                );
-              },
-            ),
-            // referee
-            TextField(
-              controller: refereeController,
-              decoration: const InputDecoration(
-                labelText: "Input Referee",
+        message: SizedBox(
+          width: 300,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // dropdown table
+              ValueListenableBuilder<String>(
+                valueListenable: selectedTable,
+                builder: (context, value, _) {
+                  return SizedBox(
+                    width: 300,
+                    child: DropdownButton<String>(
+                      value: value,
+                      items: tables.map((e) {
+                        return DropdownMenuItem<String>(
+                          value: e,
+                          child: Text(e),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        if (value != null) selectedTable.value = value;
+                      },
+                    ),
+                  );
+                },
               ),
-            ),
-          ],
+              // space
+              const SizedBox(height: 20),
+              // referee
+              TextField(
+                controller: refereeController,
+                decoration: const InputDecoration(
+                  labelText: "Input Referee",
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       onConfirm: () {

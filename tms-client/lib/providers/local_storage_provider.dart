@@ -117,6 +117,6 @@ class TmsLocalStorageProvider extends _TmsLocalStorageBase {
   set gameTable(String table) => setString("gameTable", table);
   String get gameTable => getString("gameTable") ?? "";
 
-  set referee(String referee) => setString("referee", referee);
-  String get referee => getString("referee") ?? "";
+  set gameReferee(String referee) => setString("gameReferee", referee);
+  String get gameReferee => getString("gameReferee") ?? "";
 }

@@ -1,11 +1,12 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 abstract class _BaseTeamsProvider extends EchoTreeProvider<String, Team> {
   _BaseTeamsProvider() : super(tree: ":teams", fromJsonString: (json) => Team.fromJsonString(json: json));
 
   List<Team> get teams {
-    return this.items.values.toList();
+    return sortTeamsByNumber(this.items.values.toList());
   }
 
   Team getTeam(String teamNumber) {

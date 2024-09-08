@@ -1,4 +1,3 @@
-import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
@@ -112,16 +111,13 @@ class MatchSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EchoTreeLifetime(
-      trees: [":robot_game:matches"],
-      child: Column(
-        children: [
-          _modeHeader(),
-          Expanded(
-            child: _matchList(),
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        _modeHeader(),
+        Expanded(
+          child: _matchList(),
+        ),
+      ],
     );
   }
 }

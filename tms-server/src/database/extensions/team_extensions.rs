@@ -10,6 +10,8 @@ pub trait TeamExtensions {
   async fn get_team_by_number(&self, number: String) -> Option<(String, Team)>;
   async fn insert_team(&self, team: Team, team_id: Option<String>) -> Result<(), String>;
   async fn remove_team(&self, team_id: String) -> Result<(), String>;
+  async fn update_team_rank(&self, team_id: String, rank: u32) -> Result<(), String>;
+  async fn calculate_team_rankings(&self, score_sheets: Vec<GameScoreSheet>) -> Result<(), String>;
 }
 
 #[async_trait::async_trait]
@@ -72,5 +74,29 @@ impl TeamExtensions for Database {
       }
       None => Err(format!("Team with id {} not found", team_id)),
     }
+  }
+
+  async fn update_team_rank(&self, team_id: String, rank: u32) -> Result<(), String> {
+    let tree = self.inner.read().await.get_tree(TEAMS.to_string()).await;
+    let team = tree.get(&team_id).cloned();
+
+    match team {
+      Some(team) => {
+        let mut team = Team::from_json_string(&team);
+        team.ranking = rank;
+        self.inner.write().await.insert_entry(TEAMS.to_string(), team_id, team.to_json_string()).await;
+        Ok(())
+      }
+      None => Err(format!("Team with id {} not found", team_id)),
+    }
+  }
+
+  async fn calculate_team_rankings(&self, score_sheets: Vec<GameScoreSheet>) -> Result<(), String> {
+    // get all team scoresheets
+    let team_rankings = GameScoreSheet::calculate_team_rankings(score_sheets);
+    for (team_id, rank) in team_rankings {
+      self.update_team_rank(team_id, rank).await?;
+    }
+    Ok(())
   }
 }

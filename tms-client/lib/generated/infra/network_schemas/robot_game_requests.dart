@@ -4,12 +4,15 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import '../database_schemas/date_time.dart';
+import '../database_schemas/game_match.dart';
 import '../fll_infra/question.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`
 
 class RobotGameScoreSheetRequest {
+  final String blueprintTitle;
   final String table;
   final String teamNumber;
   final String referee;
@@ -23,6 +26,7 @@ class RobotGameScoreSheetRequest {
   final String privateComment;
 
   const RobotGameScoreSheetRequest({
+    required this.blueprintTitle,
     required this.table,
     required this.teamNumber,
     required this.referee,
@@ -55,6 +59,7 @@ class RobotGameScoreSheetRequest {
 
   @override
   int get hashCode =>
+      blueprintTitle.hashCode ^
       table.hashCode ^
       teamNumber.hashCode ^
       referee.hashCode ^
@@ -72,6 +77,7 @@ class RobotGameScoreSheetRequest {
       identical(this, other) ||
       other is RobotGameScoreSheetRequest &&
           runtimeType == other.runtimeType &&
+          blueprintTitle == other.blueprintTitle &&
           table == other.table &&
           teamNumber == other.teamNumber &&
           referee == other.referee &&
@@ -156,4 +162,42 @@ class RobotGamesLoadMatchRequest {
       other is RobotGamesLoadMatchRequest &&
           runtimeType == other.runtimeType &&
           gameMatchNumbers == other.gameMatchNumbers;
+}
+
+class RobotGamesUpdateMatchRequest {
+  final String matchId;
+  final GameMatch gameMatch;
+
+  const RobotGamesUpdateMatchRequest({
+    required this.matchId,
+    required this.gameMatch,
+  });
+
+  static Future<RobotGamesUpdateMatchRequest> default_() => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestDefault();
+
+  static RobotGamesUpdateMatchRequest fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestFromJsonString(
+              json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToSchema();
+
+  @override
+  int get hashCode => matchId.hashCode ^ gameMatch.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RobotGamesUpdateMatchRequest &&
+          runtimeType == other.runtimeType &&
+          matchId == other.matchId &&
+          gameMatch == other.gameMatch;
 }

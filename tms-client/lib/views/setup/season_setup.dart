@@ -1,4 +1,3 @@
-import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
@@ -76,34 +75,31 @@ class SeasonSetup extends StatelessWidget {
   Widget build(BuildContext context) {
     availableSeasons.value = Provider.of<TournamentBlueprintProvider>(context, listen: false).blueprintTitles;
 
-    return EchoTreeLifetime(
-      trees: [":tournament:blueprint", ":tournament:config"],
-      child: Selector<TournamentBlueprintProvider, _BlueprintData>(
-        selector: (context, provider) {
-          return _BlueprintData(
-            bpType: provider.blueprintType,
-            selectedBlueprint: provider.season,
-            blueprintTitles: provider.blueprintTitles,
-          );
-        },
-        builder: (context, blueprints, _) {
-          availableSeasons.value = blueprints.blueprintTitles;
-          if (blueprints.bpType == BlueprintType.agnostic) {
-            selectedBlueprint.value = "Agnostic";
+    return Selector<TournamentBlueprintProvider, _BlueprintData>(
+      selector: (context, provider) {
+        return _BlueprintData(
+          bpType: provider.blueprintType,
+          selectedBlueprint: provider.season,
+          blueprintTitles: provider.blueprintTitles,
+        );
+      },
+      builder: (context, blueprints, _) {
+        availableSeasons.value = blueprints.blueprintTitles;
+        if (blueprints.bpType == BlueprintType.agnostic) {
+          selectedBlueprint.value = "Agnostic";
+        } else {
+          if (availableSeasons.value.contains(blueprints.selectedBlueprint)) {
+            selectedBlueprint.value = blueprints.selectedBlueprint;
           } else {
-            if (availableSeasons.value.contains(blueprints.selectedBlueprint)) {
-              selectedBlueprint.value = blueprints.selectedBlueprint;
-            } else {
-              selectedBlueprint.value = "Agnostic";
-            }
+            selectedBlueprint.value = "Agnostic";
           }
-          return Consumer<TournamentConfigProvider>(
-            builder: (context, config, _) {
-              return input(context, config);
-            },
-          );
-        },
-      ),
+        }
+        return Consumer<TournamentConfigProvider>(
+          builder: (context, config, _) {
+            return input(context, config);
+          },
+        );
+      },
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
@@ -10,27 +9,23 @@ class BlueprintSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EchoTreeLifetime(
-      trees: [":tournament:blueprint"],
-      child: Consumer<TournamentBlueprintProvider>(
-        builder: (context, provider, _) {
-          return InputSetter(
-            label: "Upload Season Blueprint (optional):",
-            input: ElevatedButton(
-              onPressed: () async {
-                await provider.selectBlueprint();
-              },
-              child:
-                  Text(provider.result == null ? "Select Blueprint (JSON)" : provider.result?.files.first.name ?? ""),
-            ),
-            onSet: () async {
-              await provider.uploadBlueprint().then((res) {
-                SnackBarDialog.fromStatus(message: "Upload Blueprint", status: res).show(context);
-              });
+    return Consumer<TournamentBlueprintProvider>(
+      builder: (context, provider, _) {
+        return InputSetter(
+          label: "Upload Season Blueprint (optional):",
+          input: ElevatedButton(
+            onPressed: () async {
+              await provider.selectBlueprint();
             },
-          );
-        },
-      ),
+            child: Text(provider.result == null ? "Select Blueprint (JSON)" : provider.result?.files.first.name ?? ""),
+          ),
+          onSet: () async {
+            await provider.uploadBlueprint().then((res) {
+              SnackBarDialog.fromStatus(message: "Upload Blueprint", status: res).show(context);
+            });
+          },
+        );
+      },
     );
   }
 }

@@ -139,15 +139,16 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   }) async {
     if (isValid()) {
       // get gp out of answers
-      String gp = _answers.firstWhere((a) => a.questionId == "gp").answer;
+      String? gp = _answers.firstWhereOrNull((a) => a.questionId == "gp")?.answer;
 
       // create the score sheet
       var scoreSheet = RobotGameScoreSheetRequest(
+        blueprintTitle: season,
         table: table,
         teamNumber: teamNumber,
         referee: "@TODO",
         matchNumber: matchNumber,
-        gp: gp,
+        gp: gp ?? "",
         noShow: noShow,
         score: score,
         round: round,

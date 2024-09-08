@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::{infra::DataSchemeExtensions, QuestionAnswer};
+use crate::{infra::DataSchemeExtensions, GameMatch, QuestionAnswer};
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub struct RobotGamesLoadMatchRequest {
@@ -31,6 +31,7 @@ impl Default for RobotGameTableSignalRequest {
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub struct RobotGameScoreSheetRequest {
+  pub blueprint_title: String,
   pub table: String,
   pub team_number: String,
   pub referee: String,
@@ -53,6 +54,7 @@ pub struct RobotGameScoreSheetRequest {
 impl Default for RobotGameScoreSheetRequest {
   fn default() -> Self {
     Self {
+      blueprint_title: "".to_string(),
       table: "".to_string(),
       team_number: "".to_string(),
       referee: "".to_string(),
@@ -68,6 +70,22 @@ impl Default for RobotGameScoreSheetRequest {
   }
 }
 
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct RobotGamesUpdateMatchRequest {
+  pub match_id: String,
+  pub game_match: GameMatch,
+}
+
+impl Default for RobotGamesUpdateMatchRequest {
+  fn default() -> Self {
+    Self {
+      match_id: "".to_string(),
+      game_match: GameMatch::default(),
+    }
+  }
+}
+
 impl DataSchemeExtensions for RobotGamesLoadMatchRequest {}
 impl DataSchemeExtensions for RobotGameTableSignalRequest {}
 impl DataSchemeExtensions for RobotGameScoreSheetRequest {}
+impl DataSchemeExtensions for RobotGamesUpdateMatchRequest {}

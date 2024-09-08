@@ -70,14 +70,14 @@ String secondsToTimeString(int seconds) {
 
   // Build time string based on the presence of hours and minutes
   String timeString = '';
-  if (hours > 0) {
+  if (hours.abs() > 0) {
     timeString += _padTime(hours, 2) + ':';
   }
-  if (minutes > 0 || hours > 0) {
+  if (minutes.abs() > 0 || hours > 0) {
     // Include minutes if there are hours
     timeString += _padTime(minutes, 2) + ':';
   }
-  if (seconds >= 10) {
+  if (seconds.abs() >= 10) {
     timeString += _padTime(secs, 2);
   } else {
     timeString += secs.toString();

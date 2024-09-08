@@ -6,19 +6,19 @@ enum TableSignalState {
   READY,
 }
 
-class TableStatus extends StatefulWidget {
+class GameTableStatus extends StatefulWidget {
   final TableSignalState state;
 
-  const TableStatus({
+  const GameTableStatus({
     Key? key,
     required this.state,
   }) : super(key: key);
 
   @override
-  _TableStatusState createState() => _TableStatusState();
+  State<GameTableStatus> createState() => _GameTableStatusState();
 }
 
-class _TableStatusState extends State<TableStatus> with SingleTickerProviderStateMixin {
+class _GameTableStatusState extends State<GameTableStatus> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override

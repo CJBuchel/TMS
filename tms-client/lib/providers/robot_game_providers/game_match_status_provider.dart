@@ -28,21 +28,35 @@ class _StagedGameMatchStatusProvider extends _BaseGameMatchStatusProvider {
 
   bool canStageMatch(String matchNumber, List<GameMatch> matches) {
     // check if this match is already staged
-    return _stagedMatchNumbers.any((stagedMatchNumber) {
-      // check against each staged match
-      GameMatch? stagedMatch = matches.firstWhereOrNull((match) => match.matchNumber == stagedMatchNumber);
-      GameMatch? match = matches.firstWhereOrNull((match) => match.matchNumber == matchNumber);
+    if (_stagedMatchNumbers.contains(matchNumber)) {
+      return false;
+    }
 
-      if (stagedMatch == null || match == null) {
+    // check if the match is already completed
+    GameMatch? match = matches.firstWhereOrNull((match) => match.matchNumber == matchNumber);
+    if (match == null || match.completed) {
+      return false;
+    }
+
+    // check over the staged matches
+    for (var stagedMatchNumber in _stagedMatchNumbers) {
+      GameMatch? stagedMatch = matches.firstWhereOrNull((match) => match.matchNumber == stagedMatchNumber);
+
+      if (stagedMatch == null) {
         return false;
       }
 
-      return match.gameMatchTables.any((table) {
-        return stagedMatch.gameMatchTables.any((stagedTable) {
-          return table.table == stagedTable.table;
-        });
-      });
-    });
+      // check if any table is already staged
+      for (var stagedTable in stagedMatch.gameMatchTables) {
+        for (var table in match.gameMatchTables) {
+          if (stagedTable.table == table.table) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
   }
 
   List<GameMatch> getStagedMatches(List<GameMatch> matches) {
@@ -93,12 +107,17 @@ class _LoadedGameMatchStatusProvider extends _StagedGameMatchStatusProvider {
     // get all matches that are complete
     List<GameMatch> completedMatches = matches.where((match) => match.completed).toList();
 
-    // check if any of the completed matches have the table but haven't submitted prior score sheets
-    return completedMatches.any((match) {
-      return match.gameMatchTables.any((gameMatchTable) {
-        return gameMatchTable.table == table && !gameMatchTable.scoreSubmitted;
-      });
-    });
+    // Check if any of the completed matches have the specified table with a submitted score sheet
+    for (var match in completedMatches) {
+      for (var gameMatchTable in match.gameMatchTables) {
+        if (gameMatchTable.table == table && !gameMatchTable.scoreSubmitted) {
+          return false;
+        }
+      }
+    }
+
+    // Return false if no such table is found
+    return true;
   }
 
   bool canLoad(List<GameMatch> matches) {
@@ -110,7 +129,7 @@ class _LoadedGameMatchStatusProvider extends _StagedGameMatchStatusProvider {
       }
 
       return match.gameMatchTables.every((table) {
-        return !hasTableSubmittedPriorScoreSheets(table.table, matches);
+        return hasTableSubmittedPriorScoreSheets(table.table, matches);
       });
     });
     return _stagedMatchNumbers.isNotEmpty && _loadedMatchNumbers.isEmpty && tablesReady;

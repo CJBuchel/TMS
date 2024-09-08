@@ -13,7 +13,7 @@ class ExpandedRowBody extends StatelessWidget {
   });
 
   Widget _stageButtons(BuildContext context) {
-    if (!loadedMatches.isNotEmpty) {
+    if (!loadedMatches.isNotEmpty && !match.completed) {
       return Row(
         children: [
           Expanded(child: StageMatchButtons(match: match)),

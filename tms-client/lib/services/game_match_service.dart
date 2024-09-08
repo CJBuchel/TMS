@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/network_schemas/robot_game_requests.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/utils/logger.dart';
@@ -56,6 +57,22 @@ class GameMatchService {
       var response = await Network().networkPost("/robot_game/matches/unready_matches", null);
       if (response.$1) {
         TmsLogger().i("Unready game matches");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
+
+  Future<int> updateMatch(String matchId, GameMatch match) async {
+    try {
+      var request = RobotGamesUpdateMatchRequest(matchId: matchId, gameMatch: match).toJsonString();
+      var response = await Network().networkPost("/robot_game/matches/update_match", request);
+      if (response.$1) {
+        TmsLogger().d("Updated game match: $matchId");
         return HttpStatus.ok;
       } else {
         return response.$2;

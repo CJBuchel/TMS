@@ -18,7 +18,11 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
 
   EchoTreeProvider({required this.tree, required this.fromJsonString})
       : managedTree = Database().getTreeMap.getTree(tree) {
-    // check if connected listener (used to populate data if connection reset)
+    // initial data population (if connected)
+    if (EchoTreeClient().state.value == EchoTreeConnection.connected) {
+      _populateData();
+    }
+    // add listener to check for connection (used to populate data if connection reset)
     EchoTreeClient().state.addListener(_connectedListener);
     // listen and update items in map
     _treeEventListener();

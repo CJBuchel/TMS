@@ -1,8 +1,6 @@
-import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
-import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 
 class _GameTableData {
@@ -110,47 +108,44 @@ class _SelectGameTableState extends State<SelectGameTable> {
 
   @override
   Widget build(BuildContext context) {
-    return EchoTreeLifetime(
-      trees: [":robot_game:tables"],
-      child: Selector<GameTableProvider, _GameTableData>(
-        selector: (context, provider) {
-          return _GameTableData(
-            isTableSet: provider.isLocalGameTableSet(),
-            currentTableName: provider.localGameTable,
-            tableNames: provider.tableNames,
-            currentReferee: provider.localReferee,
-          );
-        },
-        builder: (context, data, _) {
-          return Container(
-            margin: const EdgeInsets.only(top: 8, bottom: 8),
-            child: TextButton(
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
-                padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(10, 0, 10, 0)),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(
-                      color: Colors.white,
-                      width: 1,
-                    ),
+    return Selector<GameTableProvider, _GameTableData>(
+      selector: (context, provider) {
+        return _GameTableData(
+          isTableSet: provider.isLocalGameTableSet(),
+          currentTableName: provider.localGameTable,
+          tableNames: provider.tableNames,
+          currentReferee: provider.localReferee,
+        );
+      },
+      builder: (context, data, _) {
+        return Container(
+          margin: const EdgeInsets.only(top: 8, bottom: 8),
+          child: TextButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+              padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.fromLTRB(10, 0, 10, 0)),
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(
+                    color: Colors.white,
+                    width: 1,
                   ),
                 ),
               ),
-              onPressed: () {
-                selectTable(context, data.currentTableName, data.tableNames, data.currentReferee);
-              },
-              child: Text(
-                data.isTableSet ? data.currentTableName : "No Table Selected",
-                style: TextStyle(
-                  fontSize: widget.fontSize,
-                ),
+            ),
+            onPressed: () {
+              selectTable(context, data.currentTableName, data.tableNames, data.currentReferee);
+            },
+            child: Text(
+              data.isTableSet ? data.currentTableName : "No Table Selected",
+              style: TextStyle(
+                fontSize: widget.fontSize,
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

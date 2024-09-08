@@ -1,3 +1,4 @@
+import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/views/match_controller/match_controls/match_controls.dart';
 import 'package:tms/views/match_controller/match_selector/match_selection.dart';
@@ -9,37 +10,40 @@ class MatchController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Expanded(
-          flex: 1,
-          child: Column(
-            children: [
-              // stage
-              Expanded(
-                flex: 1,
-                child: MatchStage(),
-              ),
+    return EchoTreeLifetime(
+      trees: [":robot_game:tables", ":robot_game:matches", ":teams"],
+      child: Row(
+        children: [
+          const Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                // stage
+                Expanded(
+                  flex: 1,
+                  child: MatchStage(),
+                ),
 
-              // match control
-              const Expanded(
-                flex: 1,
-                child: MatchControls(),
-              ),
+                // match control
+                const Expanded(
+                  flex: 1,
+                  child: MatchControls(),
+                ),
 
-              // timer controls
-              const Expanded(
-                flex: 1,
-                child: TimerControls(),
-              ),
-            ],
+                // timer controls
+                const Expanded(
+                  flex: 1,
+                  child: TimerControls(),
+                ),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: MatchSelection(),
-        ),
-      ],
+          Expanded(
+            flex: 1,
+            child: MatchSelection(),
+          ),
+        ],
+      ),
     );
   }
 }

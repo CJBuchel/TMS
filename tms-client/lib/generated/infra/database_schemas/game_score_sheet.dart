@@ -8,9 +8,10 @@ import '../fll_infra/question.dart';
 import 'date_time.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`
 
 class GameScoreSheet {
+  final String blueprintTitle;
   final String table;
   final String teamRefId;
   final String referee;
@@ -27,6 +28,7 @@ class GameScoreSheet {
   final String? modifiedBy;
 
   const GameScoreSheet({
+    required this.blueprintTitle,
     required this.table,
     required this.teamRefId,
     required this.referee,
@@ -42,6 +44,24 @@ class GameScoreSheet {
     required this.modified,
     this.modifiedBy,
   });
+
+  static Future<Map<String, int>> calculateTeamRankings(
+          {required List<GameScoreSheet> scoreSheets}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasGameScoreSheetGameScoreSheetCalculateTeamRankings(
+              scoreSheets: scoreSheets);
+
+  Future<GameScoreSheetComparison> compare({required GameScoreSheet other}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasGameScoreSheetGameScoreSheetCompare(
+              that: this, other: other);
+
+  static Future<GameScoreSheetComparison> compareList(
+          {required List<GameScoreSheet> current,
+          required List<GameScoreSheet> previous}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasGameScoreSheetGameScoreSheetCompareList(
+              current: current, previous: previous);
 
   static Future<GameScoreSheet> default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasGameScoreSheetGameScoreSheetDefault();
@@ -61,6 +81,7 @@ class GameScoreSheet {
 
   @override
   int get hashCode =>
+      blueprintTitle.hashCode ^
       table.hashCode ^
       teamRefId.hashCode ^
       referee.hashCode ^
@@ -81,6 +102,7 @@ class GameScoreSheet {
       identical(this, other) ||
       other is GameScoreSheet &&
           runtimeType == other.runtimeType &&
+          blueprintTitle == other.blueprintTitle &&
           table == other.table &&
           teamRefId == other.teamRefId &&
           referee == other.referee &&
@@ -95,4 +117,11 @@ class GameScoreSheet {
           privateComment == other.privateComment &&
           modified == other.modified &&
           modifiedBy == other.modifiedBy;
+}
+
+enum GameScoreSheetComparison {
+  better,
+  worse,
+  equal,
+  ;
 }

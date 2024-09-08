@@ -46,5 +46,14 @@ pub fn robot_game_matches_filter(clients: ClientMap, db: SharedDatabase, service
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
     .and_then(robot_game_matches_unready_matches_handler);
 
-  load_matches.or(unload_matches).or(ready_matches).or(unready_matches)
+  let update_match = robot_game_matches_path
+    .and(warp::path("update_match"))
+    .and(warp::post())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
+    .and_then(robot_game_matches_update_match_handler);
+
+  load_matches.or(unload_matches).or(ready_matches).or(unready_matches).or(update_match)
 }

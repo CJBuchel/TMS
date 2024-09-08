@@ -12,6 +12,7 @@ pub async fn robot_game_scoring_submit_score_sheet(request: RobotGameScoreSheetR
   };
 
   let score_sheet = GameScoreSheet {
+    blueprint_title: request.blueprint_title.clone(),
     table: request.table.clone(),
     team_ref_id: team_id,
     referee: request.referee,

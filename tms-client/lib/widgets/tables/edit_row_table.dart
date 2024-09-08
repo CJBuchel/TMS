@@ -79,20 +79,32 @@ class EditTable extends BaseTable {
     }
 
     // add final add button as row
-    var lastRow = rows.last;
-    rows.add(EditTableRow(
-      cells: [
-        _iconButtonCell(
-          onPressed: onAdd,
-          icon: const Icon(Icons.add, color: Colors.green),
-        ),
-        ...List.generate(lastRow.cells.length - 1, (index) {
-          return BaseTableCell(
-            child: const SizedBox.shrink(),
-            flex: lastRow.cells[index].flex ?? 1,
-          );
-        }),
-      ],
-    ));
+    var lastRow = rows.lastOrNull;
+
+    if (lastRow != null) {
+      rows.add(EditTableRow(
+        cells: [
+          _iconButtonCell(
+            onPressed: onAdd,
+            icon: const Icon(Icons.add, color: Colors.green),
+          ),
+          ...List.generate(lastRow.cells.length - 1, (index) {
+            return BaseTableCell(
+              child: const SizedBox.shrink(),
+              flex: lastRow.cells[index].flex ?? 1,
+            );
+          }),
+        ],
+      ));
+    } else {
+      rows.add(EditTableRow(
+        cells: [
+          _iconButtonCell(
+            icon: const Icon(Icons.add, color: Colors.green),
+            onPressed: onAdd,
+          ),
+        ],
+      ));
+    }
   }
 }

@@ -31,11 +31,12 @@ class EchoItemBroker {
       // convert to echo item event
       EchoItemEvent event = EchoItemEvent.fromJson(jsonDecode(message));
 
-      if (event.data.isEmpty) {
-        await _remove(event.treeName, event.key);
-      } else {
+      if (event.data != null && (event.data?.isNotEmpty ?? false)) {
         // update the item
-        await _insert(event.treeName, event.key, event.data);
+        await _insert(event.treeName, event.key, event.data!);
+      } else {
+        // remove the item
+        await _remove(event.treeName, event.key);
       }
     } catch (e) {
       EchoTreeLogger().e("Error: $e");

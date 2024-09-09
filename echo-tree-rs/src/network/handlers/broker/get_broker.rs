@@ -58,7 +58,7 @@ pub async fn get_broker(uuid: String, msg: EchoTreeClientSocketMessage, clients:
     let echo_event = EchoItemEvent {
       tree_name: msg.tree_name,
       key: msg.key,
-      data: res,
+      data: Some(res),
     };
 
     client.echo_item(echo_event);

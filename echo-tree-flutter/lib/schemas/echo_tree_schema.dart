@@ -121,12 +121,12 @@ class DeleteEvent {
 }
 
 class EchoItemEvent {
-    String data;
+    String? data;
     String key;
     String treeName;
 
     EchoItemEvent({
-        required this.data,
+        this.data,
         required this.key,
         required this.treeName,
     });

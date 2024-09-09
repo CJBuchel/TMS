@@ -1,4 +1,4 @@
-use tms_infra::{RobotGamesLoadMatchRequest, RobotGamesUpdateMatchRequest};
+use tms_infra::{RobotGamesLoadMatchRequest, RobotGamesRemoveMatchRequest, RobotGamesUpdateMatchRequest};
 
 use crate::{database::{GameMatchExtensions, SharedDatabase}, services::{ControlsSubService, SharedServices}};
 
@@ -38,6 +38,15 @@ pub async fn robot_game_matches_update_match_handler(request: RobotGamesUpdateMa
   let read_db = db.read().await;
 
   match read_db.insert_game_match(request.game_match, Some(request.match_id)).await {
+    Ok(_) => Ok(warp::http::StatusCode::OK),
+    Err(e) => Err(warp::reject::custom(crate::network::BadRequestWithMessage { message: e })),
+  }
+}
+
+pub async fn robot_game_matches_remove_game_match_handler(request: RobotGamesRemoveMatchRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
+  let read_db = db.read().await;
+
+  match read_db.remove_game_match(request.match_id).await {
     Ok(_) => Ok(warp::http::StatusCode::OK),
     Err(e) => Err(warp::reject::custom(crate::network::BadRequestWithMessage { message: e })),
   }

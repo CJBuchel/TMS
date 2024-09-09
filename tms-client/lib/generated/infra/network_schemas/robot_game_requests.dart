@@ -9,7 +9,7 @@ import '../database_schemas/game_match.dart';
 import '../fll_infra/question.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
 class RobotGameScoreSheetRequest {
   final String blueprintTitle;
@@ -162,6 +162,41 @@ class RobotGamesLoadMatchRequest {
       other is RobotGamesLoadMatchRequest &&
           runtimeType == other.runtimeType &&
           gameMatchNumbers == other.gameMatchNumbers;
+}
+
+class RobotGamesRemoveMatchRequest {
+  final String matchId;
+
+  const RobotGamesRemoveMatchRequest({
+    required this.matchId,
+  });
+
+  static Future<RobotGamesRemoveMatchRequest> default_() => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestDefault();
+
+  static RobotGamesRemoveMatchRequest fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestFromJsonString(
+              json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToSchema();
+
+  @override
+  int get hashCode => matchId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RobotGamesRemoveMatchRequest &&
+          runtimeType == other.runtimeType &&
+          matchId == other.matchId;
 }
 
 class RobotGamesUpdateMatchRequest {

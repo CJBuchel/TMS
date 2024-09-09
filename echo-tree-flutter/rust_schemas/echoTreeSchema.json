@@ -108,13 +108,15 @@
     "EchoItemEvent": {
       "type": "object",
       "required": [
-        "data",
         "key",
         "tree_name"
       ],
       "properties": {
         "data": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "key": {
           "type": "string"

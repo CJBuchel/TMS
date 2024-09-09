@@ -5,14 +5,16 @@ import 'package:tms/providers/robot_game_providers/game_match_status_provider.da
 
 class StageMatchButtons extends StatelessWidget {
   final GameMatch match;
+  final bool isStaged;
 
   const StageMatchButtons({
     Key? key,
     required this.match,
+    required this.isStaged,
   }) : super(key: key);
 
   Widget _unstageButton(BuildContext context) {
-    return ElevatedButton.icon(
+    return IconButton(
       onPressed: () {
         Provider.of<GameMatchStatusProvider>(context, listen: false).clearStagedMatches();
       },
@@ -25,15 +27,11 @@ class StageMatchButtons extends StatelessWidget {
         Icons.chevron_right,
         color: Colors.blue,
       ),
-      label: const Text(
-        "Unstage Match",
-        style: TextStyle(color: Colors.blue),
-      ),
     );
   }
 
   Widget _stageButton(BuildContext context) {
-    return ElevatedButton.icon(
+    return IconButton(
       onPressed: () {
         Provider.of<GameMatchStatusProvider>(context, listen: false).stageMatches([match.matchNumber]);
       },
@@ -46,25 +44,14 @@ class StageMatchButtons extends StatelessWidget {
         Icons.chevron_left,
         color: Colors.white,
       ),
-      label: const Text(
-        "Stage Match",
-        style: TextStyle(color: Colors.white),
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Selector<GameMatchStatusProvider, bool>(
-      selector: (context, provider) {
-        return provider.isMatchStaged(match.matchNumber);
-      },
-      builder: (context, isStaged, child) {
-        return Padding(
-          padding: const EdgeInsets.all(10),
-          child: isStaged ? _unstageButton(context) : _stageButton(context),
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: isStaged ? _unstageButton(context) : _stageButton(context),
     );
   }
 }

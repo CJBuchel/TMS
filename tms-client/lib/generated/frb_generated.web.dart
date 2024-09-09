@@ -136,6 +136,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dco_decode_box_autoadd_robot_games_load_match_request(dynamic raw);
 
   @protected
+  RobotGamesRemoveMatchRequest
+      dco_decode_box_autoadd_robot_games_remove_match_request(dynamic raw);
+
+  @protected
   RobotGamesUpdateMatchRequest
       dco_decode_box_autoadd_robot_games_update_match_request(dynamic raw);
 
@@ -373,6 +377,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dynamic raw);
 
   @protected
+  RobotGamesRemoveMatchRequest dco_decode_robot_games_remove_match_request(
+      dynamic raw);
+
+  @protected
   RobotGamesUpdateMatchRequest dco_decode_robot_games_update_match_request(
       dynamic raw);
 
@@ -556,6 +564,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   RobotGamesLoadMatchRequest
       sse_decode_box_autoadd_robot_games_load_match_request(
+          SseDeserializer deserializer);
+
+  @protected
+  RobotGamesRemoveMatchRequest
+      sse_decode_box_autoadd_robot_games_remove_match_request(
           SseDeserializer deserializer);
 
   @protected
@@ -814,6 +827,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  RobotGamesRemoveMatchRequest sse_decode_robot_games_remove_match_request(
+      SseDeserializer deserializer);
+
+  @protected
   RobotGamesUpdateMatchRequest sse_decode_robot_games_update_match_request(
       SseDeserializer deserializer);
 
@@ -1013,6 +1030,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_robot_games_load_match_request(
       RobotGamesLoadMatchRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_robot_games_remove_match_request(
+      RobotGamesRemoveMatchRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_robot_games_update_match_request(
@@ -1275,6 +1296,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_robot_games_load_match_request(
       RobotGamesLoadMatchRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_robot_games_remove_match_request(
+      RobotGamesRemoveMatchRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_robot_games_update_match_request(

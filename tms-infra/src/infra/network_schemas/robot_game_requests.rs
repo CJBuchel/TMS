@@ -85,7 +85,19 @@ impl Default for RobotGamesUpdateMatchRequest {
   }
 }
 
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct RobotGamesRemoveMatchRequest {
+  pub match_id: String,
+}
+
+impl Default for RobotGamesRemoveMatchRequest {
+  fn default() -> Self {
+    Self { match_id: "".to_string() }
+  }
+}
+
 impl DataSchemeExtensions for RobotGamesLoadMatchRequest {}
 impl DataSchemeExtensions for RobotGameTableSignalRequest {}
 impl DataSchemeExtensions for RobotGameScoreSheetRequest {}
 impl DataSchemeExtensions for RobotGamesUpdateMatchRequest {}
+impl DataSchemeExtensions for RobotGamesRemoveMatchRequest {}

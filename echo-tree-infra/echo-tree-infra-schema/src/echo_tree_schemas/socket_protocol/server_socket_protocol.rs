@@ -20,7 +20,7 @@ pub struct EchoTreeEvent {
 pub struct EchoItemEvent {
   pub tree_name: String, // tree name
   pub key: String, // key name
-  pub data: String, // data
+  pub data: Option<String>, // data (if none, the entry is removed)
 }
 
 #[derive(serde::Deserialize, serde::Serialize, JsonSchema)]

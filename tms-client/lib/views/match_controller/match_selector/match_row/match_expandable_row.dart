@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/expanded_row_body/expanded_row_body.dart';
@@ -33,7 +32,9 @@ enum MatchRowState {
 
 class MatchExpandableRow extends StatelessWidget {
   final GameMatch match;
+  final List<GameMatch> loadedMatches;
   final bool isMultiMatch;
+  final bool canStage;
   final Color? backgroundColor;
   final Color? submittedColor;
   final Function(bool)? onChangeExpand;
@@ -43,7 +44,9 @@ class MatchExpandableRow extends StatelessWidget {
   MatchExpandableRow({
     Key? key,
     required this.match,
+    required this.loadedMatches,
     required this.isMultiMatch,
+    required this.canStage,
     this.backgroundColor,
     this.submittedColor,
     this.controller,
@@ -102,7 +105,7 @@ class MatchExpandableRow extends StatelessWidget {
     );
   }
 
-  Widget _tileRow(MatchRowState state, List<GameMatch> loadedMatches) {
+  Widget _tileRow(MatchRowState state, List<GameMatch> loadedMatches, bool canStage, bool isStaged) {
     bool isLoaded = state == MatchRowState.LOADED;
     bool isExpandable = !isMultiMatch && !isLoaded;
 
@@ -114,7 +117,12 @@ class MatchExpandableRow extends StatelessWidget {
         child: Row(
           children: [
             // optional checkbox (multi match only)
-            if (isMultiMatch && loadedMatches.isEmpty) StageCheckbox(match: match),
+            if (isMultiMatch && loadedMatches.isEmpty)
+              StageCheckbox(
+                match: match,
+                canStage: canStage,
+                isStaged: isStaged,
+              ),
 
             // leading
             _leading(state),
@@ -129,7 +137,13 @@ class MatchExpandableRow extends StatelessWidget {
           ],
         ),
       ),
-      body: isExpandable ? ExpandedRowBody(match: match, loadedMatches: loadedMatches) : const SizedBox.shrink(),
+      body: isExpandable
+          ? ExpandedRowBody(
+              match: match,
+              loadedMatches: loadedMatches,
+              isStaged: isStaged,
+            )
+          : const SizedBox.shrink(),
     );
   }
 
@@ -158,13 +172,13 @@ class MatchExpandableRow extends StatelessWidget {
         side: BorderSide(color: borderColor),
       ),
       // provider selector
-      child: Selector2<GameMatchStatusProvider, GameMatchProvider, _MatchRowData>(
-        selector: (context, statusProvider, gameMatchProvider) {
+      child: Selector<GameMatchStatusProvider, _MatchRowData>(
+        selector: (context, statusProvider) {
           return _MatchRowData(
             isMatchStaged: statusProvider.isMatchStaged(match.matchNumber),
             isMatchLoaded: statusProvider.isMatchLoaded(match.matchNumber),
             isMatchRunning: statusProvider.isMatchRunning(match.matchNumber),
-            loadedMatches: statusProvider.getLoadedMatches(gameMatchProvider.matches),
+            loadedMatches: loadedMatches,
           );
         },
         builder: (context, data, child) {
@@ -186,14 +200,14 @@ class MatchExpandableRow extends StatelessWidget {
               color: Colors.grey[800],
               hoverColor: Colors.grey[700],
               borderRadius: BorderRadius.circular(8),
-              child: _tileRow(state, data.loadedMatches),
+              child: _tileRow(state, data.loadedMatches, canStage, data.isMatchStaged),
             );
           } else {
             return BarberPoleContainer(
               active: false,
               color: _stateColor(state),
               borderRadius: BorderRadius.circular(8),
-              child: _tileRow(state, data.loadedMatches),
+              child: _tileRow(state, data.loadedMatches, canStage, data.isMatchStaged),
             );
           }
         },

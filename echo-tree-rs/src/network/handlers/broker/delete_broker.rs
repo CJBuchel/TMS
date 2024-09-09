@@ -45,7 +45,7 @@ pub async fn delete_broker(uuid: String, msg: EchoTreeClientSocketMessage, clien
           let echo_item_event = EchoItemEvent {
             tree_name: tree_name.clone(),
             key: key.clone(),
-            data: "".to_string(),
+            data: None,
           };
           changed_items.push(echo_item_event);
           log::debug!("{}: tree item deleted: {}", uuid, key);

@@ -63,18 +63,15 @@ impl GameMatchExtensions for Database {
   }
 
   async fn remove_game_match(&self, game_match_id: String) -> Result<(), String> {
-    let tree = self.inner.read().await.get_tree(ROBOT_GAME_MATCHES.to_string()).await;
-    let game_match = tree.get(&game_match_id).cloned();
-
-    match game_match {
+    match self.inner.write().await.remove_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id.to_owned()).await {
       Some(_) => {
-        self.inner.write().await.remove_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id).await;
+        log::warn!("GameMatch removed: {}", game_match_id);
         Ok(())
-      }
+      },
       None => {
         log::warn!("GameMatch does not exist: {}", game_match_id);
-        Err(format!("GameMatch not found: {}", game_match_id))
-      },
+        return Err(format!("GameMatch not found: {}", game_match_id));
+      }
     }
   }
 

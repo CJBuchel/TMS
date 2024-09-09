@@ -75,13 +75,13 @@ class StageTable extends StatelessWidget {
                   GameMatchTable update = GameMatchTable(
                     table: selectedTable.value,
                     teamNumber: selectedTeam.value!.number,
-                    scoreSubmitted: segment.submittedPrior,
+                    scoreSubmitted: segment.table.scoreSubmitted,
                   );
-
                   return Provider.of<GameMatchProvider>(context, listen: false).updateTableOnMatch(
-                    segment.table.table,
-                    segment.matchNumber,
-                    update,
+                    originTable: segment.table.table,
+                    originMatchNumber: segment.matchNumber,
+                    updatedTable: update,
+                    updatedMatchNumber: selectedMatch.value,
                   );
                 }
               },

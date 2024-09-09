@@ -1,8 +1,4 @@
-use crate::{
-  database::SharedDatabase,
-  network::*,
-  services::SharedServices,
-};
+use crate::{database::SharedDatabase, network::*, services::SharedServices};
 use warp::Filter;
 
 use super::{
@@ -55,5 +51,14 @@ pub fn robot_game_matches_filter(clients: ClientMap, db: SharedDatabase, service
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
     .and_then(robot_game_matches_update_match_handler);
 
-  load_matches.or(unload_matches).or(ready_matches).or(unready_matches).or(update_match)
+  let remove_match = robot_game_matches_path
+    .and(warp::path("remove_match"))
+    .and(warp::delete())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
+    .and_then(robot_game_matches_remove_game_match_handler);
+
+  load_matches.or(unload_matches).or(ready_matches).or(unready_matches).or(update_match).or(remove_match)
 }

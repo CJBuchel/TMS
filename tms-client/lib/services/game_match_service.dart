@@ -82,4 +82,20 @@ class GameMatchService {
       return HttpStatus.badRequest;
     }
   }
+
+  Future<int> removeMatch(String matchId) async {
+    try {
+      var request = RobotGamesRemoveMatchRequest(matchId: matchId).toJsonString();
+      var response = await Network().networkDelete("/robot_game/matches/remove_match", request);
+      if (response.$1) {
+        TmsLogger().d("Removed game match: $matchId");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
 }

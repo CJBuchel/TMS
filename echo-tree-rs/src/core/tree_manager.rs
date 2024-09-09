@@ -25,7 +25,7 @@ impl TreeManager for EchoTreeServer {
             let echo_event = EchoItemEvent {
               tree_name,
               key,
-              data,
+              data: Some(data),
             };
 
             self.clients.read().await.echo_item(echo_event);
@@ -112,7 +112,7 @@ impl TreeManager for EchoTreeServer {
             let echo_event = EchoItemEvent {
               tree_name,
               key: key.clone(),
-              data: data.clone(),
+              data: None,
             };
 
             self.clients.read().await.echo_item(echo_event);

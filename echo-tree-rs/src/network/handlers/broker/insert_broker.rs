@@ -66,7 +66,7 @@ pub async fn insert_broker(uuid: String, msg: EchoTreeClientSocketMessage, clien
     let echo_event = EchoItemEvent {
       tree_name: msg.tree_name.clone(),
       key: msg.key.clone(),
-      data: msg.data.clone(),
+      data: Some(msg.data.clone()),
     };
 
     // echo the event to sll subscribed clients

@@ -61,9 +61,11 @@ impl Database {
     self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), TournamentBlueprint::to_schema()).await;
     self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
+    self.inner.read().await.add_tree_schema(ROBOT_GAME_CATEGORIES.to_string(), TmsCategory::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_TABLES.to_string(), GameTable::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_SCORES.to_string(), GameScoreSheet::to_schema()).await;
     self.inner.read().await.add_tree_schema(JUDGING_SESSIONS.to_string(), JudgingSession::to_schema()).await;
+    self.inner.read().await.add_tree_schema(JUDGING_CATEGORIES.to_string(), TmsCategory::to_schema()).await;
     self.inner.read().await.add_tree_schema(JUDGING_PODS.to_string(), JudgingPod::to_schema()).await;
     self.inner.read().await.add_tree_schema(USERS.to_string(), User::to_schema()).await;
   }

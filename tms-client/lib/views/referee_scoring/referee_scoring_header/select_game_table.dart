@@ -39,11 +39,13 @@ class _SelectGameTableState extends State<SelectGameTable> {
       return;
     }
 
-    if (tables.contains(currentTable)) {
-      selectedTable.value = currentTable;
-    } else {
-      selectedTable.value = tables.first;
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (tables.contains(currentTable)) {
+        selectedTable.value = currentTable;
+      } else {
+        selectedTable.value = tables.first;
+      }
+    });
 
     ConfirmDialog(
       style: ConfirmDialogStyle.info(

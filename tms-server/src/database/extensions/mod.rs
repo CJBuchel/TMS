@@ -27,3 +27,9 @@ pub use tournament_blueprint_extensions::*;
 
 mod game_score_sheet_extensions;
 pub use game_score_sheet_extensions::*;
+
+mod game_match_category_extensions;
+pub use game_match_category_extensions::*;
+
+mod judging_category_extensions;
+pub use judging_category_extensions::*;

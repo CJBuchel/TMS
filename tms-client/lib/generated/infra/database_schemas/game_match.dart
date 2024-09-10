@@ -4,6 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import 'category.dart';
 import 'date_time.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -15,6 +16,7 @@ class GameMatch {
   final TmsDateTime endTime;
   final List<GameMatchTable> gameMatchTables;
   final bool completed;
+  final TmsCategory category;
 
   const GameMatch({
     required this.matchNumber,
@@ -22,6 +24,7 @@ class GameMatch {
     required this.endTime,
     required this.gameMatchTables,
     required this.completed,
+    required this.category,
   });
 
   static Future<GameMatch> default_() => TmsRustLib.instance.api
@@ -45,7 +48,8 @@ class GameMatch {
       startTime.hashCode ^
       endTime.hashCode ^
       gameMatchTables.hashCode ^
-      completed.hashCode;
+      completed.hashCode ^
+      category.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -56,7 +60,8 @@ class GameMatch {
           startTime == other.startTime &&
           endTime == other.endTime &&
           gameMatchTables == other.gameMatchTables &&
-          completed == other.completed;
+          completed == other.completed &&
+          category == other.category;
 }
 
 class GameMatchTable {

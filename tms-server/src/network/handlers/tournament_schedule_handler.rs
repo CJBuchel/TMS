@@ -8,10 +8,9 @@ pub async fn tournament_schedule_set_csv_handler(request: String, db: SharedData
     Ok(s) => {
       // reply with message
       log::info!(
-        "Parsed schedule, teams: {}, matches: {}, practice: {}, judging: {}",
+        "Parsed schedule, teams: {}, matches: {}, judging: {}",
         s.teams.len(),
         s.game_matches.len(),
-        s.practice_game_matches.len(),
         s.judging_sessions.len()
       );
       // set schedule

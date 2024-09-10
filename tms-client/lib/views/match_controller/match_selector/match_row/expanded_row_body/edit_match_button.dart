@@ -94,6 +94,7 @@ class EditMatchButton extends StatelessWidget {
           endTime: match.endTime,
           gameMatchTables: updatedTables,
           completed: _matchComplete.value,
+          category: match.category,
         );
 
         // update the match

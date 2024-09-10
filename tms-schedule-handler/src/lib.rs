@@ -1,4 +1,4 @@
-use tms_infra::infra::database_schemas::{GameMatch, JudgingSession, Team};
+use tms_infra::{infra::database_schemas::{GameMatch, JudgingSession, Team}, TmsCategory};
 use v1::V1;
 
 pub mod v1;
@@ -11,7 +11,6 @@ pub trait CsvToTmsSchedule {
 pub struct TmsSchedule {
   pub teams: Vec<Team>,
   pub game_matches: Vec<GameMatch>,
-  pub practice_game_matches: Vec<GameMatch>,
   pub judging_sessions: Vec<JudgingSession>,
   pub game_tables: Vec<String>,
   pub judging_pods: Vec<String>,

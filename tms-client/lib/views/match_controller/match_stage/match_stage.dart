@@ -44,7 +44,7 @@ class MatchStage extends StatelessWidget {
                 table: table,
                 submittedPrior: statusProvider.hasTableSubmittedPriorScoreSheets(table.table, matchProvider.matches),
                 matchNumber: match.matchNumber,
-                team: teams.firstWhere((team) => team.number == table.teamNumber),
+                team: Provider.of<TeamsProvider>(context, listen: false).getTeam(table.teamNumber),
               ),
             );
           }

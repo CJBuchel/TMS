@@ -4600,12 +4600,12 @@ impl SseDecode for crate::infra::network_schemas::robot_game_requests::RobotGame
 impl SseDecode for crate::infra::database_schemas::team::Team {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-    let mut var_number = <String>::sse_decode(deserializer);
+    let mut var_teamNumber = <String>::sse_decode(deserializer);
     let mut var_name = <String>::sse_decode(deserializer);
     let mut var_affiliation = <String>::sse_decode(deserializer);
     let mut var_ranking = <u32>::sse_decode(deserializer);
     return crate::infra::database_schemas::team::Team {
-      number: var_number,
+      team_number: var_teamNumber,
       name: var_name,
       affiliation: var_affiliation,
       ranking: var_ranking,
@@ -5515,7 +5515,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::robot_game
 impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::team::Team {
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
     [
-      self.number.into_into_dart().into_dart(),
+      self.team_number.into_into_dart().into_dart(),
       self.name.into_into_dart().into_dart(),
       self.affiliation.into_into_dart().into_dart(),
       self.ranking.into_into_dart().into_dart(),
@@ -6372,7 +6372,7 @@ impl SseEncode for crate::infra::network_schemas::robot_game_requests::RobotGame
 impl SseEncode for crate::infra::database_schemas::team::Team {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-    <String>::sse_encode(self.number, serializer);
+    <String>::sse_encode(self.team_number, serializer);
     <String>::sse_encode(self.name, serializer);
     <String>::sse_encode(self.affiliation, serializer);
     <u32>::sse_encode(self.ranking, serializer);

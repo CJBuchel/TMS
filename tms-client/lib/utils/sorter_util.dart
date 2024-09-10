@@ -32,8 +32,8 @@ int _extractNumber(String str) {
 
 List<Team> sortTeamsByNumber(List<Team> teams) {
   teams.sort((a, b) {
-    int aTeamNumber = _extractNumber(a.number);
-    int bTeamNumber = _extractNumber(b.number);
+    int aTeamNumber = _extractNumber(a.teamNumber);
+    int bTeamNumber = _extractNumber(b.teamNumber);
     return aTeamNumber.compareTo(bTeamNumber);
   });
 

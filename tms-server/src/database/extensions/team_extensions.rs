@@ -30,7 +30,7 @@ impl TeamExtensions for Database {
     let tree = self.inner.read().await.get_tree(TEAMS.to_string()).await;
     let team = tree.iter().find_map(|(id, team)| {
       let team = Team::from_json_string(team);
-      if team.number == number {
+      if team.team_number == number {
         Some((id.clone(), team))
       } else {
         None
@@ -47,7 +47,7 @@ impl TeamExtensions for Database {
     // check if team already exists (using id if provided, otherwise using number)
     let existing_team: Option<(String, Team)> = match team_id {
       Some(team_id) => self.get_team(team_id.clone()).await.map(|team| (team_id, team)),
-      None => self.get_team_by_number(team.clone().number).await,
+      None => self.get_team_by_number(team.clone().team_number).await,
     };
 
     match existing_team {

@@ -1,9 +1,10 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/utils/sorter_util.dart';
+import 'package:collection/collection.dart';
 
-abstract class _BaseTeamsProvider extends EchoTreeProvider<String, Team> {
-  _BaseTeamsProvider() : super(tree: ":teams", fromJsonString: (json) => Team.fromJsonString(json: json));
+class TeamsProvider extends EchoTreeProvider<String, Team> {
+  TeamsProvider() : super(tree: ":teams", fromJsonString: (json) => Team.fromJsonString(json: json));
 
   List<Team> get teams {
     return sortTeamsByNumber(this.items.values.toList());
@@ -11,19 +12,17 @@ abstract class _BaseTeamsProvider extends EchoTreeProvider<String, Team> {
 
   Team getTeam(String teamNumber) {
     // find team from team number
-    try {
-      return teams.firstWhere((t) => t.number == teamNumber);
-    } catch (e) {
+    Team? team = teams.firstWhereOrNull((t) => t.teamNumber == teamNumber);
+    if (team != null) {
+      return team;
+    } else {
+      // if team is not found, return a default team
       return const Team(
         affiliation: 'N/A',
         name: 'N/A',
-        number: 'N/A',
+        teamNumber: 'N/A',
         ranking: 0,
       );
     }
   }
-}
-
-class TeamsProvider extends _BaseTeamsProvider {
-  TeamsProvider();
 }

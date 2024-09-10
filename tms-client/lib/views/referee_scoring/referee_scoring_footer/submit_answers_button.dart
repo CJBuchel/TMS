@@ -44,7 +44,7 @@ class SubmitAnswersButton extends StatelessWidget {
       onStatusConfirmFuture: () => Provider.of<GameScoringProvider>(context, listen: false).submitScoreSheet(
         table: table,
         round: round,
-        teamNumber: team!.number,
+        teamNumber: team!.teamNumber,
         matchNumber: match!.matchNumber,
       ),
       onFinish: (status) {

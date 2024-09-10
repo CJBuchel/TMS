@@ -42,7 +42,7 @@ class _RefereeScoringHeaderState extends State<RefereeScoringHeader> {
 
   void _sendStatusRequest() async {
     if (widget.table != null) {
-      await _gameScoringService.sendTableReadySignal(widget.table!, widget.nextTeam?.number);
+      await _gameScoringService.sendTableReadySignal(widget.table!, widget.nextTeam?.teamNumber);
     } else if (widget.table != null) {
       await _gameScoringService.sendTableNotReadySignal(widget.table!, "");
     }

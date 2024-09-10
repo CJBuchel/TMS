@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/robot_game_providers/game_table_signal_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/views/match_controller/match_stage/game_table_status.dart';
 import 'package:collection/collection.dart';
 
@@ -31,7 +32,7 @@ class LoadedTable extends StatelessWidget {
   }
 
   Widget _tableRow(BuildContext context, GameMatchTable table, TableSignalState state) {
-    Team? team = teams.firstWhereOrNull((team) => team.number == table.teamNumber);
+    Team? team = teams.firstWhereOrNull((team) => team.teamNumber == table.teamNumber);
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -75,6 +76,7 @@ class LoadedTable extends StatelessWidget {
 
     return Selector<GameTableSignalProvider, Map<String, String>>(
       selector: (context, provider) => provider.tableSignals,
+      shouldRebuild: (previous, next) => previous.values.toList() != next.values.toList(),
       builder: (context, tableSignals, _) {
         return ListView.builder(
           itemCount: tables.length,

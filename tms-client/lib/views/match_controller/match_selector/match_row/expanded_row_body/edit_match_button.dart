@@ -44,6 +44,7 @@ class EditMatchButton extends StatelessWidget {
   }
 
   Widget _buildDialogMessage() {
+    _matchComplete.value = match.completed;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -55,7 +56,7 @@ class EditMatchButton extends StatelessWidget {
             children: [
               const Text("Match Complete"),
               LiveCheckbox(
-                defaultValue: match.completed,
+                defaultValue: _matchComplete.value,
                 onChanged: (bool newValue) => _matchComplete.value = newValue,
               ),
             ],

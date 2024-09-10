@@ -74,7 +74,7 @@ class StageTable extends StatelessWidget {
                 } else {
                   GameMatchTable update = GameMatchTable(
                     table: selectedTable.value,
-                    teamNumber: selectedTeam.value!.number,
+                    teamNumber: selectedTeam.value!.teamNumber,
                     scoreSubmitted: segment.table.scoreSubmitted,
                   );
                   return Provider.of<GameMatchProvider>(context, listen: false).updateTableOnMatch(
@@ -177,7 +177,7 @@ class StageTable extends StatelessWidget {
               } else {
                 return Provider.of<GameMatchProvider>(context, listen: false).addTableToMatch(
                   selectedTable.value,
-                  selectedTeam.value!.number,
+                  selectedTeam.value!.teamNumber,
                   selectedMatch.value,
                 );
               }

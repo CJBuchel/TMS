@@ -9,13 +9,13 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
 class Team {
-  final String number;
+  final String teamNumber;
   final String name;
   final String affiliation;
   final int ranking;
 
   const Team({
-    required this.number,
+    required this.teamNumber,
     required this.name,
     required this.affiliation,
     required this.ranking,
@@ -37,14 +37,17 @@ class Team {
 
   @override
   int get hashCode =>
-      number.hashCode ^ name.hashCode ^ affiliation.hashCode ^ ranking.hashCode;
+      teamNumber.hashCode ^
+      name.hashCode ^
+      affiliation.hashCode ^
+      ranking.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Team &&
           runtimeType == other.runtimeType &&
-          number == other.number &&
+          teamNumber == other.teamNumber &&
           name == other.name &&
           affiliation == other.affiliation &&
           ranking == other.ranking;

@@ -16,7 +16,7 @@ impl TournamentScheduleExtensions for Database {
     for team in schedule.teams {
       match self.insert_team(team.clone(), None).await {
         Ok(_) => {
-          log::info!("Inserted team: {}, name: {}, affiliation: {}", team.number, team.name, team.affiliation);
+          log::info!("Inserted team: {}, name: {}, affiliation: {}", team.team_number, team.name, team.affiliation);
         }
         Err(e) => {
           log::error!("Error inserting team: {}", e);

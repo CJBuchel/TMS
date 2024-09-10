@@ -43,7 +43,7 @@ class NoShowButton extends StatelessWidget {
       ),
       onStatusConfirmFuture: () => Provider.of<GameScoringProvider>(context, listen: false).submitNoShow(
         table: table,
-        teamNumber: team!.number,
+        teamNumber: team!.teamNumber,
         round: round,
         matchNumber: match!.matchNumber,
       ),

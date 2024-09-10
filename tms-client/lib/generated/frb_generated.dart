@@ -5956,7 +5956,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     if (arr.length != 4)
       throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return Team(
-      number: dco_decode_String(arr[0]),
+      teamNumber: dco_decode_String(arr[0]),
       name: dco_decode_String(arr[1]),
       affiliation: dco_decode_String(arr[2]),
       ranking: dco_decode_u_32(arr[3]),
@@ -7185,12 +7185,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   @protected
   Team sse_decode_team(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_number = sse_decode_String(deserializer);
+    var var_teamNumber = sse_decode_String(deserializer);
     var var_name = sse_decode_String(deserializer);
     var var_affiliation = sse_decode_String(deserializer);
     var var_ranking = sse_decode_u_32(deserializer);
     return Team(
-        number: var_number,
+        teamNumber: var_teamNumber,
         name: var_name,
         affiliation: var_affiliation,
         ranking: var_ranking);
@@ -8239,7 +8239,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   @protected
   void sse_encode_team(Team self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.number, serializer);
+    sse_encode_String(self.teamNumber, serializer);
     sse_encode_String(self.name, serializer);
     sse_encode_String(self.affiliation, serializer);
     sse_encode_u_32(self.ranking, serializer);

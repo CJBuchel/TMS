@@ -6,9 +6,10 @@ import 'package:tms/mixins/server_event_subscriber_mixin.dart';
 import 'package:tms/utils/logger.dart';
 
 class GameTableSignalProvider extends EchoTreeProvider<String, GameTable> with ServerEventSubscribeNotifierMixin {
-  Map<String, String> _tableSignals = {};
+  final Map<String, String> _tableSignals = {};
 
   void _updateTableSignals(String table, String teamNumber) {
+    // update or add table signal
     _tableSignals[table] = teamNumber;
     notifyListeners();
   }

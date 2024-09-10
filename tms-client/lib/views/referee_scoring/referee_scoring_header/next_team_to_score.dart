@@ -14,7 +14,7 @@ class NextTeamToScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "${nextTeam?.number} | ${nextTeam?.name}",
+      "${nextTeam?.teamNumber} | ${nextTeam?.name}",
       style: TextStyle(
         fontSize: fontSize,
         color: Colors.white,

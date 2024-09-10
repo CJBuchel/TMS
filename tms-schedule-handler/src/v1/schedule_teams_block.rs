@@ -2,7 +2,7 @@
 use super::{V1Block, BLOCK_TEAMS};
 
 pub struct ScheduleTeamT {
-  pub number: String,
+  pub team_number: String,
   pub name: String,
   pub affiliation: String,
 }
@@ -36,7 +36,7 @@ impl V1Block for ScheduleTeamsBlock {
         },
         _ => {
           let team = ScheduleTeamT {
-            number: fields[0].to_string(),
+            team_number: fields[0].to_string(),
             name: fields[1].to_string(),
             affiliation: fields[2].to_string(),
           };

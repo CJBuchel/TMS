@@ -48,7 +48,7 @@ class UpdateTeamOnMatchWidget extends StatelessWidget {
         showSearchBox: true,
       ),
       items: availableTeams,
-      itemAsString: (team) => "${team.number} - ${team.name}",
+      itemAsString: (team) => "${team.teamNumber} - ${team.name}",
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
           border: OutlineInputBorder(),
@@ -131,8 +131,9 @@ class UpdateTeamOnMatchWidget extends StatelessWidget {
               .map((table) => table)
               .toList();
           // get teams not referenced in the tableData list
-          List<Team> availableTeams = sortTeamsByNumber(
-              teamProvider.teams.where((team) => !tableData.any((data) => data.team.number == team.number)).toList());
+          List<Team> availableTeams = sortTeamsByNumber(teamProvider.teams
+              .where((team) => !tableData.any((data) => data.team.teamNumber == team.teamNumber))
+              .toList());
 
           return _AvailableData(
             availableTables: availableTables,

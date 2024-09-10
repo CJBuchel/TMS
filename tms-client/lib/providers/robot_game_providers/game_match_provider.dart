@@ -12,7 +12,7 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
   GameMatchProvider()
       : super(tree: ":robot_game:matches", fromJsonString: (json) => GameMatch.fromJsonString(json: json));
 
-  List<GameMatch> get matches => matchesByNumber;
+  List<GameMatch> get matches => matchesByTime;
 
   List<GameMatch> get matchesByNumber {
     // order matches by match number

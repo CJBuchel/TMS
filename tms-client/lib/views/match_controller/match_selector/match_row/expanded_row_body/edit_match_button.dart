@@ -112,7 +112,7 @@ class EditMatchButton extends StatelessWidget {
     return IconButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(Colors.orange),
-        overlayColor: WidgetStateProperty.all(Colors.orangeAccent),
+        overlayColor: WidgetStateProperty.all(Colors.orange[400]),
         splashFactory: NoSplash.splashFactory,
       ),
       onPressed: () => _showEditDialog(context),

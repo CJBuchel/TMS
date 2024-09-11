@@ -18,7 +18,8 @@ class _AvailableData {
 }
 
 class UpdateTeamOnMatchWidget extends StatelessWidget {
-  final bool filterAvailableData;
+  final bool isEditing;
+
   final List<StageTableData> tableData;
   final List<String> stagedMatchNumbers;
 
@@ -28,7 +29,7 @@ class UpdateTeamOnMatchWidget extends StatelessWidget {
 
   UpdateTeamOnMatchWidget({
     Key? key,
-    this.filterAvailableData = true,
+    required this.isEditing,
     required this.tableData,
     required this.stagedMatchNumbers,
     required this.selectedTable,
@@ -39,7 +40,7 @@ class UpdateTeamOnMatchWidget extends StatelessWidget {
   Widget _selectAvailableTeamWidget(List<Team> availableTeams) {
     if (availableTeams.isEmpty) {
       return const SizedBox();
-    } else if (selectedTeam.value == null) {
+    } else if (selectedTeam.value == null || !isEditing) {
       selectedTeam.value = availableTeams.first;
     }
 
@@ -67,7 +68,7 @@ class UpdateTeamOnMatchWidget extends StatelessWidget {
   Widget _selectAvailableTableWidget(List<String> availableTables) {
     if (availableTables.isEmpty) {
       return const SizedBox();
-    } else if (selectedTable.value.isEmpty) {
+    } else if (selectedTable.value.isEmpty || !isEditing) {
       selectedTable.value = availableTables.first;
     }
 
@@ -95,7 +96,7 @@ class UpdateTeamOnMatchWidget extends StatelessWidget {
   Widget _selectAvailableMatchesWidget(List<String> availableMatchNumbers) {
     if (availableMatchNumbers.isEmpty) {
       return const SizedBox();
-    } else if (selectedMatch.value.isEmpty) {
+    } else if (selectedMatch.value.isEmpty || !isEditing) {
       selectedMatch.value = availableMatchNumbers.first;
     }
 
@@ -125,26 +126,19 @@ class UpdateTeamOnMatchWidget extends StatelessWidget {
     return Selector2<GameTableProvider, TeamsProvider, _AvailableData>(
       selector: (context, tableProvider, teamProvider) {
         // get tables not referenced in the tableData list
-        if (filterAvailableData) {
-          List<String> availableTables = tableProvider.tableNames
-              .where((table) => !tableData.any((data) => data.table.table == table))
-              .map((table) => table)
-              .toList();
-          // get teams not referenced in the tableData list
-          List<Team> availableTeams = sortTeamsByNumber(teamProvider.teams
-              .where((team) => !tableData.any((data) => data.team.teamNumber == team.teamNumber))
-              .toList());
+        List<String> availableTables = tableProvider.tableNames
+            .where((table) => !tableData.any((data) => data.table.table == table))
+            .map((table) => table)
+            .toList();
+        // get teams not referenced in the tableData list
+        List<Team> availableTeams = sortTeamsByNumber(teamProvider.teams
+            .where((team) => !tableData.any((data) => data.team.teamNumber == team.teamNumber))
+            .toList());
 
-          return _AvailableData(
-            availableTables: availableTables,
-            availableTeams: availableTeams,
-          );
-        } else {
-          return _AvailableData(
-            availableTables: tableProvider.tableNames,
-            availableTeams: teamProvider.teams,
-          );
-        }
+        return _AvailableData(
+          availableTables: availableTables,
+          availableTeams: availableTeams,
+        );
       },
       builder: (context, data, _) {
         return Column(

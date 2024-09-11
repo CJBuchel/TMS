@@ -65,7 +65,7 @@ class StageTable extends StatelessWidget {
                   selectedTable: selectedTable,
                   selectedTeam: selectedTeam,
                   selectedMatch: selectedMatch,
-                  filterAvailableData: false,
+                  isEditing: true,
                 ),
               ),
               onStatusConfirmFuture: () {
@@ -169,6 +169,7 @@ class StageTable extends StatelessWidget {
                 selectedTable: selectedTable,
                 selectedTeam: selectedTeam,
                 selectedMatch: selectedMatch,
+                isEditing: false, // we're adding a new team (no edit)
               ),
             ),
             onStatusConfirmFuture: () {

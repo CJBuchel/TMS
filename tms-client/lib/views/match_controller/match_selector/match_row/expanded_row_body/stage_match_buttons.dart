@@ -35,9 +35,9 @@ class StageMatchButtons extends StatelessWidget {
       onPressed: () {
         Provider.of<GameMatchStatusProvider>(context, listen: false).stageMatches([match.matchNumber]);
       },
-      style: const ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(Colors.blue),
-        overlayColor: WidgetStatePropertyAll(Colors.blueAccent),
+      style: ButtonStyle(
+        backgroundColor: const WidgetStatePropertyAll(Colors.blue),
+        overlayColor: WidgetStatePropertyAll(Colors.blue[400]),
         splashFactory: NoSplash.splashFactory,
       ),
       icon: const Icon(

@@ -50,7 +50,9 @@ mixin _$QuestionInput {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of QuestionInput
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $QuestionInputCopyWith<QuestionInput> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -74,6 +76,8 @@ class _$QuestionInputCopyWithImpl<$Res, $Val extends QuestionInput>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of QuestionInput
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -109,6 +113,8 @@ class __$$QuestionInput_CategoricalImplCopyWithImpl<$Res>
       $Res Function(_$QuestionInput_CategoricalImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of QuestionInput
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,7 +153,9 @@ class _$QuestionInput_CategoricalImpl extends QuestionInput_Categorical {
   @override
   int get hashCode => Object.hash(runtimeType, field0);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of QuestionInput
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$QuestionInput_CategoricalImplCopyWith<_$QuestionInput_CategoricalImpl>
@@ -218,8 +226,11 @@ abstract class QuestionInput_Categorical extends QuestionInput {
 
   @override
   CategoricalQuestion get field0;
+
+  /// Create a copy of QuestionInput
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$QuestionInput_CategoricalImplCopyWith<_$QuestionInput_CategoricalImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

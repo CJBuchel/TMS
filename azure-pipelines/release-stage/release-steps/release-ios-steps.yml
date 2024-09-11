@@ -1,0 +1,33 @@
+
+steps:
+  # download the artifact
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download IPA Artifact'
+    inputs:
+      artifact: 'client-ios'
+      targetPath: '$(Pipeline.Workspace)/client-ios'
+
+  # release to the appstore
+  # - task: AppStoreRelease@1
+  #   inputs:
+  #     serviceEndpoint: 'App Store Connect'
+  #     apiKeyID: '5PDA964VH6'
+  #     apiIssuerID: '0f183d1c-c039-4e7b-9f00-c306c21186bf'
+  #     appSpecificId: '6447258831'
+  #     appIdentifier: 'a.loose.screw.tms'
+  #     shouldSkipWaitingForProcessing: true
+  #     shouldSkipSubmission: true
+
+  #     releaseTrack: 'Production' # Production or TestFlight
+  #     appType: 'iOS'
+  #     ipaPath: '$(Pipeline.Workspace)/**/*.ipa'
+
+  - task: AppStoreRelease@1
+    inputs:
+      serviceEndpoint: 'App Store Connect'
+      releaseTrack: 'TestFlight'
+      appIdentifier: 'a.loose.screw.tms'
+      appType: 'iOS'
+      shouldSubmitForReview: true
+      shouldAutoRelease: true
+      ipaPath: '$(Pipeline.Workspace)/**/*.ipa'

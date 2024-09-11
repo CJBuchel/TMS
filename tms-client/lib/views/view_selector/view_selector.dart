@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/utils/permissions.dart';
 import 'package:tms/views/view_selector/admin_views.dart';
+import 'package:tms/views/view_selector/public_views.dart';
 import 'package:tms/views/view_selector/referee_views.dart';
 
 class ViewSelector extends StatelessWidget {
@@ -18,6 +19,8 @@ class ViewSelector extends StatelessWidget {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
+                  // public views
+                  const PublicViews(),
                   // admin views
                   if (authProvider.hasAccess(const Permissions(admin: true))) const AdminViews(),
                   // referee screens

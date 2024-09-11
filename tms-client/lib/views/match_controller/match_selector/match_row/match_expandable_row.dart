@@ -107,7 +107,8 @@ class MatchExpandableRow extends StatelessWidget {
 
   Widget _tileRow(MatchRowState state, List<GameMatch> loadedMatches, bool canStage, bool isStaged) {
     bool isLoaded = state == MatchRowState.LOADED;
-    bool isExpandable = !isMultiMatch && !isLoaded;
+    bool isRunning = state == MatchRowState.RUNNING;
+    bool isExpandable = !isMultiMatch && !isLoaded && !isRunning;
 
     return ExpandableTile(
       controller: controller,

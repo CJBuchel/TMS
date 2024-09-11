@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/connection/connection.dart';
+import 'package:tms/views/game_match_timer/game_match_timer.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/match_controller/match_controller.dart';
@@ -105,6 +106,11 @@ final tmsRouter = GoRouter(
       path: '/connection',
       name: 'connection',
       builder: (context, state) => BaseResponsive(child: Connection(state: state)),
+    ),
+    GoRoute(
+      path: '/game_match_timer',
+      name: 'game_match_timer',
+      builder: (context, state) => BaseScaffold(state: state, child: const GameMatchTimer()),
     ),
     ..._protectedRoutes,
   ],

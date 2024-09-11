@@ -1,2 +1,0 @@
-#!/bin/sh
-flutter run -d chrome --web-header=Cross-Origin-Opener-Policy=same-origin --web-header=Cross-Origin-Embedder-Policy=require-corp

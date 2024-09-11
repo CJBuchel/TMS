@@ -1,0 +1,40 @@
+jobs:
+  # setup the environment (.env files)
+  - job: Environment
+    displayName: 'Setup Environment'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      # Create env file
+      - script: |
+          echo 'Creating .env file'
+          echo 'TMS_VERSION=$(tms_version)' > .env
+          cat .env
+        displayName: 'Generate .env file'
+      # Copy to staging
+      - template: templates/steps/common-steps/copy-to-staging.yml
+        parameters:
+          contents: '.env'
+          flattenFolders: true
+      # Publish artifact
+      - template: templates/steps/common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'env-files'
+  # create the release notes
+  - job: ReleaseNotes
+    displayName: 'Create Release Notes'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: |
+          python generate_release_notes.py $(tms_version)
+        displayName: 'Generate Release Notes'
+      # Copy to staging
+      - template: templates/steps/common-steps/copy-to-staging.yml
+        parameters:
+          contents: 'RELEASE_NOTES.md'
+          flattenFolders: true
+      # Publish artifact
+      - template: templates/steps/common-steps/publish-artifact.yml
+        parameters:
+          artifactName: 'release-notes'

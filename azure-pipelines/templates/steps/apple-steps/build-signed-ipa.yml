@@ -1,0 +1,21 @@
+steps:
+  - task: Xcode@5
+    displayName: "Generate IPA"
+    inputs:
+      # build options
+      actions: 'build'
+      xcWorkspacePath: '$(Build.SourcesDirectory)/tms-client/ios/Runner.xcworkspace'
+      scheme: 'Runner'
+      sdk: 'iphoneos'
+      configuration: 'release'
+
+      # package options
+      packageApp: true
+
+      # signing
+      signingOption: 'manual'
+      signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+      provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'  
+
+      # advanced
+      useXcpretty: false

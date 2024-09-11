@@ -1,0 +1,18 @@
+parameters:
+  - name: clientBinaryPath
+    type: string
+
+  - name: artifactName
+    type: string
+
+steps:
+  # copy client binary to staging
+  - template: steps/common-steps/copy-to-staging.yml
+    parameters:
+      contents: ${{ parameters.clientBinaryPath }}
+      flattenFolders: true
+  # publish the artifact
+  - template: steps/common-steps/publish-artifact.yml
+    parameters:
+      artifactName: ${{ parameters.artifactName }}
+      shouldArchive: false

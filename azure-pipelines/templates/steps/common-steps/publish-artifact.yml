@@ -1,0 +1,46 @@
+parameters:
+  - name: artifactName
+    type: string
+    default: 'artifacts'
+  - name: shouldArchive
+    type: boolean
+    default: false
+  - name: archiveType
+    type: string
+    default: 'zip'
+    values:
+      - 'zip'
+      - 'tar'
+  - name: tarCompression
+    type: string
+    default: 'gz'
+  - name: archiveFile
+    type: string
+    default: 'artifacts.tar.gz'
+
+steps:
+  - ${{ if eq(parameters.shouldArchive, true) }}:
+    - task: ArchiveFiles@2
+      displayName: 'Archive ${{ parameters.artifactName }}'
+      inputs:
+        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+        includeRootFolder: false
+        replaceExistingArchive: true
+        archiveType: ${{ parameters.archiveType }}
+        tarCompression: ${{ parameters.tarCompression }}
+        archiveFile: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
+  
+  # only publish the archive if it was created
+  - ${{ if eq(parameters.shouldArchive, true) }}:
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Archive ${{ parameters.artifactName }}'
+      inputs:
+        PathToPublish: '$(Build.ArtifactStagingDirectory)/${{ parameters.archiveFile }}'
+        ArtifactName: ${{ parameters.artifactName }}
+
+  - ${{ if ne(parameters.shouldArchive, true) }}:
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish ${{ parameters.artifactName }}'
+      inputs:
+        PathToPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: ${{ parameters.artifactName }}

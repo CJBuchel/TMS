@@ -1,8 +1,12 @@
+use std::collections::HashMap;
+
+use tms_infra::TmsCategory;
 use tms_schedule_handler::TmsSchedule;
 
 use crate::database::Database;
 
-use super::{GameMatchExtensions, GameTableExtensions, JudgingPodExtensions, JudgingSessionExtensions, TeamExtensions};
+// use super::{GameMatchCategoryExtensions, GameMatchExtensions, GameTableExtensions, JudgingPodExtensions, JudgingSessionExtensions, TeamExtensions};
+use super::*;
 
 #[async_trait::async_trait]
 pub trait TournamentScheduleExtensions {
@@ -39,7 +43,7 @@ impl TournamentScheduleExtensions for Database {
     }
 
     // set matches
-    for game_match in schedule.game_matches {
+    for game_match in schedule.game_matches.to_owned() {
       match self.insert_game_match(game_match.clone(), None).await {
         Ok(_) => {
           log::info!("Inserted game match: {}", game_match.match_number);
@@ -47,6 +51,35 @@ impl TournamentScheduleExtensions for Database {
         Err(e) => {
           log::error!("Error inserting game match: {}", e);
           return Err(format!("Error inserting game match: {}", e));
+        }
+      }
+    }
+
+    // set game match categories (iterate through the matches, grab the categories, and insert them)
+    let mut game_categories_map: HashMap<String, Vec<String>> = HashMap::new();
+    for game_match in schedule.game_matches {
+      let cat_name = game_match.category.category;
+      let sub_categories = game_match.category.sub_categories;
+      // Check if the category already exists in the map
+      let entry = game_categories_map.entry(cat_name).or_insert_with(Vec::new);
+      // Add the subcategories to the existing category
+      for sub_cat in sub_categories {
+        if !entry.contains(&sub_cat) {
+          entry.push(sub_cat);
+        }
+      }
+    }
+    // Convert the HashMap back to a Vec<TmsCategory>
+    let game_categories: Vec<TmsCategory> = game_categories_map.into_iter().map(|(category, sub_categories)| TmsCategory { category, sub_categories }).collect();
+    // add them to the db
+    for category in game_categories {
+      match self.insert_game_match_category(category.clone(), None).await {
+        Ok(_) => {
+          log::info!("Inserted game match category: {}", category.category);
+        }
+        Err(e) => {
+          log::error!("Error inserting game match category: {}", e);
+          return Err(format!("Error inserting game match category: {}", e));
         }
       }
     }
@@ -65,7 +98,7 @@ impl TournamentScheduleExtensions for Database {
     }
 
     // set sessions
-    for session in schedule.judging_sessions {
+    for session in schedule.judging_sessions.to_owned() {
       match self.insert_judging_session(session.clone(), None).await {
         Ok(_) => {
           log::info!("Inserted judging session: {}", session.session_number);
@@ -73,6 +106,36 @@ impl TournamentScheduleExtensions for Database {
         Err(e) => {
           log::error!("Error inserting judging session: {}", e);
           return Err(format!("Error inserting judging session: {}", e));
+        }
+      }
+    }
+
+    // set judging categories
+    let mut judging_categories_map: HashMap<String, Vec<String>> = HashMap::new();
+    for session in schedule.judging_sessions {
+      let cat_name = session.category.category;
+      let sub_categories = session.category.sub_categories;
+      // Check if the category already exists in the map
+      let entry = judging_categories_map.entry(cat_name).or_insert_with(Vec::new);
+      // Add the subcategories to the existing category
+      for sub_cat in sub_categories {
+        if !entry.contains(&sub_cat) {
+          entry.push(sub_cat);
+        }
+      }
+    }
+
+    // Convert the HashMap back to a Vec<TmsCategory>
+    let judging_categories: Vec<TmsCategory> = judging_categories_map.into_iter().map(|(category, sub_categories)| TmsCategory { category, sub_categories }).collect();
+    // add them to the db
+    for category in judging_categories {
+      match self.insert_judging_category(category.clone(), None).await {
+        Ok(_) => {
+          log::info!("Inserted judging category: {}", category.category);
+        }
+        Err(e) => {
+          log::error!("Error inserting judging category: {}", e);
+          return Err(format!("Error inserting judging category: {}", e));
         }
       }
     }

@@ -26,6 +26,24 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
     return sortMatchesByTime(matches);
   }
 
+  List<GameMatch> getMatchesByCategory({
+    required String category,
+    List<String> subCategories = const [],
+  }) {
+    List<GameMatch> timeSortedMatches = matchesByTime;
+    return timeSortedMatches.where((match) {
+      if (match.category.category == category) {
+        if (subCategories.isEmpty) {
+          return true;
+        } else {
+          return match.category.subCategories.any((subCategory) => subCategories.contains(subCategory));
+        }
+      }
+
+      return false;
+    }).toList();
+  }
+
   String? getIdFromMatchNumber(String matchNumber) {
     return this.items.keys.firstWhereOrNull((key) => this.items[key]?.matchNumber == matchNumber);
   }

@@ -12,12 +12,19 @@ class ViewSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
-        return ListView(
-          children: [
-            // admin views
-            if (authProvider.hasAccess(const Permissions(admin: true))) const AdminViews(),
-            // referee screens
-            if (authProvider.hasAccess(const Permissions(referee: true))) const RefereeViews(),
+        return CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  // admin views
+                  if (authProvider.hasAccess(const Permissions(admin: true))) const AdminViews(),
+                  // referee screens
+                  if (authProvider.hasAccess(const Permissions(referee: true))) const RefereeViews(),
+                ],
+              ),
+            ),
           ],
         );
       },

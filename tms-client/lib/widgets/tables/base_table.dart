@@ -72,14 +72,21 @@ class BaseTable extends StatelessWidget {
           child: headerWidgets(),
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: rows.length,
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: rows[index].decoration,
-                child: tableRowWidget(rows[index]),
-              );
-            },
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return Container(
+                      decoration: rows[index].decoration,
+                      child: tableRowWidget(rows[index]),
+                    );
+                  },
+                  childCount: rows.length,
+                ),
+              ),
+            ],
           ),
         ),
       ],

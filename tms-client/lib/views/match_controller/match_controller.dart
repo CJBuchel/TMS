@@ -11,7 +11,12 @@ class MatchController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EchoTreeLifetime(
-      trees: [":robot_game:tables", ":robot_game:matches", ":teams"],
+      trees: [
+        ":robot_game:tables",
+        ":robot_game:matches",
+        ":robot_game:categories",
+        ":teams",
+      ],
       child: Row(
         children: [
           const Expanded(

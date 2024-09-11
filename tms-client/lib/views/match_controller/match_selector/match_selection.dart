@@ -104,11 +104,18 @@ class MatchSelection extends StatelessWidget {
         return ValueListenableBuilder(
           valueListenable: _isMultiMatch,
           builder: (context, isMultiMatch, _) {
-            return ListView.builder(
-              itemCount: matches.length,
-              itemBuilder: (context, index) {
-                return _matchItem(index, isMultiMatch);
-              },
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return _matchItem(index, isMultiMatch);
+                    },
+                    childCount: matches.length,
+                  ),
+                ),
+              ],
             );
           },
         );

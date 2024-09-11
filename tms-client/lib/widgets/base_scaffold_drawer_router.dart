@@ -99,13 +99,18 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
       child: Scaffold(
         appBar: TmsAppBar(state: state),
         drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                child: Image.asset('assets/logos/TMS_LOGO_NO_TEXT.png'),
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    DrawerHeader(
+                      child: Image.asset('assets/logos/TMS_LOGO_NO_TEXT.png'),
+                    ),
+                    ...(items ?? []),
+                  ],
+                ),
               ),
-              ...(items ?? []),
             ],
           ),
         ),

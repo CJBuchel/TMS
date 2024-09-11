@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-use super::TmsDateTime;
+use super::{TmsCategory, TmsDateTime};
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameMatchTable {
@@ -19,6 +19,9 @@ pub struct GameMatch {
   pub end_time: TmsDateTime,
   pub game_match_tables: Vec<GameMatchTable>,
   pub completed: bool,
+
+  // category
+  pub category: TmsCategory,
 }
 
 impl Default for GameMatch {
@@ -29,6 +32,7 @@ impl Default for GameMatch {
       end_time: TmsDateTime::default(),
       game_match_tables: Vec::new(),
       completed: false,
+      category: TmsCategory::default(),
     }
   }
 }

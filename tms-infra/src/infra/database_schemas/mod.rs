@@ -27,3 +27,6 @@ pub use tournament_blueprint::*;
 
 pub mod game_score_sheet;
 pub use game_score_sheet::*;
+
+pub mod category;
+pub use category::*;

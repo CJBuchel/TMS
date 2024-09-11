@@ -20,7 +20,10 @@ use schedule_practice_matches_block::*;
 
 mod schedule_judging_block;
 use schedule_judging_block::*;
-use tms_infra::infra::database_schemas::{GameMatch, GameMatchTable, JudgingSession, JudgingSessionPod, Team, TmsDateTime, TmsTime};
+use tms_infra::{
+  infra::database_schemas::{GameMatch, GameMatchTable, JudgingSession, JudgingSessionPod, Team, TmsDateTime, TmsTime},
+  TmsCategory,
+};
 
 pub trait V1Block {
   type Output;
@@ -41,7 +44,7 @@ pub trait V1Block {
       let fields = line.split(",").collect::<Vec<&str>>();
       if fields[0] == BLOCK_FORMAT {
         if fields[1] == block {
-          return Some(line_number+1); // start with line after block format
+          return Some(line_number + 1); // start with line after block format
         }
       }
     }
@@ -52,7 +55,7 @@ pub trait V1Block {
   // gets lines between block format and next block format
   fn get_block_lines(csv: &str, block: &str) -> Result<Vec<String>, String> {
     let reader = BufReader::new(csv.as_bytes());
-    
+
     // find block
     let block_line = match Self::find_block_line_number(csv, block) {
       Some(line) => line,
@@ -62,7 +65,7 @@ pub trait V1Block {
     // skip to block, and get lines until next block
     let lines = reader.lines().skip(block_line);
     let mut block_lines: Vec<String> = vec![];
-    
+
     for line in lines {
       let line = match line {
         Ok(line) => line,
@@ -92,20 +95,22 @@ pub struct V1 {
 }
 
 impl V1 {
-  pub fn string_to_tms_date_time(time: String) -> Result<TmsDateTime, String> {
-    let time_regex = match regex::Regex::new(r"(\d{2}):(\d{2}):(\d{2})") {
+  pub fn extract_time(input: &str) -> Result<TmsDateTime, String> {
+    let re = match regex::Regex::new(r"(\d{2}:\d{2}:\d{2})\s?(AM|PM)?") {
       Ok(re) => re,
-      Err(_) => return Err("Error creating time regex".to_string()),
+      Err(_) => return Err("Error creating regex".to_string()),
     };
 
-    let start_time_str = match time_regex.captures(&time) {
-      Some(caps) => caps.get(0).unwrap().as_str(),
-      None => return Err(format!("Error getting regex time: {}", time)),
+    let captures = match re.captures(input) {
+      Some(caps) => caps,
+      None => return Err(format!("Error capturing time from: {}", input)),
     };
 
-    let start_time_native = match chrono::NaiveTime::parse_from_str(start_time_str, "%H:%M:%S") {
+    let time_str = captures.get(1).unwrap().as_str();
+
+    let start_time_native = match chrono::NaiveTime::parse_from_str(time_str, "%H:%M:%S") {
       Ok(time) => time,
-      Err(_) => return Err(format!("Error parsing time: {}", time)),
+      Err(_) => return Err(format!("Error parsing time: {}", time_str)),
     };
 
     // TMS Date Time
@@ -119,6 +124,17 @@ impl V1 {
     };
 
     Ok(start_time)
+  }
+
+  pub fn extract_category(input: &str) -> Option<String> {
+    let re = match regex::Regex::new(r"^(.*)\s\d{2}:\d{2}:\d{2}\s?(AM|PM)?") {
+      Ok(re) => re,
+      Err(_) => return None,
+    };
+
+    let captures = re.captures(input)?;
+
+    Some(captures.get(1).unwrap().as_str().to_string())
   }
 }
 
@@ -168,9 +184,8 @@ impl CsvToTmsSchedule for V1 {
     let mut schedule = TmsSchedule {
       teams: vec![],
       game_matches: vec![],
-      judging_sessions: vec![],
-      practice_game_matches: vec![],
       game_tables: vec![],
+      judging_sessions: vec![],
       judging_pods: vec![],
     };
 
@@ -186,16 +201,15 @@ impl CsvToTmsSchedule for V1 {
       }
     }
 
-    // matches & tables
-    if let Some(matches_block) = v1.matches_block {
-      // tables
-      for table in matches_block.table_names {
-        schedule.game_tables.push(table);
-      }
-
-      // matches
-      for m in matches_block.matches {
+    // practice matches
+    if let Some(practice_matches_block) = v1.practice_matches_block {
+      for m in practice_matches_block.matches {
         let mut game_match_tables: Vec<GameMatchTable> = vec![];
+
+        if m.on_tables.is_empty() {
+          log::error!("No tables assigned to match: {}", m.match_number);
+          return Err(format!("No tables assigned to match: {}", m.match_number));
+        }
 
         for on_table in m.on_tables.clone() {
           let game_match_table = GameMatchTable {
@@ -207,15 +221,72 @@ impl CsvToTmsSchedule for V1 {
         }
 
         // start/end time
-        let start_time = Self::string_to_tms_date_time(m.start_time)?;
-        let end_time = Self::string_to_tms_date_time(m.end_time)?;
+        let start_time = Self::extract_time(&m.start_time)?;
+        let end_time = Self::extract_time(&m.end_time)?;
+
+        let sub_categories = match Self::extract_category(&m.start_time) {
+          Some(sub_category) => vec![sub_category],
+          None => vec![],
+        };
 
         schedule.game_matches.push(GameMatch {
           match_number: m.match_number.clone(),
           start_time,
           end_time,
-          game_match_tables: game_match_tables,
+          game_match_tables,
           completed: false,
+          category: TmsCategory {
+            category: String::from("Practice Matches"),
+            sub_categories,
+          },
+        });
+      }
+    }
+
+    // matches & tables
+    if let Some(matches_block) = v1.matches_block {
+      // tables
+      for table in matches_block.table_names {
+        schedule.game_tables.push(table);
+      }
+
+      // matches
+      for m in matches_block.matches {
+        let mut game_match_tables: Vec<GameMatchTable> = vec![];
+
+        if m.on_tables.is_empty() {
+          log::error!("No tables assigned to match: {}", m.match_number);
+          return Err(format!("No tables assigned to match: {}", m.match_number));
+        }
+
+        for on_table in m.on_tables.clone() {
+          let game_match_table = GameMatchTable {
+            table: on_table.on_table_name,
+            team_number: on_table.team_number,
+            score_submitted: false,
+          };
+          game_match_tables.push(game_match_table);
+        }
+
+        // start/end time
+        let start_time = Self::extract_time(&m.start_time)?;
+        let end_time = Self::extract_time(&m.end_time)?;
+
+        let sub_categories = match Self::extract_category(&m.start_time) {
+          Some(sub_category) => vec![sub_category],
+          None => vec![],
+        };
+
+        schedule.game_matches.push(GameMatch {
+          match_number: m.match_number.clone(),
+          start_time,
+          end_time,
+          game_match_tables,
+          completed: false,
+          category: TmsCategory {
+            category: String::from("Ranking Matches"),
+            sub_categories,
+          },
         });
       }
     }
@@ -243,42 +314,21 @@ impl CsvToTmsSchedule for V1 {
         }
 
         // start/end time
-        let start_time = Self::string_to_tms_date_time(j.start_time)?;
-        let end_time = Self::string_to_tms_date_time(j.end_time)?;
+        let start_time = Self::extract_time(&j.start_time)?;
+        let end_time = Self::extract_time(&j.end_time)?;
+
+        let category_name = String::from("Judging Sessions");
+        let sub_categories = match Self::extract_category(&j.start_time) {
+          Some(sub_category) => vec![sub_category],
+          None => vec![],
+        };
 
         schedule.judging_sessions.push(JudgingSession {
           session_number: j.session_number.clone(),
           start_time,
           end_time,
-          judging_session_pods: judging_session_pods,
-        });
-      }
-    }
-
-    // practice matches
-    if let Some(practice_matches_block) = v1.practice_matches_block {
-      for m in practice_matches_block.matches {
-        let mut game_match_tables: Vec<GameMatchTable> = vec![];
-
-        for on_table in m.on_tables.clone() {
-          let game_match_table = GameMatchTable {
-            table: on_table.on_table_name,
-            team_number: on_table.team_number,
-            score_submitted: false,
-          };
-          game_match_tables.push(game_match_table);
-        }
-
-        // start/end time
-        let start_time = Self::string_to_tms_date_time(m.start_time)?;
-        let end_time = Self::string_to_tms_date_time(m.end_time)?;
-
-        schedule.practice_game_matches.push(GameMatch {
-          match_number: m.match_number.clone(),
-          start_time,
-          end_time,
-          game_match_tables: game_match_tables,
-          completed: false,
+          judging_session_pods,
+          category: TmsCategory { category: category_name, sub_categories },
         });
       }
     }

@@ -6,36 +6,15 @@ enum TableSignalState {
   READY,
 }
 
-class GameTableStatus extends StatefulWidget {
+class GameTableStatus extends StatelessWidget {
   final TableSignalState state;
+  final AnimationController blinkController;
 
   const GameTableStatus({
     Key? key,
     required this.state,
+    required this.blinkController,
   }) : super(key: key);
-
-  @override
-  State<GameTableStatus> createState() => _GameTableStatusState();
-}
-
-class _GameTableStatusState extends State<GameTableStatus> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 100),
-      vsync: this,
-    )..repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   Widget _statusText(TableSignalState state) {
     Color? color = Colors.red;
@@ -54,11 +33,11 @@ class _GameTableStatusState extends State<GameTableStatus> with SingleTickerProv
     }
 
     return AnimatedBuilder(
-      animation: _controller,
+      animation: blinkController,
       builder: (context, child) {
         Color? status_color = color;
         if (state == TableSignalState.SIG) {
-          status_color = _controller.value < 0.5 ? color : Colors.transparent;
+          status_color = blinkController.value < 0.5 ? color : Colors.transparent;
         }
 
         return Text(
@@ -75,7 +54,9 @@ class _GameTableStatusState extends State<GameTableStatus> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _statusText(widget.state),
+      child: RepaintBoundary(
+        child: _statusText(state),
+      ),
     );
   }
 }

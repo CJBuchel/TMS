@@ -75,36 +75,42 @@ class GameScoringWidget extends StatelessWidget {
               },
             );
           } else {
-            return ListView.builder(
-              shrinkWrap: true,
+            return CustomScrollView(
               controller: scrollController,
-              itemCount: data.blueprint?.blueprint.robotGameMissions.length,
-              itemBuilder: (context, index) {
-                Mission mission = data.blueprint!.blueprint.robotGameMissions[index];
-                List<Question> allQuestions = data.blueprint!.blueprint.robotGameQuestions;
-                List<Question> missionQuestions = allQuestions.where((q) => q.id.startsWith(mission.id)).toList();
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      Mission mission = data.blueprint!.blueprint.robotGameMissions[index];
+                      List<Question> allQuestions = data.blueprint!.blueprint.robotGameQuestions;
+                      List<Question> missionQuestions = allQuestions.where((q) => q.id.startsWith(mission.id)).toList();
 
-                // Create a GlobalKey for each questions
-                questionKeys.addAll(List.generate(missionQuestions.length, (index) => GlobalKey()));
+                      // Create a GlobalKey for each questions
+                      questionKeys.addAll(List.generate(missionQuestions.length, (index) => GlobalKey()));
 
-                return MissionWidget(
-                  mission: mission,
-                  missionQuestions: missionQuestions.map((question) {
-                    final key = questionKeys[allQuestions.indexOf(question)];
-                    return QuestionWidget(
-                      key: key,
-                      question: question,
-                      onAnswer: (a) {
-                        _scrollToNextQuestion(questionKeys.indexOf(key));
-                        Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
-                          QuestionAnswer(questionId: question.id, answer: a),
-                        );
-                      },
-                    );
-                  }).toList(),
-                  season: data.blueprint!.title,
-                );
-              },
+                      return MissionWidget(
+                        mission: mission,
+                        missionQuestions: missionQuestions.map((question) {
+                          final key = questionKeys[allQuestions.indexOf(question)];
+                          return QuestionWidget(
+                            key: key,
+                            question: question,
+                            onAnswer: (a) {
+                              _scrollToNextQuestion(questionKeys.indexOf(key));
+                              Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
+                                QuestionAnswer(questionId: question.id, answer: a),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        season: data.blueprint!.title,
+                      );
+                    },
+                    childCount: data.blueprint?.blueprint.robotGameMissions.length,
+                  ),
+                ),
+              ],
             );
           }
         },

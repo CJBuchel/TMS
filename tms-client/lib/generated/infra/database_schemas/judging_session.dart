@@ -4,6 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import 'category.dart';
 import 'date_time.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -14,12 +15,14 @@ class JudgingSession {
   final TmsDateTime startTime;
   final TmsDateTime endTime;
   final List<JudgingSessionPod> judgingSessionPods;
+  final TmsCategory category;
 
   const JudgingSession({
     required this.sessionNumber,
     required this.startTime,
     required this.endTime,
     required this.judgingSessionPods,
+    required this.category,
   });
 
   static Future<JudgingSession> default_() => TmsRustLib.instance.api
@@ -43,7 +46,8 @@ class JudgingSession {
       sessionNumber.hashCode ^
       startTime.hashCode ^
       endTime.hashCode ^
-      judgingSessionPods.hashCode;
+      judgingSessionPods.hashCode ^
+      category.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -53,7 +57,8 @@ class JudgingSession {
           sessionNumber == other.sessionNumber &&
           startTime == other.startTime &&
           endTime == other.endTime &&
-          judgingSessionPods == other.judgingSessionPods;
+          judgingSessionPods == other.judgingSessionPods &&
+          category == other.category;
 }
 
 class JudgingSessionPod {

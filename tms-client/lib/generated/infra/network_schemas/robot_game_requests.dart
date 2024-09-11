@@ -4,6 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../frb_generated.dart';
+import '../database_schemas/category.dart';
 import '../database_schemas/date_time.dart';
 import '../database_schemas/game_match.dart';
 import '../fll_infra/question.dart';

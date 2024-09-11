@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'dart:ffi' as ffi;
 import 'frb_generated.dart';
 import 'infra.dart';
+import 'infra/database_schemas/category.dart';
 import 'infra/database_schemas/date_time.dart';
 import 'infra/database_schemas/game_match.dart';
 import 'infra/database_schemas/game_score_sheet.dart';
@@ -143,6 +144,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   Team dco_decode_box_autoadd_team(dynamic raw);
+
+  @protected
+  TmsCategory dco_decode_box_autoadd_tms_category(dynamic raw);
 
   @protected
   TmsDate dco_decode_box_autoadd_tms_date(dynamic raw);
@@ -386,6 +390,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Team dco_decode_team(dynamic raw);
 
   @protected
+  TmsCategory dco_decode_tms_category(dynamic raw);
+
+  @protected
   TmsDate dco_decode_tms_date(dynamic raw);
 
   @protected
@@ -576,6 +583,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   Team sse_decode_box_autoadd_team(SseDeserializer deserializer);
+
+  @protected
+  TmsCategory sse_decode_box_autoadd_tms_category(SseDeserializer deserializer);
 
   @protected
   TmsDate sse_decode_box_autoadd_tms_date(SseDeserializer deserializer);
@@ -836,6 +846,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Team sse_decode_team(SseDeserializer deserializer);
 
   @protected
+  TmsCategory sse_decode_tms_category(SseDeserializer deserializer);
+
+  @protected
   TmsDate sse_decode_tms_date(SseDeserializer deserializer);
 
   @protected
@@ -1039,6 +1052,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_team(Team self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_tms_category(
+      TmsCategory self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_tms_date(TmsDate self, SseSerializer serializer);
@@ -1305,6 +1322,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_team(Team self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tms_category(TmsCategory self, SseSerializer serializer);
 
   @protected
   void sse_encode_tms_date(TmsDate self, SseSerializer serializer);

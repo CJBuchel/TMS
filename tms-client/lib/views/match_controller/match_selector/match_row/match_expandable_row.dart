@@ -140,7 +140,6 @@ class MatchExpandableRow extends StatelessWidget {
       body: isExpandable
           ? ExpandedRowBody(
               match: match,
-              loadedMatches: loadedMatches,
               isStaged: isStaged,
             )
           : const SizedBox.shrink(),

@@ -3,7 +3,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-use super::TmsDateTime;
+use super::{TmsCategory, TmsDateTime};
+
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct JudgingSessionPod {
@@ -20,6 +21,7 @@ pub struct JudgingSession {
   pub start_time: TmsDateTime,
   pub end_time: TmsDateTime,
   pub judging_session_pods: Vec<JudgingSessionPod>,
+  pub category: TmsCategory,
 }
 
 impl Default for JudgingSession {
@@ -29,6 +31,7 @@ impl Default for JudgingSession {
       start_time: TmsDateTime::default(),
       end_time: TmsDateTime::default(),
       judging_session_pods: Vec::new(),
+      category: TmsCategory::default(),
     }
   }
 }

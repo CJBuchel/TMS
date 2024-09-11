@@ -31,7 +31,7 @@ class DeleteMatchButton extends StatelessWidget {
     return IconButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(Colors.red),
-        overlayColor: WidgetStateProperty.all(Colors.redAccent),
+        overlayColor: WidgetStateProperty.all(Colors.red[400]),
         splashFactory: NoSplash.splashFactory,
       ),
       onPressed: () => _showConfirmDialog(context),

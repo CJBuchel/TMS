@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tms/utils/logger.dart';
 
 // Creates an animated infinite list which will scroll forever
 // Under the hood this creates 2 duplicate lists, one after the other
@@ -7,13 +8,15 @@ import 'package:flutter/material.dart';
 // Once the second list is fully visible, the scroll position is reset to the start
 class AnimatedInfiniteVerticalList extends StatefulWidget {
   final List<Widget> children;
-  final double? standardChildHeight;
+  final List<Widget> childrenSecondList;
+  final double childHeight;
   final int scrollSpeed;
 
   const AnimatedInfiniteVerticalList({
     Key? key,
     required this.children,
-    this.standardChildHeight,
+    this.childrenSecondList = const [],
+    required this.childHeight,
     this.scrollSpeed = 5,
   }) : super(key: key);
 
@@ -70,7 +73,11 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
         _initKeys();
         // redo animation
         if (!_animationInitialized) {
-          _initInfAni();
+          Future.delayed(const Duration(seconds: 2), () {
+            if (mounted) {
+              _initInfAni();
+            }
+          });
         }
       }
     }
@@ -79,8 +86,11 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
   @override
   void initState() {
     super.initState();
-    _initKeys();
-    _initInfAni();
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        _initInfAni();
+      }
+    });
   }
 
   @override
@@ -90,18 +100,10 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
     super.dispose();
   }
 
-  double? _getChildHeight(int index) {
-    if (widget.standardChildHeight != null) {
-      return widget.standardChildHeight;
-    } else {
-      return _keys[index].currentContext?.size?.height;
-    }
-  }
-
   double _getChildrenTotalHeight() {
     double totalHeight = 0;
     for (int i = 0; i < widget.children.length; i++) {
-      totalHeight += _getChildHeight(i) ?? 0;
+      totalHeight += widget.childHeight;
     }
     return totalHeight;
   }
@@ -123,12 +125,15 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      return LayoutBuilder(
-                        key: _keys[index],
-                        builder: (context, constraints) {
-                          return widget.children[index % widget.children.length];
-                        },
-                      );
+                      if (widget.childrenSecondList.isEmpty) {
+                        return widget.children[index % widget.children.length];
+                      } else {
+                        if (index < widget.children.length) {
+                          return widget.children[index];
+                        } else {
+                          return widget.childrenSecondList[index % widget.childrenSecondList.length];
+                        }
+                      }
                     },
                     childCount: widget.children.length * 2,
                   ),

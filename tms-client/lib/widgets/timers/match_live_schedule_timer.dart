@@ -88,10 +88,12 @@ class MatchLiveScheduleTimer extends StatelessWidget {
     return Selector<GameMatchProvider, List<GameMatch>>(
       selector: (context, provider) => provider.matches,
       builder: (context, matches, child) {
-        return _MatchLiveScheduleTimer(
-          positiveStyle: positiveStyle,
-          negativeStyle: negativeStyle,
-          matches: matches,
+        return RepaintBoundary(
+          child: _MatchLiveScheduleTimer(
+            positiveStyle: positiveStyle,
+            negativeStyle: negativeStyle,
+            matches: matches,
+          ),
         );
       },
     );

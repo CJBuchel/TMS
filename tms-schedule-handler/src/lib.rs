@@ -1,4 +1,4 @@
-use tms_infra::{infra::database_schemas::{GameMatch, JudgingSession, Team}, TmsCategory};
+use tms_infra::infra::database_schemas::{GameMatch, JudgingSession, Team};
 use v1::V1;
 
 pub mod v1;

@@ -130,33 +130,35 @@ class _BarberPoleContainerState extends State<BarberPoleContainer> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => _hovering.value = true,
-      onExit: (_) => _hovering.value = false,
-      child: ValueListenableBuilder(
-        valueListenable: _hovering,
-        builder: (context, hovering, _) {
-          return Container(
-            width: widget.width,
-            height: widget.height,
-            decoration: BoxDecoration(
-              color: hovering ? widget.hoverColor ?? widget.color : widget.color,
-              border: widget.border,
-              borderRadius: widget.borderRadius,
-            ),
-
-            // child
-            child: ClipRRect(
-              borderRadius: widget.borderRadius ?? BorderRadius.zero,
-              child: Stack(
-                children: [
-                  if (widget.active) _barberPole(_controller),
-                  if (widget.child != null) widget.child!,
-                ],
+    return RepaintBoundary(
+      child: MouseRegion(
+        onEnter: (_) => _hovering.value = true,
+        onExit: (_) => _hovering.value = false,
+        child: ValueListenableBuilder(
+          valueListenable: _hovering,
+          builder: (context, hovering, _) {
+            return Container(
+              width: widget.width,
+              height: widget.height,
+              decoration: BoxDecoration(
+                color: hovering ? widget.hoverColor ?? widget.color : widget.color,
+                border: widget.border,
+                borderRadius: widget.borderRadius,
               ),
-            ),
-          );
-        },
+
+              // child
+              child: ClipRRect(
+                borderRadius: widget.borderRadius ?? BorderRadius.zero,
+                child: Stack(
+                  children: [
+                    if (widget.active) _barberPole(_controller),
+                    if (widget.child != null) widget.child!,
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

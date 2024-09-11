@@ -12,8 +12,8 @@ class ViewSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
-        return ListView(
-          children: [
+        return CustomScrollView(
+          slivers: [
             // admin views
             if (authProvider.hasAccess(const Permissions(admin: true))) const AdminViews(),
             // referee screens

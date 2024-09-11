@@ -6,7 +6,7 @@ import 'package:tms/providers/robot_game_providers/game_table_signal_provider.da
 import 'package:tms/views/match_controller/match_stage/game_table_status.dart';
 import 'package:collection/collection.dart';
 
-class LoadedTable extends StatelessWidget {
+class LoadedTable extends StatefulWidget {
   final List<GameMatch> loadedMatches;
   final List<Team> teams;
 
@@ -15,6 +15,29 @@ class LoadedTable extends StatelessWidget {
     required this.loadedMatches,
     required this.teams,
   }) : super(key: key);
+
+  @override
+  _LoadedTableState createState() => _LoadedTableState();
+}
+
+class _LoadedTableState extends State<LoadedTable> with SingleTickerProviderStateMixin {
+  late AnimationController _blinkController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _blinkController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _blinkController.dispose();
+    super.dispose();
+  }
 
   Widget _cell(BuildContext context, String label) {
     return Container(
@@ -31,7 +54,7 @@ class LoadedTable extends StatelessWidget {
   }
 
   Widget _tableRow(BuildContext context, GameMatchTable table, TableSignalState state) {
-    Team? team = teams.firstWhereOrNull((team) => team.teamNumber == table.teamNumber);
+    Team? team = widget.teams.firstWhereOrNull((team) => team.teamNumber == table.teamNumber);
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -49,7 +72,7 @@ class LoadedTable extends StatelessWidget {
               ),
             ),
             child: Center(
-              child: GameTableStatus(state: state),
+              child: GameTableStatus(state: state, blinkController: _blinkController),
             ),
           ),
         ),
@@ -69,7 +92,7 @@ class LoadedTable extends StatelessWidget {
   Widget build(BuildContext context) {
     List<GameMatchTable> tables = [];
 
-    for (GameMatch match in loadedMatches) {
+    for (GameMatch match in widget.loadedMatches) {
       tables.addAll(match.gameMatchTables);
     }
 
@@ -77,22 +100,28 @@ class LoadedTable extends StatelessWidget {
       selector: (context, provider) => provider.tableSignals,
       shouldRebuild: (previous, next) => previous.values.toList() != next.values.toList(),
       builder: (context, tableSignals, _) {
-        return ListView.builder(
-          itemCount: tables.length,
-          itemBuilder: (context, index) {
-            GameMatchTable table = tables[index];
-            TableSignalState state = TableSignalState.SIG;
+        return CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  GameMatchTable table = tables[index];
+                  TableSignalState state = TableSignalState.SIG;
 
-            // check if table is in tableSignals
-            if (tableSignals.containsKey(table.table)) {
-              state = TableSignalState.STANDBY;
-              if (tableSignals[table.table] == table.teamNumber) {
-                state = TableSignalState.READY;
-              }
-            }
+                  // check if table is in tableSignals
+                  if (tableSignals.containsKey(table.table)) {
+                    state = TableSignalState.STANDBY;
+                    if (tableSignals[table.table] == table.teamNumber) {
+                      state = TableSignalState.READY;
+                    }
+                  }
 
-            return _tableRow(context, table, state);
-          },
+                  return _tableRow(context, table, state);
+                },
+                childCount: tables.length,
+              ),
+            ),
+          ],
         );
       },
     );

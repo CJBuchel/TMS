@@ -1,9 +1,6 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tms/generated/infra/database_schemas/category.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/providers/robot_game_providers/game_category_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
@@ -31,34 +28,23 @@ class MatchSelection extends StatelessWidget {
 
   // multi match trigger
   final ValueNotifier<bool> _isMultiMatch = ValueNotifier<bool>(false);
-  final ValueNotifier<TmsCategory?> _selectedCategory = ValueNotifier<TmsCategory?>(null);
 
-  Widget _matchItem(TmsCategory? category, int listIndex, bool isMultiMatch) {
+  Widget _matchItem(int listIndex, bool isMultiMatch) {
     if (listIndex >= _controllers.length) {
       _controllers.add(ExpansionController(isExpanded: false));
     }
 
     return Selector2<GameMatchProvider, GameMatchStatusProvider, _MatchItemData>(
       selector: (_, gameMatchProvider, statusProvider) {
-        List<GameMatch> matches = [];
-        if (category != null) {
-          matches = gameMatchProvider.getMatchesByCategory(
-            category: category.category,
-            subCategories: category.subCategories,
-          );
-        } else {
-          matches = gameMatchProvider.matches;
-        }
-
         bool canStage = statusProvider.canStageMatch(
-          matches[listIndex].matchNumber,
-          matches,
+          gameMatchProvider.matches[listIndex].matchNumber,
+          gameMatchProvider.matches,
         );
         List<GameMatch> loadedMatches = statusProvider.getLoadedMatches(
-          matches,
+          gameMatchProvider.matches,
         );
         return _MatchItemData(
-          match: matches[listIndex],
+          match: gameMatchProvider.matches[listIndex],
           loadedMatches: loadedMatches,
           canStage: canStage,
         );
@@ -111,31 +97,24 @@ class MatchSelection extends StatelessWidget {
   }
 
   Widget _matchList() {
-    return ValueListenableBuilder(
-      valueListenable: _selectedCategory,
-      builder: (context, category, _) {
-        return Selector<GameMatchProvider, List<GameMatch>>(
-          selector: (_, provider) {
-            if (_selectedCategory.value != null) {
-              return provider.getMatchesByCategory(
-                category: _selectedCategory.value!.category,
-              );
-            } else {
-              return provider.matches;
-            }
-          },
-          shouldRebuild: (previous, next) => previous.length != next.length,
-          builder: (context, matches, _) {
-            return ValueListenableBuilder(
-              valueListenable: _isMultiMatch,
-              builder: (context, isMultiMatch, _) {
-                return ListView.builder(
-                  itemCount: matches.length,
-                  itemBuilder: (context, index) {
-                    return _matchItem(_selectedCategory.value, index, isMultiMatch);
-                  },
-                );
-              },
+    return Selector<GameMatchProvider, List<GameMatch>>(
+      selector: (_, provider) => provider.matches,
+      shouldRebuild: (previous, next) => previous.length != next.length,
+      builder: (context, matches, _) {
+        return ValueListenableBuilder(
+          valueListenable: _isMultiMatch,
+          builder: (context, isMultiMatch, _) {
+            return CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return _matchItem(index, isMultiMatch);
+                    },
+                    childCount: matches.length,
+                  ),
+                ),
+              ],
             );
           },
         );
@@ -165,51 +144,11 @@ class MatchSelection extends StatelessWidget {
     );
   }
 
-  Widget _categoryHeader() {
-    // display dropdown for category selection
-    return Selector<GameCategoryProvider, List<TmsCategory>>(
-      selector: (context, provider) => provider.categories,
-      builder: (context, data, _) {
-        if (data.isEmpty) {
-          return const SizedBox();
-        }
-
-        // post frame callback to set the selected category
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_selectedCategory.value == null && data.isNotEmpty) {
-            if (!data.contains(_selectedCategory.value)) _selectedCategory.value = data.first;
-          }
-        });
-
-        return Container(
-          padding: const EdgeInsets.all(8),
-          child: DropdownSearch<TmsCategory>(
-            selectedItem: _selectedCategory.value,
-            items: data,
-            itemAsString: (cat) => cat.category,
-            dropdownDecoratorProps: const DropDownDecoratorProps(
-              dropdownSearchDecoration: InputDecoration(
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.all(20),
-                labelText: "Category",
-                hintText: "Select Category",
-              ),
-            ),
-            onChanged: (value) {
-              if (value != null) _selectedCategory.value = value;
-            },
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         _modeHeader(),
-        _categoryHeader(),
         Expanded(
           child: _matchList(),
         ),

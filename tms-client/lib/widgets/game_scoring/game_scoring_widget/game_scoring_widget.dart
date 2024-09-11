@@ -77,6 +77,7 @@ class GameScoringWidget extends StatelessWidget {
           } else {
             return CustomScrollView(
               controller: scrollController,
+              physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverList(
                   delegate: SliverChildBuilderDelegate(

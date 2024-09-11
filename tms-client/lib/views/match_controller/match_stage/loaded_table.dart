@@ -101,6 +101,7 @@ class _LoadedTableState extends State<LoadedTable> with SingleTickerProviderStat
       shouldRebuild: (previous, next) => previous.values.toList() != next.values.toList(),
       builder: (context, tableSignals, _) {
         return CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverList(
               delegate: SliverChildBuilderDelegate(

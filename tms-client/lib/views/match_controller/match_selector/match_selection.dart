@@ -105,6 +105,7 @@ class MatchSelection extends StatelessWidget {
           valueListenable: _isMultiMatch,
           builder: (context, isMultiMatch, _) {
             return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverList(
                   delegate: SliverChildBuilderDelegate(

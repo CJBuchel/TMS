@@ -39,13 +39,11 @@ class _SelectGameTableState extends State<SelectGameTable> {
       return;
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (tables.contains(currentTable)) {
-        selectedTable.value = currentTable;
-      } else {
-        selectedTable.value = tables.first;
-      }
-    });
+    if (tables.contains(currentTable)) {
+      selectedTable.value = currentTable;
+    } else {
+      selectedTable.value = tables.first;
+    }
 
     ConfirmDialog(
       style: ConfirmDialogStyle.info(

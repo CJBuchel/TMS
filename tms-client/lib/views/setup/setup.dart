@@ -17,6 +17,7 @@ class Setup extends StatelessWidget {
     return EchoTreeLifetime(
       trees: [":tournament:config", ":tournament:blueprint"],
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Center(
           child: SizedBox(
             width: 800,

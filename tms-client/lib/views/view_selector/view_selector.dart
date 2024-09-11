@@ -13,11 +13,18 @@ class ViewSelector extends StatelessWidget {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
-            // admin views
-            if (authProvider.hasAccess(const Permissions(admin: true))) const AdminViews(),
-            // referee screens
-            if (authProvider.hasAccess(const Permissions(referee: true))) const RefereeViews(),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  // admin views
+                  if (authProvider.hasAccess(const Permissions(admin: true))) const AdminViews(),
+                  // referee screens
+                  if (authProvider.hasAccess(const Permissions(referee: true))) const RefereeViews(),
+                ],
+              ),
+            ),
           ],
         );
       },

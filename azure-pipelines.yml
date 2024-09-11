@@ -1,40 +1,47 @@
-# Azure test/publish
-# https://levelup.gitconnected.com/integrate-your-flutter-application-with-azure-devops-and-app-center-6e5e5ee4a53
-
 trigger:
-- master 
-- publish
+- master
+- ci-cd
+
+# custom build number, (previous was 20240714.2) we want (202407142)
+name: $(Date:yyyyMMdd)$(Rev:r)
 
 resources: 
-- repo: self
+  - repo: self
 
-variables: 
-- group: apple-variables
-- template: './azure-pipelines/vars.yml'
-- name: isPublishable
-  value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/publish'))]
-
-  # docker variables
-- name: dockerRepository
-  value: 'cjbuchel/tms'
-- name: dockerfilePath
-  value: '**/Dockerfile'
-- name: dockerRegistryServiceConnection
-  value: 'CJBuchel-Dockerhub1'
-
-# Flutter cache variables
-- name: FLUTTER_ROOT
-  value: $(Agent.ToolsDirectory)/flutter # or the path to your flutter sdk
-- name: PUB_CACHE
-  value: $(Pipeline.Workspace)/.pub-cache
+variables:
+  - group: 'apple-variables'
+  - template: vars.yml
+  - name: 'isProd'
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/ci-cd'))]
+  - name: dockerRepository
+    value: 'cjbuchel/tms'
+  - name: dockerRegistryServiceConnection
+    value: 'CJBuchel-Dockerhub1'
 
 stages:
-- stage: Build
-  jobs:
-  - template: './azure-pipelines/build-stage/build-stage.yml'
+  # Environment setup
+  - stage: Setup
+    displayName: 'Setup & Environment'
+    jobs:
+      - template: azure-pipelines/setup-stage.yml
 
-- stage: Release
-  dependsOn: Build
-  condition: and(succeeded(), eq(variables['isPublishable'], true))
-  jobs:
-  - template: './azure-pipelines/release-stage/release-stage.yml'
+  - stage: Infra
+    dependsOn: Setup
+    displayName: 'Generate Infrastructure'
+    jobs:
+      - template: azure-pipelines/infra-stage.yml
+
+  # Build Stage
+  - stage: Build
+    dependsOn: Infra
+    displayName: 'Build'
+    jobs:
+      - template: azure-pipelines/build-stage.yml
+
+  # Release Stage
+  - stage: Release
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['isProd'], true))
+    displayName: 'Release'
+    jobs:
+      - template: azure-pipelines/release-stage.yml

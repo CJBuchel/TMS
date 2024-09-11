@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+  "echo-tree-infra",
+  "echo-tree-rs",
+  "tms-infra",
+  "tms-schedule-handler",
+  "tms-server",
+]
+
+# [patch.crates-io]
+# warp = { git = "https://github.com/CJBuchel/warp.git" }

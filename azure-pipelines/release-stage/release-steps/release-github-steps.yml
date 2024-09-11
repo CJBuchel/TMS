@@ -1,0 +1,34 @@
+steps:
+  # Download all the artifacts
+  - task: DownloadBuildArtifacts@1
+    inputs:
+      downloadPath: '$(System.ArtifactsDirectory)'
+      buildType: 'current'
+      downloadType: 'all'
+
+  - script: |
+      python generate_release_notes.py $(version)
+    displayName: 'Generate Release Notes'
+
+  - task: GitHubRelease@1
+    inputs:
+      gitHubConnection: 'github.com_CJBuchel'
+      repositoryName: '$(Build.Repository.Name)'
+      action: 'create'
+      target: '$(Build.SourceVersion)'
+      tagSource: 'userSpecifiedTag'
+      tag: "$(version)"
+      title: '$(version) TMS Release'
+      isDraft: false # might change this
+      isPreRelease: false
+
+      # change logs
+      addChangeLog: false
+      releaseNotesSource: 'filePath'
+      releaseNotesFilePath: 'RELEASE_NOTES.md'
+      assets: |
+        $(System.ArtifactsDirectory)/**/*.zip
+        $(System.ArtifactsDirectory)/**/*.tar.gz
+        $(System.ArtifactsDirectory)/**/*.apk
+        $(System.ArtifactsDirectory)/**/*.ipa
+        $(System.ArtifactsDirectory)/**/*.msix

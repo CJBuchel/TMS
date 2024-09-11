@@ -1,0 +1,53 @@
+steps:
+  # install npm for flutter prep
+  - task: Npm@1
+    displayName: 'Install npm for client'
+    inputs:
+      command: 'install'
+      workingDir: './client'
+
+  # generate client side structures from server
+  - task: Npm@1
+    displayName: 'Generate Client Side Network Structures'
+    inputs:
+      command: 'custom'
+      workingDir: './client'
+      customCommand: 'run prepare'
+
+  # install flutter
+  - task: FlutterInstall@0
+    displayName: 'Install Flutter'
+    inputs:
+      mode: 'auto'
+      channel: 'stable'
+      version: 'custom'
+      customVersion: '3.13.4'
+
+  # setup cache for flutter (speeds up builds by reusing dependencies)
+  - task: Cache@2
+    displayName: 'Cache Flutter Dependencies'
+    inputs:
+      key: 'flutter | "$(Agent.OS)" | "$(Build.SourcesDirectory)/client/pubspec.lock"'
+      restoreKeys: 'flutter | "$(Agent.OS)"'
+      path: $(PUB_CACHE)
+
+  # perform the doctor check
+  # - task: FlutterCommand@0
+  #   displayName: 'Check Flutter Client'
+  #   inputs:
+  #     projectDirectory: './client'
+  #     arguments: 'doctor -v'
+
+  # get the flutter dependencies
+  - task: FlutterCommand@0
+    displayName: 'Get Dependencies for Flutter Client'
+    inputs:
+      projectDirectory: './client'
+      arguments: 'pub get'
+
+  # generate icons for platforms
+  - task: FlutterCommand@0
+    displayName: 'Generate Icons for Flutter Client'
+    inputs:
+      projectDirectory: './client'
+      arguments: 'pub run flutter_launcher_icons'

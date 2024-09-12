@@ -119,4 +119,7 @@ class TmsLocalStorageProvider extends _TmsLocalStorageBase {
 
   set gameReferee(String referee) => setString("gameReferee", referee);
   String get gameReferee => getString("gameReferee") ?? "";
+
+  set timerAssignedTables(List<String> tables) => setStringList("timerAssignedTables", tables);
+  List<String> get timerAssignedTables => getStringList("timerAssignedTables") ?? [];
 }

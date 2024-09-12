@@ -110,7 +110,7 @@ final tmsRouter = GoRouter(
     GoRoute(
       path: '/game_match_timer',
       name: 'game_match_timer',
-      builder: (context, state) => BaseScaffold(state: state, child: const GameMatchTimer()),
+      builder: (context, state) => BaseScaffold(state: state, child: GameMatchTimer()),
     ),
     ..._protectedRoutes,
   ],

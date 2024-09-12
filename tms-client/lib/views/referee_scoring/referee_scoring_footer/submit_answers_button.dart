@@ -35,7 +35,7 @@ class SubmitAnswersButton extends StatelessWidget {
         message: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Are you sure you want to submit answers for match ${match?.matchNumber}?"),
+            Text("Submit answers for match ${match?.matchNumber}, team ${team?.teamNumber}?"),
             const SizedBox(height: 10),
             const Text("This action cannot be undone."),
           ],

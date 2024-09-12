@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tms/utils/logger.dart';
 
 // Creates an animated infinite list which will scroll forever
 // Under the hood this creates 2 duplicate lists, one after the other
@@ -8,14 +7,12 @@ import 'package:tms/utils/logger.dart';
 // Once the second list is fully visible, the scroll position is reset to the start
 class AnimatedInfiniteVerticalList extends StatefulWidget {
   final List<Widget> children;
-  final List<Widget> childrenSecondList;
   final double childHeight;
   final int scrollSpeed;
 
   const AnimatedInfiniteVerticalList({
     Key? key,
     required this.children,
-    this.childrenSecondList = const [],
     required this.childHeight,
     this.scrollSpeed = 5,
   }) : super(key: key);
@@ -117,28 +114,24 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
 
         if (availableHeight < _getChildrenTotalHeight()) {
           // infinite list
-          return ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-            child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      if (widget.childrenSecondList.isEmpty) {
-                        return widget.children[index % widget.children.length];
-                      } else {
-                        if (index < widget.children.length) {
-                          return widget.children[index];
-                        } else {
-                          return widget.childrenSecondList[index % widget.childrenSecondList.length];
-                        }
-                      }
-                    },
-                    childCount: widget.children.length * 2,
+          return RepaintBoundary(
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return RepaintBoundary(
+                          child: widget.children[index % widget.children.length],
+                        );
+                      },
+                      childCount: widget.children.length * 2,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         } else {
@@ -153,7 +146,9 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
                       return LayoutBuilder(
                         key: _keys[index],
                         builder: (context, constraints) {
-                          return widget.children[index];
+                          return RepaintBoundary(
+                            child: widget.children[index],
+                          );
                         },
                       );
                     },

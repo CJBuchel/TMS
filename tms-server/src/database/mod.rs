@@ -98,7 +98,24 @@ impl Database {
     // :judge
     // :judge_advisor
 
-    self.check_insert_role("public", "", vec![TOURNAMENT_CONFIG], vec![]).await;
+    self
+      .check_insert_role(
+        "public",
+        "",
+        vec![
+          TOURNAMENT_CONFIG,
+          TOURNAMENT_BLUEPRINT,
+          TEAMS,
+          ROBOT_GAME_MATCHES,
+          ROBOT_GAME_CATEGORIES,
+          ROBOT_GAME_TABLES,
+          ROBOT_GAME_SCORES,
+          JUDGING_SESSIONS,
+          JUDGING_CATEGORIES,
+        ],
+        vec![],
+      )
+      .await;
     self.check_insert_role("admin", &self.generate_password(), vec![":"], vec![":"]).await;
     self.check_insert_role("referee", &self.generate_password(), vec![], vec![]).await;
     self.check_insert_role("head_referee", &self.generate_password(), vec![], vec![]).await;

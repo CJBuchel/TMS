@@ -48,6 +48,8 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
     return this.items.keys.firstWhereOrNull((key) => this.items[key]?.matchNumber == matchNumber);
   }
 
+  GameMatch? get nextMatch => matchesByTime.firstWhereOrNull((match) => !match.completed);
+
   Future<int> updateGameMatch(String matchNumber, GameMatch match) async {
     String? matchId = getIdFromMatchNumber(matchNumber);
 

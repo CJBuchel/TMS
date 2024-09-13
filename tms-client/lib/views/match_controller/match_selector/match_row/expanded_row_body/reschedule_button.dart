@@ -130,18 +130,18 @@ class RescheduleButton extends StatelessWidget {
 
         if (originTable == null) {
           return Future.value(HttpStatus.badRequest);
-        } else {
-          return Provider.of<GameMatchProvider>(context, listen: false).updateTableOnMatch(
-            originTable: originTable,
-            originMatchNumber: match.matchNumber,
-            updatedMatchNumber: _selectedMatch.value!.matchNumber,
-            updatedTable: GameMatchTable(
-              table: _selectedTable.value!,
-              teamNumber: _selectedTeamNumber.value!,
-              scoreSubmitted: false,
-            ),
-          );
         }
+
+        return Provider.of<GameMatchProvider>(context, listen: false).updateTableOnMatch(
+          originTable: originTable,
+          originMatchNumber: match.matchNumber,
+          updatedMatchNumber: _selectedMatch.value!.matchNumber,
+          updatedTable: GameMatchTable(
+            table: _selectedTable.value!,
+            teamNumber: _selectedTeamNumber.value!,
+            scoreSubmitted: false,
+          ),
+        );
       },
     ).show(context);
   }

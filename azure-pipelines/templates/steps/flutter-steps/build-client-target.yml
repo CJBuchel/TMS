@@ -39,7 +39,7 @@ steps:
         debugMode: false
         profileMode: false
         iosCodesign: false
-        extraArgs: '--release --no-web-resources-cdn --web-renderer canvaskit'
+        extraArgs: '--release --no-web-resources-cdn --wasm'
 
         # build
         buildName: ${{ parameters.buildVersion }}

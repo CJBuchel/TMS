@@ -27,7 +27,7 @@ dependencies:
   logger: ^2.2.0
   shared_preferences: ^2.2.3
   go_router: ^14.2.7
-  responsive_framework: ^1.4.0
+  responsive_framework: ^1.5.1
   provider: ^6.1.2
   nsd: ^3.0.0
   path_provider: ^2.1.3

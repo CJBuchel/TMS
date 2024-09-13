@@ -33,16 +33,25 @@ class GameMatchTimer extends StatelessWidget {
     );
   }
 
+  Widget _matchInfoFooter(BuildContext context) {
+    if (ResponsiveBreakpoints.of(context).isDesktop &&
+        ResponsiveBreakpoints.of(context).orientation == Orientation.landscape) {
+      return GameMatchTimerFooter(data: _timerMatchData);
+    } else {
+      return const SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double fontSize = 100;
 
     if (ResponsiveBreakpoints.of(context).isDesktop) {
-      fontSize = 400;
+      fontSize = 350;
     } else if (ResponsiveBreakpoints.of(context).isTablet) {
-      fontSize = 300;
-    } else if (ResponsiveBreakpoints.of(context).isMobile) {
       fontSize = 250;
+    } else if (ResponsiveBreakpoints.of(context).isMobile) {
+      fontSize = 80;
     }
 
     return EchoTreeLifetime(
@@ -67,7 +76,7 @@ class GameMatchTimer extends StatelessWidget {
           ),
           SizedBox(
             height: 200,
-            child: GameMatchTimerFooter(data: _timerMatchData),
+            child: _matchInfoFooter(context),
           ),
         ],
       ),

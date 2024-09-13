@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
@@ -58,15 +59,42 @@ class GameMatchTimerHeader extends StatelessWidget {
     );
   }
 
+  Widget _tableSector(BuildContext context) {
+    if (ResponsiveBreakpoints.of(context).isDesktop) {
+      return Container(
+        width: 300,
+        padding: const EdgeInsets.only(right: 10, top: 10),
+        child: _dropDownTableSelector(context),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Color borderColor = Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white;
+
+    double fontSize = 20;
+    double edgeInsets = 20;
+
+    if (ResponsiveBreakpoints.of(context).isDesktop) {
+      fontSize = 20;
+      edgeInsets = 20;
+    } else if (ResponsiveBreakpoints.of(context).isTablet) {
+      fontSize = 18;
+      edgeInsets = 10;
+    } else if (ResponsiveBreakpoints.of(context).isMobile) {
+      fontSize = 16;
+      edgeInsets = 5;
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(edgeInsets),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
               bottomRight: Radius.circular(20),
@@ -84,17 +112,13 @@ class GameMatchTimerHeader extends StatelessWidget {
           ),
           child: Text(
             _getMatchSummary(data.loadedMatches, data.nextMatch),
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: fontSize,
             ),
           ),
         ),
-        Container(
-          width: 300,
-          padding: const EdgeInsets.only(right: 10, top: 10),
-          child: _dropDownTableSelector(context),
-        ),
+        _tableSector(context),
       ],
     );
   }

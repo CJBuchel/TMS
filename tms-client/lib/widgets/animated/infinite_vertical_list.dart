@@ -25,7 +25,6 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
-  final List<GlobalKey> _keys = [];
 
   final ScrollController _scrollController = ScrollController();
   late AnimationController _animationController;
@@ -57,17 +56,11 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
     }
   }
 
-  void _initKeys() {
-    _keys.clear();
-    _keys.addAll(widget.children.map((e) => GlobalKey()));
-  }
-
   @override
   void didUpdateWidget(covariant AnimatedInfiniteVerticalList oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget != oldWidget) {
       if (!listEquals(oldWidget.children, widget.children)) {
-        _initKeys();
         // redo animation
         if (!_animationInitialized) {
           Future.delayed(const Duration(seconds: 2), () {
@@ -144,7 +137,6 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       return LayoutBuilder(
-                        key: _keys[index],
                         builder: (context, constraints) {
                           return RepaintBoundary(
                             child: widget.children[index],

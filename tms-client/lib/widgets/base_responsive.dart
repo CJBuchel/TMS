@@ -23,8 +23,8 @@ class BaseResponsive extends StatelessWidget {
       // landscape breakpoints
       // breakpointsLandscape: [
       //   const Breakpoint(start: 0, end: 820, name: MOBILE),
-      //   const Breakpoint(start: 821, end: 1200, name: TABLET),
-      //   const Breakpoint(start: 1201, end: 1920, name: DESKTOP),
+      //   const Breakpoint(start: 821, end: 1024, name: TABLET),
+      //   const Breakpoint(start: 1024, end: 1920, name: DESKTOP),
       //   const Breakpoint(start: 1921, end: double.infinity, name: 'XL'),
       // ],
 

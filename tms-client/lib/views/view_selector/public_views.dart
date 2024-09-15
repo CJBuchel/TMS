@@ -26,10 +26,28 @@ class PublicViews extends StatelessWidget {
           ),
         ),
 
-        // setup car
         Row(
           children: [
-            // Setup card
+            // Scoreboard
+            Flexible(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: ImageButtonCard(
+                  title: "Scoreboard",
+                  subTitle: "PUBLIC",
+                  color: const Color(0xff8E97FD),
+                  textColor: const Color(0xff3F414E),
+                  image: const Image(
+                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+                  ),
+                  onPressed: () {
+                    context.go('/scoreboard');
+                  },
+                ),
+              ),
+            ),
+            // Timer
             Flexible(
               flex: 1,
               child: Padding(

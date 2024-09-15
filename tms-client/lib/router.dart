@@ -8,6 +8,7 @@ import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/match_controller/match_controller.dart';
 import 'package:tms/views/referee_scoring/referee_scoring.dart';
+import 'package:tms/views/scoreboard/scoreboard.dart';
 import 'package:tms/views/setup/setup.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
 import 'package:tms/widgets/base_responsive.dart';
@@ -110,7 +111,12 @@ final tmsRouter = GoRouter(
     GoRoute(
       path: '/game_match_timer',
       name: 'game_match_timer',
-      builder: (context, state) => BaseScaffold(state: state, child: GameMatchTimer()),
+      builder: (context, state) => BaseScaffold(state: state, child: _DelayedViewWrapper(child: GameMatchTimer())),
+    ),
+    GoRoute(
+      path: '/scoreboard',
+      name: 'scoreboard',
+      builder: (context, state) => BaseScaffold(state: state, child: const _DelayedViewWrapper(child: Scoreboard())),
     ),
     ..._protectedRoutes,
   ],

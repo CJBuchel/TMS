@@ -5,6 +5,7 @@ import 'package:tms/providers/auth_provider.dart';
 // providers
 import 'package:tms/providers/connection_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_category_provider.dart';
+import 'package:tms/providers/robot_game_providers/game_scores_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
@@ -40,6 +41,7 @@ class ProviderMap extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GameScoringProvider()),
         ChangeNotifierProvider(create: (_) => GameTableSignalProvider()),
         ChangeNotifierProvider(create: (_) => GameCategoryProvider()),
+        ChangeNotifierProvider(create: (_) => GameScoresProvider()),
       ],
       child: app,
     );

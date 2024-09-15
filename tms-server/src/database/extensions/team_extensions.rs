@@ -1,8 +1,85 @@
+use std::collections::HashMap;
+
 use tms_infra::*;
 
 use crate::database::{Database, TEAMS};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
+
+pub trait RankingUtilities {
+  fn compare_list(a: &[GameScoreSheet], b: &[GameScoreSheet]) -> std::cmp::Ordering;
+  fn calculate_team_rankings(score_sheets: Vec<GameScoreSheet>) -> std::collections::HashMap<String, u32>;
+}
+
+impl RankingUtilities for GameScoreSheet {
+  // compare two lists of score sheets to find out which one is better
+  // we use the highest score from each list to determine which one is better
+  // if they are equal, we compare the second highest score, and so on
+  fn compare_list(a: &[GameScoreSheet], b: &[GameScoreSheet]) -> std::cmp::Ordering {
+    // Handle empty cases first
+    if a.is_empty() && !b.is_empty() {
+      return std::cmp::Ordering::Less;
+    } else if b.is_empty() && !a.is_empty() {
+      return std::cmp::Ordering::Greater;
+    } else if a.is_empty() && b.is_empty() {
+      return std::cmp::Ordering::Equal;
+    }
+
+    // Sort scores
+    let mut scores_a: Vec<i32> = a.iter().map(|s| s.score).collect();
+    let mut scores_b: Vec<i32> = b.iter().map(|s| s.score).collect();
+    scores_a.sort_by(|a, b| b.cmp(a));  // Sort in descending order
+    scores_b.sort_by(|a, b| b.cmp(a));
+
+    // Compare sorted scores
+    for (score_a, score_b) in scores_a.iter().zip(scores_b.iter()) {
+      if score_a > score_b {
+        return std::cmp::Ordering::Greater;
+      } else if score_a < score_b {
+        return std::cmp::Ordering::Less;
+      }
+    }
+
+    std::cmp::Ordering::Equal
+  }
+
+  // provides list of (team_id, rank)
+  fn calculate_team_rankings(score_sheets: Vec<GameScoreSheet>) -> HashMap<String, u32> {
+    // Split the game_score_sheets into teams
+    let mut team_score_sheets: HashMap<String, Vec<GameScoreSheet>> = HashMap::new();
+    for game_score_sheet in score_sheets {
+      team_score_sheets.entry(game_score_sheet.team_ref_id.clone())
+        .or_insert_with(Vec::new)
+        .push(game_score_sheet);
+    }
+
+    // Initialize a vector to store the team rankings (needed for sorting)
+    let mut team_score_sheets_vec: Vec<(String, Vec<GameScoreSheet>)> = Vec::new();
+    for (team_id, score_sheets) in team_score_sheets {
+      team_score_sheets_vec.push((team_id, score_sheets));
+    }
+    team_score_sheets_vec.sort_by(|a, b| {
+      GameScoreSheet::compare_list(&b.1, &a.1) // sort in ascending order (we want worst scores first)
+    });
+
+    // assign rankings to each team
+    let mut ranked_teams: HashMap<String, u32> = HashMap::new();
+    let mut rank: u32 = 1;
+    let mut prev_team: Option<&(String, Vec<GameScoreSheet>)> = None;
+
+    for team in &team_score_sheets_vec {
+      if let Some(prev) = prev_team {
+        if GameScoreSheet::compare_list(&team.1, &prev.1) == std::cmp::Ordering::Less {
+          rank += 1;
+        }
+      }
+      ranked_teams.insert(team.0.clone(), rank);
+      prev_team = Some(team);
+    }
+
+    ranked_teams
+  }
+}
 
 #[async_trait::async_trait]
 pub trait TeamExtensions {
@@ -92,10 +169,17 @@ impl TeamExtensions for Database {
   }
 
   async fn calculate_team_rankings(&self, score_sheets: Vec<GameScoreSheet>) -> Result<(), String> {
-    // get all team scoresheets
     let team_rankings = GameScoreSheet::calculate_team_rankings(score_sheets);
-    for (team_id, rank) in team_rankings {
-      self.update_team_rank(team_id, rank).await?;
+
+    // determine the next rank for teams not in the ranking map
+    let next_rank = team_rankings.values().max().unwrap_or(&0) + 1;
+
+    let tree = self.inner.read().await.get_tree(TEAMS.to_string()).await;
+    let team_ids = tree.iter().map(|(id, _)| id.clone()).collect::<Vec<String>>();
+
+    for team_id in team_ids {
+      let rank = team_rankings.get(&team_id).unwrap_or(&next_rank);
+      self.update_team_rank(team_id, *rank).await?;
     }
     Ok(())
   }

@@ -25,4 +25,6 @@ class TeamsProvider extends EchoTreeProvider<String, Team> {
       );
     }
   }
+
+  Map<String, Team> get teamsMap => this.items;
 }

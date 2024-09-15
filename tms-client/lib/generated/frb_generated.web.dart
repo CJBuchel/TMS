@@ -53,9 +53,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dynamic raw);
 
   @protected
-  Map<String, int> dco_decode_Map_String_u_32(dynamic raw);
-
-  @protected
   String dco_decode_String(dynamic raw);
 
   @protected
@@ -248,9 +245,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   GameScoreSheet dco_decode_game_score_sheet(dynamic raw);
 
   @protected
-  GameScoreSheetComparison dco_decode_game_score_sheet_comparison(dynamic raw);
-
-  @protected
   GameTable dco_decode_game_table(dynamic raw);
 
   @protected
@@ -273,9 +267,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   List<GameMatchTable> dco_decode_list_game_match_table(dynamic raw);
-
-  @protected
-  List<GameScoreSheet> dco_decode_list_game_score_sheet(dynamic raw);
 
   @protected
   List<JudgingSessionPod> dco_decode_list_judging_session_pod(dynamic raw);
@@ -302,9 +293,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   List<(String, QuestionAnswer)> dco_decode_list_record_string_question_answer(
       dynamic raw);
-
-  @protected
-  List<(String, int)> dco_decode_list_record_string_u_32(dynamic raw);
 
   @protected
   List<TmsTreeRole> dco_decode_list_tms_tree_role(dynamic raw);
@@ -358,9 +346,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   (String, QuestionAnswer) dco_decode_record_string_question_answer(
       dynamic raw);
-
-  @protected
-  (String, int) dco_decode_record_string_u_32(dynamic raw);
 
   @protected
   RegisterRequest dco_decode_register_request(dynamic raw);
@@ -480,9 +465,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   Map<String, QuestionAnswer> sse_decode_Map_String_question_answer(
       SseDeserializer deserializer);
-
-  @protected
-  Map<String, int> sse_decode_Map_String_u_32(SseDeserializer deserializer);
 
   @protected
   String sse_decode_String(SseDeserializer deserializer);
@@ -694,10 +676,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   GameScoreSheet sse_decode_game_score_sheet(SseDeserializer deserializer);
 
   @protected
-  GameScoreSheetComparison sse_decode_game_score_sheet_comparison(
-      SseDeserializer deserializer);
-
-  @protected
   GameTable sse_decode_game_table(SseDeserializer deserializer);
 
   @protected
@@ -722,10 +700,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   List<GameMatchTable> sse_decode_list_game_match_table(
-      SseDeserializer deserializer);
-
-  @protected
-  List<GameScoreSheet> sse_decode_list_game_score_sheet(
       SseDeserializer deserializer);
 
   @protected
@@ -755,10 +729,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   List<(String, QuestionAnswer)> sse_decode_list_record_string_question_answer(
-      SseDeserializer deserializer);
-
-  @protected
-  List<(String, int)> sse_decode_list_record_string_u_32(
       SseDeserializer deserializer);
 
   @protected
@@ -814,9 +784,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   (String, QuestionAnswer) sse_decode_record_string_question_answer(
       SseDeserializer deserializer);
-
-  @protected
-  (String, int) sse_decode_record_string_u_32(SseDeserializer deserializer);
 
   @protected
   RegisterRequest sse_decode_register_request(SseDeserializer deserializer);
@@ -949,10 +916,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_Map_String_question_answer(
       Map<String, QuestionAnswer> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_Map_String_u_32(
-      Map<String, int> self, SseSerializer serializer);
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
@@ -1163,10 +1126,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       GameScoreSheet self, SseSerializer serializer);
 
   @protected
-  void sse_encode_game_score_sheet_comparison(
-      GameScoreSheetComparison self, SseSerializer serializer);
-
-  @protected
   void sse_encode_game_table(GameTable self, SseSerializer serializer);
 
   @protected
@@ -1193,10 +1152,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_list_game_match_table(
       List<GameMatchTable> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_game_score_sheet(
-      List<GameScoreSheet> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_judging_session_pod(
@@ -1227,10 +1182,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_list_record_string_question_answer(
       List<(String, QuestionAnswer)> self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_list_record_string_u_32(
-      List<(String, int)> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_tms_tree_role(
@@ -1289,10 +1240,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_record_string_question_answer(
       (String, QuestionAnswer) self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_record_string_u_32(
-      (String, int) self, SseSerializer serializer);
 
   @protected
   void sse_encode_register_request(

@@ -67,10 +67,10 @@ class Logout extends StatelessWidget {
           height: 50,
           child: ElevatedButton.icon(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-              overlayColor: MaterialStateProperty.all<Color>(Colors.orange[800] ?? Colors.orange),
-              shape: MaterialStateProperty.all<OutlinedBorder>(
+              backgroundColor: WidgetStateProperty.all<Color>(Colors.orange),
+              foregroundColor: WidgetStateProperty.all<Color>(Colors.black),
+              overlayColor: WidgetStateProperty.all<Color>(Colors.orange[800] ?? Colors.orange),
+              shape: WidgetStateProperty.all<OutlinedBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   side: const BorderSide(color: Colors.black),

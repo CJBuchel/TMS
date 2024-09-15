@@ -22,7 +22,7 @@ impl TmsSchedule {
       log::info!("Valid V1 version");
       return Ok(V1::csv_to_tms_schedule(csv)?);
     }
-    
+
     Err("Invalid version or unknown CSV type".to_string())
   }
 }

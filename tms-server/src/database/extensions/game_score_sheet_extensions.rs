@@ -41,7 +41,7 @@ impl GameScoreSheetExtensions for Database {
   }
 
   async fn insert_game_score_sheet(&self, mut game_score_sheet: GameScoreSheet, game_score_sheet_id: Option<String>) -> Result<(), String> {
-    // if this is not an agnostic scoresheet, pass the answers through the calculator and validate system
+    // if this is not an agnostic score sheet, pass the answers through the calculator and validate system
     if !game_score_sheet.is_agnostic {
       match self.get_blueprint_by_title(game_score_sheet.blueprint_title.clone()).await {
         Some((_, blueprint)) => {
@@ -59,6 +59,7 @@ impl GameScoreSheetExtensions for Database {
           // modify the score sheet to include the calculated score
           let score = FllBlueprintMap::calculate_score(blueprint.blueprint, game_score_sheet.score_sheet_answers.to_owned());
           game_score_sheet.score = score;
+          log::warn!("Calculated score for: {}, {}", game_score_sheet.table , score);
         }
         None => {
           return Err("Blueprint does not exist".to_string());
@@ -87,6 +88,7 @@ impl GameScoreSheetExtensions for Database {
   }
 
   async fn update_rankings(&self) -> Result<(), String> {
+    log::warn!("Updating rankings...");
     // get all team score sheets
     let tree = self.inner.read().await.get_tree(ROBOT_GAME_SCORES.to_string()).await;
     let game_score_sheets = tree.iter().map(|(_, game_score_sheet)| GameScoreSheet::from_json_string(game_score_sheet)).collect::<Vec<GameScoreSheet>>();

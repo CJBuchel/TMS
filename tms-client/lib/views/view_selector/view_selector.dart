@@ -6,6 +6,15 @@ import 'package:tms/views/view_selector/admin_views.dart';
 import 'package:tms/views/view_selector/public_views.dart';
 import 'package:tms/views/view_selector/referee_views.dart';
 
+/**
+ * Pastel colors
+ * 0xff8E97FD blue/purple
+ * 0xffFFC97E yellow
+ * 0xffFA6E5A red
+ * 0xff6CB28E green
+ * 0xffD291BC violet
+ */
+
 class ViewSelector extends StatelessWidget {
   const ViewSelector({Key? key}) : super(key: key);
 

@@ -39,3 +39,11 @@ List<Team> sortTeamsByNumber(List<Team> teams) {
 
   return teams;
 }
+
+List<Team> sortTeamsByRanking(List<Team> teams) {
+  teams.sort((a, b) {
+    return a.ranking.compareTo(b.ranking);
+  });
+
+  return teams;
+}

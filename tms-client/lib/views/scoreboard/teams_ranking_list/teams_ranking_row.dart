@@ -50,6 +50,7 @@ class TeamsRankingRow extends StatelessWidget {
             shape: BeveledRectangleBorder(
               borderRadius: const BorderRadius.all(Radius.circular(15)),
               side: BorderSide(
+                width: 0.3,
                 color: Theme.of(context).brightness == Brightness.light ? Colors.black26 : Colors.white24,
               ),
             ),

@@ -122,4 +122,10 @@ class TmsLocalStorageProvider extends _TmsLocalStorageBase {
 
   set timerAssignedTables(List<String> tables) => setStringList("timerAssignedTables", tables);
   List<String> get timerAssignedTables => getStringList("timerAssignedTables") ?? [];
+
+  set scoreboardShowMatchInfo(bool value) => setBool("scoreboardShowMatchInfo", value);
+  bool get scoreboardShowMatchInfo => getBool("scoreboardShowMatchInfo") ?? false;
+
+  set scoreboardShowJudgingInfo(bool value) => setBool("scoreboardShowJudgingInfo", value);
+  bool get scoreboardShowJudgingInfo => getBool("scoreboardShowJudgingInfo") ?? false;
 }

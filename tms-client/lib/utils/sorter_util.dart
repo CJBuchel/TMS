@@ -1,6 +1,15 @@
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/generated/infra/database_schemas/judging_session.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/utils/tms_time_utils.dart';
+
+List<JudgingSession> sortJudgingSessionsByTime(List<JudgingSession> sessions) {
+  sessions.sort((a, b) {
+    return tmsDateTimeCompare(a.startTime, b.startTime);
+  });
+
+  return sessions;
+}
 
 List<GameMatch> sortMatchesByTime(List<GameMatch> matches) {
   matches.sort((a, b) {
@@ -8,6 +17,17 @@ List<GameMatch> sortMatchesByTime(List<GameMatch> matches) {
   });
 
   return matches;
+}
+
+List<JudgingSession> sortJudgingSessionsBySessionNumber(List<JudgingSession> sessions) {
+  // sort by session number and try parse
+  sessions.sort((a, b) {
+    int aSessionNumber = int.tryParse(a.sessionNumber) ?? 0;
+    int bSessionNumber = int.tryParse(b.sessionNumber) ?? 0;
+    return aSessionNumber.compareTo(bSessionNumber);
+  });
+
+  return sessions;
 }
 
 List<GameMatch> sortMatchesByMatchNumber(List<GameMatch> matches) {

@@ -1,27 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-// Creates an animated infinite list which will scroll forever
-// Under the hood this creates 2 duplicate lists, one after the other
-// And animates the scroll to give the illusion of infinite scrolling
-// Once the second list is fully visible, the scroll position is reset to the start
-class AnimatedInfiniteVerticalList extends StatefulWidget {
+class AnimatedInfiniteHorizontalList extends StatefulWidget {
   final List<Widget> children;
-  final double childHeight;
+  final double childWidth;
   final int scrollSpeed;
 
-  const AnimatedInfiniteVerticalList({
+  const AnimatedInfiniteHorizontalList({
     Key? key,
     required this.children,
-    required this.childHeight,
+    required this.childWidth,
     this.scrollSpeed = 5,
   }) : super(key: key);
 
   @override
-  State<AnimatedInfiniteVerticalList> createState() => _AniInfVertState();
+  State<AnimatedInfiniteHorizontalList> createState() => _AniInfHorState();
 }
 
-class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
+class _AniInfHorState extends State<AnimatedInfiniteHorizontalList>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
@@ -31,12 +27,12 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
 
   bool _animationInitialized = false;
 
-  double _getChildrenTotalHeight() {
-    double totalHeight = 0;
+  double _getChildrenTotalWidth() {
+    double totalWidth = 0;
     for (int i = 0; i < widget.children.length; i++) {
-      totalHeight += widget.childHeight;
+      totalWidth += widget.childWidth;
     }
-    return totalHeight;
+    return totalWidth;
   }
 
   void _initInfAni() {
@@ -49,7 +45,7 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
         duration: Duration(seconds: (widget.children.isEmpty ? 1 : widget.children.length) * widget.scrollSpeed),
       )
         ..addListener(() {
-          double resetPosition = _getChildrenTotalHeight(); // position where the second table starts
+          double resetPosition = _getChildrenTotalWidth(); // position where the second table starts
           double currentScroll = _animationController.value * resetPosition * 2; // scrolling through double the data
 
           if (currentScroll >= resetPosition && _scrollController.hasClients && widget.children.isNotEmpty) {
@@ -65,7 +61,7 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
   }
 
   @override
-  void didUpdateWidget(covariant AnimatedInfiniteVerticalList oldWidget) {
+  void didUpdateWidget(covariant AnimatedInfiniteHorizontalList oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget != oldWidget) {
       if (!listEquals(oldWidget.children, widget.children)) {
@@ -103,15 +99,16 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
     super.build(context);
     return LayoutBuilder(
       builder: (context, constraints) {
-        double availableHeight = constraints.maxHeight;
+        double availableWidth = constraints.maxWidth;
 
-        if (availableHeight < _getChildrenTotalHeight()) {
+        if (availableWidth < _getChildrenTotalWidth()) {
           // infinite list
           return RepaintBoundary(
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
               child: CustomScrollView(
                 controller: _scrollController,
+                scrollDirection: Axis.horizontal,
                 slivers: [
                   SliverList(
                     delegate: SliverChildBuilderDelegate(
@@ -132,6 +129,7 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
           return ScrollConfiguration(
             behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
             child: CustomScrollView(
+              scrollDirection: Axis.horizontal,
               slivers: [
                 SliverList(
                   delegate: SliverChildBuilderDelegate(

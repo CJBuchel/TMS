@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
 
 class ScoreboardHeader extends StatelessWidget {
@@ -16,9 +17,15 @@ class ScoreboardHeader extends StatelessWidget {
           Center(
             child: Row(
               children: [
-                const Text("Match Schedule"),
+                const Text(
+                  "Match Schedule",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 LiveCheckbox(
-                  defaultValue: false,
+                  defaultValue: TmsLocalStorageProvider().scoreboardShowMatchInfo,
+                  onChanged: (show) => TmsLocalStorageProvider().scoreboardShowMatchInfo = show,
                 ),
               ],
             ),
@@ -26,9 +33,15 @@ class ScoreboardHeader extends StatelessWidget {
           Center(
             child: Row(
               children: [
-                const Text("Judging Schedule"),
+                const Text(
+                  "Judging Schedule",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
                 LiveCheckbox(
-                  defaultValue: false,
+                  defaultValue: TmsLocalStorageProvider().scoreboardShowJudgingInfo,
+                  onChanged: (show) => TmsLocalStorageProvider().scoreboardShowJudgingInfo = show,
                 ),
               ],
             ),

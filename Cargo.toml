@@ -7,6 +7,3 @@ members = [
   "tms-schedule-handler",
   "tms-server",
 ]
-
-# [patch.crates-io]
-# warp = { git = "https://github.com/CJBuchel/warp.git" }

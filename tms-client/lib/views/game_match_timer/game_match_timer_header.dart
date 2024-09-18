@@ -6,7 +6,7 @@ import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
 import 'package:tms/utils/tms_time_utils.dart';
-import 'package:tms/views/game_match_timer/timer_match_data.dart';
+import 'package:tms/models/timer_match_data.dart';
 
 class GameMatchTimerHeader extends StatelessWidget {
   final TimerMatchData data;

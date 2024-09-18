@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:tms/views/game_match_timer/game_match_timer_footer/team_on_table_info.dart';
+import 'package:tms/models/team_on_table_info.dart';
 
 class TeamOnTableRow extends StatelessWidget {
   final TeamOnTableInfo info;
   final bool isLeft;
+  final TextStyle? textStyle;
 
   const TeamOnTableRow({
     Key? key,
     required this.info,
     required this.isLeft,
+    this.textStyle,
   }) : super(key: key);
 
   BorderSide _getBorderSide(BuildContext context) {
@@ -44,26 +46,20 @@ class TeamOnTableRow extends StatelessWidget {
       child: Text(
         textAlign: TextAlign.center,
         info.teamNumber,
-        style: const TextStyle(
-          color: Colors.black,
-        ),
+        style: const TextStyle(color: Colors.black),
       ),
     );
 
     Widget tNaWidget = Text(
       textAlign: TextAlign.center,
       info.teamName,
-      style: const TextStyle(
-        color: Colors.white,
-      ),
+      style: textStyle ?? const TextStyle(color: Colors.white),
     );
 
     Widget tOnWidget = Text(
       textAlign: TextAlign.center,
       info.onTable,
-      style: const TextStyle(
-        color: Colors.white,
-      ),
+      style: textStyle ?? const TextStyle(color: Colors.white),
     );
 
     Widget a = isLeft ? tOnWidget : tNumWidget;
@@ -75,9 +71,7 @@ class TeamOnTableRow extends StatelessWidget {
       children: [
         Expanded(
           flex: 1,
-          child: Container(
-            child: a,
-          ),
+          child: a,
         ),
         Expanded(
           flex: 3,

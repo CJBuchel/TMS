@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/providers/teams_provider.dart';
-import 'package:tms/views/game_match_timer/game_match_timer_footer/team_on_table_info.dart';
+import 'package:tms/models/team_on_table_info.dart';
 import 'package:tms/views/game_match_timer/game_match_timer_footer/teams_on_table_list.dart';
-import 'package:tms/views/game_match_timer/timer_match_data.dart';
+import 'package:tms/models/timer_match_data.dart';
 
 class GameMatchTimerFooter extends StatelessWidget {
   final TimerMatchData data;

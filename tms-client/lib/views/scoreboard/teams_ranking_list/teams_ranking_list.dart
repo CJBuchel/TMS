@@ -29,12 +29,6 @@ class TeamsRankingList extends StatelessWidget {
         return teamScoringData;
       },
       builder: (context, teamsData, child) {
-        // Check if the number of elements is odd (stops alternating color issues with the infinite list reset)
-        if (teamsData.length % 2 != 0) {
-          // Duplicate the list to make it even
-          teamsData = List.from(teamsData)..addAll(teamsData);
-        }
-
         int numRounds = teamsData.fold(0, (max, teamData) {
           return teamData.scores.length > max ? teamData.scores.length : max;
         });

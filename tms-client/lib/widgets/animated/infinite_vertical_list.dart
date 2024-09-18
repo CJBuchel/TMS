@@ -9,12 +9,14 @@ class AnimatedInfiniteVerticalList extends StatefulWidget {
   final List<Widget> children;
   final double childHeight;
   final int scrollSpeed;
+  final bool duplicateWhenChildrenOdd;
 
   const AnimatedInfiniteVerticalList({
     Key? key,
     required this.children,
     required this.childHeight,
     this.scrollSpeed = 5,
+    this.duplicateWhenChildrenOdd = true,
   }) : super(key: key);
 
   @override
@@ -31,28 +33,36 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
 
   bool _animationInitialized = false;
 
-  double _getChildrenTotalHeight() {
-    double totalHeight = 0;
-    for (int i = 0; i < widget.children.length; i++) {
-      totalHeight += widget.childHeight;
+  List<Widget> _getChildren() {
+    if (widget.duplicateWhenChildrenOdd && widget.children.length % 2 != 0) {
+      return List.from(widget.children)..addAll(widget.children);
+    } else {
+      return widget.children;
     }
-    return totalHeight;
+  }
+
+  double _getChildrenTotalHeight({bool actual = false}) {
+    if (actual) {
+      return widget.children.length * widget.childHeight;
+    } else {
+      return _getChildren().length * widget.childHeight;
+    }
   }
 
   void _initInfAni() {
     if (_animationInitialized) return;
 
-    if (widget.children.isNotEmpty) {
+    if (_getChildren().isNotEmpty) {
       _animationInitialized = true;
       _animationController = AnimationController(
         vsync: this,
-        duration: Duration(seconds: (widget.children.isEmpty ? 1 : widget.children.length) * widget.scrollSpeed),
+        duration: Duration(seconds: (_getChildren().isEmpty ? 1 : _getChildren().length) * widget.scrollSpeed),
       )
         ..addListener(() {
           double resetPosition = _getChildrenTotalHeight(); // position where the second table starts
           double currentScroll = _animationController.value * resetPosition * 2; // scrolling through double the data
 
-          if (currentScroll >= resetPosition && _scrollController.hasClients && widget.children.isNotEmpty) {
+          if (currentScroll >= resetPosition && _scrollController.hasClients && _getChildren().isNotEmpty) {
             _animationController.forward(from: 0.0);
           } else {
             if (_scrollController.hasClients) {
@@ -105,7 +115,7 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
       builder: (context, constraints) {
         double availableHeight = constraints.maxHeight;
 
-        if (availableHeight < _getChildrenTotalHeight()) {
+        if (availableHeight < _getChildrenTotalHeight(actual: true)) {
           // infinite list
           return RepaintBoundary(
             child: ScrollConfiguration(
@@ -117,10 +127,10 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         return RepaintBoundary(
-                          child: widget.children[index % widget.children.length],
+                          child: _getChildren()[index % _getChildren().length],
                         );
                       },
-                      childCount: widget.children.length * 2,
+                      childCount: _getChildren().length * 2,
                     ),
                   ),
                 ],

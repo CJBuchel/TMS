@@ -6,7 +6,7 @@ import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/views/game_match_timer/game_match_timer_footer/game_match_timer_footer.dart';
 import 'package:tms/views/game_match_timer/game_match_timer_header.dart';
-import 'package:tms/views/game_match_timer/timer_match_data.dart';
+import 'package:tms/models/timer_match_data.dart';
 import 'package:tms/widgets/timers/match_timer.dart';
 
 class GameMatchTimer extends StatelessWidget {

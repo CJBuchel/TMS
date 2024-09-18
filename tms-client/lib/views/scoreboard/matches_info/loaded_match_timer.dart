@@ -166,39 +166,39 @@ class LoadedMatchTimer extends StatelessWidget {
               isLeft: true,
             ),
           ),
-          Column(
-            children: [
-              Container(
-                height: 40,
-                color: evenBackground,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Match: ",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      // get all match numbers
-                      matchNumbers.join(", "),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            width: 300,
+            child: Column(
+              children: [
+                Container(
+                  height: 40,
+                  color: evenBackground,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Match: ",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        // get all match numbers
+                        matchNumbers.join(", "),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                height: 120,
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                // margin: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
+                Container(
+                  height: 120,
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: MatchTimer.full(
+                    soundEnabled: true,
+                    fontSize: 100,
+                  ),
                 ),
-                child: MatchTimer.full(
-                  soundEnabled: true,
-                  fontSize: 100,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
           Expanded(
             child: _TeamsOnTableList(

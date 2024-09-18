@@ -59,37 +59,40 @@ class TeamsRankingHeader extends StatelessWidget {
     Color? evenBackground = Theme.of(context).brightness == Brightness.light ? evenLightBackground : evenDarkBackground;
     Color? oddBackground = Theme.of(context).brightness == Brightness.light ? oddLightBackground : oddDarkBackground;
 
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: oddBackground,
-            child: const Center(
-              child: Text(
-                'Rank',
-                style: TextStyle(fontWeight: FontWeight.bold),
+    return Container(
+      color: evenBackground,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: oddBackground,
+              child: const Center(
+                child: Text(
+                  'Rank',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Container(
-            color: evenBackground,
-            child: const Center(
-              child: Text(
-                'Team',
-                style: TextStyle(fontWeight: FontWeight.bold),
+          Expanded(
+            flex: 3,
+            child: Container(
+              color: evenBackground,
+              child: const Center(
+                child: Text(
+                  'Team',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
-        ),
-        Expanded(
-          flex: 4,
-          child: _scoresHeader(evenBackground, oddBackground),
-        ),
-      ],
+          Expanded(
+            flex: 4,
+            child: _scoresHeader(evenBackground, oddBackground),
+          ),
+        ],
+      ),
     );
   }
 }

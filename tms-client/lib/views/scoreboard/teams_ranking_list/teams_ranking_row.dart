@@ -14,11 +14,6 @@ class TeamsRankingRow extends StatelessWidget {
     this.bestScoreColor,
   }) : super(key: key);
 
-  List<int> _teamScores(List<GameScoreSheet> scores) {
-    scores.sort((a, b) => a.round.compareTo(b.round));
-    return scores.map((score) => score.score).toList();
-  }
-
   Widget _getRankIcon(int rank) {
     if (rank == 1) {
       return const Icon(Icons.looks_one_outlined);
@@ -65,7 +60,7 @@ class TeamsRankingRow extends StatelessWidget {
     }
   }
 
-  List<Widget> _scoreColumns(BuildContext context, List<int> scores) {
+  List<Widget> _scoreColumns(BuildContext context, List<GameScoreSheet> scores) {
     List<Widget> scoreColumns = [];
 
     // add best score first if there are multiple scores
@@ -73,7 +68,7 @@ class TeamsRankingRow extends StatelessWidget {
       scoreColumns.add(
         Expanded(
           flex: 1,
-          child: _bestScoreWidget(context, scores),
+          child: _bestScoreWidget(context, scores.map((score) => score.score).toList()),
         ),
       );
     }
@@ -82,10 +77,17 @@ class TeamsRankingRow extends StatelessWidget {
     scoreColumns.addAll(
       List.generate(numRounds, (index) {
         if (index < scores.length) {
+          List<int> scoreValues = scores.where((score) => score.round == index + 1).map((score) {
+            return score.score;
+          }).toList();
+
+          String strScore = scoreValues.isEmpty ? "?" : scoreValues.first.toString();
+          strScore = scoreValues.length > 1 ? "Conflict" : strScore;
+
           return Expanded(
             flex: 1,
             child: Center(
-              child: Text("${scores[index]}"),
+              child: Text(strScore),
             ),
           );
         } else {
@@ -102,7 +104,7 @@ class TeamsRankingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<int> scores = _teamScores(teamData.scores);
+    // List<int> scores = _teamScores(teamData.scores);
     return Row(
       children: [
         Expanded(
@@ -120,7 +122,7 @@ class TeamsRankingRow extends StatelessWidget {
         Expanded(
           flex: 4,
           child: Row(
-            children: _scoreColumns(context, scores),
+            children: _scoreColumns(context, teamData.scores),
           ),
         ),
       ],

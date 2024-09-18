@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:tms/providers/auth_provider.dart';
+import 'package:tms/utils/permissions.dart';
 import 'package:tms/views/view_selector/image_button_card.dart';
 
 class RefereeViews extends StatelessWidget {
@@ -42,30 +45,31 @@ class RefereeViews extends StatelessWidget {
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
                   onPressed: () {
-                    context.go('/referee/scoring');
+                    context.goNamed('scoring');
                   },
                 ),
               ),
             ),
             // Head referee card
-            Flexible(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: ImageButtonCard(
-                  title: "Match Controller",
-                  subTitle: "HEAD REFEREE",
-                  color: const Color(0xffD291BC),
-                  textColor: const Color(0xff3F414E),
-                  image: const Image(
-                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+            if (Provider.of<AuthProvider>(context).hasAccess(const Permissions(headReferee: true)))
+              Flexible(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ImageButtonCard(
+                    title: "Match Controller",
+                    subTitle: "HEAD REFEREE",
+                    color: const Color(0xffD291BC),
+                    textColor: const Color(0xff3F414E),
+                    image: const Image(
+                      image: AssetImage('assets/images/FIRST_LOGO.png'),
+                    ),
+                    onPressed: () {
+                      context.goNamed('match_controller');
+                    },
                   ),
-                  onPressed: () {
-                    context.go('/referee/match_controller');
-                  },
                 ),
               ),
-            ),
           ],
         ),
       ],

@@ -26,7 +26,6 @@ class AdminViews extends StatelessWidget {
           ),
         ),
 
-        // setup car
         Row(
           children: [
             // Setup card
@@ -43,7 +42,25 @@ class AdminViews extends StatelessWidget {
                     image: AssetImage('assets/images/FIRST_LOGO.png'),
                   ),
                   onPressed: () {
-                    context.go('/setup');
+                    context.goNamed('setup');
+                  },
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: ImageButtonCard(
+                  title: "Dashboard",
+                  subTitle: "ADMIN",
+                  color: const Color(0xff2ACAC8),
+                  textColor: const Color(0xff3F414E),
+                  image: const Image(
+                    image: AssetImage('assets/images/FIRST_LOGO.png'),
+                  ),
+                  onPressed: () {
+                    context.goNamed('dashboard');
                   },
                 ),
               ),

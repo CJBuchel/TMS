@@ -25,6 +25,20 @@ class TeamsRankingList extends StatelessWidget {
           );
         }).toList();
 
+        // first sort by team number (stops teams jumping around)
+        teamScoringData.sort((a, b) {
+          final regex = RegExp(r'\d+');
+          final matchA = regex.firstMatch(a.teamNumber);
+          final matchB = regex.firstMatch(b.teamNumber);
+          if (matchA != null && matchB != null) {
+            int aTeamNumber = int.parse(matchA.group(0)!);
+            int bTeamNumber = int.parse(matchB.group(0)!);
+            return aTeamNumber.compareTo(bTeamNumber);
+          } else {
+            return a.teamNumber.compareTo(b.teamNumber);
+          }
+        });
+        // then sort by team rank
         teamScoringData.sort((a, b) => a.teamRank.compareTo(b.teamRank));
         return teamScoringData;
       },

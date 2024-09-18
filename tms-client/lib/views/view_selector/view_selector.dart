@@ -13,6 +13,7 @@ import 'package:tms/views/view_selector/referee_views.dart';
  * 0xffFA6E5A red
  * 0xff6CB28E green
  * 0xffD291BC violet
+ * 0xff2ACAC8 cyan
  */
 
 class ViewSelector extends StatelessWidget {

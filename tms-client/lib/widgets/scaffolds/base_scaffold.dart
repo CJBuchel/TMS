@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
-import 'package:tms/widgets/base_responsive.dart';
+import 'package:tms/widgets/scaffolds/base_responsive.dart';
 
 class BaseScaffold extends StatelessWidget {
   final GoRouterState state;

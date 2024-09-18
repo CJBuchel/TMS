@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/connection/connection.dart';
+import 'package:tms/views/dashboard/dashboard.dart';
 import 'package:tms/views/game_match_timer/game_match_timer.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
@@ -10,10 +11,11 @@ import 'package:tms/views/match_controller/match_controller.dart';
 import 'package:tms/views/referee_scoring/referee_scoring.dart';
 import 'package:tms/views/scoreboard/scoreboard.dart';
 import 'package:tms/views/setup/setup.dart';
+import 'package:tms/views/teams/teams.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
-import 'package:tms/widgets/base_responsive.dart';
-import 'package:tms/widgets/base_scaffold.dart';
-import 'package:tms/widgets/base_scaffold_drawer_router.dart';
+import 'package:tms/widgets/scaffolds/base_responsive.dart';
+import 'package:tms/widgets/scaffolds/base_scaffold.dart';
+import 'package:tms/widgets/scaffolds/base_scaffold_drawer_router.dart';
 import 'package:tms/widgets/no_mobile_view_wrapper.dart';
 
 class _DelayedViewWrapper extends StatelessWidget {
@@ -37,12 +39,45 @@ class _DelayedViewWrapper extends StatelessWidget {
 }
 
 final _protectedRoutes = <GoRoute>[
+  // admin routes
   GoRoute(
-    path: '/setup',
-    name: 'setup',
-    builder: (context, state) => BaseScaffold(
+    path: '/admin',
+    name: 'admin',
+    routes: [
+      GoRoute(
+        path: 'setup',
+        name: 'setup',
+        builder: (context, state) => BaseScaffoldDrawerRouter(
+          state: state,
+          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Setup())),
+        ),
+      ),
+      GoRoute(
+        path: 'dashboard',
+        name: 'dashboard',
+        builder: (context, state) => BaseScaffoldDrawerRouter(
+          state: state,
+          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Dashboard())),
+        ),
+      ),
+    ],
+    redirect: (context, state) {
+      if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
+        return '/login';
+      }
+
+      return null;
+    },
+  ),
+
+  GoRoute(
+    path: '/teams',
+    name: 'teams',
+    builder: (context, state) => BaseScaffoldDrawerRouter(
       state: state,
-      child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Setup())),
+      child: _DelayedViewWrapper(
+        child: NoMobileViewWrapper(child: Teams()),
+      ),
     ),
     redirect: (context, state) {
       if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
@@ -57,7 +92,6 @@ final _protectedRoutes = <GoRoute>[
   GoRoute(
     path: '/referee',
     name: 'referee',
-    // builder: (context, state) => BaseScaffold(state: state, child: const ViewSelector()),
     routes: [
       GoRoute(
         path: 'match_controller',

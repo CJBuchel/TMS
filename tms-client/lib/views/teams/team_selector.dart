@@ -1,11 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 class TeamSelector extends StatefulWidget {
-  final Function(Team) onTeamSelected;
+  final Function(String teamId) onTeamSelected;
 
   const TeamSelector({Key? key, required this.onTeamSelected}) : super(key: key);
 
@@ -18,6 +20,17 @@ class _TeamSelectorState extends State<TeamSelector> {
   TextEditingController _rankSearchController = TextEditingController();
   String _teamSearchText = "";
   String _rankSearchText = "";
+
+  String _selectedTeamId = "";
+
+  set _selectedTeam(String teamId) {
+    setState(() {
+      _selectedTeamId = teamId;
+      widget.onTeamSelected(teamId);
+    });
+  }
+
+  String get _selectedTeam => _selectedTeamId;
 
   @override
   void initState() {
@@ -48,7 +61,7 @@ class _TeamSelectorState extends State<TeamSelector> {
 
     return Column(
       children: [
-        const Text("Header/add team button"),
+        const Text("Header/add team button @TODO"),
         Padding(
           padding: const EdgeInsets.all(8),
           child: Row(
@@ -77,23 +90,35 @@ class _TeamSelectorState extends State<TeamSelector> {
           ),
         ),
         // main list
-        Selector<TeamsProvider, List<Team>>(
+        Selector<TeamsProvider, Map<String, Team>>(
           selector: (_, provider) {
             if (_teamSearchText.isEmpty && _rankSearchText.isEmpty) {
-              return provider.teams;
+              return provider.teamsMap;
             } else {
-              return provider.teams.where((team) {
-                // team search
-                bool isMatch = team.name.toLowerCase().contains(_teamSearchText.toLowerCase());
-                isMatch = isMatch || team.teamNumber.toLowerCase() == _teamSearchText.toLowerCase();
+              return Map.fromEntries(
+                provider.teamsMap.entries.where((entry) {
+                  final team = entry.value;
+                  // team search
+                  bool isMatch = team.name.toLowerCase().contains(_teamSearchText.toLowerCase());
+                  isMatch = isMatch || team.teamNumber.toLowerCase() == _teamSearchText.toLowerCase();
 
-                // rank search
-                isMatch = isMatch && team.ranking.toString().contains(_rankSearchText);
-                return isMatch;
-              }).toList();
+                  // rank search
+                  isMatch = isMatch && team.ranking.toString().contains(_rankSearchText);
+                  return isMatch;
+                }),
+              );
             }
           },
+          shouldRebuild: (previous, next) => !listEquals(previous.entries.toList(), next.entries.toList()),
           builder: (context, teams, _) {
+            // sort teams by their number
+            final teamsList = teams.entries.toList();
+            teamsList.sort((a, b) {
+              int aNum = extractTeamNumber(a.value.teamNumber);
+              int bNum = extractTeamNumber(b.value.teamNumber);
+              return aNum.compareTo(bNum);
+            });
+
             // silver list
             return Expanded(
               child: CustomScrollView(
@@ -102,8 +127,17 @@ class _TeamSelectorState extends State<TeamSelector> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         Color tileColor = index.isEven ? evenBackground : oddBackground;
+                        // if this is the selected team, highlight it
+                        if (teamsList[index].key == _selectedTeam) {
+                          if (Theme.of(context).brightness == Brightness.light) {
+                            tileColor = Colors.blue[200] ?? Colors.blue;
+                          } else {
+                            tileColor = Colors.blue[800] ?? Colors.blue;
+                          }
+                        }
 
-                        final team = teams[index];
+                        final teamId = teamsList[index].key;
+                        final team = teamsList[index].value;
                         return ListTile(
                           tileColor: tileColor,
                           leading: CircleAvatar(
@@ -118,7 +152,7 @@ class _TeamSelectorState extends State<TeamSelector> {
                             Icons.check,
                             color: Colors.green,
                           ),
-                          onTap: () => widget.onTeamSelected(team),
+                          onTap: () => _selectedTeam = teamId,
                         );
                       },
                       childCount: teams.length,

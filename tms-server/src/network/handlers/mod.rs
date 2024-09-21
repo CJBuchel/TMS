@@ -30,3 +30,6 @@ pub use robot_game_tables_handler::*;
 
 mod robot_game_scoring_handler;
 pub use robot_game_scoring_handler::*;
+
+mod teams_handler;
+pub use teams_handler::*;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tms/models/team_on_table_info.dart';
-import 'package:tms/widgets/team_on_table_row.dart';
+import 'package:tms/widgets/team_widgets/team_on_table_row.dart';
 import 'package:tms/widgets/animated/infinite_vertical_list.dart';
 
 class TeamsOnTableList extends StatelessWidget {

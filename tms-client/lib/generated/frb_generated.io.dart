@@ -35,6 +35,7 @@ import 'infra/network_schemas/socket_protocol/match_state_event.dart';
 import 'infra/network_schemas/socket_protocol/match_time_event.dart';
 import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'infra/network_schemas/socket_protocol/table_state_event.dart';
+import 'infra/network_schemas/teams_requests.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 
@@ -141,6 +142,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   Team dco_decode_box_autoadd_team(dynamic raw);
+
+  @protected
+  TeamsUpdateTeamRequest dco_decode_box_autoadd_teams_update_team_request(
+      dynamic raw);
 
   @protected
   TmsCategory dco_decode_box_autoadd_tms_category(dynamic raw);
@@ -375,6 +380,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Team dco_decode_team(dynamic raw);
 
   @protected
+  TeamsUpdateTeamRequest dco_decode_teams_update_team_request(dynamic raw);
+
+  @protected
   TmsCategory dco_decode_tms_category(dynamic raw);
 
   @protected
@@ -565,6 +573,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   Team sse_decode_box_autoadd_team(SseDeserializer deserializer);
+
+  @protected
+  TeamsUpdateTeamRequest sse_decode_box_autoadd_teams_update_team_request(
+      SseDeserializer deserializer);
 
   @protected
   TmsCategory sse_decode_box_autoadd_tms_category(SseDeserializer deserializer);
@@ -813,6 +825,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Team sse_decode_team(SseDeserializer deserializer);
 
   @protected
+  TeamsUpdateTeamRequest sse_decode_teams_update_team_request(
+      SseDeserializer deserializer);
+
+  @protected
   TmsCategory sse_decode_tms_category(SseDeserializer deserializer);
 
   @protected
@@ -1015,6 +1031,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_team(Team self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_teams_update_team_request(
+      TeamsUpdateTeamRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_tms_category(
@@ -1269,6 +1289,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_team(Team self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_teams_update_team_request(
+      TeamsUpdateTeamRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_tms_category(TmsCategory self, SseSerializer serializer);

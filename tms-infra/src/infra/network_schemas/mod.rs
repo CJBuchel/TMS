@@ -15,3 +15,6 @@ pub use socket_protocol::*;
 
 pub mod robot_game_requests;
 pub use robot_game_requests::*;
+
+pub mod teams_requests;
+pub use teams_requests::*;

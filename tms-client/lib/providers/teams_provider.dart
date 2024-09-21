@@ -27,4 +27,19 @@ class TeamsProvider extends EchoTreeProvider<String, Team> {
   }
 
   Map<String, Team> get teamsMap => this.items;
+
+  Team getTeamById(String teamId) {
+    Team? team = this.items[teamId];
+
+    if (team != null) {
+      return team;
+    } else {
+      return const Team(
+        affiliation: 'N/A',
+        name: 'N/A',
+        teamNumber: 'N/A',
+        ranking: 0,
+      );
+    }
+  }
 }

@@ -49,6 +49,9 @@ pub use tournament_config_filter::*;
 mod tournament_schedule_filter;
 pub use tournament_schedule_filter::*;
 
+mod teams_filter;
+pub use teams_filter::*;
+
 mod websocket_filter;
 pub use websocket_filter::*;
 

@@ -4,7 +4,7 @@ import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/models/team_on_table_info.dart';
 import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/widgets/team_on_table_row.dart';
+import 'package:tms/widgets/team_widgets/team_on_table_row.dart';
 import 'package:tms/widgets/animated/infinite_vertical_list.dart';
 import 'package:tms/widgets/timers/match_timer.dart';
 

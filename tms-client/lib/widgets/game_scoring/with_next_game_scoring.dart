@@ -21,8 +21,13 @@ class _NextData {
 }
 
 class WithNextGameScoring extends StatelessWidget {
-  final Widget Function(BuildContext context, GameMatch? nextMatch, Team? nextTeam, int totalMatches, int round)
-      builder;
+  final Widget Function(
+    BuildContext context,
+    GameMatch? nextMatch,
+    Team? nextTeam,
+    int totalMatches,
+    int round,
+  ) builder;
 
   const WithNextGameScoring({Key? key, required this.builder}) : super(key: key);
 

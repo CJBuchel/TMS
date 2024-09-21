@@ -1,5 +1,3 @@
-import 'package:tms/utils/logger.dart';
-
 class Permissions {
   final bool admin;
   final bool referee;
@@ -24,7 +22,6 @@ class Permissions {
   bool hasAccess(List<String> roles) {
     // admin has access to all
     if (roles.contains('admin')) {
-      TmsLogger().w('roles: $roles, admin: true');
       return true;
     }
 

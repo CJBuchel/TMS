@@ -41,7 +41,7 @@ List<GameMatch> sortMatchesByMatchNumber(List<GameMatch> matches) {
   return matches;
 }
 
-int _extractNumber(String str) {
+int extractTeamNumber(String str) {
   final regex = RegExp(r'\d+');
   final match = regex.firstMatch(str);
   if (match != null) {
@@ -52,8 +52,8 @@ int _extractNumber(String str) {
 
 List<Team> sortTeamsByNumber(List<Team> teams) {
   teams.sort((a, b) {
-    int aTeamNumber = _extractNumber(a.teamNumber);
-    int bTeamNumber = _extractNumber(b.teamNumber);
+    int aTeamNumber = extractTeamNumber(a.teamNumber);
+    int bTeamNumber = extractTeamNumber(b.teamNumber);
     return aTeamNumber.compareTo(bTeamNumber);
   });
 

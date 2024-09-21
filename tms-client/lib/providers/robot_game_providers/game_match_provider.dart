@@ -50,6 +50,12 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
 
   GameMatch? get nextMatch => matchesByTime.firstWhereOrNull((match) => !match.completed);
 
+  List<GameMatch> getMatchesByTeamNumber(String teamNumber) {
+    return matchesByTime.where((match) {
+      return match.gameMatchTables.any((table) => table.teamNumber == teamNumber);
+    }).toList();
+  }
+
   Future<int> updateGameMatch(String matchNumber, GameMatch match) async {
     String? matchId = getIdFromMatchNumber(matchNumber);
 

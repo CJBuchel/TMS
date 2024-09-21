@@ -17,4 +17,10 @@ class JudgingSessionsProvider extends EchoTreeProvider<String, JudgingSession> {
     List<JudgingSession> sessions = items.values.toList();
     return sortJudgingSessionsByTime(sessions);
   }
+
+  List<JudgingSession> getSessionsByTeamNumber(String teamNumber) {
+    return judgingSessionsByTime.where((session) {
+      return session.judgingSessionPods.any((pod) => pod.teamNumber == teamNumber);
+    }).toList();
+  }
 }

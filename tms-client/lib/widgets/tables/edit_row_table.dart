@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 
 class EditTableRow extends BaseTableRow {
-  final String? key;
+  final Key? key;
 
   // optional per row onEdit & onDelete
   final Function()? onDelete;
@@ -19,8 +19,8 @@ class EditTableRow extends BaseTableRow {
 
 class EditTable extends BaseTable {
   final List<EditTableRow> rows;
-  final Function(int index, String? key)? onDelete;
-  final Function(int index, String? key)? onEdit;
+  final Function(int index, Key? key)? onDelete;
+  final Function(int index, Key? key)? onEdit;
   final Function()? onAdd;
 
   BaseTableCell _iconButtonCell({Function()? onPressed, required Widget icon}) {

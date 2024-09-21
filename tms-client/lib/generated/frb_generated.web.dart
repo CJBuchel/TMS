@@ -123,14 +123,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RegisterResponse dco_decode_box_autoadd_register_response(dynamic raw);
 
   @protected
-  RobotGameScoreSheetRequest
-      dco_decode_box_autoadd_robot_game_score_sheet_request(dynamic raw);
-
-  @protected
-  RobotGameTableSignalRequest
-      dco_decode_box_autoadd_robot_game_table_signal_request(dynamic raw);
-
-  @protected
   RobotGamesLoadMatchRequest
       dco_decode_box_autoadd_robot_games_load_match_request(dynamic raw);
 
@@ -139,8 +131,26 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dco_decode_box_autoadd_robot_games_remove_match_request(dynamic raw);
 
   @protected
+  RobotGamesRemoveScoreSheetRequest
+      dco_decode_box_autoadd_robot_games_remove_score_sheet_request(
+          dynamic raw);
+
+  @protected
+  RobotGamesScoreSheetRequest
+      dco_decode_box_autoadd_robot_games_score_sheet_request(dynamic raw);
+
+  @protected
+  RobotGamesTableSignalRequest
+      dco_decode_box_autoadd_robot_games_table_signal_request(dynamic raw);
+
+  @protected
   RobotGamesUpdateMatchRequest
       dco_decode_box_autoadd_robot_games_update_match_request(dynamic raw);
+
+  @protected
+  RobotGamesUpdateScoreSheetRequest
+      dco_decode_box_autoadd_robot_games_update_score_sheet_request(
+          dynamic raw);
 
   @protected
   Team dco_decode_box_autoadd_team(dynamic raw);
@@ -359,14 +369,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RegisterResponse dco_decode_register_response(dynamic raw);
 
   @protected
-  RobotGameScoreSheetRequest dco_decode_robot_game_score_sheet_request(
-      dynamic raw);
-
-  @protected
-  RobotGameTableSignalRequest dco_decode_robot_game_table_signal_request(
-      dynamic raw);
-
-  @protected
   RobotGamesLoadMatchRequest dco_decode_robot_games_load_match_request(
       dynamic raw);
 
@@ -375,8 +377,24 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dynamic raw);
 
   @protected
+  RobotGamesRemoveScoreSheetRequest
+      dco_decode_robot_games_remove_score_sheet_request(dynamic raw);
+
+  @protected
+  RobotGamesScoreSheetRequest dco_decode_robot_games_score_sheet_request(
+      dynamic raw);
+
+  @protected
+  RobotGamesTableSignalRequest dco_decode_robot_games_table_signal_request(
+      dynamic raw);
+
+  @protected
   RobotGamesUpdateMatchRequest dco_decode_robot_games_update_match_request(
       dynamic raw);
+
+  @protected
+  RobotGamesUpdateScoreSheetRequest
+      dco_decode_robot_games_update_score_sheet_request(dynamic raw);
 
   @protected
   Team dco_decode_team(dynamic raw);
@@ -549,16 +567,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  RobotGameScoreSheetRequest
-      sse_decode_box_autoadd_robot_game_score_sheet_request(
-          SseDeserializer deserializer);
-
-  @protected
-  RobotGameTableSignalRequest
-      sse_decode_box_autoadd_robot_game_table_signal_request(
-          SseDeserializer deserializer);
-
-  @protected
   RobotGamesLoadMatchRequest
       sse_decode_box_autoadd_robot_games_load_match_request(
           SseDeserializer deserializer);
@@ -569,8 +577,28 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  RobotGamesRemoveScoreSheetRequest
+      sse_decode_box_autoadd_robot_games_remove_score_sheet_request(
+          SseDeserializer deserializer);
+
+  @protected
+  RobotGamesScoreSheetRequest
+      sse_decode_box_autoadd_robot_games_score_sheet_request(
+          SseDeserializer deserializer);
+
+  @protected
+  RobotGamesTableSignalRequest
+      sse_decode_box_autoadd_robot_games_table_signal_request(
+          SseDeserializer deserializer);
+
+  @protected
   RobotGamesUpdateMatchRequest
       sse_decode_box_autoadd_robot_games_update_match_request(
+          SseDeserializer deserializer);
+
+  @protected
+  RobotGamesUpdateScoreSheetRequest
+      sse_decode_box_autoadd_robot_games_update_score_sheet_request(
           SseDeserializer deserializer);
 
   @protected
@@ -804,14 +832,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RegisterResponse sse_decode_register_response(SseDeserializer deserializer);
 
   @protected
-  RobotGameScoreSheetRequest sse_decode_robot_game_score_sheet_request(
-      SseDeserializer deserializer);
-
-  @protected
-  RobotGameTableSignalRequest sse_decode_robot_game_table_signal_request(
-      SseDeserializer deserializer);
-
-  @protected
   RobotGamesLoadMatchRequest sse_decode_robot_games_load_match_request(
       SseDeserializer deserializer);
 
@@ -820,8 +840,26 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  RobotGamesRemoveScoreSheetRequest
+      sse_decode_robot_games_remove_score_sheet_request(
+          SseDeserializer deserializer);
+
+  @protected
+  RobotGamesScoreSheetRequest sse_decode_robot_games_score_sheet_request(
+      SseDeserializer deserializer);
+
+  @protected
+  RobotGamesTableSignalRequest sse_decode_robot_games_table_signal_request(
+      SseDeserializer deserializer);
+
+  @protected
   RobotGamesUpdateMatchRequest sse_decode_robot_games_update_match_request(
       SseDeserializer deserializer);
+
+  @protected
+  RobotGamesUpdateScoreSheetRequest
+      sse_decode_robot_games_update_score_sheet_request(
+          SseDeserializer deserializer);
 
   @protected
   Team sse_decode_team(SseDeserializer deserializer);
@@ -1012,14 +1050,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       RegisterResponse self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_robot_game_score_sheet_request(
-      RobotGameScoreSheetRequest self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_box_autoadd_robot_game_table_signal_request(
-      RobotGameTableSignalRequest self, SseSerializer serializer);
-
-  @protected
   void sse_encode_box_autoadd_robot_games_load_match_request(
       RobotGamesLoadMatchRequest self, SseSerializer serializer);
 
@@ -1028,8 +1058,24 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       RobotGamesRemoveMatchRequest self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_robot_games_remove_score_sheet_request(
+      RobotGamesRemoveScoreSheetRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_robot_games_score_sheet_request(
+      RobotGamesScoreSheetRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_robot_games_table_signal_request(
+      RobotGamesTableSignalRequest self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_robot_games_update_match_request(
       RobotGamesUpdateMatchRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_robot_games_update_score_sheet_request(
+      RobotGamesUpdateScoreSheetRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_team(Team self, SseSerializer serializer);
@@ -1270,14 +1316,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       RegisterResponse self, SseSerializer serializer);
 
   @protected
-  void sse_encode_robot_game_score_sheet_request(
-      RobotGameScoreSheetRequest self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_robot_game_table_signal_request(
-      RobotGameTableSignalRequest self, SseSerializer serializer);
-
-  @protected
   void sse_encode_robot_games_load_match_request(
       RobotGamesLoadMatchRequest self, SseSerializer serializer);
 
@@ -1286,8 +1324,24 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       RobotGamesRemoveMatchRequest self, SseSerializer serializer);
 
   @protected
+  void sse_encode_robot_games_remove_score_sheet_request(
+      RobotGamesRemoveScoreSheetRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_robot_games_score_sheet_request(
+      RobotGamesScoreSheetRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_robot_games_table_signal_request(
+      RobotGamesTableSignalRequest self, SseSerializer serializer);
+
+  @protected
   void sse_encode_robot_games_update_match_request(
       RobotGamesUpdateMatchRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_robot_games_update_score_sheet_request(
+      RobotGamesUpdateScoreSheetRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_team(Team self, SseSerializer serializer);

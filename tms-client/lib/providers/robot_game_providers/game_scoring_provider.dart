@@ -142,7 +142,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
       String? gp = _answers.firstWhereOrNull((a) => a.questionId == "gp")?.answer;
 
       // create the score sheet
-      var scoreSheet = RobotGameScoreSheetRequest(
+      var scoreSheet = RobotGamesScoreSheetRequest(
         blueprintTitle: season,
         table: table,
         teamNumber: teamNumber,

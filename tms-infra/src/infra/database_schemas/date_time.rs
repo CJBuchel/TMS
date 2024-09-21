@@ -25,6 +25,30 @@ impl TmsDate {
   pub fn new(year: i32, month: u32, day: u32) -> Self {
     Self { year, month, day }
   }
+
+  // returns a -1 if self is less than other, 0 if equal, and a +1 if self is greater than other
+  #[flutter_rust_bridge::frb(sync)]
+  pub fn compare_to(&self, other: TmsDate) -> i32 {
+    if self.year < other.year {
+      return -1;
+    } else if self.year > other.year {
+      return 1;
+    }
+
+    if self.month < other.month {
+      return -1;
+    } else if self.month > other.month {
+      return 1;
+    }
+
+    if self.day < other.day {
+      return -1;
+    } else if self.day > other.day {
+      return 1;
+    }
+
+    return 0;
+  }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -48,6 +72,30 @@ impl TmsTime {
   pub fn new(hour: u32, minute: u32, second: u32) -> Self {
     Self { hour, minute, second }
   }
+
+  // returns a -1 if self is less than other, 0 if equal, and a +1 if self is greater than other
+  #[flutter_rust_bridge::frb(sync)]
+  pub fn compare_to(&self, other: TmsTime) -> i32 {
+    if self.hour < other.hour {
+      return -1;
+    } else if self.hour > other.hour {
+      return 1;
+    }
+
+    if self.minute < other.minute {
+      return -1;
+    } else if self.minute > other.minute {
+      return 1;
+    }
+
+    if self.second < other.second {
+      return -1;
+    } else if self.second > other.second {
+      return 1;
+    }
+
+    return 0;
+  }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -66,6 +114,27 @@ impl TmsDateTime {
 
   pub fn new(date: Option<TmsDate>, time: Option<TmsTime>) -> Self {
     Self { date, time }
+  }
+
+  // returns a -1 if self is less than other, 0 if equal, and a +1 if self is greater than other
+  #[flutter_rust_bridge::frb(sync)]
+  pub fn compare_to(&self, other: TmsDateTime) -> i32 {
+    if let Some(date) = &self.date {
+      if let Some(other_date) = &other.date {
+        let date_compare = date.compare_to(other_date.clone());
+        if date_compare != 0 {
+          return date_compare;
+        }
+      }
+    }
+
+    if let Some(time) = &self.time {
+      if let Some(other_time) = &other.time {
+        return time.compare_to(other_time.clone());
+      }
+    }
+
+    return 0;
   }
 }
 

@@ -1,7 +1,7 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
-use crate::{infra::DataSchemeExtensions, GameMatch, QuestionAnswer};
+use crate::{infra::DataSchemeExtensions, GameMatch, GameScoreSheet, QuestionAnswer};
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub struct RobotGamesLoadMatchRequest {
@@ -15,12 +15,12 @@ impl Default for RobotGamesLoadMatchRequest {
 }
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
-pub struct RobotGameTableSignalRequest {
+pub struct RobotGamesTableSignalRequest {
   pub table: String,
   pub team_number: String,
 }
 
-impl Default for RobotGameTableSignalRequest {
+impl Default for RobotGamesTableSignalRequest {
   fn default() -> Self {
     Self {
       table: "".to_string(),
@@ -30,7 +30,7 @@ impl Default for RobotGameTableSignalRequest {
 }
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
-pub struct RobotGameScoreSheetRequest {
+pub struct RobotGamesScoreSheetRequest {
   pub blueprint_title: String,
   pub table: String,
   pub team_number: String,
@@ -51,7 +51,7 @@ pub struct RobotGameScoreSheetRequest {
   pub private_comment: String,
 }
 
-impl Default for RobotGameScoreSheetRequest {
+impl Default for RobotGamesScoreSheetRequest {
   fn default() -> Self {
     Self {
       blueprint_title: "".to_string(),
@@ -67,6 +67,32 @@ impl Default for RobotGameScoreSheetRequest {
       score_sheet_answers: vec![],
       private_comment: "".to_string(),
     }
+  }
+}
+
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct RobotGamesUpdateScoreSheetRequest {
+  pub score_sheet_id: String,
+  pub score_sheet: GameScoreSheet,
+}
+
+impl Default for RobotGamesUpdateScoreSheetRequest {
+  fn default() -> Self {
+    Self {
+      score_sheet_id: "".to_string(),
+      score_sheet: GameScoreSheet::default(),
+    }
+  }
+}
+
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct RobotGamesRemoveScoreSheetRequest {
+  pub score_sheet_id: String,
+}
+
+impl Default for RobotGamesRemoveScoreSheetRequest {
+  fn default() -> Self {
+    Self { score_sheet_id: "".to_string() }
   }
 }
 
@@ -97,7 +123,9 @@ impl Default for RobotGamesRemoveMatchRequest {
 }
 
 impl DataSchemeExtensions for RobotGamesLoadMatchRequest {}
-impl DataSchemeExtensions for RobotGameTableSignalRequest {}
-impl DataSchemeExtensions for RobotGameScoreSheetRequest {}
+impl DataSchemeExtensions for RobotGamesTableSignalRequest {}
+impl DataSchemeExtensions for RobotGamesScoreSheetRequest {}
+impl DataSchemeExtensions for RobotGamesUpdateScoreSheetRequest {}
+impl DataSchemeExtensions for RobotGamesRemoveScoreSheetRequest {}
 impl DataSchemeExtensions for RobotGamesUpdateMatchRequest {}
 impl DataSchemeExtensions for RobotGamesRemoveMatchRequest {}

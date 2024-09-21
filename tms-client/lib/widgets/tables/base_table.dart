@@ -66,27 +66,23 @@ class BaseTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           decoration: headerDecoration,
           child: headerWidgets(),
         ),
-        Expanded(
-          child: CustomScrollView(
+        Flexible(
+          child: ListView.builder(
             physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return Container(
-                      decoration: rows[index].decoration,
-                      child: tableRowWidget(rows[index]),
-                    );
-                  },
-                  childCount: rows.length,
-                ),
-              ),
-            ],
+            shrinkWrap: true,
+            itemCount: rows.length,
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: rows[index].decoration,
+                child: tableRowWidget(rows[index]),
+              );
+            },
           ),
         ),
       ],

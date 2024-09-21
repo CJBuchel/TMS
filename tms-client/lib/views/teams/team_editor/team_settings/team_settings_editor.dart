@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/views/teams/team_editor/update_team_button.dart';
+import 'package:tms/views/teams/team_editor/team_settings/update_team_button.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 import 'package:tms/widgets/multi_value_listener_builders.dart';
 
-class GeneralTeamSettings extends StatelessWidget {
+class TeamSettingsEditor extends StatelessWidget {
   final String teamId;
   final Team team;
 
-  GeneralTeamSettings({
+  TeamSettingsEditor({
     Key? key,
     required this.teamId,
     required this.team,
   }) : super(key: key);
+
+  final ExpansionController _expansionController = ExpansionController(isExpanded: true);
 
   final TextEditingController _teamNumberController = TextEditingController();
   final TextEditingController _teamNameController = TextEditingController();
@@ -31,7 +33,8 @@ class GeneralTeamSettings extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: ExpandableTile(
-        header: const Padding(
+        controller: _expansionController,
+        header: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
             children: [
@@ -42,8 +45,13 @@ class GeneralTeamSettings extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Icon(
-                Icons.keyboard_arrow_down,
+              ValueListenableBuilder(
+                valueListenable: _expansionController,
+                builder: (context, isExpanded, _) {
+                  return Icon(
+                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  );
+                },
               ),
             ],
           ),
@@ -75,7 +83,10 @@ class GeneralTeamSettings extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 15, top: 15),
                 child: TextField(
                   controller: _teamNumberController,
-                  decoration: const InputDecoration(labelText: "Team Number"),
+                  decoration: const InputDecoration(
+                    labelText: "Team Number",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               // team name field
@@ -83,7 +94,10 @@ class GeneralTeamSettings extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 15, top: 15),
                 child: TextField(
                   controller: _teamNameController,
-                  decoration: const InputDecoration(labelText: "Team Name"),
+                  decoration: const InputDecoration(
+                    labelText: "Team Name",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               // team affiliation field
@@ -91,7 +105,10 @@ class GeneralTeamSettings extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 15, top: 15),
                 child: TextField(
                   controller: _teamAffiliationController,
-                  decoration: const InputDecoration(labelText: "Team Affiliation"),
+                  decoration: const InputDecoration(
+                    labelText: "Team Affiliation",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               // update button

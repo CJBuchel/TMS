@@ -10,4 +10,12 @@ class GameScoresProvider extends EchoTreeProvider<String, GameScoreSheet> {
   List<GameScoreSheet> getScoresByTeamId(String teamId) {
     return scores.where((score) => score.teamRefId == teamId).toList();
   }
+
+  List<(String, GameScoreSheet)> getScoresByTeamIdWithId(String teamId) {
+    var entries = items.entries.where((entry) {
+      return entry.value.teamRefId == teamId;
+    }).toList();
+
+    return entries.map((entry) => (entry.key, entry.value)).toList();
+  }
 }

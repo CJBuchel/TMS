@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 import 'package:tms/generated/infra/database_schemas/judging_session.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
+import 'package:tms/models/team_score_sheet.dart';
 import 'package:tms/providers/judging_sessions_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scores_provider.dart';
@@ -14,7 +14,7 @@ class _TeamDetailsData {
   final Team team;
   final List<GameMatch> teamMatches;
   final List<JudgingSession> teamSessions;
-  final List<GameScoreSheet> teamScores;
+  final List<TeamScoreSheet> teamScores;
 
   _TeamDetailsData({
     required this.team,
@@ -31,7 +31,7 @@ class WithTeamDetails extends StatelessWidget {
     Team team,
     List<GameMatch> teamMatches,
     List<JudgingSession> teamSessions,
-    List<GameScoreSheet> teamScores,
+    List<TeamScoreSheet> teamScores,
   ) builder;
 
   const WithTeamDetails({
@@ -49,7 +49,9 @@ class WithTeamDetails extends StatelessWidget {
           team: d.getTeamById(teamId),
           teamMatches: a.getMatchesByTeamNumber(team.teamNumber),
           teamSessions: b.getSessionsByTeamNumber(teamId),
-          teamScores: c.getScoresByTeamId(teamId),
+          teamScores: c.getScoresByTeamIdWithId(teamId).map((entry) {
+            return TeamScoreSheet(scoreSheetId: entry.$1, scoreSheet: entry.$2);
+          }).toList(),
         );
       },
       shouldRebuild: (previous, next) {

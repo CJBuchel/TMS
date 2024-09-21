@@ -124,8 +124,11 @@ class AgnosticScoringWidget extends StatelessWidget {
               _scoreController.text = value.toString();
               return TextField(
                 controller: _scoreController,
-                onChanged: (value) {
-                  onScoreChanged(int.tryParse(value) ?? 0);
+                onEditingComplete: () {
+                  onScoreChanged(int.tryParse(_scoreController.text) ?? 0);
+                },
+                onTapOutside: (event) {
+                  onScoreChanged(int.tryParse(_scoreController.text) ?? 0);
                 },
                 keyboardType: TextInputType.number,
                 inputFormatters: [

@@ -49,7 +49,7 @@ class StageTable extends StatelessWidget {
     for (var segment in tableData) {
       rows.add(
         EditTableRow(
-          key: segment.table.table,
+          key: Key(segment.table.table),
           onEdit: () {
             // preload selected data
             selectedTable.value = segment.table.table;

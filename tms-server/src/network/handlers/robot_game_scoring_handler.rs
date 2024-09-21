@@ -1,7 +1,35 @@
-use tms_infra::RobotGameScoreSheetRequest;
+use tms_infra::*;
 use crate::{database::*, network::BadRequestWithMessage};
 
-pub async fn robot_game_scoring_submit_score_sheet(request: RobotGameScoreSheetRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
+pub async fn robot_game_remove_score_sheet_handler(request: RobotGamesRemoveScoreSheetRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
+  let read_db = db.read().await;
+  match read_db.remove_game_score_sheet(request.score_sheet_id.to_owned()).await {
+    Ok(_) => {
+      log::info!("GameScoreSheet removed: {}", request.score_sheet_id);
+      Ok(warp::http::StatusCode::OK)
+    },
+    Err(e) => {
+      log::error!("Failed to delete GameScoreSheet: {}", e);
+      return Err(warp::reject::custom(BadRequestWithMessage { message: e }));
+    }
+  }
+}
+
+pub async fn robot_game_scoring_update_score_sheet_handler(request: RobotGamesUpdateScoreSheetRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
+  let read_db = db.read().await;
+  match read_db.insert_game_score_sheet(request.score_sheet, Some(request.score_sheet_id.to_owned())).await {
+    Ok(_) => {
+      log::info!("GameScoreSheet updated: {}", request.score_sheet_id);
+      Ok(warp::http::StatusCode::OK)
+    },
+    Err(e) => {
+      log::error!("Failed to update GameScoreSheet: {}", e);
+      return Err(warp::reject::custom(BadRequestWithMessage { message: e }));
+    }
+  }
+}
+
+pub async fn robot_game_scoring_submit_score_sheet_handler(request: RobotGamesScoreSheetRequest, db: SharedDatabase) -> Result<impl warp::Reply, warp::Rejection> {
   // get team from team number
   let team_id: String = match db.read().await.get_team_by_number(request.team_number.to_owned()).await {
     Some(team) => team.0,

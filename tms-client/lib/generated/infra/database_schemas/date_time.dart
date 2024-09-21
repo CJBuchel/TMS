@@ -19,6 +19,10 @@ class TmsDate {
     required this.day,
   });
 
+  int compareTo({required TmsDate other}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateCompareTo(
+          that: this, other: other);
+
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<TmsDate> newInstance(
           {required int year, required int month, required int day}) =>
@@ -49,6 +53,10 @@ class TmsDateTime {
     this.date,
     this.time,
   });
+
+  int compareTo({required TmsDateTime other}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasDateTimeTmsDateTimeCompareTo(
+          that: this, other: other);
 
   static Future<TmsDateTime> default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasDateTimeTmsDateTimeDefault();
@@ -95,6 +103,10 @@ class TmsTime {
     required this.minute,
     required this.second,
   });
+
+  int compareTo({required TmsTime other}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsTimeCompareTo(
+          that: this, other: other);
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<TmsTime> newInstance(

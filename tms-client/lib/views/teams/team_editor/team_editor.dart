@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tms/views/teams/team_editor/general_team_settings.dart';
+import 'package:tms/views/teams/team_editor/team_scores/team_scores_editor.dart';
+import 'package:tms/views/teams/team_editor/team_settings/team_settings_editor.dart';
 import 'package:tms/widgets/team_widgets/with_team_details.dart';
 
 class TeamEditor extends StatelessWidget {
@@ -38,9 +39,14 @@ class TeamEditor extends StatelessWidget {
                   padding: const EdgeInsets.all(50),
                   child: Column(
                     children: [
-                      GeneralTeamSettings(
+                      TeamSettingsEditor(
                         teamId: teamId,
                         team: team,
+                      ),
+                      const SizedBox(height: 20),
+                      TeamScoresEditor(
+                        teamId: teamId,
+                        teamScores: teamScores,
                       ),
                     ],
                   ),

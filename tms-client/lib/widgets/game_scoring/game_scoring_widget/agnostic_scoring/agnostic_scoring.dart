@@ -5,7 +5,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 
 class AgnosticScoringWidget extends StatelessWidget {
-  final Function(int) onScoreChanged;
+  final Function(int, String) onScoreChanged;
 
   AgnosticScoringWidget({
     Key? key,
@@ -13,6 +13,8 @@ class AgnosticScoringWidget extends StatelessWidget {
   }) : super(key: key);
 
   final TextEditingController _scoreController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
+
   void _updateScore(int delta) {
     int currentScore = int.tryParse(_scoreController.text) ?? 0;
     int newScore = currentScore + delta;
@@ -20,7 +22,7 @@ class AgnosticScoringWidget extends StatelessWidget {
       newScore = 0;
     }
     _scoreController.text = newScore.toString();
-    onScoreChanged(newScore);
+    onScoreChanged(newScore, _commentController.text);
   }
 
   Widget _buildScoreButton(BuildContext context, String label, int delta, Color color, bool isInverse) {
@@ -121,21 +123,20 @@ class AgnosticScoringWidget extends StatelessWidget {
           child: Selector<GameScoringProvider, int>(
             selector: (context, provider) => provider.score,
             builder: (context, value, child) {
-              _scoreController.text = value.toString();
+              if (value.toString() != _scoreController.text) {
+                _scoreController.text = value.toString();
+              }
               return TextField(
                 controller: _scoreController,
-                onEditingComplete: () {
-                  onScoreChanged(int.tryParse(_scoreController.text) ?? 0);
-                },
-                onTapOutside: (event) {
-                  onScoreChanged(int.tryParse(_scoreController.text) ?? 0);
+                onChanged: (value) {
+                  onScoreChanged(int.tryParse(value) ?? 0, _commentController.text);
                 },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                 ],
                 decoration: const InputDecoration(
-                  labelText: 'Enter Score',
+                  labelText: 'Score',
                   border: OutlineInputBorder(),
                 ),
               );
@@ -152,6 +153,26 @@ class AgnosticScoringWidget extends StatelessWidget {
             _scoreButton(context, '5', 5, Colors.blue),
             _scoreButton(context, '1', 1, Colors.green),
           ],
+        ),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          padding: const EdgeInsets.all(20),
+          child: Selector<GameScoringProvider, String>(
+            selector: (context, provider) => provider.privateComment,
+            builder: (context, value, child) {
+              if (value != _commentController.text) {
+                _commentController.text = value;
+              }
+              return TextField(
+                controller: _commentController,
+                onChanged: (value) => onScoreChanged(int.tryParse(_scoreController.text) ?? 0, value),
+                decoration: const InputDecoration(
+                  labelText: 'Private Comment (optional)',
+                  border: OutlineInputBorder(),
+                ),
+              );
+            },
+          ),
         ),
       ],
     );

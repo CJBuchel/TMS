@@ -41,12 +41,19 @@ class SubmitAnswersButton extends StatelessWidget {
           ],
         ),
       ),
-      onStatusConfirmFuture: () => Provider.of<GameScoringProvider>(context, listen: false).submitScoreSheet(
-        table: table,
-        round: round,
-        teamNumber: team!.teamNumber,
-        matchNumber: match!.matchNumber,
-      ),
+      onStatusConfirmFuture: () {
+        if (team != null && match != null) {
+          return Provider.of<GameScoringProvider>(context, listen: false).submitScoreSheet(
+            table: table,
+            round: round,
+            teamNumber: team!.teamNumber,
+            matchNumber: match!.matchNumber,
+            referee: referee,
+          );
+        } else {
+          return Future.value(HttpStatus.badRequest);
+        }
+      },
       onFinish: (status) {
         if (status == HttpStatus.ok) {
           if (scrollController?.hasClients ?? false) {

@@ -41,12 +41,19 @@ class NoShowButton extends StatelessWidget {
           ],
         ),
       ),
-      onStatusConfirmFuture: () => Provider.of<GameScoringProvider>(context, listen: false).submitNoShow(
-        table: table,
-        teamNumber: team!.teamNumber,
-        round: round,
-        matchNumber: match!.matchNumber,
-      ),
+      onStatusConfirmFuture: () {
+        if (team != null && match != null) {
+          return Provider.of<GameScoringProvider>(context, listen: false).submitNoShow(
+            teamNumber: team!.teamNumber,
+            matchNumber: match!.matchNumber,
+            round: round,
+            table: table,
+            referee: referee,
+          );
+        } else {
+          return Future.value(HttpStatus.badRequest);
+        }
+      },
       onFinish: (status) {
         if (status == HttpStatus.ok) {
           if (scrollController?.hasClients ?? false) {

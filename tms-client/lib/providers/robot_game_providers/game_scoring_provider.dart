@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 import 'package:tms/generated/infra/fll_infra/fll_blueprint_map.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/robot_game_requests.dart';
@@ -12,6 +13,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   final GameScoringService _service = GameScoringService();
 
   int _score = 0;
+  String _privateComment = "";
 
   List<QuestionValidationError> _errors = [];
   List<QuestionAnswer> _defaultAnswers = [];
@@ -78,12 +80,16 @@ class GameScoringProvider extends TournamentBlueprintProvider {
 
   // getters
   int get score => _score;
+  String get privateComment => _privateComment;
   List<QuestionValidationError> get errors => _errors;
   List<QuestionAnswer> get answers => _answers;
   List<Question> get gameQuestions => _gameQuestions;
 
   // manual setter for score
   set score(int score) => _updateScore(score);
+  set rawScore(int score) => _score = score;
+  set privateComment(String comment) => _privateComment = comment;
+  set answers(List<QuestionAnswer> answers) => _answers = answers;
 
   void resetAnswers() {
     if (blueprintType == BlueprintType.agnostic) {
@@ -92,6 +98,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
       _answers = [..._defaultAnswers]; // copy default answers (don't want the origin modified)
       onAnswers(_answers);
     }
+    privateComment = "";
   }
 
   String? getAnswer(String questionId) {
@@ -133,6 +140,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   Future<int> submitScoreSheet({
     required String table,
     required String teamNumber,
+    required String referee,
     String? matchNumber,
     required int round,
     bool noShow = false,
@@ -146,7 +154,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
         blueprintTitle: season,
         table: table,
         teamNumber: teamNumber,
-        referee: "@TODO",
+        referee: referee,
         matchNumber: matchNumber,
         gp: gp ?? "",
         noShow: noShow,
@@ -154,7 +162,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
         round: round,
         isAgnostic: blueprintType == BlueprintType.agnostic,
         scoreSheetAnswers: _answers,
-        privateComment: "@TODO",
+        privateComment: privateComment,
       );
 
       return _service.submitScoreSheet(scoreSheet);
@@ -167,6 +175,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   Future<int> submitNoShow({
     required String table,
     required String teamNumber,
+    required String referee,
     String? matchNumber,
     required int round,
   }) {
@@ -174,8 +183,17 @@ class GameScoringProvider extends TournamentBlueprintProvider {
       table: table,
       teamNumber: teamNumber,
       matchNumber: matchNumber,
+      referee: referee,
       round: round,
       noShow: true,
     );
+  }
+
+  // update score sheet
+  Future<int> updateScoreSheet({
+    required String scoreSheetId,
+    required GameScoreSheet updatedScoreSheet,
+  }) {
+    return _service.updateScoreSheet(scoreSheetId, updatedScoreSheet);
   }
 }

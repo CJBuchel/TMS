@@ -13,7 +13,6 @@ import 'package:tms/views/scoreboard/scoreboard.dart';
 import 'package:tms/views/setup/setup.dart';
 import 'package:tms/views/teams/teams.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
-import 'package:tms/widgets/scaffolds/base_responsive.dart';
 import 'package:tms/widgets/scaffolds/base_scaffold.dart';
 import 'package:tms/widgets/scaffolds/base_scaffold_drawer_router.dart';
 import 'package:tms/widgets/no_mobile_view_wrapper.dart';
@@ -140,7 +139,7 @@ final tmsRouter = GoRouter(
     GoRoute(
       path: '/connection',
       name: 'connection',
-      builder: (context, state) => BaseResponsive(child: Connection(state: state)),
+      builder: (context, state) => Connection(state: state),
     ),
     GoRoute(
       path: '/game_match_timer',

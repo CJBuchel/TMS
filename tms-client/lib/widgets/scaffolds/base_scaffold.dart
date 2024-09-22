@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
-import 'package:tms/widgets/scaffolds/base_responsive.dart';
 
 class BaseScaffold extends StatelessWidget {
   final GoRouterState state;
@@ -15,11 +14,9 @@ class BaseScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseResponsive(
-      child: Scaffold(
-        appBar: TmsAppBar(state: this.state),
-        body: child,
-      ),
+    return Scaffold(
+      appBar: TmsAppBar(state: this.state),
+      body: child,
     );
   }
 }

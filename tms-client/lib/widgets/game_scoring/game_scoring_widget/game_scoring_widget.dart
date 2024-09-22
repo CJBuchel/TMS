@@ -1,6 +1,7 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_blueprint.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
@@ -10,6 +11,7 @@ import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/agnostic_scoring/agnostic_scoring.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/mission.dart';
+import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/private_comment.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/question/question.dart';
 
 class _BlueprintData {
@@ -23,9 +25,12 @@ class GameScoringWidget extends StatelessWidget {
   final ScrollController? scrollController;
   final List<GlobalKey> questionKeys = [];
 
+  final GameScoreSheet? scoreSheet;
+
   GameScoringWidget({
     Key? key,
     required this.scrollController,
+    this.scoreSheet,
   }) : super(key: key);
 
   void _scrollToNextQuestion(int currentIndex) {
@@ -53,7 +58,7 @@ class GameScoringWidget extends StatelessWidget {
           curve: Curves.easeInOut,
         );
       } else {
-        TmsLogger().e("Next question context is null");
+        TmsLogger().w("Next question context is null, can't scroll to it");
       }
     }
   }
@@ -64,17 +69,34 @@ class GameScoringWidget extends StatelessWidget {
       trees: [":tournament:blueprint", ":tournament:config"],
       child: Selector<TournamentBlueprintProvider, _BlueprintData>(
         selector: (context, bp) {
-          String blueprintTitle = bp.season;
-          return _BlueprintData(type: bp.blueprintType, blueprint: bp.getBlueprint(blueprintTitle));
+          if (scoreSheet != null) {
+            // get blueprint type
+            var type = scoreSheet!.isAgnostic ? BlueprintType.agnostic : BlueprintType.seasonal;
+            return _BlueprintData(type: type, blueprint: bp.getBlueprint(scoreSheet!.blueprintTitle));
+          } else {
+            String blueprintTitle = bp.season;
+            return _BlueprintData(type: bp.blueprintType, blueprint: bp.getBlueprint(blueprintTitle));
+          }
         },
         builder: (context, data, child) {
+          if (scoreSheet != null) {
+            Provider.of<GameScoringProvider>(context, listen: false).privateComment = scoreSheet!.privateComment;
+          }
+
           if (data.type == BlueprintType.agnostic) {
+            if (scoreSheet != null) {
+              Provider.of<GameScoringProvider>(context, listen: false).rawScore = scoreSheet!.score;
+            }
             return AgnosticScoringWidget(
-              onScoreChanged: (score) {
+              onScoreChanged: (score, comment) {
                 Provider.of<GameScoringProvider>(context, listen: false).score = score;
+                Provider.of<GameScoringProvider>(context, listen: false).privateComment = comment;
               },
             );
           } else {
+            if (scoreSheet != null) {
+              Provider.of<GameScoringProvider>(context, listen: false).answers = scoreSheet!.scoreSheetAnswers;
+            }
             return CustomScrollView(
               controller: scrollController,
               physics: const BouncingScrollPhysics(),
@@ -108,6 +130,14 @@ class GameScoringWidget extends StatelessWidget {
                       );
                     },
                     childCount: data.blueprint?.blueprint.robotGameMissions.length,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: PrivateCommentWidget(
+                    comment: Provider.of<GameScoringProvider>(context).privateComment,
+                    onCommentChanged: (c) {
+                      Provider.of<GameScoringProvider>(context, listen: false).privateComment = c;
+                    },
                   ),
                 ),
               ],

@@ -5,7 +5,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/utils/permissions.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
-import 'package:tms/widgets/scaffolds/base_responsive.dart';
 
 class _DrawStack extends StatelessWidget {
   final Widget child;
@@ -112,97 +111,95 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseResponsive(
-      child: Scaffold(
-        appBar: TmsAppBar(state: state),
-        drawer: Drawer(
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    DrawerHeader(
-                      child: Image.asset('assets/logos/TMS_LOGO_NO_TEXT.png'),
-                    ),
-                    ...(items ??
-                        [
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.dashboard,
-                            title: const Text('Dashboard'),
-                            goNamed: 'dashboard',
-                            permissions: const Permissions(admin: true),
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.settings,
-                            title: const Text('Setup'),
-                            goNamed: 'setup',
-                            permissions: const Permissions(admin: true),
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.edit_document,
-                            title: const Text('Referee Scoring'),
-                            goNamed: 'scoring',
-                            permissions: const Permissions(referee: true),
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.shuffle,
-                            title: const Text('Match Controller'),
-                            goNamed: 'match_controller',
-                            permissions: const Permissions(headReferee: true),
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.person,
-                            title: const Text('Users'),
-                            goNamed: 'users',
-                            permissions: const Permissions(admin: true),
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.table_chart,
-                            title: const Text('Matches'),
-                            goNamed: 'matches',
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.table_restaurant,
-                            title: const Text('Tables'),
-                            goNamed: 'tables',
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.table_chart,
-                            title: const Text('Judging Sessions'),
-                            goNamed: 'judging_sessions',
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.table_bar,
-                            title: const Text('Pods'),
-                            goNamed: 'pods',
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.people,
-                            title: const Text('Teams'),
-                            goNamed: 'teams',
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.table_view,
-                            title: const Text('Team Data'),
-                            goNamed: 'team_data',
-                          ),
-                          const BaseScaffoldDrawerRouterItem(
-                            icon: Icons.backup,
-                            title: const Text('Backups'),
-                            goNamed: 'backups',
-                          ),
-                        ]),
-                  ],
-                ),
+    return Scaffold(
+      appBar: TmsAppBar(state: state),
+      drawer: Drawer(
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  DrawerHeader(
+                    child: Image.asset('assets/logos/TMS_LOGO_NO_TEXT.png'),
+                  ),
+                  ...(items ??
+                      [
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.dashboard,
+                          title: const Text('Dashboard'),
+                          goNamed: 'dashboard',
+                          permissions: const Permissions(admin: true),
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.settings,
+                          title: const Text('Setup'),
+                          goNamed: 'setup',
+                          permissions: const Permissions(admin: true),
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.edit_document,
+                          title: const Text('Referee Scoring'),
+                          goNamed: 'scoring',
+                          permissions: const Permissions(referee: true),
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.shuffle,
+                          title: const Text('Match Controller'),
+                          goNamed: 'match_controller',
+                          permissions: const Permissions(headReferee: true),
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.person,
+                          title: const Text('Users'),
+                          goNamed: 'users',
+                          permissions: const Permissions(admin: true),
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.table_chart,
+                          title: const Text('Matches'),
+                          goNamed: 'matches',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.table_restaurant,
+                          title: const Text('Tables'),
+                          goNamed: 'tables',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.table_chart,
+                          title: const Text('Judging Sessions'),
+                          goNamed: 'judging_sessions',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.table_bar,
+                          title: const Text('Pods'),
+                          goNamed: 'pods',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.people,
+                          title: const Text('Teams'),
+                          goNamed: 'teams',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.table_view,
+                          title: const Text('Team Data'),
+                          goNamed: 'team_data',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.backup,
+                          title: const Text('Backups'),
+                          goNamed: 'backups',
+                        ),
+                      ]),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
 
-        // child with stack
-        body: _DrawStack(
-          child: child,
-        ),
+      // child with stack
+      body: _DrawStack(
+        child: child,
       ),
     );
   }

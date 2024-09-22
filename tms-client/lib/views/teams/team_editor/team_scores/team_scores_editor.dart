@@ -43,7 +43,7 @@ class TeamScoresEditor extends StatelessWidget {
             onStatusConfirmFuture: () => GameScoringService().removeScoreSheet(score.scoreSheetId),
           ).show(context);
         },
-        onEdit: () => OnEditScore(context: context, score: score).call(),
+        onEdit: () => OnEditScore(score: score).call(context),
         cells: [
           // Timestamp
           _cell(Text(tmsDateTimeToString(score.scoreSheet.timestamp))),

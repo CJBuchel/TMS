@@ -71,10 +71,7 @@ class MissionWidget extends StatelessWidget {
   }
 
   Color getMissionColor(BuildContext context) {
-    // Color darkColor = const Color(0xFF100023);
-    // get number out of the mission.id
     Color darkColor = lighten(Theme.of(context).cardColor, 0.05);
-    // Color darkColor = lighten(Theme.of(context).cardColor, 0.05);
     Color lightColor = Theme.of(context).cardColor;
     return Theme.of(context).brightness == Brightness.dark ? darkColor : lightColor;
   }

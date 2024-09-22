@@ -11,8 +11,9 @@ import 'package:tms/widgets/game_scoring/game_scoring_widget/game_scoring_widget
 import 'package:tms/widgets/game_scoring/with_next_game_scoring.dart';
 
 class RefereeScoring extends StatelessWidget {
-  final ScrollController _scrollController = ScrollController();
   RefereeScoring({Key? key}) : super(key: key);
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {

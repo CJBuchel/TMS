@@ -31,7 +31,11 @@ class TeamsRankingHeader extends StatelessWidget {
         (index) => Expanded(
           flex: 1,
           child: Container(
-            color: index % 2 == 0 ? evenColor : oddColor,
+            color: numRounds > 1
+                ? index % 2 == 0
+                    ? evenColor
+                    : oddColor
+                : oddColor,
             child: Center(
               child: Text(
                 'Round ${index + 1}',

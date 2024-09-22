@@ -127,7 +127,7 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         return RepaintBoundary(
-                          child: _getChildren()[index % _getChildren().length],
+                          child: _getChildren().elementAtOrNull(index % _getChildren().length),
                         );
                       },
                       childCount: _getChildren().length * 2,
@@ -149,7 +149,7 @@ class _AniInfVertState extends State<AnimatedInfiniteVerticalList>
                       return LayoutBuilder(
                         builder: (context, constraints) {
                           return RepaintBoundary(
-                            child: widget.children[index],
+                            child: widget.children.elementAtOrNull(index),
                           );
                         },
                       );

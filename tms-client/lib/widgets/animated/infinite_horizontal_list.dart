@@ -114,7 +114,7 @@ class _AniInfHorState extends State<AnimatedInfiniteHorizontalList>
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         return RepaintBoundary(
-                          child: widget.children[index % widget.children.length],
+                          child: widget.children.elementAtOrNull(index % widget.children.length),
                         );
                       },
                       childCount: widget.children.length * 2,
@@ -137,7 +137,7 @@ class _AniInfHorState extends State<AnimatedInfiniteHorizontalList>
                       return LayoutBuilder(
                         builder: (context, constraints) {
                           return RepaintBoundary(
-                            child: widget.children[index],
+                            child: widget.children.elementAtOrNull(index),
                           );
                         },
                       );

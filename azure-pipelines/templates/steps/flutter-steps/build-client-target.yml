@@ -39,7 +39,7 @@ steps:
         debugMode: false
         profileMode: false
         iosCodesign: false
-        extraArgs: '--release --no-web-resources-cdn --wasm'
+        extraArgs: '--release --no-web-resources-cdn'
 
         # build
         buildName: ${{ parameters.buildVersion }}

@@ -5,6 +5,7 @@ import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/providers/teams_provider.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
@@ -56,6 +57,9 @@ class OnAddScore {
   }
 
   void call(BuildContext context) {
+    TmsLogger().i('Resetting the GameScoringProvider');
+    Provider.of<GameScoringProvider>(context, listen: false).resetAnswers();
+
     ConfirmFutureDialog(
       onStatusConfirmFuture: () {
         return Provider.of<GameScoringProvider>(context, listen: false).submitScoreSheet(

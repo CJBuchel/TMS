@@ -41,8 +41,12 @@ impl GameScoreSheetExtensions for Database {
   }
 
   async fn insert_game_score_sheet(&self, mut game_score_sheet: GameScoreSheet, game_score_sheet_id: Option<String>) -> Result<(), String> {
+    if game_score_sheet.no_show {
+      game_score_sheet.score = 0;
+    }
+
     // if this is not an agnostic score sheet, pass the answers through the calculator and validate system
-    if !game_score_sheet.is_agnostic {
+    if !game_score_sheet.is_agnostic && !game_score_sheet.no_show {
       match self.get_blueprint_by_title(game_score_sheet.blueprint_title.clone()).await {
         Some((_, blueprint)) => {
           // validate answers

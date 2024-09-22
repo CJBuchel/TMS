@@ -7,6 +7,7 @@ import 'package:tms/models/team_score_sheet.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/views/teams/team_editor/team_scores/on_edit_answers.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
@@ -51,6 +52,11 @@ class OnEditScore {
   }
 
   void call(BuildContext context) {
+    // reset the provider
+    TmsLogger().i('Resetting the GameScoringProvider');
+    Provider.of<GameScoringProvider>(context, listen: false).answers = score.scoreSheet.scoreSheetAnswers;
+    Provider.of<GameScoringProvider>(context, listen: false).score = score.scoreSheet.score;
+    Provider.of<GameScoringProvider>(context, listen: false).privateComment = score.scoreSheet.privateComment;
     // setup the initial values
     _tableController.text = score.scoreSheet.table;
     _refereeController.text = score.scoreSheet.referee;

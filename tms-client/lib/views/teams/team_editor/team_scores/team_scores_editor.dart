@@ -3,6 +3,7 @@ import 'package:tms/models/team_score_sheet.dart';
 import 'package:tms/services/game_scoring_service.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/tms_time_utils.dart';
+import 'package:tms/views/teams/team_editor/team_scores/on_add_score.dart';
 import 'package:tms/views/teams/team_editor/team_scores/on_edit_score.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
@@ -125,6 +126,7 @@ class TeamScoresEditor extends StatelessWidget {
               _cell(const Text("Score", style: TextStyle(fontWeight: FontWeight.bold))),
             ],
             rows: _editTableRows(context),
+            onAdd: () => OnAddScore(teamId: teamId).call(context),
           ),
         ),
       ),

@@ -77,12 +77,20 @@ class TeamsRankingRow extends StatelessWidget {
     scoreColumns.addAll(
       List.generate(numRounds, (index) {
         if (index < scores.length) {
-          List<int> scoreValues = scores.where((score) => score.round == index + 1).map((score) {
-            return score.score;
+          List<(bool, int)> scoreValues = scores.where((score) => score.round == index + 1).map((score) {
+            return (score.noShow, score.score);
           }).toList();
 
-          String strScore = scoreValues.isEmpty ? "?" : scoreValues.first.toString();
-          strScore = scoreValues.length > 1 ? "Conflict" : strScore;
+          String strScore = "?";
+          if (scoreValues.isEmpty) {
+            strScore = "?";
+          } else if (scoreValues.length > 1) {
+            strScore = "Conflict";
+          } else if (scoreValues.firstOrNull?.$1 ?? false) {
+            strScore = "-";
+          } else {
+            strScore = scoreValues.first.$2.toString();
+          }
 
           return Expanded(
             flex: 1,

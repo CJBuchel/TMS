@@ -19,7 +19,11 @@ import 'infra/database_schemas/judging_pod.dart';
 import 'infra/database_schemas/judging_session.dart';
 import 'infra/database_schemas/team.dart';
 import 'infra/database_schemas/tournament_blueprint.dart';
+import 'infra/database_schemas/tournament_code.dart';
 import 'infra/database_schemas/tournament_config.dart';
+import 'infra/database_schemas/tournament_errors.dart';
+import 'infra/database_schemas/tournament_integrity_message.dart';
+import 'infra/database_schemas/tournament_warnings.dart';
 import 'infra/database_schemas/user.dart';
 import 'infra/fll_infra/category_question.dart';
 import 'infra/fll_infra/fll_blueprint.dart';
@@ -63,6 +67,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   DataSchemeExtensions dco_decode_TraitDef_DataSchemeExtensions(dynamic raw);
 
   @protected
+  TournamentCode dco_decode_TraitDef_TournamentCode(dynamic raw);
+
+  @protected
   BlueprintType dco_decode_blueprint_type(dynamic raw);
 
   @protected
@@ -94,6 +101,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   JudgingSession dco_decode_box_autoadd_judging_session(dynamic raw);
+
+  @protected
+  JudgingSessionPod dco_decode_box_autoadd_judging_session_pod(dynamic raw);
 
   @protected
   LoginRequest dco_decode_box_autoadd_login_request(dynamic raw);
@@ -169,6 +179,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsDateTime dco_decode_box_autoadd_tms_date_time(dynamic raw);
 
   @protected
+  TmsDuration dco_decode_box_autoadd_tms_duration(dynamic raw);
+
+  @protected
   TmsServerMatchStateEvent dco_decode_box_autoadd_tms_server_match_state_event(
       dynamic raw);
 
@@ -230,6 +243,14 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
           dynamic raw);
 
   @protected
+  TournamentIntegrityCode dco_decode_box_autoadd_tournament_integrity_code(
+      dynamic raw);
+
+  @protected
+  TournamentIntegrityMessage
+      dco_decode_box_autoadd_tournament_integrity_message(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
@@ -264,6 +285,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int dco_decode_i_32(dynamic raw);
+
+  @protected
+  PlatformInt64 dco_decode_i_64(dynamic raw);
 
   @protected
   JudgingPod dco_decode_judging_pod(dynamic raw);
@@ -412,6 +436,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsDateTime dco_decode_tms_date_time(dynamic raw);
 
   @protected
+  TmsDuration dco_decode_tms_duration(dynamic raw);
+
+  @protected
   TmsServerMatchState dco_decode_tms_server_match_state(dynamic raw);
 
   @protected
@@ -474,6 +501,19 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dco_decode_tournament_config_set_timer_length_request(dynamic raw);
 
   @protected
+  TournamentErrorCode dco_decode_tournament_error_code(dynamic raw);
+
+  @protected
+  TournamentIntegrityCode dco_decode_tournament_integrity_code(dynamic raw);
+
+  @protected
+  TournamentIntegrityMessage dco_decode_tournament_integrity_message(
+      dynamic raw);
+
+  @protected
+  TournamentWarningCode dco_decode_tournament_warning_code(dynamic raw);
+
+  @protected
   int dco_decode_u_16(dynamic raw);
 
   @protected
@@ -531,6 +571,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   JudgingSession sse_decode_box_autoadd_judging_session(
+      SseDeserializer deserializer);
+
+  @protected
+  JudgingSessionPod sse_decode_box_autoadd_judging_session_pod(
       SseDeserializer deserializer);
 
   @protected
@@ -619,6 +663,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  TmsDuration sse_decode_box_autoadd_tms_duration(SseDeserializer deserializer);
+
+  @protected
   TmsServerMatchStateEvent sse_decode_box_autoadd_tms_server_match_state_event(
       SseDeserializer deserializer);
 
@@ -685,6 +732,15 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  TournamentIntegrityCode sse_decode_box_autoadd_tournament_integrity_code(
+      SseDeserializer deserializer);
+
+  @protected
+  TournamentIntegrityMessage
+      sse_decode_box_autoadd_tournament_integrity_message(
+          SseDeserializer deserializer);
+
+  @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
@@ -720,6 +776,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
+  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
 
   @protected
   JudgingPod sse_decode_judging_pod(SseDeserializer deserializer);
@@ -878,6 +937,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsDateTime sse_decode_tms_date_time(SseDeserializer deserializer);
 
   @protected
+  TmsDuration sse_decode_tms_duration(SseDeserializer deserializer);
+
+  @protected
   TmsServerMatchState sse_decode_tms_server_match_state(
       SseDeserializer deserializer);
 
@@ -953,6 +1015,22 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
           SseDeserializer deserializer);
 
   @protected
+  TournamentErrorCode sse_decode_tournament_error_code(
+      SseDeserializer deserializer);
+
+  @protected
+  TournamentIntegrityCode sse_decode_tournament_integrity_code(
+      SseDeserializer deserializer);
+
+  @protected
+  TournamentIntegrityMessage sse_decode_tournament_integrity_message(
+      SseDeserializer deserializer);
+
+  @protected
+  TournamentWarningCode sse_decode_tournament_warning_code(
+      SseDeserializer deserializer);
+
+  @protected
   int sse_decode_u_16(SseDeserializer deserializer);
 
   @protected
@@ -1014,6 +1092,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_judging_session(
       JudgingSession self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_judging_session_pod(
+      JudgingSessionPod self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_login_request(
@@ -1096,6 +1178,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       TmsDateTime self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_tms_duration(
+      TmsDuration self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_tms_server_match_state_event(
       TmsServerMatchStateEvent self, SseSerializer serializer);
 
@@ -1157,6 +1243,14 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       TournamentConfigSetTimerLengthRequest self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_tournament_integrity_code(
+      TournamentIntegrityCode self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_tournament_integrity_message(
+      TournamentIntegrityMessage self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
   @protected
@@ -1196,6 +1290,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
 
   @protected
   void sse_encode_judging_pod(JudgingPod self, SseSerializer serializer);
@@ -1360,6 +1457,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_tms_date_time(TmsDateTime self, SseSerializer serializer);
 
   @protected
+  void sse_encode_tms_duration(TmsDuration self, SseSerializer serializer);
+
+  @protected
   void sse_encode_tms_server_match_state(
       TmsServerMatchState self, SseSerializer serializer);
 
@@ -1429,6 +1529,22 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_tournament_config_set_timer_length_request(
       TournamentConfigSetTimerLengthRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tournament_error_code(
+      TournamentErrorCode self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tournament_integrity_code(
+      TournamentIntegrityCode self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tournament_integrity_message(
+      TournamentIntegrityMessage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tournament_warning_code(
+      TournamentWarningCode self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_16(int self, SseSerializer serializer);

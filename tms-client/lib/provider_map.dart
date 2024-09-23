@@ -18,6 +18,7 @@ import 'package:tms/providers/game_timer_provider.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/providers/schedule_provider.dart';
 import 'package:tms/providers/teams_provider.dart';
+import 'package:tms/providers/tournament_integrity_provider.dart';
 
 class ProviderMap extends StatelessWidget {
   final Widget app;
@@ -44,6 +45,7 @@ class ProviderMap extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GameCategoryProvider()),
         ChangeNotifierProvider(create: (_) => GameScoresProvider()),
         ChangeNotifierProvider(create: (_) => JudgingSessionsProvider()),
+        ChangeNotifierProvider(create: (_) => TournamentIntegrityProvider()),
       ],
       child: app,
     );

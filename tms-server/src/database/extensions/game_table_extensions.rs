@@ -53,14 +53,14 @@ impl GameTableExtensions for Database {
         log::warn!("GameTable already exists: {}, overwriting with insert...", game_table_id);
         let game_table = GameTable { table_name: game_table };
         self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), game_table_id, game_table.to_json_string()).await;
-        Ok(())
       }
       None => {
         let game_table = GameTable { table_name: game_table };
         self.inner.write().await.insert_entry(ROBOT_GAME_TABLES.to_string(), Uuid::new_v4().to_string(), game_table.to_json_string()).await;
-        Ok(())
       }
     }
+
+    Ok(())
   }
 
   async fn remove_game_table(&self, game_table_id: String) -> Result<(), String> {

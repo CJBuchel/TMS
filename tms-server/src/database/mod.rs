@@ -9,16 +9,30 @@ pub use tree_names::*;
 mod backup_service;
 pub use backup_service::*;
 
+mod integrity_check_service;
+pub use integrity_check_service::*;
+
 mod extensions;
 pub use extensions::*;
 
+mod tournament_integrity_checks;
+pub use tournament_integrity_checks::*;
+
 pub use tms_infra::*;
+
 
 pub struct Database {
   inner: std::sync::Arc<tokio::sync::RwLock<EchoTreeServer>>,
+
+  // backup service
   backup_service_thread: Option<tokio::task::JoinHandle<()>>,
-  stop_signal_sender: tokio::sync::watch::Sender<bool>,
-  reset_backups_signal_sender: tokio::sync::watch::Sender<bool>,
+  backup_service_stop_signal_sender: tokio::sync::watch::Sender<bool>,
+  backup_service_reset_signal_sender: tokio::sync::watch::Sender<bool>,
+
+  // integrity check service
+  integrity_check_service_thread: Option<tokio::task::JoinHandle<()>>,
+  integrity_check_stop_signal_sender: tokio::sync::watch::Sender<bool>,
+  integrity_check_reset_signal_sender: tokio::sync::watch::Sender<bool>,
 }
 
 pub type SharedDatabase = std::sync::Arc<tokio::sync::RwLock<Database>>;
@@ -40,13 +54,19 @@ impl Database {
 
     let db_server = EchoTreeServer::new(config);
 
-    let (stop_signal_sender, _) = tokio::sync::watch::channel(false);
-    let (reset_backups_signal_sender, _) = tokio::sync::watch::channel(false);
+    let (backup_service_stop_signal_sender, _) = tokio::sync::watch::channel(false);
+    let (backup_service_reset_signal_sender, _) = tokio::sync::watch::channel(false);
+
+    let (integrity_check_stop_signal_sender, _) = tokio::sync::watch::channel(false);
+    let (integrity_check_reset_signal_sender, _) = tokio::sync::watch::channel(false);
     Self {
       inner: std::sync::Arc::new(tokio::sync::RwLock::new(db_server)),
       backup_service_thread: None,
-      stop_signal_sender,
-      reset_backups_signal_sender,
+      backup_service_stop_signal_sender,
+      backup_service_reset_signal_sender,
+      integrity_check_service_thread: None,
+      integrity_check_stop_signal_sender,
+      integrity_check_reset_signal_sender,
     }
   }
 
@@ -59,6 +79,7 @@ impl Database {
 
     self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
     self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), TournamentBlueprint::to_schema()).await;
+    self.inner.read().await.add_tree_schema(TOURNAMENT_INTEGRITY_MESSAGES.to_string(), TournamentIntegrityMessage::to_schema()).await;
     self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_CATEGORIES.to_string(), TmsCategory::to_schema()).await;
@@ -175,6 +196,7 @@ impl Database {
     self.create_trees().await;
     self.create_roles().await;
     self.setup_blueprints().await;
+    self.check_integrity().await;
   }
 
   pub async fn get_echo_tree_routes(&self, tls: bool) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {

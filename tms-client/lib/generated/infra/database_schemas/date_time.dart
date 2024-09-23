@@ -6,6 +6,7 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These functions are ignored because they are not marked as `pub`: `normalize`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`
 
 class TmsDate {
@@ -21,6 +22,10 @@ class TmsDate {
 
   int compareTo({required TmsDate other}) =>
       TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDateCompareTo(
+          that: this, other: other);
+
+  TmsDuration difference({required TmsDate other}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasDateTimeTmsDateDifference(
           that: this, other: other);
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
@@ -61,6 +66,11 @@ class TmsDateTime {
   static Future<TmsDateTime> default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasDateTimeTmsDateTimeDefault();
 
+  TmsDuration difference({required TmsDateTime other}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDateTimeDifference(
+              that: this, other: other);
+
   static TmsDateTime fromJsonString({required String json}) => TmsRustLib
       .instance.api
       .crateInfraDatabaseSchemasDateTimeTmsDateTimeFromJsonString(json: json);
@@ -93,6 +103,96 @@ class TmsDateTime {
           time == other.time;
 }
 
+class TmsDuration {
+  final PlatformInt64 years;
+  final PlatformInt64 months;
+  final PlatformInt64 days;
+  final PlatformInt64 hours;
+  final PlatformInt64 minutes;
+  final PlatformInt64 seconds;
+
+  const TmsDuration({
+    required this.years,
+    required this.months,
+    required this.days,
+    required this.hours,
+    required this.minutes,
+    required this.seconds,
+  });
+
+  Future<TmsDuration> difference({required TmsDuration other}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDurationDifference(
+              that: this, other: other);
+
+  Future<PlatformInt64> inDays() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDurationInDays(
+        that: this,
+      );
+
+  Future<PlatformInt64> inHours() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDurationInHours(
+        that: this,
+      );
+
+  Future<PlatformInt64> inMinutes() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDurationInMinutes(
+        that: this,
+      );
+
+  Future<PlatformInt64> inMonths() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDurationInMonths(
+        that: this,
+      );
+
+  Future<PlatformInt64> inSeconds() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDurationInSeconds(
+        that: this,
+      );
+
+  Future<PlatformInt64> inYears() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasDateTimeTmsDurationInYears(
+        that: this,
+      );
+
+  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
+  static Future<TmsDuration> newInstance(
+          {required PlatformInt64 years,
+          required PlatformInt64 months,
+          required PlatformInt64 days,
+          required PlatformInt64 hours,
+          required PlatformInt64 minutes,
+          required PlatformInt64 seconds}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsDurationNew(
+          years: years,
+          months: months,
+          days: days,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds);
+
+  @override
+  int get hashCode =>
+      years.hashCode ^
+      months.hashCode ^
+      days.hashCode ^
+      hours.hashCode ^
+      minutes.hashCode ^
+      seconds.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TmsDuration &&
+          runtimeType == other.runtimeType &&
+          years == other.years &&
+          months == other.months &&
+          days == other.days &&
+          hours == other.hours &&
+          minutes == other.minutes &&
+          seconds == other.seconds;
+}
+
 class TmsTime {
   final int hour;
   final int minute;
@@ -106,6 +206,10 @@ class TmsTime {
 
   int compareTo({required TmsTime other}) =>
       TmsRustLib.instance.api.crateInfraDatabaseSchemasDateTimeTmsTimeCompareTo(
+          that: this, other: other);
+
+  TmsDuration difference({required TmsTime other}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasDateTimeTmsTimeDifference(
           that: this, other: other);
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.

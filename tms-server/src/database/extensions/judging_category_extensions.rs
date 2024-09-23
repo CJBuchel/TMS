@@ -26,13 +26,13 @@ impl JudgingCategoryExtensions for Database {
       Some((cat_id, _)) => {
         log::warn!("Judging category already exists: {}, overwriting with insert...", cat_id);
         self.inner.write().await.insert_entry(JUDGING_CATEGORIES.to_string(), cat_id.clone(), category.to_json_string()).await;
-        Ok(())
       }
       None => {
         self.inner.write().await.insert_entry(JUDGING_CATEGORIES.to_string(), Uuid::new_v4().to_string(), category.to_json_string()).await;
-        Ok(())
       }
     }
+
+    Ok(())
   }
 
   async fn get_judging_category(&self, judging_cat_id: String) -> Option<TmsCategory> {

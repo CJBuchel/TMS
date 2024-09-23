@@ -52,13 +52,13 @@ impl JudgingSessionExtensions for Database {
       Some((judging_session_id, _)) => {
         log::warn!("JudgingSession already exists: {}, overwriting with insert...", judging_session_id);
         self.inner.write().await.insert_entry(JUDGING_SESSIONS.to_string(), judging_session_id, judging_session.to_json_string()).await;
-        Ok(())
       }
       None => {
         self.inner.write().await.insert_entry(JUDGING_SESSIONS.to_string(), Uuid::new_v4().to_string(), judging_session.to_json_string()).await;
-        Ok(())
       }
     }
+
+    Ok(())
   }
 
   async fn remove_judging_session(&self, judging_session_id: String) -> Result<(), String> {

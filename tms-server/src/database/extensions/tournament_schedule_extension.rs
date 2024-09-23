@@ -140,6 +140,8 @@ impl TournamentScheduleExtensions for Database {
       }
     }
 
+    self.check_integrity().await;
+
     Ok(())
   }
 }

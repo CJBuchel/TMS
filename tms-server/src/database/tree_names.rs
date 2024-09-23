@@ -1,5 +1,8 @@
 pub const TOURNAMENT_CONFIG: &str = ":tournament:config";
 pub const TOURNAMENT_BLUEPRINT: &str = ":tournament:blueprint";
+pub const TOURNAMENT_INTEGRITY_MESSAGES: &str = ":tournament:integrity_messages";
+
+// users
 pub const USERS: &str = ":users";
 
 // teams

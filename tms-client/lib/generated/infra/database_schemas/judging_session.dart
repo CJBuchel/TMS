@@ -15,6 +15,7 @@ class JudgingSession {
   final TmsDateTime startTime;
   final TmsDateTime endTime;
   final List<JudgingSessionPod> judgingSessionPods;
+  final bool completed;
   final TmsCategory category;
 
   const JudgingSession({
@@ -22,6 +23,7 @@ class JudgingSession {
     required this.startTime,
     required this.endTime,
     required this.judgingSessionPods,
+    required this.completed,
     required this.category,
   });
 
@@ -47,6 +49,7 @@ class JudgingSession {
       startTime.hashCode ^
       endTime.hashCode ^
       judgingSessionPods.hashCode ^
+      completed.hashCode ^
       category.hashCode;
 
   @override
@@ -58,27 +61,44 @@ class JudgingSession {
           startTime == other.startTime &&
           endTime == other.endTime &&
           judgingSessionPods == other.judgingSessionPods &&
+          completed == other.completed &&
           category == other.category;
 }
 
 class JudgingSessionPod {
-  final String pod;
+  final String podName;
   final String teamNumber;
   final bool coreValuesSubmitted;
   final bool innovationSubmitted;
   final bool robotDesignSubmitted;
 
   const JudgingSessionPod({
-    required this.pod,
+    required this.podName,
     required this.teamNumber,
     required this.coreValuesSubmitted,
     required this.innovationSubmitted,
     required this.robotDesignSubmitted,
   });
 
+  static Future<JudgingSessionPod> default_() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasJudgingSessionJudgingSessionPodDefault();
+
+  static JudgingSessionPod fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraDatabaseSchemasJudgingSessionJudgingSessionPodFromJsonString(
+          json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasJudgingSessionJudgingSessionPodToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasJudgingSessionJudgingSessionPodToSchema();
+
   @override
   int get hashCode =>
-      pod.hashCode ^
+      podName.hashCode ^
       teamNumber.hashCode ^
       coreValuesSubmitted.hashCode ^
       innovationSubmitted.hashCode ^
@@ -89,7 +109,7 @@ class JudgingSessionPod {
       identical(this, other) ||
       other is JudgingSessionPod &&
           runtimeType == other.runtimeType &&
-          pod == other.pod &&
+          podName == other.podName &&
           teamNumber == other.teamNumber &&
           coreValuesSubmitted == other.coreValuesSubmitted &&
           innovationSubmitted == other.innovationSubmitted &&

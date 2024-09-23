@@ -305,7 +305,7 @@ impl CsvToTmsSchedule for V1 {
         for pod in j.in_rooms.clone() {
           let judging_session_pod = JudgingSessionPod {
             team_number: pod.team_number.clone(),
-            pod: pod.room_name.clone(),
+            pod_name: pod.room_name.clone(),
             innovation_submitted: false,
             core_values_submitted: false,
             robot_design_submitted: false,
@@ -328,6 +328,7 @@ impl CsvToTmsSchedule for V1 {
           start_time,
           end_time,
           judging_session_pods,
+          completed: false,
           category: TmsCategory { category: category_name, sub_categories },
         });
       }

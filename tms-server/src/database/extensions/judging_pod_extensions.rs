@@ -53,14 +53,14 @@ impl JudgingPodExtensions for Database {
         log::warn!("JudgingPod already exists: {}, overwriting with insert...", judging_pod_id);
         let judging_pod = JudgingPod { pod_name: judging_pod };
         self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), judging_pod_id, judging_pod.to_json_string()).await;
-        Ok(())
       }
       None => {
         let judging_pod = JudgingPod { pod_name: judging_pod };
         self.inner.write().await.insert_entry(JUDGING_PODS.to_string(), Uuid::new_v4().to_string(), judging_pod.to_json_string()).await;
-        Ok(())
       }
     }
+
+    Ok(())
   }
 
   async fn remove_judging_pod(&self, judging_pod_id: String) -> Result<(), String> {

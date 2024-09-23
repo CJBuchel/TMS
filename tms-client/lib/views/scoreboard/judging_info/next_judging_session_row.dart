@@ -23,7 +23,7 @@ class NextJudgingSessionRow extends StatelessWidget {
         return Container(
           width: childWidth,
           child: Center(
-            child: Text("${jsPod.teamNumber} | ${team.name} | ${jsPod.pod}"),
+            child: Text("${jsPod.teamNumber} | ${team.name} | ${jsPod.podName}"),
           ),
         );
       },

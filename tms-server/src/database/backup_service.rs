@@ -18,8 +18,8 @@ impl BackupService for Database {
       return;
     }
 
-    let mut stop_signal_receiver = self.stop_signal_sender.subscribe();
-    let mut reset_signal_receiver = self.reset_backups_signal_sender.subscribe();
+    let mut stop_signal_receiver = self.backup_service_stop_signal_sender.subscribe();
+    let mut reset_signal_receiver = self.backup_service_reset_signal_sender.subscribe();
     let inner = self.inner.clone();
 
     self.backup_service_thread = Some(tokio::spawn(async move {
@@ -70,7 +70,7 @@ impl BackupService for Database {
 
   async fn stop_backup_service(&mut self) {
     if let Some(handle) = self.backup_service_thread.take() {
-      match self.stop_signal_sender.send(true) {
+      match self.backup_service_stop_signal_sender.send(true) {
         Ok(_) => {
           log::info!("Backup service stopping...")
         }
@@ -91,7 +91,7 @@ impl BackupService for Database {
 
   fn reset_backup_service(&mut self) {
     if let Some(handle) = self.backup_service_thread.take() {
-      match self.reset_backups_signal_sender.send(true) {
+      match self.backup_service_reset_signal_sender.send(true) {
         Ok(_) => {
           log::info!("Backup service resetting...")
         }

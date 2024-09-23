@@ -131,13 +131,13 @@ impl TeamExtensions for Database {
       Some((team_id, _)) => {
         log::warn!("Team already exists: {}, overwriting with insert...", team_id);
         self.inner.write().await.insert_entry(TEAMS.to_string(), team_id, team.to_json_string()).await;
-        Ok(())
       }
       None => {
         self.inner.write().await.insert_entry(TEAMS.to_string(), Uuid::new_v4().to_string(), team.to_json_string()).await;
-        Ok(())
       }
     }
+
+    Ok(())
   }
 
   async fn remove_team(&self, team_id: String) -> Result<(), String> {

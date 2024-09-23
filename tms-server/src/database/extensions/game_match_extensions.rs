@@ -53,13 +53,13 @@ impl GameMatchExtensions for Database {
       Some((game_match_id, _)) => {
         log::warn!("GameMatch already exists: {}, overwriting with insert...", game_match_id);
         self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), game_match_id, game_match.to_json_string()).await;
-        Ok(())
       }
       None => {
         self.inner.write().await.insert_entry(ROBOT_GAME_MATCHES.to_string(), Uuid::new_v4().to_string(), game_match.to_json_string()).await;
-        Ok(())
       }
     }
+
+    Ok(())
   }
 
   async fn remove_game_match(&self, game_match_id: String) -> Result<(), String> {

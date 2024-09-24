@@ -10,6 +10,7 @@ import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
+import 'package:tms/widgets/team_widgets/team_score_sheet_tags.dart';
 
 class TeamScoresEditor extends StatefulWidget {
   final String teamId;
@@ -36,7 +37,8 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
 
   List<EditTableRow> _editTableRows(BuildContext context) {
     widget.teamScores.sort((a, b) {
-      return a.scoreSheet.timestamp.compareTo(other: b.scoreSheet.timestamp);
+      DateTime other = tmsDateTimeToDateTime(b.scoreSheet.timestamp);
+      return tmsDateTimeToDateTime(a.scoreSheet.timestamp).compareTo(other);
     });
     return widget.teamScores.map((score) {
       return EditTableRow(
@@ -52,7 +54,7 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
         onEdit: () => OnEditScore(score: score).call(context),
         cells: [
           // Timestamp
-          _cell(Text(tmsDateTimeToString(score.scoreSheet.timestamp))),
+          _cell(Text(score.scoreSheet.timestamp.time?.toString() ?? '')),
           // Round
           _cell(Text(score.scoreSheet.round.toString())),
           // Table
@@ -60,7 +62,12 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
           // Referee
           _cell(Text(score.scoreSheet.referee)),
           // Score
-          _cell(Text(score.scoreSheet.score.toString())),
+          _cell(Text(
+            score.scoreSheet.score.toString(),
+            style: const TextStyle(color: Colors.green),
+          )),
+          // Tags
+          _cell(TeamScoreSheetTags(gameScoreSheet: score.scoreSheet)),
         ],
       );
     }).toList();
@@ -129,6 +136,8 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
               _cell(const Text("Referee", style: TextStyle(fontWeight: FontWeight.bold))),
               // Score
               _cell(const Text("Score", style: TextStyle(fontWeight: FontWeight.bold))),
+              // Tags
+              _cell(const Text("Tags", style: TextStyle(fontWeight: FontWeight.bold))),
             ],
             rows: _editTableRows(context),
             onAdd: () => OnAddScore(teamId: widget.teamId).call(context),

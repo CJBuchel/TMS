@@ -13,8 +13,8 @@ pub use game_match::*;
 pub mod judging_session;
 pub use judging_session::*;
 
-pub mod date_time;
-pub use date_time::*;
+pub mod tms_time;
+pub use tms_time::*;
 
 pub mod game_table;
 pub use game_table::*;

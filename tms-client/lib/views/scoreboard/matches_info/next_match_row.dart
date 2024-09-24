@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/teams_provider.dart';
-import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/widgets/animated/infinite_horizontal_list.dart';
 
 class NextMatchRow extends StatelessWidget {
@@ -60,7 +59,7 @@ class NextMatchRow extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              tmsDateTimeToString(nextMatch.startTime),
+              nextMatch.startTime.toString(),
             ),
           ),
         ),

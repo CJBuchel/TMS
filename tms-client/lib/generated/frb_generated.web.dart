@@ -11,13 +11,17 @@ import 'dart:convert';
 import 'frb_generated.dart';
 import 'infra.dart';
 import 'infra/database_schemas/category.dart';
-import 'infra/database_schemas/date_time.dart';
 import 'infra/database_schemas/game_match.dart';
 import 'infra/database_schemas/game_score_sheet.dart';
 import 'infra/database_schemas/game_table.dart';
 import 'infra/database_schemas/judging_pod.dart';
 import 'infra/database_schemas/judging_session.dart';
 import 'infra/database_schemas/team.dart';
+import 'infra/database_schemas/tms_time.dart';
+import 'infra/database_schemas/tms_time/tms_date.dart';
+import 'infra/database_schemas/tms_time/tms_date_time.dart';
+import 'infra/database_schemas/tms_time/tms_duration.dart';
+import 'infra/database_schemas/tms_time/tms_time.dart';
 import 'infra/database_schemas/tournament_blueprint.dart';
 import 'infra/database_schemas/tournament_code.dart';
 import 'infra/database_schemas/tournament_config.dart';
@@ -67,6 +71,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   DataSchemeExtensions dco_decode_TraitDef_DataSchemeExtensions(dynamic raw);
 
   @protected
+  TmsTimeBased dco_decode_TraitDef_TmsTimeBased(dynamic raw);
+
+  @protected
   TournamentCode dco_decode_TraitDef_TournamentCode(dynamic raw);
 
   @protected
@@ -95,6 +102,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int dco_decode_box_autoadd_i_32(dynamic raw);
+
+  @protected
+  PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw);
 
   @protected
   JudgingPod dco_decode_box_autoadd_judging_pod(dynamic raw);
@@ -363,6 +373,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
 
   @protected
+  PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw);
+
+  @protected
   TmsDate? dco_decode_opt_box_autoadd_tms_date(dynamic raw);
 
   @protected
@@ -579,6 +592,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int sse_decode_box_autoadd_i_32(SseDeserializer deserializer);
+
+  @protected
+  PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
   JudgingPod sse_decode_box_autoadd_judging_pod(SseDeserializer deserializer);
@@ -874,6 +890,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer);
 
   @protected
+  PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer);
+
+  @protected
   TmsDate? sse_decode_opt_box_autoadd_tms_date(SseDeserializer deserializer);
 
   @protected
@@ -1114,6 +1133,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_i_64(
+      PlatformInt64 self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_judging_pod(
@@ -1405,6 +1428,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_i_64(
+      PlatformInt64? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_tms_date(

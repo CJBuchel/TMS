@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
-import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:collection/collection.dart';
@@ -66,7 +65,7 @@ class RescheduleButton extends StatelessWidget {
                 showSearchBox: true,
               ),
               items: data.matches,
-              itemAsString: (match) => "${match.matchNumber} - ${tmsDateTimeToString(match.startTime)}",
+              itemAsString: (match) => "${match.matchNumber} - ${match.startTime.toString()}",
               dropdownDecoratorProps: const DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
                   border: OutlineInputBorder(),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
-import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/expanded_row_body/expanded_row_body.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/stage_checkbox.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/table_info.dart';
@@ -70,7 +69,7 @@ class MatchExpandableRow extends StatelessWidget {
             children: [
               Text("#${match.matchNumber}", style: TextStyle(color: color)),
               const SizedBox(height: 10),
-              Text(tmsDateTimeToString(match.startTime), style: TextStyle(fontSize: 12, color: color)),
+              Text(match.startTime.toString(), style: TextStyle(fontSize: 12, color: color)),
             ],
           ),
         ],

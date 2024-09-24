@@ -1,6 +1,16 @@
-// provides unix timestamp for tms date time
-import 'package:tms/generated/infra/database_schemas/date_time.dart';
+//
+// This file is required for tms time based operations.
+// While TmsDateTime does have the below functions natively, the communications between flutter and WASM seem to lag.
+// Half of this is due to the large integer values, and the other half is based on the chrono library used in WASM.
+// DateTime objects are used in flutter, and are much faster to work with.
+// Hence, these functions are implemented in dart to improve performance for basic utility
+//
 
+import 'package:tms/generated/infra/database_schemas/tms_time/tms_date.dart';
+import 'package:tms/generated/infra/database_schemas/tms_time/tms_date_time.dart';
+import 'package:tms/generated/infra/database_schemas/tms_time/tms_time.dart';
+
+// provides unix timestamp for tms date time
 int getTmsDateTimestamp(TmsDateTime tmsDateTime) {
   int timestamp = 0;
 
@@ -57,6 +67,39 @@ String tmsDateTimeToString(TmsDateTime tmsDateTime) {
   return "$date $time";
 }
 
+// convert DateTime obj to TmsDateTime obj
+TmsDateTime dateTimeToTmsDateTime(DateTime dateTime) {
+  return TmsDateTime(
+    date: TmsDate(
+      year: dateTime.year,
+      month: dateTime.month,
+      day: dateTime.day,
+    ),
+    time: TmsTime(
+      hour: dateTime.hour,
+      minute: dateTime.minute,
+      second: dateTime.second,
+    ),
+  );
+}
+
+// // convert TmsDateTime obj to DateTime obj
+DateTime tmsDateTimeToDateTime(TmsDateTime tmsDateTime) {
+  DateTime now = DateTime.now();
+  return DateTime(
+    tmsDateTime.date?.year ?? now.year,
+    tmsDateTime.date?.month ?? now.month,
+    tmsDateTime.date?.day ?? now.day,
+    tmsDateTime.time?.hour ?? now.hour,
+    tmsDateTime.time?.minute ?? now.minute,
+    tmsDateTime.time?.second ?? now.second,
+  );
+}
+
+TmsDateTime nowToTmsDateTime() {
+  return dateTimeToTmsDateTime(DateTime.now());
+}
+
 String _padTime(int value, int length) {
   return value.toString().padLeft(length, '0');
 }
@@ -84,33 +127,4 @@ String secondsToTimeString(int seconds) {
   }
 
   return timeString;
-}
-
-// convert DateTime obj to TmsDateTime obj
-TmsDateTime dateTimeToTmsDateTime(DateTime dateTime) {
-  return TmsDateTime(
-    date: TmsDate(
-      year: dateTime.year,
-      month: dateTime.month,
-      day: dateTime.day,
-    ),
-    time: TmsTime(
-      hour: dateTime.hour,
-      minute: dateTime.minute,
-      second: dateTime.second,
-    ),
-  );
-}
-
-// convert TmsDateTime obj to DateTime obj
-DateTime tmsDateTimeToDateTime(TmsDateTime tmsDateTime) {
-  DateTime now = DateTime.now();
-  return DateTime(
-    tmsDateTime.date?.year ?? now.year,
-    tmsDateTime.date?.month ?? now.month,
-    tmsDateTime.date?.day ?? now.day,
-    tmsDateTime.time?.hour ?? now.hour,
-    tmsDateTime.time?.minute ?? now.minute,
-    tmsDateTime.time?.second ?? now.second,
-  );
 }

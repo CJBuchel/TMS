@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/judging_session.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/teams_provider.dart';
-import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/widgets/animated/infinite_horizontal_list.dart';
 
 class NextJudgingSessionRow extends StatelessWidget {
@@ -59,7 +58,7 @@ class NextJudgingSessionRow extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              tmsDateTimeToString(nextSession.startTime),
+              nextSession.startTime.toString(),
             ),
           ),
         ),

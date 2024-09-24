@@ -5,7 +5,6 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
-import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/models/timer_match_data.dart';
 
 class GameMatchTimerHeader extends StatelessWidget {
@@ -20,7 +19,7 @@ class GameMatchTimerHeader extends StatelessWidget {
       if (nextMatch == null) {
         return "No Matches";
       } else {
-        String t = tmsDateTimeToString(nextMatch.startTime);
+        String t = nextMatch.startTime.toString();
         return "Next Match: ${nextMatch.matchNumber} - $t";
       }
     } else {

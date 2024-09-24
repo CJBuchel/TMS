@@ -8,7 +8,6 @@ import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/views/teams/team_editor/team_scores/on_edit_answers.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
@@ -107,7 +106,7 @@ class OnEditScore {
           children: [
             // non edit fields
             _textCell('Blueprint: ', score.scoreSheet.blueprintTitle),
-            _textCell('Timestamp: ', tmsDateTimeToString(score.scoreSheet.timestamp)),
+            _textCell('Timestamp: ', score.scoreSheet.timestamp.toString()),
             _textCell('GP: ', score.scoreSheet.gp),
             _textCell('Round: ', score.scoreSheet.round.toString()),
             _textCell('Private Comment: ', score.scoreSheet.privateComment),

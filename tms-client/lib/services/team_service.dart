@@ -21,4 +21,36 @@ class TeamService {
       return HttpStatus.badRequest;
     }
   }
+
+  Future<int> addTeam(Team team) async {
+    try {
+      var request = TeamsAddTeamRequest(team: team);
+      var response = await Network().networkPost("/teams/add_team", request.toJsonString());
+      if (response.$1) {
+        TmsLogger().d("Added team: ${team.teamNumber}");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
+
+  Future<int> removeTeam(String teamId) async {
+    try {
+      var request = TeamsRemoveTeamRequest(teamId: teamId);
+      var response = await Network().networkPost("/teams/remove_team", request.toJsonString());
+      if (response.$1) {
+        TmsLogger().d("Deleted team: $teamId");
+        return HttpStatus.ok;
+      } else {
+        return response.$2;
+      }
+    } catch (e) {
+      TmsLogger().e("Error: $e");
+      return HttpStatus.badRequest;
+    }
+  }
 }

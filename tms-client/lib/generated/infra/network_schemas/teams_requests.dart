@@ -7,7 +7,75 @@ import '../../frb_generated.dart';
 import '../database_schemas/team.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`
+
+class TeamsAddTeamRequest {
+  final Team team;
+
+  const TeamsAddTeamRequest({
+    required this.team,
+  });
+
+  static Future<TeamsAddTeamRequest> default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestDefault();
+
+  static TeamsAddTeamRequest fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestFromJsonString(
+          json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToSchema();
+
+  @override
+  int get hashCode => team.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TeamsAddTeamRequest &&
+          runtimeType == other.runtimeType &&
+          team == other.team;
+}
+
+class TeamsRemoveTeamRequest {
+  final String teamId;
+
+  const TeamsRemoveTeamRequest({
+    required this.teamId,
+  });
+
+  static Future<TeamsRemoveTeamRequest> default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestDefault();
+
+  static TeamsRemoveTeamRequest fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestFromJsonString(
+              json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToSchema();
+
+  @override
+  int get hashCode => teamId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TeamsRemoveTeamRequest &&
+          runtimeType == other.runtimeType &&
+          teamId == other.teamId;
+}
 
 class TeamsUpdateTeamRequest {
   final String teamId;

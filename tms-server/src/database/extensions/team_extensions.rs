@@ -6,6 +6,8 @@ use crate::database::{Database, TEAMS};
 pub use echo_tree_rs::core::*;
 use uuid::Uuid;
 
+use super::{GameMatchExtensions, GameScoreSheetExtensions, JudgingSessionExtensions};
+
 pub trait RankingUtilities {
   fn compare_list(a: &[GameScoreSheet], b: &[GameScoreSheet]) -> std::cmp::Ordering;
   fn calculate_team_rankings(score_sheets: Vec<GameScoreSheet>) -> std::collections::HashMap<String, u32>;
@@ -145,7 +147,34 @@ impl TeamExtensions for Database {
     let team = tree.get(&team_id).cloned();
 
     match team {
-      Some(_) => {
+      Some(team_str) => {
+        // convert team to struct
+        let team = Team::from_json_string(&team_str);
+
+        // remove team score sheets
+        let score_sheets = self.get_game_score_sheets_by_team(team_id.clone()).await;
+
+        for (game_score_sheet_id, _) in score_sheets {
+          self.remove_game_score_sheet(game_score_sheet_id).await?;
+        }
+
+        // update and remove on table where this team exists
+        let game_matches = self.get_game_matches_by_team_number(team.team_number.clone()).await;
+        // update the matches and remove the game match tables where this team exists
+        for (game_match_id, mut game_match) in game_matches {
+          game_match.game_match_tables.retain(|table| table.team_number != team.team_number);
+          self.insert_game_match(game_match, Some(game_match_id)).await?;
+        }
+
+        // update and remove in pod where this team exists
+        let judging_sessions = self.get_judging_sessions_by_team_number(team.team_number.clone()).await;
+        // update the judging sessions and remove the judging session pods where this team exists
+        for (judging_session_id, mut judging_session) in judging_sessions {
+          judging_session.judging_session_pods.retain(|pod| pod.team_number != team.team_number);
+          self.insert_judging_session(judging_session, Some(judging_session_id)).await?;
+        }
+
+        // finally remove the team
         self.inner.write().await.remove_entry(TEAMS.to_string(), team_id).await;
         Ok(())
       }

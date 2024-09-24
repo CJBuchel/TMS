@@ -11,7 +11,7 @@ import 'package:tms/widgets/expandable/expandable_tile.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
 
-class TeamScoresEditor extends StatelessWidget {
+class TeamScoresEditor extends StatefulWidget {
   final String teamId;
   final List<TeamScoreSheet> teamScores;
 
@@ -21,6 +21,11 @@ class TeamScoresEditor extends StatelessWidget {
     required this.teamScores,
   }) : super(key: key);
 
+  @override
+  _TeamScoresEditorState createState() => _TeamScoresEditorState();
+}
+
+class _TeamScoresEditorState extends State<TeamScoresEditor> {
   final ExpansionController _expansionController = ExpansionController();
 
   BaseTableCell _cell(Widget child) {
@@ -30,10 +35,10 @@ class TeamScoresEditor extends StatelessWidget {
   }
 
   List<EditTableRow> _editTableRows(BuildContext context) {
-    teamScores.sort((a, b) {
+    widget.teamScores.sort((a, b) {
       return a.scoreSheet.timestamp.compareTo(other: b.scoreSheet.timestamp);
     });
-    return teamScores.map((score) {
+    return widget.teamScores.map((score) {
       return EditTableRow(
         onDelete: () {
           ConfirmFutureDialog(
@@ -126,7 +131,7 @@ class TeamScoresEditor extends StatelessWidget {
               _cell(const Text("Score", style: TextStyle(fontWeight: FontWeight.bold))),
             ],
             rows: _editTableRows(context),
-            onAdd: () => OnAddScore(teamId: teamId).call(context),
+            onAdd: () => OnAddScore(teamId: widget.teamId).call(context),
           ),
         ),
       ),

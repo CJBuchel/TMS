@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tms/views/teams/team_editor/team_info_banner/team_info_banner.dart';
 import 'package:tms/views/teams/team_editor/team_scores/team_scores_editor.dart';
 import 'package:tms/views/teams/team_editor/team_settings/team_settings_editor.dart';
 import 'package:tms/widgets/team_widgets/with_team_details.dart';
@@ -22,15 +23,9 @@ class TeamEditor extends StatelessWidget {
         return Column(
           children: [
             // team checks
-            Container(
-              height: 100,
-              color: Colors.deepPurple[900],
-              padding: const EdgeInsets.all(8.0),
-              child: const Row(
-                children: [
-                  Text("Header stuff"),
-                ],
-              ),
+            TeamInfoBanner(
+              teamId: teamId,
+              team: team,
             ),
             // team settings
             Expanded(

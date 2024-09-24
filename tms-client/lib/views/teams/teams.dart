@@ -13,7 +13,10 @@ class Teams extends StatelessWidget {
     return EchoTreeLifetime(
       trees: [
         ":teams",
+        ":robot_game:matches",
         ":robot_game:game_scores",
+        ":judging:sessions",
+        ":tournament:integrity_messages",
       ],
       child: Row(
         children: [

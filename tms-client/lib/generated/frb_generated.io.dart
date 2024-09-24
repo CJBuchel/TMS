@@ -164,6 +164,14 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Team dco_decode_box_autoadd_team(dynamic raw);
 
   @protected
+  TeamsAddTeamRequest dco_decode_box_autoadd_teams_add_team_request(
+      dynamic raw);
+
+  @protected
+  TeamsRemoveTeamRequest dco_decode_box_autoadd_teams_remove_team_request(
+      dynamic raw);
+
+  @protected
   TeamsUpdateTeamRequest dco_decode_box_autoadd_teams_update_team_request(
       dynamic raw);
 
@@ -422,6 +430,12 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Team dco_decode_team(dynamic raw);
 
   @protected
+  TeamsAddTeamRequest dco_decode_teams_add_team_request(dynamic raw);
+
+  @protected
+  TeamsRemoveTeamRequest dco_decode_teams_remove_team_request(dynamic raw);
+
+  @protected
   TeamsUpdateTeamRequest dco_decode_teams_update_team_request(dynamic raw);
 
   @protected
@@ -645,6 +659,14 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   Team sse_decode_box_autoadd_team(SseDeserializer deserializer);
+
+  @protected
+  TeamsAddTeamRequest sse_decode_box_autoadd_teams_add_team_request(
+      SseDeserializer deserializer);
+
+  @protected
+  TeamsRemoveTeamRequest sse_decode_box_autoadd_teams_remove_team_request(
+      SseDeserializer deserializer);
 
   @protected
   TeamsUpdateTeamRequest sse_decode_box_autoadd_teams_update_team_request(
@@ -922,6 +944,14 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   Team sse_decode_team(SseDeserializer deserializer);
 
   @protected
+  TeamsAddTeamRequest sse_decode_teams_add_team_request(
+      SseDeserializer deserializer);
+
+  @protected
+  TeamsRemoveTeamRequest sse_decode_teams_remove_team_request(
+      SseDeserializer deserializer);
+
+  @protected
   TeamsUpdateTeamRequest sse_decode_teams_update_team_request(
       SseDeserializer deserializer);
 
@@ -1159,6 +1189,14 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_team(Team self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_teams_add_team_request(
+      TeamsAddTeamRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_teams_remove_team_request(
+      TeamsRemoveTeamRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_teams_update_team_request(
@@ -1440,6 +1478,14 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_team(Team self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_teams_add_team_request(
+      TeamsAddTeamRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_teams_remove_team_request(
+      TeamsRemoveTeamRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_teams_update_team_request(

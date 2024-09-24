@@ -66,6 +66,6 @@ impl TournamentIntegrityMessageExtensions for Database {
       read_db.set_tree(TOURNAMENT_INTEGRITY_MESSAGES.to_string(), new_messages.to_owned()).await;
     }
 
-    log::debug!("Tournament integrity check complete");
+    log::trace!("Tournament integrity check complete");
   }
 }

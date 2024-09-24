@@ -12,7 +12,25 @@ pub fn teams_filter(clients: ClientMap, db: SharedDatabase) -> impl warp::Filter
     .and(with_db(db.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["judge_advisor"]))
-    .and_then(team_update_team_handler);
+    .and_then(teams_update_team_handler);
 
-  update_team
+  let add_team = teams_path
+    .and(warp::path("add_team"))
+    .and(warp::post())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["judge_advisor"]))
+    .and_then(teams_add_team_handler);
+
+  let remove_team = teams_path
+    .and(warp::path("remove_team"))
+    .and(warp::post())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["judge_advisor"]))
+    .and_then(teams_remove_team_handler);
+
+  update_team.or(add_team).or(remove_team)
 }

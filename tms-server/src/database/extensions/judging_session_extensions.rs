@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use tms_infra::*;
 
 use crate::database::{Database, JUDGING_SESSIONS};
@@ -8,6 +10,7 @@ use uuid::Uuid;
 pub trait JudgingSessionExtensions {
   async fn get_judging_session(&self, judging_session_id: String) -> Option<JudgingSession>;
   async fn get_judging_session_by_number(&self, number: String) -> Option<(String, JudgingSession)>;
+  async fn get_judging_sessions_by_team_number(&self, team_number: String) -> HashMap<String, JudgingSession>;
   async fn insert_judging_session(&self, judging_session: JudgingSession, judging_session_id: Option<String>) -> Result<(), String>;
   async fn remove_judging_session(&self, judging_session_id: String) -> Result<(), String>;
 }
@@ -39,6 +42,19 @@ impl JudgingSessionExtensions for Database {
       Some((id, judging_session)) => Some((id, judging_session)),
       None => None,
     }
+  }
+
+  async fn get_judging_sessions_by_team_number(&self, team_number: String) -> HashMap<String, JudgingSession> {
+    let tree = self.inner.read().await.get_tree(JUDGING_SESSIONS.to_string()).await;
+    let judging_sessions: HashMap<String, JudgingSession> = tree.iter().filter_map(|(judging_session_id, judging_session)| {
+      let judging_session = JudgingSession::from_json_string(judging_session);
+      if judging_session.judging_session_pods.iter().any(|p| p.team_number == team_number) {
+        Some((judging_session_id.clone(), judging_session))
+      } else {
+        None
+      }
+    }).collect();
+    judging_sessions
   }
 
   async fn insert_judging_session(&self, judging_session: JudgingSession, judging_session_id: Option<String>) -> Result<(), String> {

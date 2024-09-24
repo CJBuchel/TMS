@@ -1,10 +1,13 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
+import 'package:tms/services/team_service.dart';
 import 'package:tms/utils/sorter_util.dart';
 import 'package:collection/collection.dart';
 
 class TeamsProvider extends EchoTreeProvider<String, Team> {
   TeamsProvider() : super(tree: ":teams", fromJsonString: (json) => Team.fromJsonString(json: json));
+
+  final TeamService _teamService = TeamService();
 
   List<Team> get teams {
     return sortTeamsByNumber(this.items.values.toList());
@@ -41,5 +44,17 @@ class TeamsProvider extends EchoTreeProvider<String, Team> {
         ranking: 0,
       );
     }
+  }
+
+  Future<int> updateTeam(String teamId, Team team) async {
+    return await _teamService.updateTeam(teamId, team);
+  }
+
+  Future<int> addTeam(Team team) async {
+    return await _teamService.addTeam(team);
+  }
+
+  Future<int> removeTeam(String teamId) async {
+    return await _teamService.removeTeam(teamId);
   }
 }

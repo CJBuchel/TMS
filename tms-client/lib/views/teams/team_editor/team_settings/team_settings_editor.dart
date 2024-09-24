@@ -5,7 +5,7 @@ import 'package:tms/views/teams/team_editor/team_settings/update_team_button.dar
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 import 'package:tms/widgets/multi_value_listener_builders.dart';
 
-class TeamSettingsEditor extends StatelessWidget {
+class TeamSettingsEditor extends StatefulWidget {
   final String teamId;
   final Team team;
 
@@ -15,6 +15,11 @@ class TeamSettingsEditor extends StatelessWidget {
     required this.team,
   }) : super(key: key);
 
+  @override
+  _TeamSettingsEditorState createState() => _TeamSettingsEditorState();
+}
+
+class _TeamSettingsEditorState extends State<TeamSettingsEditor> {
   final ExpansionController _expansionController = ExpansionController(isExpanded: true);
 
   final TextEditingController _teamNumberController = TextEditingController();
@@ -23,9 +28,9 @@ class TeamSettingsEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _teamNumberController.text = team.teamNumber;
-    _teamNameController.text = team.name;
-    _teamAffiliationController.text = team.affiliation;
+    _teamNumberController.text = widget.team.teamNumber;
+    _teamNameController.text = widget.team.name;
+    _teamAffiliationController.text = widget.team.affiliation;
 
     return Container(
       decoration: BoxDecoration(
@@ -123,12 +128,12 @@ class TeamSettingsEditor extends StatelessWidget {
                       third: _teamAffiliationController,
                       builder: (context, teamNumber, teamName, teamAffiliation, _) {
                         return UpdateTeamButton(
-                          teamId: teamId,
+                          teamId: widget.teamId,
                           updatedTeam: Team(
                             teamNumber: teamNumber.text,
                             name: teamName.text,
                             affiliation: teamAffiliation.text,
-                            ranking: team.ranking,
+                            ranking: widget.team.ranking,
                           ),
                         );
                       },

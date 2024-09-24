@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::database::{Database, ROBOT_GAME_MATCHES};
 pub use echo_tree_rs::core::*;
 use tms_infra::*;
@@ -7,6 +9,7 @@ use uuid::Uuid;
 pub trait GameMatchExtensions {
   async fn get_game_match(&self, game_match_id: String) -> Option<GameMatch>;
   async fn get_game_match_by_number(&self, number: String) -> Option<(String, GameMatch)>;
+  async fn get_game_matches_by_team_number(&self, team_number: String) -> HashMap<String, GameMatch>;
   async fn insert_game_match(&self, game_match: GameMatch, game_match_id: Option<String>) -> Result<(), String>;
   async fn remove_game_match(&self, game_match_id: String) -> Result<(), String>;
   async fn set_game_match_complete(&self, game_match_id: String) -> Result<(), String>;
@@ -40,6 +43,19 @@ impl GameMatchExtensions for Database {
       Some((id, game_match)) => Some((id, game_match)),
       None => None,
     }
+  }
+
+  async fn get_game_matches_by_team_number(&self, team_number: String) -> HashMap<String, GameMatch> {
+    let tree = self.inner.read().await.get_tree(ROBOT_GAME_MATCHES.to_string()).await;
+    let game_matches: HashMap<String, GameMatch> = tree.iter().filter_map(|(game_match_id, game_match)| {
+      let game_match = GameMatch::from_json_string(game_match);
+      if game_match.game_match_tables.iter().any(|t| t.team_number == team_number) {
+        Some((game_match_id.clone(), game_match))
+      } else {
+        None
+      }
+    }).collect();
+    game_matches
   }
 
   async fn insert_game_match(&self, game_match: GameMatch, game_match_id: Option<String>) -> Result<(), String> {

@@ -27,7 +27,7 @@ class _JudgingScheduleTimerState extends State<_JudgingScheduleTimer> {
   Timer? _timer;
   ValueNotifier<int> _difference = ValueNotifier<int>(0);
 
-  int getTimeDifference() {
+  Future<int> getTimeDifference() async {
     // list of sessions
     List<JudgingSession> sessions = sortJudgingSessionsByTime(widget.sessions);
 
@@ -49,7 +49,9 @@ class _JudgingScheduleTimerState extends State<_JudgingScheduleTimer> {
     super.initState();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _difference.value = getTimeDifference();
+      getTimeDifference().then((value) {
+        _difference.value = value;
+      });
     });
   }
 

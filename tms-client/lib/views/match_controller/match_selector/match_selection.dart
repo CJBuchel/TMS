@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/generated/infra/database_schemas/tournament_integrity_message.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
+import 'package:tms/providers/tournament_integrity_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/match_expandable_row.dart';
 import 'package:tms/widgets/buttons/category_button.dart';
@@ -11,11 +13,13 @@ import 'package:tms/widgets/expandable/expandable_tile.dart';
 class _MatchItemData {
   final GameMatch match;
   final List<GameMatch> loadedMatches;
+  final List<TournamentIntegrityMessage> integrityMessages;
   final bool canStage;
 
   _MatchItemData({
     required this.match,
     required this.loadedMatches,
+    required this.integrityMessages,
     required this.canStage,
   });
 }
@@ -34,8 +38,8 @@ class MatchSelection extends StatelessWidget {
       _controllers.add(ExpansionController(isExpanded: false));
     }
 
-    return Selector2<GameMatchProvider, GameMatchStatusProvider, _MatchItemData>(
-      selector: (_, gameMatchProvider, statusProvider) {
+    return Selector3<GameMatchProvider, GameMatchStatusProvider, TournamentIntegrityProvider, _MatchItemData>(
+      selector: (_, gameMatchProvider, statusProvider, integrityProvider) {
         bool canStage = statusProvider.canStageMatch(
           gameMatchProvider.matches[listIndex].matchNumber,
           gameMatchProvider.matches,
@@ -46,6 +50,9 @@ class MatchSelection extends StatelessWidget {
         return _MatchItemData(
           match: gameMatchProvider.matches[listIndex],
           loadedMatches: loadedMatches,
+          integrityMessages: integrityProvider.getMatchMessages(
+            gameMatchProvider.matches[listIndex].matchNumber,
+          ),
           canStage: canStage,
         );
       },
@@ -76,6 +83,7 @@ class MatchSelection extends StatelessWidget {
           child: MatchExpandableRow(
             match: data.match,
             loadedMatches: data.loadedMatches,
+            integrityMessages: data.integrityMessages,
             isMultiMatch: isMultiMatch,
             canStage: data.canStage,
             controller: _controllers[listIndex],

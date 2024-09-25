@@ -16,6 +16,7 @@ class MatchController extends StatelessWidget {
         ":robot_game:matches",
         ":robot_game:categories",
         ":teams",
+        ":tournament:integrity_messages",
       ],
       child: Row(
         children: [

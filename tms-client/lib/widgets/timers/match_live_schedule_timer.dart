@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
@@ -27,7 +28,7 @@ class _MatchLiveScheduleTimerState extends State<_MatchLiveScheduleTimer> {
   Timer? _timer;
   ValueNotifier<int> _difference = ValueNotifier<int>(0);
 
-  int getTimeDifference() {
+  Future<int> getTimeDifference() async {
     // current time
     List<GameMatch> matches = sortMatchesByTime(widget.matches);
 
@@ -48,7 +49,9 @@ class _MatchLiveScheduleTimerState extends State<_MatchLiveScheduleTimer> {
     super.initState();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _difference.value = getTimeDifference();
+      getTimeDifference().then((value) {
+        _difference.value = value;
+      });
     });
   }
 
@@ -87,6 +90,7 @@ class MatchLiveScheduleTimer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Selector<GameMatchProvider, List<GameMatch>>(
       selector: (context, provider) => provider.matches,
+      shouldRebuild: (previous, next) => !listEquals(previous, next),
       builder: (context, matches, child) {
         return RepaintBoundary(
           child: _MatchLiveScheduleTimer(

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/generated/infra/database_schemas/tournament_integrity_message.dart';
 import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/expanded_row_body/expanded_row_body.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/stage_checkbox.dart';
 import 'package:tms/views/match_controller/match_selector/match_row/table_info.dart';
 import 'package:tms/widgets/animated/barber_pole_container.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
+import 'package:tms/widgets/integrity_checks/icon_tooltip_integrity_check.dart';
 
 class _MatchRowData {
   final bool isMatchStaged;
@@ -32,6 +34,7 @@ enum MatchRowState {
 class MatchExpandableRow extends StatelessWidget {
   final GameMatch match;
   final List<GameMatch> loadedMatches;
+  final List<TournamentIntegrityMessage> integrityMessages;
   final bool isMultiMatch;
   final bool canStage;
   final Color? backgroundColor;
@@ -44,6 +47,7 @@ class MatchExpandableRow extends StatelessWidget {
     Key? key,
     required this.match,
     required this.loadedMatches,
+    required this.integrityMessages,
     required this.isMultiMatch,
     required this.canStage,
     this.backgroundColor,
@@ -63,7 +67,9 @@ class MatchExpandableRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(Icons.sports_esports, color: color),
+          integrityMessages.isEmpty
+              ? Icon(Icons.sports_esports, color: color)
+              : IconTooltipIntegrityCheck(messages: integrityMessages),
           const SizedBox(width: 10),
           Column(
             children: [

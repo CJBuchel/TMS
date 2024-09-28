@@ -94,7 +94,7 @@ class OnEditScore {
           modified: true,
           modifiedBy: Provider.of<AuthProvider>(context, listen: false).username,
         );
-        return GameScoringService().updateScoreSheet(
+        return GameScoringService().insertScoreSheet(
           score.scoreSheetId,
           updatedScoreSheet,
         );

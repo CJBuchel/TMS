@@ -46,12 +46,8 @@ class TeamsProvider extends EchoTreeProvider<String, Team> {
     }
   }
 
-  Future<int> updateTeam(String teamId, Team team) async {
-    return await _teamService.updateTeam(teamId, team);
-  }
-
-  Future<int> addTeam(Team team) async {
-    return await _teamService.addTeam(team);
+  Future<int> insertTeam(String teamId, Team team) async {
+    return await _teamService.insertTeam(teamId, team);
   }
 
   Future<int> removeTeam(String teamId) async {

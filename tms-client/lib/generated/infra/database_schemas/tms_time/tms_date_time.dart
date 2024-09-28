@@ -20,6 +20,11 @@ class TmsDateTime {
     this.time,
   });
 
+  TmsDateTime addDuration({required TmsDuration duration}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeAddDuration(
+              that: this, duration: duration);
+
   int compareTo({required TmsDateTime other}) => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeCompareTo(
           that: this, other: other);

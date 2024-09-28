@@ -56,14 +56,10 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
     }).toList();
   }
 
-  Future<int> updateGameMatch(String matchNumber, GameMatch match) async {
-    String? matchId = getIdFromMatchNumber(matchNumber);
-
-    if (matchId != null) {
-      return _service.updateMatch(matchId, match);
-    }
-
-    return HttpStatus.badRequest;
+  Future<int> insertGameMatch(String? matchNumber, GameMatch match) async {
+    // try find match id from match number (if null this will create a new match using insert)
+    String? matchId = matchNumber != null ? getIdFromMatchNumber(matchNumber) : null;
+    return _service.insertMatch(matchId, match);
   }
 
   Future<int> removeGameMatch(String matchNumber) async {
@@ -82,7 +78,7 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
 
     if (match != null && matchId != null) {
       match.gameMatchTables.removeWhere((gameMatchTable) => gameMatchTable.table == table);
-      return _service.updateMatch(matchId, match);
+      return _service.insertMatch(matchId, match);
     }
 
     return HttpStatus.badRequest;
@@ -100,7 +96,7 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
           scoreSubmitted: false,
         ),
       );
-      return _service.updateMatch(matchId, match);
+      return _service.insertMatch(matchId, match);
     }
 
     return HttpStatus.badRequest;
@@ -128,8 +124,8 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
           updatedMatch.gameMatchTables.add(updatedTable);
         }
 
-        int originStatus = await _service.updateMatch(originMatchId, originMatch);
-        int updatedStatus = await _service.updateMatch(updatedMatchId, updatedMatch);
+        int originStatus = await _service.insertMatch(originMatchId, originMatch);
+        int updatedStatus = await _service.insertMatch(updatedMatchId, updatedMatch);
         return originStatus == HttpStatus.ok && updatedStatus == HttpStatus.ok ? HttpStatus.ok : HttpStatus.badRequest;
       }
     } else {
@@ -140,7 +136,7 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
       if (originMatch != null && originMatchId != null) {
         originMatch.gameMatchTables.removeWhere((gameMatchTable) => gameMatchTable.table == originTable);
         originMatch.gameMatchTables.add(updatedTable);
-        return _service.updateMatch(originMatchId, originMatch);
+        return _service.insertMatch(originMatchId, originMatch);
       }
     }
 

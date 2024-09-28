@@ -10,6 +10,8 @@ import 'tms_time/tms_duration.dart';
 // These functions are ignored (category: IgnoreBecauseSelfTypeNotAllowed): `compare_to`, `difference`, `is_after`, `is_before`, `is_same_moment`
 
 abstract class TmsTimeBased {
+  TmsTimeBased addDuration({required TmsDuration duration});
+
   TmsDuration duration();
 
   String toString();

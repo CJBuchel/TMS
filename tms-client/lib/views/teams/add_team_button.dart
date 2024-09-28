@@ -16,7 +16,8 @@ class AddTeamButton extends StatelessWidget {
   void _confirmAddTeam(BuildContext context) {
     ConfirmFutureDialog(
       onStatusConfirmFuture: () {
-        return TeamService().addTeam(
+        return TeamService().insertTeam(
+          null,
           Team(
             teamNumber: _teamNumberController.text,
             name: _teamNameController.text,

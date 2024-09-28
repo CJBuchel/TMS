@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
-import 'package:tms/generated/infra/network_schemas/robot_game_requests.dart';
+import 'package:tms/generated/infra/network_schemas/robot_game_match_requests.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/utils/logger.dart';
 
 class GameMatchService {
   Future<int> loadMatches(List<String> gameMatchNumbers) async {
     try {
-      var request = RobotGamesLoadMatchRequest(gameMatchNumbers: gameMatchNumbers).toJsonString();
+      var request = RobotGameMatchLoadRequest(gameMatchNumbers: gameMatchNumbers).toJsonString();
       var response = await Network().networkPost("/robot_game/matches/load_matches", request);
       if (response.$1) {
         TmsLogger().i("Loaded game matches: $gameMatchNumbers");
@@ -67,9 +67,9 @@ class GameMatchService {
     }
   }
 
-  Future<int> updateMatch(String matchId, GameMatch match) async {
+  Future<int> insertMatch(String? matchId, GameMatch match) async {
     try {
-      var request = RobotGamesUpdateMatchRequest(matchId: matchId, gameMatch: match).toJsonString();
+      var request = RobotGameMatchInsertRequest(matchId: matchId, gameMatch: match).toJsonString();
       var response = await Network().networkPost("/robot_game/matches/update_match", request);
       if (response.$1) {
         TmsLogger().d("Updated game match: $matchId");
@@ -85,7 +85,7 @@ class GameMatchService {
 
   Future<int> removeMatch(String matchId) async {
     try {
-      var request = RobotGamesRemoveMatchRequest(matchId: matchId).toJsonString();
+      var request = RobotGameMatchRemoveRequest(matchId: matchId).toJsonString();
       var response = await Network().networkDelete("/robot_game/matches/remove_match", request);
       if (response.$1) {
         TmsLogger().d("Removed game match: $matchId");

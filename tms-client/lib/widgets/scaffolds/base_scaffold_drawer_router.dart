@@ -124,6 +124,10 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                   ),
                   ...(items ??
                       [
+                        const Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: const Text('Admin Tools', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.dashboard,
                           title: const Text('Dashboard'),
@@ -131,10 +135,28 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           permissions: const Permissions(admin: true),
                         ),
                         const BaseScaffoldDrawerRouterItem(
-                          icon: Icons.settings,
-                          title: const Text('Setup'),
-                          goNamed: 'setup',
+                          icon: Icons.person,
+                          title: const Text('Users'),
+                          goNamed: 'users',
                           permissions: const Permissions(admin: true),
+                        ),
+                        const Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: const Text('Teams', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.people,
+                          title: const Text('Teams'),
+                          goNamed: 'teams',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.table_view,
+                          title: const Text('Team Data'),
+                          goNamed: 'team_data',
+                        ),
+                        const Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: const Text('Robot Games', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.edit_document,
@@ -149,20 +171,18 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           permissions: const Permissions(headReferee: true),
                         ),
                         const BaseScaffoldDrawerRouterItem(
-                          icon: Icons.person,
-                          title: const Text('Users'),
-                          goNamed: 'users',
-                          permissions: const Permissions(admin: true),
-                        ),
-                        const BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_chart,
                           title: const Text('Matches'),
-                          goNamed: 'matches',
+                          goNamed: 'game_matches',
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_restaurant,
                           title: const Text('Tables'),
                           goNamed: 'tables',
+                        ),
+                        const Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: const Text('Judging', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_chart,
@@ -174,20 +194,20 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           title: const Text('Pods'),
                           goNamed: 'pods',
                         ),
-                        const BaseScaffoldDrawerRouterItem(
-                          icon: Icons.people,
-                          title: const Text('Teams'),
-                          goNamed: 'teams',
-                        ),
-                        const BaseScaffoldDrawerRouterItem(
-                          icon: Icons.table_view,
-                          title: const Text('Team Data'),
-                          goNamed: 'team_data',
+                        const Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: const Text('Config', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.backup,
                           title: const Text('Backups'),
                           goNamed: 'backups',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.settings,
+                          title: const Text('Setup'),
+                          goNamed: 'setup',
+                          permissions: const Permissions(admin: true),
                         ),
                       ]),
                 ],

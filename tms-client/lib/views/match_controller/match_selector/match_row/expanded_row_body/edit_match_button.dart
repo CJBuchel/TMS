@@ -99,7 +99,7 @@ class EditMatchButton extends StatelessWidget {
 
         // update the match
 
-        return Provider.of<GameMatchProvider>(context, listen: false).updateGameMatch(
+        return Provider.of<GameMatchProvider>(context, listen: false).insertGameMatch(
           match.matchNumber,
           updatedMatch,
         );

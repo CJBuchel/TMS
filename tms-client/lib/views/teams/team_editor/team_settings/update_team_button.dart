@@ -15,7 +15,7 @@ class UpdateTeamButton extends StatelessWidget {
         message: const Text("Are you sure you want to update this team?"),
       ),
       onStatusConfirmFuture: () {
-        return TeamService().updateTeam(
+        return TeamService().insertTeam(
           teamId,
           updatedTeam,
         );

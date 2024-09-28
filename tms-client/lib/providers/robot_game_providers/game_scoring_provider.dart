@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 import 'package:tms/generated/infra/fll_infra/fll_blueprint_map.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
-import 'package:tms/generated/infra/network_schemas/robot_game_requests.dart';
+import 'package:tms/generated/infra/network_schemas/robot_game_score_sheet_requests.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
 import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:collection/collection.dart';
@@ -150,7 +150,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
       String? gp = _answers.firstWhereOrNull((a) => a.questionId == "gp")?.answer;
 
       // create the score sheet
-      var scoreSheet = RobotGamesScoreSheetRequest(
+      var scoreSheet = RobotGameScoreSheetSubmitRequest(
         blueprintTitle: season,
         table: table,
         teamNumber: teamNumber,
@@ -190,10 +190,10 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   }
 
   // update score sheet
-  Future<int> updateScoreSheet({
+  Future<int> insertScoreSheet({
     required String scoreSheetId,
     required GameScoreSheet updatedScoreSheet,
   }) {
-    return _service.updateScoreSheet(scoreSheetId, updatedScoreSheet);
+    return _service.insertScoreSheet(scoreSheetId, updatedScoreSheet);
   }
 }

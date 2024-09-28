@@ -37,14 +37,18 @@ import 'infra/fll_infra/rule_engine.dart';
 import 'infra/fll_infra/seasons.dart';
 import 'infra/fll_infra/seasons/fll_2023.dart';
 import 'infra/network_schemas/errors.dart';
+import 'infra/network_schemas/judging_pod_requests.dart';
+import 'infra/network_schemas/judging_session_requests.dart';
 import 'infra/network_schemas/login_requests.dart';
 import 'infra/network_schemas/register_requests.dart';
-import 'infra/network_schemas/robot_game_requests.dart';
+import 'infra/network_schemas/robot_game_match_requests.dart';
+import 'infra/network_schemas/robot_game_score_sheet_requests.dart';
+import 'infra/network_schemas/robot_game_table_requests.dart';
 import 'infra/network_schemas/socket_protocol/match_state_event.dart';
 import 'infra/network_schemas/socket_protocol/match_time_event.dart';
 import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'infra/network_schemas/socket_protocol/table_state_event.dart';
-import 'infra/network_schemas/teams_requests.dart';
+import 'infra/network_schemas/team_requests.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -106,7 +110,7 @@ class TmsRustLib
   String get codegenVersion => '2.4.0';
 
   @override
-  int get rustContentHash => -1896364478;
+  int get rustContentHash => 1886698579;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -211,6 +215,9 @@ abstract class TmsRustLibApi extends BaseApi {
 
   String crateInfraDatabaseSchemasTeamTeamToSchema();
 
+  TmsDate crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateAddDuration(
+      {required TmsDate that, required TmsDuration duration});
+
   int crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateCompareTo(
       {required TmsDate that, required TmsDate other});
 
@@ -246,6 +253,9 @@ abstract class TmsRustLibApi extends BaseApi {
 
   String crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateToString(
       {required TmsDate that});
+
+  TmsDateTime crateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeAddDuration(
+      {required TmsDateTime that, required TmsDuration duration});
 
   int crateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeCompareTo(
       {required TmsDateTime that, required TmsDateTime other});
@@ -286,6 +296,9 @@ abstract class TmsRustLibApi extends BaseApi {
   String crateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeToString(
       {required TmsDateTime that});
 
+  Future<TmsDuration> crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationAdd(
+      {required TmsDuration that, required TmsDuration other});
+
   TmsDuration crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationDifference(
       {required TmsDuration that, required TmsDuration other});
 
@@ -314,6 +327,9 @@ abstract class TmsRustLibApi extends BaseApi {
       PlatformInt64? hours,
       PlatformInt64? minutes,
       PlatformInt64? seconds});
+
+  TmsTime crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeAddDuration(
+      {required TmsTime that, required TmsDuration duration});
 
   int crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeCompareTo(
       {required TmsTime that, required TmsTime other});
@@ -564,6 +580,62 @@ abstract class TmsRustLibApi extends BaseApi {
 
   String crateInfraNetworkSchemasErrorsErrorMessageToSchema();
 
+  Future<JudgingPodInsertRequest>
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestDefault();
+
+  JudgingPodInsertRequest
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToJsonString(
+          {required JudgingPodInsertRequest that});
+
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToSchema();
+
+  Future<JudgingPodRemoveRequest>
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestDefault();
+
+  JudgingPodRemoveRequest
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToJsonString(
+          {required JudgingPodRemoveRequest that});
+
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToSchema();
+
+  Future<JudgingSessionInsertRequest>
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestDefault();
+
+  JudgingSessionInsertRequest
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToJsonString(
+          {required JudgingSessionInsertRequest that});
+
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToSchema();
+
+  Future<JudgingSessionRemoveRequest>
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestDefault();
+
+  JudgingSessionRemoveRequest
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToJsonString(
+          {required JudgingSessionRemoveRequest that});
+
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToSchema();
+
   Future<LoginRequest>
       crateInfraNetworkSchemasLoginRequestsLoginRequestDefault();
 
@@ -611,103 +683,131 @@ abstract class TmsRustLibApi extends BaseApi {
 
   String crateInfraNetworkSchemasRegisterRequestsRegisterResponseToSchema();
 
-  Future<RobotGamesLoadMatchRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestDefault();
+  Future<RobotGameMatchInsertRequest>
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestDefault();
 
-  RobotGamesLoadMatchRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonString(
+  RobotGameMatchInsertRequest
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonString(
-          {required RobotGamesLoadMatchRequest that});
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToJsonString(
+          {required RobotGameMatchInsertRequest that});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema();
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToSchema();
 
-  Future<RobotGamesRemoveMatchRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestDefault();
+  Future<RobotGameMatchLoadRequest>
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestDefault();
 
-  RobotGamesRemoveMatchRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestFromJsonString(
+  RobotGameMatchLoadRequest
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToJsonString(
-          {required RobotGamesRemoveMatchRequest that});
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToJsonString(
+          {required RobotGameMatchLoadRequest that});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToSchema();
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToSchema();
 
-  Future<RobotGamesRemoveScoreSheetRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestDefault();
+  Future<RobotGameMatchRemoveRequest>
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestDefault();
 
-  RobotGamesRemoveScoreSheetRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestFromJsonString(
+  RobotGameMatchRemoveRequest
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToJsonString(
-          {required RobotGamesRemoveScoreSheetRequest that});
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToJsonString(
+          {required RobotGameMatchRemoveRequest that});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToSchema();
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToSchema();
 
-  Future<RobotGamesScoreSheetRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestDefault();
+  Future<RobotGameScoreSheetInsertRequest>
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestDefault();
 
-  RobotGamesScoreSheetRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestFromJsonString(
+  RobotGameScoreSheetInsertRequest
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToJsonString(
-          {required RobotGamesScoreSheetRequest that});
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToJsonString(
+          {required RobotGameScoreSheetInsertRequest that});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToSchema();
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToSchema();
 
-  Future<RobotGamesTableSignalRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestDefault();
+  Future<RobotGameScoreSheetRemoveRequest>
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestDefault();
 
-  RobotGamesTableSignalRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestFromJsonString(
+  RobotGameScoreSheetRemoveRequest
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToJsonString(
-          {required RobotGamesTableSignalRequest that});
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToJsonString(
+          {required RobotGameScoreSheetRemoveRequest that});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToSchema();
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToSchema();
 
-  Future<RobotGamesUpdateMatchRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestDefault();
+  Future<RobotGameScoreSheetSubmitRequest>
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestDefault();
 
-  RobotGamesUpdateMatchRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestFromJsonString(
+  RobotGameScoreSheetSubmitRequest
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToJsonString(
-          {required RobotGamesUpdateMatchRequest that});
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToJsonString(
+          {required RobotGameScoreSheetSubmitRequest that});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToSchema();
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToSchema();
 
-  Future<RobotGamesUpdateScoreSheetRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestDefault();
+  Future<RobotGameTableInsertRequest>
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestDefault();
 
-  RobotGamesUpdateScoreSheetRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestFromJsonString(
+  RobotGameTableInsertRequest
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestFromJsonString(
           {required String json});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToJsonString(
-          {required RobotGamesUpdateScoreSheetRequest that});
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToJsonString(
+          {required RobotGameTableInsertRequest that});
 
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToSchema();
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToSchema();
+
+  Future<RobotGameTableRemoveRequest>
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestDefault();
+
+  RobotGameTableRemoveRequest
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToJsonString(
+          {required RobotGameTableRemoveRequest that});
+
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToSchema();
+
+  Future<RobotGameTableSignalRequest>
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestDefault();
+
+  RobotGameTableSignalRequest
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestFromJsonString(
+          {required String json});
+
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToJsonString(
+          {required RobotGameTableSignalRequest that});
+
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToSchema();
 
   Future<TmsServerMatchStateEvent>
       crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventDefault();
@@ -765,43 +865,29 @@ abstract class TmsRustLibApi extends BaseApi {
   String
       crateInfraNetworkSchemasSocketProtocolTableStateEventTmsServerTableStateEventToSchema();
 
-  Future<TeamsAddTeamRequest>
-      crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestDefault();
+  Future<TeamInsertRequest>
+      crateInfraNetworkSchemasTeamRequestsTeamInsertRequestDefault();
 
-  TeamsAddTeamRequest
-      crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestFromJsonString(
+  TeamInsertRequest
+      crateInfraNetworkSchemasTeamRequestsTeamInsertRequestFromJsonString(
           {required String json});
 
-  String crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToJsonString(
-      {required TeamsAddTeamRequest that});
+  String crateInfraNetworkSchemasTeamRequestsTeamInsertRequestToJsonString(
+      {required TeamInsertRequest that});
 
-  String crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToSchema();
+  String crateInfraNetworkSchemasTeamRequestsTeamInsertRequestToSchema();
 
-  Future<TeamsRemoveTeamRequest>
-      crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestDefault();
+  Future<TeamRemoveRequest>
+      crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestDefault();
 
-  TeamsRemoveTeamRequest
-      crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestFromJsonString(
+  TeamRemoveRequest
+      crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestFromJsonString(
           {required String json});
 
-  String
-      crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToJsonString(
-          {required TeamsRemoveTeamRequest that});
+  String crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToJsonString(
+      {required TeamRemoveRequest that});
 
-  String crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToSchema();
-
-  Future<TeamsUpdateTeamRequest>
-      crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestDefault();
-
-  TeamsUpdateTeamRequest
-      crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestFromJsonString(
-          {required String json});
-
-  String
-      crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToJsonString(
-          {required TeamsUpdateTeamRequest that});
-
-  String crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToSchema();
+  String crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToSchema();
 
   Future<TournamentConfigSetAdminPasswordRequest>
       crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestDefault();
@@ -1859,6 +1945,34 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       );
 
   @override
+  TmsDate crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateAddDuration(
+      {required TmsDate that, required TmsDuration duration}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_date(that, serializer);
+        sse_encode_box_autoadd_tms_duration(duration, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_date,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasTmsTimeTmsDateTmsDateAddDurationConstMeta,
+      argValues: [that, duration],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasTmsTimeTmsDateTmsDateAddDurationConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_date_add_duration",
+            argNames: ["that", "duration"],
+          );
+
+  @override
   int crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateCompareTo(
       {required TmsDate that, required TmsDate other}) {
     return handler.executeSync(SyncTask(
@@ -1866,7 +1980,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
         sse_encode_box_autoadd_tms_date(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_32,
@@ -1892,7 +2006,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 45, port: port_);
+            funcId: 47, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date,
@@ -1920,7 +2034,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
         sse_encode_box_autoadd_tms_date(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -1947,7 +2061,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -1974,7 +2088,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date,
@@ -2002,7 +2116,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
         sse_encode_box_autoadd_tms_date(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2030,7 +2144,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
         sse_encode_box_autoadd_tms_date(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2058,7 +2172,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
         sse_encode_box_autoadd_tms_date(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2087,7 +2201,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_i_32(year, serializer);
         sse_encode_u_32(month, serializer);
         sse_encode_u_32(day, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date,
@@ -2112,7 +2226,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 53, port: port_);
+            funcId: 55, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date,
@@ -2138,7 +2252,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2163,7 +2277,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2190,7 +2304,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2211,6 +2325,34 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
+  TmsDateTime crateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeAddDuration(
+      {required TmsDateTime that, required TmsDuration duration}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_date_time(that, serializer);
+        sse_encode_box_autoadd_tms_duration(duration, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_date_time,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeAddDurationConstMeta,
+      argValues: [that, duration],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeAddDurationConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_date_time_add_duration",
+            argNames: ["that", "duration"],
+          );
+
+  @override
   int crateInfraDatabaseSchemasTmsTimeTmsDateTimeTmsDateTimeCompareTo(
       {required TmsDateTime that, required TmsDateTime other}) {
     return handler.executeSync(SyncTask(
@@ -2218,7 +2360,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
         sse_encode_box_autoadd_tms_date_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_32,
@@ -2245,7 +2387,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 58, port: port_);
+            funcId: 61, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date_time,
@@ -2273,7 +2415,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
         sse_encode_box_autoadd_tms_date_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -2300,7 +2442,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -2328,7 +2470,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date_time,
@@ -2356,7 +2498,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
         sse_encode_box_autoadd_tms_date_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2384,7 +2526,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
         sse_encode_box_autoadd_tms_date_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2412,7 +2554,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
         sse_encode_box_autoadd_tms_date_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2440,7 +2582,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_opt_box_autoadd_tms_date(date, serializer);
         sse_encode_opt_box_autoadd_tms_time(time, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date_time,
@@ -2467,7 +2609,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 66, port: port_);
+            funcId: 69, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_date_time,
@@ -2494,7 +2636,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 70)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2519,7 +2661,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2546,7 +2688,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_date_time(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -2567,6 +2709,35 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
+  Future<TmsDuration> crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationAdd(
+      {required TmsDuration that, required TmsDuration other}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_duration(that, serializer);
+        sse_encode_box_autoadd_tms_duration(other, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 73, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_duration,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationAddConstMeta,
+      argValues: [that, other],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationAddConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_duration_add",
+            argNames: ["that", "other"],
+          );
+
+  @override
   TmsDuration crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationDifference(
       {required TmsDuration that, required TmsDuration other}) {
     return handler.executeSync(SyncTask(
@@ -2574,7 +2745,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_duration(that, serializer);
         sse_encode_box_autoadd_tms_duration(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 70)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -2601,7 +2772,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_duration(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_64,
@@ -2628,7 +2799,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_duration(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_64,
@@ -2655,7 +2826,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_duration(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 77)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_64,
@@ -2682,7 +2853,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_duration(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 78)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_64,
@@ -2709,7 +2880,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_duration(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 79)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_64,
@@ -2736,7 +2907,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_duration(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 80)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_64,
@@ -2773,7 +2944,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_opt_box_autoadd_i_64(hours, serializer);
         sse_encode_opt_box_autoadd_i_64(minutes, serializer);
         sse_encode_opt_box_autoadd_i_64(seconds, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 77)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 81)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -2801,6 +2972,34 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
+  TmsTime crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeAddDuration(
+      {required TmsTime that, required TmsDuration duration}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_tms_time(that, serializer);
+        sse_encode_box_autoadd_tms_duration(duration, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 82)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_tms_time,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeAddDurationConstMeta,
+      argValues: [that, duration],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeAddDurationConstMeta =>
+          const TaskConstMeta(
+            debugName: "tms_time_add_duration",
+            argNames: ["that", "duration"],
+          );
+
+  @override
   int crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeCompareTo(
       {required TmsTime that, required TmsTime other}) {
     return handler.executeSync(SyncTask(
@@ -2808,7 +3007,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
         sse_encode_box_autoadd_tms_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 78)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 83)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_32,
@@ -2834,7 +3033,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 79, port: port_);
+            funcId: 84, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_time,
@@ -2862,7 +3061,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
         sse_encode_box_autoadd_tms_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 80)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 85)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -2889,7 +3088,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 81)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 86)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_duration,
@@ -2916,7 +3115,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 82)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 87)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_time,
@@ -2944,7 +3143,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
         sse_encode_box_autoadd_tms_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 83)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 88)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -2972,7 +3171,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
         sse_encode_box_autoadd_tms_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 84)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 89)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -3000,7 +3199,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
         sse_encode_box_autoadd_tms_time(other, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 85)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 90)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -3029,7 +3228,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_u_32(hour, serializer);
         sse_encode_u_32(minute, serializer);
         sse_encode_u_32(second, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 86)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 91)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_time,
@@ -3054,7 +3253,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 87, port: port_);
+            funcId: 92, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_time,
@@ -3080,7 +3279,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 88)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 93)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3105,7 +3304,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 89)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 94)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3132,7 +3331,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_time(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 90)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 95)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3159,7 +3358,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 91, port: port_);
+            funcId: 96, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_blueprint,
@@ -3187,7 +3386,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 92)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 97)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_blueprint,
@@ -3215,7 +3414,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_blueprint(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 93)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 98)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3241,7 +3440,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 94)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 99)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3268,7 +3467,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 97, port: port_);
+            funcId: 102, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config,
@@ -3296,7 +3495,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 98)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 103)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config,
@@ -3323,7 +3522,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 99)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 104)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3348,7 +3547,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 100)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 105)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3375,7 +3574,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 101, port: port_);
+            funcId: 106, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_error_code,
@@ -3403,7 +3602,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 102)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 107)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_error_code,
@@ -3432,7 +3631,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_tournament_error_code(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 103, port: port_);
+            funcId: 108, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3461,7 +3660,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_tournament_error_code(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 104, port: port_);
+            funcId: 109, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3489,7 +3688,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_tournament_error_code(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 105)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 110)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3515,7 +3714,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 106)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 111)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3542,7 +3741,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 107, port: port_);
+            funcId: 112, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_integrity_code,
@@ -3570,7 +3769,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 108)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 113)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_integrity_code,
@@ -3599,7 +3798,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_integrity_code(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 109, port: port_);
+            funcId: 114, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3628,7 +3827,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_integrity_code(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 110, port: port_);
+            funcId: 115, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3656,7 +3855,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_integrity_code(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 111)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 116)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3682,7 +3881,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 112)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 117)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3709,7 +3908,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 113, port: port_);
+            funcId: 118, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_integrity_message,
@@ -3737,7 +3936,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 114)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 119)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_integrity_message,
@@ -3773,7 +3972,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_opt_String(matchNumber, serializer);
         sse_encode_opt_String(sessionNumber, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 115, port: port_);
+            funcId: 120, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_integrity_message,
@@ -3806,7 +4005,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_integrity_message(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 116)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 121)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3832,7 +4031,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 117)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 122)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3859,7 +4058,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 118, port: port_);
+            funcId: 123, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_warning_code,
@@ -3887,7 +4086,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 119)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 124)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_warning_code,
@@ -3916,7 +4115,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_tournament_warning_code(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 120, port: port_);
+            funcId: 125, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3945,7 +4144,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_tournament_warning_code(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 121, port: port_);
+            funcId: 126, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3973,7 +4172,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_tournament_warning_code(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 122)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 127)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -3999,7 +4198,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 123)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 128)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4025,7 +4224,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 124, port: port_);
+            funcId: 129, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_user,
@@ -4049,7 +4248,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 125)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 130)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_user,
@@ -4073,7 +4272,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_user(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 126)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 131)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4096,7 +4295,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 127)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 132)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4121,7 +4320,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 128, port: port_);
+            funcId: 133, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_categorical_question,
@@ -4149,7 +4348,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 129)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 134)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_categorical_question,
@@ -4176,7 +4375,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_categorical_question(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 130)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 135)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4201,7 +4400,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 131)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 136)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4227,7 +4426,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 132, port: port_);
+            funcId: 137, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_fll_blueprint,
@@ -4253,7 +4452,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 133)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 138)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_fll_blueprint,
@@ -4280,7 +4479,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_fll_blueprint(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 134)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 139)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4305,7 +4504,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 135)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 140)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4334,7 +4533,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_box_autoadd_fll_blueprint(blueprint, serializer);
         sse_encode_list_question_answer(answers, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 136, port: port_);
+            funcId: 141, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_32,
@@ -4364,7 +4563,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_String(season, serializer);
         sse_encode_list_question_answer(answers, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 137, port: port_);
+            funcId: 142, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_list_question_validation_error,
@@ -4390,7 +4589,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 138, port: port_);
+            funcId: 143, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_mission,
@@ -4415,7 +4614,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 139)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 144)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_mission,
@@ -4439,7 +4638,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_mission(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 140)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 145)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4462,7 +4661,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 141)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 146)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4486,7 +4685,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 142, port: port_);
+            funcId: 147, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_question_answer,
@@ -4511,7 +4710,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 143)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 148)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_question_answer,
@@ -4538,7 +4737,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_question_answer(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 144)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 149)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4562,7 +4761,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 145)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 150)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4587,7 +4786,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 146, port: port_);
+            funcId: 151, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_question,
@@ -4612,7 +4811,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 147)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 152)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_question,
@@ -4640,7 +4839,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_box_autoadd_question(that, serializer);
         sse_encode_Map_String_question_answer(answers, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 148, port: port_);
+            funcId: 153, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_i_32,
@@ -4665,7 +4864,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_question(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 149)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 154)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4688,7 +4887,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 150)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 155)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4716,7 +4915,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_box_autoadd_question_rule(that, serializer);
         sse_encode_Map_String_question_answer(answers, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 151, port: port_);
+            funcId: 156, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_opt_box_autoadd_i_32,
@@ -4744,7 +4943,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_box_autoadd_question_rule(that, serializer);
         sse_encode_Map_String_question_answer(answers, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 152, port: port_);
+            funcId: 157, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_bool,
@@ -4772,7 +4971,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_String(condition, serializer);
         sse_encode_i_32(output, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 153, port: port_);
+            funcId: 158, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_question_rule,
@@ -4798,7 +4997,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_master_piece(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 157, port: port_);
+            funcId: 162, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_fll_blueprint,
@@ -4826,7 +5025,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_master_piece(that, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 158, port: port_);
+            funcId: 163, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4856,7 +5055,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         sse_encode_box_autoadd_master_piece(that, serializer);
         sse_encode_Map_String_question_answer(answers, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 159, port: port_);
+            funcId: 164, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_list_question_validation_error,
@@ -4881,7 +5080,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 160, port: port_);
+            funcId: 165, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_error_message,
@@ -4907,7 +5106,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 161)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 166)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_error_message,
@@ -4934,7 +5133,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_error_message(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 162)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 167)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4959,7 +5158,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 163)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 168)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -4979,13 +5178,449 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
+  Future<JudgingPodInsertRequest>
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 169, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_pod_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_insert_request_default",
+            argNames: [],
+          );
+
+  @override
+  JudgingPodInsertRequest
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 170)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_pod_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_insert_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToJsonString(
+          {required JudgingPodInsertRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_judging_pod_insert_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 171)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_insert_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 172)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_insert_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<JudgingPodRemoveRequest>
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 173, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_pod_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_remove_request_default",
+            argNames: [],
+          );
+
+  @override
+  JudgingPodRemoveRequest
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 174)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_pod_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_remove_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToJsonString(
+          {required JudgingPodRemoveRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_judging_pod_remove_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 175)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_remove_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 176)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_pod_remove_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<JudgingSessionInsertRequest>
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 177, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_session_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_insert_request_default",
+            argNames: [],
+          );
+
+  @override
+  JudgingSessionInsertRequest
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 178)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_session_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_insert_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToJsonString(
+          {required JudgingSessionInsertRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_judging_session_insert_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 179)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_insert_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 180)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_insert_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<JudgingSessionRemoveRequest>
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 181, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_session_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_remove_request_default",
+            argNames: [],
+          );
+
+  @override
+  JudgingSessionRemoveRequest
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 182)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_judging_session_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_remove_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToJsonString(
+          {required JudgingSessionRemoveRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_judging_session_remove_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 183)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_remove_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 184)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "judging_session_remove_request_to_schema",
+            argNames: [],
+          );
+
+  @override
   Future<LoginRequest>
       crateInfraNetworkSchemasLoginRequestsLoginRequestDefault() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 164, port: port_);
+            funcId: 185, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_login_request,
@@ -5012,7 +5647,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 165)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 186)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_login_request,
@@ -5039,7 +5674,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_login_request(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 166)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 187)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5064,7 +5699,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 167)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 188)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5091,7 +5726,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 168, port: port_);
+            funcId: 189, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_login_response,
@@ -5119,7 +5754,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 169)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 190)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_login_response,
@@ -5146,7 +5781,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_login_response(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 170)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 191)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5171,7 +5806,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 171)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 192)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5198,7 +5833,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 172, port: port_);
+            funcId: 193, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_register_request,
@@ -5226,7 +5861,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 173)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 194)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_register_request,
@@ -5253,7 +5888,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_register_request(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 174)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 195)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5278,7 +5913,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 175)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 196)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5305,7 +5940,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 176, port: port_);
+            funcId: 197, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_register_response,
@@ -5333,7 +5968,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 177)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 198)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_register_response,
@@ -5360,7 +5995,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_register_response(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 178)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 199)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5385,7 +6020,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 179)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 200)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -5406,645 +6041,69 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  Future<RobotGamesLoadMatchRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestDefault() {
+  Future<RobotGameMatchInsertRequest>
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestDefault() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 180, port: port_);
+            funcId: 201, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_load_match_request,
+        decodeSuccessData: sse_decode_robot_game_match_insert_request,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestDefaultConstMeta,
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestDefaultConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestDefaultConstMeta =>
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestDefaultConstMeta =>
           const TaskConstMeta(
-            debugName: "robot_games_load_match_request_default",
+            debugName: "robot_game_match_insert_request_default",
             argNames: [],
           );
 
   @override
-  RobotGamesLoadMatchRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonString(
+  RobotGameMatchInsertRequest
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestFromJsonString(
           {required String json}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 181)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_load_match_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_load_match_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonString(
-          {required RobotGamesLoadMatchRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_robot_games_load_match_request(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 182)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonStringConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_load_match_request_to_json_string",
-            argNames: ["that"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchema() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 183)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchemaConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesLoadMatchRequestToSchemaConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_load_match_request_to_schema",
-            argNames: [],
-          );
-
-  @override
-  Future<RobotGamesRemoveMatchRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 184, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_remove_match_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestDefaultConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestDefaultConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_remove_match_request_default",
-            argNames: [],
-          );
-
-  @override
-  RobotGamesRemoveMatchRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestFromJsonString(
-          {required String json}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 185)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_remove_match_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_remove_match_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToJsonString(
-          {required RobotGamesRemoveMatchRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_robot_games_remove_match_request(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 186)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToJsonStringConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_remove_match_request_to_json_string",
-            argNames: ["that"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToSchema() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 187)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToSchemaConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveMatchRequestToSchemaConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_remove_match_request_to_schema",
-            argNames: [],
-          );
-
-  @override
-  Future<RobotGamesRemoveScoreSheetRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 188, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_remove_score_sheet_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestDefaultConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestDefaultConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_remove_score_sheet_request_default",
-            argNames: [],
-          );
-
-  @override
-  RobotGamesRemoveScoreSheetRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestFromJsonString(
-          {required String json}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 189)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_remove_score_sheet_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName:
-                "robot_games_remove_score_sheet_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToJsonString(
-          {required RobotGamesRemoveScoreSheetRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_robot_games_remove_score_sheet_request(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 190)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToJsonStringConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_remove_score_sheet_request_to_json_string",
-            argNames: ["that"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToSchema() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 191)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToSchemaConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesRemoveScoreSheetRequestToSchemaConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_remove_score_sheet_request_to_schema",
-            argNames: [],
-          );
-
-  @override
-  Future<RobotGamesScoreSheetRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 192, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_score_sheet_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestDefaultConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestDefaultConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_score_sheet_request_default",
-            argNames: [],
-          );
-
-  @override
-  RobotGamesScoreSheetRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestFromJsonString(
-          {required String json}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 193)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_score_sheet_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_score_sheet_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToJsonString(
-          {required RobotGamesScoreSheetRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_robot_games_score_sheet_request(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 194)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToJsonStringConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_score_sheet_request_to_json_string",
-            argNames: ["that"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToSchema() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 195)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToSchemaConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesScoreSheetRequestToSchemaConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_score_sheet_request_to_schema",
-            argNames: [],
-          );
-
-  @override
-  Future<RobotGamesTableSignalRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 196, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_table_signal_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestDefaultConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestDefaultConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_table_signal_request_default",
-            argNames: [],
-          );
-
-  @override
-  RobotGamesTableSignalRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestFromJsonString(
-          {required String json}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 197)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_table_signal_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_table_signal_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToJsonString(
-          {required RobotGamesTableSignalRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_robot_games_table_signal_request(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 198)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToJsonStringConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_table_signal_request_to_json_string",
-            argNames: ["that"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToSchema() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 199)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToSchemaConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesTableSignalRequestToSchemaConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_table_signal_request_to_schema",
-            argNames: [],
-          );
-
-  @override
-  Future<RobotGamesUpdateMatchRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 200, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_update_match_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestDefaultConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestDefaultConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_update_match_request_default",
-            argNames: [],
-          );
-
-  @override
-  RobotGamesUpdateMatchRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestFromJsonString(
-          {required String json}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 201)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_update_match_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_update_match_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToJsonString(
-          {required RobotGamesUpdateMatchRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_robot_games_update_match_request(
-            that, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 202)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
+        decodeSuccessData: sse_decode_robot_game_match_insert_request,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToJsonStringConstMeta,
-      argValues: [that],
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestFromJsonStringConstMeta,
+      argValues: [json],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestFromJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "robot_games_update_match_request_to_json_string",
-            argNames: ["that"],
+            debugName: "robot_game_match_insert_request_from_json_string",
+            argNames: ["json"],
           );
 
   @override
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToSchema() {
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToJsonString(
+          {required RobotGameMatchInsertRequest that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_match_insert_request(
+            that, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 203)!;
       },
       codec: SseCodec(
@@ -6052,110 +6111,108 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToSchemaConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateMatchRequestToSchemaConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_update_match_request_to_schema",
-            argNames: [],
-          );
-
-  @override
-  Future<RobotGamesUpdateScoreSheetRequest>
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 204, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_update_score_sheet_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestDefaultConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestDefaultConstMeta =>
-          const TaskConstMeta(
-            debugName: "robot_games_update_score_sheet_request_default",
-            argNames: [],
-          );
-
-  @override
-  RobotGamesUpdateScoreSheetRequest
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestFromJsonString(
-          {required String json}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 205)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_robot_games_update_score_sheet_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName:
-                "robot_games_update_score_sheet_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToJsonString(
-          {required RobotGamesUpdateScoreSheetRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_robot_games_update_score_sheet_request(
-            that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 206)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToJsonStringConstMeta,
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToJsonStringConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "robot_games_update_score_sheet_request_to_json_string",
+            debugName: "robot_game_match_insert_request_to_json_string",
             argNames: ["that"],
           );
 
   @override
   String
-      crateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToSchema() {
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToSchema() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 204)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchInsertRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_insert_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameMatchLoadRequest>
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 205, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_match_load_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_load_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameMatchLoadRequest
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 206)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_match_load_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_load_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToJsonString(
+          {required RobotGameMatchLoadRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_match_load_request(that, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 207)!;
       },
       codec: SseCodec(
@@ -6163,16 +6220,812 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToSchemaConstMeta,
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_load_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 208)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToSchemaConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasRobotGameRequestsRobotGamesUpdateScoreSheetRequestToSchemaConstMeta =>
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchLoadRequestToSchemaConstMeta =>
           const TaskConstMeta(
-            debugName: "robot_games_update_score_sheet_request_to_schema",
+            debugName: "robot_game_match_load_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameMatchRemoveRequest>
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 209, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_match_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_remove_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameMatchRemoveRequest
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 210)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_match_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_remove_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToJsonString(
+          {required RobotGameMatchRemoveRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_match_remove_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 211)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_remove_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 212)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameMatchRequestsRobotGameMatchRemoveRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_match_remove_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameScoreSheetInsertRequest>
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 213, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_score_sheet_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_insert_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameScoreSheetInsertRequest
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 214)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_score_sheet_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_insert_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToJsonString(
+          {required RobotGameScoreSheetInsertRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_score_sheet_insert_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 215)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_insert_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 216)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_insert_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameScoreSheetRemoveRequest>
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 217, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_score_sheet_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_remove_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameScoreSheetRemoveRequest
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 218)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_score_sheet_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_remove_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToJsonString(
+          {required RobotGameScoreSheetRemoveRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_score_sheet_remove_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 219)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_remove_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 220)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_remove_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameScoreSheetSubmitRequest>
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 221, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_score_sheet_submit_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_submit_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameScoreSheetSubmitRequest
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 222)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_score_sheet_submit_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_submit_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToJsonString(
+          {required RobotGameScoreSheetSubmitRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_score_sheet_submit_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 223)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_submit_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 224)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_score_sheet_submit_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameTableInsertRequest>
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 225, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_table_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_insert_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameTableInsertRequest
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 226)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_table_insert_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_insert_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToJsonString(
+          {required RobotGameTableInsertRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_table_insert_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 227)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_insert_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 228)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_insert_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameTableRemoveRequest>
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 229, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_table_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_remove_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameTableRemoveRequest
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 230)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_table_remove_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_remove_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToJsonString(
+          {required RobotGameTableRemoveRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_table_remove_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 231)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_remove_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 232)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_remove_request_to_schema",
+            argNames: [],
+          );
+
+  @override
+  Future<RobotGameTableSignalRequest>
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestDefault() {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 233, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_table_signal_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestDefaultConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestDefaultConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_signal_request_default",
+            argNames: [],
+          );
+
+  @override
+  RobotGameTableSignalRequest
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestFromJsonString(
+          {required String json}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_String(json, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 234)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_robot_game_table_signal_request,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestFromJsonStringConstMeta,
+      argValues: [json],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestFromJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_signal_request_from_json_string",
+            argNames: ["json"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToJsonString(
+          {required RobotGameTableSignalRequest that}) {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_box_autoadd_robot_game_table_signal_request(
+            that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 235)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToJsonStringConstMeta,
+      argValues: [that],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToJsonStringConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_signal_request_to_json_string",
+            argNames: ["that"],
+          );
+
+  @override
+  String
+      crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToSchema() {
+    return handler.executeSync(SyncTask(
+      callFfi: () {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 236)!;
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_String,
+        decodeErrorData: null,
+      ),
+      constMeta:
+          kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToSchemaConstMeta,
+      argValues: [],
+      apiImpl: this,
+    ));
+  }
+
+  TaskConstMeta
+      get kCrateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestToSchemaConstMeta =>
+          const TaskConstMeta(
+            debugName: "robot_game_table_signal_request_to_schema",
             argNames: [],
           );
 
@@ -6183,7 +7036,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 208, port: port_);
+            funcId: 237, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_match_state_event,
@@ -6211,7 +7064,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 209)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 238)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_match_state_event,
@@ -6239,7 +7092,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_server_match_state_event(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 210)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 239)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6265,7 +7118,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 211)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 240)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6292,7 +7145,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 212, port: port_);
+            funcId: 241, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_match_timer_event,
@@ -6320,7 +7173,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 213)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 242)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_match_timer_event,
@@ -6348,7 +7201,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_server_match_timer_event(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 214)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 243)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6374,7 +7227,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 215)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 244)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6401,7 +7254,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 216, port: port_);
+            funcId: 245, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_socket_message,
@@ -6429,7 +7282,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 217)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 246)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_socket_message,
@@ -6457,7 +7310,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_server_socket_message(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 218)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 247)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6483,7 +7336,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 219)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 248)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6510,7 +7363,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 220, port: port_);
+            funcId: 249, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_table_state_event,
@@ -6538,7 +7391,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 221)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 250)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tms_server_table_state_event,
@@ -6566,7 +7419,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tms_server_table_state_event(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 222)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 251)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6592,7 +7445,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 223)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 252)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -6613,325 +7466,216 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  Future<TeamsAddTeamRequest>
-      crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestDefault() {
+  Future<TeamInsertRequest>
+      crateInfraNetworkSchemasTeamRequestsTeamInsertRequestDefault() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 224, port: port_);
+            funcId: 253, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_teams_add_team_request,
+        decodeSuccessData: sse_decode_team_insert_request,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestDefaultConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestDefaultConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestDefaultConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestDefaultConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_add_team_request_default",
+            debugName: "team_insert_request_default",
             argNames: [],
           );
 
   @override
-  TeamsAddTeamRequest
-      crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestFromJsonString(
+  TeamInsertRequest
+      crateInfraNetworkSchemasTeamRequestsTeamInsertRequestFromJsonString(
           {required String json}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 225)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 254)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_teams_add_team_request,
+        decodeSuccessData: sse_decode_team_insert_request,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestFromJsonStringConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestFromJsonStringConstMeta,
       argValues: [json],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestFromJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestFromJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_add_team_request_from_json_string",
+            debugName: "team_insert_request_from_json_string",
             argNames: ["json"],
           );
 
   @override
-  String crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToJsonString(
-      {required TeamsAddTeamRequest that}) {
+  String crateInfraNetworkSchemasTeamRequestsTeamInsertRequestToJsonString(
+      {required TeamInsertRequest that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_teams_add_team_request(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 226)!;
+        sse_encode_box_autoadd_team_insert_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 255)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToJsonStringConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestToJsonStringConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestToJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_add_team_request_to_json_string",
+            debugName: "team_insert_request_to_json_string",
             argNames: ["that"],
           );
 
   @override
-  String crateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToSchema() {
+  String crateInfraNetworkSchemasTeamRequestsTeamInsertRequestToSchema() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 227)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 256)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToSchemaConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestToSchemaConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsAddTeamRequestToSchemaConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamInsertRequestToSchemaConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_add_team_request_to_schema",
+            debugName: "team_insert_request_to_schema",
             argNames: [],
           );
 
   @override
-  Future<TeamsRemoveTeamRequest>
-      crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestDefault() {
+  Future<TeamRemoveRequest>
+      crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestDefault() {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 228, port: port_);
+            funcId: 257, port: port_);
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_teams_remove_team_request,
+        decodeSuccessData: sse_decode_team_remove_request,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestDefaultConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestDefaultConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestDefaultConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestDefaultConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_remove_team_request_default",
+            debugName: "team_remove_request_default",
             argNames: [],
           );
 
   @override
-  TeamsRemoveTeamRequest
-      crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestFromJsonString(
+  TeamRemoveRequest
+      crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestFromJsonString(
           {required String json}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 229)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 258)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_teams_remove_team_request,
+        decodeSuccessData: sse_decode_team_remove_request,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestFromJsonStringConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestFromJsonStringConstMeta,
       argValues: [json],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestFromJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestFromJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_remove_team_request_from_json_string",
+            debugName: "team_remove_request_from_json_string",
             argNames: ["json"],
           );
 
   @override
-  String
-      crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToJsonString(
-          {required TeamsRemoveTeamRequest that}) {
+  String crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToJsonString(
+      {required TeamRemoveRequest that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_teams_remove_team_request(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 230)!;
+        sse_encode_box_autoadd_team_remove_request(that, serializer);
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 259)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToJsonStringConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToJsonStringConstMeta,
       argValues: [that],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToJsonStringConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToJsonStringConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_remove_team_request_to_json_string",
+            debugName: "team_remove_request_to_json_string",
             argNames: ["that"],
           );
 
   @override
-  String crateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToSchema() {
+  String crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToSchema() {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 231)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 260)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
         decodeErrorData: null,
       ),
       constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToSchemaConstMeta,
+          kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToSchemaConstMeta,
       argValues: [],
       apiImpl: this,
     ));
   }
 
   TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsRemoveTeamRequestToSchemaConstMeta =>
+      get kCrateInfraNetworkSchemasTeamRequestsTeamRemoveRequestToSchemaConstMeta =>
           const TaskConstMeta(
-            debugName: "teams_remove_team_request_to_schema",
-            argNames: [],
-          );
-
-  @override
-  Future<TeamsUpdateTeamRequest>
-      crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestDefault() {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 232, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_teams_update_team_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestDefaultConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestDefaultConstMeta =>
-          const TaskConstMeta(
-            debugName: "teams_update_team_request_default",
-            argNames: [],
-          );
-
-  @override
-  TeamsUpdateTeamRequest
-      crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestFromJsonString(
-          {required String json}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 233)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_teams_update_team_request,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestFromJsonStringConstMeta,
-      argValues: [json],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestFromJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "teams_update_team_request_from_json_string",
-            argNames: ["json"],
-          );
-
-  @override
-  String
-      crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToJsonString(
-          {required TeamsUpdateTeamRequest that}) {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_box_autoadd_teams_update_team_request(that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 234)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToJsonStringConstMeta,
-      argValues: [that],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToJsonStringConstMeta =>
-          const TaskConstMeta(
-            debugName: "teams_update_team_request_to_json_string",
-            argNames: ["that"],
-          );
-
-  @override
-  String crateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToSchema() {
-    return handler.executeSync(SyncTask(
-      callFfi: () {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 235)!;
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_String,
-        decodeErrorData: null,
-      ),
-      constMeta:
-          kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToSchemaConstMeta,
-      argValues: [],
-      apiImpl: this,
-    ));
-  }
-
-  TaskConstMeta
-      get kCrateInfraNetworkSchemasTeamsRequestsTeamsUpdateTeamRequestToSchemaConstMeta =>
-          const TaskConstMeta(
-            debugName: "teams_update_team_request_to_schema",
+            debugName: "team_remove_request_to_schema",
             argNames: [],
           );
 
@@ -6942,7 +7686,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 236, port: port_);
+            funcId: 261, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -6971,7 +7715,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 237)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 262)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7002,7 +7746,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_admin_password_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 238)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 263)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7029,7 +7773,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 239)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 264)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7056,7 +7800,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 240, port: port_);
+            funcId: 265, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7085,7 +7829,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 241)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 266)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7116,7 +7860,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_backup_interval_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 242)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 267)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7143,7 +7887,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 243)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 268)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7171,7 +7915,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 244, port: port_);
+            funcId: 269, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7201,7 +7945,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 245)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 270)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7232,7 +7976,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_endgame_timer_length_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 246)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 271)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7259,7 +8003,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 247)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 272)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7287,7 +8031,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 248, port: port_);
+            funcId: 273, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config_set_name_request,
@@ -7315,7 +8059,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 249)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 274)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config_set_name_request,
@@ -7344,7 +8088,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_name_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 250)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 275)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7370,7 +8114,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 251)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 276)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7397,7 +8141,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 252, port: port_);
+            funcId: 277, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7426,7 +8170,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 253)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 278)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7457,7 +8201,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_retain_backups_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 254)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 279)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7484,7 +8228,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 255)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 280)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7511,7 +8255,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 256, port: port_);
+            funcId: 281, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config_set_season_request,
@@ -7539,7 +8283,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 257)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 282)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_tournament_config_set_season_request,
@@ -7568,7 +8312,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_season_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 258)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 283)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7594,7 +8338,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 259)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 284)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7621,7 +8365,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 260, port: port_);
+            funcId: 285, port: port_);
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7650,7 +8394,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_String(json, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 261)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 286)!;
       },
       codec: SseCodec(
         decodeSuccessData:
@@ -7681,7 +8425,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_tournament_config_set_timer_length_request(
             that, serializer);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 262)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 287)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7708,7 +8452,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 263)!;
+        return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 288)!;
       },
       codec: SseCodec(
         decodeSuccessData: sse_decode_String,
@@ -7833,15 +8577,43 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  JudgingPodInsertRequest dco_decode_box_autoadd_judging_pod_insert_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_judging_pod_insert_request(raw);
+  }
+
+  @protected
+  JudgingPodRemoveRequest dco_decode_box_autoadd_judging_pod_remove_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_judging_pod_remove_request(raw);
+  }
+
+  @protected
   JudgingSession dco_decode_box_autoadd_judging_session(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_judging_session(raw);
   }
 
   @protected
+  JudgingSessionInsertRequest
+      dco_decode_box_autoadd_judging_session_insert_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_judging_session_insert_request(raw);
+  }
+
+  @protected
   JudgingSessionPod dco_decode_box_autoadd_judging_session_pod(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_judging_session_pod(raw);
+  }
+
+  @protected
+  JudgingSessionRemoveRequest
+      dco_decode_box_autoadd_judging_session_remove_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_judging_session_remove_request(raw);
   }
 
   @protected
@@ -7899,54 +8671,69 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  RobotGamesLoadMatchRequest
-      dco_decode_box_autoadd_robot_games_load_match_request(dynamic raw) {
+  RobotGameMatchInsertRequest
+      dco_decode_box_autoadd_robot_game_match_insert_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_robot_games_load_match_request(raw);
+    return dco_decode_robot_game_match_insert_request(raw);
   }
 
   @protected
-  RobotGamesRemoveMatchRequest
-      dco_decode_box_autoadd_robot_games_remove_match_request(dynamic raw) {
+  RobotGameMatchLoadRequest
+      dco_decode_box_autoadd_robot_game_match_load_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_robot_games_remove_match_request(raw);
+    return dco_decode_robot_game_match_load_request(raw);
   }
 
   @protected
-  RobotGamesRemoveScoreSheetRequest
-      dco_decode_box_autoadd_robot_games_remove_score_sheet_request(
+  RobotGameMatchRemoveRequest
+      dco_decode_box_autoadd_robot_game_match_remove_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_robot_game_match_remove_request(raw);
+  }
+
+  @protected
+  RobotGameScoreSheetInsertRequest
+      dco_decode_box_autoadd_robot_game_score_sheet_insert_request(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_robot_games_remove_score_sheet_request(raw);
+    return dco_decode_robot_game_score_sheet_insert_request(raw);
   }
 
   @protected
-  RobotGamesScoreSheetRequest
-      dco_decode_box_autoadd_robot_games_score_sheet_request(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_robot_games_score_sheet_request(raw);
-  }
-
-  @protected
-  RobotGamesTableSignalRequest
-      dco_decode_box_autoadd_robot_games_table_signal_request(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_robot_games_table_signal_request(raw);
-  }
-
-  @protected
-  RobotGamesUpdateMatchRequest
-      dco_decode_box_autoadd_robot_games_update_match_request(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_robot_games_update_match_request(raw);
-  }
-
-  @protected
-  RobotGamesUpdateScoreSheetRequest
-      dco_decode_box_autoadd_robot_games_update_score_sheet_request(
+  RobotGameScoreSheetRemoveRequest
+      dco_decode_box_autoadd_robot_game_score_sheet_remove_request(
           dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_robot_games_update_score_sheet_request(raw);
+    return dco_decode_robot_game_score_sheet_remove_request(raw);
+  }
+
+  @protected
+  RobotGameScoreSheetSubmitRequest
+      dco_decode_box_autoadd_robot_game_score_sheet_submit_request(
+          dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_robot_game_score_sheet_submit_request(raw);
+  }
+
+  @protected
+  RobotGameTableInsertRequest
+      dco_decode_box_autoadd_robot_game_table_insert_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_robot_game_table_insert_request(raw);
+  }
+
+  @protected
+  RobotGameTableRemoveRequest
+      dco_decode_box_autoadd_robot_game_table_remove_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_robot_game_table_remove_request(raw);
+  }
+
+  @protected
+  RobotGameTableSignalRequest
+      dco_decode_box_autoadd_robot_game_table_signal_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_robot_game_table_signal_request(raw);
   }
 
   @protected
@@ -7956,24 +8743,15 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TeamsAddTeamRequest dco_decode_box_autoadd_teams_add_team_request(
-      dynamic raw) {
+  TeamInsertRequest dco_decode_box_autoadd_team_insert_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_teams_add_team_request(raw);
+    return dco_decode_team_insert_request(raw);
   }
 
   @protected
-  TeamsRemoveTeamRequest dco_decode_box_autoadd_teams_remove_team_request(
-      dynamic raw) {
+  TeamRemoveRequest dco_decode_box_autoadd_team_remove_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_teams_remove_team_request(raw);
-  }
-
-  @protected
-  TeamsUpdateTeamRequest dco_decode_box_autoadd_teams_update_team_request(
-      dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_teams_update_team_request(raw);
+    return dco_decode_team_remove_request(raw);
   }
 
   @protected
@@ -8278,6 +9056,29 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  JudgingPodInsertRequest dco_decode_judging_pod_insert_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return JudgingPodInsertRequest(
+      podId: dco_decode_opt_String(arr[0]),
+      pod: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  JudgingPodRemoveRequest dco_decode_judging_pod_remove_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return JudgingPodRemoveRequest(
+      podId: dco_decode_String(arr[0]),
+    );
+  }
+
+  @protected
   JudgingSession dco_decode_judging_session(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -8294,6 +9095,19 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  JudgingSessionInsertRequest dco_decode_judging_session_insert_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return JudgingSessionInsertRequest(
+      sessionId: dco_decode_opt_String(arr[0]),
+      session: dco_decode_judging_session(arr[1]),
+    );
+  }
+
+  @protected
   JudgingSessionPod dco_decode_judging_session_pod(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -8305,6 +9119,18 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       coreValuesSubmitted: dco_decode_bool(arr[2]),
       innovationSubmitted: dco_decode_bool(arr[3]),
       robotDesignSubmitted: dco_decode_bool(arr[4]),
+    );
+  }
+
+  @protected
+  JudgingSessionRemoveRequest dco_decode_judging_session_remove_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return JudgingSessionRemoveRequest(
+      sessionId: dco_decode_String(arr[0]),
     );
   }
 
@@ -8580,49 +9406,75 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  RobotGamesLoadMatchRequest dco_decode_robot_games_load_match_request(
+  RobotGameMatchInsertRequest dco_decode_robot_game_match_insert_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return RobotGameMatchInsertRequest(
+      matchId: dco_decode_opt_String(arr[0]),
+      gameMatch: dco_decode_game_match(arr[1]),
+    );
+  }
+
+  @protected
+  RobotGameMatchLoadRequest dco_decode_robot_game_match_load_request(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 1)
       throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return RobotGamesLoadMatchRequest(
+    return RobotGameMatchLoadRequest(
       gameMatchNumbers: dco_decode_list_String(arr[0]),
     );
   }
 
   @protected
-  RobotGamesRemoveMatchRequest dco_decode_robot_games_remove_match_request(
+  RobotGameMatchRemoveRequest dco_decode_robot_game_match_remove_request(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 1)
       throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return RobotGamesRemoveMatchRequest(
+    return RobotGameMatchRemoveRequest(
       matchId: dco_decode_String(arr[0]),
     );
   }
 
   @protected
-  RobotGamesRemoveScoreSheetRequest
-      dco_decode_robot_games_remove_score_sheet_request(dynamic raw) {
+  RobotGameScoreSheetInsertRequest
+      dco_decode_robot_game_score_sheet_insert_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return RobotGameScoreSheetInsertRequest(
+      scoreSheetId: dco_decode_opt_String(arr[0]),
+      scoreSheet: dco_decode_game_score_sheet(arr[1]),
+    );
+  }
+
+  @protected
+  RobotGameScoreSheetRemoveRequest
+      dco_decode_robot_game_score_sheet_remove_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 1)
       throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return RobotGamesRemoveScoreSheetRequest(
+    return RobotGameScoreSheetRemoveRequest(
       scoreSheetId: dco_decode_String(arr[0]),
     );
   }
 
   @protected
-  RobotGamesScoreSheetRequest dco_decode_robot_games_score_sheet_request(
-      dynamic raw) {
+  RobotGameScoreSheetSubmitRequest
+      dco_decode_robot_game_score_sheet_submit_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 12)
       throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
-    return RobotGamesScoreSheetRequest(
+    return RobotGameScoreSheetSubmitRequest(
       blueprintTitle: dco_decode_String(arr[0]),
       table: dco_decode_String(arr[1]),
       teamNumber: dco_decode_String(arr[2]),
@@ -8639,41 +9491,40 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  RobotGamesTableSignalRequest dco_decode_robot_games_table_signal_request(
+  RobotGameTableInsertRequest dco_decode_robot_game_table_insert_request(
       dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 2)
       throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return RobotGamesTableSignalRequest(
+    return RobotGameTableInsertRequest(
+      tableId: dco_decode_opt_String(arr[0]),
+      table: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  RobotGameTableRemoveRequest dco_decode_robot_game_table_remove_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return RobotGameTableRemoveRequest(
+      tableId: dco_decode_String(arr[0]),
+    );
+  }
+
+  @protected
+  RobotGameTableSignalRequest dco_decode_robot_game_table_signal_request(
+      dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return RobotGameTableSignalRequest(
       table: dco_decode_String(arr[0]),
       teamNumber: dco_decode_String(arr[1]),
-    );
-  }
-
-  @protected
-  RobotGamesUpdateMatchRequest dco_decode_robot_games_update_match_request(
-      dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return RobotGamesUpdateMatchRequest(
-      matchId: dco_decode_String(arr[0]),
-      gameMatch: dco_decode_game_match(arr[1]),
-    );
-  }
-
-  @protected
-  RobotGamesUpdateScoreSheetRequest
-      dco_decode_robot_games_update_score_sheet_request(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return RobotGamesUpdateScoreSheetRequest(
-      scoreSheetId: dco_decode_String(arr[0]),
-      scoreSheet: dco_decode_game_score_sheet(arr[1]),
     );
   }
 
@@ -8692,36 +9543,25 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TeamsAddTeamRequest dco_decode_teams_add_team_request(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 1)
-      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return TeamsAddTeamRequest(
-      team: dco_decode_team(arr[0]),
-    );
-  }
-
-  @protected
-  TeamsRemoveTeamRequest dco_decode_teams_remove_team_request(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    final arr = raw as List<dynamic>;
-    if (arr.length != 1)
-      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
-    return TeamsRemoveTeamRequest(
-      teamId: dco_decode_String(arr[0]),
-    );
-  }
-
-  @protected
-  TeamsUpdateTeamRequest dco_decode_teams_update_team_request(dynamic raw) {
+  TeamInsertRequest dco_decode_team_insert_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 2)
       throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-    return TeamsUpdateTeamRequest(
-      teamId: dco_decode_String(arr[0]),
+    return TeamInsertRequest(
+      teamId: dco_decode_opt_String(arr[0]),
       team: dco_decode_team(arr[1]),
+    );
+  }
+
+  @protected
+  TeamRemoveRequest dco_decode_team_remove_request(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return TeamRemoveRequest(
+      teamId: dco_decode_String(arr[0]),
     );
   }
 
@@ -9160,6 +10000,20 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  JudgingPodInsertRequest sse_decode_box_autoadd_judging_pod_insert_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_judging_pod_insert_request(deserializer));
+  }
+
+  @protected
+  JudgingPodRemoveRequest sse_decode_box_autoadd_judging_pod_remove_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_judging_pod_remove_request(deserializer));
+  }
+
+  @protected
   JudgingSession sse_decode_box_autoadd_judging_session(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -9167,10 +10021,26 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  JudgingSessionInsertRequest
+      sse_decode_box_autoadd_judging_session_insert_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_judging_session_insert_request(deserializer));
+  }
+
+  @protected
   JudgingSessionPod sse_decode_box_autoadd_judging_session_pod(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_judging_session_pod(deserializer));
+  }
+
+  @protected
+  JudgingSessionRemoveRequest
+      sse_decode_box_autoadd_judging_session_remove_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_judging_session_remove_request(deserializer));
   }
 
   @protected
@@ -9235,59 +10105,75 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  RobotGamesLoadMatchRequest
-      sse_decode_box_autoadd_robot_games_load_match_request(
+  RobotGameMatchInsertRequest
+      sse_decode_box_autoadd_robot_game_match_insert_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_robot_games_load_match_request(deserializer));
+    return (sse_decode_robot_game_match_insert_request(deserializer));
   }
 
   @protected
-  RobotGamesRemoveMatchRequest
-      sse_decode_box_autoadd_robot_games_remove_match_request(
+  RobotGameMatchLoadRequest
+      sse_decode_box_autoadd_robot_game_match_load_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_robot_games_remove_match_request(deserializer));
+    return (sse_decode_robot_game_match_load_request(deserializer));
   }
 
   @protected
-  RobotGamesRemoveScoreSheetRequest
-      sse_decode_box_autoadd_robot_games_remove_score_sheet_request(
+  RobotGameMatchRemoveRequest
+      sse_decode_box_autoadd_robot_game_match_remove_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_robot_games_remove_score_sheet_request(deserializer));
+    return (sse_decode_robot_game_match_remove_request(deserializer));
   }
 
   @protected
-  RobotGamesScoreSheetRequest
-      sse_decode_box_autoadd_robot_games_score_sheet_request(
+  RobotGameScoreSheetInsertRequest
+      sse_decode_box_autoadd_robot_game_score_sheet_insert_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_robot_games_score_sheet_request(deserializer));
+    return (sse_decode_robot_game_score_sheet_insert_request(deserializer));
   }
 
   @protected
-  RobotGamesTableSignalRequest
-      sse_decode_box_autoadd_robot_games_table_signal_request(
+  RobotGameScoreSheetRemoveRequest
+      sse_decode_box_autoadd_robot_game_score_sheet_remove_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_robot_games_table_signal_request(deserializer));
+    return (sse_decode_robot_game_score_sheet_remove_request(deserializer));
   }
 
   @protected
-  RobotGamesUpdateMatchRequest
-      sse_decode_box_autoadd_robot_games_update_match_request(
+  RobotGameScoreSheetSubmitRequest
+      sse_decode_box_autoadd_robot_game_score_sheet_submit_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_robot_games_update_match_request(deserializer));
+    return (sse_decode_robot_game_score_sheet_submit_request(deserializer));
   }
 
   @protected
-  RobotGamesUpdateScoreSheetRequest
-      sse_decode_box_autoadd_robot_games_update_score_sheet_request(
+  RobotGameTableInsertRequest
+      sse_decode_box_autoadd_robot_game_table_insert_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_robot_games_update_score_sheet_request(deserializer));
+    return (sse_decode_robot_game_table_insert_request(deserializer));
+  }
+
+  @protected
+  RobotGameTableRemoveRequest
+      sse_decode_box_autoadd_robot_game_table_remove_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_robot_game_table_remove_request(deserializer));
+  }
+
+  @protected
+  RobotGameTableSignalRequest
+      sse_decode_box_autoadd_robot_game_table_signal_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_robot_game_table_signal_request(deserializer));
   }
 
   @protected
@@ -9297,24 +10183,17 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TeamsAddTeamRequest sse_decode_box_autoadd_teams_add_team_request(
+  TeamInsertRequest sse_decode_box_autoadd_team_insert_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_teams_add_team_request(deserializer));
+    return (sse_decode_team_insert_request(deserializer));
   }
 
   @protected
-  TeamsRemoveTeamRequest sse_decode_box_autoadd_teams_remove_team_request(
+  TeamRemoveRequest sse_decode_box_autoadd_team_remove_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_teams_remove_team_request(deserializer));
-  }
-
-  @protected
-  TeamsUpdateTeamRequest sse_decode_box_autoadd_teams_update_team_request(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_teams_update_team_request(deserializer));
+    return (sse_decode_team_remove_request(deserializer));
   }
 
   @protected
@@ -9623,6 +10502,23 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  JudgingPodInsertRequest sse_decode_judging_pod_insert_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_podId = sse_decode_opt_String(deserializer);
+    var var_pod = sse_decode_String(deserializer);
+    return JudgingPodInsertRequest(podId: var_podId, pod: var_pod);
+  }
+
+  @protected
+  JudgingPodRemoveRequest sse_decode_judging_pod_remove_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_podId = sse_decode_String(deserializer);
+    return JudgingPodRemoveRequest(podId: var_podId);
+  }
+
+  @protected
   JudgingSession sse_decode_judging_session(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_sessionNumber = sse_decode_String(deserializer);
@@ -9642,6 +10538,16 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  JudgingSessionInsertRequest sse_decode_judging_session_insert_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_sessionId = sse_decode_opt_String(deserializer);
+    var var_session = sse_decode_judging_session(deserializer);
+    return JudgingSessionInsertRequest(
+        sessionId: var_sessionId, session: var_session);
+  }
+
+  @protected
   JudgingSessionPod sse_decode_judging_session_pod(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -9656,6 +10562,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         coreValuesSubmitted: var_coreValuesSubmitted,
         innovationSubmitted: var_innovationSubmitted,
         robotDesignSubmitted: var_robotDesignSubmitted);
+  }
+
+  @protected
+  JudgingSessionRemoveRequest sse_decode_judging_session_remove_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_sessionId = sse_decode_String(deserializer);
+    return JudgingSessionRemoveRequest(sessionId: var_sessionId);
   }
 
   @protected
@@ -10004,33 +10918,55 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  RobotGamesLoadMatchRequest sse_decode_robot_games_load_match_request(
+  RobotGameMatchInsertRequest sse_decode_robot_game_match_insert_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_matchId = sse_decode_opt_String(deserializer);
+    var var_gameMatch = sse_decode_game_match(deserializer);
+    return RobotGameMatchInsertRequest(
+        matchId: var_matchId, gameMatch: var_gameMatch);
+  }
+
+  @protected
+  RobotGameMatchLoadRequest sse_decode_robot_game_match_load_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_gameMatchNumbers = sse_decode_list_String(deserializer);
-    return RobotGamesLoadMatchRequest(gameMatchNumbers: var_gameMatchNumbers);
+    return RobotGameMatchLoadRequest(gameMatchNumbers: var_gameMatchNumbers);
   }
 
   @protected
-  RobotGamesRemoveMatchRequest sse_decode_robot_games_remove_match_request(
+  RobotGameMatchRemoveRequest sse_decode_robot_game_match_remove_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_matchId = sse_decode_String(deserializer);
-    return RobotGamesRemoveMatchRequest(matchId: var_matchId);
+    return RobotGameMatchRemoveRequest(matchId: var_matchId);
   }
 
   @protected
-  RobotGamesRemoveScoreSheetRequest
-      sse_decode_robot_games_remove_score_sheet_request(
+  RobotGameScoreSheetInsertRequest
+      sse_decode_robot_game_score_sheet_insert_request(
+          SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_scoreSheetId = sse_decode_opt_String(deserializer);
+    var var_scoreSheet = sse_decode_game_score_sheet(deserializer);
+    return RobotGameScoreSheetInsertRequest(
+        scoreSheetId: var_scoreSheetId, scoreSheet: var_scoreSheet);
+  }
+
+  @protected
+  RobotGameScoreSheetRemoveRequest
+      sse_decode_robot_game_score_sheet_remove_request(
           SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_scoreSheetId = sse_decode_String(deserializer);
-    return RobotGamesRemoveScoreSheetRequest(scoreSheetId: var_scoreSheetId);
+    return RobotGameScoreSheetRemoveRequest(scoreSheetId: var_scoreSheetId);
   }
 
   @protected
-  RobotGamesScoreSheetRequest sse_decode_robot_games_score_sheet_request(
-      SseDeserializer deserializer) {
+  RobotGameScoreSheetSubmitRequest
+      sse_decode_robot_game_score_sheet_submit_request(
+          SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_blueprintTitle = sse_decode_String(deserializer);
     var var_table = sse_decode_String(deserializer);
@@ -10044,7 +10980,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     var var_isAgnostic = sse_decode_bool(deserializer);
     var var_scoreSheetAnswers = sse_decode_list_question_answer(deserializer);
     var var_privateComment = sse_decode_String(deserializer);
-    return RobotGamesScoreSheetRequest(
+    return RobotGameScoreSheetSubmitRequest(
         blueprintTitle: var_blueprintTitle,
         table: var_table,
         teamNumber: var_teamNumber,
@@ -10060,34 +10996,30 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  RobotGamesTableSignalRequest sse_decode_robot_games_table_signal_request(
+  RobotGameTableInsertRequest sse_decode_robot_game_table_insert_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_tableId = sse_decode_opt_String(deserializer);
+    var var_table = sse_decode_String(deserializer);
+    return RobotGameTableInsertRequest(tableId: var_tableId, table: var_table);
+  }
+
+  @protected
+  RobotGameTableRemoveRequest sse_decode_robot_game_table_remove_request(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_tableId = sse_decode_String(deserializer);
+    return RobotGameTableRemoveRequest(tableId: var_tableId);
+  }
+
+  @protected
+  RobotGameTableSignalRequest sse_decode_robot_game_table_signal_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_table = sse_decode_String(deserializer);
     var var_teamNumber = sse_decode_String(deserializer);
-    return RobotGamesTableSignalRequest(
+    return RobotGameTableSignalRequest(
         table: var_table, teamNumber: var_teamNumber);
-  }
-
-  @protected
-  RobotGamesUpdateMatchRequest sse_decode_robot_games_update_match_request(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_matchId = sse_decode_String(deserializer);
-    var var_gameMatch = sse_decode_game_match(deserializer);
-    return RobotGamesUpdateMatchRequest(
-        matchId: var_matchId, gameMatch: var_gameMatch);
-  }
-
-  @protected
-  RobotGamesUpdateScoreSheetRequest
-      sse_decode_robot_games_update_score_sheet_request(
-          SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_scoreSheetId = sse_decode_String(deserializer);
-    var var_scoreSheet = sse_decode_game_score_sheet(deserializer);
-    return RobotGamesUpdateScoreSheetRequest(
-        scoreSheetId: var_scoreSheetId, scoreSheet: var_scoreSheet);
   }
 
   @protected
@@ -10105,28 +11037,20 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  TeamsAddTeamRequest sse_decode_teams_add_team_request(
+  TeamInsertRequest sse_decode_team_insert_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_teamId = sse_decode_opt_String(deserializer);
     var var_team = sse_decode_team(deserializer);
-    return TeamsAddTeamRequest(team: var_team);
+    return TeamInsertRequest(teamId: var_teamId, team: var_team);
   }
 
   @protected
-  TeamsRemoveTeamRequest sse_decode_teams_remove_team_request(
+  TeamRemoveRequest sse_decode_team_remove_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_teamId = sse_decode_String(deserializer);
-    return TeamsRemoveTeamRequest(teamId: var_teamId);
-  }
-
-  @protected
-  TeamsUpdateTeamRequest sse_decode_teams_update_team_request(
-      SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_teamId = sse_decode_String(deserializer);
-    var var_team = sse_decode_team(deserializer);
-    return TeamsUpdateTeamRequest(teamId: var_teamId, team: var_team);
+    return TeamRemoveRequest(teamId: var_teamId);
   }
 
   @protected
@@ -10531,6 +11455,20 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_box_autoadd_judging_pod_insert_request(
+      JudgingPodInsertRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_judging_pod_insert_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_judging_pod_remove_request(
+      JudgingPodRemoveRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_judging_pod_remove_request(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_judging_session(
       JudgingSession self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -10538,10 +11476,24 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_box_autoadd_judging_session_insert_request(
+      JudgingSessionInsertRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_judging_session_insert_request(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_judging_session_pod(
       JudgingSessionPod self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_judging_session_pod(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_judging_session_remove_request(
+      JudgingSessionRemoveRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_judging_session_remove_request(self, serializer);
   }
 
   @protected
@@ -10607,52 +11559,66 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_box_autoadd_robot_games_load_match_request(
-      RobotGamesLoadMatchRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_robot_game_match_insert_request(
+      RobotGameMatchInsertRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_robot_games_load_match_request(self, serializer);
+    sse_encode_robot_game_match_insert_request(self, serializer);
   }
 
   @protected
-  void sse_encode_box_autoadd_robot_games_remove_match_request(
-      RobotGamesRemoveMatchRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_robot_game_match_load_request(
+      RobotGameMatchLoadRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_robot_games_remove_match_request(self, serializer);
+    sse_encode_robot_game_match_load_request(self, serializer);
   }
 
   @protected
-  void sse_encode_box_autoadd_robot_games_remove_score_sheet_request(
-      RobotGamesRemoveScoreSheetRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_robot_game_match_remove_request(
+      RobotGameMatchRemoveRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_robot_games_remove_score_sheet_request(self, serializer);
+    sse_encode_robot_game_match_remove_request(self, serializer);
   }
 
   @protected
-  void sse_encode_box_autoadd_robot_games_score_sheet_request(
-      RobotGamesScoreSheetRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_robot_game_score_sheet_insert_request(
+      RobotGameScoreSheetInsertRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_robot_games_score_sheet_request(self, serializer);
+    sse_encode_robot_game_score_sheet_insert_request(self, serializer);
   }
 
   @protected
-  void sse_encode_box_autoadd_robot_games_table_signal_request(
-      RobotGamesTableSignalRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_robot_game_score_sheet_remove_request(
+      RobotGameScoreSheetRemoveRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_robot_games_table_signal_request(self, serializer);
+    sse_encode_robot_game_score_sheet_remove_request(self, serializer);
   }
 
   @protected
-  void sse_encode_box_autoadd_robot_games_update_match_request(
-      RobotGamesUpdateMatchRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_robot_game_score_sheet_submit_request(
+      RobotGameScoreSheetSubmitRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_robot_games_update_match_request(self, serializer);
+    sse_encode_robot_game_score_sheet_submit_request(self, serializer);
   }
 
   @protected
-  void sse_encode_box_autoadd_robot_games_update_score_sheet_request(
-      RobotGamesUpdateScoreSheetRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_robot_game_table_insert_request(
+      RobotGameTableInsertRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_robot_games_update_score_sheet_request(self, serializer);
+    sse_encode_robot_game_table_insert_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_robot_game_table_remove_request(
+      RobotGameTableRemoveRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_robot_game_table_remove_request(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_robot_game_table_signal_request(
+      RobotGameTableSignalRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_robot_game_table_signal_request(self, serializer);
   }
 
   @protected
@@ -10662,24 +11628,17 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_box_autoadd_teams_add_team_request(
-      TeamsAddTeamRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_team_insert_request(
+      TeamInsertRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_teams_add_team_request(self, serializer);
+    sse_encode_team_insert_request(self, serializer);
   }
 
   @protected
-  void sse_encode_box_autoadd_teams_remove_team_request(
-      TeamsRemoveTeamRequest self, SseSerializer serializer) {
+  void sse_encode_box_autoadd_team_remove_request(
+      TeamRemoveRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_teams_remove_team_request(self, serializer);
-  }
-
-  @protected
-  void sse_encode_box_autoadd_teams_update_team_request(
-      TeamsUpdateTeamRequest self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_teams_update_team_request(self, serializer);
+    sse_encode_team_remove_request(self, serializer);
   }
 
   @protected
@@ -10944,6 +11903,21 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_judging_pod_insert_request(
+      JudgingPodInsertRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.podId, serializer);
+    sse_encode_String(self.pod, serializer);
+  }
+
+  @protected
+  void sse_encode_judging_pod_remove_request(
+      JudgingPodRemoveRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.podId, serializer);
+  }
+
+  @protected
   void sse_encode_judging_session(
       JudgingSession self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -10956,6 +11930,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_judging_session_insert_request(
+      JudgingSessionInsertRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.sessionId, serializer);
+    sse_encode_judging_session(self.session, serializer);
+  }
+
+  @protected
   void sse_encode_judging_session_pod(
       JudgingSessionPod self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -10964,6 +11946,13 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     sse_encode_bool(self.coreValuesSubmitted, serializer);
     sse_encode_bool(self.innovationSubmitted, serializer);
     sse_encode_bool(self.robotDesignSubmitted, serializer);
+  }
+
+  @protected
+  void sse_encode_judging_session_remove_request(
+      JudgingSessionRemoveRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.sessionId, serializer);
   }
 
   @protected
@@ -11254,29 +12243,45 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_robot_games_load_match_request(
-      RobotGamesLoadMatchRequest self, SseSerializer serializer) {
+  void sse_encode_robot_game_match_insert_request(
+      RobotGameMatchInsertRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.matchId, serializer);
+    sse_encode_game_match(self.gameMatch, serializer);
+  }
+
+  @protected
+  void sse_encode_robot_game_match_load_request(
+      RobotGameMatchLoadRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_String(self.gameMatchNumbers, serializer);
   }
 
   @protected
-  void sse_encode_robot_games_remove_match_request(
-      RobotGamesRemoveMatchRequest self, SseSerializer serializer) {
+  void sse_encode_robot_game_match_remove_request(
+      RobotGameMatchRemoveRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.matchId, serializer);
   }
 
   @protected
-  void sse_encode_robot_games_remove_score_sheet_request(
-      RobotGamesRemoveScoreSheetRequest self, SseSerializer serializer) {
+  void sse_encode_robot_game_score_sheet_insert_request(
+      RobotGameScoreSheetInsertRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.scoreSheetId, serializer);
+    sse_encode_game_score_sheet(self.scoreSheet, serializer);
+  }
+
+  @protected
+  void sse_encode_robot_game_score_sheet_remove_request(
+      RobotGameScoreSheetRemoveRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.scoreSheetId, serializer);
   }
 
   @protected
-  void sse_encode_robot_games_score_sheet_request(
-      RobotGamesScoreSheetRequest self, SseSerializer serializer) {
+  void sse_encode_robot_game_score_sheet_submit_request(
+      RobotGameScoreSheetSubmitRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.blueprintTitle, serializer);
     sse_encode_String(self.table, serializer);
@@ -11293,27 +12298,26 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_robot_games_table_signal_request(
-      RobotGamesTableSignalRequest self, SseSerializer serializer) {
+  void sse_encode_robot_game_table_insert_request(
+      RobotGameTableInsertRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.tableId, serializer);
+    sse_encode_String(self.table, serializer);
+  }
+
+  @protected
+  void sse_encode_robot_game_table_remove_request(
+      RobotGameTableRemoveRequest self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.tableId, serializer);
+  }
+
+  @protected
+  void sse_encode_robot_game_table_signal_request(
+      RobotGameTableSignalRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.table, serializer);
     sse_encode_String(self.teamNumber, serializer);
-  }
-
-  @protected
-  void sse_encode_robot_games_update_match_request(
-      RobotGamesUpdateMatchRequest self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.matchId, serializer);
-    sse_encode_game_match(self.gameMatch, serializer);
-  }
-
-  @protected
-  void sse_encode_robot_games_update_score_sheet_request(
-      RobotGamesUpdateScoreSheetRequest self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.scoreSheetId, serializer);
-    sse_encode_game_score_sheet(self.scoreSheet, serializer);
   }
 
   @protected
@@ -11326,25 +12330,18 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_teams_add_team_request(
-      TeamsAddTeamRequest self, SseSerializer serializer) {
+  void sse_encode_team_insert_request(
+      TeamInsertRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.teamId, serializer);
     sse_encode_team(self.team, serializer);
   }
 
   @protected
-  void sse_encode_teams_remove_team_request(
-      TeamsRemoveTeamRequest self, SseSerializer serializer) {
+  void sse_encode_team_remove_request(
+      TeamRemoveRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.teamId, serializer);
-  }
-
-  @protected
-  void sse_encode_teams_update_team_request(
-      TeamsUpdateTeamRequest self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.teamId, serializer);
-    sse_encode_team(self.team, serializer);
   }
 
   @protected

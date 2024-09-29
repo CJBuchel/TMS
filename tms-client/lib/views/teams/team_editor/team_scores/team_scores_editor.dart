@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tms/models/team_score_sheet.dart';
-import 'package:tms/services/game_scoring_service.dart';
+import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/views/teams/team_editor/team_scores/on_add_score.dart';
@@ -48,7 +49,9 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
               title: 'Delete Score',
               message: const Text('Are you sure you want to delete this score?'),
             ),
-            onStatusConfirmFuture: () => GameScoringService().removeScoreSheet(score.scoreSheetId),
+            onStatusConfirmFuture: () {
+              return Provider.of<GameScoringProvider>(context, listen: false).removeScoreSheet(score.scoreSheetId);
+            },
           ).show(context);
         },
         onEdit: () => OnEditScore(score: score).call(context),

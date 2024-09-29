@@ -9,7 +9,7 @@ class TeamService {
   Future<int> insertTeam(String? teamId, Team team) async {
     try {
       var request = TeamInsertRequest(teamId: teamId, team: team);
-      var response = await Network().networkPost("/teams/update_team", request.toJsonString());
+      var response = await Network().networkPost("/teams/insert_team", request.toJsonString());
       if (response.$1) {
         TmsLogger().d("Updated team: $teamId");
         return HttpStatus.ok;

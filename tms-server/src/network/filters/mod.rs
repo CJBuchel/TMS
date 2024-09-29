@@ -40,6 +40,12 @@ pub use robot_game_timer_filter::*;
 mod robot_game_scoring_filter;
 pub use robot_game_scoring_filter::*;
 
+mod judging_sessions_filter;
+pub use judging_sessions_filter::*;
+
+mod judging_pods_filter;
+pub use judging_pods_filter::*;
+
 mod tournament_blueprint_filter;
 pub use tournament_blueprint_filter::*;
 

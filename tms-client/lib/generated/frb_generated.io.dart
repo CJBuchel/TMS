@@ -106,9 +106,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   int dco_decode_box_autoadd_i_32(dynamic raw);
 
   @protected
-  PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw);
-
-  @protected
   JudgingPod dco_decode_box_autoadd_judging_pod(dynamic raw);
 
   @protected
@@ -323,9 +320,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   int dco_decode_i_32(dynamic raw);
 
   @protected
-  PlatformInt64 dco_decode_i_64(dynamic raw);
-
-  @protected
   JudgingPod dco_decode_judging_pod(dynamic raw);
 
   @protected
@@ -403,9 +397,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
-
-  @protected
-  PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw);
 
   @protected
   TmsDate? dco_decode_opt_box_autoadd_tms_date(dynamic raw);
@@ -629,9 +620,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int sse_decode_box_autoadd_i_32(SseDeserializer deserializer);
-
-  @protected
-  PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
   JudgingPod sse_decode_box_autoadd_judging_pod(SseDeserializer deserializer);
@@ -877,9 +865,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
-  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
-
-  @protected
   JudgingPod sse_decode_judging_pod(SseDeserializer deserializer);
 
   @protected
@@ -965,9 +950,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer);
-
-  @protected
-  PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
   TmsDate? sse_decode_opt_box_autoadd_tms_date(SseDeserializer deserializer);
@@ -1217,10 +1199,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_i_64(
-      PlatformInt64 self, SseSerializer serializer);
-
-  @protected
   void sse_encode_box_autoadd_judging_pod(
       JudgingPod self, SseSerializer serializer);
 
@@ -1455,9 +1433,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
-  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
-
-  @protected
   void sse_encode_judging_pod(JudgingPod self, SseSerializer serializer);
 
   @protected
@@ -1546,10 +1521,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_opt_box_autoadd_i_64(
-      PlatformInt64? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_tms_date(

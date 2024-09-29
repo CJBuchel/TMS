@@ -56,9 +56,9 @@ impl TmsTimeBased for TmsTime {
 
   #[flutter_rust_bridge::frb(sync)]
   fn duration(&self) -> TmsDuration {
-    let hours = self.hour as i64;
-    let minutes = self.minute as i64;
-    let seconds = self.second as i64;
+    let hours = self.hour as i32;
+    let minutes = self.minute as i32;
+    let seconds = self.second as i32;
 
     TmsDuration::new(None, None, None, Some(hours), Some(minutes), Some(seconds))
   }
@@ -86,6 +86,16 @@ impl TmsTimeBased for TmsTime {
   #[flutter_rust_bridge::frb(sync)]
   fn to_string(&self) -> String {
     format!("{:02}:{:02}:{:02}", self.hour, self.minute, self.second)
+  }
+
+  #[flutter_rust_bridge::frb(sync)]
+  fn add_duration(&self, duration: TmsDuration) -> Self {
+    let added_duration = self.duration().add(duration);
+    Self {
+      hour: added_duration.hours.unwrap_or(self.hour as i32) as u32,
+      minute: added_duration.minutes.unwrap_or(self.minute as i32) as u32,
+      second: added_duration.seconds.unwrap_or(self.second as i32) as u32,
+    }
   }
 }
 

@@ -13,7 +13,7 @@ pub fn robot_game_tables_filter(clients: ClientMap, db: SharedDatabase) -> impl 
     .and(with_clients(clients.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee", "referee"]))
-    .and_then(robot_game_tables_not_ready_signal_handler);
+    .and_then(robot_game_table_not_ready_signal_handler);
 
   let ready_signal = robot_game_tables_filter
     .and(warp::path("ready_signal"))
@@ -22,7 +22,25 @@ pub fn robot_game_tables_filter(clients: ClientMap, db: SharedDatabase) -> impl 
     .and(with_clients(clients.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee", "referee"]))
-    .and_then(robot_game_tables_ready_signal_handler);
+    .and_then(robot_game_table_ready_signal_handler);
 
-  not_ready_signal.or(ready_signal)
+  let insert_table = robot_game_tables_filter
+    .and(warp::path("insert_table"))
+    .and(warp::post())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
+    .and_then(robot_game_table_insert_handler);
+
+  let remove_table = robot_game_tables_filter
+    .and(warp::path("remove_table"))
+    .and(warp::delete())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
+    .and_then(robot_game_table_remove_handler);
+
+  not_ready_signal.or(ready_signal).or(insert_table).or(remove_table)
 }

@@ -302,31 +302,31 @@ abstract class TmsRustLibApi extends BaseApi {
   TmsDuration crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationDifference(
       {required TmsDuration that, required TmsDuration other});
 
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInDays(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInDays(
       {required TmsDuration that});
 
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInHours(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInHours(
       {required TmsDuration that});
 
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMinutes(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMinutes(
       {required TmsDuration that});
 
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMonths(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMonths(
       {required TmsDuration that});
 
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInSeconds(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInSeconds(
       {required TmsDuration that});
 
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInYears(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInYears(
       {required TmsDuration that});
 
   TmsDuration crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationNew(
-      {PlatformInt64? years,
-      PlatformInt64? months,
-      PlatformInt64? days,
-      PlatformInt64? hours,
-      PlatformInt64? minutes,
-      PlatformInt64? seconds});
+      {int? years,
+      int? months,
+      int? days,
+      int? hours,
+      int? minutes,
+      int? seconds});
 
   TmsTime crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeAddDuration(
       {required TmsTime that, required TmsDuration duration});
@@ -2766,7 +2766,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInDays(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInDays(
       {required TmsDuration that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -2775,7 +2775,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_i_64,
+        decodeSuccessData: sse_decode_i_32,
         decodeErrorData: null,
       ),
       constMeta:
@@ -2793,7 +2793,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInHours(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInHours(
       {required TmsDuration that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -2802,7 +2802,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_i_64,
+        decodeSuccessData: sse_decode_i_32,
         decodeErrorData: null,
       ),
       constMeta:
@@ -2820,7 +2820,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMinutes(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMinutes(
       {required TmsDuration that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -2829,7 +2829,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 77)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_i_64,
+        decodeSuccessData: sse_decode_i_32,
         decodeErrorData: null,
       ),
       constMeta:
@@ -2847,7 +2847,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMonths(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMonths(
       {required TmsDuration that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -2856,7 +2856,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 78)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_i_64,
+        decodeSuccessData: sse_decode_i_32,
         decodeErrorData: null,
       ),
       constMeta:
@@ -2874,7 +2874,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInSeconds(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInSeconds(
       {required TmsDuration that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -2883,7 +2883,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 79)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_i_64,
+        decodeSuccessData: sse_decode_i_32,
         decodeErrorData: null,
       ),
       constMeta:
@@ -2901,7 +2901,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
           );
 
   @override
-  PlatformInt64 crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInYears(
+  int crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInYears(
       {required TmsDuration that}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
@@ -2910,7 +2910,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 80)!;
       },
       codec: SseCodec(
-        decodeSuccessData: sse_decode_i_64,
+        decodeSuccessData: sse_decode_i_32,
         decodeErrorData: null,
       ),
       constMeta:
@@ -2929,21 +2929,21 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
   @override
   TmsDuration crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationNew(
-      {PlatformInt64? years,
-      PlatformInt64? months,
-      PlatformInt64? days,
-      PlatformInt64? hours,
-      PlatformInt64? minutes,
-      PlatformInt64? seconds}) {
+      {int? years,
+      int? months,
+      int? days,
+      int? hours,
+      int? minutes,
+      int? seconds}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_opt_box_autoadd_i_64(years, serializer);
-        sse_encode_opt_box_autoadd_i_64(months, serializer);
-        sse_encode_opt_box_autoadd_i_64(days, serializer);
-        sse_encode_opt_box_autoadd_i_64(hours, serializer);
-        sse_encode_opt_box_autoadd_i_64(minutes, serializer);
-        sse_encode_opt_box_autoadd_i_64(seconds, serializer);
+        sse_encode_opt_box_autoadd_i_32(years, serializer);
+        sse_encode_opt_box_autoadd_i_32(months, serializer);
+        sse_encode_opt_box_autoadd_i_32(days, serializer);
+        sse_encode_opt_box_autoadd_i_32(hours, serializer);
+        sse_encode_opt_box_autoadd_i_32(minutes, serializer);
+        sse_encode_opt_box_autoadd_i_32(seconds, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 81)!;
       },
       codec: SseCodec(
@@ -8565,12 +8565,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dco_decode_i_64(raw);
-  }
-
-  @protected
   JudgingPod dco_decode_box_autoadd_judging_pod(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_judging_pod(raw);
@@ -9039,12 +9033,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  PlatformInt64 dco_decode_i_64(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return dcoDecodeI64(raw);
-  }
-
-  @protected
   JudgingPod dco_decode_judging_pod(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -9267,12 +9255,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_i_32(raw);
-  }
-
-  @protected
-  PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw) {
-    // Codec=Dco (DartCObject based), see doc to use other codecs
-    return raw == null ? null : dco_decode_box_autoadd_i_64(raw);
   }
 
   @protected
@@ -9609,12 +9591,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     if (arr.length != 6)
       throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
     return TmsDuration.raw(
-      years: dco_decode_opt_box_autoadd_i_64(arr[0]),
-      months: dco_decode_opt_box_autoadd_i_64(arr[1]),
-      days: dco_decode_opt_box_autoadd_i_64(arr[2]),
-      hours: dco_decode_opt_box_autoadd_i_64(arr[3]),
-      minutes: dco_decode_opt_box_autoadd_i_64(arr[4]),
-      seconds: dco_decode_opt_box_autoadd_i_64(arr[5]),
+      years: dco_decode_opt_box_autoadd_i_32(arr[0]),
+      months: dco_decode_opt_box_autoadd_i_32(arr[1]),
+      days: dco_decode_opt_box_autoadd_i_32(arr[2]),
+      hours: dco_decode_opt_box_autoadd_i_32(arr[3]),
+      minutes: dco_decode_opt_box_autoadd_i_32(arr[4]),
+      seconds: dco_decode_opt_box_autoadd_i_32(arr[5]),
     );
   }
 
@@ -9985,12 +9967,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   int sse_decode_box_autoadd_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_i_32(deserializer));
-  }
-
-  @protected
-  PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return (sse_decode_i_64(deserializer));
   }
 
   @protected
@@ -10489,12 +10465,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getPlatformInt64();
-  }
-
-  @protected
   JudgingPod sse_decode_judging_pod(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_podName = sse_decode_String(deserializer);
@@ -10766,17 +10736,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
     if (sse_decode_bool(deserializer)) {
       return (sse_decode_box_autoadd_i_32(deserializer));
-    } else {
-      return null;
-    }
-  }
-
-  @protected
-  PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    if (sse_decode_bool(deserializer)) {
-      return (sse_decode_box_autoadd_i_64(deserializer));
     } else {
       return null;
     }
@@ -11082,12 +11041,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   @protected
   TmsDuration sse_decode_tms_duration(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var var_years = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_months = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_days = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_hours = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_minutes = sse_decode_opt_box_autoadd_i_64(deserializer);
-    var var_seconds = sse_decode_opt_box_autoadd_i_64(deserializer);
+    var var_years = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_months = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_days = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_hours = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_minutes = sse_decode_opt_box_autoadd_i_32(deserializer);
+    var var_seconds = sse_decode_opt_box_autoadd_i_32(deserializer);
     return TmsDuration.raw(
         years: var_years,
         months: var_months,
@@ -11438,13 +11397,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   void sse_encode_box_autoadd_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self, serializer);
-  }
-
-  @protected
-  void sse_encode_box_autoadd_i_64(
-      PlatformInt64 self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_i_64(self, serializer);
   }
 
   @protected
@@ -11891,12 +11843,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
-  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putPlatformInt64(self);
-  }
-
-  @protected
   void sse_encode_judging_pod(JudgingPod self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.podName, serializer);
@@ -12113,17 +12059,6 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_i_32(self, serializer);
-    }
-  }
-
-  @protected
-  void sse_encode_opt_box_autoadd_i_64(
-      PlatformInt64? self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-
-    sse_encode_bool(self != null, serializer);
-    if (self != null) {
-      sse_encode_box_autoadd_i_64(self, serializer);
     }
   }
 
@@ -12369,12 +12304,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   @protected
   void sse_encode_tms_duration(TmsDuration self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_opt_box_autoadd_i_64(self.years, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.months, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.days, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.hours, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.minutes, serializer);
-    sse_encode_opt_box_autoadd_i_64(self.seconds, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.years, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.months, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.days, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.hours, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.minutes, serializer);
+    sse_encode_opt_box_autoadd_i_32(self.seconds, serializer);
   }
 
   @protected

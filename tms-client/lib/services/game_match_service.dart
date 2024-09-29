@@ -70,7 +70,7 @@ class GameMatchService {
   Future<int> insertMatch(String? matchId, GameMatch match) async {
     try {
       var request = RobotGameMatchInsertRequest(matchId: matchId, gameMatch: match).toJsonString();
-      var response = await Network().networkPost("/robot_game/matches/update_match", request);
+      var response = await Network().networkPost("/robot_game/matches/insert_match", request);
       if (response.$1) {
         TmsLogger().d("Updated game match: $matchId");
         return HttpStatus.ok;

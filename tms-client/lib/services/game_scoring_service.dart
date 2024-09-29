@@ -58,7 +58,7 @@ class GameScoringService {
         scoreSheetId: scoreSheetId,
         scoreSheet: scoreSheet,
       ).toJsonString();
-      var response = await Network().networkPost("/robot_game/scoring/update_score_sheet", request);
+      var response = await Network().networkPost("/robot_game/scoring/insert_score_sheet", request);
       if (response.$1) {
         return HttpStatus.ok;
       } else {

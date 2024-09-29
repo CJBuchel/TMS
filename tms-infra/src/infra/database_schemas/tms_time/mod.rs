@@ -34,4 +34,7 @@ pub trait TmsTimeBased {
 
   #[flutter_rust_bridge::frb(sync)]
   fn to_string(&self) -> String;
+
+  #[flutter_rust_bridge::frb(sync)]
+  fn add_duration(&self, duration: TmsDuration) -> Self;
 }

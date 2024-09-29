@@ -13,8 +13,20 @@ pub use tournament_config_requests::*;
 pub mod socket_protocol;
 pub use socket_protocol::*;
 
-pub mod robot_game_requests;
-pub use robot_game_requests::*;
+pub mod robot_game_table_requests;
+pub use robot_game_table_requests::*;
 
-pub mod teams_requests;
-pub use teams_requests::*;
+pub mod robot_game_match_requests;
+pub use robot_game_match_requests::*;
+
+pub mod robot_game_score_sheet_requests;
+pub use robot_game_score_sheet_requests::*;
+
+pub mod judging_pod_requests;
+pub use judging_pod_requests::*;
+
+pub mod judging_session_requests;
+pub use judging_session_requests::*;
+
+pub mod team_requests;
+pub use team_requests::*;

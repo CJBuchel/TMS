@@ -16,7 +16,7 @@ pub fn robot_game_matches_filter(clients: ClientMap, db: SharedDatabase, service
     .and(with_services(services.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
-    .and_then(robot_game_matches_load_matches_handler);
+    .and_then(robot_game_match_load_handler);
 
   let unload_matches = robot_game_matches_path
     .and(warp::path("unload_matches"))
@@ -24,7 +24,7 @@ pub fn robot_game_matches_filter(clients: ClientMap, db: SharedDatabase, service
     .and(with_services(services.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
-    .and_then(robot_game_matches_unload_matches_handler);
+    .and_then(robot_game_match_unload_handler);
 
   let ready_matches = robot_game_matches_path
     .and(warp::path("ready_matches"))
@@ -32,7 +32,7 @@ pub fn robot_game_matches_filter(clients: ClientMap, db: SharedDatabase, service
     .and(with_services(services.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
-    .and_then(robot_game_matches_ready_matches_handler);
+    .and_then(robot_game_match_ready_handler);
 
   let unready_matches = robot_game_matches_path
     .and(warp::path("unready_matches"))
@@ -40,16 +40,16 @@ pub fn robot_game_matches_filter(clients: ClientMap, db: SharedDatabase, service
     .and(with_services(services.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
-    .and_then(robot_game_matches_unready_matches_handler);
+    .and_then(robot_game_match_unready_handler);
 
   let update_match = robot_game_matches_path
-    .and(warp::path("update_match"))
+    .and(warp::path("insert_match"))
     .and(warp::post())
     .and(warp::body::json())
     .and(with_db(db.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
-    .and_then(robot_game_matches_update_match_handler);
+    .and_then(robot_game_match_insert_handler);
 
   let remove_match = robot_game_matches_path
     .and(warp::path("remove_match"))
@@ -58,7 +58,7 @@ pub fn robot_game_matches_filter(clients: ClientMap, db: SharedDatabase, service
     .and(with_db(db.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
-    .and_then(robot_game_matches_remove_game_match_handler);
+    .and_then(robot_game_match_remove_handler);
 
   load_matches.or(unload_matches).or(ready_matches).or(unready_matches).or(update_match).or(remove_match)
 }

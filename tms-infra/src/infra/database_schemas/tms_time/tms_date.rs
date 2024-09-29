@@ -57,9 +57,9 @@ impl TmsTimeBased for TmsDate {
 
   #[flutter_rust_bridge::frb(sync)]
   fn duration(&self) -> TmsDuration {
-    let years = self.year as i64;
-    let months = self.month as i64;
-    let days = self.day as i64;
+    let years = self.year as i32;
+    let months = self.month as i32;
+    let days = self.day as i32;
 
     TmsDuration::new(Some(years), Some(months), Some(days), None, None, None)
   }
@@ -87,6 +87,16 @@ impl TmsTimeBased for TmsDate {
   #[flutter_rust_bridge::frb(sync)]
   fn to_string(&self) -> String {
     format!("{:04}-{:02}-{:02}", self.year, self.month, self.day)
+  }
+
+  #[flutter_rust_bridge::frb(sync)]
+  fn add_duration(&self, duration: TmsDuration) -> Self {
+    let added_duration = self.duration().add(duration);
+    Self {
+      year: (self.year + added_duration.years.unwrap_or(self.year)) as i32,
+      month: (self.month as i32 + added_duration.months.unwrap_or(self.month as i32)) as u32,
+      day: (self.day as i32 + added_duration.days.unwrap_or(self.day as i32)) as u32,
+    }
   }
 }
 

@@ -31,5 +31,11 @@ pub use robot_game_tables_handler::*;
 mod robot_game_scoring_handler;
 pub use robot_game_scoring_handler::*;
 
+mod judging_sessions_handler;
+pub use judging_sessions_handler::*;
+
+mod judging_pods_handler;
+pub use judging_pods_handler::*;
+
 mod teams_handler;
 pub use teams_handler::*;

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/category.dart';
@@ -25,7 +27,7 @@ class OnAddMatch {
   Widget _editStartTime() {
     return EditTimeWidget(
       label: "Start Time",
-      initialTime: dateTimeToTmsDateTime(DateTime.now()),
+      initialTime: TmsDateTime(time: dateTimeToTmsDateTime(DateTime.now()).time),
       onChanged: (t) => _startTime = t,
     );
   }
@@ -33,24 +35,29 @@ class OnAddMatch {
   void call(BuildContext context) {
     ConfirmFutureDialog(
       onStatusConfirmFuture: () {
-        return Provider.of<GameMatchProvider>(context, listen: false).insertGameMatch(
-          null,
-          GameMatch(
-            matchNumber: _matchNumberController.text,
-            startTime: _startTime,
-            endTime: _startTime.addDuration(duration: TmsDuration(minutes: 7)),
-            completed: false,
-            gameMatchTables: [],
-            category: const TmsCategory(category: "Ranking Matches", subCategories: []),
-          ),
-        );
+        if (_matchNumberController.text.isEmpty) {
+          return Future.value(HttpStatus.badRequest);
+        } else {
+          return Provider.of<GameMatchProvider>(context, listen: false).insertGameMatch(
+            null,
+            GameMatch(
+              matchNumber: _matchNumberController.text,
+              startTime: TmsDateTime(time: _startTime.time), // we only care about time, not date
+              endTime: TmsDateTime(time: _startTime.time).addDuration(duration: TmsDuration(minutes: 4)),
+              completed: false,
+              gameMatchTables: [],
+              category: const TmsCategory(category: "Ranking Matches", subCategories: []),
+            ),
+          );
+        }
       },
       style: ConfirmDialogStyle.success(
         title: "Add Match",
         message: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            _editStartTime(),
-            // don't need to add end time (useful for now)
+            _rowPadding(_editStartTime()),
+            // don't need to add end time (not useful for now)
             _rowPadding(
               TextField(
                 controller: _matchNumberController,

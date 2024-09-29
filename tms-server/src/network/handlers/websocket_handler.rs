@@ -1,9 +1,7 @@
 use futures::{FutureExt, StreamExt};
 
-use crate::{
-  database::SharedDatabase,
-  network::{clients::*, filters::ClientNotFound, ClientMap},
-};
+use crate::{database::*, network::*};
+
 
 async fn client_msg(uuid: String, msg: warp::filters::ws::Message, _clients: &ClientMap, _db: &SharedDatabase) {
   log::debug!("{}: message: {:?}", uuid, msg);

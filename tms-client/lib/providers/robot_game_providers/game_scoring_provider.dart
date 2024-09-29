@@ -196,4 +196,9 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   }) {
     return _service.insertScoreSheet(scoreSheetId, updatedScoreSheet);
   }
+
+  // remove
+  Future<int> removeScoreSheet(String scoreSheetId) {
+    return _service.removeScoreSheet(scoreSheetId);
+  }
 }

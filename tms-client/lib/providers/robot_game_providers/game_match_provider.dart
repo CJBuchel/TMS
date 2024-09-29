@@ -56,6 +56,10 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
     }).toList();
   }
 
+  GameMatch? getMatchByMatchNumber(String matchNumber) {
+    return this.items.values.firstWhereOrNull((match) => match.matchNumber == matchNumber);
+  }
+
   Future<int> insertGameMatch(String? matchNumber, GameMatch match) async {
     // try find match id from match number (if null this will create a new match using insert)
     String? matchId = matchNumber != null ? getIdFromMatchNumber(matchNumber) : null;

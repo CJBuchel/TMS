@@ -10,12 +10,12 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
 class TmsDuration {
-  final PlatformInt64? years;
-  final PlatformInt64? months;
-  final PlatformInt64? days;
-  final PlatformInt64? hours;
-  final PlatformInt64? minutes;
-  final PlatformInt64? seconds;
+  final int? years;
+  final int? months;
+  final int? days;
+  final int? hours;
+  final int? minutes;
+  final int? seconds;
 
   const TmsDuration.raw({
     this.years,
@@ -36,43 +36,43 @@ class TmsDuration {
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationDifference(
               that: this, other: other);
 
-  PlatformInt64 inDays() => TmsRustLib.instance.api
+  int inDays() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInDays(
         that: this,
       );
 
-  PlatformInt64 inHours() => TmsRustLib.instance.api
+  int inHours() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInHours(
         that: this,
       );
 
-  PlatformInt64 inMinutes() => TmsRustLib.instance.api
+  int inMinutes() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMinutes(
         that: this,
       );
 
-  PlatformInt64 inMonths() => TmsRustLib.instance.api
+  int inMonths() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInMonths(
         that: this,
       );
 
-  PlatformInt64 inSeconds() => TmsRustLib.instance.api
+  int inSeconds() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInSeconds(
         that: this,
       );
 
-  PlatformInt64 inYears() => TmsRustLib.instance.api
+  int inYears() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationInYears(
         that: this,
       );
 
   factory TmsDuration(
-          {PlatformInt64? years,
-          PlatformInt64? months,
-          PlatformInt64? days,
-          PlatformInt64? hours,
-          PlatformInt64? minutes,
-          PlatformInt64? seconds}) =>
+          {int? years,
+          int? months,
+          int? days,
+          int? hours,
+          int? minutes,
+          int? seconds}) =>
       TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationNew(
               years: years,

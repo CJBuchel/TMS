@@ -102,6 +102,21 @@ impl TmsTimeBased for TmsDateTime {
 
     format!("{} {}", date_str, time_str)
   }
+
+  #[flutter_rust_bridge::frb(sync)]
+  fn add_duration(&self, duration: TmsDuration) -> Self {
+    let date: Option<TmsDate> = match &self.date {
+      Some(date) => Some(date.add_duration(duration.clone())),
+      None => None,
+    };
+
+    let time: Option<TmsTime> = match &self.time {
+      Some(time) => Some(time.add_duration(duration.clone())),
+      None => None,
+    };
+
+    Self { date, time }
+  }
 }
 
 impl Default for TmsDateTime {

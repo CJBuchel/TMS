@@ -73,16 +73,16 @@ class BaseTable extends StatelessWidget {
           child: headerWidgets(),
         ),
         Flexible(
-          child: ListView.builder(
+          child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: rows.length,
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: rows[index].decoration,
-                child: tableRowWidget(rows[index]),
-              );
-            },
+            child: Column(
+              children: rows.map((row) {
+                return Container(
+                  decoration: row.decoration,
+                  child: tableRowWidget(row),
+                );
+              }).toList(),
+            ),
           ),
         ),
       ],

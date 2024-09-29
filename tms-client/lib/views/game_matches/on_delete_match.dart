@@ -12,7 +12,7 @@ class OnDeleteGameMatch {
 
   void call(BuildContext context) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.warn(
+      style: ConfirmDialogStyle.error(
         title: "Delete Match $matchNumber",
         message: const Text("Are you sure you want to delete this match?"),
       ),

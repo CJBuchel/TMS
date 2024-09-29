@@ -192,7 +192,7 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_bar,
                           title: const Text('Pods'),
-                          goNamed: 'pods',
+                          goNamed: 'judging_pods',
                         ),
                         const Padding(
                           padding: const EdgeInsets.only(left: 10),

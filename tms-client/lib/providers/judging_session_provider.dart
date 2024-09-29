@@ -2,8 +2,8 @@ import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/generated/infra/database_schemas/judging_session.dart';
 import 'package:tms/utils/sorter_util.dart';
 
-class JudgingSessionsProvider extends EchoTreeProvider<String, JudgingSession> {
-  JudgingSessionsProvider()
+class JudgingSessionProvider extends EchoTreeProvider<String, JudgingSession> {
+  JudgingSessionProvider()
       : super(tree: ":judging:sessions", fromJsonString: (json) => JudgingSession.fromJsonString(json: json));
 
   List<JudgingSession> get judgingSessions => judgingSessionsByTime;

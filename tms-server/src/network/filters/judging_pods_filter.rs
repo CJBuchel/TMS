@@ -3,7 +3,7 @@ use filters::header_filters::{auth_token_filter::check_auth_token_filter, role_p
 use warp::Filter;
 
 pub fn judging_pods_filter(clients: ClientMap, db: SharedDatabase) -> impl warp::Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-  let judging_pods_path = warp::path("judging_pods");
+  let judging_pods_path = warp::path("judging").and(warp::path("pods"));
 
   let insert_pod_path = judging_pods_path
     .and(warp::path("insert_pod"))

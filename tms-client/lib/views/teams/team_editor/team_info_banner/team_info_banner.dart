@@ -5,7 +5,7 @@ import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/judging_session.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_integrity_message.dart';
-import 'package:tms/providers/judging_sessions_provider.dart';
+import 'package:tms/providers/judging_session_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/tournament_integrity_provider.dart';
 import 'package:tms/views/teams/team_editor/team_info_banner/delete_team_button.dart';
@@ -65,7 +65,7 @@ class TeamInfoBanner extends StatelessWidget {
   }
 
   Widget _judgingSessionsInfo() {
-    return Selector<JudgingSessionsProvider, List<JudgingSession>>(
+    return Selector<JudgingSessionProvider, List<JudgingSession>>(
       selector: (_, p) => p.getSessionsByTeamNumber(team.teamNumber),
       shouldRebuild: (previous, next) => !listEquals(previous, next),
       builder: (_, sessions, __) {

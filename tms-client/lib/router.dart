@@ -7,6 +7,7 @@ import 'package:tms/views/dashboard/dashboard.dart';
 import 'package:tms/views/game_match_timer/game_match_timer.dart';
 import 'package:tms/views/game_matches/game_matches.dart';
 import 'package:tms/views/game_tables/game_tables.dart';
+import 'package:tms/views/judging_pods/judging_pods.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/match_controller/match_controller.dart';
@@ -133,6 +134,29 @@ final _protectedRoutes = <GoRoute>[
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
           child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: GameTables())),
+        ),
+      ),
+    ],
+    redirect: (context, state) {
+      if (!Provider.of<AuthProvider>(context, listen: false).isLoggedIn) {
+        return '/login';
+      }
+
+      return null;
+    },
+  ),
+
+  // Judging routes
+  GoRoute(
+    path: '/judging',
+    name: 'judging',
+    routes: [
+      GoRoute(
+        path: 'judging_pods',
+        name: 'judging_pods',
+        builder: (context, state) => BaseScaffoldDrawerRouter(
+          state: state,
+          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Center(child: JudgingPods()))),
         ),
       ),
     ],

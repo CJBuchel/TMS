@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/judging_session.dart';
-import 'package:tms/providers/judging_sessions_provider.dart';
+import 'package:tms/providers/judging_session_provider.dart';
 import 'package:tms/utils/sorter_util.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 
@@ -89,7 +89,7 @@ class JudgingScheduleTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<JudgingSessionsProvider, List<JudgingSession>>(
+    return Selector<JudgingSessionProvider, List<JudgingSession>>(
       selector: (_, provider) => provider.judgingSessions,
       builder: (context, sessions, _) {
         return _JudgingScheduleTimer(

@@ -5,7 +5,7 @@ import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/judging_session.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/models/team_score_sheet.dart';
-import 'package:tms/providers/judging_sessions_provider.dart';
+import 'package:tms/providers/judging_session_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scores_provider.dart';
 import 'package:tms/providers/teams_provider.dart';
@@ -42,7 +42,7 @@ class WithTeamDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector4<GameMatchProvider, JudgingSessionsProvider, GameScoresProvider, TeamsProvider, _TeamDetailsData>(
+    return Selector4<GameMatchProvider, JudgingSessionProvider, GameScoresProvider, TeamsProvider, _TeamDetailsData>(
       selector: (context, a, b, c, d) {
         Team team = d.getTeamById(teamId);
         return _TeamDetailsData(

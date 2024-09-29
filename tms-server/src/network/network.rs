@@ -30,11 +30,17 @@ impl Network {
       .or(tournament_schedule_filter(self.clients.clone(), self.db.clone()))
       .or(tournament_config_filter(self.clients.clone(), self.db.clone()))
       .or(tournament_blueprint_filter(self.clients.clone(), self.db.clone()))
+      // login/auth
       .or(login_filter(self.clients.clone(), self.db.clone()))
+      // robot games
       .or(robot_game_matches_filter(self.clients.clone(), self.db.clone(), self.services.clone()))
       .or(robot_game_timer_filter(self.clients.clone(), self.db.clone(), self.services.clone()))
       .or(robot_game_tables_filter(self.clients.clone(), self.db.clone()))
       .or(robot_game_scoring_filter(self.clients.clone(), self.db.clone()))
+      // judging
+      .or(judging_sessions_filter(self.clients.clone(), self.db.clone()))
+      .or(judging_pods_filter(self.clients.clone(), self.db.clone()))
+      // teams
       .or(teams_filter(self.clients.clone(), self.db.clone()))
       // core filters
       .or(registration_filter(self.clients.clone(), self.db.clone(), self.local_ip.clone(), self.tls, self.port))

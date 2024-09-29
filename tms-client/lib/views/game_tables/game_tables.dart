@@ -29,6 +29,13 @@ class GameTables extends StatelessWidget {
     List<EditTableRow> _rows(BuildContext context, List<GameTable> tables) {
       return tables.map((table) {
         return EditTableRow(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).dividerColor,
+              ),
+            ),
+          ),
           onEdit: () {
             _tableController.text = table.tableName;
             ConfirmFutureDialog(

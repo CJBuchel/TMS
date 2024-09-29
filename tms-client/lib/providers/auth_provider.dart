@@ -1,14 +1,16 @@
 import 'dart:io';
 
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
+import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra.dart';
+import 'package:tms/generated/infra/database_schemas/user.dart';
 import 'package:tms/generated/infra/network_schemas/login_requests.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/services/auth_service.dart';
 import 'package:tms/utils/permissions.dart';
 
-class AuthProvider with ChangeNotifier {
+class AuthProvider extends EchoTreeProvider<String, User> {
   final AuthService _authService = AuthService();
 
   String get authToken => TmsLocalStorageProvider().authToken;
@@ -22,7 +24,7 @@ class AuthProvider with ChangeNotifier {
   final _localStorage = TmsLocalStorageProvider();
   late final VoidCallback _lsListener;
 
-  AuthProvider() {
+  AuthProvider() : super(tree: ':users', fromJsonString: (json) => User.fromJsonString(json: json)) {
     _lsListener = () {
       notifyListeners();
     };
@@ -80,4 +82,12 @@ class AuthProvider with ChangeNotifier {
     var r = roles.map((e) => e.roleId).toList();
     return permissions.hasAccess(r);
   }
+
+  List<User> get usersByName {
+    List<User> users = items.values.toList();
+    users.sort((a, b) => a.username.compareTo(b.username));
+    return users;
+  }
+
+  List<User> get users => usersByName;
 }

@@ -5,10 +5,14 @@ import 'package:tms/generated/infra/network_schemas/socket_protocol/match_state_
 import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'package:tms/mixins/server_event_subscriber_mixin.dart';
 import 'package:tms/providers/local_storage_provider.dart';
+import 'package:tms/services/game_table_service.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/utils/sorter_util.dart';
+import 'package:collection/collection.dart';
 
 class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerEventSubscribeNotifierMixin {
+  GameTableService _service = GameTableService();
+
   String _localGameTable = "";
   String _localReferee = "";
   List<String> _loadedMatchNumbers = [];
@@ -74,8 +78,14 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerE
     super.dispose();
   }
 
-  List<GameTable> get tables => this.items.values.toList();
-  List<String> get tableNames => this.items.values.map((e) => e.tableName).toList();
+  List<GameTable> get tablesByName {
+    List<GameTable> tables = this.items.values.toList();
+    tables.sort((a, b) => a.tableName.compareTo(b.tableName));
+    return tables;
+  }
+
+  List<GameTable> get tables => tablesByName;
+  List<String> get tableNames => this.tables.map((e) => e.tableName).toList();
 
   // check if table is set in local storage
   // and if the table exists in the db
@@ -162,5 +172,17 @@ class GameTableProvider extends EchoTreeProvider<String, GameTable> with ServerE
     }
 
     return null;
+  }
+
+  String? getIdFromTableName(String tableName) {
+    return this.items.keys.firstWhereOrNull((key) => this.items[key]?.tableName == tableName);
+  }
+
+  Future<int> insertTable(String? tableId, String table) async {
+    return _service.insertTable(tableId, table);
+  }
+
+  Future<int> removeTable(String tableId) async {
+    return _service.removeTable(tableId);
   }
 }

@@ -40,6 +40,22 @@ class MatchesInfoBanner extends StatelessWidget {
     );
   }
 
+  Widget _teamIntegrity() {
+    return Selector<TournamentIntegrityProvider, List<TournamentIntegrityMessage>>(
+      selector: (_, p) {
+        return p.teamMessages;
+      },
+      builder: (context, messages, child) {
+        return Row(
+          children: [
+            IconTooltipIntegrityCheck(messages: messages),
+            Text("Team issues: ${messages.length}"),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -59,8 +75,10 @@ class MatchesInfoBanner extends StatelessWidget {
           ),
           // completed matches
           _completedMatches(),
-          // checks
+          // match checks
           _matchIntegrity(),
+          // team checks
+          _teamIntegrity(),
           // add match
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(

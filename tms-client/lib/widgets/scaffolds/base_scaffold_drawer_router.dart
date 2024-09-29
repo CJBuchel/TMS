@@ -178,7 +178,7 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_restaurant,
                           title: const Text('Tables'),
-                          goNamed: 'tables',
+                          goNamed: 'game_tables',
                         ),
                         const Padding(
                           padding: const EdgeInsets.only(left: 10),

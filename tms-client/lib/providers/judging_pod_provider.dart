@@ -19,6 +19,8 @@ class JudgingPodProvider extends EchoTreeProvider<String, JudgingPod> {
 
   List<JudgingPod> get pods => podsByName;
 
+  List<String> get podNames => podsByName.map((e) => e.podName).toList();
+
   String? getIdFromPodName(String podName) {
     return this.items.keys.firstWhereOrNull((key) => this.items[key]?.podName == podName);
   }

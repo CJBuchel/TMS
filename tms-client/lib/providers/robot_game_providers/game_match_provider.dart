@@ -121,8 +121,8 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
       String? updatedMatchId = getIdFromMatchNumber(updatedMatchNumber);
 
       if (originMatch != null && updatedMatch != null && originMatchId != null && updatedMatchId != null) {
-        originMatch.gameMatchTables.removeWhere((gameMatchTable) => gameMatchTable.table == originTable);
-        if (updatedMatch.gameMatchTables.any((gameMatchTable) => gameMatchTable.table == updatedTable.table)) {
+        originMatch.gameMatchTables.removeWhere((t) => t.table == originTable);
+        if (updatedMatch.gameMatchTables.any((t) => t.table == updatedTable.table)) {
           return HttpStatus.badRequest;
         } else {
           updatedMatch.gameMatchTables.add(updatedTable);
@@ -138,7 +138,7 @@ class GameMatchProvider extends EchoTreeProvider<String, GameMatch> {
       String? originMatchId = getIdFromMatchNumber(originMatchNumber);
 
       if (originMatch != null && originMatchId != null) {
-        originMatch.gameMatchTables.removeWhere((gameMatchTable) => gameMatchTable.table == originTable);
+        originMatch.gameMatchTables.removeWhere((t) => t.table == originTable);
         originMatch.gameMatchTables.add(updatedTable);
         return _service.insertMatch(originMatchId, originMatch);
       }

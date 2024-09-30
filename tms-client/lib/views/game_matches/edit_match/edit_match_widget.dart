@@ -121,8 +121,9 @@ class EditMatchWidget extends StatelessWidget {
             EditTable(
               onAdd: () {
                 // initial values
-                _selectedTable.value = data.availableTables.first;
-                _selectedTeam.value = data.availableTeams.first;
+                _selectedTable.value = data.availableTables.firstOrNull ?? "";
+                _selectedTeam.value = data.availableTeams.firstOrNull ??
+                    const Team(teamNumber: "", name: "", ranking: 0, affiliation: "");
 
                 ConfirmFutureDialog(
                   onStatusConfirmFuture: () {

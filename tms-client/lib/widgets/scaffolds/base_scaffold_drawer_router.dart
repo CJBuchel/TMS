@@ -140,6 +140,17 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           goNamed: 'users',
                           permissions: const Permissions(admin: true),
                         ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.backup,
+                          title: const Text('Backups'),
+                          goNamed: 'backups',
+                        ),
+                        const BaseScaffoldDrawerRouterItem(
+                          icon: Icons.settings,
+                          title: const Text('Setup'),
+                          goNamed: 'setup',
+                          permissions: const Permissions(admin: true),
+                        ),
                         const Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: const Text('Teams', style: TextStyle(fontSize: 12, color: Colors.grey)),
@@ -193,21 +204,6 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           icon: Icons.table_bar,
                           title: const Text('Pods'),
                           goNamed: 'judging_pods',
-                        ),
-                        const Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: const Text('Config', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                        ),
-                        const BaseScaffoldDrawerRouterItem(
-                          icon: Icons.backup,
-                          title: const Text('Backups'),
-                          goNamed: 'backups',
-                        ),
-                        const BaseScaffoldDrawerRouterItem(
-                          icon: Icons.settings,
-                          title: const Text('Setup'),
-                          goNamed: 'setup',
-                          permissions: const Permissions(admin: true),
                         ),
                       ]),
                 ],

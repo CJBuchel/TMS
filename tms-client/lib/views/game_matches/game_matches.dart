@@ -26,39 +26,46 @@ class GameMatches extends StatelessWidget {
     Color? submittedColor,
     bool isMatchComplete = false,
   }) {
-    return Row(
-      children: tables.map((t) {
-        Color? c = t.scoreSubmitted
-            ? submittedColor
-            : isMatchComplete
-                ? Colors.red
-                : backgroundColor;
-        return Expanded(
-          flex: 1,
-          child: Container(
-            margin: const EdgeInsets.all(5),
-            padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(8),
-              color: c,
-            ),
-            child: Column(
-              children: [
-                Text(
-                  t.table,
-                  style: const TextStyle(fontSize: 12),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Wrap(
+          children: tables.map((t) {
+            Color? c = t.scoreSubmitted
+                ? submittedColor
+                : isMatchComplete
+                    ? Colors.red
+                    : backgroundColor;
+            return ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 100),
+              child: SizedBox(
+                width: constraints.maxWidth / tables.length,
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8),
+                    color: c,
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        t.table,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        t.teamNumber,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  t.teamNumber,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
   }
 
@@ -78,6 +85,13 @@ class GameMatches extends StatelessWidget {
       return EditTableRow(
         onEdit: () => ConfirmFutureDialog(
           onStatusConfirmFuture: () {
+            // catcher if the match was updated while the dialog was open
+            GameMatch? updatedMatch = Provider.of<GameMatchProvider>(context, listen: false).getMatchByMatchNumber(
+              m.matchNumber,
+            );
+
+            m = updatedMatch ?? m;
+
             return Provider.of<GameMatchProvider>(context, listen: false).insertGameMatch(
               m.matchNumber,
               GameMatch(

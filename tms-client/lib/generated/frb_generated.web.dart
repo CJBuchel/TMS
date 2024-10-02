@@ -87,6 +87,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
+  bool dco_decode_box_autoadd_bool(dynamic raw);
+
+  @protected
   CategoricalQuestion dco_decode_box_autoadd_categorical_question(dynamic raw);
 
   @protected
@@ -292,6 +295,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User dco_decode_box_autoadd_user(dynamic raw);
 
   @protected
+  UserPermissions dco_decode_box_autoadd_user_permissions(dynamic raw);
+
+  @protected
   CategoricalOption dco_decode_categorical_option(dynamic raw);
 
   @protected
@@ -396,6 +402,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   String? dco_decode_opt_String(dynamic raw);
+
+  @protected
+  bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
@@ -586,6 +595,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User dco_decode_user(dynamic raw);
 
   @protected
+  UserPermissions dco_decode_user_permissions(dynamic raw);
+
+  @protected
   Map<String, QuestionAnswer> sse_decode_Map_String_question_answer(
       SseDeserializer deserializer);
 
@@ -597,6 +609,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
   CategoricalQuestion sse_decode_box_autoadd_categorical_question(
@@ -836,6 +851,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User sse_decode_box_autoadd_user(SseDeserializer deserializer);
 
   @protected
+  UserPermissions sse_decode_box_autoadd_user_permissions(
+      SseDeserializer deserializer);
+
+  @protected
   CategoricalOption sse_decode_categorical_option(SseDeserializer deserializer);
 
   @protected
@@ -949,6 +968,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   String? sse_decode_opt_String(SseDeserializer deserializer);
+
+  @protected
+  bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
 
   @protected
   int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer);
@@ -1161,6 +1183,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User sse_decode_user(SseDeserializer deserializer);
 
   @protected
+  UserPermissions sse_decode_user_permissions(SseDeserializer deserializer);
+
+  @protected
   void sse_encode_Map_String_question_answer(
       Map<String, QuestionAnswer> self, SseSerializer serializer);
 
@@ -1172,6 +1197,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_categorical_question(
@@ -1400,6 +1428,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_box_autoadd_user(User self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_user_permissions(
+      UserPermissions self, SseSerializer serializer);
+
+  @protected
   void sse_encode_categorical_option(
       CategoricalOption self, SseSerializer serializer);
 
@@ -1520,6 +1552,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
 
   @protected
   void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer);
@@ -1728,6 +1763,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_user(User self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_user_permissions(
+      UserPermissions self, SseSerializer serializer);
 }
 
 // Section: wire_class

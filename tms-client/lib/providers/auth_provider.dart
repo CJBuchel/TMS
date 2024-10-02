@@ -8,7 +8,6 @@ import 'package:tms/generated/infra/database_schemas/user.dart';
 import 'package:tms/generated/infra/network_schemas/login_requests.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/services/auth_service.dart';
-import 'package:tms/utils/permissions.dart';
 
 class AuthProvider extends EchoTreeProvider<String, User> {
   final AuthService _authService = AuthService();
@@ -78,9 +77,9 @@ class AuthProvider extends EchoTreeProvider<String, User> {
     return status;
   }
 
-  bool hasAccess(Permissions permissions) {
+  bool hasAccess(UserPermissions permissions) {
     var r = roles.map((e) => e.roleId).toList();
-    return permissions.hasAccess(r);
+    return permissions.hasAccess(roles: r);
   }
 
   List<User> get usersByName {

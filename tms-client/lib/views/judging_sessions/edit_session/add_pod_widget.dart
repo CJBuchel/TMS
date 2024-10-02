@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 
 class AddPodWidget extends StatelessWidget {

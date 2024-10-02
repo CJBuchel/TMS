@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:tms/generated/infra/database_schemas/user.dart';
 import 'package:tms/providers/auth_provider.dart';
-import 'package:tms/utils/permissions.dart';
 import 'package:tms/widgets/app_bar/app_bar.dart';
 
 class _DrawStack extends StatelessWidget {
@@ -63,7 +63,7 @@ class BaseScaffoldDrawerRouterItem extends StatelessWidget {
   final IconData icon;
   final Widget title;
   final String goNamed;
-  final Permissions? permissions;
+  final UserPermissions? permissions;
 
   const BaseScaffoldDrawerRouterItem({
     Key? key,
@@ -132,13 +132,11 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           icon: Icons.dashboard,
                           title: const Text('Dashboard'),
                           goNamed: 'dashboard',
-                          permissions: const Permissions(admin: true),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.person,
                           title: const Text('Users'),
                           goNamed: 'users',
-                          permissions: const Permissions(admin: true),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.backup,
@@ -149,16 +147,16 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           icon: Icons.settings,
                           title: const Text('Setup'),
                           goNamed: 'setup',
-                          permissions: const Permissions(admin: true),
                         ),
                         const Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: const Text('Teams', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.people,
                           title: const Text('Teams'),
                           goNamed: 'teams',
+                          permissions: UserPermissions(judgeAdvisor: true),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_view,
@@ -173,13 +171,11 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           icon: Icons.edit_document,
                           title: const Text('Referee Scoring'),
                           goNamed: 'scoring',
-                          permissions: const Permissions(referee: true),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.shuffle,
                           title: const Text('Match Controller'),
                           goNamed: 'match_controller',
-                          permissions: const Permissions(headReferee: true),
                         ),
                         const BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_chart,

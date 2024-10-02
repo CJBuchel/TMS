@@ -6,14 +6,14 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`
 
 class User {
   final String username;
   final String password;
   final List<String> roles;
 
-  const User({
+  const User.raw({
     required this.username,
     required this.password,
     required this.roles,
@@ -24,6 +24,25 @@ class User {
 
   static User fromJsonString({required String json}) => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasUserUserFromJsonString(json: json);
+
+  UserPermissions getPermissions() =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserGetPermissions(
+        that: this,
+      );
+
+  bool hasAccess({required UserPermissions permissions}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserHasAccess(
+          that: this, permissions: permissions);
+
+  bool hasRole({required String role}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasUserUserHasRole(that: this, role: role);
+
+  factory User(
+          {required String username,
+          required String password,
+          required List<String> roles}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserNew(
+          username: username, password: password, roles: roles);
 
   String toJsonString() =>
       TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserToJsonString(
@@ -44,4 +63,93 @@ class User {
           username == other.username &&
           password == other.password &&
           roles == other.roles;
+}
+
+class UserPermissions {
+  final bool? admin;
+  final bool? referee;
+  final bool? headReferee;
+  final bool? judge;
+  final bool? judgeAdvisor;
+  final bool? scoreKeeper;
+  final bool? emcee;
+  final bool? av;
+
+  const UserPermissions.raw({
+    this.admin,
+    this.referee,
+    this.headReferee,
+    this.judge,
+    this.judgeAdvisor,
+    this.scoreKeeper,
+    this.emcee,
+    this.av,
+  });
+
+  static Future<UserPermissions> default_() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasUserUserPermissionsDefault();
+
+  static UserPermissions fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraDatabaseSchemasUserUserPermissionsFromJsonString(json: json);
+
+  static UserPermissions fromRoles({required List<String> roles}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasUserUserPermissionsFromRoles(roles: roles);
+
+  bool hasAccess({required List<String> roles}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasUserUserPermissionsHasAccess(
+          that: this, roles: roles);
+
+  factory UserPermissions(
+          {bool? admin,
+          bool? referee,
+          bool? headReferee,
+          bool? judge,
+          bool? judgeAdvisor,
+          bool? scoreKeeper,
+          bool? emcee,
+          bool? av}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserPermissionsNew(
+          admin: admin,
+          referee: referee,
+          headReferee: headReferee,
+          judge: judge,
+          judgeAdvisor: judgeAdvisor,
+          scoreKeeper: scoreKeeper,
+          emcee: emcee,
+          av: av);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasUserUserPermissionsToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasUserUserPermissionsToSchema();
+
+  @override
+  int get hashCode =>
+      admin.hashCode ^
+      referee.hashCode ^
+      headReferee.hashCode ^
+      judge.hashCode ^
+      judgeAdvisor.hashCode ^
+      scoreKeeper.hashCode ^
+      emcee.hashCode ^
+      av.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserPermissions &&
+          runtimeType == other.runtimeType &&
+          admin == other.admin &&
+          referee == other.referee &&
+          headReferee == other.headReferee &&
+          judge == other.judge &&
+          judgeAdvisor == other.judgeAdvisor &&
+          scoreKeeper == other.scoreKeeper &&
+          emcee == other.emcee &&
+          av == other.av;
 }

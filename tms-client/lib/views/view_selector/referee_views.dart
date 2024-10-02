@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tms/generated/infra/database_schemas/user.dart';
 import 'package:tms/providers/auth_provider.dart';
-import 'package:tms/utils/permissions.dart';
 import 'package:tms/views/view_selector/image_button_card.dart';
 
 class RefereeViews extends StatelessWidget {
@@ -51,7 +51,7 @@ class RefereeViews extends StatelessWidget {
               ),
             ),
             // Head referee card
-            if (Provider.of<AuthProvider>(context).hasAccess(const Permissions(headReferee: true)))
+            if (Provider.of<AuthProvider>(context).hasAccess(UserPermissions(headReferee: true)))
               Flexible(
                 flex: 1,
                 child: Padding(

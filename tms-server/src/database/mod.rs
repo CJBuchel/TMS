@@ -3,9 +3,6 @@ pub use echo_tree_rs::core::*;
 use rand::distributions::Alphanumeric;
 use rand::Rng;
 
-mod tree_names;
-pub use tree_names::*;
-
 mod backup_service;
 pub use backup_service::*;
 
@@ -121,7 +118,7 @@ impl Database {
 
     self
       .check_insert_role(
-        "public",
+        PUBLIC_ROLE,
         "",
         vec![
           TOURNAMENT_CONFIG,
@@ -137,17 +134,17 @@ impl Database {
         vec![],
       )
       .await;
-    self.check_insert_role("admin", &self.generate_password(), vec![":"], vec![":"]).await;
-    self.check_insert_role("referee", &self.generate_password(), vec![], vec![]).await;
-    self.check_insert_role("head_referee", &self.generate_password(), vec![], vec![]).await;
-    self.check_insert_role("judge", &self.generate_password(), vec![], vec![]).await;
-    self.check_insert_role("judge_advisor", &self.generate_password(), vec![], vec![]).await;
+    self.check_insert_role(ADMIN_ROLE, &self.generate_password(), vec![":"], vec![":"]).await;
+    self.check_insert_role(REFEREE_ROLE, &self.generate_password(), vec![], vec![]).await;
+    self.check_insert_role(HEAD_REFEREE_ROLE, &self.generate_password(), vec![], vec![]).await;
+    self.check_insert_role(JUDGE_ROLE, &self.generate_password(), vec![], vec![]).await;
+    self.check_insert_role(JUDGE_ADVISOR_ROLE, &self.generate_password(), vec![], vec![]).await;
 
     // public user
     let public_user = User {
       username: "public".to_string(),
       password: "".to_string(),
-      roles: vec!["public".to_string()],
+      roles: vec![PUBLIC_ROLE.to_string()],
     };
 
     match self.insert_user(public_user, None).await {

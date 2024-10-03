@@ -49,6 +49,7 @@ import 'infra/network_schemas/socket_protocol/server_socket_protocol.dart';
 import 'infra/network_schemas/socket_protocol/table_state_event.dart';
 import 'infra/network_schemas/team_requests.dart';
 import 'infra/network_schemas/tournament_config_requests.dart';
+import 'infra/network_schemas/user_requests.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 
 abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
@@ -293,7 +294,13 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User dco_decode_box_autoadd_user(dynamic raw);
 
   @protected
+  UserInsertRequest dco_decode_box_autoadd_user_insert_request(dynamic raw);
+
+  @protected
   UserPermissions dco_decode_box_autoadd_user_permissions(dynamic raw);
+
+  @protected
+  UserRemoveRequest dco_decode_box_autoadd_user_remove_request(dynamic raw);
 
   @protected
   CategoricalOption dco_decode_categorical_option(dynamic raw);
@@ -593,7 +600,13 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User dco_decode_user(dynamic raw);
 
   @protected
+  UserInsertRequest dco_decode_user_insert_request(dynamic raw);
+
+  @protected
   UserPermissions dco_decode_user_permissions(dynamic raw);
+
+  @protected
+  UserRemoveRequest dco_decode_user_remove_request(dynamic raw);
 
   @protected
   Map<String, QuestionAnswer> sse_decode_Map_String_question_answer(
@@ -849,7 +862,15 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User sse_decode_box_autoadd_user(SseDeserializer deserializer);
 
   @protected
+  UserInsertRequest sse_decode_box_autoadd_user_insert_request(
+      SseDeserializer deserializer);
+
+  @protected
   UserPermissions sse_decode_box_autoadd_user_permissions(
+      SseDeserializer deserializer);
+
+  @protected
+  UserRemoveRequest sse_decode_box_autoadd_user_remove_request(
       SseDeserializer deserializer);
 
   @protected
@@ -1181,7 +1202,15 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   User sse_decode_user(SseDeserializer deserializer);
 
   @protected
+  UserInsertRequest sse_decode_user_insert_request(
+      SseDeserializer deserializer);
+
+  @protected
   UserPermissions sse_decode_user_permissions(SseDeserializer deserializer);
+
+  @protected
+  UserRemoveRequest sse_decode_user_remove_request(
+      SseDeserializer deserializer);
 
   @protected
   void sse_encode_Map_String_question_answer(
@@ -1426,8 +1455,16 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_box_autoadd_user(User self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_user_insert_request(
+      UserInsertRequest self, SseSerializer serializer);
+
+  @protected
   void sse_encode_box_autoadd_user_permissions(
       UserPermissions self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_user_remove_request(
+      UserRemoveRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_categorical_option(
@@ -1763,8 +1800,16 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_user(User self, SseSerializer serializer);
 
   @protected
+  void sse_encode_user_insert_request(
+      UserInsertRequest self, SseSerializer serializer);
+
+  @protected
   void sse_encode_user_permissions(
       UserPermissions self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_user_remove_request(
+      UserRemoveRequest self, SseSerializer serializer);
 }
 
 // Section: wire_class

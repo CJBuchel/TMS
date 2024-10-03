@@ -51,7 +51,7 @@ class RefereeViews extends StatelessWidget {
               ),
             ),
             // Head referee card
-            if (Provider.of<AuthProvider>(context).hasAccess(UserPermissions(headReferee: true)))
+            if (Provider.of<AuthProvider>(context).hasPermissionAccess(UserPermissions(headReferee: true)))
               Flexible(
                 flex: 1,
                 child: Padding(

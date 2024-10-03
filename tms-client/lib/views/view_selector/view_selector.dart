@@ -32,9 +32,9 @@ class ViewSelector extends StatelessWidget {
                   // public views
                   const PublicViews(),
                   // admin views
-                  if (authProvider.hasAccess(UserPermissions(admin: true))) const AdminViews(),
+                  if (authProvider.hasPermissionAccess(UserPermissions(admin: true))) const AdminViews(),
                   // referee screens
-                  if (authProvider.hasAccess(UserPermissions(referee: true))) const RefereeViews(),
+                  if (authProvider.hasPermissionAccess(UserPermissions(referee: true))) const RefereeViews(),
                 ],
               ),
             ),

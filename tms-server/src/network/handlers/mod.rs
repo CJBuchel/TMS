@@ -39,3 +39,6 @@ pub use judging_pods_handler::*;
 
 mod teams_handler;
 pub use teams_handler::*;
+
+mod users_handler;
+pub use users_handler::*;

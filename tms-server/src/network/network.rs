@@ -26,12 +26,14 @@ impl Network {
       .allow_methods(vec!["GET", "POST", "DELETE", "OPTIONS"]);
 
     let routes = pulse_filter()
-      // main filters
+      // config
       .or(tournament_schedule_filter(self.clients.clone(), self.db.clone()))
       .or(tournament_config_filter(self.clients.clone(), self.db.clone()))
       .or(tournament_blueprint_filter(self.clients.clone(), self.db.clone()))
       // login/auth
       .or(login_filter(self.clients.clone(), self.db.clone()))
+      // users
+      .or(users_filter(self.clients.clone(), self.db.clone()))
       // robot games
       .or(robot_game_matches_filter(self.clients.clone(), self.db.clone(), self.services.clone()))
       .or(robot_game_timer_filter(self.clients.clone(), self.db.clone(), self.services.clone()))

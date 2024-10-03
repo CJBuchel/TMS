@@ -8,6 +8,7 @@ import 'package:tms/generated/infra/database_schemas/user.dart';
 import 'package:tms/generated/infra/network_schemas/login_requests.dart';
 import 'package:tms/providers/local_storage_provider.dart';
 import 'package:tms/services/auth_service.dart';
+import 'package:collection/collection.dart';
 
 class AuthProvider extends EchoTreeProvider<String, User> {
   final AuthService _authService = AuthService();
@@ -77,9 +78,9 @@ class AuthProvider extends EchoTreeProvider<String, User> {
     return status;
   }
 
-  bool hasAccess(UserPermissions permissions) {
+  bool hasPermissionAccess(UserPermissions permissions) {
     var r = roles.map((e) => e.roleId).toList();
-    return permissions.hasAccess(roles: r);
+    return permissions.hasRoleAccess(roles: r);
   }
 
   List<User> get usersByName {
@@ -89,4 +90,16 @@ class AuthProvider extends EchoTreeProvider<String, User> {
   }
 
   List<User> get users => usersByName;
+
+  String? getUserIdFromUsername(String username) {
+    return items.keys.firstWhereOrNull((key) => items[key]?.username == username);
+  }
+
+  Future<int> insertUser(String? userId, User user) async {
+    return await _authService.insertUser(userId, user);
+  }
+
+  Future<int> removeUser(String userId) async {
+    return await _authService.removeUser(userId);
+  }
 }

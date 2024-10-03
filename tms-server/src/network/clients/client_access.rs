@@ -1,4 +1,4 @@
-use tms_infra::User;
+use tms_infra::*;
 
 use crate::database::*;
 
@@ -21,7 +21,7 @@ impl ClientAccess for Client {
   async fn has_role_access(&self, db: SharedDatabase, roles: Vec<String>) -> ClientAccessResult {
     // add admin role (admin should always have access)
     let mut roles = roles;
-    roles.push("admin".to_string());
+    roles.push(ADMIN_ROLE.to_string());
 
     let db = db.read().await;
     let user = db.get_inner().read().await.get_entry(":users".to_string(), self.user_id.clone()).await;
@@ -30,7 +30,7 @@ impl ClientAccess for Client {
       Some(user) => {
         let user = User::from_json_string(&user);
         for role in roles {
-          if user.roles.contains(&role.to_string()) {
+          if user.has_role_access(vec![role.to_string()]) {
             return ClientAccessResult::Success;
           }
         }

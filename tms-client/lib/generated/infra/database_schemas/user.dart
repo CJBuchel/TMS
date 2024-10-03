@@ -6,7 +6,7 @@
 import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `fmt`
 
 class User {
   final String username;
@@ -30,12 +30,16 @@ class User {
         that: this,
       );
 
-  bool hasAccess({required UserPermissions permissions}) =>
-      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserHasAccess(
-          that: this, permissions: permissions);
+  bool hasPermissionAccess({required UserPermissions permissions}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasUserUserHasPermissionAccess(
+              that: this, permissions: permissions);
 
   bool hasRole({required String role}) => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasUserUserHasRole(that: this, role: role);
+
+  bool hasRoleAccess({required List<String> roles}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasUserUserHasRoleAccess(that: this, roles: roles);
 
   factory User(
           {required String username,
@@ -97,8 +101,19 @@ class UserPermissions {
       TmsRustLib.instance.api
           .crateInfraDatabaseSchemasUserUserPermissionsFromRoles(roles: roles);
 
-  bool hasAccess({required List<String> roles}) => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasUserUserPermissionsHasAccess(
+  UserPermissions getMergedPermissions(
+          {required UserPermissions permissions}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasUserUserPermissionsGetMergedPermissions(
+              that: this, permissions: permissions);
+
+  List<String> getRoles() => TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasUserUserPermissionsGetRoles(
+        that: this,
+      );
+
+  bool hasRoleAccess({required List<String> roles}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasUserUserPermissionsHasRoleAccess(
           that: this, roles: roles);
 
   factory UserPermissions(

@@ -5,7 +5,7 @@ use crate::infra::DataSchemeExtensions;
 
 use super::{ADMIN_ROLE, AV_ROLE, EMCEE_ROLE, HEAD_REFEREE_ROLE, JUDGE_ADVISOR_ROLE, JUDGE_ROLE, REFEREE_ROLE, SCORE_KEEPER_ROLE};
 
-#[derive(Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct UserPermissions {
   // hard coded roles
   pub admin: Option<bool>,
@@ -44,6 +44,22 @@ impl UserPermissions {
   }
 
   #[flutter_rust_bridge::frb(sync)]
+  pub fn get_merged_permissions(&self, permissions: UserPermissions) -> UserPermissions {
+    let mut merged_permissions = self.clone();
+
+    merged_permissions.admin = permissions.admin.or(self.admin);
+    merged_permissions.referee = permissions.referee.or(self.referee);
+    merged_permissions.head_referee = permissions.head_referee.or(self.head_referee);
+    merged_permissions.judge = permissions.judge.or(self.judge);
+    merged_permissions.judge_advisor = permissions.judge_advisor.or(self.judge_advisor);
+    merged_permissions.score_keeper = permissions.score_keeper.or(self.score_keeper);
+    merged_permissions.emcee = permissions.emcee.or(self.emcee);
+    merged_permissions.av = permissions.av.or(self.av);
+
+    merged_permissions
+  }
+
+  #[flutter_rust_bridge::frb(sync)]
   pub fn from_roles(roles: Vec<String>) -> Self {
     let mut permissions = Self::default();
 
@@ -65,7 +81,46 @@ impl UserPermissions {
   }
 
   #[flutter_rust_bridge::frb(sync)]
-  pub fn has_access(&self, roles: Vec<String>) -> bool {
+  pub fn get_roles(&self) -> Vec<String> {
+    let mut roles = vec![];
+
+    if self.admin.unwrap_or(false) {
+      roles.push(ADMIN_ROLE.to_string());
+    }
+
+    if self.referee.unwrap_or(false) {
+      roles.push(REFEREE_ROLE.to_string());
+    }
+
+    if self.head_referee.unwrap_or(false) {
+      roles.push(HEAD_REFEREE_ROLE.to_string());
+    }
+
+    if self.judge.unwrap_or(false) {
+      roles.push(JUDGE_ROLE.to_string());
+    }
+
+    if self.judge_advisor.unwrap_or(false) {
+      roles.push(JUDGE_ADVISOR_ROLE.to_string());
+    }
+
+    if self.score_keeper.unwrap_or(false) {
+      roles.push(SCORE_KEEPER_ROLE.to_string());
+    }
+
+    if self.emcee.unwrap_or(false) {
+      roles.push(EMCEE_ROLE.to_string());
+    }
+
+    if self.av.unwrap_or(false) {
+      roles.push(AV_ROLE.to_string());
+    }
+
+    roles
+  } 
+
+  #[flutter_rust_bridge::frb(sync)]
+  pub fn has_role_access(&self, roles: Vec<String>) -> bool {
     // admin always has access, regardless of current set permissions
     let role_access = Self::from_roles(roles.to_owned());
     if role_access.admin.unwrap_or(false) {
@@ -167,8 +222,14 @@ impl User {
   }
 
   #[flutter_rust_bridge::frb(sync)]
-  pub fn has_access(&self, permissions: &UserPermissions) -> bool {
-    permissions.has_access(self.roles.clone())
+  pub fn has_permission_access(&self, permissions: &UserPermissions) -> bool {
+    permissions.has_role_access(self.roles.clone())
+  }
+
+  #[flutter_rust_bridge::frb(sync)]
+  pub fn has_role_access(&self, roles: Vec<String>) -> bool {
+    let permissions = UserPermissions::from_roles(self.roles.clone());
+    permissions.has_role_access(roles)
   }
 
   #[flutter_rust_bridge::frb(sync)]

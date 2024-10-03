@@ -86,7 +86,7 @@ class BaseScaffoldDrawerRouterItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (permissions != null) {
-      if (Provider.of<AuthProvider>(context, listen: false).hasAccess(permissions!)) {
+      if (Provider.of<AuthProvider>(context, listen: false).hasPermissionAccess(permissions!)) {
         return _tile(context);
       } else {
         return const SizedBox();

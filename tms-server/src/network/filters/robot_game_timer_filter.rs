@@ -3,6 +3,7 @@ use crate::{
   network::{robot_game_timer_start_countdown_handler, robot_game_timer_start_handler, robot_game_timer_stop_handler, ClientMap},
   services::SharedServices,
 };
+use tms_infra::HEAD_REFEREE_ROLE;
 use warp::Filter;
 
 use super::{
@@ -18,7 +19,7 @@ pub fn robot_game_timer_filter(clients: ClientMap, db: SharedDatabase, services:
     .and(warp::post())
     .and(with_services(services.clone()))
     .and(check_auth_token_filter(clients.clone()))
-    .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec![HEAD_REFEREE_ROLE]))
     .and_then(robot_game_timer_start_handler);
 
   let stop_timer = robot_game_timer_path
@@ -26,7 +27,7 @@ pub fn robot_game_timer_filter(clients: ClientMap, db: SharedDatabase, services:
     .and(warp::post())
     .and(with_services(services.clone()))
     .and(check_auth_token_filter(clients.clone()))
-    .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec![HEAD_REFEREE_ROLE]))
     .and_then(robot_game_timer_stop_handler);
 
   let start_countdown_timer = robot_game_timer_path
@@ -34,7 +35,7 @@ pub fn robot_game_timer_filter(clients: ClientMap, db: SharedDatabase, services:
     .and(warp::post())
     .and(with_services(services.clone()))
     .and(check_auth_token_filter(clients.clone()))
-    .and(role_permission_filter(clients.clone(), db.clone(), vec!["head_referee"]))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec![HEAD_REFEREE_ROLE]))
     .and_then(robot_game_timer_start_countdown_handler);
 
   start_timer.or(stop_timer).or(start_countdown_timer)

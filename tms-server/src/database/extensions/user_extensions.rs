@@ -99,7 +99,15 @@ impl UserExtensions for Database {
 
     match user {
       Some(user) => {
-        log::warn!("Removing user: {}", User::from_json_string(&user).username);
+        // check if user is admin/public
+        let user = User::from_json_string(&user);
+
+        if user.username == "admin" || user.username == "public" {
+          log::error!("Cannot remove user: {}, it is a protected username", user.username);
+          return Err(format!("Cannot remove user: {}, it is a protected username", user.username));
+        }
+
+        log::warn!("Removing user: {}", user.username);
         self.inner.write().await.remove_entry(USERS.to_string(), user_id).await;
         Ok(())
       }

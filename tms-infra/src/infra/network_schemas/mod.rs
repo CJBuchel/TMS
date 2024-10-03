@@ -30,3 +30,6 @@ pub use judging_session_requests::*;
 
 pub mod team_requests;
 pub use team_requests::*;
+
+pub mod user_requests;
+pub use user_requests::*;

@@ -25,6 +25,17 @@ class _LiveCheckboxState extends State<LiveCheckbox> {
   }
 
   @override
+  void didUpdateWidget(covariant LiveCheckbox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.defaultValue != oldWidget.defaultValue) {
+      setState(() {
+        _value = widget.defaultValue ?? false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Checkbox(
       activeColor: widget.color,

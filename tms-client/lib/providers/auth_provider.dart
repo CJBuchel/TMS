@@ -102,4 +102,57 @@ class AuthProvider extends EchoTreeProvider<String, User> {
   Future<int> removeUser(String userId) async {
     return await _authService.removeUser(userId);
   }
+
+  Future<int> insertDefaultUsers() async {
+    int status = HttpStatus.ok;
+
+    // head referee
+    User u = User(
+      username: 'head_referee',
+      password: 'head_referee',
+      roles: UserPermissions(headReferee: true).getRoles(),
+    );
+
+    status = await insertUser(null, u);
+    if (status != HttpStatus.ok) {
+      return status;
+    }
+
+    // referee
+    u = User(
+      username: 'referee',
+      password: 'referee',
+      roles: UserPermissions(referee: true).getRoles(),
+    );
+
+    status = await insertUser(null, u);
+
+    if (status != HttpStatus.ok) {
+      return status;
+    }
+
+    // judge advisor
+    u = User(
+      username: 'judge_advisor',
+      password: 'judge_advisor',
+      roles: UserPermissions(judgeAdvisor: true).getRoles(),
+    );
+
+    status = await insertUser(null, u);
+
+    if (status != HttpStatus.ok) {
+      return status;
+    }
+
+    // judge
+    u = User(
+      username: 'judge',
+      password: 'judge',
+      roles: UserPermissions(judge: true).getRoles(),
+    );
+
+    status = await insertUser(null, u);
+
+    return status;
+  }
 }

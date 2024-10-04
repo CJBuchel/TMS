@@ -15,6 +15,7 @@ import 'package:tms/views/match_controller/match_controller.dart';
 import 'package:tms/views/referee_scoring/referee_scoring.dart';
 import 'package:tms/views/scoreboard/scoreboard.dart';
 import 'package:tms/views/setup/setup.dart';
+import 'package:tms/views/team_data/team_data.dart';
 import 'package:tms/views/teams/teams.dart';
 import 'package:tms/views/users/users.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
@@ -85,6 +86,16 @@ final _protectedRoutes = <GoRoute>[
   GoRoute(
     path: '/teams',
     name: 'teams',
+    routes: [
+      GoRoute(
+        path: 'team_data',
+        name: 'team_data',
+        builder: (context, state) => BaseScaffoldDrawerRouter(
+          state: state,
+          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: TeamData())),
+        ),
+      ),
+    ],
     builder: (context, state) => BaseScaffoldDrawerRouter(
       state: state,
       child: _DelayedViewWrapper(

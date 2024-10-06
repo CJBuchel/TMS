@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/user.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/view_selector/admin_views.dart';
+import 'package:tms/views/view_selector/judging_views.dart';
 import 'package:tms/views/view_selector/public_views.dart';
 import 'package:tms/views/view_selector/referee_views.dart';
 
@@ -14,6 +15,7 @@ import 'package:tms/views/view_selector/referee_views.dart';
  * 0xff6CB28E green
  * 0xffD291BC violet
  * 0xff2ACAC8 cyan
+ * 0xFF828282 grey
  */
 
 class ViewSelector extends StatelessWidget {
@@ -33,8 +35,10 @@ class ViewSelector extends StatelessWidget {
                   const PublicViews(),
                   // admin views
                   if (authProvider.hasPermissionAccess(UserPermissions(admin: true))) const AdminViews(),
-                  // referee screens
+                  // referee views
                   if (authProvider.hasPermissionAccess(UserPermissions(referee: true))) const RefereeViews(),
+                  // judging views
+                  if (authProvider.hasPermissionAccess(UserPermissions(judge: true))) const JudgingViews(),
                 ],
               ),
             ),

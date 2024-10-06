@@ -17,7 +17,7 @@ class AdminViews extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
             child: Text(
-              "Admin Screens",
+              "Admin Views",
               style: TextStyle(
                 fontSize: 28,
                 color: Colors.blueGrey[800],

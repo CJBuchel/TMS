@@ -33,3 +33,6 @@ pub use team_requests::*;
 
 pub mod user_requests;
 pub use user_requests::*;
+
+pub mod backup_requests;
+pub use backup_requests::*;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/auth_provider.dart';
+import 'package:tms/views/backups/backups.dart';
 import 'package:tms/views/connection/connection.dart';
 import 'package:tms/views/dashboard/dashboard.dart';
 import 'package:tms/views/game_match_timer/game_match_timer.dart';
@@ -71,6 +72,14 @@ final _protectedRoutes = <GoRoute>[
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
           child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Users())),
+        ),
+      ),
+      GoRoute(
+        path: 'backups',
+        name: 'backups',
+        builder: (context, state) => BaseScaffoldDrawerRouter(
+          state: state,
+          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Backups())),
         ),
       ),
     ],

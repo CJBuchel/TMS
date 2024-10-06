@@ -22,6 +22,7 @@ chrono = "^0.4"
 mdns-sd = "^0.11"
 serde = { version = "^1.0", features = ["derive"] }
 serde_json = "^1.0"
+regex = "^1.10"
 
 # Patch rustls for now, there is a flutter bug https://github.com/dart-lang/http/issues/1161 which isn't fixed yet.
 # And we need the latest version of rustls in warp to get around it

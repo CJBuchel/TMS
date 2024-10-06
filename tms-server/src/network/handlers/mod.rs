@@ -42,3 +42,6 @@ pub use teams_handler::*;
 
 mod users_handler;
 pub use users_handler::*;
+
+mod backups_handler;
+pub use backups_handler::*;

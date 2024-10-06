@@ -13,7 +13,6 @@ class TeamData extends StatelessWidget {
       trees: [
         ":teams",
         ":robot_game:game_scores",
-        ":tournament:integrity_messages",
       ],
       child: Selector2<TeamsProvider, GameScoresProvider, List<TeamDataModel>>(
         selector: (_, tp, gsp) {

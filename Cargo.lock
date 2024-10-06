@@ -2442,6 +2442,7 @@ dependencies = [
  "mdns-sd",
  "rand",
  "rcgen",
+ "regex",
  "serde",
  "serde_json",
  "structopt",

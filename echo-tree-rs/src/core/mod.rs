@@ -107,6 +107,11 @@ impl EchoTreeServer {
     db.drop_db().await;
   }
 
+  pub async fn get_backups(&self, backup_path: &str) -> Vec<String> {
+    let db = self.database.read().await;
+    db.get_backup_file_names(backup_path).await.unwrap_or_default()
+  }
+
   pub async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> zip::result::ZipResult<()> {
     let db = self.database.read().await;
     db.backup_db(backup_path, retain_backups).await

@@ -52,11 +52,30 @@ impl SerializableBackup {
 }
 
 pub trait BackupManager {
+  async fn get_backup_file_names(&self, backup_path: &str) -> zip::result::ZipResult<Vec<String>>;
   async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> zip::result::ZipResult<()>;
   async fn restore_db(&mut self, backup_path: &str) -> zip::result::ZipResult<()>;
 }
 
 impl BackupManager for Database {
+  async fn get_backup_file_names(&self, backup_path: &str) -> zip::result::ZipResult<Vec<String>> {
+    let mut backups = Vec::new();
+
+    if let Ok(entries) = std::fs::read_dir(backup_path) {
+      for entry in entries {
+        if let Ok(entry) = entry {
+          if let Some(file_name) = entry.file_name().to_str() {
+            if file_name.ends_with(".zip") {
+              backups.push(file_name.to_string());
+            }
+          }
+        }
+      }
+    }
+
+    Ok(backups)
+  }
+
   async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> zip::result::ZipResult<()> {
     log::warn!("EchoTree backing up...");
 

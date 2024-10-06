@@ -64,6 +64,9 @@ pub use users_filter::*;
 mod websocket_filter;
 pub use websocket_filter::*;
 
+mod backups_filter;
+pub use backups_filter::*;
+
 #[derive(Debug)]
 pub struct UnauthorizedToken;
 impl warp::reject::Reject for UnauthorizedToken {}

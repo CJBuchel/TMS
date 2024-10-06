@@ -65,7 +65,7 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
       () => FilterColumn(
         label: "Team Name",
         show: true,
-        flex: 2,
+        flex: 3,
         onFilterChanged: (value) => _onFilterChanged("teamName", value),
       ),
     );
@@ -96,7 +96,7 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
         () => FilterColumn(
           label: "R$i Comment",
           show: false,
-          flex: 1,
+          flex: 3,
           onFilterChanged: (value) => _onFilterChanged("r${i}_comment", value),
         ),
       );

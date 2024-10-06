@@ -40,6 +40,9 @@ class EditTable extends BaseTable {
     this.onDelete,
     this.onEdit,
     this.onAdd,
+    Widget deleteIcon = const Icon(Icons.delete, color: Colors.red),
+    Widget editIcon = const Icon(Icons.edit, color: Colors.blue),
+    Widget addIcon = const Icon(Icons.add, color: Colors.green),
     BoxDecoration? headerDecoration,
   }) : super(headers: headers, rows: rows, headerDecoration: headerDecoration) {
     // add blank to start and end of headers
@@ -60,7 +63,7 @@ class EditTable extends BaseTable {
               onDelete!(rows.indexOf(row), row.key);
             }
           },
-          icon: const Icon(Icons.delete, color: Colors.red),
+          icon: deleteIcon,
         ),
       );
 
@@ -73,7 +76,7 @@ class EditTable extends BaseTable {
               onEdit!(rows.indexOf(row), row.key);
             }
           },
-          icon: const Icon(Icons.edit, color: Colors.blue),
+          icon: editIcon,
         ),
       );
     }
@@ -86,7 +89,7 @@ class EditTable extends BaseTable {
         cells: [
           _iconButtonCell(
             onPressed: onAdd,
-            icon: const Icon(Icons.add, color: Colors.green),
+            icon: addIcon,
           ),
           ...List.generate(lastRow.cells.length - 1, (index) {
             return BaseTableCell(
@@ -100,7 +103,7 @@ class EditTable extends BaseTable {
       rows.add(EditTableRow(
         cells: [
           _iconButtonCell(
-            icon: const Icon(Icons.add, color: Colors.green),
+            icon: addIcon,
             onPressed: onAdd,
           ),
         ],

@@ -17,7 +17,7 @@ pub fn backups_filter(clients: ClientMap, db: SharedDatabase) -> impl warp::Filt
     .and(warp::path("download"))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec![]))
-    .and(warp::fs::dir("/backups"));
+    .and(warp::fs::dir("backups"));
 
   get_backups_path.or(download_backup_path)
 }

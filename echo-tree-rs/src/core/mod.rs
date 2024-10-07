@@ -112,14 +112,20 @@ impl EchoTreeServer {
     db.get_backup_file_names(backup_path).await.unwrap_or_default()
   }
 
-  pub async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> zip::result::ZipResult<()> {
+  pub async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> Result<(), Box<dyn std::error::Error>> {
     let db = self.database.read().await;
     db.backup_db(backup_path, retain_backups).await
   }
 
-  pub async fn restore_db(&self, backup_path: &str) -> zip::result::ZipResult<()> {
+  pub async fn restore_db(&self, backup_path: &str) -> Result<(), Box<dyn std::error::Error>> {
     let mut db = self.database.write().await;
     db.restore_db(backup_path).await?;
+
+    // recalculate checksums
+    db.get_tree_map_mut().await.iter_mut().for_each(|(tree_name, tree)| {
+      tree.calculate_checksum();
+      log::info!("Restored tree [{}] with checksum: {}", tree_name, tree.get_checksum());
+    });
     
     // echo change to all clients
     let echo_trees: Vec<EchoTreeEventTree> = db.get_tree_map().await.iter().map(|(tree_name, tree)| {

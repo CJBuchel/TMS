@@ -9,32 +9,32 @@ import '../database_schemas/tms_time/tms_date_time.dart';
 import '../database_schemas/tms_time/tms_time.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`
 
-class BackupInfo {
+class BackupGetNamesInfo {
   final String fileName;
   final TmsDateTime timestamp;
 
-  const BackupInfo({
+  const BackupGetNamesInfo({
     required this.fileName,
     required this.timestamp,
   });
 
-  static Future<BackupInfo> default_() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasBackupRequestsBackupInfoDefault();
+  static Future<BackupGetNamesInfo> default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasBackupRequestsBackupGetNamesInfoDefault();
 
-  static BackupInfo fromJsonString({required String json}) =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasBackupRequestsBackupInfoFromJsonString(
-              json: json);
+  static BackupGetNamesInfo fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasBackupRequestsBackupGetNamesInfoFromJsonString(
+          json: json);
 
   String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasBackupRequestsBackupInfoToJsonString(
+          .crateInfraNetworkSchemasBackupRequestsBackupGetNamesInfoToJsonString(
         that: this,
       );
 
   static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasBackupRequestsBackupInfoToSchema();
+      .crateInfraNetworkSchemasBackupRequestsBackupGetNamesInfoToSchema();
 
   @override
   int get hashCode => fileName.hashCode ^ timestamp.hashCode;
@@ -42,34 +42,34 @@ class BackupInfo {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BackupInfo &&
+      other is BackupGetNamesInfo &&
           runtimeType == other.runtimeType &&
           fileName == other.fileName &&
           timestamp == other.timestamp;
 }
 
-class BackupResponse {
-  final List<BackupInfo> backups;
+class BackupGetNamesResponse {
+  final List<BackupGetNamesInfo> backups;
 
-  const BackupResponse({
+  const BackupGetNamesResponse({
     required this.backups,
   });
 
-  static Future<BackupResponse> default_() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasBackupRequestsBackupResponseDefault();
+  static Future<BackupGetNamesResponse> default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasBackupRequestsBackupGetNamesResponseDefault();
 
-  static BackupResponse fromJsonString({required String json}) =>
+  static BackupGetNamesResponse fromJsonString({required String json}) =>
       TmsRustLib.instance.api
-          .crateInfraNetworkSchemasBackupRequestsBackupResponseFromJsonString(
+          .crateInfraNetworkSchemasBackupRequestsBackupGetNamesResponseFromJsonString(
               json: json);
 
   String toJsonString() => TmsRustLib.instance.api
-          .crateInfraNetworkSchemasBackupRequestsBackupResponseToJsonString(
+          .crateInfraNetworkSchemasBackupRequestsBackupGetNamesResponseToJsonString(
         that: this,
       );
 
   static String toSchema() => TmsRustLib.instance.api
-      .crateInfraNetworkSchemasBackupRequestsBackupResponseToSchema();
+      .crateInfraNetworkSchemasBackupRequestsBackupGetNamesResponseToSchema();
 
   @override
   int get hashCode => backups.hashCode;
@@ -77,7 +77,41 @@ class BackupResponse {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BackupResponse &&
+      other is BackupGetNamesResponse &&
           runtimeType == other.runtimeType &&
           backups == other.backups;
+}
+
+class BackupRestoreRequest {
+  final String fileName;
+
+  const BackupRestoreRequest({
+    required this.fileName,
+  });
+
+  static Future<BackupRestoreRequest> default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasBackupRequestsBackupRestoreRequestDefault();
+
+  static BackupRestoreRequest fromJsonString({required String json}) => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasBackupRequestsBackupRestoreRequestFromJsonString(
+          json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasBackupRequestsBackupRestoreRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasBackupRequestsBackupRestoreRequestToSchema();
+
+  @override
+  int get hashCode => fileName.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BackupRestoreRequest &&
+          runtimeType == other.runtimeType &&
+          fileName == other.fileName;
 }

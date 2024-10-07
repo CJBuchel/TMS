@@ -31,12 +31,12 @@ sealed class TournamentIntegrityCode with _$TournamentIntegrityCode {
           .crateInfraDatabaseSchemasTournamentIntegrityMessageTournamentIntegrityCodeFromJsonString(
               json: json);
 
-  Future<String> getMessage() => TmsRustLib.instance.api
+  String getMessage() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTournamentIntegrityMessageTournamentIntegrityCodeGetMessage(
         that: this,
       );
 
-  Future<String> getStringifiedCode() => TmsRustLib.instance.api
+  String getStringifiedCode() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTournamentIntegrityMessageTournamentIntegrityCodeGetStringifiedCode(
         that: this,
       );
@@ -57,7 +57,7 @@ class TournamentIntegrityMessage {
   final String? matchNumber;
   final String? sessionNumber;
 
-  const TournamentIntegrityMessage({
+  const TournamentIntegrityMessage.raw({
     required this.integrityCode,
     required this.message,
     this.teamNumber,
@@ -74,8 +74,7 @@ class TournamentIntegrityMessage {
           .crateInfraDatabaseSchemasTournamentIntegrityMessageTournamentIntegrityMessageFromJsonString(
               json: json);
 
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<TournamentIntegrityMessage> newInstance(
+  factory TournamentIntegrityMessage(
           {required TournamentIntegrityCode integrityCode,
           String? teamNumber,
           String? matchNumber,

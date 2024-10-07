@@ -5,13 +5,29 @@ use super::Database;
 
 #[async_trait::async_trait]
 pub trait BackupService {
+  fn get_backup_name_format(name: String) -> String {
+    let bp_name = format!("{}-backup-{}_{}.kvdb.zip", name, chrono::Local::now().format("%Y-%m-%d"), chrono::Local::now().format("%H-%M-%S"));
+    bp_name.replace(" ", "_").replace(":", "-")
+  }
+  fn get_named_backup_path(&self, backup_name: String) -> String;
+  fn get_base_backup_path(&self) -> String;
   fn start_backup_service(&mut self);
   fn reset_backup_service(&mut self);
+  async fn create_manual_backup(&mut self);
   async fn stop_backup_service(&mut self);
 }
 
 #[async_trait::async_trait]
 impl BackupService for Database {
+  fn get_named_backup_path(&self, backup_name: String) -> String {
+    let bp_name = format!("{}/{}", self.backups_path, backup_name);
+    bp_name.replace(" ", "_").replace(":", "-")
+  }
+
+  fn get_base_backup_path(&self) -> String {
+    self.backups_path.clone()
+  }
+
   fn start_backup_service(&mut self) {
     if self.backup_service_thread.is_some() {
       log::warn!("Backup service already running");
@@ -21,6 +37,7 @@ impl BackupService for Database {
     let mut stop_signal_receiver = self.backup_service_stop_signal_sender.subscribe();
     let mut reset_signal_receiver = self.backup_service_reset_signal_sender.subscribe();
     let inner = self.inner.clone();
+    let base_backup_path = self.get_base_backup_path();
 
     self.backup_service_thread = Some(tokio::spawn(async move {
       loop {
@@ -41,12 +58,11 @@ impl BackupService for Database {
                 let config = TournamentConfig::from_json_string(&config);
                 let interval_seconds = config.backup_interval * 60;
                 let name = if config.name.is_empty() { "tms".to_string() } else { config.name };
-                let backup_name = format!("{}-backup-{}_{}.kvdb.zip", name, chrono::Local::now().format("%Y-%m-%d"), chrono::Local::now().format("%H-%M-%S"));
-                let backup_name = backup_name.replace(" ", "_").replace(":", "-");
+                let backup_name = Self::get_backup_name_format(name);
                 let retain_backups: usize = config.retain_backups.try_into().unwrap_or(0);
 
 
-                match inner.read().await.backup_db(&format!("backups/{}", backup_name), retain_backups).await {
+                match inner.read().await.backup_db(&format!("{}/{}", base_backup_path, backup_name), retain_backups).await {
                   Ok(_) => {
                     log::info!("Backup successful: {}", backup_name);
                   },
@@ -66,6 +82,26 @@ impl BackupService for Database {
         }
       }
     }));
+  }
+
+  async fn create_manual_backup(&mut self) {
+    let config: Option<String> = self.inner.read().await.get_entry(":tournament:config".to_string(), "config".to_string()).await;
+    let config: TournamentConfig = match config {
+      Some(c) => TournamentConfig::from_json_string(&c),
+      None => TournamentConfig::default()
+    };
+    let backup_name = if config.name.is_empty() { "tms".to_string() } else { config.name };
+    let backup_name = Self::get_backup_name_format(backup_name);
+    let retain_backups: usize = config.retain_backups.try_into().unwrap_or(0);
+
+    match self.inner.read().await.backup_db(&format!("{}/{}", self.get_base_backup_path(), backup_name), retain_backups).await {
+      Ok(_) => {
+        log::info!("Manual backup successful: {}", backup_name);
+      },
+      Err(e) => {
+        log::error!("Manual backup failed: {:?}", e);
+      }
+    }
   }
 
   async fn stop_backup_service(&mut self) {

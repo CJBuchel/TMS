@@ -16,6 +16,13 @@ class HttpController {
 
   final _client = TmsHttpClient.create();
 
+  Map<String, String> get authHeaders {
+    return {
+      "X-Client-Id": TmsLocalStorageProvider().uuid,
+      "X-Auth-Token": TmsLocalStorageProvider().authToken,
+    };
+  }
+
   Future<bool> pulse(String addr) async {
     if (addr.isEmpty) {
       _connectivity.state = NetworkConnectionState.disconnected;
@@ -85,8 +92,7 @@ class HttpController {
     final response = await _client.delete(
       Uri.parse("$addr/register/${TmsLocalStorageProvider().uuid}"),
       headers: {
-        "X-Client-Id": TmsLocalStorageProvider().uuid,
-        "X-Auth-Token": TmsLocalStorageProvider().authToken,
+        ...authHeaders,
         "Content-Type": "application/json",
       },
     );
@@ -113,8 +119,7 @@ class HttpController {
         Uri.parse("$addr$route"),
         body: body,
         headers: {
-          "X-Client-Id": TmsLocalStorageProvider().uuid,
-          "X-Auth-Token": TmsLocalStorageProvider().authToken,
+          ...authHeaders,
           "Content-Type": "application/json",
         },
       );
@@ -142,8 +147,7 @@ class HttpController {
       final response = await _client.get(
         Uri.parse("$addr$route"),
         headers: {
-          "X-Client-Id": TmsLocalStorageProvider().uuid,
-          "X-Auth-Token": TmsLocalStorageProvider().authToken,
+          ...authHeaders,
           "Content-Type": "application/json",
         },
       );
@@ -172,8 +176,7 @@ class HttpController {
         Uri.parse("$addr$route"),
         body: body,
         headers: {
-          "X-Client-Id": TmsLocalStorageProvider().uuid,
-          "X-Auth-Token": TmsLocalStorageProvider().authToken,
+          ...authHeaders,
           "Content-Type": "application/json",
         },
       );

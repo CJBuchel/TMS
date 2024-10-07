@@ -175,25 +175,48 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
   }
 
   bool _applyFilters(TeamDataModel data) {
-    if (_filters["rank"] != null && !data.team.ranking.toString().contains(_filters["rank"]!)) {
+    if (_filters["rank"] != null &&
+        _filters["rank"]!.isNotEmpty &&
+        (!data.team.ranking.toString().toLowerCase().contains(_filters["rank"]!.toLowerCase()) ||
+            data.team.ranking.toString().isEmpty)) {
       return false;
     }
-    if (_filters["teamNumber"] != null && !data.team.teamNumber.contains(_filters["teamNumber"]!)) {
+    if (_filters["teamNumber"] != null &&
+        _filters["teamNumber"]!.isNotEmpty &&
+        (!data.team.teamNumber.toLowerCase().contains(_filters["teamNumber"]!.toLowerCase()) ||
+            data.team.teamNumber.isEmpty)) {
       return false;
     }
-    if (_filters["teamName"] != null && !data.team.name.contains(_filters["teamName"]!)) {
+    if (_filters["teamName"] != null &&
+        _filters["teamName"]!.isNotEmpty &&
+        (!data.team.name.toLowerCase().contains(_filters["teamName"]!.toLowerCase()) || data.team.name.isEmpty)) {
       return false;
     }
     for (var i = 1; i <= widget.maxNumberRounds; i++) {
       var score = data.scores.firstWhereOrNull((element) => element.round == i);
       if (score != null) {
-        if (_filters["r${i}_score"] != null && !score.score.toString().contains(_filters["r${i}_score"]!)) {
+        if (_filters["r${i}_score"] != null &&
+            _filters["r${i}_score"]!.isNotEmpty &&
+            (!score.score.toString().toLowerCase().contains(_filters["r${i}_score"]!.toLowerCase()) ||
+                score.score.toString().isEmpty)) {
           return false;
         }
-        if (_filters["r${i}_gp"] != null && !convertGpToInt(score.gp).toString().contains(_filters["r${i}_gp"]!)) {
+        if (_filters["r${i}_gp"] != null &&
+            _filters["r${i}_gp"]!.isNotEmpty &&
+            (!convertGpToInt(score.gp).toString().toLowerCase().contains(_filters["r${i}_gp"]!.toLowerCase()) ||
+                convertGpToInt(score.gp).toString().isEmpty)) {
           return false;
         }
-        if (_filters["r${i}_comment"] != null && !score.privateComment.contains(_filters["r${i}_comment"]!)) {
+        if (_filters["r${i}_comment"] != null &&
+            _filters["r${i}_comment"]!.isNotEmpty &&
+            (!score.privateComment.toLowerCase().contains(_filters["r${i}_comment"]!.toLowerCase()) ||
+                score.privateComment.isEmpty)) {
+          return false;
+        }
+      } else {
+        if ((_filters["r${i}_score"] != null && _filters["r${i}_score"]!.isNotEmpty) ||
+            (_filters["r${i}_gp"] != null && _filters["r${i}_gp"]!.isNotEmpty) ||
+            (_filters["r${i}_comment"] != null && _filters["r${i}_comment"]!.isNotEmpty)) {
           return false;
         }
       }
@@ -244,9 +267,17 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
                   ));
                 } else if (key == "r${i}_gp") {
                   var score = data.scores.firstWhereOrNull((element) => element.round == i);
+                  String text = "";
+
+                  if (score?.gp.isEmpty ?? true) {
+                    text = "";
+                  } else {
+                    text = convertGpToInt(score!.gp).toString();
+                  }
+
                   rowCells.add(FilterRowCell(
                     context: context,
-                    text: convertGpToInt(score?.gp ?? "").toString(),
+                    text: text,
                     flex: column.flex,
                     color: _getColor(i),
                   ));
@@ -341,6 +372,7 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
                   overlayColor: Colors.blue[900],
                   shadowColor: Colors.blue[900],
                   surfaceTintColor: Colors.blue[900],
+                  foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),

@@ -10,11 +10,10 @@ RELEASE_NOTES.md
 *.so
 *.dylib
 *.kvdb
-**/backups/**
 *.log
 log/
 logs/
-backups/
+/backups/
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out

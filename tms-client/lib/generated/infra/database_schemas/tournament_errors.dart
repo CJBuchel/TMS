@@ -31,12 +31,12 @@ enum TournamentErrorCode {
       .crateInfraDatabaseSchemasTournamentErrorsTournamentErrorCodeFromJsonString(
           json: json);
 
-  Future<String> getMessage() => TmsRustLib.instance.api
+  String getMessage() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTournamentErrorsTournamentErrorCodeGetMessage(
         that: this,
       );
 
-  Future<String> getStringifiedCode() => TmsRustLib.instance.api
+  String getStringifiedCode() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTournamentErrorsTournamentErrorCodeGetStringifiedCode(
         that: this,
       );

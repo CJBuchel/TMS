@@ -38,7 +38,7 @@ impl ManagedTree {
     Ok(ManagedTree { db: db.clone(), tree_name, tree, checksum })
   }
 
-  fn checksum(&mut self) {
+  pub fn calculate_checksum(&mut self) {
     match self.tree.checksum() {
       Ok(c) => self.checksum = {
         log::debug!("{}: checksum: {}", self.tree_name, c);
@@ -61,7 +61,7 @@ impl ManagedTree {
 
     // checksum after each time
     if result.is_ok() {
-      self.checksum();
+      self.calculate_checksum();
     }
 
     result
@@ -76,7 +76,7 @@ impl ManagedTree {
 
     // checksum after each time
     if result.is_ok() {
-      self.checksum();
+      self.calculate_checksum();
     }
 
     result
@@ -88,7 +88,7 @@ impl ManagedTree {
     // checksum after each time
     if result.is_ok() {
       log::debug!("cleared tree: {}", self.tree_name);
-      self.checksum();
+      self.calculate_checksum();
     }
 
     result
@@ -106,7 +106,7 @@ impl ManagedTree {
     }
 
     // recalculate the checksum
-    self.checksum();
+    self.calculate_checksum();
 
     Ok(())
   }

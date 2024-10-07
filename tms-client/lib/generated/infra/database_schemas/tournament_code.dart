@@ -7,7 +7,7 @@ import '../../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 abstract class TournamentCode {
-  Future<String> getMessage();
+  String getMessage();
 
-  Future<String> getStringifiedCode();
+  String getStringifiedCode();
 }

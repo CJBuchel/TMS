@@ -12,6 +12,7 @@ pub enum TournamentIntegrityCode {
 }
 
 impl TournamentIntegrityCode {
+  #[flutter_rust_bridge::frb(sync)]
   pub fn get_stringified_code(&self) -> String {
     match self {
       Self::Error(code) => code.get_stringified_code(),
@@ -19,6 +20,7 @@ impl TournamentIntegrityCode {
     }
   }
 
+  #[flutter_rust_bridge::frb(sync)]
   pub fn get_message(&self) -> String {
     match self {
       Self::Error(code) => code.get_message(),
@@ -43,6 +45,7 @@ pub struct TournamentIntegrityMessage {
 }
 
 impl TournamentIntegrityMessage {
+  #[flutter_rust_bridge::frb(sync)]
   pub fn new(
     integrity_code: TournamentIntegrityCode,
     team_number: Option<String>,

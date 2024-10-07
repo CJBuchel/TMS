@@ -18,7 +18,9 @@ class FilterRowCell extends BaseTableCell {
             height: 50,
             decoration: BoxDecoration(
               color: color,
-              border: Border.all(color: Theme.of(context).dividerColor),
+              border: Border.all(
+                color: Theme.of(context).dividerColor.withOpacity(0.5),
+              ),
             ),
             child: Center(
               child: Text(

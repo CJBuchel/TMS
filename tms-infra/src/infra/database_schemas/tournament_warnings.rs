@@ -29,6 +29,7 @@ pub enum TournamentWarningCode {
 }
 
 impl TournamentCode for TournamentWarningCode {
+  #[flutter_rust_bridge::frb(sync)]
   fn get_message(&self) -> String {
     match self {
       TournamentWarningCode::W001 => "Team name is missing.".to_string(),

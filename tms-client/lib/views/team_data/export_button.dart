@@ -43,6 +43,7 @@ class ExportButton extends StatelessWidget {
         overlayColor: Colors.green[900],
         shadowColor: Colors.green[900],
         surfaceTintColor: Colors.green[900],
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
         ),

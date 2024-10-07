@@ -37,12 +37,12 @@ enum TournamentWarningCode {
       .crateInfraDatabaseSchemasTournamentWarningsTournamentWarningCodeFromJsonString(
           json: json);
 
-  Future<String> getMessage() => TmsRustLib.instance.api
+  String getMessage() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTournamentWarningsTournamentWarningCodeGetMessage(
         that: this,
       );
 
-  Future<String> getStringifiedCode() => TmsRustLib.instance.api
+  String getStringifiedCode() => TmsRustLib.instance.api
           .crateInfraDatabaseSchemasTournamentWarningsTournamentWarningCodeGetStringifiedCode(
         that: this,
       );

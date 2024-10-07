@@ -5,12 +5,12 @@ use serde::{Deserialize, Serialize};
 use crate::{DataSchemeExtensions, TmsDateTime};
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
-pub struct BackupInfo {
+pub struct BackupGetNamesInfo {
   pub file_name: String,
   pub timestamp: TmsDateTime,
 }
 
-impl Default for BackupInfo {
+impl Default for BackupGetNamesInfo {
   fn default() -> Self {
     Self {
       file_name: "".to_string(),
@@ -21,11 +21,11 @@ impl Default for BackupInfo {
 
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
-pub struct BackupResponse {
-  pub backups: Vec<BackupInfo>,
+pub struct BackupGetNamesResponse {
+  pub backups: Vec<BackupGetNamesInfo>,
 }
 
-impl Default for BackupResponse {
+impl Default for BackupGetNamesResponse {
   fn default() -> Self {
     Self {
       backups: vec![],
@@ -33,5 +33,19 @@ impl Default for BackupResponse {
   }
 }
 
-impl DataSchemeExtensions for BackupInfo {}
-impl DataSchemeExtensions for BackupResponse {}
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct BackupRestoreRequest {
+  pub file_name: String,
+}
+
+impl Default for BackupRestoreRequest {
+  fn default() -> Self {
+    Self {
+      file_name: "".to_string(),
+    }
+  }
+}
+
+impl DataSchemeExtensions for BackupGetNamesInfo {}
+impl DataSchemeExtensions for BackupGetNamesResponse {}
+impl DataSchemeExtensions for BackupRestoreRequest {}

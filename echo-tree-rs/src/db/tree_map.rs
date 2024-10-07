@@ -113,4 +113,8 @@ impl TreeMap {
   pub fn iter(&self) -> std::collections::hash_map::Iter<String, ManagedTree> {
     self.tree_map.iter()
   }
+
+  pub fn iter_mut(&mut self) -> std::collections::hash_map::IterMut<String, ManagedTree> {
+    self.tree_map.iter_mut()
+  }
 }

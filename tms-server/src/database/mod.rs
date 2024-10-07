@@ -25,6 +25,7 @@ pub struct Database {
   backup_service_thread: Option<tokio::task::JoinHandle<()>>,
   backup_service_stop_signal_sender: tokio::sync::watch::Sender<bool>,
   backup_service_reset_signal_sender: tokio::sync::watch::Sender<bool>,
+  backups_path: String,
 
   // integrity check service
   integrity_check_service_thread: Option<tokio::task::JoinHandle<()>>,
@@ -61,6 +62,7 @@ impl Database {
       backup_service_thread: None,
       backup_service_stop_signal_sender,
       backup_service_reset_signal_sender,
+      backups_path: "backups".to_string(),
       integrity_check_service_thread: None,
       integrity_check_stop_signal_sender,
       integrity_check_reset_signal_sender,

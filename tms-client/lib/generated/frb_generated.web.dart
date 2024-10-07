@@ -83,10 +83,13 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TournamentCode dco_decode_TraitDef_TournamentCode(dynamic raw);
 
   @protected
-  BackupInfo dco_decode_backup_info(dynamic raw);
+  BackupGetNamesInfo dco_decode_backup_get_names_info(dynamic raw);
 
   @protected
-  BackupResponse dco_decode_backup_response(dynamic raw);
+  BackupGetNamesResponse dco_decode_backup_get_names_response(dynamic raw);
+
+  @protected
+  BackupRestoreRequest dco_decode_backup_restore_request(dynamic raw);
 
   @protected
   BlueprintType dco_decode_blueprint_type(dynamic raw);
@@ -95,10 +98,15 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
-  BackupInfo dco_decode_box_autoadd_backup_info(dynamic raw);
+  BackupGetNamesInfo dco_decode_box_autoadd_backup_get_names_info(dynamic raw);
 
   @protected
-  BackupResponse dco_decode_box_autoadd_backup_response(dynamic raw);
+  BackupGetNamesResponse dco_decode_box_autoadd_backup_get_names_response(
+      dynamic raw);
+
+  @protected
+  BackupRestoreRequest dco_decode_box_autoadd_backup_restore_request(
+      dynamic raw);
 
   @protected
   bool dco_decode_box_autoadd_bool(dynamic raw);
@@ -374,7 +382,7 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   List<String> dco_decode_list_String(dynamic raw);
 
   @protected
-  List<BackupInfo> dco_decode_list_backup_info(dynamic raw);
+  List<BackupGetNamesInfo> dco_decode_list_backup_get_names_info(dynamic raw);
 
   @protected
   List<CategoricalOption> dco_decode_list_categorical_option(dynamic raw);
@@ -634,10 +642,16 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
-  BackupInfo sse_decode_backup_info(SseDeserializer deserializer);
+  BackupGetNamesInfo sse_decode_backup_get_names_info(
+      SseDeserializer deserializer);
 
   @protected
-  BackupResponse sse_decode_backup_response(SseDeserializer deserializer);
+  BackupGetNamesResponse sse_decode_backup_get_names_response(
+      SseDeserializer deserializer);
+
+  @protected
+  BackupRestoreRequest sse_decode_backup_restore_request(
+      SseDeserializer deserializer);
 
   @protected
   BlueprintType sse_decode_blueprint_type(SseDeserializer deserializer);
@@ -646,10 +660,15 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
-  BackupInfo sse_decode_box_autoadd_backup_info(SseDeserializer deserializer);
+  BackupGetNamesInfo sse_decode_box_autoadd_backup_get_names_info(
+      SseDeserializer deserializer);
 
   @protected
-  BackupResponse sse_decode_box_autoadd_backup_response(
+  BackupGetNamesResponse sse_decode_box_autoadd_backup_get_names_response(
+      SseDeserializer deserializer);
+
+  @protected
+  BackupRestoreRequest sse_decode_box_autoadd_backup_restore_request(
       SseDeserializer deserializer);
 
   @protected
@@ -965,7 +984,8 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   List<String> sse_decode_list_String(SseDeserializer deserializer);
 
   @protected
-  List<BackupInfo> sse_decode_list_backup_info(SseDeserializer deserializer);
+  List<BackupGetNamesInfo> sse_decode_list_backup_get_names_info(
+      SseDeserializer deserializer);
 
   @protected
   List<CategoricalOption> sse_decode_list_categorical_option(
@@ -1254,11 +1274,16 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
-  void sse_encode_backup_info(BackupInfo self, SseSerializer serializer);
+  void sse_encode_backup_get_names_info(
+      BackupGetNamesInfo self, SseSerializer serializer);
 
   @protected
-  void sse_encode_backup_response(
-      BackupResponse self, SseSerializer serializer);
+  void sse_encode_backup_get_names_response(
+      BackupGetNamesResponse self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_backup_restore_request(
+      BackupRestoreRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_blueprint_type(BlueprintType self, SseSerializer serializer);
@@ -1267,12 +1292,16 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_backup_info(
-      BackupInfo self, SseSerializer serializer);
+  void sse_encode_box_autoadd_backup_get_names_info(
+      BackupGetNamesInfo self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_backup_response(
-      BackupResponse self, SseSerializer serializer);
+  void sse_encode_box_autoadd_backup_get_names_response(
+      BackupGetNamesResponse self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_backup_restore_request(
+      BackupRestoreRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
@@ -1581,8 +1610,8 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
 
   @protected
-  void sse_encode_list_backup_info(
-      List<BackupInfo> self, SseSerializer serializer);
+  void sse_encode_list_backup_get_names_info(
+      List<BackupGetNamesInfo> self, SseSerializer serializer);
 
   @protected
   void sse_encode_list_categorical_option(

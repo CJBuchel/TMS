@@ -11,7 +11,7 @@ pub fn backups_filter(clients: ClientMap, db: SharedDatabase) -> impl warp::Filt
     .and(with_db(db.clone()))
     .and(check_auth_token_filter(clients.clone()))
     .and(role_permission_filter(clients.clone(), db.clone(), vec![]))
-    .and_then(get_backups_handler);
+    .and_then(backup_get_names_handler);
 
   let download_backup_path = backups_path
     .and(warp::path("download"))
@@ -19,5 +19,22 @@ pub fn backups_filter(clients: ClientMap, db: SharedDatabase) -> impl warp::Filt
     .and(role_permission_filter(clients.clone(), db.clone(), vec![]))
     .and(warp::fs::dir("backups"));
 
-  get_backups_path.or(download_backup_path)
+  let restore_backup_path = backups_path
+    .and(warp::path("restore"))
+    .and(warp::post())
+    .and(warp::body::json())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec![]))
+    .and_then(backup_restore_handler);
+
+  let create_backup_path = backups_path
+    .and(warp::path("create"))
+    .and(warp::post())
+    .and(with_db(db.clone()))
+    .and(check_auth_token_filter(clients.clone()))
+    .and(role_permission_filter(clients.clone(), db.clone(), vec![]))
+    .and_then(backup_create_backup_handler);
+
+  get_backups_path.or(download_backup_path).or(restore_backup_path).or(create_backup_path)
 }

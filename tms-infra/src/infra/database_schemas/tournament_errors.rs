@@ -23,6 +23,7 @@ pub enum TournamentErrorCode {
 }
 
 impl TournamentCode for TournamentErrorCode {
+  #[flutter_rust_bridge::frb(sync)]
   fn get_message(&self) -> String {
     match self {
       TournamentErrorCode::E001 => "Team number is missing.".to_string(),

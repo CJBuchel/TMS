@@ -5,7 +5,20 @@ class GameScoresProvider extends EchoTreeProvider<String, GameScoreSheet> {
   GameScoresProvider()
       : super(tree: ":robot_game:game_scores", fromJsonString: (json) => GameScoreSheet.fromJsonString(json: json));
 
-  List<GameScoreSheet> get scores => items.values.toList();
+  List<GameScoreSheet> get scoresByTimestamp {
+    var scores = items.values.toList();
+    scores.sort((a, b) => a.timestamp.compareTo(other: b.timestamp));
+    return scores;
+  }
+
+  List<GameScoreSheet> get scores => scoresByTimestamp;
+
+  List<(String, GameScoreSheet)> get scoresWithId {
+    // sort this by timestamp
+    List<(String, GameScoreSheet)> entries = items.entries.map((entry) => (entry.key, entry.value)).toList();
+    entries.sort((a, b) => a.$2.timestamp.compareTo(other: b.$2.timestamp));
+    return entries;
+  }
 
   List<GameScoreSheet> getScoresByTeamId(String teamId) {
     return scores.where((score) => score.teamRefId == teamId).toList();

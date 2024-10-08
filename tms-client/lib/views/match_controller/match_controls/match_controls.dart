@@ -4,7 +4,7 @@ import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/views/match_controller/match_controls/load_match_button.dart';
 import 'package:tms/views/match_controller/match_controls/ready_match_button.dart';
-import 'package:tms/widgets/timers/match_live_schedule_timer.dart';
+import 'package:tms/widgets/timers/match_schedule_timer.dart';
 
 class MatchControls extends StatelessWidget {
   const MatchControls({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class MatchControls extends StatelessWidget {
               child: Center(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: MatchLiveScheduleTimer(
+                  child: MatchScheduleTimer(
                     positiveStyle: TextStyle(
                       color: Colors.green,
                       fontSize: 50,

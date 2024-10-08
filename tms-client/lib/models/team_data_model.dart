@@ -18,8 +18,8 @@ class TeamDataModel {
       int rankComparison = a.team.ranking.compareTo(b.team.ranking);
 
       if (rankComparison == 0) {
-        int aTeamNumber = extractTeamNumber(a.team.teamNumber);
-        int bTeamNumber = extractTeamNumber(b.team.teamNumber);
+        int aTeamNumber = extractNumberFromString(a.team.teamNumber);
+        int bTeamNumber = extractNumberFromString(b.team.teamNumber);
         if (aTeamNumber != bTeamNumber) {
           return aTeamNumber.compareTo(bTeamNumber);
         }

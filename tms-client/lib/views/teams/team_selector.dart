@@ -132,8 +132,8 @@ class _TeamSelectorState extends State<TeamSelector> {
             // sort teams by their number
             final teamsList = teams.entries.toList();
             teamsList.sort((a, b) {
-              int aNum = extractTeamNumber(a.value.teamNumber);
-              int bNum = extractTeamNumber(b.value.teamNumber);
+              int aNum = extractNumberFromString(a.value.teamNumber);
+              int bNum = extractNumberFromString(b.value.teamNumber);
               return aNum.compareTo(bNum);
             });
 

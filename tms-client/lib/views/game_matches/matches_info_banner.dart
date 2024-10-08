@@ -5,7 +5,7 @@ import 'package:tms/generated/infra/database_schemas/tournament_integrity_messag
 import 'package:tms/providers/tournament_integrity_provider.dart';
 import 'package:tms/views/game_matches/on_add_match.dart';
 import 'package:tms/widgets/integrity_checks/icon_tooltip_integrity_check.dart';
-import 'package:tms/widgets/timers/match_live_schedule_timer.dart';
+import 'package:tms/widgets/timers/match_schedule_timer.dart';
 
 class MatchesInfoBanner extends StatelessWidget {
   final List<GameMatch> gameMatches;
@@ -67,7 +67,7 @@ class MatchesInfoBanner extends StatelessWidget {
           Container(
             width: 150,
             child: const Center(
-              child: MatchLiveScheduleTimer(
+              child: MatchScheduleTimer(
                 negativeStyle: TextStyle(color: Colors.red),
                 positiveStyle: TextStyle(color: Colors.green),
               ),

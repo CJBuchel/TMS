@@ -6,18 +6,18 @@ import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/game_scoring_widget.dart';
 
-class OnEditAnswers {
+class EditGameAnswersDialog {
   final Function(List<QuestionAnswer> answers, int score, String privateComment) onConfirm;
   final GameScoreSheet scoreSheet;
 
-  OnEditAnswers({
+  EditGameAnswersDialog({
     required this.onConfirm,
     required this.scoreSheet,
   });
 
   final ScrollController _scrollController = ScrollController();
 
-  void call(BuildContext context) {
+  void show(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final dialogWidth = screenSize.width * 0.8;
     final dialogHeight = screenSize.height * 0.8;

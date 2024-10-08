@@ -6,6 +6,8 @@ import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/widgets/integrity_checks/icon_tooltip_integrity_check.dart';
 
 class IntegrityOverview extends StatelessWidget {
+  const IntegrityOverview({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Selector<TournamentIntegrityProvider, List<TournamentIntegrityMessage>>(

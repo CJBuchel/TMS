@@ -11,10 +11,10 @@ import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/game_scoring_widget.dart';
 
-class OnAddScore {
+class AddGameScoreDialog {
   final String teamId;
 
-  OnAddScore({
+  AddGameScoreDialog({
     required this.teamId,
   });
 
@@ -56,7 +56,7 @@ class OnAddScore {
     ).show(context);
   }
 
-  void call(BuildContext context) {
+  void show(BuildContext context) {
     TmsLogger().i('Resetting the GameScoringProvider');
     Provider.of<GameScoringProvider>(context, listen: false).resetAnswers();
 

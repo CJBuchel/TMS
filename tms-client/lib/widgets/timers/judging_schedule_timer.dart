@@ -11,12 +11,14 @@ class _JudgingScheduleTimer extends StatefulWidget {
   final TextStyle? positiveStyle;
   final TextStyle? negativeStyle;
   final List<JudgingSession> sessions;
+  final bool live;
 
   const _JudgingScheduleTimer({
     Key? key,
     this.positiveStyle,
     this.negativeStyle,
     required this.sessions,
+    required this.live,
   }) : super(key: key);
 
   @override
@@ -31,13 +33,23 @@ class _JudgingScheduleTimerState extends State<_JudgingScheduleTimer> {
     // list of sessions
     List<JudgingSession> sessions = sortJudgingSessionsByTime(widget.sessions);
 
-    // find the next sessions that is ahead of current time
     int diff = 0;
-    for (JudgingSession session in sessions) {
-      DateTime startTime = tmsDateTimeToDateTime(session.startTime);
-      if (startTime.isAfter(DateTime.now())) {
-        diff = tmsDateTimeGetDifferenceFromNow(session.startTime);
-        break;
+    if (widget.live) {
+      // find the first session that is not completed
+      for (JudgingSession session in sessions) {
+        if (!session.completed) {
+          diff = tmsDateTimeGetDifferenceFromNow(session.startTime);
+          break;
+        }
+      }
+    } else {
+      // find the first session that is ahead of current time
+      for (JudgingSession session in sessions) {
+        DateTime startTime = tmsDateTimeToDateTime(session.startTime);
+        if (startTime.isAfter(DateTime.now())) {
+          diff = tmsDateTimeGetDifferenceFromNow(session.startTime);
+          break;
+        }
       }
     }
 
@@ -65,12 +77,11 @@ class _JudgingScheduleTimerState extends State<_JudgingScheduleTimer> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
       valueListenable: _difference,
-      builder: (context, difference, _) {
-        String stringTime = secondsToTimeString(difference);
-        TextStyle style = difference > 0 ? widget.positiveStyle! : widget.negativeStyle!;
+      builder: (context, diff, _) {
+        String stringTime = secondsToTimeString(diff);
         return Text(
-          difference > 0 ? "+$stringTime" : "-$stringTime",
-          style: style,
+          diff < 0 ? "-$stringTime" : "+$stringTime",
+          style: diff > 0 ? widget.positiveStyle : widget.negativeStyle,
         );
       },
     );
@@ -78,11 +89,13 @@ class _JudgingScheduleTimerState extends State<_JudgingScheduleTimer> {
 }
 
 class JudgingScheduleTimer extends StatelessWidget {
+  final bool live;
   final TextStyle? positiveStyle;
   final TextStyle? negativeStyle;
 
   const JudgingScheduleTimer({
     Key? key,
+    this.live = false,
     this.positiveStyle,
     this.negativeStyle,
   }) : super(key: key);
@@ -96,6 +109,7 @@ class JudgingScheduleTimer extends StatelessWidget {
           positiveStyle: positiveStyle,
           negativeStyle: negativeStyle,
           sessions: sessions,
+          live: live,
         );
       },
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/views/scoreboard/matches_info/next_match_row.dart';
-import 'package:tms/widgets/timers/match_live_schedule_timer.dart';
+import 'package:tms/widgets/timers/match_schedule_timer.dart';
 
 class MatchesSchedule extends StatelessWidget {
   final List<GameMatch> matches;
@@ -47,7 +47,7 @@ class MatchesSchedule extends StatelessWidget {
                       "Next: ",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    MatchLiveScheduleTimer(
+                    MatchScheduleTimer(
                       positiveStyle: TextStyle(fontWeight: FontWeight.bold),
                       negativeStyle: TextStyle(fontWeight: FontWeight.bold),
                     ),

@@ -4,8 +4,8 @@ import 'package:tms/models/team_score_sheet.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/tms_time_utils.dart';
-import 'package:tms/views/teams/team_editor/team_scores/on_add_score.dart';
-import 'package:tms/views/teams/team_editor/team_scores/on_edit_score.dart';
+import 'package:tms/widgets/dialogs/add_game_score_dialog.dart';
+import 'package:tms/widgets/dialogs/edit_game_score_dialog.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
@@ -54,7 +54,7 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
             },
           ).show(context);
         },
-        onEdit: () => OnEditScore(score: score).call(context),
+        onEdit: () => EditGameScoreDialog(score: score).show(context),
         cells: [
           // Timestamp
           _cell(Text(score.scoreSheet.timestamp.time?.toString() ?? '')),
@@ -143,7 +143,7 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
               _cell(const Text("Tags", style: TextStyle(fontWeight: FontWeight.bold))),
             ],
             rows: _editTableRows(context),
-            onAdd: () => OnAddScore(teamId: widget.teamId).call(context),
+            onAdd: () => AddGameScoreDialog(teamId: widget.teamId).show(context),
           ),
         ),
       ),

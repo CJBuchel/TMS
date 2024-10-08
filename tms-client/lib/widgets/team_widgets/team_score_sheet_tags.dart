@@ -3,8 +3,12 @@ import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 
 class TeamScoreSheetTags extends StatelessWidget {
   final GameScoreSheet gameScoreSheet;
+  final double? fontSize;
 
-  TeamScoreSheetTags({required this.gameScoreSheet});
+  TeamScoreSheetTags({
+    required this.gameScoreSheet,
+    this.fontSize,
+  });
 
   Widget _containerTag(String label, Color color) {
     // create outline border container with same colored text
@@ -17,7 +21,10 @@ class TeamScoreSheetTags extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(color: color),
+        style: TextStyle(
+          color: color,
+          fontSize: fontSize,
+        ),
       ),
     );
   }

@@ -32,7 +32,7 @@ impl TournamentCode for TournamentErrorCode {
       TournamentErrorCode::E004 => "Table does not exist in event.".to_string(),
       TournamentErrorCode::E005 => "Team in match does not exist in this event.".to_string(),
       TournamentErrorCode::E006 => "Duplicate match number.".to_string(),
-      TournamentErrorCode::E007 => "Team has fewer matches than the maximum number of round.".to_string(),
+      TournamentErrorCode::E007 => "Team has fewer matches than the maximum number of rounds.".to_string(),
       TournamentErrorCode::E008 => "Pod does not exist in event.".to_string(),
       TournamentErrorCode::E009 => "Team in pod does not exist in this event.".to_string(),
       TournamentErrorCode::E010 => "Team has more than one judging session.".to_string(),

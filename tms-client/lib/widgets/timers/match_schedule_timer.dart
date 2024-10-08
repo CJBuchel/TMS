@@ -8,23 +8,25 @@ import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/utils/sorter_util.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 
-class _MatchLiveScheduleTimer extends StatefulWidget {
+class _MatchScheduleTimer extends StatefulWidget {
   final TextStyle? positiveStyle;
   final TextStyle? negativeStyle;
   final List<GameMatch> matches;
+  final bool live;
 
-  const _MatchLiveScheduleTimer({
+  const _MatchScheduleTimer({
     Key? key,
     this.positiveStyle,
     this.negativeStyle,
     required this.matches,
+    required this.live,
   }) : super(key: key);
 
   @override
-  State<_MatchLiveScheduleTimer> createState() => _MatchLiveScheduleTimerState();
+  State<_MatchScheduleTimer> createState() => _MatchLiveScheduleTimerState();
 }
 
-class _MatchLiveScheduleTimerState extends State<_MatchLiveScheduleTimer> {
+class _MatchLiveScheduleTimerState extends State<_MatchScheduleTimer> {
   Timer? _timer;
   ValueNotifier<int> _difference = ValueNotifier<int>(0);
 
@@ -32,12 +34,23 @@ class _MatchLiveScheduleTimerState extends State<_MatchLiveScheduleTimer> {
     // current time
     List<GameMatch> matches = sortMatchesByTime(widget.matches);
 
-    // find the first match that is not completed
     int diff = 0;
-    for (GameMatch match in matches) {
-      if (!match.completed) {
-        diff = tmsDateTimeGetDifferenceFromNow(match.startTime);
-        break;
+    if (widget.live) {
+      // find the first match that is not completed
+      for (GameMatch match in matches) {
+        if (!match.completed) {
+          diff = tmsDateTimeGetDifferenceFromNow(match.startTime);
+          break;
+        }
+      }
+    } else {
+      // find the first match that is ahead of current time
+      for (GameMatch match in matches) {
+        DateTime startTime = tmsDateTimeToDateTime(match.startTime);
+        if (startTime.isAfter(DateTime.now())) {
+          diff = tmsDateTimeGetDifferenceFromNow(match.startTime);
+          break;
+        }
       }
     }
 
@@ -76,12 +89,14 @@ class _MatchLiveScheduleTimerState extends State<_MatchLiveScheduleTimer> {
   }
 }
 
-class MatchLiveScheduleTimer extends StatelessWidget {
+class MatchScheduleTimer extends StatelessWidget {
+  final bool live;
   final TextStyle? positiveStyle;
   final TextStyle? negativeStyle;
 
-  const MatchLiveScheduleTimer({
+  const MatchScheduleTimer({
     Key? key,
+    this.live = true,
     this.positiveStyle,
     this.negativeStyle,
   }) : super(key: key);
@@ -93,10 +108,11 @@ class MatchLiveScheduleTimer extends StatelessWidget {
       shouldRebuild: (previous, next) => !listEquals(previous, next),
       builder: (context, matches, child) {
         return RepaintBoundary(
-          child: _MatchLiveScheduleTimer(
+          child: _MatchScheduleTimer(
             positiveStyle: positiveStyle,
             negativeStyle: negativeStyle,
             matches: matches,
+            live: live,
           ),
         );
       },

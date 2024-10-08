@@ -8,16 +8,16 @@ import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/views/teams/team_editor/team_scores/on_edit_answers.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:collection/collection.dart';
+import 'package:tms/widgets/dialogs/edit_game_answers_dialog.dart';
 
-class OnEditScore {
+class EditGameScoreDialog {
   final TeamScoreSheet score;
 
-  OnEditScore({
+  EditGameScoreDialog({
     required this.score,
   });
 
@@ -50,7 +50,7 @@ class OnEditScore {
     );
   }
 
-  void call(BuildContext context) {
+  void show(BuildContext context) {
     // reset the provider
     TmsLogger().i('Resetting the GameScoringProvider');
     Provider.of<GameScoringProvider>(context, listen: false).answers = score.scoreSheet.scoreSheetAnswers;
@@ -182,14 +182,14 @@ class OnEditScore {
                   const Text('Answers: '),
                   IconButton(
                     icon: const Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () => OnEditAnswers(
+                    onPressed: () => EditGameAnswersDialog(
                       scoreSheet: score.scoreSheet,
                       onConfirm: (answers, score, privateComment) {
                         _answers.value = answers;
                         _score.value = score;
                         _privateComment.value = privateComment;
                       },
-                    ).call(context),
+                    ).show(context),
                   ),
                 ],
               ),

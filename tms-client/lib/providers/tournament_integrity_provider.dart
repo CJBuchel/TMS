@@ -1,5 +1,6 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_provider.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_integrity_message.dart';
+import 'package:tms/utils/sorter_util.dart';
 
 class TournamentIntegrityProvider extends EchoTreeProvider<String, TournamentIntegrityMessage> {
   TournamentIntegrityProvider()
@@ -8,7 +9,28 @@ class TournamentIntegrityProvider extends EchoTreeProvider<String, TournamentInt
           fromJsonString: (json) => TournamentIntegrityMessage.fromJsonString(json: json),
         );
 
-  List<TournamentIntegrityMessage> get messages => this.items.values.toList();
+  List<TournamentIntegrityMessage> get messagesSortedByCode {
+    List<TournamentIntegrityMessage> sortedMessages = this.items.values.toList();
+    sortedMessages.sort((a, b) {
+      // Prioritize errors over warnings
+      bool aIsError = a.integrityCode.when(error: (e) => true, warning: (w) => false);
+      bool bIsError = b.integrityCode.when(error: (e) => true, warning: (w) => false);
+
+      if (aIsError && !bIsError) {
+        return -1;
+      } else if (!aIsError && bIsError) {
+        return 1;
+      }
+
+      var aCode = extractNumberFromString(a.integrityCode.getStringifiedCode());
+      var bCode = extractNumberFromString(b.integrityCode.getStringifiedCode());
+      return aCode.compareTo(bCode);
+    });
+
+    return sortedMessages;
+  }
+
+  List<TournamentIntegrityMessage> get messages => messagesSortedByCode;
 
   List<TournamentIntegrityMessage> get teamMessages {
     return this.messages.where((element) => element.teamNumber != null).toList();

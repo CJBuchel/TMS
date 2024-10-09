@@ -22,40 +22,14 @@
   <img src="https://raw.githubusercontent.com/CJBuchel/TMS/master/images/prom4.png" width="400" height="550"/>
 </p>
 
-
-
-## Install
-
-- This project is split into two distinct application, [Server](./server/) and [Client](./client/)
-- Both applications can be installed separately in their own native platforms.
-- The server can be run in [Debian linux](https://ubuntu.com/), [Windows](https://www.microsoft.com/en-au/windows?r=1) ^8 and [MacOs](https://support.apple.com/en-au/macos)
-- The client is built in flutter and officially supports [iOS](https://support.apple.com/downloads/ios), [Android](https://www.android.com/), [Debian linux](https://ubuntu.com/), [Windows](https://www.microsoft.com/en-au/windows?r=1) ^8 and [MacOs](https://support.apple.com/en-au/macos)
-- The project is also bundled into a docker image which contains the linux variant of the server & web compiled variant of the client.
-
 ## Binary Installs
-- Most TMS Server and Client binaries can be found on the [release](https://github.com/CJBuchel/TMS/releases) page. However, some signed binaries are not available such as windows msix installers or iOS ipa binaries. View below for specific installs.
-
-<!-- https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker
- -->
-
-| Binary | Link | Status |
-|--|--|--|
-| Client IOS | [App Store](https://apps.apple.com/au/app/tms-client/id6447258831) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=IOS) |
-| Client Android | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Android) |
-| Client Windows | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Client_Windows) |
-| Client Linux | Coming Soon | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Client_Linux) |
-| Server Windows | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_Windows) |
-| Server Linux | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_Linux) |
-| Server MacOs | [Github Releases](https://github.com/CJBuchel/TMS/releases) | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Server_MacOs) |
+- Most TMS Server and Client binaries can be found on the [release](https://github.com/CJBuchel/TMS/releases) page.
 
 
 ### Docker Install
-| Binary | Status |
+<!-- | Binary | Status |
 |--|--|
-| Docker Image | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) |
-
-#### Info
-- The docker image is the most recommended method for installing the project as it provides a stable up to date version that is simple to use and deploy.
+| Docker Image | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) | -->
 
 #### Steps
 
@@ -83,16 +57,16 @@
 2. Either wait for a network connection by monitoring the header messages (if on the web or using mDNS). 
     - Or navigate to the connection page in the top right corner and manually enter the ip. Afterwards go back to view selector screen
 3. Once you have connected to the server and no header messages are displayed in the app bar. Login through the button in the top right.
-    - On the first startup only one user will be active, `admin` with a password of `password`.
+    - On the first startup only one user will be active, `admin` with a password of `admin`.
 4. After logging in go back to the view selector screen and click on `Setup`
 5. Provide the generated CSV for your event or create a new one using a supported [FLL Schedule generator](https://firstaustralia.org/fll-scheduler/)
-6. (Optional) Input an admin password, it's recommended but not essential. By default the password will stay as `password`
+6. (Optional) Input an admin password, it's recommended but not essential. By default the password will stay as `admin`
 7. (Optional) Input an event name
 8. Click submit and go back to the view selector.
     - Note that the setup page is live, most of the options can be edited and submitted again during a running event with the exception of the CSV file which will overwrite the existing data.
-9. Setup users by going to the `Dashboard` page and clicking on the menu icon in the top left. Then click `Users` in the drawer menu.
+9. Setup users by going to the `Dashboard` page and clicking on the arrow on the left. Then click `Users` in the drawer menu.
 10. You can either create your own users by clicking on the `+` or generate a set of default users for the event by clicking the `Add Defaults` button.
-    - By default all generated users will have the password `password` and should be changed to suite the event if needed.
+    - By default all generated users will have the password of their username and should be changed to suite the event if needed.
 11. Once complete the system should be ready for event use.
 
 ## Sound Notice
@@ -103,8 +77,5 @@
 - TMS has sound on any view which has the timer clock
 - Similar actions may need to be taken in safari and/or other untested browsers.
 
-### Extra Information and guides
-- Refer to the [WIKI](https://github.com/CJBuchel/TMS/wiki) for detailed use
-
 ### Privacy Policy
-- [Client Policy](https://github.com/CJBuchel/TMS/blob/master/client/privacy_policy/067e7bb7-4ac3-4226-ad84-52c27dad78d0_en.md)
+- [Client Policy](https://github.com/CJBuchel/TMS/blob/master/tms-client/privacy_policy/067e7bb7-4ac3-4226-ad84-52c27dad78d0_en.md)

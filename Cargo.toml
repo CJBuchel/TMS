@@ -1,0 +1,9 @@
+[workspace]
+resolver = "2"
+members = [
+  "echo-tree-infra",
+  "echo-tree-rs",
+  "tms-infra",
+  "tms-schedule-handler",
+  "tms-server",
+]

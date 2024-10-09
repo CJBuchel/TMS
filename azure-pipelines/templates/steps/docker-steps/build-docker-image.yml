@@ -1,0 +1,8 @@
+steps:
+  - task: Docker@2
+    displayName: 'Build Docker Image'
+    inputs:
+      command: build
+      Dockerfile: '**/Dockerfile'
+      repository: $(dockerRepository)
+      tags: latest

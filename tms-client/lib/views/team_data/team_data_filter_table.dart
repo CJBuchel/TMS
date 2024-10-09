@@ -341,7 +341,11 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
                   row.add(score?.score.toString() ?? "");
                 } else if (key == "r${i}_gp") {
                   var score = data.scores.firstWhereOrNull((element) => element.round == i);
-                  row.add(convertGpToInt(score?.gp ?? "").toString());
+                  if (score?.gp.isEmpty ?? true) {
+                    row.add("");
+                  } else {
+                    row.add(convertGpToInt(score?.gp ?? "").toString());
+                  }
                 } else if (key == "r${i}_comment") {
                   var score = data.scores.firstWhereOrNull((element) => element.round == i);
                   row.add(score?.privateComment ?? "");

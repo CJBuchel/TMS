@@ -59,6 +59,17 @@ class ScoreOverviewTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  // match
+                  Text(
+                    "Match ${teamScoreSheet.scoreSheet.matchNumber ?? "N/A"},",
+                    // make italic and bold
+                    style: const TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   // round
                   Text(
                     "Round ${teamScoreSheet.scoreSheet.round},",

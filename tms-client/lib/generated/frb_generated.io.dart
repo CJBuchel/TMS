@@ -35,6 +35,7 @@ import 'infra/fll_infra/question.dart';
 import 'infra/fll_infra/rule_engine.dart';
 import 'infra/fll_infra/seasons.dart';
 import 'infra/fll_infra/seasons/fll_2023.dart';
+import 'infra/fll_infra/seasons/fll_2024.dart';
 import 'infra/network_schemas/backup_requests.dart';
 import 'infra/network_schemas/errors.dart';
 import 'infra/network_schemas/judging_pod_requests.dart';
@@ -217,6 +218,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   RobotGameTableSignalRequest
       dco_decode_box_autoadd_robot_game_table_signal_request(dynamic raw);
+
+  @protected
+  Submerged dco_decode_box_autoadd_submerged(dynamic raw);
 
   @protected
   Team dco_decode_box_autoadd_team(dynamic raw);
@@ -513,6 +517,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dynamic raw);
 
   @protected
+  Submerged dco_decode_submerged(dynamic raw);
+
+  @protected
   Team dco_decode_team(dynamic raw);
 
   @protected
@@ -803,6 +810,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   RobotGameTableSignalRequest
       sse_decode_box_autoadd_robot_game_table_signal_request(
           SseDeserializer deserializer);
+
+  @protected
+  Submerged sse_decode_box_autoadd_submerged(SseDeserializer deserializer);
 
   @protected
   Team sse_decode_box_autoadd_team(SseDeserializer deserializer);
@@ -1125,6 +1135,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  Submerged sse_decode_submerged(SseDeserializer deserializer);
+
+  @protected
   Team sse_decode_team(SseDeserializer deserializer);
 
   @protected
@@ -1428,6 +1441,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_robot_game_table_signal_request(
       RobotGameTableSignalRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_submerged(
+      Submerged self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_team(Team self, SseSerializer serializer);
@@ -1753,6 +1770,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_robot_game_table_signal_request(
       RobotGameTableSignalRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_submerged(Submerged self, SseSerializer serializer);
 
   @protected
   void sse_encode_team(Team self, SseSerializer serializer);

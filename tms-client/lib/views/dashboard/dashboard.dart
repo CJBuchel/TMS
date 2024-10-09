@@ -30,7 +30,7 @@ class Dashboard extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 6,
+                      flex: 1,
                       child: Column(
                         children: [
                           Expanded(flex: 1, child: TimersOverview()),
@@ -38,7 +38,7 @@ class Dashboard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Expanded(flex: 4, child: ScoringOverview()),
+                    Expanded(flex: 1, child: ScoringOverview()),
                   ],
                 ),
               ),

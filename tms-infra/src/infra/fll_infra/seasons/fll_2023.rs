@@ -149,7 +149,10 @@ impl BaseSeason for MasterPiece {
           label: "All team equipment fits in one launch area and under 12 in. (305 mm)?".to_string(),
           label_short: "Inspection?".to_string(),
           input: QuestionInput::Categorical(CategoricalQuestion {
-            options: vec![CategoricalOption { label: "No".to_string(), score: 0 }, CategoricalOption { label: "Yes".to_string(), score: 20 }],
+            options: vec![
+              CategoricalOption { label: "No".to_string(), score: 0 }, 
+              CategoricalOption { label: "Yes".to_string(), score: 20 },
+            ],
             default_option: "No".to_string(),
           }),
           rules: vec![],

@@ -128,25 +128,29 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 10),
                           child: const Text('Admin Tools', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.dashboard,
                           title: const Text('Dashboard'),
                           goNamed: 'dashboard',
+                          permissions: UserPermissions(admin: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.person,
                           title: const Text('Users'),
                           goNamed: 'users',
+                          permissions: UserPermissions(admin: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.backup,
                           title: const Text('Backups'),
                           goNamed: 'backups',
+                          permissions: UserPermissions(admin: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.settings,
                           title: const Text('Setup'),
                           goNamed: 'setup',
+                          permissions: UserPermissions(admin: true),
                         ),
                         const Padding(
                           padding: const EdgeInsets.only(left: 10),
@@ -158,48 +162,61 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           goNamed: 'teams',
                           permissions: UserPermissions(judgeAdvisor: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_view,
                           title: const Text('Team Data'),
                           goNamed: 'team_data',
+                          permissions: UserPermissions(judgeAdvisor: true),
                         ),
                         const Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: const Text('Robot Games', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.edit_document,
                           title: const Text('Referee Scoring'),
                           goNamed: 'scoring',
+                          permissions: UserPermissions(referee: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.shuffle,
                           title: const Text('Match Controller'),
                           goNamed: 'match_controller',
+                          permissions: UserPermissions(headReferee: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        // BaseScaffoldDrawerRouterItem(
+                        //   icon: Icons.mic,
+                        //   title: const Text('Match Announcer'),
+                        //   goNamed: 'match_announcer',
+                        //   permissions: UserPermissions(emcee: true, headReferee: true),
+                        // ),
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_chart,
                           title: const Text('Matches'),
                           goNamed: 'game_matches',
+                          permissions: UserPermissions(headReferee: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_restaurant,
                           title: const Text('Tables'),
                           goNamed: 'game_tables',
+                          permissions: UserPermissions(headReferee: true),
                         ),
                         const Padding(
                           padding: const EdgeInsets.only(left: 10),
                           child: const Text('Judging', style: TextStyle(fontSize: 12, color: Colors.grey)),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_chart,
                           title: const Text('Judging Sessions'),
                           goNamed: 'judging_sessions',
+                          permissions: UserPermissions(judgeAdvisor: true),
                         ),
-                        const BaseScaffoldDrawerRouterItem(
+                        BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_bar,
                           title: const Text('Pods'),
                           goNamed: 'judging_pods',
+                          permissions: UserPermissions(judgeAdvisor: true),
                         ),
                       ]),
                 ],

@@ -87,6 +87,7 @@ class EditGameScoreDialog {
           score: Provider.of<GameScoringProvider>(context, listen: false).score,
           privateComment: Provider.of<GameScoringProvider>(context, listen: false).privateComment,
           round: int.tryParse(_roundNumberController.text) ?? score.scoreSheet.round,
+          matchNumber: _matchNumberController.text,
           table: _tableController.text,
           referee: _refereeController.text,
           noShow: _noShow.value,

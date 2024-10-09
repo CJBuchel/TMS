@@ -17,7 +17,6 @@ pub use tournament_integrity_checks::*;
 
 pub use tms_infra::*;
 
-
 pub struct Database {
   inner: std::sync::Arc<tokio::sync::RwLock<EchoTreeServer>>,
 
@@ -111,13 +110,15 @@ impl Database {
   pub async fn create_roles(&mut self) {
     log::info!("Creating roles...");
 
-    // :public
     // :admin
+    // :public
+
     // :referee
     // :head_referee
     // :judge
     // :judge_advisor
 
+    self.check_insert_role(ADMIN_ROLE, &self.generate_password(), vec![":"], vec![":"]).await;
     self
       .check_insert_role(
         PUBLIC_ROLE,
@@ -136,11 +137,78 @@ impl Database {
         vec![],
       )
       .await;
-    self.check_insert_role(ADMIN_ROLE, &self.generate_password(), vec![":"], vec![":"]).await;
-    self.check_insert_role(REFEREE_ROLE, &self.generate_password(), vec![], vec![]).await;
-    self.check_insert_role(HEAD_REFEREE_ROLE, &self.generate_password(), vec![], vec![]).await;
-    self.check_insert_role(JUDGE_ROLE, &self.generate_password(), vec![], vec![]).await;
-    self.check_insert_role(JUDGE_ADVISOR_ROLE, &self.generate_password(), vec![], vec![]).await;
+    self
+      .check_insert_role(
+        REFEREE_ROLE,
+        &self.generate_password(),
+        vec![
+          TOURNAMENT_CONFIG,
+          TOURNAMENT_BLUEPRINT,
+          TEAMS,
+          ROBOT_GAME_MATCHES,
+          ROBOT_GAME_CATEGORIES,
+          ROBOT_GAME_TABLES,
+          ROBOT_GAME_SCORES,
+          JUDGING_SESSIONS,
+          JUDGING_CATEGORIES,
+        ],
+        vec![],
+      )
+      .await;
+    self
+      .check_insert_role(
+        HEAD_REFEREE_ROLE,
+        &self.generate_password(),
+        vec![
+          TOURNAMENT_CONFIG,
+          TOURNAMENT_BLUEPRINT,
+          TEAMS,
+          ROBOT_GAME_MATCHES,
+          ROBOT_GAME_CATEGORIES,
+          ROBOT_GAME_TABLES,
+          ROBOT_GAME_SCORES,
+          JUDGING_SESSIONS,
+          JUDGING_CATEGORIES,
+        ],
+        vec![],
+      )
+      .await;
+    self
+      .check_insert_role(
+        JUDGE_ROLE,
+        &self.generate_password(),
+        vec![
+          TOURNAMENT_CONFIG,
+          TOURNAMENT_BLUEPRINT,
+          TEAMS,
+          ROBOT_GAME_MATCHES,
+          ROBOT_GAME_CATEGORIES,
+          ROBOT_GAME_TABLES,
+          ROBOT_GAME_SCORES,
+          JUDGING_SESSIONS,
+          JUDGING_CATEGORIES,
+        ],
+        vec![],
+      )
+      .await;
+    self
+      .check_insert_role(
+        JUDGE_ADVISOR_ROLE,
+        &self.generate_password(),
+        vec![
+          TOURNAMENT_CONFIG,
+          TOURNAMENT_BLUEPRINT,
+          TEAMS,
+          ROBOT_GAME_MATCHES,
+          ROBOT_GAME_CATEGORIES,
+          ROBOT_GAME_TABLES,
+          ROBOT_GAME_SCORES,
+          JUDGING_SESSIONS,
+          JUDGING_CATEGORIES,
+        ],
+        vec![],
+      )
+      .await;
 
     // public user
     let public_user = User {

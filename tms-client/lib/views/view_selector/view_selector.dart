@@ -5,7 +5,7 @@ import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/view_selector/admin_views.dart';
 import 'package:tms/views/view_selector/judging_views.dart';
 import 'package:tms/views/view_selector/public_views.dart';
-import 'package:tms/views/view_selector/referee_views.dart';
+import 'package:tms/views/view_selector/robot_game_views.dart';
 
 /**
  * Pastel colors
@@ -16,6 +16,7 @@ import 'package:tms/views/view_selector/referee_views.dart';
  * 0xffD291BC violet
  * 0xff2ACAC8 cyan
  * 0xFF828282 grey
+ * 0xFF2D7F9D steel blue
  */
 
 class ViewSelector extends StatelessWidget {
@@ -35,9 +36,10 @@ class ViewSelector extends StatelessWidget {
                   const PublicViews(),
                   // admin views
                   if (authProvider.hasPermissionAccess(UserPermissions(admin: true))) const AdminViews(),
-                  // referee views
-                  if (authProvider.hasPermissionAccess(UserPermissions(referee: true))) const RefereeViews(),
-                  // judging views
+                  // robot game views
+                  if (authProvider.hasPermissionAccess(UserPermissions(referee: true, emcee: true)))
+                    const RobotGameViews(),
+                  // team views
                   if (authProvider.hasPermissionAccess(UserPermissions(judge: true))) const JudgingViews(),
                 ],
               ),

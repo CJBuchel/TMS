@@ -2,11 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/models/team_score_sheet.dart';
 import 'package:tms/providers/robot_game_providers/game_scores_provider.dart';
+import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/views/dashboard/scoring_overview/scoring_tile.dart/scoring_overview_tile.dart';
 
-class ScoringOverview extends StatelessWidget {
+class ScoringOverview extends StatefulWidget {
   const ScoringOverview({Key? key}) : super(key: key);
+
+  @override
+  _ScoringOverviewState createState() => _ScoringOverviewState();
+}
+
+class _ScoringOverviewState extends State<ScoringOverview> {
+  final TextEditingController _matchController = TextEditingController();
+  final TextEditingController _roundController = TextEditingController();
+  final TextEditingController _teamController = TextEditingController();
+  final TextEditingController _tableController = TextEditingController();
 
   Widget _scoringItem(BuildContext context, int listIndex, TeamScoreSheet teamScoreSheet) {
     Color evenBackground = Theme.of(context).cardColor;
@@ -29,6 +40,34 @@ class ScoringOverview extends StatelessWidget {
             scoreSheetId: e.$1,
           );
         }).toList();
+
+        // Apply filters
+        if (_matchController.text.isNotEmpty) {
+          scores = scores.where((s) {
+            return s.scoreSheet.matchNumber?.toLowerCase().contains(_matchController.text.toLowerCase()) ?? false;
+          }).toList();
+        }
+        if (_roundController.text.isNotEmpty) {
+          scores = scores.where((s) {
+            return s.scoreSheet.round.toString().toLowerCase() == _roundController.text.toLowerCase();
+          }).toList();
+        }
+        if (_teamController.text.isNotEmpty) {
+          scores = scores.where((s) {
+            return Provider.of<TeamsProvider>(context, listen: false)
+                .getTeamById(s.scoreSheet.teamRefId)
+                .teamNumber
+                .toLowerCase()
+                .contains(_teamController.text.toLowerCase());
+          }).toList();
+        }
+        if (_tableController.text.isNotEmpty) {
+          scores = scores.where(
+            (s) {
+              return s.scoreSheet.table.toLowerCase().contains(_tableController.text.toLowerCase());
+            },
+          ).toList();
+        }
 
         return scores.reversed.toList(); // reverse so newest scores are at the top
       },
@@ -68,6 +107,43 @@ class ScoringOverview extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
+                ),
+              ),
+
+              // filter, (match, round, team, table)
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _matchController,
+                        decoration: const InputDecoration(labelText: 'Match', border: OutlineInputBorder()),
+                        onChanged: (value) => setState(() {}),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _roundController,
+                        decoration: const InputDecoration(labelText: 'Round', border: OutlineInputBorder()),
+                        onChanged: (value) => setState(() {}),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _teamController,
+                        decoration: const InputDecoration(labelText: 'Team', border: OutlineInputBorder()),
+                        onChanged: (value) => setState(() {}),
+                      ),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: _tableController,
+                        decoration: const InputDecoration(labelText: 'Table', border: OutlineInputBorder()),
+                        onChanged: (value) => setState(() {}),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 

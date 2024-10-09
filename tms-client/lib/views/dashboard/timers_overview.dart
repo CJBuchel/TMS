@@ -41,7 +41,16 @@ class TimersOverview extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _item(const Text('Judging:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+              _item(
+                const Text(
+                  'Judging:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
               _item(const JudgingScheduleTimer(
                 live: false,
                 positiveStyle: TextStyle(
@@ -83,7 +92,16 @@ class TimersOverview extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _item(const Text('Games:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+                _item(
+                  const Text(
+                    'Games:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
                 _item(const MatchScheduleTimer(
                   live: false,
                   positiveStyle: TextStyle(
@@ -119,7 +137,16 @@ class TimersOverview extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _item(const Text('Current Match:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+              _item(
+                const Text(
+                  'Current Match:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
               _item(Selector<GameMatchStatusProvider, _MatchStatusData>(
                 selector: (_, p) {
                   return _MatchStatusData(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms/services/team_service.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class DeleteTeamButton extends StatelessWidget {
   final String teamId;
@@ -16,7 +16,7 @@ class DeleteTeamButton extends StatelessWidget {
       onStatusConfirmFuture: () {
         return TeamService().removeTeam(teamId);
       },
-      style: ConfirmDialogStyle.error(
+      style: DialogStyle.error(
         title: "Delete Team",
         message: const Column(
           mainAxisSize: MainAxisSize.min,

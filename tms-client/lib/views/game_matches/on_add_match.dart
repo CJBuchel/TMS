@@ -8,8 +8,8 @@ import 'package:tms/generated/infra/database_schemas/tms_time/tms_date_time.dart
 import 'package:tms/generated/infra/database_schemas/tms_time/tms_duration.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/utils/tms_time_utils.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/edit_time.dart';
 
 class OnAddMatch {
@@ -51,7 +51,7 @@ class OnAddMatch {
           );
         }
       },
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: "Add Match",
         message: Column(
           mainAxisSize: MainAxisSize.min,

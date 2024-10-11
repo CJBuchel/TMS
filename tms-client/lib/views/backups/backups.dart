@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/network_schemas/backup_requests.dart';
 import 'package:tms/services/backups_service.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 
@@ -70,7 +70,7 @@ class _BackupsState extends State<Backups> {
               onPressed: () {
                 ConfirmFutureDialog(
                   onStatusConfirmFuture: () => BackupsService().restoreBackup(backup.fileName),
-                  style: ConfirmDialogStyle.error(
+                  style: DialogStyle.error(
                     title: "Restore Backup",
                     message: const Column(
                       mainAxisSize: MainAxisSize.min,
@@ -157,7 +157,7 @@ class _BackupsState extends State<Backups> {
               child: IconButton(
                 onPressed: () => ConfirmFutureDialog(
                   onStatusConfirmFuture: () => BackupsService().createBackup(),
-                  style: ConfirmDialogStyle.success(
+                  style: DialogStyle.success(
                     title: "Create Backup",
                     message: const Text("Are you sure you want to create a backup?"),
                   ),

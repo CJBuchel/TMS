@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class _GameTableData {
   final bool isTableSet;
@@ -46,7 +47,7 @@ class _SelectGameTableState extends State<SelectGameTable> {
     }
 
     ConfirmDialog(
-      style: ConfirmDialogStyle.info(
+      style: DialogStyle.info(
         title: "Select Table",
         message: SizedBox(
           width: 300,

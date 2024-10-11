@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/judging_pod.dart';
 import 'package:tms/providers/judging_pod_provider.dart';
 import 'package:tms/utils/logger.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
 
@@ -52,7 +52,7 @@ class JudgingPods extends StatelessWidget {
                 );
               }
             },
-            style: ConfirmDialogStyle.warn(
+            style: DialogStyle.warn(
               title: "Edit Pod: ${pod.podName}",
               message: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -81,7 +81,7 @@ class JudgingPods extends StatelessWidget {
                 return Provider.of<JudgingPodProvider>(context, listen: false).removePod(podId);
               }
             },
-            style: ConfirmDialogStyle.error(
+            style: DialogStyle.error(
               title: "Remove Pod: ${pod.podName}",
               message: const Text("Are you sure you want to remove this pod?"),
             ),
@@ -116,7 +116,7 @@ class JudgingPods extends StatelessWidget {
                           _podController.text,
                         );
                       },
-                      style: ConfirmDialogStyle.warn(
+                      style: DialogStyle.warn(
                         title: "Add Pod",
                         message: Column(
                           mainAxisSize: MainAxisSize.min,

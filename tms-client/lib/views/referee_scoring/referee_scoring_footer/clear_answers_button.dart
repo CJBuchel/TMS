@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class ClearAnswersButton extends StatelessWidget {
   final double buttonHeight;
@@ -15,7 +16,7 @@ class ClearAnswersButton extends StatelessWidget {
 
   void _onClearButton(BuildContext context) {
     ConfirmDialog(
-      style: ConfirmDialogStyle.error(
+      style: DialogStyle.error(
         title: "Clear Answers",
         message: const Text("Are you sure you want to clear all answers?"),
       ),

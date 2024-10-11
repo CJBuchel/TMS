@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/schedule_provider.dart';
 import 'package:tms/views/setup/input_setter.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class ScheduleSetup extends StatelessWidget {
@@ -17,7 +17,7 @@ class ScheduleSetup extends StatelessWidget {
               SnackBarDialog.fromStatus(message: "Upload CSV Schedule", status: res).show(context);
             });
           },
-          confirmDialogStyle: ConfirmDialogStyle.warn(
+          dialogStyle: DialogStyle.warn(
             title: "Confirm Upload?",
             message: const Column(
               mainAxisSize: MainAxisSize.min,

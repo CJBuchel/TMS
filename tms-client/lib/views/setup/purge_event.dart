@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class PurgeButton extends StatelessWidget {
   void _confirmDialog(BuildContext context, TournamentConfigProvider provider) {
     ConfirmDialog(
-      style: ConfirmDialogStyle.error(
+      style: DialogStyle.error(
         title: "Confirm Purge?",
         message: const Column(
           mainAxisSize: MainAxisSize.min,

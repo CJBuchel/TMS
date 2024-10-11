@@ -7,6 +7,7 @@ import 'package:tms/views/team_data/filter_header_cell.dart';
 import 'package:tms/views/team_data/filter_row_cell.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:collection/collection.dart';
 
@@ -126,7 +127,7 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
     );
 
     ConfirmDialog(
-      style: ConfirmDialogStyle.info(
+      style: DialogStyle.info(
         title: "Select Columns",
         message: SingleChildScrollView(
           child: Column(

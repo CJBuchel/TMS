@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tms/widgets/dialogs/base_dialog.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
 class ConfirmFutureDialog extends BaseDialog {
-  final ConfirmDialogStyle style;
+  final DialogStyle style;
   final Future<void> Function()? onConfirmFuture;
   final Future<int> Function()? onStatusConfirmFuture;
   final Function(int? status)? onFinish;

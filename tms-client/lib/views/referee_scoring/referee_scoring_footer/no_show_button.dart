@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class NoShowButton extends StatelessWidget {
   final double buttonHeight;
@@ -30,7 +30,7 @@ class NoShowButton extends StatelessWidget {
 
   void _submitNoShowDialog(BuildContext context) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.warn(
+      style: DialogStyle.warn(
         title: "No Show",
         message: Column(
           mainAxisSize: MainAxisSize.min,

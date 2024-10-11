@@ -1,7 +1,6 @@
 name: Bug Report
 description: Create a report to help us improve
 labels: ["bug"]
-assignees: []
 body:
   - type: textarea
     id: describe-the-bug

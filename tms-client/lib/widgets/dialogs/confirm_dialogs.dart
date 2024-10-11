@@ -9,20 +9,24 @@ class ConfirmDialogStyle {
 
   ConfirmDialogStyle._({required this.title, required this.message, required this.type});
 
+  static ConfirmDialogStyle _scrollWrapper({required String title, required Widget message, required DialogType type}) {
+    return ConfirmDialogStyle._(title: title, message: SingleChildScrollView(child: message), type: type);
+  }
+
   factory ConfirmDialogStyle.info({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.info);
+    return _scrollWrapper(title: title, message: message, type: DialogType.info);
   }
 
   factory ConfirmDialogStyle.success({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.success);
+    return _scrollWrapper(title: title, message: message, type: DialogType.success);
   }
 
   factory ConfirmDialogStyle.error({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.error);
+    return _scrollWrapper(title: title, message: message, type: DialogType.error);
   }
 
   factory ConfirmDialogStyle.warn({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.warn);
+    return _scrollWrapper(title: title, message: message, type: DialogType.warn);
   }
 }
 

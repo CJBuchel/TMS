@@ -19,7 +19,7 @@ body:
         2. ...
         3. ...
     validations:
-      required: true
+      required: false
   - type: textarea
     id: logs
     attributes:
@@ -28,7 +28,7 @@ body:
       placeholder: Run code generator with `RUST_LOG` environment variable set to `debug`. For example, `RUST_LOG=debug flutter_rust_bridge_codegen your_args`.
       render: shell
     validations:
-      required: true
+      required: false
 
   - type: markdown
     attributes:

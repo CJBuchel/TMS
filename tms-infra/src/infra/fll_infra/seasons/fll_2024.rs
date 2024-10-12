@@ -302,7 +302,7 @@ impl BaseSeason for Submerged {
               CategoricalOption { label: "2".to_string(), score: 20 },
               CategoricalOption { label: "3".to_string(), score: 30 },
             ],
-            default_option: "0".to_string(),
+            default_option: "3".to_string(),
           }),
           rules: vec![],
         },
@@ -321,8 +321,8 @@ impl BaseSeason for Submerged {
         },
         Question {
           id: "m04b".to_string(),
-          label: "Is the angler fish latched within the shipwreck?".to_string(),
-          label_short: "Angler fish?".to_string(),
+          label: "Is the scuba diver hanging on the coral reef support?".to_string(),
+          label_short: "Scuba placed?".to_string(),
           input: QuestionInput::Categorical(CategoricalQuestion {
             options: vec![
               CategoricalOption { label: "No".to_string(), score: 0 },

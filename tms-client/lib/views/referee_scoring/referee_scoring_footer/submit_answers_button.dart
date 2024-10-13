@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class SubmitAnswersButton extends StatelessWidget {
   final double buttonHeight;
@@ -30,7 +30,7 @@ class SubmitAnswersButton extends StatelessWidget {
 
   void _submitAnswersDialog(BuildContext context) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: "Submit Answers",
         message: Column(
           mainAxisSize: MainAxisSize.min,

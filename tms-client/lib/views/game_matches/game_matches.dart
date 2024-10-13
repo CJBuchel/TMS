@@ -12,8 +12,8 @@ import 'package:tms/views/game_matches/matches_info_banner.dart';
 import 'package:tms/views/game_matches/on_add_match.dart';
 import 'package:tms/views/game_matches/on_delete_match.dart';
 import 'package:tms/views/game_matches/edit_match/edit_match_widget.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/integrity_checks/icon_tooltip_integrity_check.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
@@ -106,7 +106,7 @@ class GameMatches extends StatelessWidget {
               ),
             );
           },
-          style: ConfirmDialogStyle.warn(
+          style: DialogStyle.warn(
             title: "Edit Match: ${m.matchNumber}",
             message: Selector<GameMatchProvider, GameMatch?>(
               selector: (context, provider) => provider.getMatchByMatchNumber(m.matchNumber),

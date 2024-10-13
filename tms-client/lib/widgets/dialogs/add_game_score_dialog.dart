@@ -9,6 +9,7 @@ import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/game_scoring_widget.dart';
 
 class AddGameScoreDialog {
@@ -43,7 +44,7 @@ class AddGameScoreDialog {
 
   void _addAnswers(BuildContext context) {
     ConfirmDialog(
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: 'Add Answers',
         message: Container(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -70,7 +71,7 @@ class AddGameScoreDialog {
           noShow: _noShow,
         );
       },
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: 'Add Score',
         message: Column(
           mainAxisSize: MainAxisSize.min,

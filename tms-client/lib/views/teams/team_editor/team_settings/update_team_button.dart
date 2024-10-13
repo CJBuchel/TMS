@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/services/team_service.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class UpdateTeamButton extends StatelessWidget {
   final String teamId;
@@ -10,7 +10,7 @@ class UpdateTeamButton extends StatelessWidget {
 
   void _confirmUpdateTeam(BuildContext context) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.warn(
+      style: DialogStyle.warn(
         title: "Update Team",
         message: const Text("Are you sure you want to update this team?"),
       ),

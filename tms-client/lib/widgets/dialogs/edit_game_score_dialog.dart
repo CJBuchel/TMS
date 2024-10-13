@@ -9,9 +9,9 @@ import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:collection/collection.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/dialogs/edit_game_answers_dialog.dart';
 
 class EditGameScoreDialog {
@@ -100,7 +100,7 @@ class EditGameScoreDialog {
           updatedScoreSheet,
         );
       },
-      style: ConfirmDialogStyle.warn(
+      style: DialogStyle.warn(
         title: 'Edit Score',
         message: Column(
           mainAxisSize: MainAxisSize.min,

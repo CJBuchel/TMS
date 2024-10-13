@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class DeleteMatchButton extends StatelessWidget {
   final GameMatch match;
@@ -14,7 +14,7 @@ class DeleteMatchButton extends StatelessWidget {
 
   void _showConfirmDialog(BuildContext context) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.error(
+      style: DialogStyle.error(
         title: "Delete Match",
         message: Text("Are you sure you want to delete match ${match.matchNumber}?"),
       ),

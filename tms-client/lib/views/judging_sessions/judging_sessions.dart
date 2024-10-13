@@ -12,8 +12,8 @@ import 'package:tms/views/judging_sessions/edit_session/edit_session_widget.dart
 import 'package:tms/views/judging_sessions/judging_info_banner.dart';
 import 'package:tms/views/judging_sessions/on_add_session.dart';
 import 'package:tms/views/judging_sessions/on_delete_session.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/integrity_checks/icon_tooltip_integrity_check.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
@@ -107,7 +107,7 @@ class JudgingSessions extends StatelessWidget {
               ),
             );
           },
-          style: ConfirmDialogStyle.warn(
+          style: DialogStyle.warn(
             title: "Edit Session: ${s.sessionNumber}",
             message: Selector<JudgingSessionProvider, JudgingSession?>(
               selector: (context, provider) => provider.getSessionBySessionNumber(s.sessionNumber),

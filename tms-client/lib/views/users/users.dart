@@ -8,8 +8,8 @@ import 'package:tms/generated/infra/database_schemas/user.dart';
 import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
@@ -40,7 +40,7 @@ class Users extends StatelessWidget {
 
     ConfirmFutureDialog(
       onStatusConfirmFuture: () => _insertUser(context, userId, user.roles),
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: "Edit User",
         message: Column(
           mainAxisSize: MainAxisSize.min,
@@ -72,7 +72,7 @@ class Users extends StatelessWidget {
 
   void _addDefaultUsers(BuildContext context) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.warn(
+      style: DialogStyle.warn(
         title: "Add default users",
         message: const Column(
           mainAxisSize: MainAxisSize.min,
@@ -94,7 +94,7 @@ class Users extends StatelessWidget {
     _passwordController.clear();
     ConfirmFutureDialog(
       onStatusConfirmFuture: () => _insertUser(context, null, []),
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: "Add User",
         message: Column(
           mainAxisSize: MainAxisSize.min,
@@ -126,7 +126,7 @@ class Users extends StatelessWidget {
 
   void _removeUser(BuildContext context, User user) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.error(
+      style: DialogStyle.error(
         title: "Delete user",
         message: Column(
           mainAxisSize: MainAxisSize.min,

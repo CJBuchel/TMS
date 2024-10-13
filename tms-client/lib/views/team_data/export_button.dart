@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class ExportButton extends StatelessWidget {
   final List<List<String>> data;
@@ -27,7 +28,7 @@ class ExportButton extends StatelessWidget {
 
   void _onExport(BuildContext context) {
     ConfirmDialog(
-      style: ConfirmDialogStyle.info(
+      style: DialogStyle.info(
         title: "Export Data",
         message: const Text("Export current filtered data?"),
       ),

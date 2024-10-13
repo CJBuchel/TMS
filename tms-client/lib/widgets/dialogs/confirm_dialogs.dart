@@ -1,33 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tms/widgets/dialogs/base_dialog.dart';
-
-class ConfirmDialogStyle {
-  final String title;
-  final Widget message;
-  final DialogType type;
-
-  ConfirmDialogStyle._({required this.title, required this.message, required this.type});
-
-  factory ConfirmDialogStyle.info({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.info);
-  }
-
-  factory ConfirmDialogStyle.success({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.success);
-  }
-
-  factory ConfirmDialogStyle.error({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.error);
-  }
-
-  factory ConfirmDialogStyle.warn({required String title, required Widget message}) {
-    return ConfirmDialogStyle._(title: title, message: message, type: DialogType.warn);
-  }
-}
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class ConfirmDialog extends BaseDialog {
-  final ConfirmDialogStyle style;
+  final DialogStyle style;
   final Function? onConfirm;
   final Function? onCancel;
 

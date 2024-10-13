@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class EditMatchButton extends StatelessWidget {
   final GameMatch match;
@@ -72,7 +72,7 @@ class EditMatchButton extends StatelessWidget {
 
   void _showEditDialog(BuildContext context) {
     ConfirmFutureDialog(
-      style: ConfirmDialogStyle.warn(
+      style: DialogStyle.warn(
         title: "Edit match ${match.matchNumber}",
         message: _buildDialogMessage(),
       ),

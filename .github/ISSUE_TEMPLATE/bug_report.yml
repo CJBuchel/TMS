@@ -1,7 +1,6 @@
 name: Bug Report
 description: Create a report to help us improve
 labels: ["bug"]
-assignees: []
 body:
   - type: textarea
     id: describe-the-bug
@@ -20,7 +19,7 @@ body:
         2. ...
         3. ...
     validations:
-      required: true
+      required: false
   - type: textarea
     id: logs
     attributes:
@@ -29,7 +28,7 @@ body:
       placeholder: Run code generator with `RUST_LOG` environment variable set to `debug`. For example, `RUST_LOG=debug flutter_rust_bridge_codegen your_args`.
       render: shell
     validations:
-      required: true
+      required: false
 
   - type: markdown
     attributes:

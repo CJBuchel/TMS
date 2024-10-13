@@ -1,7 +1,6 @@
 name: Feature Request
 description: Suggest an idea for this project
 labels: ["enhancement"]
-assignees: []
 body:
   - type: textarea
     id: problem-description
@@ -25,7 +24,7 @@ body:
       label: Describe alternatives you've considered
       description: A clear and concise description of any alternative solutions or features you've considered.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: additional-context

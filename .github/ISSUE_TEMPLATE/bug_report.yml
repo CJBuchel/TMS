@@ -52,7 +52,7 @@ body:
     id: env-os
     attributes:
       label: OS
-      placeholder: ex. MacOS
+      placeholder: iOS, Web (Chrome) etc...
     validations:
       required: false
 

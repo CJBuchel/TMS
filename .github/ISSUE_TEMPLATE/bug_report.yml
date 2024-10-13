@@ -18,20 +18,19 @@ body:
   - type: textarea
     attributes:
       label: Steps to reproduce
-      description: A simple way to reproduce is to clone and modify the https://github.com/fzyzcjy/flutter_rust_bridge/tree/master/frb_example/dart_minimal example package according to your needs.
-      value: |
-        Hint: A simple way to reproduce is to clone and modify the https://github.com/fzyzcjy/flutter_rust_bridge/tree/master/frb_example/dart_minimal example package according to your needs.
-        1. ...
-        2. ...
-        3. ...
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
     validations:
       required: false
   - type: textarea
     id: logs
     attributes:
       label: Logs
-      description: Run code generator with `RUST_LOG` environment variable set to `debug`. For example, `RUST_LOG=debug flutter_rust_bridge_codegen your_args`.
-      placeholder: Run code generator with `RUST_LOG` environment variable set to `debug`. For example, `RUST_LOG=debug flutter_rust_bridge_codegen your_args`.
+      description: Logs of the application when running.
+      placeholder: Logs of the application when running.
       render: shell
     validations:
       required: false
@@ -41,15 +40,6 @@ body:
     attributes:
       label: Expected behavior
       description: A clear and concise description of what you expected to happen.
-    validations:
-      required: false
-
-  - type: textarea
-    id: generated-binding
-    attributes:
-      label: Generated binding code
-      description: If possible, please paste your generated binding code, both `.h` (via `--c-output`), and `.dart` (via `--dart-output`), here.
-      render: shell
     validations:
       required: false
 
@@ -63,28 +53,6 @@ body:
     attributes:
       label: OS
       placeholder: ex. MacOS
-    validations:
-      required: false
-  - type: input
-    id: env-version
-    attributes:
-      label: Version of `flutter_rust_bridge_codegen`
-      placeholder: ex. 1.0
-    validations:
-      required: false
-  - type: textarea
-    id: env-flutter-doctor
-    attributes:
-      label: Flutter info
-      description: Paste output of `flutter doctor -v`
-      render: shell
-    validations:
-      required: false
-  - type: input
-    id: env-clang
-    attributes:
-      label: Version of `clang++`
-      placeholder: ex. 12
     validations:
       required: false
 

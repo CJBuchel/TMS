@@ -5,8 +5,8 @@ import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
 import 'package:tms/utils/tms_time_utils.dart';
 import 'package:tms/widgets/dialogs/add_game_score_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/dialogs/edit_game_score_dialog.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:tms/widgets/expandable/expandable_tile.dart';
 import 'package:tms/widgets/tables/base_table.dart';
@@ -45,7 +45,7 @@ class _TeamScoresEditorState extends State<TeamScoresEditor> {
       return EditTableRow(
         onDelete: () {
           ConfirmFutureDialog(
-            style: ConfirmDialogStyle.error(
+            style: DialogStyle.error(
               title: 'Delete Score',
               message: const Text('Are you sure you want to delete this score?'),
             ),

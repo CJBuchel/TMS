@@ -7,8 +7,8 @@ import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/views/match_controller/match_stage/update_team_on_match.dart';
 import 'package:tms/views/match_controller/match_stage/stage_table_data.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
 
@@ -57,7 +57,7 @@ class StageTable extends StatelessWidget {
             selectedMatch.value = segment.matchNumber;
 
             ConfirmFutureDialog(
-              style: ConfirmDialogStyle.info(
+              style: DialogStyle.info(
                 title: "Update team ${segment.table.teamNumber} on match",
                 message: UpdateTeamOnMatchWidget(
                   tableData: tableData,
@@ -89,7 +89,7 @@ class StageTable extends StatelessWidget {
           },
           onDelete: () {
             ConfirmFutureDialog(
-              style: ConfirmDialogStyle.error(
+              style: DialogStyle.error(
                 title: "Remove team ${segment.table.teamNumber} from match",
                 message: Text(
                   "Are you sure you want to remove team '${segment.table.teamNumber}' from this match?",
@@ -161,7 +161,7 @@ class StageTable extends StatelessWidget {
       rows: rows,
       onAdd: () {
         ConfirmFutureDialog(
-            style: ConfirmDialogStyle.success(
+            style: DialogStyle.success(
               title: "Add team to match",
               message: UpdateTeamOnMatchWidget(
                 tableData: tableData,

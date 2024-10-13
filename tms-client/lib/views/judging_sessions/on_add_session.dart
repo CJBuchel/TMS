@@ -8,8 +8,8 @@ import 'package:tms/generated/infra/database_schemas/tms_time/tms_date_time.dart
 import 'package:tms/generated/infra/database_schemas/tms_time/tms_duration.dart';
 import 'package:tms/providers/judging_session_provider.dart';
 import 'package:tms/utils/tms_time_utils.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/edit_time.dart';
 
 class OnAddSession {
@@ -64,7 +64,7 @@ class OnAddSession {
           );
         }
       },
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: "Add Session",
         message: Column(
           mainAxisSize: MainAxisSize.min,

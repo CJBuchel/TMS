@@ -11,8 +11,8 @@ import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/views/judging_sessions/edit_session/add_pod_widget.dart';
 import 'package:tms/views/judging_sessions/edit_session/edit_pod_widget.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/edit_time.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
@@ -152,7 +152,7 @@ class EditSessionWidget extends StatelessWidget {
                       );
                     }
                   },
-                  style: ConfirmDialogStyle.success(
+                  style: DialogStyle.success(
                     title: "Add Pod to Session: ${judgingSession.sessionNumber}",
                     message: AddPodWidget(
                       availablePods: data.availablePods,
@@ -197,7 +197,7 @@ class EditSessionWidget extends StatelessWidget {
                           );
                         }
                       },
-                      style: ConfirmDialogStyle.success(
+                      style: DialogStyle.success(
                         title: "Edit team ${jsp.teamNumber} in pod ${jsp.podName}",
                         message: EditPodWidget(
                           availablePods: data.availablePods,
@@ -213,7 +213,7 @@ class EditSessionWidget extends StatelessWidget {
                   },
                   onDelete: () {
                     ConfirmFutureDialog(
-                      style: ConfirmDialogStyle.error(
+                      style: DialogStyle.error(
                         title: "Delete Pod: ${jsp.podName}",
                         message: const Text("Are you sure you want to delete this pod?"),
                       ),

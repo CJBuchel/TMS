@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_table.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
 
@@ -49,7 +49,7 @@ class GameTables extends StatelessWidget {
                 );
               }
             },
-            style: ConfirmDialogStyle.warn(
+            style: DialogStyle.warn(
               title: "Edit Table: ${table.tableName}",
               message: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -77,7 +77,7 @@ class GameTables extends StatelessWidget {
                 return Provider.of<GameTableProvider>(context, listen: false).removeTable(tableId);
               }
             },
-            style: ConfirmDialogStyle.error(
+            style: DialogStyle.error(
               title: "Delete Table: ${table.tableName}",
               message: const Text("Are you sure you want to delete this table?"),
             ),
@@ -110,7 +110,7 @@ class GameTables extends StatelessWidget {
                           _tableController.text,
                         );
                       },
-                      style: ConfirmDialogStyle.success(
+                      style: DialogStyle.success(
                         title: "Add Table",
                         message: Column(
                           mainAxisSize: MainAxisSize.min,

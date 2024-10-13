@@ -11,8 +11,8 @@ import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/views/game_matches/edit_match/add_table_widget.dart';
 import 'package:tms/views/game_matches/edit_match/edit_table_widget.dart';
 import 'package:tms/widgets/buttons/live_checkbox.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/edit_time.dart';
 import 'package:tms/widgets/tables/base_table.dart';
 import 'package:tms/widgets/tables/edit_row_table.dart';
@@ -137,7 +137,7 @@ class EditMatchWidget extends StatelessWidget {
                       );
                     }
                   },
-                  style: ConfirmDialogStyle.success(
+                  style: DialogStyle.success(
                     title: "Add team to match: ${gameMatch.matchNumber}",
                     message: AddTableWidget(
                       availableTables: data.availableTables,
@@ -176,7 +176,7 @@ class EditMatchWidget extends StatelessWidget {
                           );
                         }
                       },
-                      style: ConfirmDialogStyle.warn(
+                      style: DialogStyle.warn(
                         title: "Update team ${gmt.teamNumber} on table ${gmt.table}",
                         message: EditTableWidget(
                           availableTables: data.availableTables,
@@ -190,7 +190,7 @@ class EditMatchWidget extends StatelessWidget {
                   },
                   onDelete: () {
                     ConfirmFutureDialog(
-                      style: ConfirmDialogStyle.error(
+                      style: DialogStyle.error(
                         title: "Delete team ${gmt.teamNumber} from match",
                         message: const Text("Are you sure you want to delete this team from the match?"),
                       ),

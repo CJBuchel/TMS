@@ -78,10 +78,11 @@ impl WebServer {
     let ui_static_files = warp::fs::dir(ui_static_files_path).map(|reply| {
       // headers
       let reply = warp::reply::with_header(reply, "Cache-Control", "public, max-age=86400");
-      let reply = warp::reply::with_header(reply, "Cross-Origin-Opener-Policy", "same-origin");
-      let reply = warp::reply::with_header(reply, "Cross-Origin-Embedder-Policy", "require-corp");
+      let reply = warp::reply::with_header(reply, "Cross-Origin-Opener-Policy", "same-origin"); // same-origin
+      let reply = warp::reply::with_header(reply, "Cross-Origin-Embedder-Policy", "require-corp"); // require-corp
       reply
     });
+
     let ui_route = warp::path("ui").and(ui_static_files);
 
     // static files for deep linking

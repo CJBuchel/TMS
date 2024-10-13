@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/services/team_service.dart';
-import 'package:tms/widgets/dialogs/confirm_dialogs.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
+import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class AddTeamButton extends StatelessWidget {
   AddTeamButton({
@@ -26,7 +26,7 @@ class AddTeamButton extends StatelessWidget {
           ),
         );
       },
-      style: ConfirmDialogStyle.success(
+      style: DialogStyle.success(
         title: "Add Team",
         message: Column(
           mainAxisSize: MainAxisSize.min,

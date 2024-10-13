@@ -9,6 +9,12 @@ body:
       description: A clear and concise description of what the bug is.
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: |
+        # The following fields are *optional*
+
+        ...but may be useful for debugging
   - type: textarea
     attributes:
       label: Steps to reproduce
@@ -29,13 +35,6 @@ body:
       render: shell
     validations:
       required: false
-
-  - type: markdown
-    attributes:
-      value: |
-        # The following fields are *optional*
-
-        ...but may be useful for debugging
 
   - type: textarea
     id: expected-behavior

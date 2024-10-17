@@ -298,9 +298,9 @@ impl BaseSeason for Submerged {
           input: QuestionInput::Categorical(CategoricalQuestion {
             options: vec![
               CategoricalOption { label: "0".to_string(), score: 0 },
-              CategoricalOption { label: "1".to_string(), score: 10 },
-              CategoricalOption { label: "2".to_string(), score: 20 },
-              CategoricalOption { label: "3".to_string(), score: 30 },
+              CategoricalOption { label: "1".to_string(), score: 5 },
+              CategoricalOption { label: "2".to_string(), score: 10 },
+              CategoricalOption { label: "3".to_string(), score: 15 },
             ],
             default_option: "3".to_string(),
           }),

@@ -29,7 +29,6 @@ class NetworkObserver extends WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    TmsLogger().w("AppLifecycleState: $state");
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
       Network().stop();

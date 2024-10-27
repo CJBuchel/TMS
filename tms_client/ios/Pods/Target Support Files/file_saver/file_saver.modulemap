@@ -1,0 +1,6 @@
+framework module file_saver {
+  umbrella header "file_saver-umbrella.h"
+
+  export *
+  module * { export * }
+}

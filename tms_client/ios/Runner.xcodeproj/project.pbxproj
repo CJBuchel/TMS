@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		247AB1952CB6D05200A3FB4F /* libtms_infra.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 247AB18F2CB6CABD00A3FB4F /* libtms_infra.a */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		686186399DB1313AD27902A0 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 598FA2646C915E8898C09187 /* Pods_Runner.framework */; };
@@ -84,7 +83,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				247AB1952CB6D05200A3FB4F /* libtms_infra.a in Frameworks */,
 				686186399DB1313AD27902A0 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,1 +1,1 @@
-pub use echo_tree_infra_schema::*;
+pub use infra_schema::*;

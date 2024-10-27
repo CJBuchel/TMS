@@ -1,7 +1,7 @@
 
 use std::{fs, path::PathBuf};
 
-use echo_tree_infra_schema::*;
+use infra_schema::*;
 use schemars::JsonSchema;
 
 #[derive(JsonSchema)]

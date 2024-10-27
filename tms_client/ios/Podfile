@@ -1,0 +1,62 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '12.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    
+    # remove microphone permission (not needed for this app)
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        'AUDIO_SESSION_MICROPHONE=0'
+      ]
+      # config.build_settings['LIBRARY_SEARCH_PATHS'] ||= ['/Users/connorbuchel/code/TMS/tms_client/ios/Runner/']
+      # config.build_settings['LIBRARY_SEARCH_PATHS'] ||= ["$PROJECT_DIR/Runner"]
+      # config.build_settings['OTHER_LDFLAGS'] ||= ['-ltms_infra', '-lc++']
+      # Use the actual path instead of $(PROJECT_DIR)
+      actual_project_dir = File.expand_path('..', __FILE__) # Adjust this if needed
+      config.build_settings['LIBRARY_SEARCH_PATHS'] ||= ["#{actual_project_dir}/Runner"]
+      config.build_settings['OTHER_LDFLAGS'] ||= ['-ltms_infra', '-lc++']
+    end
+  end
+  puts "Library Search Paths: #{installer.pods_project.targets.map { |t| t.build_configurations.map { |c| c.build_settings['LIBRARY_SEARCH_PATHS'] } }}"
+  # signing config
+  installer.pods_project.build_configurations.each do |config|
+      config.build_settings['CODE_SIGNING_REQUIRED'] = "NO"
+      config.build_settings['CODE_SIGNING_ALLOWED'] = "NO"
+  end
+end

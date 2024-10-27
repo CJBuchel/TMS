@@ -5,32 +5,32 @@
 			"path": "."
 		},
 		{
-			"name": "tms-client",
-			"path": "tms-client"
+			"name": "tms_client",
+			"path": "tms_client"
 		},
 		{
-			"name": "tms-server",
-			"path": "tms-server"
+			"name": "tms_server",
+			"path": "tms_server"
 		},
 		{
-			"name": "tms-infra",
-			"path": "tms-infra"
+			"name": "tms_infra",
+			"path": "tms_infra"
 		},
 		{
-			"name": "echo-tree-rs",
-			"path": "echo-tree-rs"
+			"name": "echo_tree_rs",
+			"path": "echo_tree_rs"
 		},
 		{
-			"name": "echo-tree-infra",
-			"path": "echo-tree-infra"
+			"name": "echo_tree_infra",
+			"path": "echo_tree_infra"
 		},
 		{
-			"name": "echo-tree-flutter",
-			"path": "echo-tree-flutter"
+			"name": "echo_tree_flutter",
+			"path": "echo_tree_flutter"
 		},
 		{
-			"name": "tms-schedule-handler",
-			"path": "tms-schedule-handler"
+			"name": "tms_schedule_handler",
+			"path": "tms_schedule_handler"
 		}
 	],
 	"settings": {

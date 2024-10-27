@@ -7,8 +7,8 @@ set "Y="
 set "B="
 
 REM TMS INFRA bindings
-set "TMS_INFRA=%cd%\tms-infra"
-set "TMS_FLUTTER=%cd%\tms-client"
+set "TMS_INFRA=%cd%\tms_infra"
+set "TMS_FLUTTER=%cd%\tms_client"
 set "TMS_CRATES=crate::infra"
 set "TMS_FLUTTER_ENTRY_NAME=TmsRustLib"
 

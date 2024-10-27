@@ -13,7 +13,7 @@ steps:
   - task: Cache@2
     displayName: 'Cache Flutter Dependencies'
     inputs:
-      key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock" | $(Agent.JobName)'
+      key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms_client/pubspec.lock" | $(Agent.JobName)'
       restoreKeys: 'flutter-pub | "$(Agent.OS)" | $(Agent.JobName)'
       path: ${{ parameters.pubCachePath }}
 
@@ -22,6 +22,6 @@ steps:
     - task: Cache@2
       displayName: 'Cache Flutter Build'
       inputs:
-        key: 'flutter-build | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms-client/pubspec.lock" | $(Agent.JobName)'
+        key: 'flutter-build | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms_client/pubspec.lock" | $(Agent.JobName)'
         restoreKeys: 'flutter-build | "$(Agent.OS)" | $(Agent.JobName)'
-        path: $(Build.SourcesDirectory)/tms-client/build
+        path: $(Build.SourcesDirectory)/tms_client/build

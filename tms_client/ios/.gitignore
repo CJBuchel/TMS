@@ -35,6 +35,7 @@ Runner/GeneratedPluginRegistrant.*
 
 # FRB ignores
 Flutter/
-Runner/
+!Runner/
+!Runner/Assets.*
 Frameworks/*
 !Frameworks/.gitkeep

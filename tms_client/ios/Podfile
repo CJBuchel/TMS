@@ -44,7 +44,7 @@ post_install do |installer|
         '$(inherited)',
         'AUDIO_SESSION_MICROPHONE=0'
       ]
-      # config.build_settings['LIBRARY_SEARCH_PATHS'] ||= ['/Users/connorbuchel/code/TMS/tms_client/ios/Runner/']
+      # config.build_settings['LIBRARY_SEARCH_PATHS'] ||= ['/Users/connorbuchel/code/TMS/tms-client/ios/Runner/']
       # config.build_settings['LIBRARY_SEARCH_PATHS'] ||= ["$PROJECT_DIR/Runner"]
       # config.build_settings['OTHER_LDFLAGS'] ||= ['-ltms_infra', '-lc++']
       # Use the actual path instead of $(PROJECT_DIR)

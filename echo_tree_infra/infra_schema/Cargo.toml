@@ -1,5 +1,5 @@
 [package]
-name = "echo_tree_infra_schema"
+name = "infra_schema"
 version = "0.1.0"
 edition = "2021"
 

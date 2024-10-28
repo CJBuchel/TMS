@@ -27,7 +27,7 @@ jobs:
         parameters:
           contents: | # grab everything except build dirs
             **
-            !tms-client/build/**
+            !tms_client/build/**
             !**/target/**
           flattenFolders: false
       # Publish artifact
@@ -63,7 +63,7 @@ jobs:
         parameters:
           contents: | # grab everything except build dirs
             **
-            !tms-client/build/**
+            !tms_client/build/**
             !**/target/**
           flattenFolders: false
       # Publish artifact
@@ -99,7 +99,7 @@ jobs:
         parameters:
           contents: | # grab everything except build dirs
             **
-            !tms-client/build/**
+            !tms_client/build/**
             !**/target/**
           flattenFolders: false
       # Publish artifact

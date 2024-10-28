@@ -31,7 +31,7 @@ steps:
   # copy the web build to the staging directory (don't flatten)
   - template: steps/common-steps/copy-to-staging.yml
     parameters:
-      contents: 'tms-client/build/web/**'
+      contents: 'tms_client/build/web/**'
   
   # publish the artifact
   - template: steps/common-steps/publish-artifact.yml

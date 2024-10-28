@@ -46,10 +46,10 @@
       - Note, if you want to restore from a backup that is from a different event. Place the backup inside the `backups` folder. Then from the UI restore from that backup.
       - It's not recommended to directly remove the `tms.kvdb` directory and replace it with the backup you have on hand. But instead let the TMS server handle trying to parse, verify and replace the running config with the backup.
       - An upload backup button has not yet been added to the setup page as this is a fairly niche use case.
-    - `tms-client` this directory contains the static website files that is hosted by the server.
+    - `tms_client` this directory contains the static website files that is hosted by the server.
 
 ### iOS Client
-- The iOS client for iPads and similar devices can be found on the [App Store](https://apps.apple.com/au/app/tms-client/id6447258831), and can be used to connect to the server hosted on the same network.
+- The iOS client for iPads and similar devices can be found on the [App Store](https://apps.apple.com/au/app/tms_client/id6447258831), and can be used to connect to the server hosted on the same network.
 
 
 
@@ -149,4 +149,4 @@
 - Similar actions may need to be taken in safari and/or other untested browsers.
 
 ### Privacy Policy
-- [Client Policy](https://github.com/CJBuchel/TMS/blob/master/tms-client/privacy_policy/067e7bb7-4ac3-4226-ad84-52c27dad78d0_en.md)
+- [Client Policy](https://github.com/CJBuchel/TMS/blob/master/tms_client/privacy_policy/067e7bb7-4ac3-4226-ad84-52c27dad78d0_en.md)

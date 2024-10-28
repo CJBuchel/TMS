@@ -1,0 +1,15 @@
+[package]
+name = "echo_tree_infra"
+version = "0.1.0"
+edition = "2021"
+build = "build/build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+infra_schema = { path = "infra_schema" }
+
+[build-dependencies]
+serde_json = "^1.0"
+schemars = "^0.8"
+infra_schema = { path = "infra_schema" }

@@ -1,0 +1,47 @@
+# trigger:
+# - master
+# - ci-cd
+
+# custom build number, (previous was 20240714.2) we want (202407142)
+name: $(Date:yyyyMMdd)$(Rev:r)
+
+resources: 
+  - repo: self
+
+variables:
+  - group: 'apple-variables'
+  - template: vars.yml
+  - name: 'isProd'
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/ci-cd'))]
+  - name: dockerRepository
+    value: 'cjbuchel/tms'
+  - name: dockerRegistryServiceConnection
+    value: 'CJBuchel-Dockerhub1'
+
+stages:
+  # Environment setup
+  - stage: Setup
+    displayName: 'Setup & Environment'
+    jobs:
+      - template: azure-pipelines/setup-stage.yml
+
+  - stage: Infra
+    dependsOn: Setup
+    displayName: 'Generate Infrastructure'
+    jobs:
+      - template: azure-pipelines/infra-stage.yml
+
+  # Build Stage
+  - stage: Build
+    dependsOn: Infra
+    displayName: 'Build'
+    jobs:
+      - template: azure-pipelines/build-stage.yml
+
+  # Release Stage
+  - stage: Release
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['isProd'], true))
+    displayName: 'Release'
+    jobs:
+      - template: azure-pipelines/release-stage.yml

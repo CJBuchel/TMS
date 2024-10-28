@@ -1,0 +1,24 @@
+# download env files and place correctly
+steps:
+  # download environment artifacts
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Env Files'
+    inputs:
+      artifact: 'env-files'
+      targetPath: '$(Pipeline.Workspace)/env-files'
+  # copy .env to root
+  - task: CopyFiles@2
+    displayName: 'Copy .env to workspace'
+    inputs:
+      SourceFolder: '$(Pipeline.Workspace)/env-files'
+      Contents: '.env'
+      TargetFolder: '$(Pipeline.Workspace)'
+      OverWrite: true
+  # copy .env to tms_client
+  - task: CopyFiles@2
+    displayName: 'Copy .env to tms_client'
+    inputs:
+      SourceFolder: '$(Pipeline.Workspace)/env-files'
+      Contents: '.env'
+      TargetFolder: '$(Pipeline.Workspace)/tms_client'
+      OverWrite: true

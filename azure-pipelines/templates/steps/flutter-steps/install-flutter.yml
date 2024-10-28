@@ -1,0 +1,18 @@
+#
+# Install requirements for flutter
+#
+steps:
+  # Flutter install
+  - task: FlutterInstall@0
+    displayName: 'Install flutter'
+    inputs:
+      mode: 'auto'
+      channel: 'stable'
+      version: 'custom'
+      customVersion: '3.24.3'
+  # Get Flutter dependencies
+  - task: FlutterCommand@0
+    displayName: 'Install Flutter dependencies'
+    inputs:
+      projectDirectory: 'tms_client'
+      arguments: 'pub get'

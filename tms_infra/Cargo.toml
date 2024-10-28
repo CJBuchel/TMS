@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 # Default to rlib for most platforms
-crate-type = ["rlib", "cdylib"] # the pipelines replace "cdylib" with "staticlib" for ios binaries
+crate-type = ["rlib", "staticlib"]
+# crate-type = ["rlib", "cdylib"] # the pipelines replace "cdylib" with "staticlib" for ios binaries
 # when doing local/simulation testing, add ["rlib", "staticlib"] and use the following to build
 # cargo lipo --release --targets aarch64-apple-ios x86_64-apple-ios
 

@@ -105,7 +105,7 @@ impl WebServer {
     let root_route = warp::path::end().map(|| warp::redirect(warp::http::Uri::from_static("/ui")));
 
     // append the web route to provided routes
-    let web_route = root_route.or(ui_route).or(deep_linking_route);
+    let web_route = root_route.or(ui_route).or(deep_linking_route).boxed();
 
     // combine the web route with the provided routes
     let routes = web_route.or(routes);

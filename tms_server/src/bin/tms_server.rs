@@ -67,7 +67,7 @@ async fn main() {
   // create services
   let services = SharedServices::new_instance(db.clone(), clients.clone());
 
-  // create network
+  // // create network
   let network = Network::new(db.clone(), clients.clone(), services, ip.clone(), ServerArgs::get_tls(), ServerArgs::get_port());
 
   // check arguments for certificates

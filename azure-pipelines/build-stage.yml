@@ -68,18 +68,3 @@ jobs:
         parameters:
           clientBinaryPath: '**/*.ipa'
           artifactName: 'ios-ipa'
-
-  # - job: AndroidBuild
-  #   displayName: 'Android Client'
-  #   pool:
-  #     vmImage: 'ubuntu-latest'
-  #   steps:
-  #     # build client template
-  #     - template: templates/client-build-template.yml
-  #       parameters:
-  #         flutterTarget: 'apk'
-  #     # publish artifacts template
-  #     - template: templates/client-artifact-template.yml
-  #       parameters:
-  #         clientBinaryPath: '**/flutter-apk/**/*.apk'
-  #         artifactName: 'android-apk'

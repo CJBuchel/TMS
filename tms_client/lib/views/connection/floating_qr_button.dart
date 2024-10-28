@@ -60,9 +60,9 @@ class FloatingQrButton extends StatelessWidget {
     );
   }
 
-  void _displayWiFiQrCode(BuildContext context) {
-    _displayQrCode(context, _getQrWifiData(), Colors.blue, Colors.green);
-  }
+  // void _displayWiFiQrCode(BuildContext context) {
+  //   _displayQrCode(context, _getQrWifiData(), Colors.blue, Colors.green);
+  // }
 
   void _displayServerQrCode(BuildContext context) {
     String addr = TmsLocalStorageProvider().serverExternalAddress;
@@ -71,17 +71,17 @@ class FloatingQrButton extends StatelessWidget {
     _displayQrCode(context, qrData, Colors.blue, Colors.red);
   }
 
-  void _displayAppQrCode(BuildContext context) {
-    String serverIp = TmsLocalStorageProvider().serverExternalIp;
-    String serverPort = TmsLocalStorageProvider().serverPort.toString();
-    String qrData = "tmsapplicationscheme://connect?ip=$serverIp&port=$serverPort";
-    _displayQrCode(context, qrData, Colors.blue, Colors.purpleAccent);
-  }
+  // void _displayAppQrCode(BuildContext context) {
+  //   String serverIp = TmsLocalStorageProvider().serverExternalIp;
+  //   String serverPort = TmsLocalStorageProvider().serverPort.toString();
+  //   String qrData = "tmsapplicationscheme://connect?ip=$serverIp&port=$serverPort";
+  //   _displayQrCode(context, qrData, Colors.blue, Colors.purpleAccent);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvoked: (v) async {
+      onPopInvokedWithResult: (v, obj) async {
         if (v && _isDialOpen.value) {
           _isDialOpen.value = false;
         }
@@ -95,24 +95,24 @@ class FloatingQrButton extends StatelessWidget {
         buttonSize: const Size.fromRadius(45),
         childrenButtonSize: const Size.fromRadius(45),
         children: [
-          SpeedDialChild(
-            child: const Icon(Icons.wifi),
-            label: 'WiFi',
-            backgroundColor: Colors.green,
-            onTap: () => _displayWiFiQrCode(context),
-          ),
+          // SpeedDialChild(
+          //   child: const Icon(Icons.wifi),
+          //   label: 'WiFi',
+          //   backgroundColor: Colors.green,
+          //   onTap: () => _displayWiFiQrCode(context),
+          // ),
           SpeedDialChild(
             child: const Icon(Icons.link),
-            label: 'Server',
+            label: 'TMS Web',
             backgroundColor: Colors.red,
             onTap: () => _displayServerQrCode(context),
           ),
-          SpeedDialChild(
-            child: const Icon(Icons.app_registration),
-            label: 'App',
-            backgroundColor: Colors.purpleAccent,
-            onTap: () => _displayAppQrCode(context),
-          ),
+          // SpeedDialChild(
+          //   child: const Icon(Icons.app_registration),
+          //   label: 'App',
+          //   backgroundColor: Colors.purpleAccent,
+          //   onTap: () => _displayAppQrCode(context),
+          // ),
         ],
       ),
     );

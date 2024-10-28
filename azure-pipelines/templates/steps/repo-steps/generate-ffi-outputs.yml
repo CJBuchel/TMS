@@ -39,11 +39,11 @@ steps:
       displayName: 'Run Android Codegen'
   
   # run ios code gen
-  - ${{ if eq(parameters.target, 'ios') }}:
-    - script: |
-        cd tms_infra
-        perl -pi -e 's/"cdylib"/"staticlib"/g' Cargo.toml
-        cat Cargo.toml
-        cargo build --release --target aarch64-apple-ios
-        cp ../target/aarch64-apple-ios/release/libtms_infra.a $(Build.SourcesDirectory)/tms_client/ios/Runner
-      displayName: 'Run iOS Codegen'
+  # - ${{ if eq(parameters.target, 'ios') }}:
+  #   - script: |
+  #       cd tms_infra
+  #       perl -pi -e 's/"cdylib"/"staticlib"/g' Cargo.toml
+  #       cat Cargo.toml
+  #       cargo build --release --target aarch64-apple-ios
+  #       cp ../target/aarch64-apple-ios/release/libtms_infra.a $(Build.SourcesDirectory)/tms_client/ios/Runner
+  #     displayName: 'Run iOS Codegen'

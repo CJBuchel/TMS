@@ -4,7 +4,7 @@ steps:
     inputs:
       # build options
       actions: 'build'
-      xcWorkspacePath: '$(Build.SourcesDirectory)/tms-client/ios/Runner.xcworkspace'
+      xcWorkspacePath: '$(Build.SourcesDirectory)/tms_client/ios/Runner.xcworkspace'
       scheme: 'Runner'
       sdk: 'iphoneos'
       configuration: 'release'

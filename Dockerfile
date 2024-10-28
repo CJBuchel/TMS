@@ -5,7 +5,7 @@ WORKDIR /tms
 # Setup server
 COPY ./target/x86_64-unknown-linux-musl/release/tms_server .
 COPY ./log_config ./log_config
-COPY ./tms-client/build/web ./tms-client/build/web
+COPY ./tms_client/build/web ./tms_client/build/web
 
 RUN chmod +x tms_server
 

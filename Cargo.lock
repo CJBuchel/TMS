@@ -48,9 +48,9 @@ dependencies = [
 
 [[package]]
 name = "allo-isolate"
-version = "0.1.25"
+version = "0.1.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97b6d794345b06592d0ebeed8e477e41b71e5a0a49df4fc0e4184d5938b99509"
+checksum = "1f67642eb6773fb42a95dd3b348c305ee18dee6642274c6b412d67e985e3befc"
 dependencies = [
  "anyhow",
  "atomic",
@@ -563,31 +563,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d6ef0072f8a535281e4876be788938b528e9a1d43900b82c2569af7da799125"
 
 [[package]]
-name = "echo-tree-infra"
+name = "echo_tree_infra"
 version = "0.1.0"
 dependencies = [
- "echo-tree-infra-schema",
+ "infra_schema",
  "schemars",
  "serde_json",
 ]
 
 [[package]]
-name = "echo-tree-infra-schema"
-version = "0.1.0"
-dependencies = [
- "schemars",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "echo-tree-rs"
+name = "echo_tree_rs"
 version = "0.1.0"
 dependencies = [
  "async-compression",
  "async-trait",
  "bincode",
- "echo-tree-infra",
+ "echo_tree_infra",
  "futures",
  "jsonschema",
  "lazy_static",
@@ -671,9 +662,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "2.5.0"
+version = "2.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35a06af75bcc46b5443c2293f99fda22819e816f8a5f5bea04c72f8cb04a106a"
+checksum = "2f052ec223b70cbdf2248376a9ad5af9281b3fdf8ea3c7d3f66fff52a9aaf1fa"
 dependencies = [
  "allo-isolate",
  "android_logger",
@@ -700,9 +691,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge_macros"
-version = "2.5.0"
+version = "2.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9250f0a18500e7825617ddb677bccf1336a2fe4c4edf6c6ce7717967ed67f42e"
+checksum = "23414fe526f51870c6d89d27bbffbee52ebe0900164a4147b32caf1d3e131682"
 dependencies = [
  "hex",
  "md-5",
@@ -1084,6 +1075,15 @@ checksum = "168fb715dda47215e360912c096649d23d58bf392ac62f73919e831745e40f26"
 dependencies = [
  "equivalent",
  "hashbrown",
+]
+
+[[package]]
+name = "infra_schema"
+version = "0.1.0"
+dependencies = [
+ "schemars",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -2310,7 +2310,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
-name = "tms-infra"
+name = "tms_infra"
 version = "0.1.0"
 dependencies = [
  "chrono",
@@ -2326,23 +2326,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "tms-schedule-handler"
+name = "tms_schedule_handler"
 version = "0.1.0"
 dependencies = [
  "chrono",
  "log",
  "regex",
- "tms-infra",
+ "tms_infra",
 ]
 
 [[package]]
-name = "tms-server"
+name = "tms_server"
 version = "0.1.0"
 dependencies = [
  "async-trait",
  "chrono",
- "echo-tree-infra",
- "echo-tree-rs",
+ "echo_tree_infra",
+ "echo_tree_rs",
  "futures",
  "local-ip-address",
  "log",
@@ -2354,8 +2354,8 @@ dependencies = [
  "serde",
  "serde_json",
  "structopt",
- "tms-infra",
- "tms-schedule-handler",
+ "tms_infra",
+ "tms_schedule_handler",
  "tokio",
  "tokio-stream",
  "uuid",

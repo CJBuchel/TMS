@@ -12,39 +12,38 @@ parameters:
 #
 steps:
   # run the codegen
-  - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root $(Build.SourcesDirectory)/tms-infra --dart-output $(Build.SourcesDirectory)/tms-client/lib/generated
+  # - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root $(Build.SourcesDirectory)/tms_infra --dart-output $(Build.SourcesDirectory)/tms_client/lib/generated
+  - script: |
+      cd tms_client
+      flutter_rust_bridge_codegen generate
     displayName: 'Run Rust to Dart Codegen'
 
   # run flutter code gen (freezed)
   - script: |
-      cd tms-client
+      cd tms_client
       flutter pub run build_runner build --delete-conflicting-outputs
     displayName: 'Run Flutter (Freezed) Codegen'
 
-  # run the wasm pre codegen
-  - ${{ if eq(parameters.target, 'web') }}:
-    - script: wasm-pack build $(Build.SourcesDirectory)/tms-infra --target no-modules --out-dir $(Build.SourcesDirectory)/tms-client/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
-      displayName: 'Run Wasm Pre-Codegen'
   # run the wasm codegen
   - ${{ if eq(parameters.target, 'web') }}:
     - script: |
-        cd tms-client
-        dart run flutter_rust_bridge build-web --dart-root $(Build.SourcesDirectory)/tms-client --rust-root $(Build.SourcesDirectory)/tms-infra
+        cd tms_client
+        dart run flutter_rust_bridge build-web --dart-root $(Build.SourcesDirectory)/tms_client --rust-root $(Build.SourcesDirectory)/tms_infra
       displayName: 'Run Wasm Codegen'
 
   # run android code gen
   - ${{ if eq(parameters.target, 'apk') }}:
     - script: |
-        cd tms-infra
-        cargo ndk -o $(Build.SourcesDirectory)/tms-client/android/app/src/main/jniLibs build
+        cd tms_infra
+        cargo ndk -o $(Build.SourcesDirectory)/tms_client/android/app/src/main/jniLibs build
       displayName: 'Run Android Codegen'
   
   # run ios code gen
-  - ${{ if eq(parameters.target, 'ios') }}:
-    - script: |
-        cd tms-infra
-        perl -pi -e 's/"cdylib"/"staticlib"/g' Cargo.toml
-        cat Cargo.toml
-        cargo build --release --target aarch64-apple-ios
-        cp ../target/aarch64-apple-ios/release/libtms_infra.a $(Build.SourcesDirectory)/tms-client/ios/Runner
-      displayName: 'Run iOS Codegen'
+  # - ${{ if eq(parameters.target, 'ios') }}:
+  #   - script: |
+  #       cd tms_infra
+  #       perl -pi -e 's/"cdylib"/"staticlib"/g' Cargo.toml
+  #       cat Cargo.toml
+  #       cargo build --release --target aarch64-apple-ios
+  #       cp ../target/aarch64-apple-ios/release/libtms_infra.a $(Build.SourcesDirectory)/tms_client/ios/Runner
+  #     displayName: 'Run iOS Codegen'

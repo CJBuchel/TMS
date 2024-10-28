@@ -14,5 +14,5 @@ steps:
   - task: FlutterCommand@0
     displayName: 'Install Flutter dependencies'
     inputs:
-      projectDirectory: 'tms-client'
+      projectDirectory: 'tms_client'
       arguments: 'pub get'

@@ -14,11 +14,11 @@ steps:
       Contents: '.env'
       TargetFolder: '$(Pipeline.Workspace)'
       OverWrite: true
-  # copy .env to tms-client
+  # copy .env to tms_client
   - task: CopyFiles@2
-    displayName: 'Copy .env to tms-client'
+    displayName: 'Copy .env to tms_client'
     inputs:
       SourceFolder: '$(Pipeline.Workspace)/env-files'
       Contents: '.env'
-      TargetFolder: '$(Pipeline.Workspace)/tms-client'
+      TargetFolder: '$(Pipeline.Workspace)/tms_client'
       OverWrite: true

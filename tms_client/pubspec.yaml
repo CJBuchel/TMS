@@ -1,0 +1,102 @@
+name: tms
+description: "Tournament Management System Client, for scoring and managing FLL events"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 0.0.0+0 # this is replaced in azure pipelines during release
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: '>=3.24.0 <4.0.0'
+
+dependencies:
+  # specialized deps
+  flutter:
+    sdk: flutter
+  echo_tree_flutter:
+    path: ../echo_tree_flutter
+  tms_infra:
+    path: rust_builder
+  flutter_rust_bridge: 2.5.1
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.6
+  dotenv: ^4.2.0
+  flutter_dotenv: ^5.1.0
+  web_socket_channel: ^2.4.4
+  http: ^1.2.1
+  uuid: ^4.3.3
+  logger: ^2.2.0
+  shared_preferences: ^2.2.3
+  go_router: ^14.2.7
+  responsive_framework: ^1.5.1
+  provider: ^6.1.2
+  nsd: ^3.0.0
+  path_provider: ^2.1.3
+  flutter_speed_dial: ^7.0.0
+  qr_flutter: ^4.1.0
+  file_picker: ^8.0.2
+  just_audio: ^0.9.39
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+  dropdown_search: ^5.0.6
+  multi_select_flutter: ^4.1.3
+  file_saver: ^0.2.13
+  percent_indicator: ^4.2.3
+  signature: ^5.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+  build_runner: ^2.4.11
+  json_serializable: ^6.8.0
+  freezed: ^2.5.2
+
+# run -> `flutter pub run flutter_launcher_icons` to generate icons
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/logos/TMS_LOGO_NO_TEXT_1024.png"
+  adaptive_icon_background: "#212332"  # Set your desired background color or image path
+  adaptive_icon_foreground: "assets/logos/TMS_LOGO_ADAPTIVE_FOREGROUND.png"
+  web:
+    generate: true
+    image_path: "assets/logos/TMS_LOGO_NO_TEXT_1024.png"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/images/missions/2023/
+    - assets/images/missions/2024/
+    - assets/logos/
+    - assets/audio/
+
+  fonts:
+    # primary font
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins/Poppins-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Poppins/Poppins-Black.ttf
+          weight: 900
+
+    # timer fonts
+    - family: lcdbold
+      fonts:
+        - asset: assets/fonts/LCDBOLD.ttf

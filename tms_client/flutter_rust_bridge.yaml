@@ -1,0 +1,4 @@
+rust_input: crate::infra
+rust_root: ../tms_infra/
+dart_output: lib/generated
+dart_entrypoint_class_name: TmsRustLib

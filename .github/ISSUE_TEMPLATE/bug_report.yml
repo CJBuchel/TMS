@@ -1,0 +1,63 @@
+name: Bug Report
+description: Create a report to help us improve
+labels: ["bug"]
+body:
+  - type: textarea
+    id: describe-the-bug
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        # The following fields are *optional*
+
+        ...but may be useful for debugging
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Logs of the application when running.
+      placeholder: Logs of the application when running.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        Development Environment
+
+  - type: input
+    id: env-os
+    attributes:
+      label: OS
+      placeholder: iOS, Web (Chrome) etc...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.

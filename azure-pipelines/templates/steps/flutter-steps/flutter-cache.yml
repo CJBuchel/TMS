@@ -1,0 +1,27 @@
+parameters:
+  - name: pubCachePath
+    type: string
+    default: $(HOME)/.pub-cache
+  - name: cacheBuild
+    type: boolean
+    default: true
+#
+# Caching for Flutter dependencies and build artifacts.
+#
+steps:
+  # Cache Flutter dependencies
+  - task: Cache@2
+    displayName: 'Cache Flutter Dependencies'
+    inputs:
+      key: 'flutter-pub | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms_client/pubspec.lock" | $(Agent.JobName)'
+      restoreKeys: 'flutter-pub | "$(Agent.OS)" | $(Agent.JobName)'
+      path: ${{ parameters.pubCachePath }}
+
+  # Cache flutter build
+  - ${{ if eq(parameters.cacheBuild, true) }}:
+    - task: Cache@2
+      displayName: 'Cache Flutter Build'
+      inputs:
+        key: 'flutter-build | "$(Agent.OS)" | "$(Build.SourcesDirectory)/tms_client/pubspec.lock" | $(Agent.JobName)'
+        restoreKeys: 'flutter-build | "$(Agent.OS)" | $(Agent.JobName)'
+        path: $(Build.SourcesDirectory)/tms_client/build

@@ -1,0 +1,9 @@
+pub const PUBLIC_ROLE: &str = "public";
+pub const ADMIN_ROLE: &str = "admin";
+pub const REFEREE_ROLE: &str = "referee";
+pub const HEAD_REFEREE_ROLE: &str = "head_referee";
+pub const JUDGE_ROLE: &str = "judge";
+pub const JUDGE_ADVISOR_ROLE: &str = "judge_advisor";
+pub const SCORE_KEEPER_ROLE: &str = "score_keeper";
+pub const EMCEE_ROLE: &str = "emcee";
+pub const AV_ROLE: &str = "av";

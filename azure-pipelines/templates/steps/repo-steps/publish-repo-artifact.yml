@@ -1,31 +1,12 @@
 parameters:
-  - name: target
+  - name: name
     type: string
-    default: 'web'
-    values:
-      - 'web'
-      - 'ios'
-      - 'apk'
+    default: 'infra'
 
 steps:
   # publish the repo artifact
-  - ${{ if eq(parameters.target, 'web') }}:
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish ${{ parameters.target }} Repo Artifact'
-      inputs:
-        PathToPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'web-repo-artifact'
-  
-  - ${{ if eq(parameters.target, 'ios') }}:
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish ${{ parameters.target }} Repo Artifact'
-      inputs:
-        PathToPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'ios-repo-artifact'
-  
-  - ${{ if eq(parameters.target, 'apk') }}:
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish ${{ parameters.target }} Repo Artifact'
-      inputs:
-        PathToPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'apk-repo-artifact'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish ${{ parameters.name }} Repo Artifact'
+    inputs:
+      PathToPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: '${{ parameters.name }}-repo-artifact'

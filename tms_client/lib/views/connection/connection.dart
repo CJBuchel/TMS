@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/network/network.dart';
 import 'package:tms/providers/connection_provider.dart';
@@ -52,6 +53,50 @@ class Connection extends StatelessWidget {
             ),
           ],
         );
+      },
+    );
+  }
+
+  Widget _versionStatus() {
+    return FutureBuilder(
+      future: PackageInfo.fromPlatform(),
+      builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Version: ',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    snapshot.data?.version ?? 'N/A',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Build: ',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    snapshot.data?.buildNumber ?? 'N/A',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ],
+          );
+        } else {
+          return const SizedBox();
+        }
       },
     );
   }
@@ -120,6 +165,7 @@ class Connection extends StatelessWidget {
                 _ipController(),
                 _portController(),
                 _connectButton(),
+                _versionStatus(),
               ],
             ),
           ),

@@ -13,6 +13,9 @@ parameters:
   - name: flutterTarget
     type: string
     default: 'ios'
+  - name: repoArtifact
+    type: string
+    default: 'infra'
   - name: flutterBuildVersion
     type: string
     default: '$(tms_version)'
@@ -27,7 +30,7 @@ steps:
   # get repo artifact
   - template: steps/repo-steps/get-repo-artifact.yml
     parameters:
-      target: ${{ parameters.flutterTarget }}
+      name: ${{ parameters.repoArtifact }}
   # pre build steps
   - template: steps/common-steps/get-env-files.yml
   # cache tasks

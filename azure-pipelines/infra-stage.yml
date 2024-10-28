@@ -1,5 +1,5 @@
 jobs:
-  - job: WebInfra
+  - job: GenerateInfra
     displayName: 'Generate Wasm & Dart'
     pool:
       vmImage: 'ubuntu-latest'
@@ -33,76 +33,4 @@ jobs:
       # Publish artifact
       - template: templates/steps/repo-steps/publish-repo-artifact.yml
         parameters:
-          target: 'web'
-
-  - job: AndroidInfra
-    displayName: 'Generate Shared APK Library & Dart'
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-      # Get cache if available
-      - template: templates/steps/rust-steps/rust-cache.yml
-      - template: templates/steps/flutter-steps/flutter-cache.yml
-        parameters:
-          cacheBuild: false # we're not building the app here
-      # Install requirements for rust & flutter
-      - template: templates/steps/rust-steps/install-rust.yml
-        parameters:
-          rustToolchain: 'nightly'
-      - template: templates/steps/flutter-steps/install-flutter.yml
-      # install wasm target and codegen
-      - template: templates/steps/repo-steps/install-ffi-deps.yml
-        parameters:
-          target: 'apk'
-      # Generate the Dart code from the Rust code
-      - template: templates/steps/repo-steps/generate-ffi-outputs.yml
-        parameters:
-          target: 'apk'
-      # Copy to staging
-      - template: templates/steps/common-steps/copy-to-staging.yml
-        parameters:
-          contents: | # grab everything except build dirs
-            **
-            !tms_client/build/**
-            !**/target/**
-          flattenFolders: false
-      # Publish artifact
-      - template: templates/steps/repo-steps/publish-repo-artifact.yml
-        parameters:
-          target: 'apk'
-  
-  - job: IosInfra
-    displayName: 'Generate Static IOS Library & Dart'
-    pool:
-      vmImage: 'macos-14'
-    steps:
-      # Get cache if available
-      - template: templates/steps/rust-steps/rust-cache.yml
-      - template: templates/steps/flutter-steps/flutter-cache.yml
-        parameters:
-          cacheBuild: false # we're not building the app here
-      # Install requirements for rust & flutter
-      - template: templates/steps/rust-steps/install-rust.yml
-        parameters:
-          rustToolchain: 'nightly'
-      - template: templates/steps/flutter-steps/install-flutter.yml
-      # install wasm target and codegen
-      - template: templates/steps/repo-steps/install-ffi-deps.yml
-        parameters:
-          target: 'ios'
-      # Generate the Dart code from the Rust code
-      - template: templates/steps/repo-steps/generate-ffi-outputs.yml
-        parameters:
-          target: 'ios'
-      # Copy to staging
-      - template: templates/steps/common-steps/copy-to-staging.yml
-        parameters:
-          contents: | # grab everything except build dirs
-            **
-            !tms_client/build/**
-            !**/target/**
-          flattenFolders: false
-      # Publish artifact
-      - template: templates/steps/repo-steps/publish-repo-artifact.yml
-        parameters:
-          target: 'ios'
+          name: 'infra'

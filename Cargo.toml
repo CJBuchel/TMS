@@ -7,3 +7,8 @@ members = [
   "tms_schedule_handler",
   "tms_server",
 ]
+
+# Patch rustls for now, there is a flutter bug https://github.com/dart-lang/http/issues/1161 which isn't fixed yet.
+# should be resolved in warp v0.3.8
+[patch.crates-io]
+warp = { git = 'https://github.com/CJBuchel/warp.git', branch = 'master' }

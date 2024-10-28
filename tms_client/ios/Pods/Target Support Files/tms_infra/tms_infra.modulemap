@@ -1,6 +1,0 @@
-framework module tms_infra {
-  umbrella header "tms_infra-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -1,6 +1,0 @@
-framework module nsd_ios {
-  umbrella header "nsd_ios-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -15,7 +15,7 @@ steps:
   # - script: flutter_rust_bridge_codegen generate --dart-entrypoint-class-name TmsRustLib --rust-input crate::infra --rust-root $(Build.SourcesDirectory)/tms_infra --dart-output $(Build.SourcesDirectory)/tms_client/lib/generated
   - script: |
       cd tms_client
-      dart run flutter_rust_bridge_codegen generate
+      flutter_rust_bridge_codegen generate
     displayName: 'Run Rust to Dart Codegen'
 
   # run flutter code gen (freezed)

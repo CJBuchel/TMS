@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/models/team_on_table_info.dart';
 import 'package:tms/widgets/team_widgets/team_on_table_row.dart';
 import 'package:tms/widgets/animated/infinite_vertical_list.dart';
@@ -24,6 +25,8 @@ class TeamsOnTableList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     EdgeInsetsGeometry margin = isLeft ? const EdgeInsets.only(right: 10) : const EdgeInsets.only(left: 10);
+
+    // height
     double childHeight = 50;
     double height = childHeight;
 
@@ -33,8 +36,16 @@ class TeamsOnTableList extends StatelessWidget {
       height = childHeight * 2;
     }
 
+    // width
+    double width = 500;
+    if (ResponsiveBreakpoints.of(context).screenWidth > 1100) {
+      width = 500;
+    } else {
+      width = ResponsiveBreakpoints.of(context).screenWidth * 0.45;
+    }
+
     return Container(
-      width: 500,
+      width: width,
       height: height, // 144 real/150 with border
       margin: margin,
       decoration: BoxDecoration(

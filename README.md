@@ -5,7 +5,7 @@
 ## Tournament Management System
 
 
-- FLL management system for scoring, displaying and simplifying events. Built in Rust & Flutter, distributed in Docker, IOS, Android and Desktop applications
+- FLL Event Management System: A comprehensive and locally hosted solution for scoring, storing and ignoring. Replacing paper and hard set schedules for live modifiable event data. Including digital scoring, timers, live schedules, scoreboards, match/score tracking, snapshots rollbacks and more.
 
 | Project Status | Pulls | Version | Size |
 |--|--|--|--|
@@ -54,10 +54,6 @@
 
 
 ### Docker Install
-<!-- | Binary | Status |
-|--|--|
-| Docker Image | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) | -->
-
 #### Steps
 
 1. Install [Docker](https://docs.docker.com/engine/install/)

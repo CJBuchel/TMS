@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_match_status_provider.dart';
-import 'package:tms/utils/logger.dart';
 import 'package:tms/views/game_match_timer/game_match_timer_footer/game_match_timer_footer.dart';
 import 'package:tms/views/game_match_timer/game_match_timer_header.dart';
 import 'package:tms/models/timer_match_data.dart';

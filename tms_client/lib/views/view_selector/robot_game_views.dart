@@ -74,30 +74,30 @@ class RobotGameViews extends StatelessWidget {
           ],
         ),
 
-        // Row(
-        //   children: [
-        //     // Announcer card
-        //     if (Provider.of<AuthProvider>(context).hasPermissionAccess(UserPermissions(emcee: true, headReferee: true)))
-        //       Flexible(
-        //         flex: 1,
-        //         child: Padding(
-        //           padding: const EdgeInsets.all(10),
-        //           child: ImageButtonCard(
-        //             title: "Match Announcer",
-        //             subTitle: "EMCEE",
-        //             color: const Color(0xFF2D7F9D),
-        //             textColor: const Color(0xff3F414E),
-        //             image: const Image(
-        //               image: AssetImage('assets/images/FIRST_LOGO.png'),
-        //             ),
-        //             onPressed: () {
-        //               context.goNamed('match_announcer');
-        //             },
-        //           ),
-        //         ),
-        //       ),
-        //   ],
-        // ),
+        Row(
+          children: [
+            // Announcer card
+            if (Provider.of<AuthProvider>(context).hasPermissionAccess(UserPermissions(emcee: true, headReferee: true)))
+              Flexible(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ImageButtonCard(
+                    title: "Match Announcer",
+                    subTitle: "EMCEE",
+                    color: const Color(0xFF2D7F9D),
+                    textColor: const Color(0xff3F414E),
+                    image: const Image(
+                      image: AssetImage('assets/images/FIRST_LOGO.png'),
+                    ),
+                    onPressed: () {
+                      context.goNamed('match_announcer');
+                    },
+                  ),
+                ),
+              ),
+          ],
+        ),
       ],
     );
   }

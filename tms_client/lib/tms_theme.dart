@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 /// Light theme
 ///
 final ThemeData tmsLightTheme = ThemeData.light().copyWith(
-  textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Poppins'),
+  // textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Poppins'),
+  textTheme: ThemeData.light().textTheme.apply(fontFamily: 'monospace'),
   colorScheme: const ColorScheme.light(),
   brightness: Brightness.light,
   primaryColor: const Color(0xFF2697FF),
@@ -80,7 +81,8 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
 /// Dark theme
 ///
 final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
-  textTheme: ThemeData.dark().textTheme.apply(fontFamily: 'Poppins'),
+  // textTheme: ThemeData.dark().textTheme.apply(fontFamily: 'Poppins'),
+  textTheme: ThemeData.dark().textTheme.apply(fontFamily: 'monospace'),
   colorScheme: const ColorScheme.dark(),
   brightness: Brightness.dark,
   primaryColor: const Color(0xFF4C779F),

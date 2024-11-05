@@ -5,7 +5,7 @@
 ## Tournament Management System
 
 
-- FLL management system for scoring, displaying and simplifying events. Built in Rust & Flutter, distributed in Docker, IOS, Android and Desktop applications
+- FLL Event Management System: A comprehensive and locally hosted solution for scoring, storing and ignoring. Replacing paper and hard set schedules for live modifiable event data. Including digital scoring, timers, live schedules, scoreboards, match/score tracking, snapshots rollbacks and more.
 
 | Project Status | Pulls | Version | Size |
 |--|--|--|--|
@@ -54,10 +54,6 @@
 
 
 ### Docker Install
-<!-- | Binary | Status |
-|--|--|
-| Docker Image | ![Azure DevOps builds (job)](https://img.shields.io/azure-devops/build/ConnorBuchel0890/e726ef53-95a3-4b7d-a618-830987485713/24/master?stage=Build&job=Docker) | -->
-
 #### Steps
 
 1. Install [Docker](https://docs.docker.com/engine/install/)
@@ -101,6 +97,7 @@
 #### Warnings
 | Code | Description |
 |--|--|
+| W000 | (Unknown Warning) This is the default warning. Usually implying it could not infer the warning type. |
 | W001 | Team name is missing. |
 | W002 | Duplicate Team Name. |
 | W003 | Team has a round 0 score. |
@@ -123,6 +120,7 @@
 #### Errors
 | Code | Description |
 |--|--|
+| E000 | (Unknown Error) This is the default error, usually implying it could not infer the error type. |
 | E001 | Team number is missing. |
 | E002 | Duplicate Team Number. |
 | E003 | Team has conflicting scores. |
@@ -135,6 +133,7 @@
 | E010 | Team has more than one judging session. |
 | E011 | Team is not in any judging sessions. |
 | E012 | Duplicate session number. |
+| E013 | Team has match overlapping with Judging session. |
 
 - While the Integrity system finds most common issues, it doesn't find EVERYTHING, and therefore shouldn't be relied upon to determine if an Event to good to run or not.
 - Above includes the checks that are currently implemented. But feel free to PR/Raise an issue for added checks.

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_integrity_message.dart';
 import 'package:tms/providers/tournament_integrity_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
+import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/integrity_checks/icon_tooltip_integrity_check.dart';
 
 class IntegrityOverview extends StatelessWidget {
@@ -61,6 +62,7 @@ class IntegrityOverview extends StatelessWidget {
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     children: integrityMessages.map((m) {
+                      TmsLogger().d(m.toJsonString());
                       return Container(
                         margin: const EdgeInsets.all(10),
                         decoration: BoxDecoration(

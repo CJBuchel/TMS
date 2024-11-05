@@ -17,6 +17,7 @@ class RefereeScoring extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double headerHeight = 45;
     double footerHeight = 120;
 
     if (ResponsiveBreakpoints.of(context).isDesktop) {
@@ -29,49 +30,53 @@ class RefereeScoring extends StatelessWidget {
 
     return EchoTreeLifetime(
       trees: [":robot_game:tables", ":robot_game:matches", ":teams"],
-      child: Stack(
-        children: [
-          Container(
-            child: Column(
-              children: [
-                // header
-                WithNextGameScoring(builder: (context, nextMatch, nextTeam, totalMatches, round) {
-                  return Selector<GameTableProvider, String>(
-                    selector: (context, provider) => provider.localGameTable,
-                    builder: (context, table, child) {
-                      return RefereeScoringHeader(
-                        nextMatch: nextMatch,
-                        nextTeam: nextTeam,
-                        totalMatches: totalMatches,
-                        round: round,
-                        table: table,
-                      );
-                    },
-                  );
-                }),
-                // expanded scrollable list
-                Expanded(
-                  child: Center(
-                    child: GameScoringWidget(scrollController: _scrollController),
-                  ),
-                ),
+      child: WithNextGameScoring(
+        builder: (context, nextMatch, nextTeam, totalMatches, round) {
+          return Stack(
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    // header
+                    Selector<GameTableProvider, String>(
+                      selector: (context, provider) => provider.localGameTable,
+                      builder: (context, table, child) {
+                        return RefereeScoringHeader(
+                          headerHeight: headerHeight,
+                          nextMatch: nextMatch,
+                          nextTeam: nextTeam,
+                          totalMatches: totalMatches,
+                          round: round,
+                          table: table,
+                        );
+                      },
+                    ),
+                    // expanded scrollable list
+                    Expanded(
+                      child: Center(
+                        child: GameScoringWidget(scrollController: _scrollController),
+                      ),
+                    ),
 
-                // footer
-                RefereeScoringFooter(
-                  footerHeight: footerHeight,
-                  scrollController: _scrollController,
+                    // footer
+                    RefereeScoringFooter(
+                      footerHeight: footerHeight,
+                      scrollController: _scrollController,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          // floating score
-          Selector<GameScoringProvider, int>(
-            selector: (context, gs) => gs.score,
-            builder: (context, score, child) {
-              return FloatingScore(score: score, left: 0, bottom: footerHeight);
-            },
-          ),
-        ],
+              ),
+              // floating schedule timer
+              // floating score
+              Selector<GameScoringProvider, int>(
+                selector: (context, gs) => gs.score,
+                builder: (context, score, child) {
+                  return FloatingScore(score: score, left: 0, bottom: footerHeight);
+                },
+              ),
+            ],
+          );
+        },
       ),
     );
   }

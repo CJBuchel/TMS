@@ -106,8 +106,8 @@ class RefereeScoringFooter extends StatelessWidget {
                 child: _buttons(context, data.table, data.referee),
               ),
               Positioned(
-                left: 118,
-                right: 0,
+                left: 148, // 150 - width of border (2)
+                right: 0, // 150 - width of border (2)
                 top: 0,
                 child: Container(
                   height: 2,

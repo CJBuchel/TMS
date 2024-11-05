@@ -41,7 +41,7 @@ class FloatingScore extends StatelessWidget {
             ),
           ),
         ),
-        width: 120,
+        width: 150,
         height: 40,
         child: Center(
           child: Text(

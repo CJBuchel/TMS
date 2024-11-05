@@ -8,6 +8,7 @@ use super::tournament_code::TournamentCode;
 
 #[derive(Display, Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub enum TournamentErrorCode {
+  E000,
   E001,
   E002,
   E003,
@@ -20,31 +21,34 @@ pub enum TournamentErrorCode {
   E010,
   E011,
   E012,
+  E013,
 }
 
 impl TournamentCode for TournamentErrorCode {
   #[flutter_rust_bridge::frb(sync)]
   fn get_message(&self) -> String {
     match self {
-      TournamentErrorCode::E001 => "Team number is missing.".to_string(),
-      TournamentErrorCode::E002 => "Duplicate Team Number.".to_string(),
-      TournamentErrorCode::E003 => "Team has conflicting scores.".to_string(),
-      TournamentErrorCode::E004 => "Table does not exist in event.".to_string(),
-      TournamentErrorCode::E005 => "Team in match does not exist in this event.".to_string(),
-      TournamentErrorCode::E006 => "Duplicate match number.".to_string(),
-      TournamentErrorCode::E007 => "Team has fewer matches than the maximum number of rounds.".to_string(),
-      TournamentErrorCode::E008 => "Pod does not exist in event.".to_string(),
-      TournamentErrorCode::E009 => "Team in pod does not exist in this event.".to_string(),
-      TournamentErrorCode::E010 => "Team has more than one judging session.".to_string(),
-      TournamentErrorCode::E011 => "Team is not in any judging sessions.".to_string(),
-      TournamentErrorCode::E012 => "Duplicate session number.".to_string(),
+      TournamentErrorCode::E000 => "Unknown Error".to_string(),
+      TournamentErrorCode::E001 => "Team number is missing".to_string(),
+      TournamentErrorCode::E002 => "Duplicate Team Number".to_string(),
+      TournamentErrorCode::E003 => "Team has conflicting scores".to_string(),
+      TournamentErrorCode::E004 => "Table does not exist in event".to_string(),
+      TournamentErrorCode::E005 => "Team in match does not exist in this event".to_string(),
+      TournamentErrorCode::E006 => "Duplicate match number".to_string(),
+      TournamentErrorCode::E007 => "Team has fewer matches than the maximum number of rounds".to_string(),
+      TournamentErrorCode::E008 => "Pod does not exist in event".to_string(),
+      TournamentErrorCode::E009 => "Team in pod does not exist in this event".to_string(),
+      TournamentErrorCode::E010 => "Team has more than one judging session".to_string(),
+      TournamentErrorCode::E011 => "Team is not in any judging sessions".to_string(),
+      TournamentErrorCode::E012 => "Duplicate session number".to_string(),
+      TournamentErrorCode::E013 => "Team has match overlapping with Judging session".to_string(),
     }
   }
 }
 
 impl Default for TournamentErrorCode {
   fn default() -> Self {
-    TournamentErrorCode::E001
+    TournamentErrorCode::E000
   }
 }
 

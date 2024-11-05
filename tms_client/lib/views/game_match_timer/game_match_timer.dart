@@ -27,6 +27,7 @@ class GameMatchTimer extends StatelessWidget {
 
   Widget _matchInfoFooter(BuildContext context) {
     if (ResponsiveBreakpoints.of(context).isDesktop &&
+        MediaQuery.of(context).size.height > 820 &&
         ResponsiveBreakpoints.of(context).orientation == Orientation.landscape) {
       return Selector2<GameMatchProvider, GameMatchStatusProvider, TimerMatchData>(
         selector: (context, gmProvider, gmsProvider) {
@@ -47,11 +48,11 @@ class GameMatchTimer extends StatelessWidget {
   Widget build(BuildContext context) {
     double fontSize = 100;
 
-    if (ResponsiveBreakpoints.of(context).isDesktop) {
+    if (ResponsiveBreakpoints.of(context).isDesktop && MediaQuery.of(context).size.height > 820) {
       fontSize = 350;
-    } else if (ResponsiveBreakpoints.of(context).isTablet) {
+    } else if (ResponsiveBreakpoints.of(context).isTablet || MediaQuery.of(context).size.height < 820) {
       fontSize = 250;
-    } else if (ResponsiveBreakpoints.of(context).isMobile) {
+    } else if (ResponsiveBreakpoints.of(context).isMobile || MediaQuery.of(context).size.height < 600) {
       fontSize = 80;
     }
 
@@ -61,22 +62,29 @@ class GameMatchTimer extends StatelessWidget {
         ":robot_game:tables",
         ":teams",
       ],
-      child: Column(
+      child: Stack(
         children: [
-          SizedBox(
-            height: 200,
-            child: _matchInfoHeader(),
-          ),
-          Expanded(
-            child: Center(
-              child: MatchTimer.full(
-                fontSize: fontSize,
-                soundEnabled: true,
-              ),
+          // match timer in the center
+          Center(
+            child: MatchTimer.full(
+              fontSize: fontSize,
+              soundEnabled: true,
             ),
           ),
-          SizedBox(
-            height: 200,
+
+          // header on top
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _matchInfoHeader(),
+          ),
+
+          // footer at the bottom
+          Positioned(
+            bottom: 25,
+            left: 0,
+            right: 0,
             child: _matchInfoFooter(context),
           ),
         ],

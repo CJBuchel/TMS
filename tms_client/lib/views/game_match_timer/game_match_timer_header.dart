@@ -61,7 +61,7 @@ class GameMatchTimerHeader extends StatelessWidget {
   Widget _tableSector(BuildContext context) {
     if (ResponsiveBreakpoints.of(context).isDesktop) {
       return Container(
-        width: 300,
+        width: ResponsiveBreakpoints.of(context).screenWidth * 0.3,
         padding: const EdgeInsets.only(right: 10, top: 10),
         child: _dropDownTableSelector(context),
       );

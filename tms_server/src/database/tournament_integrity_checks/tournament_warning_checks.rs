@@ -105,10 +105,10 @@ impl TournamentWarningChecks {
               let judging_end_time = judging_session.end_time.clone();
 
               // Check if the match ends within 10 minutes before the judging session starts
-              let ends_within_10_minutes_of_judging_start = match_end_time.difference(judging_start_time.clone()).in_minutes() <= 10;
+              let ends_within_10_minutes_of_judging_start =  match_end_time.is_before(judging_start_time.clone()) && judging_start_time.difference(match_end_time.clone()).in_minutes() <= 10;
 
               // Check if the match starts within 10 minutes after the judging session ends
-              let starts_within_10_minutes_of_judging_end = match_start_time.difference(judging_end_time.clone()).in_minutes() <= 10;
+              let starts_within_10_minutes_of_judging_end = match_start_time.is_after(judging_end_time.clone()) && match_start_time.difference(judging_end_time.clone()).in_minutes() <= 10;
 
               if ends_within_10_minutes_of_judging_start || starts_within_10_minutes_of_judging_end {
                 messages.push(TournamentIntegrityMessage::new(
@@ -218,6 +218,13 @@ impl TournamentWarningChecks {
             ));
           }
         }
+      }
+    }
+
+    if !messages.is_empty() {
+      // print the messages
+      for message in messages.iter() {
+        log::warn!("{}", message.message);
       }
     }
     return messages;

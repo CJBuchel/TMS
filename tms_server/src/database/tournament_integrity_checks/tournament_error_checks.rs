@@ -227,6 +227,55 @@ impl TournamentErrorChecks {
       }
     }
 
+    // check for match overlapping with judging session E013
+    {
+      for (_, game_match) in game_matches.iter() {
+        for on_table in game_match.game_match_tables.iter() {
+          let match_start_time = game_match.start_time.clone();
+          let match_end_time = game_match.end_time.clone();
+
+          let team_judging_sessions = judging_sessions
+            .iter()
+            .filter(|(_, judging_session)| judging_session.judging_session_pods.iter().any(|pod| pod.team_number == on_table.team_number))
+            .collect::<Vec<_>>();
+
+          
+
+          for (_, judging_session) in team_judging_sessions.iter() {
+            let judging_start_time = judging_session.start_time.clone();
+            let judging_end_time = judging_session.end_time.clone();
+
+            // match start time overlaps with judging session
+            // >js-------------------je<
+            //                >ms---------me<
+
+            // match end time overlaps with judging session
+            // >ms-------------------me<
+            //                >js---------je<
+
+            let match_start_time_overlaps_with_session = match_start_time.is_after(judging_start_time.clone()) && match_start_time.is_before(judging_end_time.clone());
+            let match_end_time_overlaps_with_session = match_end_time.is_after(judging_start_time.clone()) && match_end_time.is_before(judging_end_time.clone());
+
+            if match_start_time_overlaps_with_session || match_end_time_overlaps_with_session {
+              messages.push(TournamentIntegrityMessage::new(
+                TournamentIntegrityCode::Error(TournamentErrorCode::E013),
+                Some(on_table.team_number.clone()),
+                Some(game_match.match_number.clone()),
+                Some(judging_session.session_number.clone()),
+              ));
+            }
+          }
+        }
+      }
+    }
+
+    if !messages.is_empty() {
+      // print out the messages
+      for message in messages.iter() {
+        log::error!("{}", message.message);
+      }
+    }
+
     return messages;
   }
 }

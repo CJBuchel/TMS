@@ -9,6 +9,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `fmt`
 
 enum TournamentErrorCode {
+  e000,
   e001,
   e002,
   e003,
@@ -21,6 +22,7 @@ enum TournamentErrorCode {
   e010,
   e011,
   e012,
+  e013,
   ;
 
   static Future<TournamentErrorCode> default_() => TmsRustLib.instance.api

@@ -97,6 +97,7 @@
 #### Warnings
 | Code | Description |
 |--|--|
+| W000 | (Unknown Warning) This is the default warning. Usually implying it could not infer the warning type. |
 | W001 | Team name is missing. |
 | W002 | Duplicate Team Name. |
 | W003 | Team has a round 0 score. |
@@ -119,6 +120,7 @@
 #### Errors
 | Code | Description |
 |--|--|
+| E000 | (Unknown Error) This is the default error, usually implying it could not infer the error type. |
 | E001 | Team number is missing. |
 | E002 | Duplicate Team Number. |
 | E003 | Team has conflicting scores. |
@@ -131,6 +133,7 @@
 | E010 | Team has more than one judging session. |
 | E011 | Team is not in any judging sessions. |
 | E012 | Duplicate session number. |
+| E013 | Team has match overlapping with Judging session. |
 
 - While the Integrity system finds most common issues, it doesn't find EVERYTHING, and therefore shouldn't be relied upon to determine if an Event to good to run or not.
 - Above includes the checks that are currently implemented. But feel free to PR/Raise an issue for added checks.

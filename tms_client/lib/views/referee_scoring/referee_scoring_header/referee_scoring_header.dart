@@ -5,12 +5,14 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/services/game_scoring_service.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_header/next_match_start_time.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/next_match_to_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/next_round_to_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/next_team_to_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/select_game_table.dart';
 
 class RefereeScoringHeader extends StatefulWidget {
+  final double headerHeight;
   final GameMatch? nextMatch;
   final Team? nextTeam;
   final int totalMatches;
@@ -19,6 +21,7 @@ class RefereeScoringHeader extends StatefulWidget {
 
   const RefereeScoringHeader({
     Key? key,
+    this.headerHeight = 45,
     required this.nextMatch,
     required this.nextTeam,
     required this.totalMatches,
@@ -43,7 +46,7 @@ class _RefereeScoringHeaderState extends State<RefereeScoringHeader> {
   void _sendStatusRequest() async {
     if (widget.table != null) {
       await _gameScoringService.sendTableReadySignal(widget.table!, widget.nextTeam?.teamNumber);
-    } else if (widget.table != null) {
+    } else {
       await _gameScoringService.sendTableNotReadySignal(widget.table!, "");
     }
   }
@@ -66,6 +69,15 @@ class _RefereeScoringHeaderState extends State<RefereeScoringHeader> {
     super.dispose();
   }
 
+  Widget _headerItem(Widget child) {
+    return Expanded(
+      flex: 1,
+      child: Center(
+        child: child,
+      ),
+    );
+  }
+
   Widget _headerRow(BuildContext context) {
     double fontSize = 16;
 
@@ -81,13 +93,21 @@ class _RefereeScoringHeaderState extends State<RefereeScoringHeader> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         // table name
-        SelectGameTable(fontSize: fontSize),
+        _headerItem(SelectGameTable(fontSize: fontSize)),
         // next team to score
-        NextTeamToScore(nextTeam: widget.nextTeam, fontSize: fontSize),
+        _headerItem(NextTeamToScore(nextTeam: widget.nextTeam, fontSize: fontSize)),
         // next match to score
-        NextMatchToScore(nextMatch: widget.nextMatch, totalMatches: widget.totalMatches, fontSize: fontSize),
+        _headerItem(
+          NextMatchToScore(
+            nextMatch: widget.nextMatch,
+            totalMatches: widget.totalMatches,
+            fontSize: fontSize,
+          ),
+        ),
         // next round to score
-        NextRoundToScore(round: widget.round, fontSize: fontSize),
+        _headerItem(NextRoundToScore(round: widget.round, fontSize: fontSize)),
+        // next match start time
+        _headerItem(NextMatchTimeToScore(startTime: widget.nextMatch?.startTime, fontSize: fontSize)),
       ],
     );
   }
@@ -95,21 +115,19 @@ class _RefereeScoringHeaderState extends State<RefereeScoringHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 45,
+      height: widget.headerHeight,
       decoration: BoxDecoration(
-        // color: Theme.of(context).brightness == Brightness.dark ? Colors.transparent : Theme.of(context).cardColor,
         color: Theme.of(context).appBarTheme.backgroundColor,
         // bottom border only
         border: const Border(
           bottom: BorderSide(
             color: Colors.black,
-            // color: Theme.of(context).brightness == Brightness.dark ? Colors.grey : Colors.black,
             width: 1,
           ),
         ),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(10),
-          bottomRight: Radius.circular(10),
+          // bottomRight: Radius.circular(10),
         ),
       ),
 

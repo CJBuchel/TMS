@@ -54,7 +54,7 @@ jobs:
       # Copy to staging
       - template: templates/steps/common-steps/copy-to-staging.yml
         parameters:
-          contents: 'docs/_build'
+          contents: 'docs/_build/**'
       # Publish artifact
       - template: templates/steps/common-steps/publish-artifact.yml
         parameters:

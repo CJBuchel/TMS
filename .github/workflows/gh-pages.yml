@@ -1,0 +1,30 @@
+name: Documentation
+
+on: [push, pull_request]
+
+jobs:
+  generate_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install -r docs/requirements.txt
+
+      # Build documentation
+      - name: Build documentation
+        run: |
+          sphinx-build -b html docs _build
+      
+      # Publish documentation
+      - name: Publish documentation
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build
+          force_orphan: true

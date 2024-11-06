@@ -40,5 +40,9 @@ target/
 
 !build/
 
+# docs
+**/*_build
+
+# keys
 *.rsa
 *.pem

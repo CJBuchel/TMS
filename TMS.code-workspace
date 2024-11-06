@@ -31,6 +31,10 @@
 		{
 			"name": "tms_schedule_handler",
 			"path": "tms_schedule_handler"
+		},
+		{
+			"name": "docs",
+			"path": "docs"
 		}
 	],
 	"settings": {

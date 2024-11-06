@@ -38,24 +38,3 @@ jobs:
       - template: templates/steps/common-steps/publish-artifact.yml
         parameters:
           artifactName: 'release-notes'
-  # build the docs
-  - job: Documentation
-    displayName: 'Generate Documentation'
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-      # Install dependencies
-      - script: |
-          pip install -r docs/requirements.txt
-        displayName: 'Install Dependencies'
-      - script: |
-          sphinx-build -b html docs _build
-        displayName: 'Build Documentation'
-      # Copy to staging (don't flatten)
-      - template: templates/steps/common-steps/copy-to-staging.yml
-        parameters:
-          contents: '_build/**'
-      # Publish artifact
-      - template: templates/steps/common-steps/publish-artifact.yml
-        parameters:
-          artifactName: 'docs'

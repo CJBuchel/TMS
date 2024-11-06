@@ -43,6 +43,7 @@ dependencies:
   percent_indicator: ^4.2.3
   signature: ^5.5.0
   package_info_plus: ^8.1.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,9 @@ flutter:
     - assets/images/missions/2024/
     - assets/logos/
     - assets/audio/
+
+    # google fonts
+    - assets/fonts/google_fonts/
 
   fonts:
     # timer fonts

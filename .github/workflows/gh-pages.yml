@@ -3,7 +3,7 @@ name: Documentation
 on: [push, pull_request]
 
 jobs:
-  generate_docs:
+  generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,12 +12,12 @@ jobs:
       # Install dependencies
       - name: Install dependencies
         run: |
-          pip install -r docs/requirements.txt
+          pip install mkdocs-material
 
       # Build documentation
       - name: Build documentation
         run: |
-          sphinx-build -b html docs _build
+          mkdocs build -d _build
       
       # Publish documentation
       - name: Publish documentation

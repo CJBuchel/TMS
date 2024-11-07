@@ -1,0 +1,50 @@
+site_name: TMS Documentation
+theme:
+  name: material
+  font:
+    text: 'Ubuntu'
+    code: 'Ubuntu Mono'
+  logo: assets/logo.svg
+  favicon: assets/favicon.ico
+  features:
+    - navigation.footer
+  palette:
+    # dark theme
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+      primary: teal
+      accent: indigo
+
+    # light theme
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+      primary: teal
+      accent: indigo
+
+# extensions
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra:
+  social:
+    - icon: material/github
+      link: https://github.com/CJBuchel/TMS

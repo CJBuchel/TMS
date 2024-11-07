@@ -1,11 +1,20 @@
+# Project information
 site_name: TMS Documentation
+site_url: https://cjbuchel.github.io/TMS/
+site_author: Connor (CJ) Buchel
+
+# Repository information
+repo_name: TMS
+repo_url: https://github.com/CJBuchel/TMS/
+edit_uri: https://github.com/CJBuchel/TMS/
+
 theme:
   name: material
   font:
     text: 'Ubuntu'
     code: 'Ubuntu Mono'
   logo: assets/logo.svg
-  favicon: assets/favicon.ico
+  favicon: assets/logo_icon.svg
   features:
     - navigation.footer
   palette:

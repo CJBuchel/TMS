@@ -1,80 +1,31 @@
-# Welcome to MkDocs
+# Overview
+## What is the TMS?
+The Tournament Management System (TMS) is an [open source] digital alternative designed to streamline scoring and management of teams in [FLL]. 
+Operating on a locally hosted server to score, store and display team information without requiring a network connection.
+[open source]: https://opensource.com/resources/what-open-source
+[FLL]: https://www.firstlegoleague.org/
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Initially focused on robot game scoring, TMS has evolved to support more than just the odd score input and ranking board. 
+Providing an ongoing list of features. Including:
 
-## Commands
+- Schedule management and live shuffling
+- Real-time pit displays of upcoming matches and judging sessions
+- Native iOS builds for offline storage
+- Managed timers with game sounds
+- Dedicated screens for announcers, referees, and officials
 
-- `mkdocs new [dir-name]` - Create a new project.
-- `mkdocs serve` - Start the live-reloading docs server.
-- `mkdocs build` - Build the documentation site.
-- `mkdocs -h` - Print help message and exit.
+With ongoing development, TMS aims to introduce further enhancements, reducing reliance on paper systems and streamlining the experience for FLL teams, volunteers and organizers alike.
 
-## Project layout
+## Background
+The TMS (or Team Management System as it use to be called) was originally conceptualized by a group of [FLL volunteers] with the goal of a locally hosted web server to score and display teams and timers.
+Which was extensively used each year by multiple events around the world, including our own events right here in WA.
+Sadly in 2020 the original development team went dark for varying reasons, and was unable to continue supporting the project.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-      index.md  # The documentation homepage.
-      ...       # Other markdown pages, images and other files.
+However in 2021, with the goal of still trying to bring some "flare" to the events hosted in WA. 
+A new TMS project was founded.
+Using the same idea with a different style, it was originally built for simple score inputs and game sounding timers.
+And was specifically put together for Curtin University hosted events.
+Eventually evolving into a more flexible and accessible project in 2023.
 
-```py title="add numbers title.py" linenums="1"
-# Generic python function
-def add_two_numbers(num1, num2):
-    return num1 + num2
-```
 
-### Content tabs
-=== "Plain text"
-    This is some plain text
-
-=== "Unordered list"
-    * First item
-    * Second item
-    * Third item
-
-=== "Ordered list"
-    1. First item
-    2. Second item
-    3. Third item
-
-### Notes
-!!! note "This is a note"
-    Some note worthy text
-
-!!! info "This is info"
-    Some note worthy text
-
-!!! warning "This is a warning"
-    Some note worthy text
-
-!!! danger "This is danger"
-    Some note worthy text
-
-!!! quote "This is a quote"
-    Some note worthy text
-
-??? note "This is a dropdown note"
-    Some note worthy text
-
-## Diagrams
-### Flowchart
-```mermaid
-graph LR
-  A[Start] --> B{Failure?};
-  B -->|Yes| C[Investigate...];
-  C --> D[Debug];
-  D --> B;
-  B ---->|No| E[Success!];
-```
-### Sequence Diagram
-```mermaid
-sequenceDiagram
-  autonumber
-  Server->>Terminal: Send request
-  loop Health
-      Terminal->>Terminal: Check for health
-  end
-  Note right of Terminal: System online
-  Terminal-->>Server: Everything is OK
-  Terminal->>Database: Request customer data
-  Database-->>Terminal: Customer data
-```
+[FLL volunteers]: https://github.com/FirstLegoLeague 

@@ -4,10 +4,10 @@ site_url: https://cjbuchel.github.io/TMS/
 site_author: Connor (CJ) Buchel
 
 # Repository information
-repo_name: TMS
+repo_name: CJBuchel/TMS
 repo_url: https://github.com/CJBuchel/TMS/
-edit_uri: https://github.com/CJBuchel/TMS/
 
+# Site configuration
 theme:
   name: material
   font:
@@ -17,6 +17,19 @@ theme:
   favicon: assets/logo_icon.svg
   features:
     - navigation.footer
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - content.action.edit
+    - content.action.view
+  language: en
   palette:
     # dark theme
     - scheme: slate
@@ -33,6 +46,12 @@ theme:
         name: Switch to dark mode
       primary: teal
       accent: indigo
+
+# Extra configuration
+extra:
+  social:
+    - icon: material/github
+      link: https://github.com/CJBuchel/TMS
 
 # extensions
 markdown_extensions:
@@ -52,8 +71,3 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
-
-extra:
-  social:
-    - icon: material/github
-      link: https://github.com/CJBuchel/TMS

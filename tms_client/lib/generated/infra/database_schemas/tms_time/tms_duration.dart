@@ -26,10 +26,9 @@ class TmsDuration {
     this.seconds,
   });
 
-  Future<TmsDuration> add({required TmsDuration other}) =>
-      TmsRustLib.instance.api
-          .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationAdd(
-              that: this, other: other);
+  TmsDuration add({required TmsDuration other}) => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasTmsTimeTmsDurationTmsDurationAdd(
+          that: this, other: other);
 
   TmsDuration difference({required TmsDuration other}) =>
       TmsRustLib.instance.api

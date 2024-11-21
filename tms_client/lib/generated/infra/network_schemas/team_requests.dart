@@ -18,7 +18,7 @@ class TeamInsertRequest {
     required this.team,
   });
 
-  static Future<TeamInsertRequest> default_() => TmsRustLib.instance.api
+  static TeamInsertRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTeamRequestsTeamInsertRequestDefault();
 
   static TeamInsertRequest fromJsonString({required String json}) =>
@@ -53,7 +53,7 @@ class TeamRemoveRequest {
     required this.teamId,
   });
 
-  static Future<TeamRemoveRequest> default_() => TmsRustLib.instance.api
+  static TeamRemoveRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTeamRequestsTeamRemoveRequestDefault();
 
   static TeamRemoveRequest fromJsonString({required String json}) =>

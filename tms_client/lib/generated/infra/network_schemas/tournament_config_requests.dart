@@ -21,7 +21,7 @@ class TournamentConfigSetAdminPasswordRequest {
     required this.adminPassword,
   });
 
-  static Future<TournamentConfigSetAdminPasswordRequest> default_() => TmsRustLib
+  static TournamentConfigSetAdminPasswordRequest default_() => TmsRustLib
       .instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetAdminPasswordRequestDefault();
 
@@ -57,7 +57,7 @@ class TournamentConfigSetBackupIntervalRequest {
     required this.interval,
   });
 
-  static Future<TournamentConfigSetBackupIntervalRequest> default_() => TmsRustLib
+  static TournamentConfigSetBackupIntervalRequest default_() => TmsRustLib
       .instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetBackupIntervalRequestDefault();
 
@@ -93,9 +93,9 @@ class TournamentConfigSetEndgameTimerLengthRequest {
     required this.timerLength,
   });
 
-  static Future<TournamentConfigSetEndgameTimerLengthRequest> default_() =>
-      TmsRustLib.instance.api
-          .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestDefault();
+  static TournamentConfigSetEndgameTimerLengthRequest default_() => TmsRustLib
+      .instance.api
+      .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetEndgameTimerLengthRequestDefault();
 
   static TournamentConfigSetEndgameTimerLengthRequest fromJsonString(
           {required String json}) =>
@@ -129,8 +129,7 @@ class TournamentConfigSetNameRequest {
     required this.name,
   });
 
-  static Future<TournamentConfigSetNameRequest> default_() => TmsRustLib
-      .instance.api
+  static TournamentConfigSetNameRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetNameRequestDefault();
 
   static TournamentConfigSetNameRequest fromJsonString(
@@ -165,7 +164,7 @@ class TournamentConfigSetRetainBackupsRequest {
     required this.retainBackups,
   });
 
-  static Future<TournamentConfigSetRetainBackupsRequest> default_() => TmsRustLib
+  static TournamentConfigSetRetainBackupsRequest default_() => TmsRustLib
       .instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetRetainBackupsRequestDefault();
 
@@ -203,8 +202,7 @@ class TournamentConfigSetSeasonRequest {
     this.season,
   });
 
-  static Future<TournamentConfigSetSeasonRequest> default_() => TmsRustLib
-      .instance.api
+  static TournamentConfigSetSeasonRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetSeasonRequestDefault();
 
   static TournamentConfigSetSeasonRequest fromJsonString(
@@ -240,7 +238,7 @@ class TournamentConfigSetTimerLengthRequest {
     required this.timerLength,
   });
 
-  static Future<TournamentConfigSetTimerLengthRequest> default_() => TmsRustLib
+  static TournamentConfigSetTimerLengthRequest default_() => TmsRustLib
       .instance.api
       .crateInfraNetworkSchemasTournamentConfigRequestsTournamentConfigSetTimerLengthRequestDefault();
 

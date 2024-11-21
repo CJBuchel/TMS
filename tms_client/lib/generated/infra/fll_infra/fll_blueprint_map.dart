@@ -11,19 +11,25 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'question.dart';
 import 'rule_engine.dart';
 
-// These functions are ignored (category: IgnoreBecauseExplicitAttribute): `get_fll_blueprint`, `get_seasons`
-
 class FllBlueprintMap {
   const FllBlueprintMap();
 
-  static Future<int> calculateScore(
+  static int calculateScore(
           {required FllBlueprint blueprint,
           required List<QuestionAnswer> answers}) =>
       TmsRustLib.instance.api
           .crateInfraFllInfraFllBlueprintMapFllBlueprintMapCalculateScore(
               blueprint: blueprint, answers: answers);
 
-  static Future<List<QuestionValidationError>?> validate(
+  static FllBlueprint? getFllBlueprint({required String season}) =>
+      TmsRustLib.instance.api
+          .crateInfraFllInfraFllBlueprintMapFllBlueprintMapGetFllBlueprint(
+              season: season);
+
+  static List<String> getSeasons() => TmsRustLib.instance.api
+      .crateInfraFllInfraFllBlueprintMapFllBlueprintMapGetSeasons();
+
+  static List<QuestionValidationError>? validate(
           {required String season, required List<QuestionAnswer> answers}) =>
       TmsRustLib.instance.api
           .crateInfraFllInfraFllBlueprintMapFllBlueprintMapValidate(

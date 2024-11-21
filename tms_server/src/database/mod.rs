@@ -76,7 +76,6 @@ impl Database {
     log::info!("Creating trees...");
 
     self.inner.read().await.add_tree_schema(TOURNAMENT_CONFIG.to_string(), TournamentConfig::to_schema()).await;
-    self.inner.read().await.add_tree_schema(TOURNAMENT_BLUEPRINT.to_string(), TournamentBlueprint::to_schema()).await;
     self.inner.read().await.add_tree_schema(TOURNAMENT_INTEGRITY_MESSAGES.to_string(), TournamentIntegrityMessage::to_schema()).await;
     self.inner.read().await.add_tree_schema(TEAMS.to_string(), Team::to_schema()).await;
     self.inner.read().await.add_tree_schema(ROBOT_GAME_MATCHES.to_string(), GameMatch::to_schema()).await;
@@ -125,7 +124,6 @@ impl Database {
         "",
         vec![
           TOURNAMENT_CONFIG,
-          TOURNAMENT_BLUEPRINT,
           TEAMS,
           ROBOT_GAME_MATCHES,
           ROBOT_GAME_CATEGORIES,
@@ -143,7 +141,6 @@ impl Database {
         &self.generate_password(),
         vec![
           TOURNAMENT_CONFIG,
-          TOURNAMENT_BLUEPRINT,
           TEAMS,
           ROBOT_GAME_MATCHES,
           ROBOT_GAME_CATEGORIES,
@@ -161,7 +158,6 @@ impl Database {
         &self.generate_password(),
         vec![
           TOURNAMENT_CONFIG,
-          TOURNAMENT_BLUEPRINT,
           TEAMS,
           ROBOT_GAME_MATCHES,
           ROBOT_GAME_CATEGORIES,
@@ -179,7 +175,6 @@ impl Database {
         &self.generate_password(),
         vec![
           TOURNAMENT_CONFIG,
-          TOURNAMENT_BLUEPRINT,
           TEAMS,
           ROBOT_GAME_MATCHES,
           ROBOT_GAME_CATEGORIES,
@@ -197,7 +192,6 @@ impl Database {
         &self.generate_password(),
         vec![
           TOURNAMENT_CONFIG,
-          TOURNAMENT_BLUEPRINT,
           TEAMS,
           ROBOT_GAME_MATCHES,
           ROBOT_GAME_CATEGORIES,
@@ -241,28 +235,9 @@ impl Database {
     }
   }
 
-  pub async fn setup_blueprints(&mut self) {
-    log::info!("Setting up blueprints...");
-    let seasons = FllBlueprintMap::get_seasons();
-
-    for season in seasons {
-      match FllBlueprintMap::get_fll_blueprint(season.clone()) {
-        Some(blueprint) => {
-          let tournament_blueprint = TournamentBlueprint { title: season.clone(), blueprint: blueprint };
-          match self.insert_blueprint(tournament_blueprint, None).await {
-            Ok(_) => log::info!("Inserted blueprint: {}", season),
-            Err(e) => log::error!("Failed to insert blueprint: {}", e),
-          }
-        }
-        None => log::error!("Failed to get blueprint: {}", season),
-      }
-    }
-  }
-
   pub async fn initial_setup(&mut self) {
     self.create_trees().await;
     self.create_roles().await;
-    self.setup_blueprints().await;
     self.check_integrity().await;
   }
 

@@ -17,8 +17,7 @@ class RobotGameTableInsertRequest {
     required this.table,
   });
 
-  static Future<RobotGameTableInsertRequest> default_() => TmsRustLib
-      .instance.api
+  static RobotGameTableInsertRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableInsertRequestDefault();
 
   static RobotGameTableInsertRequest fromJsonString({required String json}) =>
@@ -53,8 +52,7 @@ class RobotGameTableRemoveRequest {
     required this.tableId,
   });
 
-  static Future<RobotGameTableRemoveRequest> default_() => TmsRustLib
-      .instance.api
+  static RobotGameTableRemoveRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableRemoveRequestDefault();
 
   static RobotGameTableRemoveRequest fromJsonString({required String json}) =>
@@ -90,8 +88,7 @@ class RobotGameTableSignalRequest {
     required this.teamNumber,
   });
 
-  static Future<RobotGameTableSignalRequest> default_() => TmsRustLib
-      .instance.api
+  static RobotGameTableSignalRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRobotGameTableRequestsRobotGameTableSignalRequestDefault();
 
   static RobotGameTableSignalRequest fromJsonString({required String json}) =>

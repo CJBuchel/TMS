@@ -20,7 +20,7 @@ class BackupGetNamesInfo {
     required this.timestamp,
   });
 
-  static Future<BackupGetNamesInfo> default_() => TmsRustLib.instance.api
+  static BackupGetNamesInfo default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasBackupRequestsBackupGetNamesInfoDefault();
 
   static BackupGetNamesInfo fromJsonString({required String json}) => TmsRustLib
@@ -55,7 +55,7 @@ class BackupGetNamesResponse {
     required this.backups,
   });
 
-  static Future<BackupGetNamesResponse> default_() => TmsRustLib.instance.api
+  static BackupGetNamesResponse default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasBackupRequestsBackupGetNamesResponseDefault();
 
   static BackupGetNamesResponse fromJsonString({required String json}) =>
@@ -89,7 +89,7 @@ class BackupRestoreRequest {
     required this.fileName,
   });
 
-  static Future<BackupRestoreRequest> default_() => TmsRustLib.instance.api
+  static BackupRestoreRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasBackupRequestsBackupRestoreRequestDefault();
 
   static BackupRestoreRequest fromJsonString({required String json}) => TmsRustLib

@@ -14,17 +14,17 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 class Submerged {
   const Submerged();
 
-  Future<FllBlueprint> getFllGame() => TmsRustLib.instance.api
+  FllBlueprint getFllGame() => TmsRustLib.instance.api
           .crateInfraFllInfraSeasonsFll2024SubmergedGetFllGame(
         that: this,
       );
 
-  Future<String> getSeason() => TmsRustLib.instance.api
+  String getSeason() => TmsRustLib.instance.api
           .crateInfraFllInfraSeasonsFll2024SubmergedGetSeason(
         that: this,
       );
 
-  Future<List<QuestionValidationError>> validate(
+  List<QuestionValidationError> validate(
           {required Map<String, QuestionAnswer> answers}) =>
       TmsRustLib.instance.api.crateInfraFllInfraSeasonsFll2024SubmergedValidate(
           that: this, answers: answers);

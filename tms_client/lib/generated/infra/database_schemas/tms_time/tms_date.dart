@@ -29,7 +29,7 @@ class TmsDate {
       .crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateCompareTo(
           that: this, other: other);
 
-  static Future<TmsDate> default_() => TmsRustLib.instance.api
+  static TmsDate default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateDefault();
 
   TmsDuration difference({required TmsDate other}) => TmsRustLib.instance.api
@@ -61,7 +61,7 @@ class TmsDate {
       TmsRustLib.instance.api.crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateNew(
           year: year, month: month, day: day);
 
-  static Future<TmsDate> now() => TmsRustLib.instance.api
+  static TmsDate now() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTmsTimeTmsDateTmsDateNow();
 
   String toJsonString() => TmsRustLib.instance.api

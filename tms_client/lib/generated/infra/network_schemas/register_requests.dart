@@ -16,7 +16,7 @@ class RegisterRequest {
     this.password,
   });
 
-  static Future<RegisterRequest> default_() => TmsRustLib.instance.api
+  static RegisterRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRegisterRequestsRegisterRequestDefault();
 
   static RegisterRequest fromJsonString({required String json}) => TmsRustLib
@@ -59,7 +59,7 @@ class RegisterResponse {
     required this.roles,
   });
 
-  static Future<RegisterResponse> default_() => TmsRustLib.instance.api
+  static RegisterResponse default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRegisterRequestsRegisterResponseDefault();
 
   static RegisterResponse fromJsonString({required String json}) => TmsRustLib

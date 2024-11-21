@@ -27,7 +27,7 @@ class TmsServerSocketMessage {
     this.message,
   });
 
-  static Future<TmsServerSocketMessage> default_() => TmsRustLib.instance.api
+  static TmsServerSocketMessage default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasSocketProtocolServerSocketProtocolTmsServerSocketMessageDefault();
 
   static TmsServerSocketMessage fromJsonString({required String json}) =>

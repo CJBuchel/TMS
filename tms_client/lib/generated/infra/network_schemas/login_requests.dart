@@ -16,7 +16,7 @@ class LoginRequest {
     required this.password,
   });
 
-  static Future<LoginRequest> default_() => TmsRustLib.instance.api
+  static LoginRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasLoginRequestsLoginRequestDefault();
 
   static LoginRequest fromJsonString({required String json}) =>
@@ -51,7 +51,7 @@ class LoginResponse {
     required this.roles,
   });
 
-  static Future<LoginResponse> default_() => TmsRustLib.instance.api
+  static LoginResponse default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasLoginRequestsLoginResponseDefault();
 
   static LoginResponse fromJsonString({required String json}) =>

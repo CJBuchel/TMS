@@ -21,7 +21,7 @@ class Team {
     required this.ranking,
   });
 
-  static Future<Team> default_() =>
+  static Team default_() =>
       TmsRustLib.instance.api.crateInfraDatabaseSchemasTeamTeamDefault();
 
   static Team fromJsonString({required String json}) => TmsRustLib.instance.api

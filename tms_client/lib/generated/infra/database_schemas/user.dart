@@ -19,7 +19,7 @@ class User {
     required this.roles,
   });
 
-  static Future<User> default_() =>
+  static User default_() =>
       TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserDefault();
 
   static User fromJsonString({required String json}) => TmsRustLib.instance.api
@@ -90,7 +90,7 @@ class UserPermissions {
     this.av,
   });
 
-  static Future<UserPermissions> default_() => TmsRustLib.instance.api
+  static UserPermissions default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasUserUserPermissionsDefault();
 
   static UserPermissions fromJsonString({required String json}) => TmsRustLib

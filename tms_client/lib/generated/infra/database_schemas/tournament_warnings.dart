@@ -30,7 +30,7 @@ enum TournamentWarningCode {
   w018,
   ;
 
-  static Future<TournamentWarningCode> default_() => TmsRustLib.instance.api
+  static TournamentWarningCode default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTournamentWarningsTournamentWarningCodeDefault();
 
   static TournamentWarningCode fromJsonString({required String json}) => TmsRustLib

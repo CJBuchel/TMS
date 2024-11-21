@@ -13,30 +13,30 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
-class TournamentBlueprint {
+class TournamentSeasonBlueprint {
   final String title;
   final FllBlueprint blueprint;
 
-  const TournamentBlueprint({
+  const TournamentSeasonBlueprint({
     required this.title,
     required this.blueprint,
   });
 
-  static Future<TournamentBlueprint> default_() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasTournamentBlueprintTournamentBlueprintDefault();
+  static TournamentSeasonBlueprint default_() => TmsRustLib.instance.api
+      .crateInfraDatabaseSchemasTournamentSeasonBlueprintTournamentSeasonBlueprintDefault();
 
-  static TournamentBlueprint fromJsonString({required String json}) => TmsRustLib
-      .instance.api
-      .crateInfraDatabaseSchemasTournamentBlueprintTournamentBlueprintFromJsonString(
-          json: json);
+  static TournamentSeasonBlueprint fromJsonString({required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasTournamentSeasonBlueprintTournamentSeasonBlueprintFromJsonString(
+              json: json);
 
   String toJsonString() => TmsRustLib.instance.api
-          .crateInfraDatabaseSchemasTournamentBlueprintTournamentBlueprintToJsonString(
+          .crateInfraDatabaseSchemasTournamentSeasonBlueprintTournamentSeasonBlueprintToJsonString(
         that: this,
       );
 
   static String toSchema() => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasTournamentBlueprintTournamentBlueprintToSchema();
+      .crateInfraDatabaseSchemasTournamentSeasonBlueprintTournamentSeasonBlueprintToSchema();
 
   @override
   int get hashCode => title.hashCode ^ blueprint.hashCode;
@@ -44,7 +44,7 @@ class TournamentBlueprint {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TournamentBlueprint &&
+      other is TournamentSeasonBlueprint &&
           runtimeType == other.runtimeType &&
           title == other.title &&
           blueprint == other.blueprint;

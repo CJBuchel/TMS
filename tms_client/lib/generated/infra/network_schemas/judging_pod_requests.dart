@@ -17,7 +17,7 @@ class JudgingPodInsertRequest {
     required this.pod,
   });
 
-  static Future<JudgingPodInsertRequest> default_() => TmsRustLib.instance.api
+  static JudgingPodInsertRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasJudgingPodRequestsJudgingPodInsertRequestDefault();
 
   static JudgingPodInsertRequest fromJsonString({required String json}) =>
@@ -52,7 +52,7 @@ class JudgingPodRemoveRequest {
     required this.podId,
   });
 
-  static Future<JudgingPodRemoveRequest> default_() => TmsRustLib.instance.api
+  static JudgingPodRemoveRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasJudgingPodRequestsJudgingPodRemoveRequestDefault();
 
   static JudgingPodRemoveRequest fromJsonString({required String json}) =>

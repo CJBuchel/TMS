@@ -9,7 +9,7 @@ pub struct TmsDuration {
 }
 
 impl TmsDuration {
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn new(years: Option<i32>, months: Option<i32>, days: Option<i32>, hours: Option<i32>, minutes: Option<i32>, seconds: Option<i32>) -> Self {
     let mut duration = Self {
       years,
@@ -23,7 +23,7 @@ impl TmsDuration {
     duration
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn normalize(&mut self) {
     if let Some(seconds) = self.seconds {
       if seconds >= 60 {
@@ -57,37 +57,37 @@ impl TmsDuration {
     }
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn in_years(&self) -> i32 {
     self.years.unwrap_or(0)
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn in_months(&self) -> i32 {
     self.in_years().saturating_mul(12).saturating_add(self.months.unwrap_or(0))
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn in_days(&self) -> i32 {
     self.in_months().saturating_mul(30).saturating_add(self.days.unwrap_or(0))
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn in_hours(&self) -> i32 {
     self.in_days().saturating_mul(24).saturating_add(self.hours.unwrap_or(0))
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn in_minutes(&self) -> i32 {
     self.in_hours().saturating_mul(60).saturating_add(self.minutes.unwrap_or(0))
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn in_seconds(&self) -> i32 {
     self.in_minutes().saturating_mul(60).saturating_add(self.seconds.unwrap_or(0))
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn difference(&self, other: TmsDuration) -> TmsDuration {
     let years = match (self.years, other.years) {
       (Some(self_years), Some(other_years)) => Some(self_years.saturating_sub(other_years)),

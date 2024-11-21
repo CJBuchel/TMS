@@ -1,15 +1,16 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 import 'package:tms/generated/infra/fll_infra/fll_blueprint_map.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/robot_game_score_sheet_requests.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
-import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:collection/collection.dart';
+import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
 
-class GameScoringProvider extends TournamentBlueprintProvider {
+class GameScoringProvider extends TournamentConfigProvider {
   final GameScoringService _service = GameScoringService();
 
   int _score = 0;
@@ -34,20 +35,23 @@ class GameScoringProvider extends TournamentBlueprintProvider {
 
   void _updateQuestions() {
     if (blueprintType != BlueprintType.agnostic) {
-      if (blueprint.robotGameQuestions != _gameQuestions) {
-        _gameQuestions = blueprint.robotGameQuestions;
+      final blueprint = FllBlueprintMap.getFllBlueprint(season: season);
+      if (blueprint != null) {
+        if (!listEquals(blueprint.robotGameQuestions, _gameQuestions)) {
+          _gameQuestions = blueprint.robotGameQuestions;
 
-        // get default answers
-        _defaultAnswers = blueprint.robotGameQuestions.map((q) {
-          return q.input.when(
-            categorical: (input) {
-              return QuestionAnswer(questionId: q.id, answer: input.defaultOption);
-            },
-          );
-        }).toList();
+          // get default answers
+          _defaultAnswers = blueprint.robotGameQuestions.map((q) {
+            return q.input.when(
+              categorical: (input) {
+                return QuestionAnswer(questionId: q.id, answer: input.defaultOption);
+              },
+            );
+          }).toList();
 
-        // reset answers
-        resetAnswers();
+          // reset answers
+          resetAnswers();
+        }
       }
     }
   }
@@ -59,19 +63,22 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   }
 
   Future<int> _calculateScore(List<QuestionAnswer> answers) async {
-    return FllBlueprintMap.calculateScore(blueprint: this.blueprint, answers: answers).then((value) {
-      _updateScore(value);
-      return value;
-    });
+    final blueprint = FllBlueprintMap.getFllBlueprint(season: season);
+    if (blueprint != null) {
+      int score = FllBlueprintMap.calculateScore(blueprint: blueprint, answers: answers);
+      _updateScore(score);
+      return score;
+    }
+
+    return 0;
   }
 
-  Future<List<QuestionValidationError>?> _validateAnswers(List<QuestionAnswer> answers) {
-    return FllBlueprintMap.validate(season: this.season, answers: answers).then((errors) {
-      if (errors != null) {
-        _errors = errors;
-      }
-      return errors;
-    });
+  Future<List<QuestionValidationError>?> _validateAnswers(List<QuestionAnswer> answers) async {
+    final errors = FllBlueprintMap.validate(season: this.season, answers: answers);
+    if (errors != null) {
+      _errors = errors;
+    }
+    return errors;
   }
 
   //
@@ -151,7 +158,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
 
       // create the score sheet
       var scoreSheet = RobotGameScoreSheetSubmitRequest(
-        blueprintTitle: season,
+        season: season,
         table: table,
         teamNumber: teamNumber,
         referee: referee,

@@ -25,7 +25,7 @@ class TmsTreeRole {
     required this.readWriteEchoTrees,
   });
 
-  static Future<TmsTreeRole> default_() =>
+  static TmsTreeRole default_() =>
       TmsRustLib.instance.api.crateInfraTmsTreeRoleDefault();
 
   static TmsTreeRole fromJsonString({required String json}) =>

@@ -15,7 +15,7 @@ class JudgingPod {
     required this.podName,
   });
 
-  static Future<JudgingPod> default_() => TmsRustLib.instance.api
+  static JudgingPod default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasJudgingPodJudgingPodDefault();
 
   static JudgingPod fromJsonString({required String json}) => TmsRustLib

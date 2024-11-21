@@ -12,10 +12,10 @@ import 'question.dart';
 import 'rule_engine.dart';
 
 abstract class BaseSeason {
-  Future<FllBlueprint> getFllGame();
+  FllBlueprint getFllGame();
 
-  Future<String> getSeason();
+  String getSeason();
 
-  Future<List<QuestionValidationError>> validate(
+  List<QuestionValidationError> validate(
       {required Map<String, QuestionAnswer> answers});
 }

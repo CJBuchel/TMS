@@ -14,7 +14,7 @@ pub struct TmsTime {
 }
 
 impl TmsTime {
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn new(hour: u32, minute: u32, second: u32) -> Self {
     Self { hour, minute, second }
   }
@@ -31,7 +31,7 @@ impl TmsTimeBased for TmsTime {
     }
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn compare_to(&self, other: Self) -> i32 {
     if self.hour < other.hour {
       return -1;
@@ -54,7 +54,7 @@ impl TmsTimeBased for TmsTime {
     return 0;
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn duration(&self) -> TmsDuration {
     let hours = self.hour as i32;
     let minutes = self.minute as i32;
@@ -63,32 +63,32 @@ impl TmsTimeBased for TmsTime {
     TmsDuration::new(None, None, None, Some(hours), Some(minutes), Some(seconds))
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn difference(&self, other: Self) -> TmsDuration {
     self.duration().difference(other.duration())
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_after(&self, other: Self) -> bool {
     self.compare_to(other) == 1
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_before(&self, other: Self) -> bool {
     self.compare_to(other) == -1
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_same_moment(&self, other: Self) -> bool {
     self.compare_to(other) == 0
   }
   
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn to_string(&self) -> String {
     format!("{:02}:{:02}:{:02}", self.hour, self.minute, self.second)
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn add_duration(&self, duration: TmsDuration) -> Self {
     let added_duration = self.duration().add(duration);
     Self {

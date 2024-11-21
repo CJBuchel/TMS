@@ -25,7 +25,7 @@ enum TournamentErrorCode {
   e013,
   ;
 
-  static Future<TournamentErrorCode> default_() => TmsRustLib.instance.api
+  static TournamentErrorCode default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTournamentErrorsTournamentErrorCodeDefault();
 
   static TournamentErrorCode fromJsonString({required String json}) => TmsRustLib

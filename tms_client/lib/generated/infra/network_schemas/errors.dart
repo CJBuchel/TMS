@@ -17,7 +17,7 @@ class ErrorMessage {
     required this.message,
   });
 
-  static Future<ErrorMessage> default_() => TmsRustLib.instance.api
+  static ErrorMessage default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasErrorsErrorMessageDefault();
 
   static ErrorMessage fromJsonString({required String json}) =>

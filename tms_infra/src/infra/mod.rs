@@ -6,18 +6,18 @@ pub mod fll_infra;
 pub mod network_schemas;
 
 pub trait DataSchemeExtensions: Default + Serialize + JsonSchema + DeserializeOwned {
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn to_schema() -> String {
     let schema = schemars::schema_for!(Self);
     serde_json::to_string_pretty(&schema).unwrap_or_default()
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn to_json_string(&self) -> String {
     serde_json::to_string_pretty(&self).unwrap_or_default()
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn from_json_string(json: &str) -> Self {
     serde_json::from_str(json).unwrap_or_default()
   }

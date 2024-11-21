@@ -21,7 +21,7 @@ class FllBlueprint {
     required this.robotGameMissions,
   });
 
-  static Future<FllBlueprint> default_() => TmsRustLib.instance.api
+  static FllBlueprint default_() => TmsRustLib.instance.api
       .crateInfraFllInfraFllBlueprintFllBlueprintDefault();
 
   static FllBlueprint fromJsonString({required String json}) =>

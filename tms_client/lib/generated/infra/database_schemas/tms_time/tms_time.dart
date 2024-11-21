@@ -29,7 +29,7 @@ class TmsTime {
       .crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeCompareTo(
           that: this, other: other);
 
-  static Future<TmsTime> default_() => TmsRustLib.instance.api
+  static TmsTime default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeDefault();
 
   TmsDuration difference({required TmsTime other}) => TmsRustLib.instance.api
@@ -62,7 +62,7 @@ class TmsTime {
       TmsRustLib.instance.api.crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeNew(
           hour: hour, minute: minute, second: second);
 
-  static Future<TmsTime> now() => TmsRustLib.instance.api
+  static TmsTime now() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTmsTimeTmsTimeTmsTimeNow();
 
   String toJsonString() => TmsRustLib.instance.api

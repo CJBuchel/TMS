@@ -22,8 +22,8 @@ pub use game_table::*;
 pub mod judging_pod;
 pub use judging_pod::*;
 
-pub mod tournament_blueprint;
-pub use tournament_blueprint::*;
+pub mod tournament_season_blueprint;
+pub use tournament_season_blueprint::*;
 
 pub mod game_score_sheet;
 pub use game_score_sheet::*;

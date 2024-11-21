@@ -15,7 +15,7 @@ class GameTable {
     required this.tableName,
   });
 
-  static Future<GameTable> default_() => TmsRustLib.instance.api
+  static GameTable default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasGameTableGameTableDefault();
 
   static GameTable fromJsonString({required String json}) => TmsRustLib

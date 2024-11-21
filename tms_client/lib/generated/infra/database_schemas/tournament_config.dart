@@ -28,7 +28,7 @@ class TournamentConfig {
     required this.blueprintType,
   });
 
-  static Future<TournamentConfig> default_() => TmsRustLib.instance.api
+  static TournamentConfig default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTournamentConfigTournamentConfigDefault();
 
   static TournamentConfig fromJsonString({required String json}) => TmsRustLib

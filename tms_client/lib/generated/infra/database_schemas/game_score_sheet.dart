@@ -13,7 +13,7 @@ import 'tms_time/tms_time.dart';
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`
 
 class GameScoreSheet {
-  final String blueprintTitle;
+  final String season;
   final String table;
   final String teamRefId;
   final String referee;
@@ -30,7 +30,7 @@ class GameScoreSheet {
   final String? modifiedBy;
 
   const GameScoreSheet({
-    required this.blueprintTitle,
+    required this.season,
     required this.table,
     required this.teamRefId,
     required this.referee,
@@ -47,7 +47,7 @@ class GameScoreSheet {
     this.modifiedBy,
   });
 
-  static Future<GameScoreSheet> default_() => TmsRustLib.instance.api
+  static GameScoreSheet default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasGameScoreSheetGameScoreSheetDefault();
 
   static GameScoreSheet fromJsonString({required String json}) =>
@@ -65,7 +65,7 @@ class GameScoreSheet {
 
   @override
   int get hashCode =>
-      blueprintTitle.hashCode ^
+      season.hashCode ^
       table.hashCode ^
       teamRefId.hashCode ^
       referee.hashCode ^
@@ -86,7 +86,7 @@ class GameScoreSheet {
       identical(this, other) ||
       other is GameScoreSheet &&
           runtimeType == other.runtimeType &&
-          blueprintTitle == other.blueprintTitle &&
+          season == other.season &&
           table == other.table &&
           teamRefId == other.teamRefId &&
           referee == other.referee &&

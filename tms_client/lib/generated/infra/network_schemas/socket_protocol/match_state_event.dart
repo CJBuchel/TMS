@@ -25,7 +25,7 @@ class TmsServerMatchStateEvent {
     required this.gameMatchNumbers,
   });
 
-  static Future<TmsServerMatchStateEvent> default_() => TmsRustLib.instance.api
+  static TmsServerMatchStateEvent default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasSocketProtocolMatchStateEventTmsServerMatchStateEventDefault();
 
   static TmsServerMatchStateEvent fromJsonString({required String json}) =>

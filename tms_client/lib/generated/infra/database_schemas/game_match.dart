@@ -29,7 +29,7 @@ class GameMatch {
     required this.category,
   });
 
-  static Future<GameMatch> default_() => TmsRustLib.instance.api
+  static GameMatch default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasGameMatchGameMatchDefault();
 
   static GameMatch fromJsonString({required String json}) => TmsRustLib

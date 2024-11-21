@@ -22,8 +22,7 @@ class JudgingSessionInsertRequest {
     required this.session,
   });
 
-  static Future<JudgingSessionInsertRequest> default_() => TmsRustLib
-      .instance.api
+  static JudgingSessionInsertRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionInsertRequestDefault();
 
   static JudgingSessionInsertRequest fromJsonString({required String json}) =>
@@ -58,8 +57,7 @@ class JudgingSessionRemoveRequest {
     required this.sessionId,
   });
 
-  static Future<JudgingSessionRemoveRequest> default_() => TmsRustLib
-      .instance.api
+  static JudgingSessionRemoveRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasJudgingSessionRequestsJudgingSessionRemoveRequestDefault();
 
   static JudgingSessionRemoveRequest fromJsonString({required String json}) =>

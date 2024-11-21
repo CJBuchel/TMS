@@ -17,7 +17,7 @@ class TmsServerTableStateEvent {
     required this.teamNumber,
   });
 
-  static Future<TmsServerTableStateEvent> default_() => TmsRustLib.instance.api
+  static TmsServerTableStateEvent default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasSocketProtocolTableStateEventTmsServerTableStateEventDefault();
 
   static TmsServerTableStateEvent fromJsonString({required String json}) =>

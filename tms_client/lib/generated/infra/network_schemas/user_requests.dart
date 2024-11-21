@@ -18,7 +18,7 @@ class UserInsertRequest {
     required this.user,
   });
 
-  static Future<UserInsertRequest> default_() => TmsRustLib.instance.api
+  static UserInsertRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasUserRequestsUserInsertRequestDefault();
 
   static UserInsertRequest fromJsonString({required String json}) =>
@@ -53,7 +53,7 @@ class UserRemoveRequest {
     required this.userId,
   });
 
-  static Future<UserRemoveRequest> default_() => TmsRustLib.instance.api
+  static UserRemoveRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasUserRequestsUserRemoveRequestDefault();
 
   static UserRemoveRequest fromJsonString({required String json}) =>

@@ -5,7 +5,7 @@ use crate::{infra::DataSchemeExtensions, GameScoreSheet, QuestionAnswer};
 
 #[derive(Serialize, Deserialize, Debug, JsonSchema)]
 pub struct RobotGameScoreSheetSubmitRequest {
-  pub blueprint_title: String,
+  pub season: String,
   pub table: String,
   pub team_number: String,
   pub referee: String,
@@ -28,7 +28,7 @@ pub struct RobotGameScoreSheetSubmitRequest {
 impl Default for RobotGameScoreSheetSubmitRequest {
   fn default() -> Self {
     Self {
-      blueprint_title: "".to_string(),
+      season: "".to_string(),
       table: "".to_string(),
       team_number: "".to_string(),
       referee: "".to_string(),

@@ -12,7 +12,7 @@ pub struct TmsDateTime {
 }
 
 impl TmsDateTime {
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn new(date: Option<TmsDate>, time: Option<TmsTime>) -> Self {
     Self { date, time }
   }
@@ -26,7 +26,7 @@ impl TmsTimeBased for TmsDateTime {
     }
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn compare_to(&self, other: Self) -> i32 {
     if let Some(date) = &self.date {
       if let Some(other_date) = &other.date {
@@ -46,7 +46,7 @@ impl TmsTimeBased for TmsDateTime {
     return 0;
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn duration(&self) -> TmsDuration {
     let date_duration = match &self.date {
       Some(date) => date.duration(),
@@ -68,27 +68,27 @@ impl TmsTimeBased for TmsDateTime {
     )
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn difference(&self, other: Self) -> TmsDuration {
     self.duration().difference(other.duration())
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_after(&self, other: Self) -> bool {
     self.compare_to(other) > 0
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_before(&self, other: Self) -> bool {
     self.compare_to(other) < 0
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_same_moment(&self, other: Self) -> bool {
     self.compare_to(other) == 0
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn to_string(&self) -> String {
     let date_str = match &self.date {
       Some(date) => date.to_string(),
@@ -103,7 +103,7 @@ impl TmsTimeBased for TmsDateTime {
     format!("{} {}", date_str, time_str)
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn add_duration(&self, duration: TmsDuration) -> Self {
     let date: Option<TmsDate> = match &self.date {
       Some(date) => Some(date.add_duration(duration.clone())),

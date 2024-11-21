@@ -38,7 +38,7 @@ class CategoricalQuestion {
     required this.defaultOption,
   });
 
-  static Future<CategoricalQuestion> default_() => TmsRustLib.instance.api
+  static CategoricalQuestion default_() => TmsRustLib.instance.api
       .crateInfraFllInfraCategoryQuestionCategoricalQuestionDefault();
 
   static CategoricalQuestion fromJsonString({required String json}) =>

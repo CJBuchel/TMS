@@ -22,8 +22,7 @@ class RobotGameScoreSheetInsertRequest {
     required this.scoreSheet,
   });
 
-  static Future<RobotGameScoreSheetInsertRequest> default_() => TmsRustLib
-      .instance.api
+  static RobotGameScoreSheetInsertRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetInsertRequestDefault();
 
   static RobotGameScoreSheetInsertRequest fromJsonString(
@@ -59,8 +58,7 @@ class RobotGameScoreSheetRemoveRequest {
     required this.scoreSheetId,
   });
 
-  static Future<RobotGameScoreSheetRemoveRequest> default_() => TmsRustLib
-      .instance.api
+  static RobotGameScoreSheetRemoveRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetRemoveRequestDefault();
 
   static RobotGameScoreSheetRemoveRequest fromJsonString(
@@ -89,7 +87,7 @@ class RobotGameScoreSheetRemoveRequest {
 }
 
 class RobotGameScoreSheetSubmitRequest {
-  final String blueprintTitle;
+  final String season;
   final String table;
   final String teamNumber;
   final String referee;
@@ -103,7 +101,7 @@ class RobotGameScoreSheetSubmitRequest {
   final String privateComment;
 
   const RobotGameScoreSheetSubmitRequest({
-    required this.blueprintTitle,
+    required this.season,
     required this.table,
     required this.teamNumber,
     required this.referee,
@@ -117,8 +115,7 @@ class RobotGameScoreSheetSubmitRequest {
     required this.privateComment,
   });
 
-  static Future<RobotGameScoreSheetSubmitRequest> default_() => TmsRustLib
-      .instance.api
+  static RobotGameScoreSheetSubmitRequest default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasRobotGameScoreSheetRequestsRobotGameScoreSheetSubmitRequestDefault();
 
   static RobotGameScoreSheetSubmitRequest fromJsonString(
@@ -137,7 +134,7 @@ class RobotGameScoreSheetSubmitRequest {
 
   @override
   int get hashCode =>
-      blueprintTitle.hashCode ^
+      season.hashCode ^
       table.hashCode ^
       teamNumber.hashCode ^
       referee.hashCode ^
@@ -155,7 +152,7 @@ class RobotGameScoreSheetSubmitRequest {
       identical(this, other) ||
       other is RobotGameScoreSheetSubmitRequest &&
           runtimeType == other.runtimeType &&
-          blueprintTitle == other.blueprintTitle &&
+          season == other.season &&
           table == other.table &&
           teamNumber == other.teamNumber &&
           referee == other.referee &&

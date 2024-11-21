@@ -19,7 +19,7 @@ class Mission {
     this.imageUrl,
   });
 
-  static Future<Mission> default_() =>
+  static Mission default_() =>
       TmsRustLib.instance.api.crateInfraFllInfraMissionMissionDefault();
 
   static Mission fromJsonString({required String json}) =>

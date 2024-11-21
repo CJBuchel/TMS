@@ -17,7 +17,7 @@ class TmsServerMatchTimerEvent {
     required this.state,
   });
 
-  static Future<TmsServerMatchTimerEvent> default_() => TmsRustLib.instance.api
+  static TmsServerMatchTimerEvent default_() => TmsRustLib.instance.api
       .crateInfraNetworkSchemasSocketProtocolMatchTimeEventTmsServerMatchTimerEventDefault();
 
   static TmsServerMatchTimerEvent fromJsonString({required String json}) =>

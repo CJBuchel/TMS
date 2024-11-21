@@ -23,7 +23,7 @@ sealed class TournamentIntegrityCode with _$TournamentIntegrityCode {
     TournamentWarningCode field0,
   ) = TournamentIntegrityCode_Warning;
 
-  static Future<TournamentIntegrityCode> default_() => TmsRustLib.instance.api
+  static TournamentIntegrityCode default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTournamentIntegrityMessageTournamentIntegrityCodeDefault();
 
   static TournamentIntegrityCode fromJsonString({required String json}) =>
@@ -65,8 +65,7 @@ class TournamentIntegrityMessage {
     this.sessionNumber,
   });
 
-  static Future<TournamentIntegrityMessage> default_() => TmsRustLib
-      .instance.api
+  static TournamentIntegrityMessage default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasTournamentIntegrityMessageTournamentIntegrityMessageDefault();
 
   static TournamentIntegrityMessage fromJsonString({required String json}) =>

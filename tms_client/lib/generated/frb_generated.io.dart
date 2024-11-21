@@ -20,11 +20,11 @@ import 'infra/database_schemas/tms_time/tms_date.dart';
 import 'infra/database_schemas/tms_time/tms_date_time.dart';
 import 'infra/database_schemas/tms_time/tms_duration.dart';
 import 'infra/database_schemas/tms_time/tms_time.dart';
-import 'infra/database_schemas/tournament_blueprint.dart';
 import 'infra/database_schemas/tournament_code.dart';
 import 'infra/database_schemas/tournament_config.dart';
 import 'infra/database_schemas/tournament_errors.dart';
 import 'infra/database_schemas/tournament_integrity_message.dart';
+import 'infra/database_schemas/tournament_season_blueprint.dart';
 import 'infra/database_schemas/tournament_warnings.dart';
 import 'infra/database_schemas/user.dart';
 import 'infra/fll_infra/category_question.dart';
@@ -266,9 +266,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsTreeRole dco_decode_box_autoadd_tms_tree_role(dynamic raw);
 
   @protected
-  TournamentBlueprint dco_decode_box_autoadd_tournament_blueprint(dynamic raw);
-
-  @protected
   TournamentConfig dco_decode_box_autoadd_tournament_config(dynamic raw);
 
   @protected
@@ -311,6 +308,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   TournamentIntegrityMessage
       dco_decode_box_autoadd_tournament_integrity_message(dynamic raw);
+
+  @protected
+  TournamentSeasonBlueprint dco_decode_box_autoadd_tournament_season_blueprint(
+      dynamic raw);
 
   @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
@@ -438,6 +439,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   bool? dco_decode_opt_box_autoadd_bool(dynamic raw);
+
+  @protected
+  FllBlueprint? dco_decode_opt_box_autoadd_fll_blueprint(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_i_32(dynamic raw);
@@ -568,9 +572,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsTreeRole dco_decode_tms_tree_role(dynamic raw);
 
   @protected
-  TournamentBlueprint dco_decode_tournament_blueprint(dynamic raw);
-
-  @protected
   TournamentConfig dco_decode_tournament_config(dynamic raw);
 
   @protected
@@ -611,6 +612,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   TournamentIntegrityMessage dco_decode_tournament_integrity_message(
       dynamic raw);
+
+  @protected
+  TournamentSeasonBlueprint dco_decode_tournament_season_blueprint(dynamic raw);
 
   @protected
   TournamentWarningCode dco_decode_tournament_warning_code(dynamic raw);
@@ -862,10 +866,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
-  TournamentBlueprint sse_decode_box_autoadd_tournament_blueprint(
-      SseDeserializer deserializer);
-
-  @protected
   TournamentConfig sse_decode_box_autoadd_tournament_config(
       SseDeserializer deserializer);
 
@@ -912,6 +912,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TournamentIntegrityMessage
       sse_decode_box_autoadd_tournament_integrity_message(
           SseDeserializer deserializer);
+
+  @protected
+  TournamentSeasonBlueprint sse_decode_box_autoadd_tournament_season_blueprint(
+      SseDeserializer deserializer);
 
   @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
@@ -1052,6 +1056,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  FllBlueprint? sse_decode_opt_box_autoadd_fll_blueprint(
+      SseDeserializer deserializer);
 
   @protected
   int? sse_decode_opt_box_autoadd_i_32(SseDeserializer deserializer);
@@ -1195,10 +1203,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   TmsTreeRole sse_decode_tms_tree_role(SseDeserializer deserializer);
 
   @protected
-  TournamentBlueprint sse_decode_tournament_blueprint(
-      SseDeserializer deserializer);
-
-  @protected
   TournamentConfig sse_decode_tournament_config(SseDeserializer deserializer);
 
   @protected
@@ -1245,6 +1249,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   TournamentIntegrityMessage sse_decode_tournament_integrity_message(
+      SseDeserializer deserializer);
+
+  @protected
+  TournamentSeasonBlueprint sse_decode_tournament_season_blueprint(
       SseDeserializer deserializer);
 
   @protected
@@ -1496,10 +1504,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       TmsTreeRole self, SseSerializer serializer);
 
   @protected
-  void sse_encode_box_autoadd_tournament_blueprint(
-      TournamentBlueprint self, SseSerializer serializer);
-
-  @protected
   void sse_encode_box_autoadd_tournament_config(
       TournamentConfig self, SseSerializer serializer);
 
@@ -1540,6 +1544,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_tournament_integrity_message(
       TournamentIntegrityMessage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_tournament_season_blueprint(
+      TournamentSeasonBlueprint self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
@@ -1689,6 +1697,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_fll_blueprint(
+      FllBlueprint? self, SseSerializer serializer);
+
+  @protected
   void sse_encode_opt_box_autoadd_i_32(int? self, SseSerializer serializer);
 
   @protected
@@ -1832,10 +1844,6 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_tms_tree_role(TmsTreeRole self, SseSerializer serializer);
 
   @protected
-  void sse_encode_tournament_blueprint(
-      TournamentBlueprint self, SseSerializer serializer);
-
-  @protected
   void sse_encode_tournament_config(
       TournamentConfig self, SseSerializer serializer);
 
@@ -1879,6 +1887,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_tournament_integrity_message(
       TournamentIntegrityMessage self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tournament_season_blueprint(
+      TournamentSeasonBlueprint self, SseSerializer serializer);
 
   @protected
   void sse_encode_tournament_warning_code(

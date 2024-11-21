@@ -17,7 +17,7 @@ class TmsCategory {
     required this.subCategories,
   });
 
-  static Future<TmsCategory> default_() => TmsRustLib.instance.api
+  static TmsCategory default_() => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasCategoryTmsCategoryDefault();
 
   static TmsCategory fromJsonString({required String json}) => TmsRustLib

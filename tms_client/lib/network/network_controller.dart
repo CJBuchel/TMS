@@ -28,8 +28,6 @@ class NetworkController {
 
     if (states.every((element) => element == NetworkConnectionState.connected)) {
       st = NetworkConnectionState.connected;
-    } else if (states.contains(NetworkConnectionState.connecting)) {
-      st = NetworkConnectionState.connecting;
     } else {
       // disconnected
       st = NetworkConnectionState.disconnected;

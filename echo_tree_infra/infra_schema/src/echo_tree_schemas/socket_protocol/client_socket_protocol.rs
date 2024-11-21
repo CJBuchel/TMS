@@ -37,7 +37,7 @@ pub struct GetTreeEvent {
 
 #[derive(serde::Deserialize, serde::Serialize, JsonSchema)]
 pub struct SubscribeEvent {
-  pub tree_names: Vec<String>, // tree names
+  pub tree_names: HashMap<String, u32>, // tree name, checksum
 }
 
 #[derive(serde::Deserialize, serde::Serialize, JsonSchema)]

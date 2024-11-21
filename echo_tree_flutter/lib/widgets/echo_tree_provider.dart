@@ -6,7 +6,7 @@ import 'package:echo_tree_flutter/db/managed_tree/managed_tree.dart';
 import 'package:echo_tree_flutter/db/managed_tree/managed_tree_event.dart';
 import 'package:echo_tree_flutter/echo_tree_flutter.dart';
 import 'package:echo_tree_flutter/logging/logger.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 class EchoTreeProvider<K, V> extends ChangeNotifier {
   final String tree;
@@ -64,16 +64,22 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
   void _populateData() {
     final rawData = managedTree.getDataMap();
 
-    // New item map
-    Map<K, V> newItems = {};
+    // check if the lists are equal (return if they are)
+    if (mapEquals(rawData, items)) {
+      return;
+    }
+
+    // Update existing items and add new items
     rawData.forEach((key, value) {
       V? entry = _entryFromString(value);
       if (entry != null) {
-        newItems[key as K] = entry;
+        items[key as K] = entry;
       }
     });
 
-    items = newItems;
+    // remove items that are not in the tree
+    final keysToRemove = items.keys.where((key) => !rawData.containsKey(key));
+    keysToRemove.forEach((key) => items.remove(key));
   }
 
   @override

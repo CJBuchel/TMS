@@ -49,7 +49,6 @@ class WebsocketController {
 
   Future<bool> connect(String url) async {
     try {
-      _connectivity.state = NetworkConnectionState.connecting;
       _channel = WebSocketChannel.connect(Uri.parse(url));
       _channel?.ready.then((_) {
         _connectivity.state = NetworkConnectionState.connected;

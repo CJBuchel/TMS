@@ -19,8 +19,6 @@ class TmsAppBarSettingsAction extends StatelessWidget {
     switch (state) {
       case NetworkConnectionState.disconnected:
         color = Colors.red;
-      case NetworkConnectionState.connecting:
-        color = Colors.orange;
       case NetworkConnectionState.connected:
         color = Colors.white;
     }

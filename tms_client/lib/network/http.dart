@@ -52,7 +52,6 @@ class HttpController {
   }
 
   Future<bool> connect() async {
-    _connectivity.state = NetworkConnectionState.connecting;
     String addr = TmsLocalStorageProvider().serverAddress;
     var request = RegisterRequest(
       username: TmsLocalStorageProvider().authUsername,

@@ -16,9 +16,6 @@ class DbController {
       case EchoTreeConnection.connected:
         st = NetworkConnectionState.connected;
         break;
-      case EchoTreeConnection.connecting:
-        st = NetworkConnectionState.connecting;
-        break;
       case EchoTreeConnection.disconnected:
         st = NetworkConnectionState.disconnected;
         break;

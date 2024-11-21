@@ -14,7 +14,6 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 enum EchoTreeConnection {
   disconnected,
-  connecting,
   connected,
 }
 
@@ -115,7 +114,11 @@ class EchoTreeNetworkService extends EchoTreeSubscriptionManager {
   }
 
   void _serverSubscribe(List<String> treeNames) {
-    final event = SubscribeEvent(treeNames: treeNames).toJson();
+    // get checksums (filter by treeNames)
+    Map<String, int> treeNameMap = Map.fromEntries(
+      Database().getChecksums.entries.where((element) => treeNames.contains(element.key)),
+    );
+    final event = SubscribeEvent(treeNames: treeNameMap).toJson();
     final message = EchoTreeClientSocketMessage(
       authToken: _authToken,
       messageEvent: EchoTreeClientSocketEvent.SUBSCRIBE_EVENT,
@@ -181,7 +184,6 @@ class EchoTreeNetworkService extends EchoTreeSubscriptionManager {
     List<String>? echoTrees,
   }) async {
     // reset values
-    _state.value = EchoTreeConnection.connecting;
     _address = address;
     _roles = roles ?? {};
 

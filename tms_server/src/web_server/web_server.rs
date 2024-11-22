@@ -12,9 +12,6 @@ pub struct WebConfig {
 
   // the local IP address to use for specifics
   pub local_ip: String,
-  // if you have your own certificate and key instead, you can specify the paths here
-  // pub cert_path: Option<String>,
-  // pub key_path: Option<String>,
 }
 
 impl Default for WebConfig {
@@ -24,8 +21,6 @@ impl Default for WebConfig {
       addr: [0, 0, 0, 0],
       tls: false,
       local_ip: "".to_string(),
-      // cert_path: None,
-      // key_path: None,
     }
   }
 }
@@ -35,7 +30,6 @@ pub struct WebServer {
   addr: [u8; 4],
   certificates: CertificateKeys,
   tls: bool,
-  local_ip: String,
 }
 
 impl WebServer {
@@ -47,7 +41,6 @@ impl WebServer {
       addr: config.addr,
       certificates: certs,
       tls: config.tls,
-      local_ip: config.local_ip,
     }
   }
 
@@ -85,27 +78,11 @@ impl WebServer {
 
     let ui_route = warp::path("ui").and(ui_static_files);
 
-    // static files for deep linking
-    let deep_linking_static_file_path = PathBuf::from("tms_client").join("build").join("web").join("deep_linking.html");
-    let html_template = match std::fs::read_to_string(deep_linking_static_file_path.clone()) {
-      Ok(content) => content,
-      Err(e) => {
-        log::error!("Error reading deep linking html file: {:?}", e);
-        "".to_string()
-      }
-    };
-    let deep_link = format!("tmsapplicationscheme://connect?ip={}&port={}", self.local_ip.clone(), self.port);
-    log::info!("Deep Link: {}", deep_link);
-    let deep_linking_route = warp::path("deep_linking").map(move || {
-      let html_content = html_template.replace("$TMS_APP_DEEP_LINK", &deep_link);
-      warp::reply::html(html_content)
-    });
-
     // redirect all root traffic to /ui
     let root_route = warp::path::end().map(|| warp::redirect(warp::http::Uri::from_static("/ui")));
 
     // append the web route to provided routes
-    let web_route = root_route.or(ui_route).or(deep_linking_route).boxed();
+    let web_route = root_route.or(ui_route).boxed();
 
     // combine the web route with the provided routes
     let routes = web_route.or(routes);

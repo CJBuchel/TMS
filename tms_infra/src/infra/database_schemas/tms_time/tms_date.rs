@@ -14,7 +14,7 @@ pub struct TmsDate {
 }
 
 impl TmsDate {
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn new(year: i32, month: u32, day: u32) -> Self {
     Self { year, month, day }
   }
@@ -32,7 +32,7 @@ impl TmsTimeBased for TmsDate {
   }
 
   // returns a -1 if self is less than other, 0 if equal, and a +1 if self is greater than other
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn compare_to(&self, other: TmsDate) -> i32 {
     if self.year < other.year {
       return -1;
@@ -55,7 +55,7 @@ impl TmsTimeBased for TmsDate {
     return 0;
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn duration(&self) -> TmsDuration {
     let years = self.year as i32;
     let months = self.month as i32;
@@ -64,32 +64,32 @@ impl TmsTimeBased for TmsDate {
     TmsDuration::new(Some(years), Some(months), Some(days), None, None, None)
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn difference(&self, other: TmsDate) -> TmsDuration {
     self.duration().difference(other.duration())
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_after(&self, other: Self) -> bool {
     self.compare_to(other) == 1
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_before(&self, other: Self) -> bool {
     self.compare_to(other) == -1
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn is_same_moment(&self, other: Self) -> bool {
     self.compare_to(other) == 0
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn to_string(&self) -> String {
     format!("{:04}-{:02}-{:02}", self.year, self.month, self.day)
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn add_duration(&self, duration: TmsDuration) -> Self {
     let added_duration = self.duration().add(duration);
     Self {

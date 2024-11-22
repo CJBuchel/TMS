@@ -15,7 +15,7 @@ dependencies:
     path: ../echo_tree_flutter
   tms_infra:
     path: rust_builder
-  flutter_rust_bridge: 2.5.1
+  flutter_rust_bridge: 2.6.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -29,7 +29,6 @@ dependencies:
   go_router: ^14.2.7
   responsive_framework: ^1.5.1
   provider: ^6.1.2
-  nsd: ^3.0.0
   path_provider: ^2.1.3
   flutter_speed_dial: ^7.0.0
   qr_flutter: ^4.1.0
@@ -60,12 +59,12 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/logos/TMS_LOGO_NO_TEXT_1024.png"
+  image_path: "assets/logos/T_LOGO.png"
   adaptive_icon_background: "#212332"  # Set your desired background color or image path
-  adaptive_icon_foreground: "assets/logos/TMS_LOGO_ADAPTIVE_FOREGROUND.png"
-  web:
-    generate: true
-    image_path: "assets/logos/TMS_LOGO_NO_TEXT_1024.png"
+  adaptive_icon_foreground: "assets/logos/T_LOGO.png"
+  # web:
+  #   generate: true
+  #   image_path: "assets/logos/T_LOGO.png"
 
 flutter:
   uses-material-design: true

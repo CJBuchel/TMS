@@ -26,7 +26,7 @@ mixin EchoTreeSubscriberMixin<T extends StatefulWidget> on State<T> {
   }
 }
 
-// wraps around existing widget and provides subscriptions to trees (pair with provider or data widgets)
+// wraps around existing widget and provides subscriptions to trees (pair with provider widget)
 class EchoTreeLifetime extends StatefulWidget {
   final List<String> trees;
   final Widget child;

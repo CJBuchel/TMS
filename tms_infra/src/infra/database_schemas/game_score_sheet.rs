@@ -6,7 +6,7 @@ use super::TmsDateTime;
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameScoreSheet {
-  pub blueprint_title: String,
+  pub season: String,
   pub table: String,
   pub team_ref_id: String, // team id in db, not team number
   pub referee: String,
@@ -33,7 +33,7 @@ pub struct GameScoreSheet {
 impl Default for GameScoreSheet {
   fn default() -> Self {
     Self {
-      blueprint_title: "".to_string(),
+      season: "".to_string(),
       table: "".to_string(),
       team_ref_id: "".to_string(),
       referee: "".to_string(),

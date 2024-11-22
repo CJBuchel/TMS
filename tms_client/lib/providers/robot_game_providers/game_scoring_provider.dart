@@ -1,53 +1,55 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 import 'package:tms/generated/infra/fll_infra/fll_blueprint_map.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/robot_game_score_sheet_requests.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
-import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:collection/collection.dart';
+import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
 
-class GameScoringProvider extends TournamentBlueprintProvider {
+class GameScoringProvider extends ChangeNotifier {
   final GameScoringService _service = GameScoringService();
 
   int _score = 0;
   String _privateComment = "";
-
   List<QuestionValidationError> _errors = [];
   List<QuestionAnswer> _defaultAnswers = [];
   List<QuestionAnswer> _answers = [];
   List<Question> _gameQuestions = [];
 
-  GameScoringProvider() : super() {
-    addListener(_updateQuestions);
-  }
+  BlueprintType _blueprintType = BlueprintType.agnostic;
+  String _season = "";
 
   @override
   void dispose() {
-    removeListener(_updateQuestions);
     super.dispose();
   }
 
   // private methods
 
   void _updateQuestions() {
-    if (blueprintType != BlueprintType.agnostic) {
-      if (blueprint.robotGameQuestions != _gameQuestions) {
-        _gameQuestions = blueprint.robotGameQuestions;
+    // get the blueprint from the current config
+    if (_blueprintType != BlueprintType.agnostic) {
+      final blueprint = FllBlueprintMap.getFllBlueprint(season: _season);
+      if (blueprint != null) {
+        if (!listEquals(blueprint.robotGameQuestions, _gameQuestions)) {
+          _gameQuestions = blueprint.robotGameQuestions;
 
-        // get default answers
-        _defaultAnswers = blueprint.robotGameQuestions.map((q) {
-          return q.input.when(
-            categorical: (input) {
-              return QuestionAnswer(questionId: q.id, answer: input.defaultOption);
-            },
-          );
-        }).toList();
+          // get default answers
+          _defaultAnswers = blueprint.robotGameQuestions.map((q) {
+            return q.input.when(
+              categorical: (input) {
+                return QuestionAnswer(questionId: q.id, answer: input.defaultOption);
+              },
+            );
+          }).toList();
 
-        // reset answers
-        resetAnswers();
+          // reset answers
+          resetAnswers();
+        }
       }
     }
   }
@@ -59,19 +61,22 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   }
 
   Future<int> _calculateScore(List<QuestionAnswer> answers) async {
-    return FllBlueprintMap.calculateScore(blueprint: this.blueprint, answers: answers).then((value) {
-      _updateScore(value);
-      return value;
-    });
+    final blueprint = FllBlueprintMap.getFllBlueprint(season: _season);
+    if (blueprint != null) {
+      int score = FllBlueprintMap.calculateScore(blueprint: blueprint, answers: answers);
+      _updateScore(score);
+      return score;
+    }
+
+    return 0;
   }
 
-  Future<List<QuestionValidationError>?> _validateAnswers(List<QuestionAnswer> answers) {
-    return FllBlueprintMap.validate(season: this.season, answers: answers).then((errors) {
-      if (errors != null) {
-        _errors = errors;
-      }
-      return errors;
-    });
+  Future<List<QuestionValidationError>?> _validateAnswers(List<QuestionAnswer> answers) async {
+    final errors = FllBlueprintMap.validate(season: _season, answers: answers);
+    if (errors != null) {
+      _errors = errors;
+    }
+    return errors;
   }
 
   //
@@ -91,8 +96,15 @@ class GameScoringProvider extends TournamentBlueprintProvider {
   set privateComment(String comment) => _privateComment = comment;
   set answers(List<QuestionAnswer> answers) => _answers = answers;
 
+  GameScoringProvider updateConfig(TournamentConfigProvider config) {
+    _blueprintType = config.blueprintType;
+    _season = config.season;
+    _updateQuestions();
+    return this;
+  }
+
   void resetAnswers() {
-    if (blueprintType == BlueprintType.agnostic) {
+    if (_blueprintType == BlueprintType.agnostic) {
       score = 0;
     } else {
       _answers = [..._defaultAnswers]; // copy default answers (don't want the origin modified)
@@ -151,7 +163,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
 
       // create the score sheet
       var scoreSheet = RobotGameScoreSheetSubmitRequest(
-        blueprintTitle: season,
+        season: _season,
         table: table,
         teamNumber: teamNumber,
         referee: referee,
@@ -160,7 +172,7 @@ class GameScoringProvider extends TournamentBlueprintProvider {
         noShow: noShow,
         score: score,
         round: round,
-        isAgnostic: blueprintType == BlueprintType.agnostic,
+        isAgnostic: _blueprintType == BlueprintType.agnostic,
         scoreSheetAnswers: _answers,
         privateComment: privateComment,
       );

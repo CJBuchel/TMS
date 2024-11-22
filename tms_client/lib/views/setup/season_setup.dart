@@ -1,42 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tms/generated/infra/fll_infra/fll_blueprint_map.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
-import 'package:tms/providers/tournament_blueprint_provider.dart';
 import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/views/setup/input_setter.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
-class _BlueprintData {
-  final BlueprintType bpType;
-  final String selectedBlueprint;
-  final List<String> blueprintTitles;
-
-  _BlueprintData({
-    required this.bpType,
-    required this.selectedBlueprint,
-    required this.blueprintTitles,
-  });
-}
+const String AGNOSTIC = "Agnostic";
 
 class SeasonSetup extends StatelessWidget {
   SeasonSetup({Key? key}) : super(key: key);
+  final ValueNotifier<String> selectedSeason = ValueNotifier<String>(AGNOSTIC);
 
-  final ValueNotifier<List<String>> availableSeasons = ValueNotifier<List<String>>([]);
-  final ValueNotifier<String> selectedBlueprint = ValueNotifier<String>("Agnostic");
-
-  Widget seasonDropdown() {
+  Widget seasonDropdown(String season) {
     return ValueListenableBuilder(
-      valueListenable: selectedBlueprint,
-      builder: (context, value, _) {
+      valueListenable: selectedSeason,
+      builder: (context, v, _) {
         return DropdownButton<String>(
-          value: value,
+          value: v,
           items: [
             const DropdownMenuItem<String>(
-              value: "Agnostic",
-              child: Text("Agnostic"),
+              value: AGNOSTIC,
+              child: Text(AGNOSTIC),
             ),
-            ...availableSeasons.value.map((String value) {
+            ...FllBlueprintMap.getSeasons().map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -44,7 +32,7 @@ class SeasonSetup extends StatelessWidget {
             }).toList(),
           ],
           onChanged: (String? value) {
-            selectedBlueprint.value = value!;
+            if (value != null) selectedSeason.value = value;
           },
         );
       },
@@ -52,20 +40,20 @@ class SeasonSetup extends StatelessWidget {
   }
 
   void showSnackBar(BuildContext context, int status) {
-    SnackBarDialog.fromStatus(message: "Season set ${selectedBlueprint.value}", status: status).show(context);
+    SnackBarDialog.fromStatus(message: "Season set ${selectedSeason.value}", status: status).show(context);
   }
 
   Widget input(BuildContext context, TournamentConfigProvider config) {
     return InputSetter(
       label: "Select Blueprint",
-      input: seasonDropdown(),
+      input: seasonDropdown(config.season),
       onSet: () async {
-        if (selectedBlueprint.value == "Agnostic") {
+        if (selectedSeason.value == AGNOSTIC) {
           TmsLogger().i("Setting season to Agnostic");
           await config.setSeasonAgnostic().then((status) => showSnackBar(context, status));
         } else {
-          TmsLogger().i("Setting season to ${selectedBlueprint.value}");
-          await config.setSeason(selectedBlueprint.value).then((status) => showSnackBar(context, status));
+          TmsLogger().i("Setting season to ${selectedSeason.value}");
+          await config.setSeason(selectedSeason.value).then((status) => showSnackBar(context, status));
         }
       },
     );
@@ -73,32 +61,19 @@ class SeasonSetup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    availableSeasons.value = Provider.of<TournamentBlueprintProvider>(context, listen: false).blueprintTitles;
-
-    return Selector<TournamentBlueprintProvider, _BlueprintData>(
-      selector: (context, provider) {
-        return _BlueprintData(
-          bpType: provider.blueprintType,
-          selectedBlueprint: provider.season,
-          blueprintTitles: provider.blueprintTitles,
-        );
-      },
-      builder: (context, blueprints, _) {
-        availableSeasons.value = blueprints.blueprintTitles;
-        if (blueprints.bpType == BlueprintType.agnostic) {
-          selectedBlueprint.value = "Agnostic";
+    //
+    return Consumer<TournamentConfigProvider>(
+      builder: (context, config, _) {
+        if (config.blueprintType == BlueprintType.agnostic) {
+          selectedSeason.value = AGNOSTIC;
         } else {
-          if (availableSeasons.value.contains(blueprints.selectedBlueprint)) {
-            selectedBlueprint.value = blueprints.selectedBlueprint;
+          if (FllBlueprintMap.getSeasons().contains(config.season)) {
+            selectedSeason.value = config.season;
           } else {
-            selectedBlueprint.value = "Agnostic";
+            selectedSeason.value = AGNOSTIC;
           }
         }
-        return Consumer<TournamentConfigProvider>(
-          builder: (context, config, _) {
-            return input(context, config);
-          },
-        );
+        return input(context, config);
       },
     );
   }

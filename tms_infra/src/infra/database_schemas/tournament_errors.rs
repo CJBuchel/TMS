@@ -25,7 +25,7 @@ pub enum TournamentErrorCode {
 }
 
 impl TournamentCode for TournamentErrorCode {
-  #[flutter_rust_bridge::frb(sync)]
+  
   fn get_message(&self) -> String {
     match self {
       TournamentErrorCode::E000 => "Unknown Error".to_string(),

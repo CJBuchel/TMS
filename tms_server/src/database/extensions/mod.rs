@@ -25,9 +25,6 @@ pub use judging_pod_extensions::*;
 mod game_table_extensions;
 pub use game_table_extensions::*;
 
-mod tournament_blueprint_extensions;
-pub use tournament_blueprint_extensions::*;
-
 mod game_score_sheet_extensions;
 pub use game_score_sheet_extensions::*;
 

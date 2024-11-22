@@ -224,7 +224,7 @@ impl TournamentWarningChecks {
     if !messages.is_empty() {
       // print the messages
       for message in messages.iter() {
-        log::warn!("{}", message.message);
+        log::debug!("{}", message.message);
       }
     }
     return messages;

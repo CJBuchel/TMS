@@ -470,18 +470,18 @@ class SetTreeEvent {
 }
 
 class SubscribeEvent {
-    List<String> treeNames;
+    Map<String, int> treeNames;
 
     SubscribeEvent({
         required this.treeNames,
     });
 
     factory SubscribeEvent.fromJson(Map<String, dynamic> json) => SubscribeEvent(
-        treeNames: List<String>.from(json["tree_names"].map((x) => x)),
+        treeNames: Map.from(json["tree_names"]).map((k, v) => MapEntry<String, int>(k, v)),
     );
 
     Map<String, dynamic> toJson() => {
-        "tree_names": List<dynamic>.from(treeNames.map((x) => x)),
+        "tree_names": Map.from(treeNames).map((k, v) => MapEntry<String, dynamic>(k, v)),
     };
 }
 

@@ -12,8 +12,6 @@ class TmsAppBarTitle extends StatelessWidget {
     switch (state) {
       case NetworkConnectionState.disconnected:
         return const Text("DC", style: TextStyle(color: Colors.red));
-      case NetworkConnectionState.connecting:
-        return const Text("CNT", style: TextStyle(color: Colors.orange));
       case NetworkConnectionState.connected:
         return const Text("OK", style: TextStyle(color: Colors.green));
       default:

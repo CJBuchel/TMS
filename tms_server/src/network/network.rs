@@ -29,7 +29,6 @@ impl Network {
       // config
       .or(tournament_schedule_filter(self.clients.clone(), self.db.clone()))
       .or(tournament_config_filter(self.clients.clone(), self.db.clone()))
-      .or(tournament_blueprint_filter(self.clients.clone(), self.db.clone()))
       .or(backups_filter(self.clients.clone(), self.db.clone()))
       // login/auth
       .or(login_filter(self.clients.clone(), self.db.clone()))

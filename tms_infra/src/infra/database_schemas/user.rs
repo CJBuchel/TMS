@@ -20,7 +20,7 @@ pub struct UserPermissions {
 
 impl UserPermissions {
   // optional new`
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn new(
     admin: Option<bool>,
     referee: Option<bool>,
@@ -43,7 +43,7 @@ impl UserPermissions {
     }
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn get_merged_permissions(&self, permissions: UserPermissions) -> UserPermissions {
     let mut merged_permissions = self.clone();
 
@@ -59,7 +59,7 @@ impl UserPermissions {
     merged_permissions
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn from_roles(roles: Vec<String>) -> Self {
     let mut permissions = Self::default();
 
@@ -80,7 +80,7 @@ impl UserPermissions {
     permissions
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn get_roles(&self) -> Vec<String> {
     let mut roles = vec![];
 
@@ -119,7 +119,7 @@ impl UserPermissions {
     roles
   } 
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn has_role_access(&self, roles: Vec<String>) -> bool {
     // admin always has access, regardless of current set permissions
     let role_access = Self::from_roles(roles.to_owned());
@@ -207,7 +207,7 @@ pub struct User {
 }
 
 impl User {
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn new(username: &str, password: &str, roles: Vec<String>) -> Self {
     Self {
       username: username.to_string(),
@@ -216,23 +216,23 @@ impl User {
     }
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn has_role(&self, role: &str) -> bool {
     self.roles.contains(&role.to_string())
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn has_permission_access(&self, permissions: &UserPermissions) -> bool {
     permissions.has_role_access(self.roles.clone())
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn has_role_access(&self, roles: Vec<String>) -> bool {
     let permissions = UserPermissions::from_roles(self.roles.clone());
     permissions.has_role_access(roles)
   }
 
-  #[flutter_rust_bridge::frb(sync)]
+  
   pub fn get_permissions(&self) -> UserPermissions {
     UserPermissions::from_roles(self.roles.clone())
   }

@@ -40,7 +40,7 @@ pub async fn robot_game_score_sheet_submit_handler(request: RobotGameScoreSheetS
   };
 
   let score_sheet = GameScoreSheet {
-    blueprint_title: request.blueprint_title.clone(),
+    season: request.season.clone(),
     table: request.table.clone(),
     team_ref_id: team_id,
     referee: request.referee,

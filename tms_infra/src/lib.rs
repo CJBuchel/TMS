@@ -7,3 +7,4 @@ pub use infra::network_schemas::*;
 pub use infra::database_schemas::*;
 pub use infra::DataSchemeExtensions;
 
+pub use flutter_rust_bridge::*;

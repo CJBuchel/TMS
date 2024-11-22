@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-enum NetworkConnectionState { disconnected, connecting, connected }
+enum NetworkConnectionState { disconnected, connected }
 
 class NetworkConnectivity {
   final ValueNotifier<NetworkConnectionState> _state = ValueNotifier(NetworkConnectionState.disconnected);

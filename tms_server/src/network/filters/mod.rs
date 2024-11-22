@@ -46,9 +46,6 @@ pub use judging_sessions_filter::*;
 mod judging_pods_filter;
 pub use judging_pods_filter::*;
 
-mod tournament_blueprint_filter;
-pub use tournament_blueprint_filter::*;
-
 mod tournament_config_filter;
 pub use tournament_config_filter::*;
 

@@ -2,3 +2,4 @@ rust_input: crate::infra
 rust_root: ../tms_infra/
 dart_output: lib/generated
 dart_entrypoint_class_name: TmsRustLib
+default_dart_async: false # http only works with synchronous code. no async wasm :(

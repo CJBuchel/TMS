@@ -22,9 +22,6 @@ pub use robot_game_matches_handler::*;
 mod robot_game_timer_handler;
 pub use robot_game_timer_handler::*;
 
-mod tournament_blueprint_handler;
-pub use tournament_blueprint_handler::*;
-
 mod robot_game_tables_handler;
 pub use robot_game_tables_handler::*;
 

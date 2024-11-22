@@ -2,12 +2,13 @@ import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
-import 'package:tms/generated/infra/database_schemas/tournament_blueprint.dart';
+import 'package:tms/generated/infra/fll_infra/fll_blueprint.dart';
+import 'package:tms/generated/infra/fll_infra/fll_blueprint_map.dart';
 import 'package:tms/generated/infra/fll_infra/mission.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
-import 'package:tms/providers/tournament_blueprint_provider.dart';
+import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/agnostic_scoring/agnostic_scoring.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/mission.dart';
@@ -16,9 +17,10 @@ import 'package:tms/widgets/game_scoring/game_scoring_widget/blueprint_scoring/q
 
 class _BlueprintData {
   final BlueprintType type;
-  final TournamentBlueprint? blueprint;
+  final String season;
+  final FllBlueprint blueprint;
 
-  _BlueprintData({required this.type, required this.blueprint});
+  _BlueprintData({required this.type, required this.season, required this.blueprint});
 }
 
 class GameScoringWidget extends StatelessWidget {
@@ -66,17 +68,21 @@ class GameScoringWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EchoTreeLifetime(
-      trees: [":tournament:blueprint", ":tournament:config"],
-      child: Selector<TournamentBlueprintProvider, _BlueprintData>(
-        selector: (context, bp) {
+      trees: [":tournament:config"],
+      child: Selector<TournamentConfigProvider, _BlueprintData>(
+        selector: (context, config) {
+          final blueprint = FllBlueprintMap.getFllBlueprint(season: config.season);
+          var type = config.blueprintType;
+
           if (scoreSheet != null) {
-            // get blueprint type
-            var type = scoreSheet!.isAgnostic ? BlueprintType.agnostic : BlueprintType.seasonal;
-            return _BlueprintData(type: type, blueprint: bp.getBlueprint(scoreSheet!.blueprintTitle));
-          } else {
-            String blueprintTitle = bp.season;
-            return _BlueprintData(type: bp.blueprintType, blueprint: bp.getBlueprint(blueprintTitle));
+            type = scoreSheet!.isAgnostic ? BlueprintType.agnostic : BlueprintType.seasonal;
           }
+
+          return _BlueprintData(
+            type: type,
+            season: config.season,
+            blueprint: blueprint ?? FllBlueprint.default_(),
+          );
         },
         builder: (context, data, child) {
           if (scoreSheet != null) {
@@ -103,9 +109,10 @@ class GameScoringWidget extends StatelessWidget {
               slivers: [
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
+                    childCount: data.blueprint.robotGameMissions.length,
                     (context, index) {
-                      Mission mission = data.blueprint!.blueprint.robotGameMissions[index];
-                      List<Question> allQuestions = data.blueprint!.blueprint.robotGameQuestions;
+                      Mission mission = data.blueprint.robotGameMissions[index];
+                      List<Question> allQuestions = data.blueprint.robotGameQuestions;
                       List<Question> missionQuestions = allQuestions.where((q) => q.id.startsWith(mission.id)).toList();
 
                       // Create a GlobalKey for each questions
@@ -118,7 +125,8 @@ class GameScoringWidget extends StatelessWidget {
                           return QuestionWidget(
                             key: key,
                             question: question,
-                            onAnswer: (a) {
+                            onAnswer: (a) async {
+                              TmsLogger().d("Answered question ${question.id} with answer $a");
                               _scrollToNextQuestion(questionKeys.indexOf(key));
                               Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
                                 QuestionAnswer(questionId: question.id, answer: a),
@@ -126,10 +134,9 @@ class GameScoringWidget extends StatelessWidget {
                             },
                           );
                         }).toList(),
-                        season: data.blueprint!.title,
+                        season: data.season,
                       );
                     },
-                    childCount: data.blueprint?.blueprint.robotGameMissions.length,
                   ),
                 ),
                 SliverToBoxAdapter(

@@ -417,9 +417,11 @@
       ],
       "properties": {
         "tree_names": {
-          "type": "array",
-          "items": {
-            "type": "string"
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "uint32",
+            "minimum": 0.0
           }
         }
       }

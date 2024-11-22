@@ -78,7 +78,7 @@ class EditGameScoreDialog {
         // create updated score sheet
         GameScoreSheet updatedScoreSheet = GameScoreSheet(
           // non edit fields
-          blueprintTitle: score.scoreSheet.blueprintTitle,
+          season: score.scoreSheet.season,
           teamRefId: score.scoreSheet.teamRefId,
           timestamp: score.scoreSheet.timestamp,
           // modified fields
@@ -106,7 +106,7 @@ class EditGameScoreDialog {
           mainAxisSize: MainAxisSize.min,
           children: [
             // non edit fields
-            _textCell('Blueprint: ', score.scoreSheet.blueprintTitle),
+            _textCell('Blueprint: ', score.scoreSheet.season),
             _textCell('Timestamp: ', score.scoreSheet.timestamp.toString()),
             _textCell('GP: ', score.scoreSheet.gp),
             _textCell('Round: ', score.scoreSheet.round.toString()),

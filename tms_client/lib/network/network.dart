@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:tms/generated/infra/network_schemas/socket_protocol/server_socket_protocol.dart';
-import 'package:tms/network/service_discovery.dart';
 import 'package:tms/network/ws.dart';
 import 'package:tms/utils/logger.dart';
 import 'package:tms/network/connectivity.dart';
@@ -42,17 +40,10 @@ class Network {
 
   Future<void> _checkConnection() async {
     // @TODO future me, after connection is established and then loses signal, http remains connected, therefore the reconnect watchdog is never triggered.
-    if (_controller.state == NetworkConnectionState.disconnected) {
+    // The quick fix is to keep reconnecting the http connection until it is connected. (We should be checking if it's "connecting", instead of just not connected)
+    if (_controller.state != NetworkConnectionState.connected) {
       TmsLogger().d("Reconnecting...");
-      // startup network discovery (non web)
-      if (!kIsWeb) {
-        await ServiceDiscoveryController().start();
-      }
       await _controller.connect();
-    } else {
-      if (!kIsWeb) {
-        await ServiceDiscoveryController().stop();
-      }
     }
   }
 

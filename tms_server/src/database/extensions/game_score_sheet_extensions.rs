@@ -5,7 +5,7 @@ pub use echo_tree_rs::core::*;
 use tms_infra::*;
 use uuid::Uuid;
 
-use super::{TeamExtensions, TournamentBlueprintExtensions};
+use super::TeamExtensions;
 
 #[async_trait::async_trait]
 pub trait GameScoreSheetExtensions {
@@ -48,10 +48,11 @@ impl GameScoreSheetExtensions for Database {
 
     // if this is not an agnostic score sheet, pass the answers through the calculator and validate system
     if !game_score_sheet.is_agnostic && !game_score_sheet.no_show {
-      match self.get_blueprint_by_title(game_score_sheet.blueprint_title.clone()).await {
-        Some((_, blueprint)) => {
+      let score_season = game_score_sheet.season.to_owned();
+      match FllBlueprintMap::get_fll_blueprint(score_season.to_owned()) {
+        Some(blueprint) => {
           // validate answers
-          let errors = FllBlueprintMap::validate(blueprint.title.clone(), game_score_sheet.score_sheet_answers.to_owned());
+          let errors = FllBlueprintMap::validate(score_season.to_owned(), game_score_sheet.score_sheet_answers.to_owned());
 
           // if any errors return error
           if let Some(errors) = errors {
@@ -62,7 +63,7 @@ impl GameScoreSheetExtensions for Database {
           }
 
           // modify the score sheet to include the calculated score
-          let score = FllBlueprintMap::calculate_score(blueprint.blueprint, game_score_sheet.score_sheet_answers.to_owned());
+          let score = FllBlueprintMap::calculate_score(blueprint, game_score_sheet.score_sheet_answers.to_owned());
           game_score_sheet.score = score;
           log::warn!("Calculated score for: {}, {}", game_score_sheet.table , score);
         }

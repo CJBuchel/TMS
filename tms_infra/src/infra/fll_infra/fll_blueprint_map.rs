@@ -27,8 +27,6 @@ impl FllBlueprintMap {
     blueprint.robot_game_questions.iter().map(|q| q.get_score(&answers_map)).sum()
   }
 
-  // this doesn't get FRB annotations to avoid frontend confusion. (Flutter gets game from server db)
-  #[flutter_rust_bridge::frb(ignore)]
   pub fn get_fll_blueprint(season: String) -> Option<FllBlueprint> {
     // match_season!(season, get_fll_game())
     match SEASONS.iter().find(|(s, _)| *s == season) {
@@ -37,8 +35,6 @@ impl FllBlueprintMap {
     }
   }
 
-  // this doesn't get FRB annotations to avoid frontend confusion. (Flutter gets game from server db)
-  #[flutter_rust_bridge::frb(ignore)]
   pub fn get_seasons() -> Vec<String> {
     SEASONS.iter().map(|(s, _)| s.to_string()).collect()
   }

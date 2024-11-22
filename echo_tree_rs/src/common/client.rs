@@ -59,4 +59,12 @@ impl Client {
     let json = serde_json::to_string(&echo_message).unwrap_or_default();
     self.send_message(json);
   }
+
+  pub fn update_subscribed_trees(&mut self, new_tree_names: Vec<String>) {
+    for tree in new_tree_names {
+      if !self.subscribed_trees.contains(&tree) {
+        self.subscribed_trees.push(tree);
+      }
+    }
+  }
 }

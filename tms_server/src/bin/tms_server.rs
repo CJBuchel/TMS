@@ -2,7 +2,6 @@ use std::env;
 
 use local_ip_address::local_ip;
 use tms_server::database::*;
-use tms_server::multicast_dns::*;
 use tms_server::network::ClientMap;
 use tms_server::network::*;
 use tms_server::services::SharedServices;
@@ -42,14 +41,6 @@ async fn main() {
       String::from("127.0.0.1")
     }
   };
-
-  // broadcast server
-  let mut m_dns = MulticastDnsBroadcaster::new(ip.clone(), ServerArgs::get_port(), ServerArgs::get_tls());
-  if ServerArgs::get_mdns() {
-    m_dns.start();
-  } else {
-    log::warn!("Multicast DNS Service Disabled");
-  }
 
   // create clients
   let clients = ClientMap::new(tokio::sync::RwLock::new(std::collections::HashMap::new()));
@@ -105,9 +96,6 @@ async fn main() {
   //
   // Stop all services
   //
-
-  // stop the multicast dns service
-  m_dns.stop();
   // stop the backup service
   db.write().await.stop_backup_service().await;
   db.stop_integrity_check_service().await;

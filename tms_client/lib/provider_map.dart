@@ -39,7 +39,11 @@ class ProviderMap extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => GameTimerProvider()),
         ChangeNotifierProvider(create: (_) => TeamsProvider()),
         ChangeNotifierProvider(create: (_) => GameTableProvider()),
-        ChangeNotifierProvider(create: (_) => GameScoringProvider()),
+        ChangeNotifierProxyProvider<TournamentConfigProvider, GameScoringProvider>(
+          create: (_) => GameScoringProvider(),
+          update: (_, configProvider, scoringProvider) =>
+              scoringProvider?.updateConfig(configProvider) ?? GameScoringProvider(),
+        ),
         ChangeNotifierProvider(create: (_) => GameTableSignalProvider()),
         ChangeNotifierProvider(create: (_) => GameCategoryProvider()),
         ChangeNotifierProvider(create: (_) => GameScoresProvider()),

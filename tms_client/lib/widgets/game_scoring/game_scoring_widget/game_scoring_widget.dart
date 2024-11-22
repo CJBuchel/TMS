@@ -125,7 +125,8 @@ class GameScoringWidget extends StatelessWidget {
                           return QuestionWidget(
                             key: key,
                             question: question,
-                            onAnswer: (a) {
+                            onAnswer: (a) async {
+                              TmsLogger().d("Answered question ${question.id} with answer $a");
                               _scrollToNextQuestion(questionKeys.indexOf(key));
                               Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
                                 QuestionAnswer(questionId: question.id, answer: a),

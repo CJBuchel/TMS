@@ -10,32 +10,30 @@ import 'package:collection/collection.dart';
 import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
 
-class GameScoringProvider extends TournamentConfigProvider {
+class GameScoringProvider extends ChangeNotifier {
   final GameScoringService _service = GameScoringService();
 
   int _score = 0;
   String _privateComment = "";
-
   List<QuestionValidationError> _errors = [];
   List<QuestionAnswer> _defaultAnswers = [];
   List<QuestionAnswer> _answers = [];
   List<Question> _gameQuestions = [];
 
-  GameScoringProvider() : super() {
-    addListener(_updateQuestions);
-  }
+  BlueprintType _blueprintType = BlueprintType.agnostic;
+  String _season = "";
 
   @override
   void dispose() {
-    removeListener(_updateQuestions);
     super.dispose();
   }
 
   // private methods
 
   void _updateQuestions() {
-    if (blueprintType != BlueprintType.agnostic) {
-      final blueprint = FllBlueprintMap.getFllBlueprint(season: season);
+    // get the blueprint from the current config
+    if (_blueprintType != BlueprintType.agnostic) {
+      final blueprint = FllBlueprintMap.getFllBlueprint(season: _season);
       if (blueprint != null) {
         if (!listEquals(blueprint.robotGameQuestions, _gameQuestions)) {
           _gameQuestions = blueprint.robotGameQuestions;
@@ -63,7 +61,7 @@ class GameScoringProvider extends TournamentConfigProvider {
   }
 
   Future<int> _calculateScore(List<QuestionAnswer> answers) async {
-    final blueprint = FllBlueprintMap.getFllBlueprint(season: season);
+    final blueprint = FllBlueprintMap.getFllBlueprint(season: _season);
     if (blueprint != null) {
       int score = FllBlueprintMap.calculateScore(blueprint: blueprint, answers: answers);
       _updateScore(score);
@@ -74,7 +72,7 @@ class GameScoringProvider extends TournamentConfigProvider {
   }
 
   Future<List<QuestionValidationError>?> _validateAnswers(List<QuestionAnswer> answers) async {
-    final errors = FllBlueprintMap.validate(season: this.season, answers: answers);
+    final errors = FllBlueprintMap.validate(season: _season, answers: answers);
     if (errors != null) {
       _errors = errors;
     }
@@ -98,8 +96,15 @@ class GameScoringProvider extends TournamentConfigProvider {
   set privateComment(String comment) => _privateComment = comment;
   set answers(List<QuestionAnswer> answers) => _answers = answers;
 
+  GameScoringProvider updateConfig(TournamentConfigProvider config) {
+    _blueprintType = config.blueprintType;
+    _season = config.season;
+    _updateQuestions();
+    return this;
+  }
+
   void resetAnswers() {
-    if (blueprintType == BlueprintType.agnostic) {
+    if (_blueprintType == BlueprintType.agnostic) {
       score = 0;
     } else {
       _answers = [..._defaultAnswers]; // copy default answers (don't want the origin modified)
@@ -158,7 +163,7 @@ class GameScoringProvider extends TournamentConfigProvider {
 
       // create the score sheet
       var scoreSheet = RobotGameScoreSheetSubmitRequest(
-        season: season,
+        season: _season,
         table: table,
         teamNumber: teamNumber,
         referee: referee,
@@ -167,7 +172,7 @@ class GameScoringProvider extends TournamentConfigProvider {
         noShow: noShow,
         score: score,
         round: round,
-        isAgnostic: blueprintType == BlueprintType.agnostic,
+        isAgnostic: _blueprintType == BlueprintType.agnostic,
         scoreSheetAnswers: _answers,
         privateComment: privateComment,
       );

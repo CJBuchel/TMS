@@ -23,10 +23,16 @@ class _BlueprintData {
   _BlueprintData({required this.type, required this.season, required this.blueprint});
 }
 
+class _QuestionKeyData {
+  final GlobalKey key = GlobalKey();
+  final Question question;
+
+  _QuestionKeyData({required this.question});
+}
+
 class GameScoringWidget extends StatelessWidget {
   final ScrollController? scrollController;
-  final List<GlobalKey> questionKeys = [];
-
+  final List<_QuestionKeyData> questionKeys = [];
   final GameScoreSheet? scoreSheet;
 
   GameScoringWidget({
@@ -35,12 +41,17 @@ class GameScoringWidget extends StatelessWidget {
     this.scoreSheet,
   }) : super(key: key);
 
+  void _initializeQuestionKeys(List<Question> questions) {
+    questionKeys.clear();
+    questionKeys.addAll(List.generate(questions.length, (index) => _QuestionKeyData(question: questions[index])));
+  }
+
   void _scrollToNextQuestion(int currentIndex) {
     // If the scrollController is null or has no clients, return
     if (scrollController == null || !(scrollController?.hasClients ?? false)) return;
     if (currentIndex + 1 < questionKeys.length) {
       final nextKey = questionKeys[currentIndex + 1];
-      final nextContext = nextKey.currentContext;
+      final nextContext = nextKey.key.currentContext;
 
       if (nextContext != null) {
         final RenderBox renderBox = nextContext.findRenderObject() as RenderBox;
@@ -100,6 +111,7 @@ class GameScoringWidget extends StatelessWidget {
               },
             );
           } else {
+            _initializeQuestionKeys(data.blueprint.robotGameQuestions);
             if (scoreSheet != null) {
               Provider.of<GameScoringProvider>(context, listen: false).answers = scoreSheet!.scoreSheetAnswers;
             }
@@ -112,27 +124,27 @@ class GameScoringWidget extends StatelessWidget {
                     childCount: data.blueprint.robotGameMissions.length,
                     (context, index) {
                       Mission mission = data.blueprint.robotGameMissions[index];
-                      List<Question> allQuestions = data.blueprint.robotGameQuestions;
-                      List<Question> missionQuestions = allQuestions.where((q) => q.id.startsWith(mission.id)).toList();
-
-                      // Create a GlobalKey for each questions
-                      questionKeys.addAll(List.generate(missionQuestions.length, (index) => GlobalKey()));
+                      // List<Question> allQuestions = data.blueprint.robotGameQuestions;
+                      List<_QuestionKeyData> missionQuestions =
+                          questionKeys.where((q) => q.question.id.startsWith(mission.id)).toList();
 
                       return MissionWidget(
                         mission: mission,
-                        missionQuestions: missionQuestions.map((question) {
-                          final key = questionKeys[allQuestions.indexOf(question)];
-                          return QuestionWidget(
+                        missionQuestions: missionQuestions.map((questionKeyData) {
+                          final key = questionKeyData.key;
+
+                          final questionWidget = QuestionWidget(
                             key: key,
-                            question: question,
+                            question: questionKeyData.question,
                             onAnswer: (a) async {
-                              TmsLogger().d("Answered question ${question.id} with answer $a");
-                              _scrollToNextQuestion(questionKeys.indexOf(key));
+                              TmsLogger().d("Answered question ${questionKeyData.question.id} with answer $a");
+                              _scrollToNextQuestion(questionKeys.indexOf(questionKeyData));
                               Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
-                                QuestionAnswer(questionId: question.id, answer: a),
+                                QuestionAnswer(questionId: questionKeyData.question.id, answer: a),
                               );
                             },
                           );
+                          return questionWidget;
                         }).toList(),
                         season: data.season,
                       );

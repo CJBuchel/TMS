@@ -59,12 +59,9 @@ flutter_launcher_icons:
   android: true
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/logos/T_LOGO.png"
+  image_path: "assets/logos/T_LOGO_PADDED.png"
   adaptive_icon_background: "#212332"  # Set your desired background color or image path
-  adaptive_icon_foreground: "assets/logos/T_LOGO.png"
-  # web:
-  #   generate: true
-  #   image_path: "assets/logos/T_LOGO.png"
+  adaptive_icon_foreground: "assets/logos/T_LOGO_PADDED.png"
 
 flutter:
   uses-material-design: true

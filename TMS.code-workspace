@@ -42,7 +42,7 @@
 			"**/android": true,
 		},
 		"rust-analyzer.showUnlinkedFileNotification": false,
-		"svg.preview.background": "transparent",
+		"svg.preview.background": "dark-transparent",
 		"java.compile.nullAnalysis.mode": "automatic",
 		"java.configuration.updateBuildConfiguration": "automatic",
 		"cSpell.words": [

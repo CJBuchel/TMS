@@ -121,18 +121,22 @@ class _LoadedGameMatchStatusProvider extends _StagedGameMatchStatusProvider {
   }
 
   bool canLoad(List<GameMatch> matches) {
-    // check if all staged matches have submitted prior score sheets
+    // check if all staged match tables have submitted prior score sheets
     bool tablesReady = _stagedMatchNumbers.every((matchNumber) {
       GameMatch? match = matches.firstWhereOrNull((match) => match.matchNumber == matchNumber);
-      if (match == null) {
-        return false;
-      }
-
+      if (match == null) return false;
       return match.gameMatchTables.every((table) {
         return hasTableSubmittedPriorScoreSheets(table.table, matches);
       });
     });
-    return _stagedMatchNumbers.isNotEmpty && _loadedMatchNumbers.isEmpty && tablesReady;
+
+    // check to make sure that the staged matches are incomplete
+    bool matchesIncomplete = _stagedMatchNumbers.every((matchNumber) {
+      GameMatch? match = matches.firstWhereOrNull((match) => match.matchNumber == matchNumber);
+      if (match == null) return false;
+      return !match.completed;
+    });
+    return _stagedMatchNumbers.isNotEmpty && _loadedMatchNumbers.isEmpty && tablesReady && matchesIncomplete;
   }
 
   bool get canUnload {

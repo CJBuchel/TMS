@@ -13,8 +13,8 @@ theme:
   font:
     text: 'Ubuntu'
     code: 'Ubuntu Mono'
-  logo: assets/logo.svg
-  favicon: assets/logo_icon.svg
+  logo: assets/TMS_LOGO_WHITE.svg
+  favicon: assets/T_LOGO_WHITE.svg
   features:
     - navigation.footer
     - navigation.tabs

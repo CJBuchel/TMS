@@ -3,11 +3,24 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/tournament_integrity_message.dart';
 import 'package:tms/providers/tournament_integrity_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
-import 'package:tms/utils/logger.dart';
-import 'package:tms/widgets/integrity_checks/icon_tooltip_integrity_check.dart';
+import 'package:tms/views/dashboard/integrity_overview/integrity_message_tile.dart';
 
 class IntegrityOverview extends StatelessWidget {
   const IntegrityOverview({Key? key}) : super(key: key);
+
+  List<List<TournamentIntegrityMessage>> _splitMessagesByCode(List<TournamentIntegrityMessage> messages) {
+    Map<String, List<TournamentIntegrityMessage>> groupedMessages = {};
+
+    for (var message in messages) {
+      String code = message.integrityCode.getStringifiedCode();
+      if (!groupedMessages.containsKey(code)) {
+        groupedMessages[code] = [];
+      }
+      groupedMessages[code]?.add(message);
+    }
+
+    return groupedMessages.values.toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +34,8 @@ class IntegrityOverview extends StatelessWidget {
         } else if (integrityMessages.any((m) => m.integrityCode.when(error: (e) => false, warning: (w) => true))) {
           mainColor = Colors.orange;
         }
+
+        final groupedMessages = _splitMessagesByCode(integrityMessages);
 
         return Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -61,8 +76,7 @@ class IntegrityOverview extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Column(
-                    children: integrityMessages.map((m) {
-                      TmsLogger().d(m.toJsonString());
+                    children: groupedMessages.map((mGroup) {
                       return Container(
                         margin: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
@@ -72,61 +86,7 @@ class IntegrityOverview extends StatelessWidget {
                           border: Border.all(color: Colors.black),
                           borderRadius: const BorderRadius.all(Radius.circular(10)),
                         ),
-                        child: ListTile(
-                          leading: IconTooltipIntegrityCheck(messages: [m]),
-                          title: Text(
-                            m.integrityCode.getMessage(),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          subtitle: Row(
-                            children: [
-                              // code
-                              Text(
-                                m.integrityCode.getStringifiedCode(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: m.integrityCode.when(
-                                    error: (_) => Colors.red,
-                                    warning: (_) => Colors.orange,
-                                  ),
-                                ),
-                              ),
-                              // team (if applicable)
-                              if (m.teamNumber != null) ...[
-                                const SizedBox(width: 10),
-                                Text(
-                                  "Team ${m.teamNumber}",
-                                  style: const TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                              // match (if applicable)
-                              if (m.matchNumber != null) ...[
-                                const SizedBox(width: 10),
-                                Text(
-                                  "Match ${m.matchNumber}",
-                                  style: const TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                              // session (if applicable)
-                              if (m.sessionNumber != null) ...[
-                                const SizedBox(width: 10),
-                                Text(
-                                  "Session ${m.sessionNumber}",
-                                  style: const TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
+                        child: IntegrityMessageTile(messages: mGroup),
                       );
                     }).toList(),
                   ),

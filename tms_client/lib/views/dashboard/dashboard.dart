@@ -1,7 +1,7 @@
 import 'package:echo_tree_flutter/widgets/echo_tree_lifetime_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:tms/views/dashboard/dashboard_info_banner.dart';
-import 'package:tms/views/dashboard/integrity_overview.dart';
+import 'package:tms/views/dashboard/integrity_overview/integrity_overview.dart';
 import 'package:tms/views/dashboard/scoring_overview/scoring_overview.dart';
 import 'package:tms/views/dashboard/timers_overview.dart';
 

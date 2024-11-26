@@ -6652,10 +6652,10 @@ fn wire__crate__infra__database_schemas__user__user_has_permission_access_impl(
       let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
       let api_that = <crate::infra::database_schemas::user::User>::sse_decode(&mut deserializer);
-      let api_permissions = <crate::infra::database_schemas::user::UserPermissions>::sse_decode(&mut deserializer);
+      let api_required_permissions = <crate::infra::database_schemas::user::UserPermissions>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::User::has_permission_access(&api_that, &api_permissions))?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::User::has_permission_access(&api_that, &api_required_permissions))?;
         Ok(output_ok)
       })())
     },
@@ -6696,10 +6696,10 @@ fn wire__crate__infra__database_schemas__user__user_has_role_access_impl(
       let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
       let api_that = <crate::infra::database_schemas::user::User>::sse_decode(&mut deserializer);
-      let api_roles = <Vec<String>>::sse_decode(&mut deserializer);
+      let api_required_roles = <Vec<String>>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::User::has_role_access(&api_that, api_roles))?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::User::has_role_access(&api_that, api_required_roles))?;
         Ok(output_ok)
       })())
     },
@@ -6946,10 +6946,10 @@ fn wire__crate__infra__database_schemas__user__user_permissions_has_role_access_
       let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
       let api_that = <crate::infra::database_schemas::user::UserPermissions>::sse_decode(&mut deserializer);
-      let api_roles = <Vec<String>>::sse_decode(&mut deserializer);
+      let api_required_roles = <Vec<String>>::sse_decode(&mut deserializer);
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
-        let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::UserPermissions::has_role_access(&api_that, api_roles))?;
+        let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::UserPermissions::has_role_access(&api_that, api_required_roles))?;
         Ok(output_ok)
       })())
     },

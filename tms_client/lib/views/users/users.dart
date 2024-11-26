@@ -151,7 +151,7 @@ class Users extends StatelessWidget {
     UserPermissions updatedPermissions = user.getPermissions().getMergedPermissions(permissions: permissions);
     User updatedUser = User(username: user.username, password: user.password, roles: updatedPermissions.getRoles());
     String? userId = Provider.of<AuthProvider>(context, listen: false).getUserIdFromUsername(user.username);
-    TmsLogger().i("User: ${user.username} permissions updated: ${permissions.admin}");
+    TmsLogger().i("User: ${user.username} permissions updated: ${updatedPermissions.getRoles()}}");
     var status = await Provider.of<AuthProvider>(context, listen: false).insertUser(userId, updatedUser);
     SnackBarDialog.fromStatus(message: "Update ${user.username}", status: status).show(context);
   }
@@ -210,6 +210,11 @@ class Users extends StatelessWidget {
           _cell(LiveCheckbox(
             defaultValue: permissions.judge,
             onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(judge: v)),
+          )),
+          // emcee
+          _cell(LiveCheckbox(
+            defaultValue: permissions.emcee,
+            onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(emcee: v)),
           )),
         ],
       );
@@ -290,6 +295,14 @@ class Users extends StatelessWidget {
                   _cell(
                     const Text(
                       "Judge",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  _cell(
+                    const Text(
+                      "Emcee",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

@@ -184,12 +184,12 @@ class BaseScaffoldDrawerRouter extends StatelessWidget {
                           goNamed: 'match_controller',
                           permissions: UserPermissions(headReferee: true),
                         ),
-                        // BaseScaffoldDrawerRouterItem(
-                        //   icon: Icons.mic,
-                        //   title: const Text('Match Announcer'),
-                        //   goNamed: 'match_announcer',
-                        //   permissions: UserPermissions(emcee: true, headReferee: true),
-                        // ),
+                        BaseScaffoldDrawerRouterItem(
+                          icon: Icons.mic,
+                          title: const Text('Match Announcer'),
+                          goNamed: 'match_announcer',
+                          permissions: UserPermissions(emcee: true, headReferee: true),
+                        ),
                         BaseScaffoldDrawerRouterItem(
                           icon: Icons.table_chart,
                           title: const Text('Matches'),

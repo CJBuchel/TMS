@@ -78,9 +78,10 @@ class AuthProvider extends EchoTreeProvider<String, User> {
     return status;
   }
 
-  bool hasPermissionAccess(UserPermissions permissions) {
-    var r = roles.map((e) => e.roleId).toList();
-    return permissions.hasRoleAccess(roles: r);
+  bool hasPermissionAccess(UserPermissions requiredPermissions) {
+    final currentUserRoles = roles.map((e) => e.roleId).toList();
+    final currentUserPerms = UserPermissions.fromRoles(roles: currentUserRoles);
+    return currentUserPerms.hasRoleAccess(requiredRoles: requiredPermissions.getRoles());
   }
 
   List<User> get usersByName {

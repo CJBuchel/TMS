@@ -30,16 +30,17 @@ class User {
         that: this,
       );
 
-  bool hasPermissionAccess({required UserPermissions permissions}) =>
+  bool hasPermissionAccess({required UserPermissions requiredPermissions}) =>
       TmsRustLib.instance.api
           .crateInfraDatabaseSchemasUserUserHasPermissionAccess(
-              that: this, permissions: permissions);
+              that: this, requiredPermissions: requiredPermissions);
 
   bool hasRole({required String role}) => TmsRustLib.instance.api
       .crateInfraDatabaseSchemasUserUserHasRole(that: this, role: role);
 
-  bool hasRoleAccess({required List<String> roles}) => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasUserUserHasRoleAccess(that: this, roles: roles);
+  bool hasRoleAccess({required List<String> requiredRoles}) =>
+      TmsRustLib.instance.api.crateInfraDatabaseSchemasUserUserHasRoleAccess(
+          that: this, requiredRoles: requiredRoles);
 
   factory User(
           {required String username,
@@ -112,9 +113,10 @@ class UserPermissions {
         that: this,
       );
 
-  bool hasRoleAccess({required List<String> roles}) => TmsRustLib.instance.api
-      .crateInfraDatabaseSchemasUserUserPermissionsHasRoleAccess(
-          that: this, roles: roles);
+  bool hasRoleAccess({required List<String> requiredRoles}) =>
+      TmsRustLib.instance.api
+          .crateInfraDatabaseSchemasUserUserPermissionsHasRoleAccess(
+              that: this, requiredRoles: requiredRoles);
 
   factory UserPermissions(
           {bool? admin,

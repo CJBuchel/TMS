@@ -21,12 +21,12 @@ pub fn role_permission_filter(clients: ClientMap, db: SharedDatabase, roles: Vec
       match clients.read().await.get(&client_id) {
         Some(client) => match client.has_role_access(db, roles.clone()).await {
           ClientAccessResult::Success => {
-            log::debug!("Client has role access: {}, roles: {}", client_id, roles.join(", "));
+            log::debug!("Client has role access: {}, required roles: {}", client_id, roles.join(", "));
             return Ok(());
           }
 
           ClientAccessResult::Unauthorized => {
-            log::warn!("Client role auth failed: {}, roles: {}", client_id, roles.join(", "));
+            log::warn!("Client role auth failed: {}, required roles: {}", client_id, roles.join(", "));
             return Err(warp::reject::custom(UnauthorizedClient));
           }
 

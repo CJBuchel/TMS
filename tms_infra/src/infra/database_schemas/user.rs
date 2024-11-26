@@ -120,62 +120,63 @@ impl UserPermissions {
   } 
 
   
-  pub fn has_role_access(&self, roles: Vec<String>) -> bool {
-    // admin always has access, regardless of current set permissions
-    let role_access = Self::from_roles(roles.to_owned());
-    if role_access.admin.unwrap_or(false) {
+  pub fn has_role_access(&self, required_roles: Vec<String>) -> bool {
+    let required_permissions = UserPermissions::from_roles(required_roles);
+
+    // admin always has access, regardless of required roles
+    if self.admin.unwrap_or(false) {
       return true;
     }
 
     let mut has_access = false;
 
     // referee
-    if self.referee.unwrap_or(false) {
+    if required_permissions.referee.unwrap_or(false) {
       // both referee & head_referee have access to the same resources
-      if roles.contains(&REFEREE_ROLE.to_string()) || roles.contains(&HEAD_REFEREE_ROLE.to_string()) {
+      if self.referee.unwrap_or(false) || self.head_referee.unwrap_or(false) {
         has_access = true;
       }
     }
 
     // head referee
-    if self.head_referee.unwrap_or(false) {
-      if roles.contains(&HEAD_REFEREE_ROLE.to_string()) {
+    if required_permissions.head_referee.unwrap_or(false) {
+      if self.head_referee.unwrap_or(false) {
         has_access = true;
       }
     }
 
     // judge
-    if self.judge.unwrap_or(false) {
+    if required_permissions.judge.unwrap_or(false) {
       // judge advisor has access to the same resources as judge
-      if roles.contains(&JUDGE_ROLE.to_string()) || roles.contains(&JUDGE_ADVISOR_ROLE.to_string()) {
+      if self.judge.unwrap_or(false) || self.judge_advisor.unwrap_or(false) {
         has_access = true;
       }
     }
 
     // judge advisor
-    if self.judge_advisor.unwrap_or(false) {
-      if roles.contains(&JUDGE_ADVISOR_ROLE.to_string()) {
+    if required_permissions.judge_advisor.unwrap_or(false) {
+      if self.judge_advisor.unwrap_or(false) {
         has_access = true;
       }
     }
 
     // scorekeeper
-    if self.score_keeper.unwrap_or(false) {
-      if roles.contains(&SCORE_KEEPER_ROLE.to_string()) {
+    if required_permissions.score_keeper.unwrap_or(false) {
+      if self.score_keeper.unwrap_or(false) {
         has_access = true;
       }
     }
 
     // emcee
-    if self.emcee.unwrap_or(false) {
-      if roles.contains(&EMCEE_ROLE.to_string()) {
+    if required_permissions.emcee.unwrap_or(false) {
+      if self.emcee.unwrap_or(false) {
         has_access = true;
       }
     }
 
     // av
-    if self.av.unwrap_or(false) {
-      if roles.contains(&AV_ROLE.to_string()) {
+    if required_permissions.av.unwrap_or(false) {
+      if self.av.unwrap_or(false) {
         has_access = true;
       }
     }
@@ -216,20 +217,20 @@ impl User {
     }
   }
 
-  
   pub fn has_role(&self, role: &str) -> bool {
     self.roles.contains(&role.to_string())
   }
 
   
-  pub fn has_permission_access(&self, permissions: &UserPermissions) -> bool {
-    permissions.has_role_access(self.roles.clone())
+  pub fn has_permission_access(&self, required_permissions: &UserPermissions) -> bool {
+    let permissions = UserPermissions::from_roles(self.roles.clone());
+    permissions.has_role_access(required_permissions.get_roles())
   }
 
   
-  pub fn has_role_access(&self, roles: Vec<String>) -> bool {
+  pub fn has_role_access(&self, required_roles: Vec<String>) -> bool {
     let permissions = UserPermissions::from_roles(self.roles.clone());
-    permissions.has_role_access(roles)
+    permissions.has_role_access(required_roles)
   }
 
   

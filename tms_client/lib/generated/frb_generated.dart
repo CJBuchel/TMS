@@ -1036,13 +1036,13 @@ abstract class TmsRustLibApi extends BaseApi {
       {required User that});
 
   bool crateInfraDatabaseSchemasUserUserHasPermissionAccess(
-      {required User that, required UserPermissions permissions});
+      {required User that, required UserPermissions requiredPermissions});
 
   bool crateInfraDatabaseSchemasUserUserHasRole(
       {required User that, required String role});
 
   bool crateInfraDatabaseSchemasUserUserHasRoleAccess(
-      {required User that, required List<String> roles});
+      {required User that, required List<String> requiredRoles});
 
   UserInsertRequest
       crateInfraNetworkSchemasUserRequestsUserInsertRequestDefault();
@@ -1078,7 +1078,7 @@ abstract class TmsRustLibApi extends BaseApi {
       {required UserPermissions that});
 
   bool crateInfraDatabaseSchemasUserUserPermissionsHasRoleAccess(
-      {required UserPermissions that, required List<String> roles});
+      {required UserPermissions that, required List<String> requiredRoles});
 
   UserPermissions crateInfraDatabaseSchemasUserUserPermissionsNew(
       {bool? admin,
@@ -8948,12 +8948,13 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
   @override
   bool crateInfraDatabaseSchemasUserUserHasPermissionAccess(
-      {required User that, required UserPermissions permissions}) {
+      {required User that, required UserPermissions requiredPermissions}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_user(that, serializer);
-        sse_encode_box_autoadd_user_permissions(permissions, serializer);
+        sse_encode_box_autoadd_user_permissions(
+            requiredPermissions, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 305)!;
       },
       codec: SseCodec(
@@ -8961,7 +8962,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta: kCrateInfraDatabaseSchemasUserUserHasPermissionAccessConstMeta,
-      argValues: [that, permissions],
+      argValues: [that, requiredPermissions],
       apiImpl: this,
     ));
   }
@@ -8970,7 +8971,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       get kCrateInfraDatabaseSchemasUserUserHasPermissionAccessConstMeta =>
           const TaskConstMeta(
             debugName: "user_has_permission_access",
-            argNames: ["that", "permissions"],
+            argNames: ["that", "requiredPermissions"],
           );
 
   @override
@@ -9001,12 +9002,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
   @override
   bool crateInfraDatabaseSchemasUserUserHasRoleAccess(
-      {required User that, required List<String> roles}) {
+      {required User that, required List<String> requiredRoles}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_user(that, serializer);
-        sse_encode_list_String(roles, serializer);
+        sse_encode_list_String(requiredRoles, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 307)!;
       },
       codec: SseCodec(
@@ -9014,7 +9015,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         decodeErrorData: null,
       ),
       constMeta: kCrateInfraDatabaseSchemasUserUserHasRoleAccessConstMeta,
-      argValues: [that, roles],
+      argValues: [that, requiredRoles],
       apiImpl: this,
     ));
   }
@@ -9022,7 +9023,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   TaskConstMeta get kCrateInfraDatabaseSchemasUserUserHasRoleAccessConstMeta =>
       const TaskConstMeta(
         debugName: "user_has_role_access",
-        argNames: ["that", "roles"],
+        argNames: ["that", "requiredRoles"],
       );
 
   @override
@@ -9296,12 +9297,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
 
   @override
   bool crateInfraDatabaseSchemasUserUserPermissionsHasRoleAccess(
-      {required UserPermissions that, required List<String> roles}) {
+      {required UserPermissions that, required List<String> requiredRoles}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_box_autoadd_user_permissions(that, serializer);
-        sse_encode_list_String(roles, serializer);
+        sse_encode_list_String(requiredRoles, serializer);
         return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 318)!;
       },
       codec: SseCodec(
@@ -9310,7 +9311,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       ),
       constMeta:
           kCrateInfraDatabaseSchemasUserUserPermissionsHasRoleAccessConstMeta,
-      argValues: [that, roles],
+      argValues: [that, requiredRoles],
       apiImpl: this,
     ));
   }
@@ -9319,7 +9320,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       get kCrateInfraDatabaseSchemasUserUserPermissionsHasRoleAccessConstMeta =>
           const TaskConstMeta(
             debugName: "user_permissions_has_role_access",
-            argNames: ["that", "roles"],
+            argNames: ["that", "requiredRoles"],
           );
 
   @override

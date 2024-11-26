@@ -2,4 +2,4 @@
 # I.e, version of the app, etc.
 variables:
 - name: tms_version
-  value: 2024.2.1
+  value: 2024.2.2

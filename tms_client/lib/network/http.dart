@@ -86,27 +86,32 @@ class HttpController {
     }
   }
 
-  Future<bool> disconnect() async {
+  Future<void> disconnect() async {
     String addr = TmsLocalStorageProvider().serverAddress;
-    final response = await _client.delete(
-      Uri.parse("$addr/register/${TmsLocalStorageProvider().uuid}"),
-      headers: {
-        ...authHeaders,
-        "Content-Type": "application/json",
-      },
-    );
 
-    if (response.statusCode == HttpStatus.ok) {
-      TmsLogger().d("Unregistered with TMS server");
+    try {
+      final response = await _client.delete(
+        Uri.parse("$addr/register/${TmsLocalStorageProvider().uuid}"),
+        headers: {
+          ...authHeaders,
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == HttpStatus.ok) {
+        TmsLogger().d("Unregistered with TMS server");
+        _connectivity.state = NetworkConnectionState.disconnected;
+        _client.close();
+      } else {
+        var m = HttpStatusToMessage().getMessage(response.statusCode);
+        TmsLogger().w("Failed to unregister with TMS server: $m");
+        _connectivity.state = NetworkConnectionState.disconnected;
+        _client.close();
+      }
+    } catch (e) {
+      TmsLogger().e("Caught failure. Failed to unregister with TMS server: $e");
       _connectivity.state = NetworkConnectionState.disconnected;
       _client.close();
-      return true;
-    } else {
-      var m = HttpStatusToMessage().getMessage(response.statusCode);
-      TmsLogger().w("Failed to unregister with TMS server: $m");
-      _connectivity.state = NetworkConnectionState.disconnected;
-      _client.close();
-      return false;
     }
   }
 

@@ -64,9 +64,13 @@ class WebsocketController {
   }
 
   Future<void> disconnect() async {
-    TmsLogger().i("Disconnecting from TMS server...");
+    try {
+      TmsLogger().i("Disconnecting from TMS server...");
+      _channel?.sink.close();
+    } catch (e) {
+      TmsLogger().e("Error disconnecting from TMS server: $e");
+    }
     _connectivity.state = NetworkConnectionState.disconnected;
-    _channel?.sink.close();
   }
 
   void subscribe(TmsServerSocketEvent event, TmsEventHandler handler) {

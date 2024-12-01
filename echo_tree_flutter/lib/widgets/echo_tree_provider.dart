@@ -64,11 +64,6 @@ class EchoTreeProvider<K, V> extends ChangeNotifier {
   void _populateData() {
     final rawData = managedTree.getDataMap();
 
-    // check if the lists are equal (return if they are)
-    if (mapEquals(rawData, items)) {
-      return;
-    }
-
     // Update existing items and add new items
     rawData.forEach((key, value) {
       V? entry = _entryFromString(value);

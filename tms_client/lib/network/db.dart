@@ -55,7 +55,11 @@ class DbController {
   }
 
   Future<void> disconnect() async {
-    TmsLogger().d("Disconnecting from EchoTree DB...");
-    await EchoTreeClient().disconnect();
+    try {
+      TmsLogger().d("Disconnecting from EchoTree DB...");
+      await EchoTreeClient().disconnect();
+    } catch (e) {
+      TmsLogger().e("Error disconnecting from EchoTree DB: $e");
+    }
   }
 }

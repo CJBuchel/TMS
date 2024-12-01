@@ -57,15 +57,20 @@ class WebsocketController {
       });
     } catch (e) {
       _connectivity.state = NetworkConnectionState.disconnected;
+      TmsLogger().e("Error connecting to TMS server websocket: $e");
       return false;
     }
     return true;
   }
 
   Future<void> disconnect() async {
-    TmsLogger().i("Disconnecting from TMS server...");
+    try {
+      TmsLogger().i("Disconnecting from TMS server...");
+      _channel?.sink.close(1000);
+    } catch (e) {
+      TmsLogger().e("Error disconnecting from TMS server: $e");
+    }
     _connectivity.state = NetworkConnectionState.disconnected;
-    _channel?.sink.close();
   }
 
   void subscribe(TmsServerSocketEvent event, TmsEventHandler handler) {

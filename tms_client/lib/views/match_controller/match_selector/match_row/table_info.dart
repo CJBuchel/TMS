@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/utils/color_modifiers.dart';
 
 class TableItem extends StatelessWidget {
@@ -44,12 +46,24 @@ class TableItem extends StatelessWidget {
           children: [
             Text(
               table.table,
-              style: TextStyle(fontSize: 12, color: fontColor),
+              style: TextStyle(fontSize: 12, color: fontColor, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-            Text(
-              table.teamNumber,
-              style: TextStyle(fontSize: 12, color: fontColor),
+            const SizedBox(height: 5),
+            Selector<TeamsProvider, String>(
+              selector: (_, provider) => provider.getTeam(table.teamNumber).name,
+              builder: (context, teamName, _) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Text(
+                    "${table.teamNumber} | $teamName",
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: fontColor,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

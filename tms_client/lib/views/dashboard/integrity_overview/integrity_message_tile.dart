@@ -40,6 +40,7 @@ class IntegrityMessageTile extends StatelessWidget {
               style: const TextStyle(
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -51,6 +52,7 @@ class IntegrityMessageTile extends StatelessWidget {
               style: const TextStyle(
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -62,6 +64,7 @@ class IntegrityMessageTile extends StatelessWidget {
               style: const TextStyle(
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -93,14 +96,19 @@ class IntegrityMessageTile extends StatelessWidget {
                       error: (_) => Colors.red,
                       warning: (_) => Colors.orange,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 10),
-                Text(
-                  messages.first.integrityCode.getMessage(),
-                  style: const TextStyle(fontSize: 16),
+                Expanded(
+                  child: Text(
+                    messages.first.integrityCode.getMessage(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
-                const Spacer(),
                 ValueListenableBuilder(
                   valueListenable: _expansionController,
                   builder: (context, isExpanded, _) {

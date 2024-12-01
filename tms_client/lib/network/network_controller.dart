@@ -99,7 +99,12 @@ class NetworkController {
   }
 
   Future<bool> _websocketConnect() async {
-    return await _websocketController.connect(TmsLocalStorageProvider().wsConnectionString);
+    try {
+      return await _websocketController.connect(TmsLocalStorageProvider().wsConnectionString);
+    } catch (e) {
+      TmsLogger().e("Error connecting to websocket: $e");
+      return false;
+    }
   }
 
   Future<void> init() async {
@@ -113,21 +118,36 @@ class NetworkController {
   }
 
   Future<bool> connect() async {
-    if (await _heartbeat()) {
-      if (await _httpController.connect()) {
-        if (await _websocketConnect()) {
-          await _dbController.connect();
-          return true;
+    // make sure we are disconnected first
+    try {
+      await disconnect();
+    } catch (e) {
+      TmsLogger().e("Error disconnecting: $e");
+    }
+
+    try {
+      if (await _heartbeat()) {
+        if (await _httpController.connect()) {
+          if (await _websocketConnect()) {
+            await _dbController.connect();
+            return true;
+          }
         }
       }
+    } catch (e) {
+      TmsLogger().e("Error connecting: $e");
     }
     return false;
   }
 
   Future<void> disconnect() async {
-    await _dbController.disconnect();
-    await _httpController.disconnect();
-    await _websocketController.disconnect();
+    try {
+      await _dbController.disconnect();
+      await _httpController.disconnect();
+      await _websocketController.disconnect();
+    } catch (e) {
+      TmsLogger().e("Error disconnecting: $e");
+    }
   }
 
   // http

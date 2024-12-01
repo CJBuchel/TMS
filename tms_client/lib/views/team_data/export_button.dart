@@ -15,7 +15,16 @@ class ExportButton extends StatelessWidget {
 
   void _onConfirmExport() {
     // create csv data
-    String csvContent = data.map((row) => row.join(",")).join("\n");
+    String csvContent = data.map((row) {
+      return row.map((field) {
+        if (field.contains(',') || field.contains('\n') || field.contains('"')) {
+          field = field.replaceAll('"', '""');
+          return '"$field"';
+        }
+        return field;
+      }).join(",");
+    }).join("\n");
+
     Uint8List csvBytes = Uint8List.fromList(csvContent.codeUnits);
 
     FileSaver.instance.saveFile(

@@ -113,6 +113,8 @@ class NetworkController {
   }
 
   Future<bool> connect() async {
+    // make sure we are disconnected first
+    await disconnect();
     if (await _heartbeat()) {
       if (await _httpController.connect()) {
         if (await _websocketConnect()) {

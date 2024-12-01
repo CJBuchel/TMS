@@ -44,7 +44,12 @@ class DbController {
       TmsLocalStorageProvider().authRoles.map((e) => MapEntry(e.roleId, e.password)),
     );
 
-    await EchoTreeClient().connect(TmsLocalStorageProvider().serverAddress, roles: roles);
+    try {
+      await EchoTreeClient().connect(TmsLocalStorageProvider().serverAddress, roles: roles);
+    } catch (e) {
+      TmsLogger().e("Error connecting to EchoTree DB: $e");
+    }
+
     var state = _stateParser();
     TmsLogger().i("State: $state");
   }

@@ -6,6 +6,7 @@ import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/floating_score.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_footer/referee_scoring_footer.dart';
+import 'package:tms/views/referee_scoring/referee_scoring_header/floating_timer.dart';
 import 'package:tms/views/referee_scoring/referee_scoring_header/referee_scoring_header.dart';
 import 'package:tms/widgets/game_scoring/game_scoring_widget/game_scoring_widget.dart';
 import 'package:tms/widgets/game_scoring/with_next_game_scoring.dart';
@@ -66,7 +67,11 @@ class RefereeScoring extends StatelessWidget {
               ],
             ),
           ),
-          // floating schedule timer
+          // floating timer
+          FloatingTimer(
+            top: headerHeight + 10,
+            right: 10,
+          ),
           // floating score
           Selector<GameScoringProvider, int>(
             selector: (context, gs) => gs.score,

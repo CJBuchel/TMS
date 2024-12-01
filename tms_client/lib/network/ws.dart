@@ -57,6 +57,7 @@ class WebsocketController {
       });
     } catch (e) {
       _connectivity.state = NetworkConnectionState.disconnected;
+      TmsLogger().e("Error connecting to TMS server websocket: $e");
       return false;
     }
     return true;

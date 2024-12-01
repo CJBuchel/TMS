@@ -19,15 +19,17 @@ class MatchesInfo extends StatelessWidget {
             ({
               List<GameMatch> nextMatches,
               List<GameMatch> loadedMatches,
+              bool isReadyOrRunning,
             })>(
           selector: (context, gmProvider, gmsProvider) {
             return (
-              nextMatches: gmProvider.matchesByTime,
+              nextMatches: gmProvider.matchesByTime.where((m) => !m.completed).toList(),
               loadedMatches: gmsProvider.getLoadedMatches(gmProvider.matches),
+              isReadyOrRunning: gmsProvider.isMatchesReady || gmsProvider.isMatchesRunning,
             );
           },
           builder: (context, data, _) {
-            if (data.loadedMatches.isNotEmpty) {
+            if (data.loadedMatches.isNotEmpty && data.isReadyOrRunning) {
               return LoadedMatchTimer(loadedMatches: data.loadedMatches);
             } else if (show) {
               return MatchesSchedule(matches: data.nextMatches);

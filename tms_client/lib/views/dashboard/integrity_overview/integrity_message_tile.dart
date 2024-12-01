@@ -100,14 +100,15 @@ class IntegrityMessageTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Text(
-                  messages.first.integrityCode.getMessage(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    overflow: TextOverflow.ellipsis,
+                Expanded(
+                  child: Text(
+                    messages.first.integrityCode.getMessage(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
-                const Spacer(),
                 ValueListenableBuilder(
                   valueListenable: _expansionController,
                   builder: (context, isExpanded, _) {

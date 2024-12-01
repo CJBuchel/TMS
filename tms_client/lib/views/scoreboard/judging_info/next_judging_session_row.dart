@@ -58,7 +58,8 @@ class NextJudgingSessionRow extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              nextSession.startTime.toString(),
+              "#${nextSession.sessionNumber} | ${nextSession.startTime.toString()}",
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

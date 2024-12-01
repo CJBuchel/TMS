@@ -64,7 +64,7 @@ class _JudgingInfoState extends State<JudgingSchedule> {
     super.dispose();
   }
 
-  Widget _headerRow(BuildContext context) {
+  Widget _headerRow(BuildContext context, List<JudgingSession> futureJudgingSessions) {
     Color? evenDarkBackground = const Color(0xFF1B6A92);
     Color? oddDarkBackground = const Color(0xFF27A07A);
 
@@ -73,6 +73,8 @@ class _JudgingInfoState extends State<JudgingSchedule> {
 
     Color? evenBackground = Theme.of(context).brightness == Brightness.light ? evenLightBackground : evenDarkBackground;
     Color? oddBackground = Theme.of(context).brightness == Brightness.light ? oddLightBackground : oddDarkBackground;
+
+    JudgingSession? nextSession = futureJudgingSessions.firstOrNull;
 
     return Container(
       height: 40,
@@ -94,18 +96,19 @@ class _JudgingInfoState extends State<JudgingSchedule> {
             flex: 1,
             child: Container(
               color: evenBackground,
-              child: const Center(
+              child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Next: ",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      "Next: #${nextSession?.sessionNumber} (",
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    JudgingScheduleTimer(
+                    const JudgingScheduleTimer(
                       positiveStyle: TextStyle(fontWeight: FontWeight.bold),
-                      negativeStyle: TextStyle(fontWeight: FontWeight.bold),
+                      negativeStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
                     ),
+                    const Text(")"),
                   ],
                 ),
               ),
@@ -116,8 +119,7 @@ class _JudgingInfoState extends State<JudgingSchedule> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _scheduleList(BuildContext context) {
     Color? evenLightBackground = Theme.of(context).scaffoldBackgroundColor;
     Color? oddLightBackground = Theme.of(context).cardColor;
 
@@ -135,7 +137,7 @@ class _JudgingInfoState extends State<JudgingSchedule> {
             height: 160, // 3*40, then + 40 for header
             child: Column(
               children: [
-                _headerRow(context),
+                _headerRow(context, _futureJudgingSessions),
                 // generate rows for each match
                 ...List<Widget>.generate(_futureJudgingSessions.length, (index) {
                   return Container(
@@ -155,5 +157,14 @@ class _JudgingInfoState extends State<JudgingSchedule> {
         }
       },
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_futureJudgingSessions.isEmpty) {
+      return const SizedBox.shrink();
+    } else {
+      return _scheduleList(context);
+    }
   }
 }

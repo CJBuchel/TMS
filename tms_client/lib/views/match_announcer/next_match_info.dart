@@ -75,6 +75,7 @@ class NextMatchInfo extends StatelessWidget {
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 18,
+            overflow: TextOverflow.ellipsis,
             // color: Colors.black,
           ),
         ),

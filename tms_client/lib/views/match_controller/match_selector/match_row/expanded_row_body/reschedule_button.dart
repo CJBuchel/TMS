@@ -4,8 +4,10 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
+import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
+import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:collection/collection.dart';
 import 'package:tms/widgets/dialogs/dialog_style.dart';
@@ -22,24 +24,27 @@ class RescheduleButton extends StatelessWidget {
   final ValueNotifier<String?> _selectedTable = ValueNotifier(null);
 
   Widget _buildDialogMessage() {
-    return Selector2<GameMatchProvider, GameTableProvider, ({List<GameMatch> matches, List<String> tables})>(
-      selector: (context, matchProvider, tableProvider) {
+    return Selector3<GameMatchProvider, GameTableProvider, TeamsProvider,
+        ({List<GameMatch> matches, List<String> tables, List<Team> teams})>(
+      selector: (context, matchProvider, tableProvider, teamsProvider) {
         // get matches which are not completed
         List<GameMatch> matches = matchProvider.matches.where((m) => !m.completed).toList();
         List<String> tables = tableProvider.tables.map((table) => table.tableName).toList();
-        return (matches: matches, tables: tables);
+        return (matches: matches, tables: tables, teams: teamsProvider.teams);
       },
       builder: (context, data, _) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // dropdown for teams
-            DropdownSearch<String>(
+            DropdownSearch<Team?>(
               popupProps: const PopupProps.menu(
                 showSearchBox: true,
               ),
-              items: match.gameMatchTables.map((table) => table.teamNumber).toList(),
-              itemAsString: (team) => "${team}",
+              items: match.gameMatchTables
+                  .map((table) => data.teams.firstWhereOrNull((t) => t.teamNumber == table.teamNumber))
+                  .toList(),
+              itemAsString: (team) => "${team?.teamNumber} | ${team?.name}",
               dropdownDecoratorProps: const DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -48,7 +53,7 @@ class RescheduleButton extends StatelessWidget {
                   hintText: "Select Team",
                 ),
               ),
-              onChanged: (value) => _selectedTeamNumber.value = value,
+              onChanged: (value) => _selectedTeamNumber.value = value?.teamNumber,
             ),
 
             // down arrow

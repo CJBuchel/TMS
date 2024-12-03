@@ -59,7 +59,7 @@ class NextMatchRow extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              nextMatch.startTime.toString(),
+              "#${nextMatch.matchNumber} | ${nextMatch.startTime.toString()}",
             ),
           ),
         ),

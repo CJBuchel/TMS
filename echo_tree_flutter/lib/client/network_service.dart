@@ -222,9 +222,13 @@ class EchoTreeNetworkService extends EchoTreeSubscriptionManager {
   }
 
   Future<void> disconnect() async {
+    try {
+      // https://datatracker.ietf.org/doc/html/rfc6455#section-7.4 (i'm being proper XD )
+      _channel?.sink.close(1000);
+    } catch (e) {
+      EchoTreeLogger().e("Error disconnecting from server: $e");
+    }
     _state.value = EchoTreeConnection.disconnected;
-    // https://datatracker.ietf.org/doc/html/rfc6455#section-7.4 (i'm being proper XD )
-    _channel?.sink.close(1000);
   }
 
   void sendMessage(EchoTreeClientSocketMessage message) {

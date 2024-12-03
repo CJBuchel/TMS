@@ -44,13 +44,22 @@ class DbController {
       TmsLocalStorageProvider().authRoles.map((e) => MapEntry(e.roleId, e.password)),
     );
 
-    await EchoTreeClient().connect(TmsLocalStorageProvider().serverAddress, roles: roles);
+    try {
+      await EchoTreeClient().connect(TmsLocalStorageProvider().serverAddress, roles: roles);
+    } catch (e) {
+      TmsLogger().e("Error connecting to EchoTree DB: $e");
+    }
+
     var state = _stateParser();
     TmsLogger().i("State: $state");
   }
 
   Future<void> disconnect() async {
-    TmsLogger().d("Disconnecting from EchoTree DB...");
-    await EchoTreeClient().disconnect();
+    try {
+      TmsLogger().d("Disconnecting from EchoTree DB...");
+      await EchoTreeClient().disconnect();
+    } catch (e) {
+      TmsLogger().e("Error disconnecting from EchoTree DB: $e");
+    }
   }
 }

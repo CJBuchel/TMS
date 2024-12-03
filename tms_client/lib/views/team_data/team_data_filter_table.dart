@@ -65,7 +65,7 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
       "teamName",
       () => FilterColumn(
         label: "Team Name",
-        show: true,
+        show: false,
         flex: 3,
         onFilterChanged: (value) => _onFilterChanged("teamName", value),
       ),
@@ -81,7 +81,9 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
           onFilterChanged: (value) => _onFilterChanged("r${i}_score", value),
         ),
       );
+    }
 
+    for (var i = 1; i <= widget.maxNumberRounds; i++) {
       _columns.putIfAbsent(
         "r${i}_gp",
         () => FilterColumn(
@@ -91,7 +93,9 @@ class _TeamDataFilterTableState extends State<TeamDataFilterTable> {
           onFilterChanged: (value) => _onFilterChanged("r${i}_gp", value),
         ),
       );
+    }
 
+    for (var i = 1; i <= widget.maxNumberRounds; i++) {
       _columns.putIfAbsent(
         "r${i}_comment",
         () => FilterColumn(

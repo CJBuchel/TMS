@@ -31,11 +31,10 @@ class GameTableSignalProvider extends ChangeNotifier with ServerEventSubscribeNo
         // handle match state event
         try {
           TmsServerMatchStateEvent matchStateEvent = TmsServerMatchStateEvent.fromJsonString(json: event.message!);
-          bool load = matchStateEvent.state == TmsServerMatchState.load;
           bool unload = matchStateEvent.state == TmsServerMatchState.unload;
 
           // clear table signals on load or unload
-          if (load || unload) {
+          if (unload) {
             _tableSignals.clear();
             notifyListeners();
           }

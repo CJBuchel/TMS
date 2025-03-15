@@ -1,0 +1,94 @@
+# Project information
+site_name: TMS Documentation
+site_url: https://cjbuchel.github.io/TMS/
+site_author: Connor (CJ) Buchel
+
+# Repository information
+repo_name: CJBuchel/TMS
+repo_url: https://github.com/CJBuchel/TMS/
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Server Install: getting-started/server-install.md
+  # - Features:
+  #     - Overview: features/overview.md
+  #     - Commands: features/commands.md
+  #     - Permissions: features/permissions.md
+  #     - Settings: features/settings.md
+  #     - Modules: features/modules.md
+  # - Support:
+  #     - FAQ: support/faq.md
+  #     - Troubleshooting: support/troubleshooting.md
+  #     - Bug Reports: support/bug-reports.md
+  #     - Feature Requests: support/feature-requests.md
+  # - Contribute:
+  #     - Contributing: contribute/contributing.md
+  #     - Code of Conduct: contribute/code-of-conduct.md
+  #     - License: contribute/license.md
+
+# Site configuration
+theme:
+  name: material
+  font:
+    text: "Ubuntu"
+    code: "Ubuntu Mono"
+  logo: assets/TMS_LOGO_WHITE.svg
+  favicon: assets/T_LOGO_WHITE.svg
+  features:
+    - navigation.footer
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - content.action.edit
+    - content.action.view
+  language: en
+  palette:
+    # dark theme
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+      primary: teal
+      accent: indigo
+
+    # light theme
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+      primary: teal
+      accent: indigo
+
+# Extra configuration
+extra:
+  social:
+    - icon: material/github
+      link: https://github.com/CJBuchel/TMS
+
+# extensions
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true

@@ -38,22 +38,22 @@ This can be used to configure TMS during runtime
 | `--addr` | Modifies the address binding. | 0.0.0.0 |
 | `--port` | Modifies the port in which TMS will run on. | 8080 |
 | `--no-tls` | Switches the server from using `HTTPS` to the insecure `HTTP` for all communications. | false |
-| `--cert` | Specifies the location of the public certificate file used for TLS. | `./cert.pem` |
-| `--key` | Specifies the location of the private key used for TLS. | `./key.rsa` |
+| `--cert` | Specifies the location of the public certificate file used for TLS. | ./cert.pem |
+| `--key` | Specifies the location of the private key used for TLS. | ./key.rsa |
 
 ## Server Directory
 Below lists the directory, files, folders and their purpose
 
 | File/Folder | Description |
 |-------------|-------------|
-| `tms_server(.exe)` | Main executable |
+| `tms_server(.exe)` | Main executable. |
 | `cert.pem` | Public certificate handed out to clients for connecting. |
 | `key.rsa` | Private key used for decrypting messages sent from clients. |
-| `log_config` | Folder containing the runtime log configuration (can be modified) |
-| `logs` | Folder containing the logs from the server |
-| `logs/tms.log` | Logs from the core TMS server |
-| `logs/db.log` | Logs from the database |
-| `logs/mdns.log` | Logs from the mDNS broadcast service |
-| `tms.kvdb` | The key value database using [sled](https://github.com/spacejam/sled) storage, <b>DO NOT MODIFY</b>. |
+| `log_config` | Folder containing the runtime log configuration (can be modified). |
+| `logs` | Folder containing the logs from the server. |
+| `logs/tms.log` | Logs from the core TMS server. |
+| `logs/db.log` | Logs from the database. |
+| `logs/mdns.log` | Logs from the mDNS broadcast service. |
+| `tms.kvdb` | The key value database using [sled](https://github.com/spacejam/sled) storage, **DO NOT MODIFY**. |
 | `backups` | Contains the compressed backups of the server. |
-| `tms_client` | Contains the static web code hosted by the server |
+| `tms_client` | Contains the static web code hosted by the server. |

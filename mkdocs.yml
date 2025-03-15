@@ -12,6 +12,7 @@ nav:
   - Home: index.md
   - Getting Started:
       - Server Install: getting-started/server-install.md
+      - Setup: getting-started/setup.md
   # - Features:
   #     - Overview: features/overview.md
   #     - Commands: features/commands.md
@@ -78,6 +79,8 @@ extra:
 markdown_extensions:
   - attr_list
   - admonition
+  - md_in_html
+  - pymdownx.blocks.caption
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

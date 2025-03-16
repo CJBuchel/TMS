@@ -2,10 +2,8 @@
 
 ## What is TMS?
 
-The Tournament Management System (TMS) is an [open source] digital alternative designed to streamline scoring and management of teams in [FLL].
+The Tournament Management System (TMS) is an [open source](https://opensource.com/resources/what-open-source) digital alternative designed to streamline scoring and management of teams in [FLL](https://www.firstlegoleague.org/).
 Operating on a locally hosted server to score, store and ignore.
-[open source]: https://opensource.com/resources/what-open-source
-[FLL]: https://www.firstlegoleague.org/
 
 Initially focused on robot game scoring, TMS has evolved to support more than just the odd score input and ranking board.
 Providing an ongoing list of features. Including:

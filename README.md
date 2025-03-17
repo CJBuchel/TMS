@@ -24,4 +24,4 @@ With ongoing development, TMS aims to introduce further enhancements, reducing t
 
 ## Documentation
 
-- view the [documentation](https://cjbuchel.github.io/TMS/) for detailed information.
+- View the [documentation](https://cjbuchel.github.io/TMS/) for detailed information.

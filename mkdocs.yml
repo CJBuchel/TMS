@@ -9,24 +9,25 @@ repo_url: https://github.com/CJBuchel/TMS/
 
 # Navigation
 nav:
-  - Home: index.md
+  - Home:
+      - Overview: index.md
+      - TMS Planning: tms-planning/index.md
+      - Example Setups:
+          - Minimal Setup: tms-planning/minimal-setup.md
+          - Extended Setup: tms-planning/extended-setup.md
+          - Full Setup: tms-planning/full-setup.md
   - Getting Started:
       - Server Install: getting-started/server-install.md
-  # - Features:
-  #     - Overview: features/overview.md
-  #     - Commands: features/commands.md
-  #     - Permissions: features/permissions.md
-  #     - Settings: features/settings.md
-  #     - Modules: features/modules.md
-  # - Support:
-  #     - FAQ: support/faq.md
-  #     - Troubleshooting: support/troubleshooting.md
-  #     - Bug Reports: support/bug-reports.md
-  #     - Feature Requests: support/feature-requests.md
-  # - Contribute:
-  #     - Contributing: contribute/contributing.md
-  #     - Code of Conduct: contribute/code-of-conduct.md
-  #     - License: contribute/license.md
+      - Setup: getting-started/setup.md
+      - User Documentation:
+          - TMS Admin:
+              - Overview: getting-started/user-docs/tms-admin/tms-admin-overview.md
+  - Features:
+      - Integrity Messages: features/integrity-messages.md
+  - Support:
+      - Bug Reports: support/bug-reports.md
+      - Change Requests: support/change-requests.md
+      - Q&A: https://github.com/CJBuchel/TMS/discussions
 
 # Site configuration
 theme:
@@ -40,6 +41,8 @@ theme:
     - navigation.footer
     - navigation.tabs
     - navigation.sections
+    - navigation.indexes
+    - navigation.expand
     - toc.integrate
     - navigation.top
     - search.suggest
@@ -78,6 +81,8 @@ extra:
 markdown_extensions:
   - attr_list
   - admonition
+  - md_in_html
+  - pymdownx.blocks.caption
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -92,3 +97,6 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg

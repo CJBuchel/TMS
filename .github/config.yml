@@ -12,4 +12,10 @@ newPRWelcomeComment: >
 firstPRMergeComment: >
   Hi! Congrats on merging your first pull request! :tada:
 
-# It is recommended to include as many gifs and emojis as possible!
+blank_issues_enabled: true
+contact_links:
+  - name: Ask a question
+    url: https://github.com/CJBuchel/TMS/discussions
+    about: >
+      Have a question or need help? Connect on the
+      discussion board

@@ -42,7 +42,7 @@ This can be used to configure TMS during runtime
 | `--key` | Specifies the location of the private key used for TLS. | ./key.rsa |
 
 ## Server Directory
-Below lists the directory, files, folders and their purpose
+Below lists the files, folders and their purpose in the directory.
 
 | File/Folder | Description |
 |-------------|-------------|

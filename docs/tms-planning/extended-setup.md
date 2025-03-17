@@ -1,8 +1,9 @@
 # Extended Setup
-If you are using TMS for the Robot Games and have more volunteers and devices available, you can expand the setup to include more features and reduce strain on volunteers by spreading the load.
+If you are using TMS for the Robot Games and have more volunteers and devices available for use. You can expand the setup to include more features and reduce strain on volunteers by spreading the load.
 What many venues will do is also provide displays in the Game Area which can be used for either displaying the schedule, scores or the timer.
-You will need:
+Below outlines an example setup with a reasonable amount of devices:
 
+## Required Devices
 - **Server**: A laptop or desktop to run the TMS software. And can be used to input/modify scores, and manage the schedule.
 - **Speaker**: A speaker system to provide game sounds for teams and audiences. This can be connected to the server device or a dedicated separate device displaying the timer.
 - **Network**: A wireless router to connect the server and scoring devices. Or a common venue network.

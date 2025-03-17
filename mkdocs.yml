@@ -19,21 +19,15 @@ nav:
   - Getting Started:
       - Server Install: getting-started/server-install.md
       - Setup: getting-started/setup.md
-  - User Documentation:
-      - Users & Roles:
-          - user-docs/index.md
+      - User Documentation:
           - TMS Admin:
-              - Overview: user-docs/tms-admin/tms-admin-overview.md
-              - Integrity System: user-docs/tms-admin/integrity-system.md
-  # - Support:
-  #     - FAQ: support/faq.md
-  #     - Troubleshooting: support/troubleshooting.md
-  #     - Bug Reports: support/bug-reports.md
-  #     - Feature Requests: support/feature-requests.md
-  # - Contribute:
-  #     - Contributing: contribute/contributing.md
-  #     - Code of Conduct: contribute/code-of-conduct.md
-  #     - License: contribute/license.md
+              - Overview: getting-started/user-docs/tms-admin/tms-admin-overview.md
+  - Features:
+      - Integrity Messages: features/integrity-messages.md
+  - Support:
+      - Bug Reports: support/bug-reports.md
+      - Change Requests: support/change-requests.md
+      - Q&A: https://github.com/CJBuchel/TMS/discussions
 
 # Site configuration
 theme:
@@ -103,3 +97,6 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg

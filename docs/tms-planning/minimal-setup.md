@@ -1,7 +1,8 @@
 # Minimal Setup
-If you are only using TMS for the Robot Games with no intention of displaying scores or schedules, then the setup is minimal. You will need:
+If you are only using TMS for the Robot Games with no intention of displaying scores or schedules, then the setup is minimal. Below outlines an example approach with a small number of devices and volunteers:
 
-- **Server**: A laptop or desktop to run the TMS software. And can be used to input/modify scores, and run the match timer.
+## Required Devices
+- **Server**: A laptop or desktop to run the TMS software. Which can also be used to input/modify scores, and run the match timer.
 - **Network**: A wireless router to connect the server and scoring devices. Or a common venue network.
 - **Scoring Devices**: At least one device to input scores. This can be a laptop, tablet or similar. The recommendation is to use tablets with the web interface or iPads with the TMS App.
 

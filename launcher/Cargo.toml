@@ -3,4 +3,18 @@ name = "launcher"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "tms_server"
+path = "src/bin/launcher.rs"
+
 [dependencies]
+eframe = "^0.31"
+egui = "^0.31"
+egui_extras = { version = "^0.31", features = ["all_loaders"] }
+image = { version = "0.25.5", features = ["png", "jpeg", "gif"] }
+local-ip-address = "0.6.3"
+qrcodegen = "1.8.0"
+tokio = { version = "^1.44", features = ["full"] }
+
+[dependencies.server]
+path = "../server"

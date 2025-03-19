@@ -1,89 +1,10 @@
+#![windows_subsystem = "windows"]
+
 use std::sync::Arc;
 
-use anyhow::Result;
 use launcher::{gui, logging, GuiMessage, ServerState};
 use parking_lot::Mutex;
-use server::TmsConfig;
-use tokio::sync::mpsc;
-
-async fn start_gui(config: TmsConfig) -> Result<()> {
-  // Setup channel for GUI messages
-  let (tx, mut rx) = mpsc::channel::<GuiMessage>(32);
-
-  // Setup shared server state
-  let server_state = Arc::new(Mutex::new(ServerState::Stopped));
-
-  // Start gui thread with channels
-  let gui_server_state = server_state.clone();
-  let gui_handle = tokio::spawn(async move {
-    // LauncherGui::new(tx, gui_server_state, config).run_gui().await;
-    gui::run_gui(tx, gui_server_state, config)
-  });
-
-  // The server instance (None initially)
-  let mut server_instance: Option<server::TmsServer> = None;
-
-  // Main thread loop
-  loop {
-    if let Some(server) = &mut server_instance {
-      // Server is running - get runtime messages
-      tokio::select! {
-        Some(msg) = rx.recv() => match msg {
-          GuiMessage::StopServer => {
-            server_instance = None;
-            *server_state.lock() = ServerState::Stopped;
-          },
-
-          GuiMessage::Exit => break, // Exit the main thread loop
-
-          // Ignore start messages while server is already running
-          _ => {}
-        },
-
-        result = server.run() => {
-          // Server has stopped on it's own
-          match result {
-            Ok(_) => {
-              log::info!("Server stopped");
-              *server_state.lock() = ServerState::Stopped;
-            },
-            Err(e) => {
-              log::error!("Server stopped with error: {}", e);
-              *server_state.lock() = ServerState::Error(e.to_string());
-            },
-          }
-
-          // Clear server instance
-          server_instance = None;
-        },
-      }
-    } else {
-      // Server is not running - wait for messages
-      if let Some(msg) = rx.recv().await {
-        match msg {
-          GuiMessage::StartServer(config) => {
-            log::info!("Starting server");
-            // Start the server
-            let server = server::TmsServer::new(Some(config));
-            server_instance = Some(server);
-            *server_state.lock() = ServerState::Running;
-          }
-
-          GuiMessage::Exit => break, // Exit the main thread loop
-
-          // Ignore stop messages while server is not running
-          _ => {}
-        }
-      }
-    }
-  }
-
-  // Wait for GUI thread to finish
-  match gui_handle.await {
-    Ok(_) => Ok(()),
-    Err(e) => Err(e.into()),
-  }
-}
+use tokio::sync::{mpsc, oneshot};
 
 // tokio main
 #[tokio::main]
@@ -105,9 +26,110 @@ async fn main() {
   } else {
     // Start with GUI
     log::info!("Starting TMS");
-    match start_gui(config).await {
-      Ok(_) => log::info!("TMS exited successfully"),
-      Err(e) => log::error!("TMS exited with error: {}", e),
+
+    // Create channel for GUI messages
+    let (gui_tx, gui_rx) = mpsc::channel::<GuiMessage>(32);
+    let (done_tx, _) = oneshot::channel();
+
+    // Create shared server state
+    let shared_state = Arc::new(Mutex::new(ServerState::Stopped));
+
+    // Clone for server thread
+    let server_state = shared_state.clone();
+
+    // Start server management thread
+    let server_handle = tokio::task::spawn_blocking(move || {
+      let rt = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .expect("Failed to create Tokio runtime for server thread");
+
+      rt.block_on(async move {
+        run_server_management(gui_rx, server_state).await;
+        // Signal that the server management thread has exited
+        let _ = done_tx.send(());
+      });
+    });
+
+    // Start GUI
+    if let Err(e) = gui::run_gui(gui_tx, shared_state, config) {
+      log::error!("GUI error: {}", e);
+    }
+
+    // Wait for server management thread to exit
+    log::info!("GUI closed, waiting for server management to finish...");
+
+    // Wait for server management to complete (with timeout)
+    tokio::select! {
+      _ = server_handle => (),
+      _ = tokio::time::sleep(tokio::time::Duration::from_secs(5)) => (),
+    }
+
+    log::info!("Application exiting");
+  }
+}
+
+async fn run_server_management(mut rx: mpsc::Receiver<GuiMessage>, server_state: Arc<Mutex<ServerState>>) {
+  // The server instance (None initially)
+  let mut server_instance: Option<server::TmsServer> = None;
+
+  // Server management loop
+  loop {
+    if let Some(server) = &mut server_instance {
+      // Server is running - select between GUI messages and server events
+      tokio::select! {
+        Some(msg) = rx.recv() => match msg {
+
+          // Stop server
+          GuiMessage::StopServer => {
+            log::warn!("Stopping server");
+            server_instance = None;
+            *server_state.lock() = ServerState::Stopped;
+          },
+
+          // Exit
+          GuiMessage::Exit => break,
+          _ => {}
+        },
+
+        result = server.run() => {
+          match result {
+            Ok(_) => {
+              log::info!("Server exited successfully");
+              *server_state.lock() = ServerState::Stopped;
+            },
+            Err(e) => {
+              log::error!("Server exited with error: {}", e);
+              *server_state.lock() = ServerState::Error(e.to_string());
+            }
+          }
+
+          server_instance = None;
+        }
+      }
+    } else {
+      // Server is stopped - wait for messages
+      if let Some(msg) = rx.recv().await {
+        log::debug!("Received message: {:?}", msg);
+        match msg {
+          // Start server
+          GuiMessage::StartServer(config) => {
+            log::info!("Starting server");
+            let server = Some(server::TmsServer::new(Some(config)));
+            server_instance = server;
+            *server_state.lock() = ServerState::Running;
+          }
+
+          // Exit
+          GuiMessage::Exit => break,
+          _ => {}
+        }
+      } else {
+        // Channel closed, exit loop
+        break;
+      }
     }
   }
+
+  log::info!("Server management thread exiting");
 }

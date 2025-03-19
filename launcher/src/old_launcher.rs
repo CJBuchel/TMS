@@ -93,6 +93,7 @@ impl eframe::App for LauncherApp {
       ui.horizontal(|ui| {
         ui.label("Port:");
         let mut port_text = self.port.to_string();
+
         let response = ui.add(egui::TextEdit::singleline(&mut port_text).desired_width(150.0));
         if response.changed() {
           if port_text.is_empty() {

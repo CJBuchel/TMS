@@ -1,6 +1,6 @@
 # Bug Reports
 
-TMS is maintained by unpaid gremlins, and often when not fed enough coffee, bugs can slip through the cracks. If you think you have discovered a bug, you can help by submitting an issue to our 
+TMS is maintained by unpaid gremlins, and often when not given enough coffee, bugs can slip through the cracks. If you think you have discovered a bug, you can help by submitting an issue to our 
 issue tracker.
 
 ## Before you submit

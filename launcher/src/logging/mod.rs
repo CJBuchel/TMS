@@ -1,6 +1,6 @@
 use std::env;
 
-use anyhow::Result;
+use anyhow::{Ok, Result};
 use log::LevelFilter;
 use log4rs::{
   append::{
@@ -10,10 +10,18 @@ use log4rs::{
       RollingFileAppender,
     },
   },
-  config::{Appender, Logger, Root},
+  config::{Appender, Root},
   encode::pattern::PatternEncoder,
   Config,
 };
+
+// d - Date and time
+// l - Log level
+// M - Module path
+// L - Line number
+// m - Message
+// n - New line
+// h - Highlight log level
 
 fn create_config() -> Result<Config> {
   // log level filter
@@ -22,7 +30,7 @@ fn create_config() -> Result<Config> {
   #[cfg(not(debug_assertions))]
   let log_level = LevelFilter::Info;
 
-  let stdout = ConsoleAppender::builder()
+  let stdout_appender = ConsoleAppender::builder()
     .encoder(Box::new(PatternEncoder::new(
       "[{d(%Y-%m-%d %H:%M:%S)} {h({l})}] {h({m})}{n}",
     )))
@@ -34,29 +42,27 @@ fn create_config() -> Result<Config> {
   let policy = CompoundPolicy::new(Box::new(size_trigger), Box::new(roller));
 
   // logging to file
-  let tms_server = RollingFileAppender::builder()
+  let rolling_appender = RollingFileAppender::builder()
     .encoder(Box::new(PatternEncoder::new(
       "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {h({m})}{n}",
     )))
     .build("logs/tms.log", Box::new(policy))?;
 
   let config = Config::builder()
-    .appender(Appender::builder().build("stdout", Box::new(stdout)))
-    .appender(Appender::builder().build("tms_server", Box::new(tms_server)))
-    .logger(
-      Logger::builder()
-        .appender("tms_server")
-        .additive(false)
-        .build("tms_server", log_level),
-    )
-    .build(Root::builder().appender("stdout").build(log_level))?;
+    .appender(Appender::builder().build("stdout_appender", Box::new(stdout_appender)))
+    .appender(Appender::builder().build("rolling_appender", Box::new(rolling_appender)))
+    .build(
+      Root::builder()
+        .appender("stdout_appender")
+        .appender("rolling_appender")
+        .build(log_level),
+    )?;
 
   Ok(config)
 }
 
-/// Initialize logger with log4rs
-pub fn init_logger() -> Result<()> {
-  // Set default log level based on build configuration
+pub fn init_logging() -> Result<()> {
+  // Initialize log env
   #[cfg(debug_assertions)]
   env::set_var("RUST_LOG", "debug");
   #[cfg(not(debug_assertions))]

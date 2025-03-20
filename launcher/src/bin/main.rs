@@ -20,8 +20,8 @@ async fn main() {
     log::info!("Starting TMS (No GUI)");
     let server = server::TmsServer::new(Some(config));
     match server.run().await {
-      Ok(_) => log::info!("TMS exited successfully"),
-      Err(e) => log::error!("TMS exited with error: {}", e),
+      Ok(_) => log::info!("Server exited gracefully"),
+      Err(e) => log::error!("Server exited with error: {}", e),
     }
   } else {
     // Start with GUI
@@ -38,11 +38,11 @@ async fn main() {
     let server_state = shared_state.clone();
 
     // Start server management thread
-    let server_handle = tokio::task::spawn_blocking(move || {
+    let mut server_handle = tokio::task::spawn_blocking(move || {
       let rt = tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
-        .expect("Failed to create Tokio runtime for server thread");
+        .expect("Failed to create Tokio runtime for management thread");
 
       rt.block_on(async move {
         run_server_management(gui_rx, server_state).await;
@@ -57,15 +57,23 @@ async fn main() {
     }
 
     // Wait for server management thread to exit
-    log::info!("GUI closed, waiting for server management to finish...");
+    log::info!("GUI closed, waiting for server to exit...");
 
-    // Wait for server management to complete (with timeout)
-    tokio::select! {
-      _ = server_handle => (),
-      _ = tokio::time::sleep(tokio::time::Duration::from_secs(5)) => (),
+    let timeout_result = tokio::time::timeout(std::time::Duration::from_secs(5), &mut server_handle).await;
+
+    match timeout_result {
+      Ok(result) => {
+        if let Err(e) = result {
+          log::error!("Management thread exited with error: {}", e);
+        } else {
+          log::info!("Management thread exited gracefully");
+        }
+      }
+      Err(_) => {
+        log::error!("Management thread did not exit in time, terminating...");
+        server_handle.abort();
+      }
     }
-
-    log::info!("Application exiting");
   }
 }
 
@@ -95,7 +103,7 @@ async fn run_server_management(mut rx: mpsc::Receiver<GuiMessage>, server_state:
         result = server.run() => {
           match result {
             Ok(_) => {
-              log::info!("Server exited successfully");
+              log::info!("Server exited gracefully");
               *server_state.lock() = ServerState::Stopped;
             },
             Err(e) => {
@@ -130,6 +138,4 @@ async fn run_server_management(mut rx: mpsc::Receiver<GuiMessage>, server_state:
       }
     }
   }
-
-  log::info!("Server management thread exiting");
 }

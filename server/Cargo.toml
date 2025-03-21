@@ -5,6 +5,9 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.97"
+async-graphql = "7.0.16"
+async-graphql-axum = "7.0.16"
+axum = "0.8.1"
 clap = { version = "4.5.32", features = ["derive"] }
 log = "0.4.26"
 tokio = "1.44.1"

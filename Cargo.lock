@@ -360,6 +360,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "async-compression"
+version = "0.4.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0cf008e5e1a9e9e22a7d3c9a4992e21a350290069e36d8fb72304ed17e8f2d2"
+dependencies = [
+ "flate2",
+ "futures-core",
+ "memchr",
+ "pin-project-lite",
+ "tokio",
+]
+
+[[package]]
 name = "async-executor"
 version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1271,6 +1284,7 @@ name = "database"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-compression",
  "dashmap",
  "log",
  "once_cell",

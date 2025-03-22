@@ -1,3 +1,5 @@
+mod backups;
+mod collection;
 mod db;
 mod record;
 mod table;

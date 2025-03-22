@@ -1,4 +1,4 @@
-use anyhow::{Ok, Result};
+use anyhow::Result;
 use dashmap::DashMap;
 use dashmap::mapref::one::Ref;
 
@@ -20,7 +20,13 @@ impl Database {
     })
   }
 
-  pub fn get_or_create_table<R: Record + 'static>(&self) -> Result<Ref<'_, String, Table>> {
+  /// Get the inner sled database
+  pub fn get_inner_db(&self) -> &sled::Db {
+    &self.db
+  }
+
+  /// Get or create a table for a record type
+  pub async fn get_table<R: Record + 'static>(&self) -> Result<Ref<'_, String, Table>> {
     let table_name = R::table_name();
 
     if !self.tables.contains_key(table_name) {
@@ -37,7 +43,7 @@ impl Database {
   }
 
   /// Clear all the tables in the database
-  pub fn clear_tables(&self) -> Result<()> {
+  pub async fn clear_tables(&self) -> Result<()> {
     for table in self.tables.iter() {
       table.clear()?;
     }

@@ -1,6 +1,7 @@
 use std::{net::IpAddr, str::FromStr, sync::Arc};
 
 use anyhow::Result;
+use egui::IconData;
 use launcher::Launcher;
 use parking_lot::Mutex;
 use server::TmsConfig;
@@ -22,6 +23,7 @@ impl From<ConfigFields> for TmsConfig {
     TmsConfig {
       no_gui: false,
       addr: IpAddr::from_str(&fields.bind_address).unwrap(),
+      enable_playground: false,
       web_port: fields.port.parse().unwrap(),
       db_path: "tms.db".to_string(),
       cert_path: "cert.pem".to_string(),
@@ -39,6 +41,17 @@ impl From<TmsConfig> for ConfigFields {
   }
 }
 
+fn load_icon_data() -> IconData {
+  let image_data = include_bytes!("../../assets/T_LOGO_WHITE.png");
+  let image = image::load_from_memory(image_data)
+    .expect("Failed to load icon image")
+    .to_rgba8();
+
+  let rgba = image.clone().into_raw();
+  let (width, height) = image.dimensions();
+  IconData { rgba, width, height }
+}
+
 pub fn run_gui(
   message_sender: Sender<GuiMessage>,
   server_state: Arc<Mutex<ServerState>>,
@@ -49,7 +62,8 @@ pub fn run_gui(
     viewport: egui::ViewportBuilder::default()
       .with_inner_size(size)
       .with_min_inner_size(size)
-      .with_max_inner_size(size),
+      .with_max_inner_size(size)
+      .with_icon(load_icon_data()),
     ..Default::default()
   };
 

@@ -25,6 +25,8 @@ impl TmsServer {
     // Initialize the database
     initialize_db(&self.config.db_path).await?;
 
+    // @TODO: Start backup service
+
     // Start web on main thread
     let web = TmsWeb::new(self.config.addr, self.config.port, self.config.api_playground);
     web.run().await

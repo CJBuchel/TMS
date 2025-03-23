@@ -1,5 +1,5 @@
 mod team;
 pub use team::*;
 
-mod ranking;
-pub use ranking::*;
+mod tournament_config;
+pub use tournament_config::*;

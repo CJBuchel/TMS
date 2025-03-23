@@ -4165,6 +4165,7 @@ dependencies = [
  "database",
  "log",
  "once_cell",
+ "serde",
  "tokio",
 ]
 

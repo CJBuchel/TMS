@@ -1,12 +1,18 @@
 use anyhow::Result;
-use serde::{de::DeserializeOwned, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 
 pub trait Record: Default + Clone + Sync + Send + Serialize + DeserializeOwned {
   //
   // Convert the record to bytes
   //
   fn to_bytes(&self) -> Result<Vec<u8>> {
-    let bytes = postcard::to_allocvec(self)?;
+    let bytes = match postcard::to_allocvec(self) {
+      Ok(bytes) => bytes,
+      Err(err) => {
+        log::error!("Failed to serialize record: {:?}", err);
+        return Err(anyhow::anyhow!("Failed to serialize record"));
+      }
+    };
     Ok(bytes)
   }
 
@@ -14,7 +20,13 @@ pub trait Record: Default + Clone + Sync + Send + Serialize + DeserializeOwned {
   // Convert bytes to a record
   //
   fn from_bytes(bytes: &[u8]) -> Result<Self> {
-    let record = postcard::from_bytes(bytes)?;
+    let record = match postcard::from_bytes(bytes) {
+      Ok(record) => record,
+      Err(err) => {
+        log::error!("Failed to deserialize record: {:?}", err);
+        return Err(anyhow::anyhow!("Failed to deserialize record"));
+      }
+    };
     Ok(record)
   }
 

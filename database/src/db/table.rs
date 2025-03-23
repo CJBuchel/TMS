@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use anyhow::{Ok, Result};
+use anyhow::Result;
 
 use crate::{ChangeOperation, TableBroker};
 
@@ -8,7 +8,9 @@ use super::record::Record;
 
 //
 // Table in the database, using two sled trees for data and secondary indexes
+// Table stores handles for sled not the actual data, so it's fine to clone
 //
+#[derive(Debug, Clone)]
 pub struct Table {
   data_tree: sled::Tree,
   index_tree: sled::Tree,
@@ -22,8 +24,18 @@ impl Table {
 
   /// Convert bytes into a HashSet of indexes
   fn __index_from_bytes(data: &Vec<u8>) -> Result<HashSet<String>> {
-    let data = postcard::from_bytes(data)?;
-    Ok(data)
+    if data.is_empty() {
+      return Ok(HashSet::new());
+    } else {
+      let data = match postcard::from_bytes(data) {
+        Ok(data) => data,
+        Err(e) => {
+          log::error!("Failed to deserialize index: {:?}", e);
+          return Err(anyhow::anyhow!("Failed to deserialize index"));
+        }
+      };
+      Ok(data)
+    }
   }
 
   /// Convert a HashSet of indexes into bytes
@@ -120,16 +132,46 @@ impl Table {
 
     // insert data record
     let record_id = match key {
-      Some(key) => self.__insert_record(&mut data_batch_update, &key, record)?,
-      None => self.__insert_record(&mut data_batch_update, &Self::__generate_key(), record)?,
+      Some(key) => match self.__insert_record(&mut data_batch_update, &key, record) {
+        Ok(record_id) => record_id,
+        Err(e) => {
+          log::error!("Failed to insert record with key: {}", e);
+          return Err(e);
+        }
+      },
+      None => match self.__insert_record(&mut data_batch_update, &Self::__generate_key(), record) {
+        Ok(record_id) => record_id,
+        Err(e) => {
+          log::error!("Failed to insert record with generated key: {:?}", e);
+          return Err(e);
+        }
+      },
     };
 
     // insert secondary indexes for the record
-    self.__insert_indexes(&mut index_batch_update, &record_id, record)?;
+    match self.__insert_indexes(&mut index_batch_update, &record_id, record) {
+      Ok(_) => (),
+      Err(e) => {
+        log::error!("Failed to insert indexes: {:?}", e);
+        return Err(e);
+      }
+    }
 
     // apply the batch updates
-    self.data_tree.apply_batch(data_batch_update)?;
-    self.index_tree.apply_batch(index_batch_update)?;
+    match self.data_tree.apply_batch(data_batch_update) {
+      Ok(_) => (),
+      Err(e) => {
+        log::error!("Failed to apply data batch update: {:?}", e);
+        return Err(anyhow::anyhow!("Failed to apply data batch update"));
+      }
+    }
+    match self.index_tree.apply_batch(index_batch_update) {
+      Ok(_) => (),
+      Err(e) => {
+        log::error!("Failed to apply index batch update: {:?}", e);
+        return Err(anyhow::anyhow!("Failed to apply index batch update"));
+      }
+    }
 
     // publish changes to channel subscribes
     TableBroker::<R>::publish(ChangeOperation::Insert(record_id.clone(), record.clone()));

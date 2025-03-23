@@ -8,20 +8,20 @@ use crate::features::{Team, TeamRepository};
 
 pub static DB: OnceCell<Database> = OnceCell::new();
 
-// async fn db_data_init() -> Result<()> {
-//   log::info!("Initializing DB data");
-//   let t = Team {
-//     name: "Test Team".to_string(),
-//     ..Team::default()
-//   };
+async fn db_data_init() -> Result<()> {
+  log::info!("Initializing DB data");
+  let t = Team {
+    name: "Test Team".to_string(),
+    ..Team::default()
+  };
 
-//   match Team::add(t).await {
-//     Ok((_, _)) => log::info!("Team added"),
-//     Err(e) => log::error!("Failed to add team: {}", e),
-//   }
+  match Team::add(t).await {
+    Ok((_, _)) => log::info!("Team added"),
+    Err(e) => log::error!("Failed to add team: {}", e),
+  }
 
-//   Ok(())
-// }
+  Ok(())
+}
 
 pub async fn initialize_db(db_path: &str) -> Result<()> {
   // check if DB is already set
@@ -34,10 +34,10 @@ pub async fn initialize_db(db_path: &str) -> Result<()> {
   }
 
   // Initialize the data
-  // match db_data_init().await {
-  //   Ok(_) => log::info!("DB data initialized"),
-  //   Err(e) => log::error!("Failed to initialize DB data: {}", e),
-  // }
+  match db_data_init().await {
+    Ok(_) => log::info!("DB data initialized"),
+    Err(e) => log::error!("Failed to initialize DB data: {}", e),
+  }
 
   Ok(())
 }

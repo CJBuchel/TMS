@@ -22,21 +22,9 @@ impl TeamRepository for Team {
       }
     };
 
-    let table = match db.get_table::<Team>().await {
-      Ok(table) => table,
-      Err(err) => {
-        log::error!("Failed to get table: {:?}", err);
-        return Err(err);
-      }
-    };
+    let table = db.get_table::<Team>().await?;
+    let key = table.insert(None, &record)?;
 
-    let key = match table.insert(None, &record) {
-      Ok(key) => key,
-      Err(err) => {
-        log::error!("Failed to insert record: {:?}", err);
-        return Err(err);
-      }
-    };
     Ok((key, record))
   }
 
@@ -49,21 +37,8 @@ impl TeamRepository for Team {
       }
     };
 
-    let table = match db.get_table::<Team>().await {
-      Ok(table) => table,
-      Err(err) => {
-        log::error!("Failed to get table: {:?}", err);
-        return Err(err);
-      }
-    };
-
-    let record = match table.get(key) {
-      Ok(record) => record,
-      Err(err) => {
-        log::error!("Failed to get record: {:?}", err);
-        return Err(err);
-      }
-    };
+    let table = db.get_table::<Team>().await?;
+    let record = table.get(key)?;
 
     let record = match record {
       Some(record) => record,

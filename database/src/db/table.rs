@@ -8,7 +8,7 @@ use super::record::Record;
 
 //
 // Table in the database, using two sled trees for data and secondary indexes
-// Table stores handles for sled not the actual data, so it's fine to clone
+// Table stores handles for sled not data, so it's fine to clone
 //
 #[derive(Debug, Clone)]
 pub struct Table {
@@ -23,25 +23,23 @@ impl Table {
   }
 
   /// Convert bytes into a HashSet of indexes
-  fn __index_from_bytes(data: &Vec<u8>) -> Result<HashSet<String>> {
+  fn __index_from_bytes(data: &Vec<u8>) -> HashSet<String> {
     if data.is_empty() {
-      return Ok(HashSet::new());
+      return HashSet::new();
     } else {
-      let data = match postcard::from_bytes(data) {
-        Ok(data) => data,
-        Err(e) => {
-          log::error!("Failed to deserialize index: {:?}", e);
-          return Err(anyhow::anyhow!("Failed to deserialize index"));
-        }
-      };
-      Ok(data)
+      match postcard::from_bytes(data) {
+        Ok(index) => index,
+        Err(_) => HashSet::new(),
+      }
     }
   }
 
   /// Convert a HashSet of indexes into bytes
-  fn __index_to_bytes(index: &HashSet<String>) -> Result<Vec<u8>> {
-    let bytes = postcard::to_allocvec(index)?;
-    Ok(bytes)
+  fn __index_to_bytes(index: &HashSet<String>) -> Vec<u8> {
+    match postcard::to_allocvec(index) {
+      Ok(bytes) => bytes,
+      Err(_) => Vec::new(),
+    }
   }
 
   /// Remove indexes from the secondary index tree
@@ -51,12 +49,12 @@ impl Table {
 
     for index in indexes {
       let values = self.index_tree.get(index.clone())?.unwrap_or_default();
-      let mut value_set = Self::__index_from_bytes(&values.to_vec())?;
+      let mut value_set = Self::__index_from_bytes(&values.to_vec());
       value_set.remove(record_id);
       if value_set.is_empty() {
         batch_update.remove(index.as_str());
       } else {
-        let bytes = Self::__index_to_bytes(&value_set)?;
+        let bytes = Self::__index_to_bytes(&value_set);
         batch_update.insert(index.as_str(), bytes);
       }
     }
@@ -70,11 +68,11 @@ impl Table {
     for index in indexes {
       // Get the current set of record ids for this index (assuming it exists)
       let values = self.index_tree.get(index.clone())?.unwrap_or_default();
-      let mut value_set = Self::__index_from_bytes(&values.to_vec())?;
+      let mut value_set = Self::__index_from_bytes(&values.to_vec());
       // Insert the record id into the set
       value_set.insert(record_id.clone());
       // Update the index tree with the new set
-      let bytes = Self::__index_to_bytes(&value_set)?;
+      let bytes = Self::__index_to_bytes(&value_set);
       batch_update.insert(index.as_str(), bytes);
     }
 
@@ -84,7 +82,7 @@ impl Table {
   /// Insert a record into the table
   fn __insert_record<R: Record>(&self, batch_update: &mut sled::Batch, key: &String, record: &R) -> Result<String> {
     let record_id = key.clone();
-    let record_data = record.to_bytes()?;
+    let record_data = record.to_bytes();
     batch_update.insert(key.as_str(), record_data);
     Ok(record_id)
   }
@@ -100,7 +98,7 @@ impl Table {
   /// Can return multiple record_id's if multiple records share the same index
   fn __get_record_ids(&self, index: &str) -> Result<HashSet<String>> {
     let values = self.index_tree.get(index)?.unwrap_or_default();
-    let value_set = Self::__index_from_bytes(&values.to_vec())?;
+    let value_set = Self::__index_from_bytes(&values.to_vec());
     Ok(value_set)
   }
 
@@ -132,46 +130,16 @@ impl Table {
 
     // insert data record
     let record_id = match key {
-      Some(key) => match self.__insert_record(&mut data_batch_update, &key, record) {
-        Ok(record_id) => record_id,
-        Err(e) => {
-          log::error!("Failed to insert record with key: {}", e);
-          return Err(e);
-        }
-      },
-      None => match self.__insert_record(&mut data_batch_update, &Self::__generate_key(), record) {
-        Ok(record_id) => record_id,
-        Err(e) => {
-          log::error!("Failed to insert record with generated key: {:?}", e);
-          return Err(e);
-        }
-      },
+      Some(key) => self.__insert_record(&mut data_batch_update, &key, record)?,
+      None => self.__insert_record(&mut data_batch_update, &Self::__generate_key(), record)?,
     };
 
     // insert secondary indexes for the record
-    match self.__insert_indexes(&mut index_batch_update, &record_id, record) {
-      Ok(_) => (),
-      Err(e) => {
-        log::error!("Failed to insert indexes: {:?}", e);
-        return Err(e);
-      }
-    }
+    self.__insert_indexes(&mut index_batch_update, &record_id, record)?;
 
     // apply the batch updates
-    match self.data_tree.apply_batch(data_batch_update) {
-      Ok(_) => (),
-      Err(e) => {
-        log::error!("Failed to apply data batch update: {:?}", e);
-        return Err(anyhow::anyhow!("Failed to apply data batch update"));
-      }
-    }
-    match self.index_tree.apply_batch(index_batch_update) {
-      Ok(_) => (),
-      Err(e) => {
-        log::error!("Failed to apply index batch update: {:?}", e);
-        return Err(anyhow::anyhow!("Failed to apply index batch update"));
-      }
-    }
+    self.data_tree.apply_batch(data_batch_update)?;
+    self.index_tree.apply_batch(index_batch_update)?;
 
     // publish changes to channel subscribes
     TableBroker::<R>::publish(ChangeOperation::Insert(record_id.clone(), record.clone()));
@@ -209,7 +177,7 @@ impl Table {
 
     // get copy of record
     let record_bytes = self.data_tree.get(key)?.unwrap_or_default().to_vec();
-    let record = R::from_bytes(&record_bytes)?;
+    let record = R::from_bytes(&record_bytes);
 
     // remove data record
     self.__remove_record(&mut data_batch_update, key)?;
@@ -235,7 +203,7 @@ impl Table {
     for key in keys.clone() {
       // get copy of record
       let record_bytes = self.data_tree.get(key.clone())?.unwrap_or_default().to_vec();
-      let record = R::from_bytes(&record_bytes)?;
+      let record = R::from_bytes(&record_bytes);
 
       // remove data record
       self.__remove_record(&mut data_batch_update, &key)?;
@@ -258,7 +226,7 @@ impl Table {
   pub fn get<R: Record>(&self, key: &String) -> Result<Option<R>> {
     match self.data_tree.get(key)? {
       Some(record_bytes) => {
-        let record = R::from_bytes(&record_bytes)?;
+        let record = R::from_bytes(&record_bytes);
         Ok(Some(record))
       }
       None => Ok(None),
@@ -289,7 +257,7 @@ impl Table {
     let mut records = HashMap::new();
     for record in self.data_tree.iter() {
       let (key, value) = record?;
-      let record = R::from_bytes(&value)?;
+      let record = R::from_bytes(&value);
       let key_str = String::from_utf8(key.to_vec())?;
       records.insert(key_str, record);
     }

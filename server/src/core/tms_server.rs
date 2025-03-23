@@ -25,17 +25,8 @@ impl TmsServer {
     // Initialize the database
     initialize_db(&self.config.db_path).await?;
 
-    match Team::add(Team::default()).await {
-      Ok((key, record)) => {
-        log::info!("Added record: key={}", key);
-      }
-      Err(err) => {
-        log::error!("Failed to add record: {:?}", err);
-      }
-    }
-
     // Start web on main thread
-    let web = TmsWeb::new(self.config.addr, self.config.web_port, self.config.enable_playground);
+    let web = TmsWeb::new(self.config.addr, self.config.port, self.config.api_playground);
     web.run().await
   }
 }

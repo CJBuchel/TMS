@@ -15,22 +15,26 @@ pub struct TmsConfig {
 
   /// The port to bind the web server to
   #[arg(short, long, default_value_t = 8080)]
-  pub web_port: u16,
+  pub port: u16,
 
   /// Enable API Playground (GraphQL HTML Page)
-  #[arg(short, long, default_value_t = false)]
-  pub enable_playground: bool,
+  #[arg(long, default_value_t = false)]
+  pub api_playground: bool,
 
   /// The path to the Key Value DB
-  #[arg(short, long, default_value = "tms.db")]
+  #[arg(long, default_value = "tms.db")]
   pub db_path: String,
 
+  /// Enable TLS Security (HTTPS)
+  #[arg(long, default_value_t = false)]
+  pub tls: bool,
+
   /// The path to the certificate
-  #[arg(short, long, default_value = "cert.pem")]
+  #[arg(long, default_value = "cert.pem")]
   pub cert_path: String,
 
   /// The path to the private key
-  #[arg(short, long, default_value = "key.pem")]
+  #[arg(long, default_value = "key.pem")]
   pub key_path: String,
 }
 

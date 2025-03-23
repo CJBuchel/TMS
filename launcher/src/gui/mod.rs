@@ -16,7 +16,8 @@ mod qr_code;
 struct ConfigFields {
   bind_address: String,
   port: String,
-  enable_playground: bool,
+  api_playground: bool,
+  tls: bool,
   db_path: String,
   cert_path: String,
   key_path: String,
@@ -27,8 +28,9 @@ impl From<ConfigFields> for TmsConfig {
     TmsConfig {
       no_gui: false,
       addr: IpAddr::from_str(&fields.bind_address).unwrap(),
-      web_port: fields.port.parse().unwrap(),
-      enable_playground: fields.enable_playground,
+      port: fields.port.parse().unwrap(),
+      api_playground: fields.api_playground,
+      tls: fields.tls,
       db_path: fields.db_path,
       cert_path: fields.cert_path,
       key_path: fields.key_path,
@@ -39,9 +41,10 @@ impl From<ConfigFields> for TmsConfig {
 impl From<TmsConfig> for ConfigFields {
   fn from(config: TmsConfig) -> Self {
     ConfigFields {
-      port: config.web_port.to_string(),
+      port: config.port.to_string(),
       bind_address: config.addr.to_string(),
-      enable_playground: config.enable_playground,
+      api_playground: config.api_playground,
+      tls: config.tls,
       db_path: config.db_path.clone(),
       cert_path: config.cert_path.clone(),
       key_path: config.key_path.clone(),

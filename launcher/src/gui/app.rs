@@ -17,7 +17,8 @@ impl eframe::App for Launcher {
     let local_ip = local_ip().unwrap_or(IpAddr::V4(std::net::Ipv4Addr::new(127, 0, 0, 1)));
 
     // Server URL
-    let server_url = format!("http://{}:{}", local_ip, self.active_cfg.port);
+    let protocol = if self.active_cfg.tls { "https" } else { "http" };
+    let server_url = format!("{}://{}:{}", protocol, local_ip, self.active_cfg.port);
 
     // Check if server is running (to disable config fields)
     let is_running = self.is_server_running();
@@ -74,6 +75,81 @@ impl eframe::App for Launcher {
           }
         }
       });
+
+      ui.separator();
+      ui.add_space(10.0);
+
+      // Enable playground
+      ui.horizontal(|ui| {
+        ui.add_enabled(
+          !is_running,
+          egui::Checkbox::new(&mut self.active_cfg.api_playground, "Enable API Playground"),
+        );
+
+        // add orange text warning if enabled
+        if self.active_cfg.api_playground {
+          ui.label(RichText::new("Warning: For Debug Only!").color(Color32::ORANGE));
+        }
+      });
+
+      // Enable TLS
+      ui.horizontal(|ui| {
+        ui.add_enabled(!is_running, egui::Checkbox::new(&mut self.active_cfg.tls, "Enable TLS"));
+      });
+
+      // ui.add_space(10.0);
+
+      // // Database path
+      // ui.horizontal(|ui| {
+      //   ui.label("Database Path:");
+      //   ui.add_enabled(
+      //     !is_running,
+      //     egui::TextEdit::singleline(&mut self.active_cfg.db_path).desired_width(150.0),
+      //   );
+      // });
+
+      ui.separator();
+      ui.add_space(10.0);
+
+      // Certificate path
+      {
+        ui.label("Certificate Path:");
+        ui.horizontal(|ui| {
+          // Display the current path
+          ui.add_enabled(
+            !is_running,
+            egui::TextEdit::singleline(&mut self.active_cfg.cert_path).desired_width(150.0),
+          );
+
+          // Browse button
+          if ui.add_enabled(!is_running, egui::Button::new("Browse...")).clicked() {
+            if let Some(picked_path) = rfd::FileDialog::new().pick_file() {
+              self.active_cfg.cert_path = picked_path.to_str().unwrap_or_default().to_string();
+            }
+          }
+        });
+      }
+
+      ui.add_space(10.0);
+
+      // Key path
+      {
+        ui.label("Key Path:");
+        ui.horizontal(|ui| {
+          // Display the current path
+          ui.add_enabled(
+            !is_running,
+            egui::TextEdit::singleline(&mut self.active_cfg.key_path).desired_width(150.0),
+          );
+
+          // Browse button
+          if ui.add_enabled(!is_running, egui::Button::new("Browse...")).clicked() {
+            if let Some(picked_path) = rfd::FileDialog::new().pick_file() {
+              self.active_cfg.key_path = picked_path.to_str().unwrap_or_default().to_string();
+            }
+          }
+        });
+      }
 
       // Display error if any
       if let Some(error) = &self.error_message {

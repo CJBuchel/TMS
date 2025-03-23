@@ -1,5 +1,3 @@
-use std::env;
-
 use anyhow::{Ok, Result};
 use log::LevelFilter;
 use log4rs::{
@@ -12,7 +10,7 @@ use log4rs::{
   },
   config::{Appender, Root},
   encode::pattern::PatternEncoder,
-  Config,
+  filter, Config,
 };
 
 // d - Date and time
@@ -29,6 +27,9 @@ fn create_config() -> Result<Config> {
   let log_level = LevelFilter::Debug;
   #[cfg(not(debug_assertions))]
   let log_level = LevelFilter::Info;
+
+  // logging to console
+  let stdout_log_level = LevelFilter::Info; // always log info to console
 
   let stdout_appender = ConsoleAppender::builder()
     .encoder(Box::new(PatternEncoder::new(
@@ -48,9 +49,15 @@ fn create_config() -> Result<Config> {
     )))
     .build("logs/tms.log", Box::new(policy))?;
 
+  // Build configuration with filters
   let config = Config::builder()
-    .appender(Appender::builder().build("stdout_appender", Box::new(stdout_appender)))
+    .appender(
+      Appender::builder()
+        .filter(Box::new(filter::threshold::ThresholdFilter::new(stdout_log_level)))
+        .build("stdout_appender", Box::new(stdout_appender)),
+    )
     .appender(Appender::builder().build("rolling_appender", Box::new(rolling_appender)))
+    // Root logger configuration
     .build(
       Root::builder()
         .appender("stdout_appender")
@@ -63,13 +70,7 @@ fn create_config() -> Result<Config> {
 
 pub fn init_logging() -> Result<()> {
   // Initialize log env
-  #[cfg(debug_assertions)]
-  env::set_var("RUST_LOG", "debug");
-  #[cfg(not(debug_assertions))]
-  env::set_var("RUST_LOG", "info");
-
   let config = create_config()?;
   log4rs::init_config(config)?;
-
   Ok(())
 }

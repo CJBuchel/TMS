@@ -74,6 +74,9 @@ impl Launcher {
   }
 
   pub fn start_server(&mut self) {
+    // clear error message
+    self.error_message = None;
+
     // Create TmsConfig from active_cfg
     let config = TmsConfig::from(self.active_cfg.clone());
 

@@ -1,4 +1,4 @@
-# (WIP)
+# WIP
 - Reorganizing project structure and core systems. View the [2024](https://github.com/CJBuchel/TMS/tree/2024) version for current install and configuration
 
 # Tournament Management System

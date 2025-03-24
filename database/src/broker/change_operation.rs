@@ -1,5 +1,2 @@
 #[derive(Clone)]
-pub enum ChangeOperation<T> {
-  Insert(String, T), // id, record
-  Remove(String),    // id
-}
+pub struct ChangeOperation<T>(pub String, pub Option<T>); // id, record

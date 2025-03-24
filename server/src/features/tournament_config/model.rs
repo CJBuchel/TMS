@@ -1,7 +1,8 @@
+use async_graphql::InputObject;
 use database::Record;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, InputObject)]
 pub struct TournamentConfig {
   pub event_name: String,
   pub backup_interval: u32,        // In minutes

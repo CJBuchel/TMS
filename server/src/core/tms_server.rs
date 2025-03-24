@@ -1,10 +1,6 @@
 use anyhow::Result;
 
-use crate::{
-  core::web::TmsWeb,
-  features::{Team, TeamRepository},
-  TmsConfig,
-};
+use crate::{core::web::TmsWeb, services::Services, TmsConfig};
 
 use super::db::initialize_db;
 
@@ -25,7 +21,9 @@ impl TmsServer {
     // Initialize the database
     initialize_db(&self.config.db_path).await?;
 
-    // @TODO: Start backup service
+    // Initialize the services
+    let services = Services::new();
+    services.start().await?;
 
     // Start web on main thread
     let web = TmsWeb::new(self.config.addr, self.config.port, self.config.api_playground);

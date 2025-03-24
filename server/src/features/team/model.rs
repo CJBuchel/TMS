@@ -1,7 +1,8 @@
+use async_graphql::InputObject;
 use database::Record;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, InputObject)]
 pub struct Team {
   pub team_number: String,
   pub name: String,

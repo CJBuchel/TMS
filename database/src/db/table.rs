@@ -142,7 +142,7 @@ impl Table {
     self.index_tree.apply_batch(index_batch_update)?;
 
     // publish changes to channel subscribes
-    TableBroker::<R>::publish(ChangeOperation::Insert(record_id.clone(), record.clone()));
+    TableBroker::<R>::publish(ChangeOperation(record_id.clone(), Some(record.clone())));
 
     Ok(record_id)
   }
@@ -164,7 +164,7 @@ impl Table {
 
     // publish changes to channel subscribes
     for (key, record) in records {
-      TableBroker::<R>::publish(ChangeOperation::Insert(key.clone(), record.clone()));
+      TableBroker::<R>::publish(ChangeOperation(key.clone(), Some(record.clone())));
     }
 
     Ok(())
@@ -190,7 +190,7 @@ impl Table {
     self.index_tree.apply_batch(index_batch_update)?;
 
     // publish changes to channel subscribes
-    TableBroker::<R>::publish(ChangeOperation::Remove(key.clone()));
+    TableBroker::<R>::publish(ChangeOperation(key.clone(), None));
 
     Ok(())
   }
@@ -216,7 +216,7 @@ impl Table {
 
     // publish changes to channel subscribes
     for key in keys {
-      TableBroker::<R>::publish(ChangeOperation::Remove(key.clone()));
+      TableBroker::<R>::publish(ChangeOperation(key.clone(), None));
     }
 
     Ok(())

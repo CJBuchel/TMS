@@ -2,8 +2,8 @@ use std::net::IpAddr;
 use tokio::net::TcpListener;
 
 use anyhow::Result;
-use async_graphql::{http::GraphiQLSource, EmptyMutation, EmptySubscription, Schema};
-use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
+use async_graphql::{http::GraphiQLSource, Schema};
+use async_graphql_axum::{GraphQLRequest, GraphQLResponse, GraphQLSubscription};
 use axum::{
   extract::State,
   http::HeaderMap,
@@ -12,13 +12,13 @@ use axum::{
   Router,
 };
 
-use crate::api::RootQuery;
+use crate::api::{RootMutation, RootQuery, RootSubscription};
 
 const GRAPHQL_ENDPOINT: &str = "/graphql";
 const GRAPHQL_SUBSCRIPTION_ENDPOINT: &str = "/graphql/subscriptions";
 const GRAPHQL_PLAYGROUND_ENDPOINT: &str = "/playground";
 
-pub type TmsSchema = Schema<RootQuery, EmptyMutation, EmptySubscription>;
+pub type TmsSchema = Schema<RootQuery, RootMutation, RootSubscription>;
 
 pub struct TmsWeb {
   addr: IpAddr,
@@ -56,10 +56,16 @@ impl TmsWeb {
       log::warn!("GraphQL Playground Enabled, this should only be used for debugging!");
     }
 
-    let schema = Schema::build(RootQuery, EmptyMutation, EmptySubscription).finish();
+    let schema = Schema::build(
+      RootQuery::default(),
+      RootMutation::default(),
+      RootSubscription::default(),
+    )
+    .finish();
 
     let mut app = Router::new()
       .route(GRAPHQL_ENDPOINT, post(graphql_handler))
+      .route_service(GRAPHQL_SUBSCRIPTION_ENDPOINT, GraphQLSubscription::new(schema.clone()))
       .with_state(schema);
 
     if self.enable_playground {

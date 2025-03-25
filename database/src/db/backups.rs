@@ -13,8 +13,8 @@ use super::Database;
 
 pub trait Backups {
   async fn get_sorted_backup_entries(&self, parent_path: &str) -> Result<Vec<(DirEntry, Metadata)>>;
-  async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> Result<()>;
-  async fn restore_db(&self, backup_path: &str) -> Result<()>;
+  async fn _backup_db(&self, backup_path: &str, retain_backups: usize) -> Result<()>;
+  async fn _restore_db(&self, backup_path: &str) -> Result<()>;
 }
 
 impl Backups for Database {
@@ -63,7 +63,7 @@ impl Backups for Database {
   }
 
   /// Backup the database to a file
-  async fn backup_db(&self, backup_path: &str, retain_backups: usize) -> Result<()> {
+  async fn _backup_db(&self, backup_path: &str, retain_backups: usize) -> Result<()> {
     log::warn!("Backing up database to: {}", backup_path);
 
     // create the parent directory if it doesn't exist
@@ -98,7 +98,7 @@ impl Backups for Database {
   }
 
   /// Restore the database from a backup file
-  async fn restore_db(&self, backup_path: &str) -> Result<()> {
+  async fn _restore_db(&self, backup_path: &str) -> Result<()> {
     log::warn!("Restoring database from: {}", backup_path);
 
     // check if the file exists

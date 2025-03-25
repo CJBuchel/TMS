@@ -15,7 +15,7 @@ async fn db_data_init() -> Result<()> {
     ..Team::default()
   };
 
-  match Team::add(t).await {
+  match Team::add(&t).await {
     Ok((_, _)) => log::info!("Team added"),
     Err(e) => log::error!("Failed to add team: {}", e),
   }

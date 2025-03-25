@@ -17,6 +17,7 @@ use crate::api::{RootMutation, RootQuery, RootSubscription};
 const GRAPHQL_ENDPOINT: &str = "/graphql";
 const GRAPHQL_SUBSCRIPTION_ENDPOINT: &str = "/graphql/subscriptions";
 const GRAPHQL_PLAYGROUND_ENDPOINT: &str = "/playground";
+const HEALTH_ENDPOINT: &str = "/health";
 
 pub type TmsSchema = Schema<RootQuery, RootMutation, RootSubscription>;
 
@@ -64,6 +65,7 @@ impl TmsWeb {
     .finish();
 
     let mut app = Router::new()
+      .route(HEALTH_ENDPOINT, get(|| async { "OK" }))
       .route(GRAPHQL_ENDPOINT, post(graphql_handler))
       .route_service(GRAPHQL_SUBSCRIPTION_ENDPOINT, GraphQLSubscription::new(schema.clone()))
       .with_state(schema);

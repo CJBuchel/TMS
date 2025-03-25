@@ -1,4 +1,4 @@
-use async_graphql::{FieldResult, Object, SimpleObject, Subscription};
+use async_graphql::{FieldResult, Object, Subscription};
 use database::TableBroker;
 use tokio_stream::Stream;
 

@@ -1,6 +1,6 @@
 use async_graphql::MergedObject;
 
-use crate::features::TournamentConfigMutations;
+use crate::features::*;
 
 #[derive(MergedObject, Default)]
-pub struct RootMutation(TournamentConfigMutations);
+pub struct RootMutation(TournamentConfigMutations, TeamMutations);

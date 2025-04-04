@@ -11,7 +11,6 @@ pub struct TeamAPI(pub String, pub Team);
 //
 // API Types
 //
-
 #[Object]
 impl TeamAPI {
   async fn id(&self) -> &str {

@@ -1,18 +1,6 @@
-use async_graphql::{FieldResult, Object};
+use async_graphql::MergedObject;
 
-use crate::features::{Team, TeamAPI, TeamRepository};
+use crate::features::*;
 
-pub struct RootQuery;
-#[Object]
-impl RootQuery {
-  /// @TODO, add system info for client versioning
-  async fn system_info(&self) -> String {
-    "VERSION".to_string()
-  }
-
-  async fn teams(&self) -> FieldResult<Vec<TeamAPI>> {
-    let teams = Team::get_all().await?;
-    let teams = teams.into_iter().map(|(key, team)| TeamAPI(key, team)).collect();
-    Ok(teams)
-  }
-}
+#[derive(MergedObject, Default)]
+pub struct RootQuery(TournamentConfigQueries, TeamQueries, UserQueries);

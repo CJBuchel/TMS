@@ -97,18 +97,28 @@ impl eframe::App for Launcher {
         ui.add_enabled(!is_running, egui::Checkbox::new(&mut self.active_cfg.tls, "Enable TLS"));
       });
 
-      // ui.add_space(10.0);
-
-      // // Database path
-      // ui.horizontal(|ui| {
-      //   ui.label("Database Path:");
-      //   ui.add_enabled(
-      //     !is_running,
-      //     egui::TextEdit::singleline(&mut self.active_cfg.db_path).desired_width(150.0),
-      //   );
-      // });
-
       ui.separator();
+      ui.add_space(10.0);
+
+      // Backup path
+      {
+        ui.label("Backup Path:");
+        ui.horizontal(|ui| {
+          // Display the current path
+          ui.add_enabled(
+            !is_running,
+            egui::TextEdit::singleline(&mut self.active_cfg.backup_path).desired_width(150.0),
+          );
+
+          // Browse button
+          if ui.add_enabled(!is_running, egui::Button::new("Browse...")).clicked() {
+            if let Some(picked_path) = rfd::FileDialog::new().pick_folder() {
+              self.active_cfg.backup_path = picked_path.to_str().unwrap_or_default().to_string();
+            }
+          }
+        });
+      }
+
       ui.add_space(10.0);
 
       // Certificate path

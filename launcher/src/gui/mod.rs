@@ -19,6 +19,7 @@ struct ConfigFields {
   api_playground: bool,
   tls: bool,
   db_path: String,
+  backup_path: String,
   cert_path: String,
   key_path: String,
 }
@@ -32,6 +33,7 @@ impl From<ConfigFields> for TmsConfig {
       api_playground: fields.api_playground,
       tls: fields.tls,
       db_path: fields.db_path,
+      backup_path: fields.backup_path,
       cert_path: fields.cert_path,
       key_path: fields.key_path,
     }
@@ -46,6 +48,7 @@ impl From<TmsConfig> for ConfigFields {
       api_playground: config.api_playground,
       tls: config.tls,
       db_path: config.db_path.clone(),
+      backup_path: config.backup_path.clone(),
       cert_path: config.cert_path.clone(),
       key_path: config.key_path.clone(),
     }
@@ -68,12 +71,11 @@ pub fn run_gui(
   server_state: Arc<Mutex<ServerState>>,
   config: TmsConfig,
 ) -> Result<()> {
-  let size = [640.0, 380.0];
+  let size = [680.0, 440.0];
   let options = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()
       .with_inner_size(size)
       .with_min_inner_size(size)
-      .with_max_inner_size(size)
       .with_icon(load_icon_data()),
     ..Default::default()
   };

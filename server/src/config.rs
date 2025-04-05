@@ -25,6 +25,10 @@ pub struct TmsConfig {
   #[arg(long, default_value = "tms.db")]
   pub db_path: String,
 
+  /// Backup path for the DB
+  #[arg(long, default_value = "backups")]
+  pub backup_path: String,
+
   /// Enable TLS Security (HTTPS)
   #[arg(long, default_value_t = false)]
   pub tls: bool,

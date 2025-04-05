@@ -2,6 +2,6 @@
 resolver = "2"
 members = [ 
   "database",
-  "launcher", 
+  "launcher",
   "server",
 ]

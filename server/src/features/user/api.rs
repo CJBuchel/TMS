@@ -1,4 +1,6 @@
-use async_graphql::{FieldResult, Object};
+use async_graphql::*;
+
+use crate::{api::*, core::permissions::*};
 
 use super::{model::User, repository::UserRepository};
 
@@ -30,7 +32,9 @@ impl UserAPI {
 pub struct UserQueries;
 #[Object]
 impl UserQueries {
-  async fn user(&self, id: String) -> FieldResult<UserAPI> {
+  async fn user(&self, ctx: &Context<'_>, id: String) -> FieldResult<UserAPI> {
+    RoleGuard::new(vec![Role::Admin]).check(ctx).await?;
+
     let user = match User::get(&id).await {
       Ok(user) => user,
       Err(e) => {
@@ -47,7 +51,9 @@ impl UserQueries {
     Ok(UserAPI(id, user))
   }
 
-  async fn users(&self) -> FieldResult<Vec<UserAPI>> {
+  async fn users(&self, ctx: &Context<'_>) -> FieldResult<Vec<UserAPI>> {
+    RoleGuard::new(vec![Role::Admin]).check(ctx).await?;
+
     let users = match User::get_all().await {
       Ok(users) => users,
       Err(e) => {

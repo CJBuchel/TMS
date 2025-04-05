@@ -1,8 +1,8 @@
-use async_graphql::{FieldResult, Object, Subscription};
+use async_graphql::*;
 use database::TableBroker;
 use tokio_stream::Stream;
 
-use crate::api::RecordChangedAPI;
+use crate::{api::*, core::permissions::*};
 
 use super::{model::TournamentConfig, TournamentConfigRepository};
 
@@ -67,7 +67,8 @@ impl TournamentConfigQueries {
 pub struct TournamentConfigMutations;
 #[Object]
 impl TournamentConfigMutations {
-  pub async fn update_name(&self, event_name: String) -> FieldResult<TournamentConfigAPI> {
+  pub async fn update_name(&self, ctx: &Context<'_>, event_name: String) -> FieldResult<TournamentConfigAPI> {
+    RoleGuard::new(vec![Role::Admin]).check(ctx).await?;
     let config = match TournamentConfig::get().await {
       Ok(mut config) => {
         config.event_name = event_name;
@@ -90,7 +91,12 @@ impl TournamentConfigMutations {
     Ok(TournamentConfigAPI(config))
   }
 
-  pub async fn update_tournament_config(&self, config: TournamentConfig) -> FieldResult<TournamentConfigAPI> {
+  pub async fn update_tournament_config(
+    &self,
+    ctx: &Context<'_>,
+    config: TournamentConfig,
+  ) -> FieldResult<TournamentConfigAPI> {
+    RoleGuard::new(vec![Role::Admin]).check(ctx).await?;
     let config = match TournamentConfig::update(config).await {
       Ok(config) => config,
       Err(e) => {

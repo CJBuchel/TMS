@@ -2,7 +2,7 @@ use anyhow::Result;
 
 use crate::{core::web::TmsWeb, services::Services, TmsConfig};
 
-use super::db::initialize_db;
+use super::{auth::initialize_jwt_secret, db::initialize_db};
 
 pub struct TmsServer {
   config: TmsConfig,
@@ -20,6 +20,9 @@ impl TmsServer {
   pub async fn run(&self) -> Result<()> {
     // Initialize the database
     initialize_db(&self.config.db_path).await?;
+
+    // Initialize the JWT token
+    initialize_jwt_secret().await?;
 
     // Initialize the services
     let services = Services::new();

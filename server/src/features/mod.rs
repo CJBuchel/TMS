@@ -9,3 +9,6 @@ pub use user::*;
 
 mod auth;
 pub use auth::*;
+
+mod secret;
+pub use secret::*;

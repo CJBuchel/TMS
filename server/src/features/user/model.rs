@@ -1,11 +1,13 @@
-use async_graphql::InputObject;
 use database::Record;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize, InputObject)]
+use crate::core::permissions::Role;
+
+#[derive(Clone, Serialize, Deserialize)]
 pub struct User {
   pub username: String,
   pub password: String,
+  pub roles: Vec<Role>,
 }
 
 impl Default for User {
@@ -13,6 +15,7 @@ impl Default for User {
     Self {
       username: "".to_string(),
       password: "".to_string(),
+      roles: vec![],
     }
   }
 }

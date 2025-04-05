@@ -1,4 +1,4 @@
-use async_graphql::{FieldResult, InputObject, Object, SimpleObject};
+use async_graphql::{FieldResult, Object, SimpleObject};
 
 use crate::{
   core::auth::Auth,
@@ -11,13 +11,8 @@ use crate::{
 #[derive(SimpleObject)]
 pub struct AuthPayload {
   token: String,
+  roles: Vec<String>,
 }
-
-// #[derive(InputObject)]
-// pub struct LoginInput {
-//   username: String,
-//   password: String,
-// }
 
 //
 // Mutations
@@ -33,7 +28,7 @@ impl AuthMutations {
     }
 
     // Check for matching users
-    let user: User = match User::get_by_username(&username).await {
+    let (user_id, user) = match User::get_by_username(&username).await {
       Ok(users) => {
         // convert to vec
         if users.is_empty() {
@@ -44,7 +39,7 @@ impl AuthMutations {
           return Err("Multiple users found with the same username".into());
         }
 
-        let (_, user) = match users.into_iter().next() {
+        let user = match users.into_iter().next() {
           Some(user) => user,
           None => return Err("Failed to get user from map".into()),
         };
@@ -62,8 +57,10 @@ impl AuthMutations {
       return Err("Invalid password".into());
     }
 
+    let roles = user.roles.clone();
+
     // Generate token
-    let token = match Auth::generate_token(&username) {
+    let token = match Auth::generate_token(&user_id, roles.clone()) {
       Ok(token) => token,
       Err(e) => {
         log::error!("Failed to generate token: {}", e);
@@ -71,6 +68,8 @@ impl AuthMutations {
       }
     };
 
-    Ok(AuthPayload { token })
+    let roles = roles.iter().map(|role| role.to_string()).collect::<Vec<String>>();
+
+    Ok(AuthPayload { token, roles })
   }
 }

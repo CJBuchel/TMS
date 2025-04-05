@@ -1,8 +1,11 @@
-use async_graphql::{FieldResult, Object, Subscription};
+use async_graphql::*;
 use database::TableBroker;
 use tokio_stream::Stream;
 
-use crate::api::RecordChangedAPI;
+use crate::{
+  api::{RecordChangedAPI, RoleGuard},
+  core::permissions::Role,
+};
 
 use super::{model::Team, TeamRepository};
 
@@ -74,7 +77,8 @@ impl TeamQueries {
 pub struct TeamMutations;
 #[Object]
 impl TeamMutations {
-  pub async fn add_team(&self, team: Team) -> FieldResult<TeamAPI> {
+  pub async fn add_team(&self, ctx: &Context<'_>, team: Team) -> FieldResult<TeamAPI> {
+    RoleGuard::new(vec![Role::JudgeAdvisor]).check(ctx).await?;
     let (id, team) = match Team::add(&team).await {
       Ok(id) => id,
       Err(e) => {
@@ -86,7 +90,8 @@ impl TeamMutations {
     Ok(TeamAPI(id, team))
   }
 
-  pub async fn remove_team(&self, id: String) -> FieldResult<bool> {
+  pub async fn remove_team(&self, ctx: &Context<'_>, id: String) -> FieldResult<bool> {
+    RoleGuard::new(vec![Role::JudgeAdvisor]).check(ctx).await?;
     match Team::remove(&id).await {
       Ok(_) => Ok(true),
       Err(e) => {

@@ -76,7 +76,7 @@ impl RoleGraph {
   }
 
   // Add a role with no parents
-  pub fn add_role(&mut self, role: Role) {
+  pub fn _add_role(&mut self, role: Role) {
     self.inheritance.entry(role).or_insert_with(HashSet::new);
   }
 

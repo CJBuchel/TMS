@@ -8,7 +8,7 @@ use super::model::User;
 
 pub trait UserRepository {
   async fn add(record: &User) -> Result<(String, User)>;
-  async fn remove(key: &String) -> Result<()>;
+  async fn _remove(key: &String) -> Result<()>;
   async fn get(key: &String) -> Result<Option<User>>;
   async fn get_all() -> Result<HashMap<String, User>>;
   async fn get_by_username(username: &String) -> Result<HashMap<String, User>>;
@@ -30,7 +30,7 @@ impl UserRepository for User {
     Ok((key, record.clone()))
   }
 
-  async fn remove(key: &String) -> Result<()> {
+  async fn _remove(key: &String) -> Result<()> {
     let db = match DB.get() {
       Some(db) => db,
       None => {

@@ -9,10 +9,6 @@ impl ClientContext {
     Self { roles: Vec::new() }
   }
 
-  pub fn has_role(&self, role: &Role) -> bool {
-    self.roles.contains(role)
-  }
-
   pub fn check_permissions(&self, required: Vec<Role>) -> bool {
     let authenticated = self
       .roles

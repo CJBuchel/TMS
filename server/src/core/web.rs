@@ -11,6 +11,7 @@ use axum::{
   routing::{get, post},
   Router,
 };
+use tower_http::cors::CorsLayer;
 
 use crate::api::{ClientContext, RootMutation, RootQuery, RootSubscription};
 
@@ -102,11 +103,17 @@ impl TmsWeb {
     )
     .finish();
 
+    let cors = CorsLayer::new()
+      .allow_origin(tower_http::cors::Any)
+      .allow_headers(tower_http::cors::Any)
+      .allow_methods(tower_http::cors::Any);
+
     let mut app = Router::new()
       .route(HEALTH_ENDPOINT, get(|| async { "OK" }))
       .route(GRAPHQL_ENDPOINT, post(graphql_handler))
       .route_service(GRAPHQL_SUBSCRIPTION_ENDPOINT, GraphQLSubscription::new(schema.clone()))
-      .with_state(schema);
+      .with_state(schema)
+      .layer(cors);
 
     if self.enable_playground {
       app = app.route(GRAPHQL_PLAYGROUND_ENDPOINT, get(playground_handler));

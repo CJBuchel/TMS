@@ -17,6 +17,7 @@ rand = "0.9.0"
 serde = "1.0.219"
 tokio = "1.44.1"
 tokio-stream = "0.1.17"
+tower-http = { version = "0.6.2", features = ["cors"] }
 
 [dependencies.database]
 path = "../database"

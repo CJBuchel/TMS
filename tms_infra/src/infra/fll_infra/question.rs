@@ -30,7 +30,7 @@ impl Default for QuestionAnswer {
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub enum QuestionInput {
   Categorical(CategoricalQuestion),
-  // Numerical(i32), // one day :(
+  // Numerical(i32), // not today either :(
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]

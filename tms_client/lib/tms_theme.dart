@@ -39,7 +39,7 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
       ),
     ),
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: Colors.white,
     titleTextStyle: const TextStyle(color: Colors.black),
     contentTextStyle: const TextStyle(color: Colors.black),
@@ -117,7 +117,7 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
       ),
     ),
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: Colors.grey[900],
     titleTextStyle: const TextStyle(color: Colors.white),
     contentTextStyle: const TextStyle(color: Colors.white),

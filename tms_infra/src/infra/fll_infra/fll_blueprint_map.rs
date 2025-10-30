@@ -1,11 +1,8 @@
 use std::collections::HashMap;
 
-use super::{BaseSeason, FllBlueprint, MasterPiece, QuestionAnswer, QuestionValidationError, Submerged};
+use super::{BaseSeason, FllBlueprint, MasterPiece, QuestionAnswer, QuestionValidationError, Submerged, Unearthed};
 
-const SEASONS: &[(&str, &'static dyn BaseSeason)] = &[
-  ("2023", &MasterPiece {}),
-  ("2024", &Submerged {}),
-];
+const SEASONS: &[(&str, &'static dyn BaseSeason)] = &[("2023", &MasterPiece {}), ("2024", &Submerged {}), ("2025", &Unearthed {})];
 
 pub struct FllBlueprintMap {}
 

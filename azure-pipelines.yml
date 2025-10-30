@@ -5,36 +5,36 @@
 # custom build number, (previous was 20240714.2) we want (202407142)
 name: $(Date:yyyyMMdd)$(Rev:r)
 
-resources: 
+resources:
   - repo: self
 
 variables:
-  - group: 'apple-variables'
+  - group: "apple-variables"
   - template: vars.yml
-  - name: 'isProd'
-    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/ci-cd'))]
+  - name: "isProd"
+    value: $[or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/legacy'))]
   - name: dockerRepository
-    value: 'cjbuchel/tms'
+    value: "cjbuchel/tms"
   - name: dockerRegistryServiceConnection
-    value: 'CJBuchel-Dockerhub1'
+    value: "CJBuchel-Dockerhub1"
 
 stages:
   # Environment setup
   - stage: Setup
-    displayName: 'Setup & Environment'
+    displayName: "Setup & Environment"
     jobs:
       - template: azure-pipelines/setup-stage.yml
 
   - stage: Infra
     dependsOn: Setup
-    displayName: 'Generate Infrastructure'
+    displayName: "Generate Infrastructure"
     jobs:
       - template: azure-pipelines/infra-stage.yml
 
   # Build Stage
   - stage: Build
     dependsOn: Infra
-    displayName: 'Build'
+    displayName: "Build"
     jobs:
       - template: azure-pipelines/build-stage.yml
 
@@ -42,6 +42,6 @@ stages:
   - stage: Release
     dependsOn: Build
     condition: and(succeeded(), eq(variables['isProd'], true))
-    displayName: 'Release'
+    displayName: "Release"
     jobs:
       - template: azure-pipelines/release-stage.yml

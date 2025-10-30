@@ -1,11 +1,11 @@
 name: tms
 description: "Tournament Management System Client, for scoring and managing FLL events"
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 0.0.0+0 # this is replaced in azure pipelines during release
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
-  flutter: '>=3.24.0 <4.0.0'
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0 <4.0.0"
 
 dependencies:
   # specialized deps
@@ -15,8 +15,7 @@ dependencies:
     path: ../echo_tree_flutter
   tms_infra:
     path: rust_builder
-  flutter_rust_bridge: 2.6.0
-
+  flutter_rust_bridge: 2.11.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -60,7 +59,7 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/logos/T_LOGO_PADDED.png"
-  adaptive_icon_background: "#212332"  # Set your desired background color or image path
+  adaptive_icon_background: "#212332" # Set your desired background color or image path
   adaptive_icon_foreground: "assets/logos/T_LOGO_PADDED.png"
 
 flutter:
@@ -70,6 +69,7 @@ flutter:
     - assets/images/
     - assets/images/missions/2023/
     - assets/images/missions/2024/
+    - assets/images/missions/2025/
     - assets/logos/
     - assets/audio/
 

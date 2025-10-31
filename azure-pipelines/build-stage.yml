@@ -56,7 +56,7 @@ jobs:
   - job: IosBuild
     displayName: 'iOS Client'
     pool:
-      vmImage: 'macos-14' # macos-latest isn't always latest (we need xcode 15)
+      vmImage: 'macos-26' # macos-latest isn't always latest (we need xcode 15)
     steps:
       # build client template
       - template: templates/client-build-template.yml

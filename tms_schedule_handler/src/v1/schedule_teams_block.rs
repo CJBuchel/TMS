@@ -1,4 +1,3 @@
-
 use super::{V1Block, BLOCK_TEAMS};
 
 pub struct ScheduleTeamT {
@@ -27,27 +26,34 @@ impl V1Block for ScheduleTeamsBlock {
     for line in block_lines {
       let fields = line.split(",").collect::<Vec<&str>>();
 
+      // Skip empty lines
+      if fields.is_empty() || fields[0].trim().is_empty() {
+        continue;
+      }
+
       match fields[0] {
         "Number of Teams" => {
-          n_teams = match fields[1].parse::<usize>() {
+          let teams_str = fields.get(1).unwrap_or(&"0");
+          n_teams = match teams_str.parse::<usize>() {
             Ok(n) => n,
             Err(e) => return Err(format!("Error parsing number of teams: {}", e)),
           }
-        },
+        }
         _ => {
-          let team = ScheduleTeamT {
-            team_number: fields[0].to_string(),
-            name: fields[1].to_string(),
-            affiliation: fields[2].to_string(),
-          };
-          teams.push(team);
-        },
+          // Use .get() with defaults to handle missing commas/fields
+          let team_number = fields.get(0).unwrap_or(&"").to_string();
+          let name = fields.get(1).unwrap_or(&"").to_string();
+          let affiliation = fields.get(2).unwrap_or(&"").to_string();
+
+          // Only add team if we have at least a team number
+          if !team_number.trim().is_empty() {
+            let team = ScheduleTeamT { team_number, name, affiliation };
+            teams.push(team);
+          }
+        }
       }
     }
 
-    Ok(ScheduleTeamsBlock {
-      teams_count: n_teams,
-      teams,
-    })
+    Ok(ScheduleTeamsBlock { teams_count: n_teams, teams })
   }
 }

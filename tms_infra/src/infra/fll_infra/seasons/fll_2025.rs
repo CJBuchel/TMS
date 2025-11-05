@@ -245,7 +245,7 @@ impl BaseSeason for Unearthed {
           label_short: "Supports standing?".to_string(),
           input: QuestionInput::Categorical(CategoricalQuestion {
             options: vec![CategoricalOption { label: "No".to_string(), score: 0 }, CategoricalOption { label: "Yes".to_string(), score: 10 }],
-            default_option: "true".to_string(),
+            default_option: "Yes".to_string(),
           }),
           rules: vec![],
         },

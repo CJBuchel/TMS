@@ -42,8 +42,8 @@ pub trait V1Block {
 
       // split
       let fields = line.split(",").collect::<Vec<&str>>();
-      if fields[0] == BLOCK_FORMAT {
-        if fields[1] == block {
+      if fields.get(0) == Some(&BLOCK_FORMAT) {
+        if fields.get(1) == Some(&block) {
           return Some(line_number + 1); // start with line after block format
         }
       }
@@ -74,7 +74,7 @@ pub trait V1Block {
 
       // split
       let fields = line.split(",").collect::<Vec<&str>>();
-      if fields[0] == BLOCK_FORMAT {
+      if fields.get(0) == Some(&BLOCK_FORMAT) {
         break;
       }
 
@@ -150,8 +150,8 @@ impl CsvToTmsSchedule for V1 {
 
       // split
       let fields = line.split(",").collect::<Vec<&str>>();
-      if fields[0] == "Version Number" {
-        if fields[1] == "1" {
+      if fields.get(0) == Some(&"Version Number") {
+        if fields.get(1) == Some(&"1") {
           return true;
         }
       }

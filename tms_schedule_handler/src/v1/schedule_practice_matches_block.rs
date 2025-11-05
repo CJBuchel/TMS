@@ -29,68 +29,90 @@ impl V1Block for SchedulePracticeMatchesBlock {
       // split
       let fields = line.split(",").collect::<Vec<&str>>();
 
+      // Skip empty lines
+      if fields.is_empty() || fields[0].trim().is_empty() {
+        continue;
+      }
+
       match fields[0] {
         "Number of Practice Matches" => {
-          n_ranking_matches = match fields[1].parse::<usize>() {
+          let matches_str = fields.get(1).unwrap_or(&"0");
+          n_ranking_matches = match matches_str.parse::<usize>() {
             Ok(n) => n,
             Err(e) => return Err(format!("Error parsing number of practice matches: {}", e)),
           };
-        },
+        }
 
         "Number of Tables" => {
-          n_tables = match fields[1].parse::<usize>() {
+          let tables_str = fields.get(1).unwrap_or(&"0");
+          n_tables = match tables_str.parse::<usize>() {
             Ok(n) => n,
             Err(e) => return Err(format!("Error parsing number of tables: {}", e)),
           };
-        },
+        }
 
         "Number of Teams per Table" => {
-          n_teams_per_table = match fields[1].parse::<usize>() {
+          let teams_per_table_str = fields.get(1).unwrap_or(&"0");
+          n_teams_per_table = match teams_per_table_str.parse::<usize>() {
             Ok(n) => n,
             Err(e) => return Err(format!("Error parsing number of teams per table: {}", e)),
           };
-        },
+        }
 
         "Number of Simultaneous Tables" => {
-          n_simultaneous_tables = match fields[1].parse::<usize>() {
+          let simultaneous_tables_str = fields.get(1).unwrap_or(&"0");
+          n_simultaneous_tables = match simultaneous_tables_str.parse::<usize>() {
             Ok(n) => n,
             Err(e) => return Err(format!("Error parsing number of simultaneous tables: {}", e)),
           };
-        },
+        }
 
         "Table Names" => {
-          // from 1 to n_tables
-          table_names = fields[1..].iter().map(|s| s.to_string()).collect();
-        },
+          // from 1 to n_tables, safely get table names
+          for i in 1..fields.len() {
+            if let Some(table_name) = fields.get(i) {
+              if !table_name.trim().is_empty() {
+                table_names.push(table_name.to_string());
+              }
+            }
+          }
+        }
 
         // match number, start time, end time, table 1, team 1, table 2, team 2, ...
         _ => {
           let mut on_tables: Vec<ScheduleOnTableT> = vec![];
-          let match_number = fields[0].to_string();
-          let start_time = fields[1].to_string();
-          let end_time = fields[2].to_string();
+          let match_number = fields.get(0).unwrap_or(&"").to_string();
+          let start_time = fields.get(1).unwrap_or(&"").to_string();
+          let end_time = fields.get(2).unwrap_or(&"").to_string();
 
-          // from 3 to n_tables
-          for i in 0..n_tables {
-            // the actual field provides the team number while the relative index provides the table name
-            let actual_index = 3 + i;
-            let team_number = fields[actual_index].to_string();
-            let on_table_name = table_names[i].clone();
+          // Only process if we have at least a match number
+          if !match_number.trim().is_empty() {
+            // from 3 to n_tables
+            for i in 0..n_tables {
+              // the actual field provides the team number while the relative index provides the table name
+              let actual_index = 3 + i;
+              if let Some(team_number_field) = fields.get(actual_index) {
+                let team_number = team_number_field.to_string();
 
-            if !team_number.is_empty() {
-              on_tables.push(ScheduleOnTableT {
-                on_table_name,
-                team_number,
-              });
+                // Only add if we have a valid table name at this index
+                if let Some(on_table_name) = table_names.get(i) {
+                  if !team_number.trim().is_empty() {
+                    on_tables.push(ScheduleOnTableT {
+                      on_table_name: on_table_name.clone(),
+                      team_number,
+                    });
+                  }
+                }
+              }
             }
-          }
 
-          matches.push(ScheduleMatchT {
-            match_number,
-            start_time,
-            end_time,
-            on_tables,
-          });
+            matches.push(ScheduleMatchT {
+              match_number,
+              start_time,
+              end_time,
+              on_tables,
+            });
+          }
         }
       }
     }

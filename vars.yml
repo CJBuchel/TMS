@@ -1,5 +1,5 @@
 # This file is used for deploy variables
 # I.e, version of the app, etc.
 variables:
-- name: tms_version
-  value: 2025.0.1
+  - name: tms_version
+    value: 2025.0.2

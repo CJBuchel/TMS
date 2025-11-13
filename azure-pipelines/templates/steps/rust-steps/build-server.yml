@@ -4,22 +4,24 @@
 steps:
   # Build the Rust server for Linux
   - task: Cargo@1
-    displayName: 'Build Rust Server for Linux'
+    displayName: "Build Rust Server for Linux"
     condition: eq(variables['Agent.OS'], 'Linux')
     inputs:
-      cargoCommand: 'build --target x86_64-unknown-linux-musl --release'
+      cargoCommand: "build --target x86_64-unknown-linux-musl --release"
       verbose: true
   # Build the Rust server for Windows
   - task: Cargo@1
-    displayName: 'Build Rust Server for Windows'
+    displayName: "Build Rust Server for Windows"
     condition: eq(variables['Agent.OS'], 'Windows_NT')
     inputs:
-      cargoCommand: 'build --target x86_64-pc-windows-msvc --release'
+      cargoCommand: "build --target x86_64-pc-windows-gnu --release"
       verbose: true
+    env:
+      RUSTFLAGS: "-C link-args=-static-libgcc"
   # Build the Rust server for Mac
   - task: Cargo@1
-    displayName: 'Build Rust Server for Mac'
+    displayName: "Build Rust Server for Mac"
     condition: eq(variables['Agent.OS'], 'Darwin')
     inputs:
-      cargoCommand: 'build --target x86_64-apple-darwin --release'
+      cargoCommand: "build --target x86_64-apple-darwin --release"
       verbose: true

@@ -5,11 +5,13 @@ import 'package:tms/utils/color_modifiers.dart';
 class PrivateCommentWidget extends StatelessWidget {
   final String? comment;
   final Function(String) onCommentChanged;
+  final bool isCommentNeeded;
 
   PrivateCommentWidget({
     Key? key,
     this.comment,
     required this.onCommentChanged,
+    required this.isCommentNeeded,
   }) : super(key: key);
 
   final TextEditingController _commentController = TextEditingController();
@@ -17,15 +19,20 @@ class PrivateCommentWidget extends StatelessWidget {
   Color getMissionColor(BuildContext context) {
     Color darkColor = lighten(Theme.of(context).cardColor, 0.05);
     Color lightColor = Theme.of(context).cardColor;
-    return Theme.of(context).brightness == Brightness.dark ? darkColor : lightColor;
+    return Theme.of(context).brightness == Brightness.dark
+        ? darkColor
+        : lightColor;
   }
 
   Color? getDecorationColor(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark ? Colors.purple : Colors.purple[300];
+    return Theme.of(context).brightness == Brightness.dark
+        ? Colors.purple
+        : Colors.purple[300];
   }
 
   @override
   Widget build(BuildContext context) {
+    // TmsLogger().d("Comment required: $isCommentNeeded");
     if (comment != null) {
       _commentController.text = comment!;
     }
@@ -76,13 +83,27 @@ class PrivateCommentWidget extends StatelessWidget {
               ),
             ),
           ),
+          // Add this: Red text when comment is required
+          if (isCommentNeeded)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              child: Text(
+                "* A comment is required for context on GP score",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           TextField(
             maxLines: 5,
             controller: _commentController,
             onChanged: onCommentChanged,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: "(Optional) Enter your private comment here...",
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText:
+                  "(${isCommentNeeded ? "REQUIRED" : "Optional"}) Enter your private comment here...",
             ),
           ),
           // colored bottom segment (just to make it look nice)

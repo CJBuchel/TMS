@@ -1,12 +1,12 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tms/generated/infra/database_schemas/game_score_sheet.dart';
 import 'package:tms/generated/infra/fll_infra/fll_blueprint_map.dart';
 import 'package:tms/generated/infra/fll_infra/question.dart';
 import 'package:tms/generated/infra/network_schemas/robot_game_score_sheet_requests.dart';
 import 'package:tms/generated/infra/network_schemas/tournament_config_requests.dart';
-import 'package:collection/collection.dart';
 import 'package:tms/providers/tournament_config_provider.dart';
 import 'package:tms/services/game_scoring_service.dart';
 
@@ -42,7 +42,8 @@ class GameScoringProvider extends ChangeNotifier {
           _defaultAnswers = blueprint.robotGameQuestions.map((q) {
             return q.input.when(
               categorical: (input) {
-                return QuestionAnswer(questionId: q.id, answer: input.defaultOption);
+                return QuestionAnswer(
+                    questionId: q.id, answer: input.defaultOption);
               },
             );
           }).toList();
@@ -63,7 +64,8 @@ class GameScoringProvider extends ChangeNotifier {
   Future<int> _calculateScore(List<QuestionAnswer> answers) async {
     final blueprint = FllBlueprintMap.getFllBlueprint(season: _season);
     if (blueprint != null) {
-      int score = FllBlueprintMap.calculateScore(blueprint: blueprint, answers: answers);
+      int score = FllBlueprintMap.calculateScore(
+          blueprint: blueprint, answers: answers);
       _updateScore(score);
       return score;
     }
@@ -71,7 +73,8 @@ class GameScoringProvider extends ChangeNotifier {
     return 0;
   }
 
-  Future<List<QuestionValidationError>?> _validateAnswers(List<QuestionAnswer> answers) async {
+  Future<List<QuestionValidationError>?> _validateAnswers(
+      List<QuestionAnswer> answers) async {
     final errors = FllBlueprintMap.validate(season: _season, answers: answers);
     if (errors != null) {
       _errors = errors;
@@ -89,6 +92,16 @@ class GameScoringProvider extends ChangeNotifier {
   List<QuestionValidationError> get errors => _errors;
   List<QuestionAnswer> get answers => _answers;
   List<Question> get gameQuestions => _gameQuestions;
+  bool get isCommentRequired {
+    // comment required when GP is not "3 - Accomplished"
+    String? gpAnswer = getAnswer("gp");
+
+    if (gpAnswer != null) {
+      return gpAnswer != "3 - Accomplished";
+    } else {
+      return false;
+    }
+  }
 
   // manual setter for score
   set score(int score) => _updateScore(score);
@@ -107,7 +120,9 @@ class GameScoringProvider extends ChangeNotifier {
     if (_blueprintType == BlueprintType.agnostic) {
       score = 0;
     } else {
-      _answers = [..._defaultAnswers]; // copy default answers (don't want the origin modified)
+      _answers = [
+        ..._defaultAnswers
+      ]; // copy default answers (don't want the origin modified)
       onAnswers(_answers);
     }
     privateComment = "";
@@ -118,17 +133,21 @@ class GameScoringProvider extends ChangeNotifier {
   }
 
   String? getValidationErrorMessage(String questionId) {
-    return _errors.firstWhereOrNull((e) => e.questionIds.contains(questionId))?.message;
+    return _errors
+        .firstWhereOrNull((e) => e.questionIds.contains(questionId))
+        ?.message;
   }
 
-  Future<(int, List<QuestionValidationError>?)> onAnswers(List<QuestionAnswer> answers) async {
+  Future<(int, List<QuestionValidationError>?)> onAnswers(
+      List<QuestionAnswer> answers) async {
     _answers = answers;
     int score = await _calculateScore(answers);
     List<QuestionValidationError>? errors = await _validateAnswers(answers);
     return (score, errors);
   }
 
-  Future<(int, List<QuestionValidationError>?)> onAnswer(QuestionAnswer answer) async {
+  Future<(int, List<QuestionValidationError>?)> onAnswer(
+      QuestionAnswer answer) async {
     // check if answer exists and change it. Otherwise add it.
     int index = _answers.indexWhere((a) => a.questionId == answer.questionId);
     if (index != -1) {
@@ -159,7 +178,8 @@ class GameScoringProvider extends ChangeNotifier {
   }) async {
     if (isValid()) {
       // get gp out of answers
-      String? gp = _answers.firstWhereOrNull((a) => a.questionId == "gp")?.answer;
+      String? gp =
+          _answers.firstWhereOrNull((a) => a.questionId == "gp")?.answer;
 
       // create the score sheet
       var scoreSheet = RobotGameScoreSheetSubmitRequest(

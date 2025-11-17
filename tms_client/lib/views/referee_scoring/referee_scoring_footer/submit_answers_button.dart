@@ -7,6 +7,7 @@ import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/robot_game_providers/game_scoring_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:tms/widgets/dialogs/dialog_style.dart';
+import 'package:tms/widgets/dialogs/popup_dialog.dart';
 
 class SubmitAnswersButton extends StatelessWidget {
   final double buttonHeight;
@@ -29,44 +30,63 @@ class SubmitAnswersButton extends StatelessWidget {
   }) : super(key: key);
 
   void _submitAnswersDialog(BuildContext context) {
-    ConfirmFutureDialog(
-      style: DialogStyle.success(
-        title: "Submit Answers",
-        message: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Submit answers for match ${match?.matchNumber}, team ${team?.teamNumber}?"),
-            const SizedBox(height: 10),
-            const Text("This action cannot be undone."),
-          ],
+    bool commentRequired =
+        Provider.of<GameScoringProvider>(context, listen: false)
+            .isCommentRequired;
+    bool hasProvidedComment =
+        Provider.of<GameScoringProvider>(context, listen: false)
+            .privateComment
+            .isNotEmpty;
+    if (commentRequired && !hasProvidedComment) {
+      // Show alert dialog that comment is required
+      PopupDialog.error(
+              title: "Comment Required",
+              message:
+                  "A private comment is required before submitting the score sheet.")
+          .show(context);
+    } else {
+      ConfirmFutureDialog(
+        style: DialogStyle.success(
+          title: "Submit Answers",
+          message: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                  "Submit answers for match ${match?.matchNumber}, team ${team?.teamNumber}?"),
+              const SizedBox(height: 10),
+              const Text("This action cannot be undone."),
+            ],
+          ),
         ),
-      ),
-      onStatusConfirmFuture: () {
-        if (team != null && match != null) {
-          return Provider.of<GameScoringProvider>(context, listen: false).submitScoreSheet(
-            table: table,
-            round: round,
-            teamNumber: team!.teamNumber,
-            matchNumber: match!.matchNumber,
-            referee: referee,
-          );
-        } else {
-          return Future.value(HttpStatus.badRequest);
-        }
-      },
-      onFinish: (status) {
-        if (status == HttpStatus.ok) {
-          if (scrollController?.hasClients ?? false) {
-            scrollController?.animateTo(
-              0.0,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
+        onStatusConfirmFuture: () {
+          if (team != null && match != null) {
+            return Provider.of<GameScoringProvider>(context, listen: false)
+                .submitScoreSheet(
+              table: table,
+              round: round,
+              teamNumber: team!.teamNumber,
+              matchNumber: match!.matchNumber,
+              referee: referee,
             );
+          } else {
+            return Future.value(HttpStatus.badRequest);
           }
-          Provider.of<GameScoringProvider>(context, listen: false).resetAnswers();
-        }
-      },
-    ).show(context);
+        },
+        onFinish: (status) {
+          if (status == HttpStatus.ok) {
+            if (scrollController?.hasClients ?? false) {
+              scrollController?.animateTo(
+                0.0,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            }
+            Provider.of<GameScoringProvider>(context, listen: false)
+                .resetAnswers();
+          }
+        },
+      ).show(context);
+    }
   }
 
   @override
@@ -75,6 +95,7 @@ class SubmitAnswersButton extends StatelessWidget {
     bool disabled = team == null || match == null;
     return Selector<GameScoringProvider, bool>(
       selector: (context, provider) => provider.isValid(),
+      shouldRebuild: (previous, next) => previous != next,
       builder: (context, isValid, _) {
         bool isDisabled = disabled || !isValid;
 

@@ -36,6 +36,7 @@ impl BaseSeason for Unearthed {
     } else {
       0
     };
+
     let minecart = if answers.get("m03b").map(|r| r.answer.as_str()) == Some("Yes") { 1 } else { 0 };
     let artefact = if answers.get("m04a").map(|r| r.answer.as_str()) == Some("Yes") { 1 } else { 0 };
     let ore = if answers.get("m06a").map(|r| r.answer.as_str()) != Some("0") && answers.get("m06a").map(|r| !r.answer.is_empty()).unwrap_or(false) {
@@ -224,10 +225,13 @@ impl BaseSeason for Unearthed {
           label: "Opposing team's minecart is on your field?".to_string(),
           label_short: "Opposing minecart?".to_string(),
           input: QuestionInput::Categorical(CategoricalQuestion {
-            options: vec![CategoricalOption { label: "No".to_string(), score: 0 }, CategoricalOption { label: "Yes".to_string(), score: 10 }],
+            options: vec![CategoricalOption { label: "No".to_string(), score: 0 }, CategoricalOption { label: "Yes".to_string(), score: 0 }],
             default_option: "No".to_string(),
           }),
-          rules: vec![],
+          rules: vec![QuestionRule {
+            condition: "m03a == Yes && m03b == Yes".to_string(),
+            output: 10,
+          }],
         },
         Question {
           id: "m04a".to_string(),

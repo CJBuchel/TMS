@@ -5,7 +5,7 @@ version: 0.0.0+0 # this is replaced in azure pipelines during release
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
-  flutter: ">=3.24.0 <4.0.0"
+  flutter: "3.35.7"
 
 dependencies:
   # specialized deps

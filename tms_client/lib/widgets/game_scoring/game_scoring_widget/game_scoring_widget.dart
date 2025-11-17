@@ -20,7 +20,8 @@ class _BlueprintData {
   final String season;
   final FllBlueprint blueprint;
 
-  _BlueprintData({required this.type, required this.season, required this.blueprint});
+  _BlueprintData(
+      {required this.type, required this.season, required this.blueprint});
 }
 
 class _QuestionKeyData {
@@ -43,12 +44,14 @@ class GameScoringWidget extends StatelessWidget {
 
   void _initializeQuestionKeys(List<Question> questions) {
     questionKeys.clear();
-    questionKeys.addAll(List.generate(questions.length, (index) => _QuestionKeyData(question: questions[index])));
+    questionKeys.addAll(List.generate(questions.length,
+        (index) => _QuestionKeyData(question: questions[index])));
   }
 
   void _scrollToNextQuestion(int currentIndex) {
     // If the scrollController is null or has no clients, return
-    if (scrollController == null || !(scrollController?.hasClients ?? false)) return;
+    if (scrollController == null || !(scrollController?.hasClients ?? false))
+      return;
     if (currentIndex + 1 < questionKeys.length) {
       final nextKey = questionKeys[currentIndex + 1];
       final nextContext = nextKey.key.currentContext;
@@ -57,13 +60,16 @@ class GameScoringWidget extends StatelessWidget {
         final RenderBox renderBox = nextContext.findRenderObject() as RenderBox;
         final position = renderBox.localToGlobal(
           Offset.zero,
-          ancestor: scrollController!.position.context.storageContext.findRenderObject() as RenderObject,
+          ancestor: scrollController!.position.context.storageContext
+              .findRenderObject() as RenderObject,
         );
 
         // Calculate the offset to center the next question
         final viewportHeight = scrollController!.position.viewportDimension;
-        final targetOffset =
-            position.dy + scrollController!.offset - (viewportHeight / 2) + (renderBox.size.height / 2);
+        final targetOffset = position.dy +
+            scrollController!.offset -
+            (viewportHeight / 2) +
+            (renderBox.size.height / 2);
 
         scrollController!.animateTo(
           targetOffset,
@@ -82,11 +88,14 @@ class GameScoringWidget extends StatelessWidget {
       trees: [":tournament:config"],
       child: Selector<TournamentConfigProvider, _BlueprintData>(
         selector: (context, config) {
-          final blueprint = FllBlueprintMap.getFllBlueprint(season: config.season);
+          final blueprint =
+              FllBlueprintMap.getFllBlueprint(season: config.season);
           var type = config.blueprintType;
 
           if (scoreSheet != null) {
-            type = scoreSheet!.isAgnostic ? BlueprintType.agnostic : BlueprintType.seasonal;
+            type = scoreSheet!.isAgnostic
+                ? BlueprintType.agnostic
+                : BlueprintType.seasonal;
           }
 
           return _BlueprintData(
@@ -97,23 +106,28 @@ class GameScoringWidget extends StatelessWidget {
         },
         builder: (context, data, child) {
           if (scoreSheet != null) {
-            Provider.of<GameScoringProvider>(context, listen: false).privateComment = scoreSheet!.privateComment;
+            Provider.of<GameScoringProvider>(context, listen: false)
+                .privateComment = scoreSheet!.privateComment;
           }
 
           if (data.type == BlueprintType.agnostic) {
             if (scoreSheet != null) {
-              Provider.of<GameScoringProvider>(context, listen: false).rawScore = scoreSheet!.score;
+              Provider.of<GameScoringProvider>(context, listen: false)
+                  .rawScore = scoreSheet!.score;
             }
             return AgnosticScoringWidget(
               onScoreChanged: (score, comment) {
-                Provider.of<GameScoringProvider>(context, listen: false).score = score;
-                Provider.of<GameScoringProvider>(context, listen: false).privateComment = comment;
+                Provider.of<GameScoringProvider>(context, listen: false).score =
+                    score;
+                Provider.of<GameScoringProvider>(context, listen: false)
+                    .privateComment = comment;
               },
             );
           } else {
             _initializeQuestionKeys(data.blueprint.robotGameQuestions);
             if (scoreSheet != null) {
-              Provider.of<GameScoringProvider>(context, listen: false).answers = scoreSheet!.scoreSheetAnswers;
+              Provider.of<GameScoringProvider>(context, listen: false).answers =
+                  scoreSheet!.scoreSheetAnswers;
             }
             return CustomScrollView(
               controller: scrollController,
@@ -125,22 +139,30 @@ class GameScoringWidget extends StatelessWidget {
                     (context, index) {
                       Mission mission = data.blueprint.robotGameMissions[index];
                       // List<Question> allQuestions = data.blueprint.robotGameQuestions;
-                      List<_QuestionKeyData> missionQuestions =
-                          questionKeys.where((q) => q.question.id.startsWith(mission.id)).toList();
+                      List<_QuestionKeyData> missionQuestions = questionKeys
+                          .where((q) => q.question.id.startsWith(mission.id))
+                          .toList();
 
                       return MissionWidget(
                         mission: mission,
-                        missionQuestions: missionQuestions.map((questionKeyData) {
+                        missionQuestions:
+                            missionQuestions.map((questionKeyData) {
                           final key = questionKeyData.key;
 
                           final questionWidget = QuestionWidget(
                             key: key,
                             question: questionKeyData.question,
                             onAnswer: (a) async {
-                              TmsLogger().d("Answered question ${questionKeyData.question.id} with answer $a");
-                              _scrollToNextQuestion(questionKeys.indexOf(questionKeyData));
-                              Provider.of<GameScoringProvider>(context, listen: false).onAnswer(
-                                QuestionAnswer(questionId: questionKeyData.question.id, answer: a),
+                              TmsLogger().d(
+                                  "Answered question ${questionKeyData.question.id} with answer $a");
+                              _scrollToNextQuestion(
+                                  questionKeys.indexOf(questionKeyData));
+                              Provider.of<GameScoringProvider>(context,
+                                      listen: false)
+                                  .onAnswer(
+                                QuestionAnswer(
+                                    questionId: questionKeyData.question.id,
+                                    answer: a),
                               );
                             },
                           );
@@ -153,10 +175,14 @@ class GameScoringWidget extends StatelessWidget {
                 ),
                 SliverToBoxAdapter(
                   child: PrivateCommentWidget(
-                    comment: Provider.of<GameScoringProvider>(context).privateComment,
+                    comment: Provider.of<GameScoringProvider>(context)
+                        .privateComment,
                     onCommentChanged: (c) {
-                      Provider.of<GameScoringProvider>(context, listen: false).privateComment = c;
+                      Provider.of<GameScoringProvider>(context, listen: false)
+                          .privateComment = c;
                     },
+                    isCommentNeeded: Provider.of<GameScoringProvider>(context)
+                        .isCommentRequired,
                   ),
                 ),
               ],

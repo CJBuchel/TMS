@@ -32,7 +32,7 @@
    - There are some optional parameters you can run with the server to change it's configuration.
      - `--addr` modifies the address binding, e.g `--addr 0.0.0.0`, by default it's `0.0.0.0`
      - `--port` modifies which port TMS will run on, e.g `--addr 8080`, by default it's `8080`
-     - `--no-tls` this switches the server from using `HTTPS` to the insecure `HTTP`, by default TLS is enabled for added security on public networks.
+     - `--tls` this switches the server from using `HTTP` to the insecure `HTTPS`, by default TLS is disabled for network compatibility, but it should be considered on insecure connections.
      - `--cert` this specifies the location of the certificate file used for TLS, e.g `--cert=cert.pem`
        - By default this will use `--cert=cert.pem`. If no cert is found at the location the server will generate it's own.
      - `--key` this specifies the location of the key file used for TLS, e.g `--key=key.rsa`

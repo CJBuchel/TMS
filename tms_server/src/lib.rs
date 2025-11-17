@@ -13,8 +13,8 @@ pub struct ServerArgs {
   #[structopt(default_value = "8080", long = "port", help = "Port to listen on, --port 8080")]
   pub port: u16,
 
-  #[structopt(long = "no-tls", help = "Use insecure connection, http/ws instead of https/wss, --no-tls")]
-  pub no_tls: bool,
+  #[structopt(long = "tls", help = "Use secure connection, https/wss instead of http/ws, --tls")]
+  pub tls: bool,
 
   #[structopt(long = "cert", help = "Path to the certificate file, --cert=cert.pem")]
   pub cert_path: Option<String>,
@@ -39,7 +39,7 @@ impl ServerArgs {
   }
 
   pub fn get_tls() -> bool {
-    !ServerArgs::from_args().no_tls
+    ServerArgs::from_args().tls
   }
 
   pub fn get_cert_path() -> Option<String> {

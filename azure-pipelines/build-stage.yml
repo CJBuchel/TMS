@@ -1,8 +1,8 @@
 jobs:
   - job: DockerBuild
-    displayName: 'Docker Image'
+    displayName: "Docker Image"
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: "ubuntu-latest"
     steps:
       # docker build template
       - template: templates/server-build-template.yml
@@ -11,33 +11,33 @@ jobs:
       # create tarball and publish
       - template: templates/steps/docker-steps/save-image-tar.yml
         parameters:
-          dockerFile: 'docker-image.tar'
-          targetFolder: '$(Build.ArtifactStagingDirectory)'
+          dockerFile: "docker-image.tar"
+          targetFolder: "$(Build.ArtifactStagingDirectory)"
       # publish artifact
       - template: templates/steps/common-steps/publish-artifact.yml
         parameters:
-          artifactName: 'docker-image'
+          artifactName: "docker-image"
 
   - job: LinuxBuild
-    displayName: 'Linux Server'
+    displayName: "Linux Server"
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: "ubuntu-latest"
     steps:
       # server build template
       - template: templates/server-build-template.yml
       # publish artifacts template
       - template: templates/server-artifact-template.yml
         parameters:
-          serverBinaryPath: '**/tms_server'
-          artifactName: 'tms-linux'
-          archiveType: 'tar'
-          tarCompression: 'gz'
-          archiveFile: 'tms.tar.gz'
+          serverBinaryPath: "**/tms_server"
+          artifactName: "tms-linux"
+          archiveType: "tar"
+          tarCompression: "gz"
+          archiveFile: "tms.tar.gz"
 
   - job: WindowsBuild
-    displayName: 'Windows Server'
+    displayName: "Windows Server"
     pool:
-      vmImage: 'windows-latest'
+      vmImage: "windows-latest"
     steps:
       # server build template
       - template: templates/server-build-template.yml
@@ -48,23 +48,38 @@ jobs:
       # publish artifacts template
       - template: templates/server-artifact-template.yml
         parameters:
-          serverBinaryPath: '**/tms_server.exe'
-          artifactName: 'tms-windows'
-          archiveType: 'zip'
-          archiveFile: 'tms.zip'
+          serverBinaryPath: "**/tms_server.exe"
+          artifactName: "tms-windows"
+          archiveType: "zip"
+          archiveFile: "tms.zip"
 
   - job: IosBuild
-    displayName: 'iOS Client'
+    displayName: "iOS Client"
     pool:
-      vmImage: 'macos-latest' # macos-latest isn't always latest (we need xcode 15)
+      vmImage: "macos-latest" # macos-latest isn't always latest (we need xcode 15)
     steps:
       # build client template
       - template: templates/client-build-template.yml
         parameters:
-          flutterTarget: 'ios'
+          flutterTarget: "ios"
           buildIpa: true
       # publish artifacts template
       - template: templates/client-artifact-template.yml
         parameters:
-          clientBinaryPath: '**/*.ipa'
-          artifactName: 'ios-ipa'
+          clientBinaryPath: "**/*.ipa"
+          artifactName: "ios-ipa"
+
+  - job: ApkBuild
+    displayName: "Android Client"
+    pool:
+      vmImage: "ubuntu-latest"
+    steps:
+      # build client template
+      - template: templates/client-build-template.yml
+        parameters:
+          flutterTarget: "apk"
+      # publish artifacts template
+      - template: templates/client-artifact-template.yml
+        parameters:
+          clientBinaryPath: "**/*.apk"
+          artifactName: "android-apk"

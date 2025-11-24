@@ -82,25 +82,25 @@ steps:
         displayName: "Install wasm-pack (Windows)"
         condition: eq(variables['Agent.OS'], 'Windows_NT')
 
-  # install cargo ndk (cargo task uses manifest, using script instead)
-  - ${{ if eq(parameters.target, 'apk') }}:
-      - script: |
-          if ! command -v cargo-ndk &> /dev/null; then
-            echo "Installing cargo-ndk"
-            cargo install cargo-ndk
-          else
-            echo "cargo-ndk already installed"
-          fi
-        displayName: "Install cargo-ndk (Unix)"
-        condition: ne(variables['Agent.OS'], 'Windows_NT')
+  # # install cargo ndk (cargo task uses manifest, using script instead)
+  # - ${{ if eq(parameters.target, 'apk') }}:
+  #     - script: |
+  #         if ! command -v cargo-ndk &> /dev/null; then
+  #           echo "Installing cargo-ndk"
+  #           cargo install cargo-ndk
+  #         else
+  #           echo "cargo-ndk already installed"
+  #         fi
+  #       displayName: "Install cargo-ndk (Unix)"
+  #       condition: ne(variables['Agent.OS'], 'Windows_NT')
 
-  - ${{ if eq(parameters.target, 'apk') }}:
-      - powershell: |
-          if (-not (Get-Command cargo-ndk -ErrorAction SilentlyContinue)) {
-            Write-Output "Installing cargo-ndk"
-            cargo install cargo-ndk
-          } else {
-            Write-Output "cargo-ndk already installed"
-          }
-        displayName: "Install cargo-ndk (Windows)"
-        condition: eq(variables['Agent.OS'], 'Windows_NT')
+  # - ${{ if eq(parameters.target, 'apk') }}:
+  #     - powershell: |
+  #         if (-not (Get-Command cargo-ndk -ErrorAction SilentlyContinue)) {
+  #           Write-Output "Installing cargo-ndk"
+  #           cargo install cargo-ndk
+  #         } else {
+  #           Write-Output "cargo-ndk already installed"
+  #         }
+  #       displayName: "Install cargo-ndk (Windows)"
+  #       condition: eq(variables['Agent.OS'], 'Windows_NT')

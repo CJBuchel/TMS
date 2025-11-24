@@ -109,18 +109,44 @@ class CargoKitPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        def plugin = findFlutterPlugin(project.rootProject);
-
         project.extensions.create("cargokit", CargoKitExtension)
+        
+        def plugin = findFlutterPlugin(project.rootProject)
 
+        // If Flutter plugin not found, try to configure manually for development
         if (plugin == null) {
-            print("Flutter plugin not found, CargoKit plugin will not be applied.")
+            if (project.android != null) {
+                // This is likely a plugin being developed, set up Android support
+                println("Flutter plugin not found, but Android extension is available. Setting up CargoKit manually.")
+                setupCargo(project, null)
+            } else {
+                println("Flutter plugin not found, CargoKit plugin will not be applied.")
+            }
             return;
         }
 
+        setupCargo(project, plugin)
+    }
+    
+    private void setupCargo(Project project, Plugin plugin) {
         def cargoBuildDir = "${project.buildDir}/build"
         
-        // Determine if the project is an application or library
+        // Get variants - we need plugin info
+        if (plugin == null) {
+            println("Warning: Flutter plugin still not available, trying to get NDK info from parent or app")
+            // Try to find the app project directly
+            def appProject = project.rootProject.findProject(':app')
+            if (appProject == null) {
+                println("ERROR: Could not find :app project")
+                return
+            }
+            plugin = appProject.plugins.findPlugin('dev.flutter.flutter-gradle-plugin')
+            if (plugin == null) {
+                println("ERROR: Could not find Flutter Gradle Plugin in app")
+                return
+            }
+        }
+        
         def isApplication = plugin.project.plugins.hasPlugin('com.android.application')
         def variants = isApplication ? plugin.project.android.applicationVariants : plugin.project.android.libraryVariants
 
@@ -132,12 +158,12 @@ class CargoKitPlugin implements Plugin<Project> {
             def jniLibs = project.android.sourceSets.maybeCreate(buildType).jniLibs;
             jniLibs.srcDir(new File(cargoOutputDir))
 
-            def platforms = plugin.getTargetPlatforms().collect()
-
-            // Same thing addFlutterDependencies does in flutter.gradle
+            // For now, only support arm64-v8a and x86_64 for release and x86/x86_64 for debug
+            def platforms = []
             if (buildType == "debug") {
-                platforms.add("android-x86")
-                platforms.add("android-x64")
+                platforms = ["android-arm64", "android-x86", "android-x64"]
+            } else {
+                platforms = ["android-arm64"]
             }
 
             // The task name depends on plugin properties, which are not available

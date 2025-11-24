@@ -25,6 +25,7 @@ class Connection extends StatelessWidget {
       builder: (context, isConnected, child) {
         String ip = TmsLocalStorageProvider().serverIp;
         String port = TmsLocalStorageProvider().serverPort.toString();
+        String externalIp = TmsLocalStorageProvider().serverExternalIp;
 
         return Column(
           children: [
@@ -34,7 +35,9 @@ class Connection extends StatelessWidget {
                 const Text('Status: '),
                 Text(
                   isConnected ? 'Connected' : 'Disconnected',
-                  style: TextStyle(color: isConnected ? Colors.green : Colors.red, overflow: TextOverflow.ellipsis),
+                  style: TextStyle(
+                      color: isConnected ? Colors.green : Colors.red,
+                      overflow: TextOverflow.ellipsis),
                 ),
               ],
             ),
@@ -44,6 +47,27 @@ class Connection extends StatelessWidget {
               children: [
                 Text(
                   ip.isNotEmpty ? '${ip}:${port}' : 'N/A',
+                  style: TextStyle(
+                    color: isConnected ? null : Colors.red,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // allow text to be copied
+                SelectableText(
+                  'Actual: ',
+                  style: TextStyle(
+                    color: isConnected ? null : Colors.red,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SelectableText(
+                  externalIp.isNotEmpty ? '${externalIp}:${port}' : 'N/A',
                   style: TextStyle(
                     color: isConnected ? null : Colors.red,
                     overflow: TextOverflow.ellipsis,
@@ -141,7 +165,8 @@ class Connection extends StatelessWidget {
         icon: const Icon(Icons.link),
         onPressed: () {
           TmsLocalStorageProvider().serverIp = _ipTextController.text;
-          TmsLocalStorageProvider().serverPort = int.parse(_portTextController.text);
+          TmsLocalStorageProvider().serverPort =
+              int.parse(_portTextController.text);
           Network().connect();
         },
         label: const Text('Connect'),

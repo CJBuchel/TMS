@@ -39,7 +39,8 @@ class FloatingQrButton extends StatelessWidget {
     return qrData;
   }
 
-  void _displayQrCode(BuildContext context, String qrData, Color dataColor, Color eyeColor) {
+  void _displayQrCode(
+      BuildContext context, String qrData, Color dataColor, Color eyeColor) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -66,7 +67,7 @@ class FloatingQrButton extends StatelessWidget {
 
   void _displayServerQrCode(BuildContext context) {
     String addr = TmsLocalStorageProvider().serverExternalAddress;
-    String qrData = "$addr/deep_linking";
+    String qrData = "$addr/ui";
     TmsLogger().i("Server QR data: $qrData");
     _displayQrCode(context, qrData, Colors.blue, Colors.red);
   }

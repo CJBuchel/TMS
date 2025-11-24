@@ -79,7 +79,7 @@ async fn main() {
     port: ServerArgs::get_port(),
     addr: ServerArgs::get_addr(),
     tls: ServerArgs::get_tls(),
-    local_ip: ip,
+    local_ip: ip.clone(),
   };
 
   // get main web/network routes
@@ -90,6 +90,7 @@ async fn main() {
   let routes = echo_tree_routes.or(network_routes);
 
   // start main web server, including the routes
+  log::info!("Hosting on {}://{}:{}", if ServerArgs::get_tls() { "https" } else { "http" }, ip.to_string(), ServerArgs::get_port());
   let web_server = WebServer::new(web_config, certs);
   web_server.start(routes).await;
 

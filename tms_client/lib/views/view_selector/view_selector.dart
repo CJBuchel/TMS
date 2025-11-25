@@ -5,6 +5,7 @@ import 'package:tms/providers/auth_provider.dart';
 import 'package:tms/views/view_selector/admin_views.dart';
 import 'package:tms/views/view_selector/judging_views.dart';
 import 'package:tms/views/view_selector/public_views.dart';
+import 'package:tms/views/view_selector/queueing_views.dart';
 import 'package:tms/views/view_selector/robot_game_views.dart';
 
 /**
@@ -35,12 +36,21 @@ class ViewSelector extends StatelessWidget {
                   // public views
                   const PublicViews(),
                   // admin views
-                  if (authProvider.hasPermissionAccess(UserPermissions(admin: true))) const AdminViews(),
+                  if (authProvider
+                      .hasPermissionAccess(UserPermissions(admin: true)))
+                    const AdminViews(),
+                  // queuer views
+                  if (authProvider
+                      .hasPermissionAccess(UserPermissions(queuer: true)))
+                    const QueueingViews(),
                   // robot game views
-                  if (authProvider.hasPermissionAccess(UserPermissions(referee: true, emcee: true)))
+                  if (authProvider.hasPermissionAccess(
+                      UserPermissions(referee: true, emcee: true)))
                     const RobotGameViews(),
                   // team views
-                  if (authProvider.hasPermissionAccess(UserPermissions(judge: true))) const JudgingViews(),
+                  if (authProvider
+                      .hasPermissionAccess(UserPermissions(judge: true)))
+                    const JudgingViews(),
                 ],
               ),
             ),

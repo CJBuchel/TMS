@@ -68,13 +68,15 @@ class EditMatchWidget extends StatelessWidget {
       selector: (_, tableProvider, teamsProvider) {
         // get tables not referenced in the match
         List<String> availableTables = tableProvider.tableNames
-            .where((table) => !gameMatch.gameMatchTables.any((data) => data.table == table))
+            .where((table) =>
+                !gameMatch.gameMatchTables.any((data) => data.table == table))
             .map((table) => table)
             .toList();
 
         // get teams not referenced in the match
         List<Team> availableTeams = teamsProvider.teams
-            .where((team) => !gameMatch.gameMatchTables.any((data) => data.teamNumber == team.teamNumber))
+            .where((team) => !gameMatch.gameMatchTables
+                .any((data) => data.teamNumber == team.teamNumber))
             .toList();
 
         return _AvailableData(
@@ -123,14 +125,18 @@ class EditMatchWidget extends StatelessWidget {
                 // initial values
                 _selectedTable.value = data.availableTables.firstOrNull ?? "";
                 _selectedTeam.value = data.availableTeams.firstOrNull ??
-                    const Team(teamNumber: "", name: "", ranking: 0, affiliation: "");
+                    const Team(
+                        teamNumber: "", name: "", ranking: 0, affiliation: "");
 
                 ConfirmFutureDialog(
                   onStatusConfirmFuture: () {
-                    if (_selectedTeam.value.teamNumber.isEmpty || _selectedTable.value.isEmpty) {
+                    if (_selectedTeam.value.teamNumber.isEmpty ||
+                        _selectedTable.value.isEmpty) {
                       return Future.value(HttpStatus.badRequest);
                     } else {
-                      return Provider.of<GameMatchProvider>(context, listen: false).addTableToMatch(
+                      return Provider.of<GameMatchProvider>(context,
+                              listen: false)
+                          .addTableToMatch(
                         _selectedTable.value,
                         _selectedTeam.value.teamNumber,
                         gameMatch.matchNumber,
@@ -149,35 +155,45 @@ class EditMatchWidget extends StatelessWidget {
                 ).show(context);
               },
               headers: [
-                _paddedCell(const Text("Table", style: const TextStyle(fontWeight: FontWeight.bold))),
-                _paddedCell(const Text("Team", style: const TextStyle(fontWeight: FontWeight.bold))),
-                _paddedCell(const Text("Score", style: const TextStyle(fontWeight: FontWeight.bold))),
+                _paddedCell(const Text("Table",
+                    style: const TextStyle(fontWeight: FontWeight.bold))),
+                _paddedCell(const Text("Team",
+                    style: const TextStyle(fontWeight: FontWeight.bold))),
+                _paddedCell(const Text("Score",
+                    style: const TextStyle(fontWeight: FontWeight.bold))),
               ],
               rows: gameMatch.gameMatchTables.map((gmt) {
                 return EditTableRow(
                   onEdit: () {
                     _selectedTable.value = gmt.table;
-                    _selectedTeam.value = Provider.of<TeamsProvider>(context, listen: false).getTeam(gmt.teamNumber);
+                    _selectedTeam.value =
+                        Provider.of<TeamsProvider>(context, listen: false)
+                            .getTeam(gmt.teamNumber);
                     _selectedScoreSubmitted.value = gmt.scoreSubmitted;
 
                     ConfirmFutureDialog(
                       onStatusConfirmFuture: () {
-                        if (_selectedTeam.value.teamNumber.isEmpty || _selectedTable.value.isEmpty) {
+                        if (_selectedTeam.value.teamNumber.isEmpty ||
+                            _selectedTable.value.isEmpty) {
                           return Future.value(HttpStatus.badRequest);
                         } else {
-                          return Provider.of<GameMatchProvider>(context, listen: false).updateTableOnMatch(
+                          return Provider.of<GameMatchProvider>(context,
+                                  listen: false)
+                              .updateTableOnMatch(
                             originTable: gmt.table,
                             originMatchNumber: gameMatch.matchNumber,
                             updatedTable: GameMatchTable(
                               table: _selectedTable.value,
                               teamNumber: _selectedTeam.value.teamNumber,
                               scoreSubmitted: _selectedScoreSubmitted.value,
+                              checkInStatus: gmt.checkInStatus,
                             ),
                           );
                         }
                       },
                       style: DialogStyle.warn(
-                        title: "Update team ${gmt.teamNumber} on table ${gmt.table}",
+                        title:
+                            "Update team ${gmt.teamNumber} on table ${gmt.table}",
                         message: EditTableWidget(
                           availableTables: data.availableTables,
                           availableTeams: data.availableTeams,
@@ -192,10 +208,13 @@ class EditMatchWidget extends StatelessWidget {
                     ConfirmFutureDialog(
                       style: DialogStyle.error(
                         title: "Delete team ${gmt.teamNumber} from match",
-                        message: const Text("Are you sure you want to delete this team from the match?"),
+                        message: const Text(
+                            "Are you sure you want to delete this team from the match?"),
                       ),
                       onStatusConfirmFuture: () {
-                        return Provider.of<GameMatchProvider>(context, listen: false).removeTableFromMatch(
+                        return Provider.of<GameMatchProvider>(context,
+                                listen: false)
+                            .removeTableFromMatch(
                           gmt.table,
                           gameMatch.matchNumber,
                         );

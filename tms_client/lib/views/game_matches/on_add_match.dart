@@ -27,7 +27,8 @@ class OnAddMatch {
   Widget _editStartTime() {
     return EditTimeWidget(
       label: "Start Time",
-      initialTime: TmsDateTime(time: dateTimeToTmsDateTime(DateTime.now()).time),
+      initialTime:
+          TmsDateTime(time: dateTimeToTmsDateTime(DateTime.now()).time),
       onChanged: (t) => _startTime = t,
     );
   }
@@ -38,15 +39,19 @@ class OnAddMatch {
         if (_matchNumberController.text.isEmpty) {
           return Future.value(HttpStatus.badRequest);
         } else {
-          return Provider.of<GameMatchProvider>(context, listen: false).insertGameMatch(
+          return Provider.of<GameMatchProvider>(context, listen: false)
+              .insertGameMatch(
             null,
             GameMatch(
               matchNumber: _matchNumberController.text,
-              startTime: TmsDateTime(time: _startTime.time), // we only care about time, not date
-              endTime: TmsDateTime(time: _startTime.time).addDuration(duration: TmsDuration(minutes: 4)),
+              startTime: TmsDateTime(
+                  time: _startTime.time), // we only care about time, not date
+              endTime: TmsDateTime(time: _startTime.time)
+                  .addDuration(duration: TmsDuration(minutes: 4)),
               completed: false,
               gameMatchTables: [],
               category: const TmsCategory(category: "", subCategories: []),
+              queueState: GameMatchQueueStatus.queueingSoon,
             ),
           );
         }

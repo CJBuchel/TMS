@@ -13,7 +13,8 @@ class EditMatchButton extends StatelessWidget {
   });
 
   final ValueNotifier<bool> _matchComplete = ValueNotifier(false);
-  final ValueNotifier<List<bool>> _gameMatchTableScoresSubmitted = ValueNotifier([]);
+  final ValueNotifier<List<bool>> _gameMatchTableScoresSubmitted =
+      ValueNotifier([]);
 
   List<Widget> _buildGameTableDialogs() {
     _gameMatchTableScoresSubmitted.value = List<bool>.generate(
@@ -84,6 +85,7 @@ class EditMatchButton extends StatelessWidget {
               table: match.gameMatchTables[index].table,
               scoreSubmitted: _gameMatchTableScoresSubmitted.value[index],
               teamNumber: match.gameMatchTables[index].teamNumber,
+              checkInStatus: match.gameMatchTables[index].checkInStatus,
             );
           },
         );
@@ -95,11 +97,13 @@ class EditMatchButton extends StatelessWidget {
           gameMatchTables: updatedTables,
           completed: _matchComplete.value,
           category: match.category,
+          queueState: match.queueState,
         );
 
         // update the match
 
-        return Provider.of<GameMatchProvider>(context, listen: false).insertGameMatch(
+        return Provider.of<GameMatchProvider>(context, listen: false)
+            .insertGameMatch(
           match.matchNumber,
           updatedMatch,
         );

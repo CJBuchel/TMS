@@ -10,7 +10,7 @@ import 'tms_time/tms_date.dart';
 import 'tms_time/tms_date_time.dart';
 import 'tms_time/tms_time.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`
 
 class GameMatch {
   final String matchNumber;
@@ -19,6 +19,7 @@ class GameMatch {
   final List<GameMatchTable> gameMatchTables;
   final bool completed;
   final TmsCategory category;
+  final GameMatchQueueStatus queueState;
 
   const GameMatch({
     required this.matchNumber,
@@ -27,6 +28,7 @@ class GameMatch {
     required this.gameMatchTables,
     required this.completed,
     required this.category,
+    required this.queueState,
   });
 
   static GameMatch default_() => TmsRustLib.instance.api
@@ -51,7 +53,8 @@ class GameMatch {
       endTime.hashCode ^
       gameMatchTables.hashCode ^
       completed.hashCode ^
-      category.hashCode;
+      category.hashCode ^
+      queueState.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -63,23 +66,37 @@ class GameMatch {
           endTime == other.endTime &&
           gameMatchTables == other.gameMatchTables &&
           completed == other.completed &&
-          category == other.category;
+          category == other.category &&
+          queueState == other.queueState;
+}
+
+enum GameMatchQueueStatus {
+  queueingSoon,
+  queuingNow,
+  onDeck,
+  playing,
+  ;
 }
 
 class GameMatchTable {
   final String table;
   final String teamNumber;
   final bool scoreSubmitted;
+  final TeamCheckInStatus checkInStatus;
 
   const GameMatchTable({
     required this.table,
     required this.teamNumber,
     required this.scoreSubmitted,
+    required this.checkInStatus,
   });
 
   @override
   int get hashCode =>
-      table.hashCode ^ teamNumber.hashCode ^ scoreSubmitted.hashCode;
+      table.hashCode ^
+      teamNumber.hashCode ^
+      scoreSubmitted.hashCode ^
+      checkInStatus.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -88,5 +105,13 @@ class GameMatchTable {
           runtimeType == other.runtimeType &&
           table == other.table &&
           teamNumber == other.teamNumber &&
-          scoreSubmitted == other.scoreSubmitted;
+          scoreSubmitted == other.scoreSubmitted &&
+          checkInStatus == other.checkInStatus;
+}
+
+enum TeamCheckInStatus {
+  notCheckedIn,
+  notPlaying,
+  checkedIn,
+  ;
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,6 @@ import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
 import 'package:tms/providers/robot_game_providers/game_table_provider.dart';
 import 'package:tms/providers/teams_provider.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
-import 'package:collection/collection.dart';
 import 'package:tms/widgets/dialogs/dialog_style.dart';
 
 class RescheduleButton extends StatelessWidget {
@@ -28,8 +28,10 @@ class RescheduleButton extends StatelessWidget {
         ({List<GameMatch> matches, List<String> tables, List<Team> teams})>(
       selector: (context, matchProvider, tableProvider, teamsProvider) {
         // get matches which are not completed
-        List<GameMatch> matches = matchProvider.matches.where((m) => !m.completed).toList();
-        List<String> tables = tableProvider.tables.map((table) => table.tableName).toList();
+        List<GameMatch> matches =
+            matchProvider.matches.where((m) => !m.completed).toList();
+        List<String> tables =
+            tableProvider.tables.map((table) => table.tableName).toList();
         return (matches: matches, tables: tables, teams: teamsProvider.teams);
       },
       builder: (context, data, _) {
@@ -42,7 +44,8 @@ class RescheduleButton extends StatelessWidget {
                 showSearchBox: true,
               ),
               items: match.gameMatchTables
-                  .map((table) => data.teams.firstWhereOrNull((t) => t.teamNumber == table.teamNumber))
+                  .map((table) => data.teams.firstWhereOrNull(
+                      (t) => t.teamNumber == table.teamNumber))
                   .toList(),
               itemAsString: (team) => "${team?.teamNumber} | ${team?.name}",
               dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -53,7 +56,8 @@ class RescheduleButton extends StatelessWidget {
                   hintText: "Select Team",
                 ),
               ),
-              onChanged: (value) => _selectedTeamNumber.value = value?.teamNumber,
+              onChanged: (value) =>
+                  _selectedTeamNumber.value = value?.teamNumber,
             ),
 
             // down arrow
@@ -70,7 +74,8 @@ class RescheduleButton extends StatelessWidget {
                 showSearchBox: true,
               ),
               items: data.matches,
-              itemAsString: (match) => "${match.matchNumber} - ${match.startTime.toString()}",
+              itemAsString: (match) =>
+                  "${match.matchNumber} - ${match.startTime.toString()}",
               dropdownDecoratorProps: const DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -94,7 +99,10 @@ class RescheduleButton extends StatelessWidget {
                     showSearchBox: true,
                   ),
                   items: data.tables.where((t) {
-                    List<String> smTables = sm?.gameMatchTables.map((table) => table.table).toList() ?? [];
+                    List<String> smTables = sm?.gameMatchTables
+                            .map((table) => table.table)
+                            .toList() ??
+                        [];
                     return !smTables.contains(t);
                   }).toList(),
                   itemAsString: (table) => "${table}",
@@ -123,7 +131,9 @@ class RescheduleButton extends StatelessWidget {
         message: _buildDialogMessage(),
       ),
       onStatusConfirmFuture: () {
-        if (_selectedTeamNumber.value == null || _selectedMatch.value == null || _selectedTable.value == null) {
+        if (_selectedTeamNumber.value == null ||
+            _selectedMatch.value == null ||
+            _selectedTable.value == null) {
           return Future.value(HttpStatus.badRequest);
         }
 
@@ -136,7 +146,8 @@ class RescheduleButton extends StatelessWidget {
           return Future.value(HttpStatus.badRequest);
         }
 
-        return Provider.of<GameMatchProvider>(context, listen: false).updateTableOnMatch(
+        return Provider.of<GameMatchProvider>(context, listen: false)
+            .updateTableOnMatch(
           originTable: originTable,
           originMatchNumber: match.matchNumber,
           updatedMatchNumber: _selectedMatch.value!.matchNumber,
@@ -144,6 +155,7 @@ class RescheduleButton extends StatelessWidget {
             table: _selectedTable.value!,
             teamNumber: _selectedTeamNumber.value!,
             scoreSubmitted: false,
+            checkInStatus: TeamCheckInStatus.notCheckedIn,
           ),
         );
       },

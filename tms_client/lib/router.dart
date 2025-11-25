@@ -15,6 +15,7 @@ import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/match_announcer/match_announcer.dart';
 // import 'package:tms/views/match_announcer/match_announcer.dart';
 import 'package:tms/views/match_controller/match_controller.dart';
+import 'package:tms/views/queueing/queueing.dart';
 import 'package:tms/views/referee_scoring/referee_scoring.dart';
 import 'package:tms/views/scoreboard/scoreboard.dart';
 import 'package:tms/views/setup/setup.dart';
@@ -22,9 +23,9 @@ import 'package:tms/views/team_data/team_data.dart';
 import 'package:tms/views/teams/teams.dart';
 import 'package:tms/views/users/users.dart';
 import 'package:tms/views/view_selector/view_selector.dart';
+import 'package:tms/widgets/no_mobile_view_wrapper.dart';
 import 'package:tms/widgets/scaffolds/base_scaffold.dart';
 import 'package:tms/widgets/scaffolds/base_scaffold_drawer_router.dart';
-import 'package:tms/widgets/no_mobile_view_wrapper.dart';
 
 class _DelayedViewWrapper extends StatelessWidget {
   final Widget child;
@@ -57,7 +58,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'setup',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Setup())),
+          child:
+              _DelayedViewWrapper(child: NoMobileViewWrapper(child: Setup())),
         ),
       ),
       GoRoute(
@@ -65,7 +67,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'dashboard',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Dashboard())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: Dashboard())),
         ),
       ),
       GoRoute(
@@ -73,7 +76,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'users',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Users())),
+          child:
+              _DelayedViewWrapper(child: NoMobileViewWrapper(child: Users())),
         ),
       ),
       GoRoute(
@@ -81,7 +85,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'backups',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Backups())),
+          child:
+              _DelayedViewWrapper(child: NoMobileViewWrapper(child: Backups())),
         ),
       ),
     ],
@@ -103,7 +108,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'team_data',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: TeamData())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: TeamData())),
         ),
       ),
     ],
@@ -122,6 +128,15 @@ final _protectedRoutes = <GoRoute>[
     },
   ),
 
+  GoRoute(
+    path: '/queueing',
+    name: 'queueing',
+    builder: (context, state) => BaseScaffoldDrawerRouter(
+      state: state,
+      child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Queueing())),
+    ),
+  ),
+
   // robot games routes
   GoRoute(
     path: '/robot_games',
@@ -132,7 +147,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'match_controller',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: const _DelayedViewWrapper(child: NoMobileViewWrapper(child: MatchController())),
+          child: const _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: MatchController())),
         ),
       ),
       GoRoute(
@@ -140,7 +156,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'scoring',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: RefereeScoring())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: RefereeScoring())),
         ),
       ),
       GoRoute(
@@ -148,7 +165,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'game_matches',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: GameMatches())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: GameMatches())),
         ),
       ),
       GoRoute(
@@ -156,7 +174,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'game_tables',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: GameTables())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: GameTables())),
         ),
       ),
       GoRoute(
@@ -164,7 +183,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'match_announcer',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: MatchAnnouncer())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: MatchAnnouncer())),
         ),
       ),
     ],
@@ -187,7 +207,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'judging_pods',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: JudgingPods())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: JudgingPods())),
         ),
       ),
       GoRoute(
@@ -195,7 +216,8 @@ final _protectedRoutes = <GoRoute>[
         name: 'judging_sessions',
         builder: (context, state) => BaseScaffoldDrawerRouter(
           state: state,
-          child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: JudgingSessions())),
+          child: _DelayedViewWrapper(
+              child: NoMobileViewWrapper(child: JudgingSessions())),
         ),
       ),
     ],
@@ -214,7 +236,8 @@ final tmsRouter = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      builder: (context, state) => BaseScaffold(state: state, child: const ViewSelector()),
+      builder: (context, state) =>
+          BaseScaffold(state: state, child: const ViewSelector()),
     ),
     GoRoute(
       path: '/login',
@@ -234,12 +257,14 @@ final tmsRouter = GoRouter(
     GoRoute(
       path: '/game_match_timer',
       name: 'game_match_timer',
-      builder: (context, state) => BaseScaffold(state: state, child: _DelayedViewWrapper(child: GameMatchTimer())),
+      builder: (context, state) => BaseScaffold(
+          state: state, child: _DelayedViewWrapper(child: GameMatchTimer())),
     ),
     GoRoute(
       path: '/scoreboard',
       name: 'scoreboard',
-      builder: (context, state) => BaseScaffold(state: state, child: const _DelayedViewWrapper(child: Scoreboard())),
+      builder: (context, state) => BaseScaffold(
+          state: state, child: const _DelayedViewWrapper(child: Scoreboard())),
     ),
     ..._protectedRoutes,
   ],

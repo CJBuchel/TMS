@@ -6,10 +6,27 @@ use crate::infra::DataSchemeExtensions;
 use super::{TmsCategory, TmsDateTime};
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
+pub enum TeamCheckInStatus {
+  NotCheckedIn,
+  NotPlaying,
+  CheckedIn,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct GameMatchTable {
   pub table: String,
   pub team_number: String,
   pub score_submitted: bool,
+  pub check_in_status: TeamCheckInStatus,
+}
+
+// State for match queuing,
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
+pub enum GameMatchQueueStatus {
+  QueueingSoon,
+  QueuingNow,
+  OnDeck,
+  Playing,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
@@ -22,6 +39,9 @@ pub struct GameMatch {
 
   // category
   pub category: TmsCategory,
+
+  // State for match queuing
+  pub queue_state: GameMatchQueueStatus,
 }
 
 impl Default for GameMatch {
@@ -33,6 +53,7 @@ impl Default for GameMatch {
       game_match_tables: Vec::new(),
       completed: false,
       category: TmsCategory::default(),
+      queue_state: GameMatchQueueStatus::QueueingSoon,
     }
   }
 }

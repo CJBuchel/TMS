@@ -7040,6 +7040,8 @@ fn wire__crate__infra__database_schemas__user__user_permissions_new_impl(
       let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
       let api_admin = <Option<bool>>::sse_decode(&mut deserializer);
+      let api_queuer = <Option<bool>>::sse_decode(&mut deserializer);
+      let api_lead_queuer = <Option<bool>>::sse_decode(&mut deserializer);
       let api_referee = <Option<bool>>::sse_decode(&mut deserializer);
       let api_head_referee = <Option<bool>>::sse_decode(&mut deserializer);
       let api_judge = <Option<bool>>::sse_decode(&mut deserializer);
@@ -7051,6 +7053,8 @@ fn wire__crate__infra__database_schemas__user__user_permissions_new_impl(
       transform_result_sse::<_, ()>((move || {
         let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::UserPermissions::new(
           api_admin,
+          api_queuer,
+          api_lead_queuer,
           api_referee,
           api_head_referee,
           api_judge,
@@ -7364,6 +7368,7 @@ impl SseDecode for crate::infra::database_schemas::game_match::GameMatch {
     let mut var_gameMatchTables = <Vec<crate::infra::database_schemas::game_match::GameMatchTable>>::sse_decode(deserializer);
     let mut var_completed = <bool>::sse_decode(deserializer);
     let mut var_category = <crate::infra::database_schemas::category::TmsCategory>::sse_decode(deserializer);
+    let mut var_queueState = <crate::infra::database_schemas::game_match::GameMatchQueueStatus>::sse_decode(deserializer);
     return crate::infra::database_schemas::game_match::GameMatch {
       match_number: var_matchNumber,
       start_time: var_startTime,
@@ -7371,6 +7376,21 @@ impl SseDecode for crate::infra::database_schemas::game_match::GameMatch {
       game_match_tables: var_gameMatchTables,
       completed: var_completed,
       category: var_category,
+      queue_state: var_queueState,
+    };
+  }
+}
+
+impl SseDecode for crate::infra::database_schemas::game_match::GameMatchQueueStatus {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+    let mut inner = <i32>::sse_decode(deserializer);
+    return match inner {
+      0 => crate::infra::database_schemas::game_match::GameMatchQueueStatus::QueueingSoon,
+      1 => crate::infra::database_schemas::game_match::GameMatchQueueStatus::QueuingNow,
+      2 => crate::infra::database_schemas::game_match::GameMatchQueueStatus::OnDeck,
+      3 => crate::infra::database_schemas::game_match::GameMatchQueueStatus::Playing,
+      _ => unreachable!("Invalid variant for GameMatchQueueStatus: {}", inner),
     };
   }
 }
@@ -7381,10 +7401,12 @@ impl SseDecode for crate::infra::database_schemas::game_match::GameMatchTable {
     let mut var_table = <String>::sse_decode(deserializer);
     let mut var_teamNumber = <String>::sse_decode(deserializer);
     let mut var_scoreSubmitted = <bool>::sse_decode(deserializer);
+    let mut var_checkInStatus = <crate::infra::database_schemas::game_match::TeamCheckInStatus>::sse_decode(deserializer);
     return crate::infra::database_schemas::game_match::GameMatchTable {
       table: var_table,
       team_number: var_teamNumber,
       score_submitted: var_scoreSubmitted,
+      check_in_status: var_checkInStatus,
     };
   }
 }
@@ -8051,6 +8073,19 @@ impl SseDecode for crate::infra::database_schemas::team::Team {
   }
 }
 
+impl SseDecode for crate::infra::database_schemas::game_match::TeamCheckInStatus {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+    let mut inner = <i32>::sse_decode(deserializer);
+    return match inner {
+      0 => crate::infra::database_schemas::game_match::TeamCheckInStatus::NotCheckedIn,
+      1 => crate::infra::database_schemas::game_match::TeamCheckInStatus::NotPlaying,
+      2 => crate::infra::database_schemas::game_match::TeamCheckInStatus::CheckedIn,
+      _ => unreachable!("Invalid variant for TeamCheckInStatus: {}", inner),
+    };
+  }
+}
+
 impl SseDecode for crate::infra::network_schemas::team_requests::TeamInsertRequest {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -8487,6 +8522,8 @@ impl SseDecode for crate::infra::database_schemas::user::UserPermissions {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
     let mut var_admin = <Option<bool>>::sse_decode(deserializer);
+    let mut var_queuer = <Option<bool>>::sse_decode(deserializer);
+    let mut var_leadQueuer = <Option<bool>>::sse_decode(deserializer);
     let mut var_referee = <Option<bool>>::sse_decode(deserializer);
     let mut var_headReferee = <Option<bool>>::sse_decode(deserializer);
     let mut var_judge = <Option<bool>>::sse_decode(deserializer);
@@ -8496,6 +8533,8 @@ impl SseDecode for crate::infra::database_schemas::user::UserPermissions {
     let mut var_av = <Option<bool>>::sse_decode(deserializer);
     return crate::infra::database_schemas::user::UserPermissions {
       admin: var_admin,
+      queuer: var_queuer,
+      lead_queuer: var_leadQueuer,
       referee: var_referee,
       head_referee: var_headReferee,
       judge: var_judge,
@@ -8971,6 +9010,7 @@ impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::game_matc
       self.game_match_tables.into_into_dart().into_dart(),
       self.completed.into_into_dart().into_dart(),
       self.category.into_into_dart().into_dart(),
+      self.queue_state.into_into_dart().into_dart(),
     ]
     .into_dart()
   }
@@ -8982,9 +9022,33 @@ impl flutter_rust_bridge::IntoIntoDart<crate::infra::database_schemas::game_matc
   }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::game_match::GameMatchQueueStatus {
+  fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+    match self {
+      Self::QueueingSoon => 0.into_dart(),
+      Self::QueuingNow => 1.into_dart(),
+      Self::OnDeck => 2.into_dart(),
+      Self::Playing => 3.into_dart(),
+      _ => unreachable!(),
+    }
+  }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::database_schemas::game_match::GameMatchQueueStatus {}
+impl flutter_rust_bridge::IntoIntoDart<crate::infra::database_schemas::game_match::GameMatchQueueStatus> for crate::infra::database_schemas::game_match::GameMatchQueueStatus {
+  fn into_into_dart(self) -> crate::infra::database_schemas::game_match::GameMatchQueueStatus {
+    self
+  }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::game_match::GameMatchTable {
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-    [self.table.into_into_dart().into_dart(), self.team_number.into_into_dart().into_dart(), self.score_submitted.into_into_dart().into_dart()].into_dart()
+    [
+      self.table.into_into_dart().into_dart(),
+      self.team_number.into_into_dart().into_dart(),
+      self.score_submitted.into_into_dart().into_dart(),
+      self.check_in_status.into_into_dart().into_dart(),
+    ]
+    .into_dart()
   }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::database_schemas::game_match::GameMatchTable {}
@@ -9433,6 +9497,23 @@ impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::team::Tea
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::database_schemas::team::Team {}
 impl flutter_rust_bridge::IntoIntoDart<crate::infra::database_schemas::team::Team> for crate::infra::database_schemas::team::Team {
   fn into_into_dart(self) -> crate::infra::database_schemas::team::Team {
+    self
+  }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::game_match::TeamCheckInStatus {
+  fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+    match self {
+      Self::NotCheckedIn => 0.into_dart(),
+      Self::NotPlaying => 1.into_dart(),
+      Self::CheckedIn => 2.into_dart(),
+      _ => unreachable!(),
+    }
+  }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::database_schemas::game_match::TeamCheckInStatus {}
+impl flutter_rust_bridge::IntoIntoDart<crate::infra::database_schemas::game_match::TeamCheckInStatus> for crate::infra::database_schemas::game_match::TeamCheckInStatus {
+  fn into_into_dart(self) -> crate::infra::database_schemas::game_match::TeamCheckInStatus {
     self
   }
 }
@@ -9915,6 +9996,8 @@ impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::user::Use
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
     [
       self.admin.into_into_dart().into_dart(),
+      self.queuer.into_into_dart().into_dart(),
+      self.lead_queuer.into_into_dart().into_dart(),
       self.referee.into_into_dart().into_dart(),
       self.head_referee.into_into_dart().into_dart(),
       self.judge.into_into_dart().into_dart(),
@@ -10050,6 +10133,25 @@ impl SseEncode for crate::infra::database_schemas::game_match::GameMatch {
     <Vec<crate::infra::database_schemas::game_match::GameMatchTable>>::sse_encode(self.game_match_tables, serializer);
     <bool>::sse_encode(self.completed, serializer);
     <crate::infra::database_schemas::category::TmsCategory>::sse_encode(self.category, serializer);
+    <crate::infra::database_schemas::game_match::GameMatchQueueStatus>::sse_encode(self.queue_state, serializer);
+  }
+}
+
+impl SseEncode for crate::infra::database_schemas::game_match::GameMatchQueueStatus {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+    <i32>::sse_encode(
+      match self {
+        crate::infra::database_schemas::game_match::GameMatchQueueStatus::QueueingSoon => 0,
+        crate::infra::database_schemas::game_match::GameMatchQueueStatus::QueuingNow => 1,
+        crate::infra::database_schemas::game_match::GameMatchQueueStatus::OnDeck => 2,
+        crate::infra::database_schemas::game_match::GameMatchQueueStatus::Playing => 3,
+        _ => {
+          unimplemented!("");
+        }
+      },
+      serializer,
+    );
   }
 }
 
@@ -10059,6 +10161,7 @@ impl SseEncode for crate::infra::database_schemas::game_match::GameMatchTable {
     <String>::sse_encode(self.table, serializer);
     <String>::sse_encode(self.team_number, serializer);
     <bool>::sse_encode(self.score_submitted, serializer);
+    <crate::infra::database_schemas::game_match::TeamCheckInStatus>::sse_encode(self.check_in_status, serializer);
   }
 }
 
@@ -10566,6 +10669,23 @@ impl SseEncode for crate::infra::database_schemas::team::Team {
   }
 }
 
+impl SseEncode for crate::infra::database_schemas::game_match::TeamCheckInStatus {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+    <i32>::sse_encode(
+      match self {
+        crate::infra::database_schemas::game_match::TeamCheckInStatus::NotCheckedIn => 0,
+        crate::infra::database_schemas::game_match::TeamCheckInStatus::NotPlaying => 1,
+        crate::infra::database_schemas::game_match::TeamCheckInStatus::CheckedIn => 2,
+        _ => {
+          unimplemented!("");
+        }
+      },
+      serializer,
+    );
+  }
+}
+
 impl SseEncode for crate::infra::network_schemas::team_requests::TeamInsertRequest {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -10941,6 +11061,8 @@ impl SseEncode for crate::infra::database_schemas::user::UserPermissions {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
     <Option<bool>>::sse_encode(self.admin, serializer);
+    <Option<bool>>::sse_encode(self.queuer, serializer);
+    <Option<bool>>::sse_encode(self.lead_queuer, serializer);
     <Option<bool>>::sse_encode(self.referee, serializer);
     <Option<bool>>::sse_encode(self.head_referee, serializer);
     <Option<bool>>::sse_encode(self.judge, serializer);

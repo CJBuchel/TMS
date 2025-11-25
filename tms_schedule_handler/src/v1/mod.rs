@@ -22,7 +22,7 @@ mod schedule_judging_block;
 use schedule_judging_block::*;
 use tms_infra::{
   infra::database_schemas::{GameMatch, GameMatchTable, JudgingSession, JudgingSessionPod, Team, TmsDateTime, TmsTime},
-  TmsCategory,
+  GameMatchQueueStatus, TeamCheckInStatus, TmsCategory,
 };
 
 pub trait V1Block {
@@ -216,6 +216,7 @@ impl CsvToTmsSchedule for V1 {
             table: on_table.on_table_name,
             team_number: on_table.team_number,
             score_submitted: false,
+            check_in_status: TeamCheckInStatus::NotCheckedIn,
           };
           game_match_tables.push(game_match_table);
         }
@@ -239,6 +240,7 @@ impl CsvToTmsSchedule for V1 {
             category: String::from("Practice Matches"),
             sub_categories,
           },
+          queue_state: GameMatchQueueStatus::QueueingSoon,
         });
       }
     }
@@ -264,6 +266,7 @@ impl CsvToTmsSchedule for V1 {
             table: on_table.on_table_name,
             team_number: on_table.team_number,
             score_submitted: false,
+            check_in_status: TeamCheckInStatus::NotCheckedIn,
           };
           game_match_tables.push(game_match_table);
         }
@@ -287,6 +290,7 @@ impl CsvToTmsSchedule for V1 {
             category: String::from("Ranking Matches"),
             sub_categories,
           },
+          queue_state: GameMatchQueueStatus::QueueingSoon,
         });
       }
     }

@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:tms/generated/infra/database_schemas/game_match.dart';
 import 'package:tms/generated/infra/database_schemas/team.dart';
 import 'package:tms/providers/robot_game_providers/game_match_provider.dart';
-import 'package:tms/views/match_controller/match_stage/update_team_on_match.dart';
 import 'package:tms/views/match_controller/match_stage/stage_table_data.dart';
+import 'package:tms/views/match_controller/match_stage/update_team_on_match.dart';
 import 'package:tms/widgets/dialogs/confirm_future_dialog.dart';
 import 'package:tms/widgets/dialogs/dialog_style.dart';
 import 'package:tms/widgets/tables/base_table.dart';
@@ -69,15 +69,19 @@ class StageTable extends StatelessWidget {
                 ),
               ),
               onStatusConfirmFuture: () {
-                if (selectedTeam.value == null || selectedTable.value.isEmpty || selectedMatch.value.isEmpty) {
+                if (selectedTeam.value == null ||
+                    selectedTable.value.isEmpty ||
+                    selectedMatch.value.isEmpty) {
                   return Future.value(HttpStatus.badRequest);
                 } else {
                   GameMatchTable update = GameMatchTable(
                     table: selectedTable.value,
                     teamNumber: selectedTeam.value!.teamNumber,
                     scoreSubmitted: segment.table.scoreSubmitted,
+                    checkInStatus: segment.table.checkInStatus,
                   );
-                  return Provider.of<GameMatchProvider>(context, listen: false).updateTableOnMatch(
+                  return Provider.of<GameMatchProvider>(context, listen: false)
+                      .updateTableOnMatch(
                     originTable: segment.table.table,
                     originMatchNumber: segment.matchNumber,
                     updatedTable: update,
@@ -96,7 +100,8 @@ class StageTable extends StatelessWidget {
                 ),
               ),
               onStatusConfirmFuture: () {
-                return Provider.of<GameMatchProvider>(context, listen: false).removeTableFromMatch(
+                return Provider.of<GameMatchProvider>(context, listen: false)
+                    .removeTableFromMatch(
                   segment.table.table,
                   segment.matchNumber,
                 );
@@ -173,10 +178,13 @@ class StageTable extends StatelessWidget {
               ),
             ),
             onStatusConfirmFuture: () {
-              if (selectedTeam.value == null || selectedTable.value.isEmpty || selectedMatch.value.isEmpty) {
+              if (selectedTeam.value == null ||
+                  selectedTable.value.isEmpty ||
+                  selectedMatch.value.isEmpty) {
                 return Future.value(HttpStatus.badRequest);
               } else {
-                return Provider.of<GameMatchProvider>(context, listen: false).addTableToMatch(
+                return Provider.of<GameMatchProvider>(context, listen: false)
+                    .addTableToMatch(
                   selectedTable.value,
                   selectedTeam.value!.teamNumber,
                   selectedMatch.value,

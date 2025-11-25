@@ -16,7 +16,8 @@ class ScoreCenterInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Selector<TeamsProvider, String>(
-      selector: (context, p) => p.getTeamById(teamScoreSheet.teamRefId).teamNumber,
+      selector: (context, p) =>
+          p.getTeamById(teamScoreSheet.teamRefId).teamNumber,
       builder: (context, teamNumber, _) {
         return Row(
           children: [

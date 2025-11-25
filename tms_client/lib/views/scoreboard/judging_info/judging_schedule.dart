@@ -14,7 +14,8 @@ import 'package:tms/widgets/timers/judging_schedule_timer.dart';
 class JudgingSchedule extends StatefulWidget {
   final List<JudgingSession> judgingSessions;
 
-  const JudgingSchedule({Key? key, required this.judgingSessions}) : super(key: key);
+  const JudgingSchedule({Key? key, required this.judgingSessions})
+      : super(key: key);
 
   @override
   _JudgingInfoState createState() => _JudgingInfoState();
@@ -64,15 +65,20 @@ class _JudgingInfoState extends State<JudgingSchedule> {
     super.dispose();
   }
 
-  Widget _headerRow(BuildContext context, List<JudgingSession> futureJudgingSessions) {
+  Widget _headerRow(
+      BuildContext context, List<JudgingSession> futureJudgingSessions) {
     Color? evenDarkBackground = const Color(0xFF1B6A92);
     Color? oddDarkBackground = const Color(0xFF27A07A);
 
     Color? evenLightBackground = const Color(0xFF9CDEFF);
     Color? oddLightBackground = const Color(0xFF81FFD7);
 
-    Color? evenBackground = Theme.of(context).brightness == Brightness.light ? evenLightBackground : evenDarkBackground;
-    Color? oddBackground = Theme.of(context).brightness == Brightness.light ? oddLightBackground : oddDarkBackground;
+    Color? evenBackground = Theme.of(context).brightness == Brightness.light
+        ? evenLightBackground
+        : evenDarkBackground;
+    Color? oddBackground = Theme.of(context).brightness == Brightness.light
+        ? oddLightBackground
+        : oddDarkBackground;
 
     JudgingSession? nextSession = futureJudgingSessions.firstOrNull;
 
@@ -105,8 +111,10 @@ class _JudgingInfoState extends State<JudgingSchedule> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const JudgingScheduleTimer(
+                      live: false,
                       positiveStyle: TextStyle(fontWeight: FontWeight.bold),
-                      negativeStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                      negativeStyle: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.red),
                     ),
                     const Text(")"),
                   ],
@@ -124,10 +132,15 @@ class _JudgingInfoState extends State<JudgingSchedule> {
     Color? oddLightBackground = Theme.of(context).cardColor;
 
     Color? evenDarkBackground = Theme.of(context).scaffoldBackgroundColor;
-    Color? oddDarkBackground = lighten(Theme.of(context).scaffoldBackgroundColor, 0.05);
+    Color? oddDarkBackground =
+        lighten(Theme.of(context).scaffoldBackgroundColor, 0.05);
 
-    Color? evenBackground = Theme.of(context).brightness == Brightness.light ? evenLightBackground : evenDarkBackground;
-    Color? oddBackground = Theme.of(context).brightness == Brightness.light ? oddLightBackground : oddDarkBackground;
+    Color? evenBackground = Theme.of(context).brightness == Brightness.light
+        ? evenLightBackground
+        : evenDarkBackground;
+    Color? oddBackground = Theme.of(context).brightness == Brightness.light
+        ? oddLightBackground
+        : oddDarkBackground;
 
     return Selector<TmsLocalStorageProvider, bool>(
       selector: (_, provider) => provider.scoreboardShowJudgingInfo,
@@ -139,7 +152,8 @@ class _JudgingInfoState extends State<JudgingSchedule> {
               children: [
                 _headerRow(context, _futureJudgingSessions),
                 // generate rows for each match
-                ...List<Widget>.generate(_futureJudgingSessions.length, (index) {
+                ...List<Widget>.generate(_futureJudgingSessions.length,
+                    (index) {
                   return Container(
                     height: 40,
                     color: index % 2 == 0 ? evenBackground : oddBackground,

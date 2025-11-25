@@ -1096,6 +1096,8 @@ abstract class TmsRustLibApi extends BaseApi {
 
   UserPermissions crateInfraDatabaseSchemasUserUserPermissionsNew(
       {bool? admin,
+      bool? queuer,
+      bool? leadQueuer,
       bool? referee,
       bool? headReferee,
       bool? judge,
@@ -9421,6 +9423,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   @override
   UserPermissions crateInfraDatabaseSchemasUserUserPermissionsNew(
       {bool? admin,
+      bool? queuer,
+      bool? leadQueuer,
       bool? referee,
       bool? headReferee,
       bool? judge,
@@ -9432,6 +9436,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       callFfi: () {
         final serializer = SseSerializer(generalizedFrbRustBinding);
         sse_encode_opt_box_autoadd_bool(admin, serializer);
+        sse_encode_opt_box_autoadd_bool(queuer, serializer);
+        sse_encode_opt_box_autoadd_bool(leadQueuer, serializer);
         sse_encode_opt_box_autoadd_bool(referee, serializer);
         sse_encode_opt_box_autoadd_bool(headReferee, serializer);
         sse_encode_opt_box_autoadd_bool(judge, serializer);
@@ -9448,6 +9454,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       constMeta: kCrateInfraDatabaseSchemasUserUserPermissionsNewConstMeta,
       argValues: [
         admin,
+        queuer,
+        leadQueuer,
         referee,
         headReferee,
         judge,
@@ -9465,6 +9473,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
         debugName: "user_permissions_new",
         argNames: [
           "admin",
+          "queuer",
+          "leadQueuer",
           "referee",
           "headReferee",
           "judge",
@@ -10263,8 +10273,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   GameMatch dco_decode_game_match(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 6)
-      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
     return GameMatch(
       matchNumber: dco_decode_String(arr[0]),
       startTime: dco_decode_tms_date_time(arr[1]),
@@ -10272,19 +10282,27 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       gameMatchTables: dco_decode_list_game_match_table(arr[3]),
       completed: dco_decode_bool(arr[4]),
       category: dco_decode_tms_category(arr[5]),
+      queueState: dco_decode_game_match_queue_status(arr[6]),
     );
+  }
+
+  @protected
+  GameMatchQueueStatus dco_decode_game_match_queue_status(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return GameMatchQueueStatus.values[raw as int];
   }
 
   @protected
   GameMatchTable dco_decode_game_match_table(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3)
-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return GameMatchTable(
       table: dco_decode_String(arr[0]),
       teamNumber: dco_decode_String(arr[1]),
       scoreSubmitted: dco_decode_bool(arr[2]),
+      checkInStatus: dco_decode_team_check_in_status(arr[3]),
     );
   }
 
@@ -10852,6 +10870,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  TeamCheckInStatus dco_decode_team_check_in_status(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TeamCheckInStatus.values[raw as int];
+  }
+
+  @protected
   TeamInsertRequest dco_decode_team_insert_request(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -11248,17 +11272,19 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   UserPermissions dco_decode_user_permissions(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 8)
-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
     return UserPermissions.raw(
       admin: dco_decode_opt_box_autoadd_bool(arr[0]),
-      referee: dco_decode_opt_box_autoadd_bool(arr[1]),
-      headReferee: dco_decode_opt_box_autoadd_bool(arr[2]),
-      judge: dco_decode_opt_box_autoadd_bool(arr[3]),
-      judgeAdvisor: dco_decode_opt_box_autoadd_bool(arr[4]),
-      scoreKeeper: dco_decode_opt_box_autoadd_bool(arr[5]),
-      emcee: dco_decode_opt_box_autoadd_bool(arr[6]),
-      av: dco_decode_opt_box_autoadd_bool(arr[7]),
+      queuer: dco_decode_opt_box_autoadd_bool(arr[1]),
+      leadQueuer: dco_decode_opt_box_autoadd_bool(arr[2]),
+      referee: dco_decode_opt_box_autoadd_bool(arr[3]),
+      headReferee: dco_decode_opt_box_autoadd_bool(arr[4]),
+      judge: dco_decode_opt_box_autoadd_bool(arr[5]),
+      judgeAdvisor: dco_decode_opt_box_autoadd_bool(arr[6]),
+      scoreKeeper: dco_decode_opt_box_autoadd_bool(arr[7]),
+      emcee: dco_decode_opt_box_autoadd_bool(arr[8]),
+      av: dco_decode_opt_box_autoadd_bool(arr[9]),
     );
   }
 
@@ -11857,13 +11883,23 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     var var_gameMatchTables = sse_decode_list_game_match_table(deserializer);
     var var_completed = sse_decode_bool(deserializer);
     var var_category = sse_decode_tms_category(deserializer);
+    var var_queueState = sse_decode_game_match_queue_status(deserializer);
     return GameMatch(
         matchNumber: var_matchNumber,
         startTime: var_startTime,
         endTime: var_endTime,
         gameMatchTables: var_gameMatchTables,
         completed: var_completed,
-        category: var_category);
+        category: var_category,
+        queueState: var_queueState);
+  }
+
+  @protected
+  GameMatchQueueStatus sse_decode_game_match_queue_status(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return GameMatchQueueStatus.values[inner];
   }
 
   @protected
@@ -11872,10 +11908,12 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     var var_table = sse_decode_String(deserializer);
     var var_teamNumber = sse_decode_String(deserializer);
     var var_scoreSubmitted = sse_decode_bool(deserializer);
+    var var_checkInStatus = sse_decode_team_check_in_status(deserializer);
     return GameMatchTable(
         table: var_table,
         teamNumber: var_teamNumber,
-        scoreSubmitted: var_scoreSubmitted);
+        scoreSubmitted: var_scoreSubmitted,
+        checkInStatus: var_checkInStatus);
   }
 
   @protected
@@ -12501,6 +12539,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  TeamCheckInStatus sse_decode_team_check_in_status(
+      SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return TeamCheckInStatus.values[inner];
+  }
+
+  @protected
   TeamInsertRequest sse_decode_team_insert_request(
       SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -12850,6 +12896,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   UserPermissions sse_decode_user_permissions(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_admin = sse_decode_opt_box_autoadd_bool(deserializer);
+    var var_queuer = sse_decode_opt_box_autoadd_bool(deserializer);
+    var var_leadQueuer = sse_decode_opt_box_autoadd_bool(deserializer);
     var var_referee = sse_decode_opt_box_autoadd_bool(deserializer);
     var var_headReferee = sse_decode_opt_box_autoadd_bool(deserializer);
     var var_judge = sse_decode_opt_box_autoadd_bool(deserializer);
@@ -12859,6 +12907,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     var var_av = sse_decode_opt_box_autoadd_bool(deserializer);
     return UserPermissions.raw(
         admin: var_admin,
+        queuer: var_queuer,
+        leadQueuer: var_leadQueuer,
         referee: var_referee,
         headReferee: var_headReferee,
         judge: var_judge,
@@ -13433,6 +13483,14 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     sse_encode_list_game_match_table(self.gameMatchTables, serializer);
     sse_encode_bool(self.completed, serializer);
     sse_encode_tms_category(self.category, serializer);
+    sse_encode_game_match_queue_status(self.queueState, serializer);
+  }
+
+  @protected
+  void sse_encode_game_match_queue_status(
+      GameMatchQueueStatus self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected
@@ -13442,6 +13500,7 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
     sse_encode_String(self.table, serializer);
     sse_encode_String(self.teamNumber, serializer);
     sse_encode_bool(self.scoreSubmitted, serializer);
+    sse_encode_team_check_in_status(self.checkInStatus, serializer);
   }
 
   @protected
@@ -13934,6 +13993,13 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
   }
 
   @protected
+  void sse_encode_team_check_in_status(
+      TeamCheckInStatus self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
   void sse_encode_team_insert_request(
       TeamInsertRequest self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -14212,6 +14278,8 @@ class TmsRustLibApiImpl extends TmsRustLibApiImplPlatform
       UserPermissions self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_opt_box_autoadd_bool(self.admin, serializer);
+    sse_encode_opt_box_autoadd_bool(self.queuer, serializer);
+    sse_encode_opt_box_autoadd_bool(self.leadQueuer, serializer);
     sse_encode_opt_box_autoadd_bool(self.referee, serializer);
     sse_encode_opt_box_autoadd_bool(self.headReferee, serializer);
     sse_encode_opt_box_autoadd_bool(self.judge, serializer);

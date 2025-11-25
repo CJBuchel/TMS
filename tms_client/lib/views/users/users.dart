@@ -18,7 +18,8 @@ class Users extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<int> _insertUser(BuildContext context, String? userId, List<String> roles) async {
+  Future<int> _insertUser(
+      BuildContext context, String? userId, List<String> roles) async {
     if (_usernameController.text.isEmpty) {
       return HttpStatus.badRequest;
     } else {
@@ -34,7 +35,8 @@ class Users extends StatelessWidget {
   }
 
   void _editUser(BuildContext context, User user) {
-    String? userId = Provider.of<AuthProvider>(context, listen: false).getUserIdFromUsername(user.username);
+    String? userId = Provider.of<AuthProvider>(context, listen: false)
+        .getUserIdFromUsername(user.username);
     _usernameController.text = user.username;
     _passwordController.text = user.password;
 
@@ -84,7 +86,8 @@ class Users extends StatelessWidget {
         ),
       ),
       onStatusConfirmFuture: () async {
-        return await Provider.of<AuthProvider>(context, listen: false).insertDefaultUsers();
+        return await Provider.of<AuthProvider>(context, listen: false)
+            .insertDefaultUsers();
       },
     ).show(context);
   }
@@ -136,9 +139,11 @@ class Users extends StatelessWidget {
         ),
       ),
       onStatusConfirmFuture: () async {
-        String? userId = Provider.of<AuthProvider>(context, listen: false).getUserIdFromUsername(user.username);
+        String? userId = Provider.of<AuthProvider>(context, listen: false)
+            .getUserIdFromUsername(user.username);
         if (userId != null) {
-          return await Provider.of<AuthProvider>(context, listen: false).removeUser(userId);
+          return await Provider.of<AuthProvider>(context, listen: false)
+              .removeUser(userId);
         } else {
           TmsLogger().e("User: ${user.username} not found");
           return HttpStatus.notFound;
@@ -147,13 +152,23 @@ class Users extends StatelessWidget {
     ).show(context);
   }
 
-  void _updateUserPermissions(BuildContext context, User user, UserPermissions permissions) async {
-    UserPermissions updatedPermissions = user.getPermissions().getMergedPermissions(permissions: permissions);
-    User updatedUser = User(username: user.username, password: user.password, roles: updatedPermissions.getRoles());
-    String? userId = Provider.of<AuthProvider>(context, listen: false).getUserIdFromUsername(user.username);
-    TmsLogger().i("User: ${user.username} permissions updated: ${updatedPermissions.getRoles()}}");
-    var status = await Provider.of<AuthProvider>(context, listen: false).insertUser(userId, updatedUser);
-    SnackBarDialog.fromStatus(message: "Update ${user.username}", status: status).show(context);
+  void _updateUserPermissions(
+      BuildContext context, User user, UserPermissions permissions) async {
+    UserPermissions updatedPermissions =
+        user.getPermissions().getMergedPermissions(permissions: permissions);
+    User updatedUser = User(
+        username: user.username,
+        password: user.password,
+        roles: updatedPermissions.getRoles());
+    String? userId = Provider.of<AuthProvider>(context, listen: false)
+        .getUserIdFromUsername(user.username);
+    TmsLogger().i(
+        "User: ${user.username} permissions updated: ${updatedPermissions.getRoles()}}");
+    var status = await Provider.of<AuthProvider>(context, listen: false)
+        .insertUser(userId, updatedUser);
+    SnackBarDialog.fromStatus(
+            message: "Update ${user.username}", status: status)
+        .show(context);
   }
 
   // padded cell
@@ -189,32 +204,50 @@ class Users extends StatelessWidget {
           // admin
           _cell(LiveCheckbox(
             defaultValue: permissions.admin,
-            onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(admin: v)),
+            onChanged: (v) =>
+                _updateUserPermissions(context, u, UserPermissions(admin: v)),
+          )),
+          // queuer
+          _cell(LiveCheckbox(
+            defaultValue: permissions.queuer,
+            onChanged: (v) =>
+                _updateUserPermissions(context, u, UserPermissions(queuer: v)),
+          )),
+          // lead queuer
+          _cell(LiveCheckbox(
+            defaultValue: permissions.leadQueuer,
+            onChanged: (v) => _updateUserPermissions(
+                context, u, UserPermissions(leadQueuer: v)),
           )),
           // head referee
           _cell(LiveCheckbox(
             defaultValue: permissions.headReferee,
-            onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(headReferee: v)),
+            onChanged: (v) => _updateUserPermissions(
+                context, u, UserPermissions(headReferee: v)),
           )),
           // referee
           _cell(LiveCheckbox(
             defaultValue: permissions.referee,
-            onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(referee: v)),
+            onChanged: (v) =>
+                _updateUserPermissions(context, u, UserPermissions(referee: v)),
           )),
           // judge advisor
           _cell(LiveCheckbox(
             defaultValue: permissions.judgeAdvisor,
-            onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(judgeAdvisor: v)),
+            onChanged: (v) => _updateUserPermissions(
+                context, u, UserPermissions(judgeAdvisor: v)),
           )),
           // judge
           _cell(LiveCheckbox(
             defaultValue: permissions.judge,
-            onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(judge: v)),
+            onChanged: (v) =>
+                _updateUserPermissions(context, u, UserPermissions(judge: v)),
           )),
           // emcee
           _cell(LiveCheckbox(
             defaultValue: permissions.emcee,
-            onChanged: (v) => _updateUserPermissions(context, u, UserPermissions(emcee: v)),
+            onChanged: (v) =>
+                _updateUserPermissions(context, u, UserPermissions(emcee: v)),
           )),
         ],
       );
@@ -263,6 +296,22 @@ class Users extends StatelessWidget {
                   _cell(
                     const Text(
                       "Admin",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  _cell(
+                    const Text(
+                      "Queuer",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  _cell(
+                    const Text(
+                      "Lead Queuer",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

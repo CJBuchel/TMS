@@ -353,6 +353,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   GameMatch dco_decode_game_match(dynamic raw);
 
   @protected
+  GameMatchQueueStatus dco_decode_game_match_queue_status(dynamic raw);
+
+  @protected
   GameMatchTable dco_decode_game_match_table(dynamic raw);
 
   @protected
@@ -531,6 +534,9 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   Team dco_decode_team(dynamic raw);
+
+  @protected
+  TeamCheckInStatus dco_decode_team_check_in_status(dynamic raw);
 
   @protected
   TeamInsertRequest dco_decode_team_insert_request(dynamic raw);
@@ -967,6 +973,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   GameMatch sse_decode_game_match(SseDeserializer deserializer);
 
   @protected
+  GameMatchQueueStatus sse_decode_game_match_queue_status(
+      SseDeserializer deserializer);
+
+  @protected
   GameMatchTable sse_decode_game_match_table(SseDeserializer deserializer);
 
   @protected
@@ -1159,6 +1169,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   Team sse_decode_team(SseDeserializer deserializer);
+
+  @protected
+  TeamCheckInStatus sse_decode_team_check_in_status(
+      SseDeserializer deserializer);
 
   @protected
   TeamInsertRequest sse_decode_team_insert_request(
@@ -1608,6 +1622,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   void sse_encode_game_match(GameMatch self, SseSerializer serializer);
 
   @protected
+  void sse_encode_game_match_queue_status(
+      GameMatchQueueStatus self, SseSerializer serializer);
+
+  @protected
   void sse_encode_game_match_table(
       GameMatchTable self, SseSerializer serializer);
 
@@ -1807,6 +1825,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
 
   @protected
   void sse_encode_team(Team self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_team_check_in_status(
+      TeamCheckInStatus self, SseSerializer serializer);
 
   @protected
   void sse_encode_team_insert_request(

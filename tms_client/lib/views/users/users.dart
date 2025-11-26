@@ -213,12 +213,6 @@ class Users extends StatelessWidget {
             onChanged: (v) =>
                 _updateUserPermissions(context, u, UserPermissions(queuer: v)),
           )),
-          // lead queuer
-          _cell(LiveCheckbox(
-            defaultValue: permissions.leadQueuer,
-            onChanged: (v) => _updateUserPermissions(
-                context, u, UserPermissions(leadQueuer: v)),
-          )),
           // head referee
           _cell(LiveCheckbox(
             defaultValue: permissions.headReferee,
@@ -304,14 +298,6 @@ class Users extends StatelessWidget {
                   _cell(
                     const Text(
                       "Queuer",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  _cell(
-                    const Text(
-                      "Lead Queuer",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

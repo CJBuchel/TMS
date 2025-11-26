@@ -7,5 +7,5 @@ analyzer:
 
 linter:
   rules:
-    line_length: 120
+    line_length: 240
     prefer_const_constructors: true

@@ -221,6 +221,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dco_decode_box_autoadd_robot_game_table_signal_request(dynamic raw);
 
   @protected
+  RobotGameToggleTeamCheckInRequest
+      dco_decode_box_autoadd_robot_game_toggle_team_check_in_request(
+          dynamic raw);
+
+  @protected
   Submerged dco_decode_box_autoadd_submerged(dynamic raw);
 
   @protected
@@ -528,6 +533,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       dynamic raw);
 
   @protected
+  RobotGameToggleTeamCheckInRequest
+      dco_decode_robot_game_toggle_team_check_in_request(dynamic raw);
+
+  @protected
   Submerged dco_decode_submerged(dynamic raw);
 
   @protected
@@ -826,6 +835,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   RobotGameTableSignalRequest
       sse_decode_box_autoadd_robot_game_table_signal_request(
+          SseDeserializer deserializer);
+
+  @protected
+  RobotGameToggleTeamCheckInRequest
+      sse_decode_box_autoadd_robot_game_toggle_team_check_in_request(
           SseDeserializer deserializer);
 
   @protected
@@ -1163,6 +1177,11 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
       SseDeserializer deserializer);
 
   @protected
+  RobotGameToggleTeamCheckInRequest
+      sse_decode_robot_game_toggle_team_check_in_request(
+          SseDeserializer deserializer);
+
+  @protected
   Submerged sse_decode_submerged(SseDeserializer deserializer);
 
   @protected
@@ -1476,6 +1495,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_box_autoadd_robot_game_table_signal_request(
       RobotGameTableSignalRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_robot_game_toggle_team_check_in_request(
+      RobotGameToggleTeamCheckInRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_box_autoadd_submerged(
@@ -1817,6 +1840,10 @@ abstract class TmsRustLibApiImplPlatform extends BaseApiImpl<TmsRustLibWire> {
   @protected
   void sse_encode_robot_game_table_signal_request(
       RobotGameTableSignalRequest self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_robot_game_toggle_team_check_in_request(
+      RobotGameToggleTeamCheckInRequest self, SseSerializer serializer);
 
   @protected
   void sse_encode_submerged(Submerged self, SseSerializer serializer);

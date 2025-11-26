@@ -47,7 +47,6 @@ impl Network {
       // core filters
       .or(registration_filter(self.clients.clone(), self.db.clone(), self.local_ip.clone(), self.tls, self.port))
       .or(websocket_filter(self.clients.clone(), self.db.clone()))
-      
       // box and recover
       .boxed()
       .recover(handle_rejection)

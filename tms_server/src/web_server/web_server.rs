@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-use log::info;
 use warp::Filter;
 
 use super::certificates::CertificateKeys;

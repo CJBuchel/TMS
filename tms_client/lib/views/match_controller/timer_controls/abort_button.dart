@@ -6,9 +6,9 @@ import 'package:tms/providers/game_timer_provider.dart';
 import 'package:tms/widgets/buttons/barber_pole_button.dart';
 import 'package:tms/widgets/dialogs/snackbar_dialog.dart';
 
-const _inactiveColor = Color(0xFF9E9E9E);
+// const _inactiveColor = Color(0xFF9E9E9E);
 const _backgroundColor = Colors.red;
-const _overlayColor = Colors.redAccent;
+// const _overlayColor = Colors.redAccent;
 
 class AbortButton extends StatelessWidget {
   const AbortButton({
@@ -25,9 +25,12 @@ class AbortButton extends StatelessWidget {
         overlayColor: Colors.grey[700],
         stripeColor: _backgroundColor,
         onPressed: () {
-          Provider.of<GameTimerProvider>(context, listen: false).stopTimer().then((status) {
+          Provider.of<GameTimerProvider>(context, listen: false)
+              .stopTimer()
+              .then((status) {
             if (status != HttpStatus.ok) {
-              SnackBarDialog.fromStatus(message: "Abort", status: status).show(context);
+              SnackBarDialog.fromStatus(message: "Abort", status: status)
+                  .show(context);
             }
           });
         },

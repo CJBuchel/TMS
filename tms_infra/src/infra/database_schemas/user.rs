@@ -3,14 +3,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::infra::DataSchemeExtensions;
 
-use super::{ADMIN_ROLE, AV_ROLE, EMCEE_ROLE, HEAD_REFEREE_ROLE, JUDGE_ADVISOR_ROLE, JUDGE_ROLE, LEAD_QUEUER_ROLE, QUEUER_ROLE, REFEREE_ROLE, SCORE_KEEPER_ROLE};
+use super::{ADMIN_ROLE, AV_ROLE, EMCEE_ROLE, HEAD_REFEREE_ROLE, JUDGE_ADVISOR_ROLE, JUDGE_ROLE, QUEUER_ROLE, REFEREE_ROLE, SCORE_KEEPER_ROLE};
 
 #[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct UserPermissions {
   // hard coded roles
   pub admin: Option<bool>,
   pub queuer: Option<bool>,
-  pub lead_queuer: Option<bool>,
   pub referee: Option<bool>,
   pub head_referee: Option<bool>,
   pub judge: Option<bool>,
@@ -23,22 +22,10 @@ pub struct UserPermissions {
 impl UserPermissions {
   // optional new`
 
-  pub fn new(
-    admin: Option<bool>,
-    queuer: Option<bool>,
-    lead_queuer: Option<bool>,
-    referee: Option<bool>,
-    head_referee: Option<bool>,
-    judge: Option<bool>,
-    judge_advisor: Option<bool>,
-    score_keeper: Option<bool>,
-    emcee: Option<bool>,
-    av: Option<bool>,
-  ) -> Self {
+  pub fn new(admin: Option<bool>, queuer: Option<bool>, referee: Option<bool>, head_referee: Option<bool>, judge: Option<bool>, judge_advisor: Option<bool>, score_keeper: Option<bool>, emcee: Option<bool>, av: Option<bool>) -> Self {
     Self {
       admin,
       queuer,
-      lead_queuer,
       referee,
       head_referee,
       judge,
@@ -54,7 +41,6 @@ impl UserPermissions {
 
     merged_permissions.admin = permissions.admin.or(self.admin);
     merged_permissions.queuer = permissions.queuer.or(self.queuer);
-    merged_permissions.lead_queuer = permissions.lead_queuer.or(self.lead_queuer);
     merged_permissions.referee = permissions.referee.or(self.referee);
     merged_permissions.head_referee = permissions.head_referee.or(self.head_referee);
     merged_permissions.judge = permissions.judge.or(self.judge);
@@ -73,7 +59,6 @@ impl UserPermissions {
       match role.as_str() {
         ADMIN_ROLE => permissions.admin = Some(true),
         QUEUER_ROLE => permissions.queuer = Some(true),
-        LEAD_QUEUER_ROLE => permissions.lead_queuer = Some(true),
         REFEREE_ROLE => permissions.referee = Some(true),
         HEAD_REFEREE_ROLE => permissions.head_referee = Some(true),
         JUDGE_ROLE => permissions.judge = Some(true),
@@ -97,10 +82,6 @@ impl UserPermissions {
 
     if self.queuer.unwrap_or(false) {
       roles.push(QUEUER_ROLE.to_string());
-    }
-
-    if self.lead_queuer.unwrap_or(false) {
-      roles.push(LEAD_QUEUER_ROLE.to_string());
     }
 
     if self.referee.unwrap_or(false) {
@@ -146,14 +127,7 @@ impl UserPermissions {
 
     // queuer
     if required_permissions.queuer.unwrap_or(false) {
-      if self.queuer.unwrap_or(false) || self.lead_queuer.unwrap_or(false) {
-        has_access = true;
-      }
-    }
-
-    // lead queuer
-    if required_permissions.lead_queuer.unwrap_or(false) {
-      if self.lead_queuer.unwrap_or(false) {
+      if self.queuer.unwrap_or(false) || self.head_referee.unwrap_or(false) {
         has_access = true;
       }
     }
@@ -218,7 +192,6 @@ impl Default for UserPermissions {
     Self {
       admin: None,
       queuer: None,
-      lead_queuer: None,
       referee: None,
       head_referee: None,
       judge: None,

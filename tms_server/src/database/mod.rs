@@ -117,66 +117,16 @@ impl Database {
     // :judge
     // :judge_advisor
 
-    let common_read_roles = vec![
-      TOURNAMENT_CONFIG,
-      TEAMS,
-      ROBOT_GAME_MATCHES,
-      ROBOT_GAME_CATEGORIES,
-      ROBOT_GAME_TABLES,
-      ROBOT_GAME_SCORES,
-      JUDGING_SESSIONS,
-      JUDGING_CATEGORIES,
-    ];
+    let common_read_roles = vec![TOURNAMENT_CONFIG, TEAMS, ROBOT_GAME_MATCHES, ROBOT_GAME_CATEGORIES, ROBOT_GAME_TABLES, ROBOT_GAME_SCORES, JUDGING_SESSIONS, JUDGING_CATEGORIES];
 
     self.check_insert_role(ADMIN_ROLE, &self.generate_password(), vec![":"], vec![":"]).await;
-    self
-      .check_insert_role(
-        PUBLIC_ROLE,
-        "",
-        common_read_roles.clone(),
-        vec![],
-      )
-      .await;
-    self
-      .check_insert_role(
-        REFEREE_ROLE,
-        &self.generate_password(),
-        common_read_roles.clone(),
-        vec![],
-      )
-      .await;
-    self
-      .check_insert_role(
-        HEAD_REFEREE_ROLE,
-        &self.generate_password(),
-        common_read_roles.clone(),
-        vec![],
-      )
-      .await;
-    self
-      .check_insert_role(
-        JUDGE_ROLE,
-        &self.generate_password(),
-        common_read_roles.clone(),
-        vec![],
-      )
-      .await;
-    self
-      .check_insert_role(
-        JUDGE_ADVISOR_ROLE,
-        &self.generate_password(),
-        common_read_roles.clone(),
-        vec![],
-      )
-      .await;
-    self
-      .check_insert_role(
-        EMCEE_ROLE,
-        &self.generate_password(),
-        common_read_roles.clone(),
-        vec![],
-      )
-      .await;
+    self.check_insert_role(PUBLIC_ROLE, "", common_read_roles.clone(), vec![]).await;
+    self.check_insert_role(QUEUER_ROLE, &self.generate_password(), common_read_roles.clone(), vec![]).await;
+    self.check_insert_role(REFEREE_ROLE, &self.generate_password(), common_read_roles.clone(), vec![]).await;
+    self.check_insert_role(HEAD_REFEREE_ROLE, &self.generate_password(), common_read_roles.clone(), vec![]).await;
+    self.check_insert_role(JUDGE_ROLE, &self.generate_password(), common_read_roles.clone(), vec![]).await;
+    self.check_insert_role(JUDGE_ADVISOR_ROLE, &self.generate_password(), common_read_roles.clone(), vec![]).await;
+    self.check_insert_role(EMCEE_ROLE, &self.generate_password(), common_read_roles.clone(), vec![]).await;
 
     // public user
     let public_user = User {

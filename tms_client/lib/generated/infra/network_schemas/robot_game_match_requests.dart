@@ -11,7 +11,7 @@ import '../database_schemas/tms_time/tms_date_time.dart';
 import '../database_schemas/tms_time/tms_time.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `fmt`, `fmt`, `fmt`, `fmt`
 
 class RobotGameMatchInsertRequest {
   final String? matchId;
@@ -116,4 +116,42 @@ class RobotGameMatchRemoveRequest {
       other is RobotGameMatchRemoveRequest &&
           runtimeType == other.runtimeType &&
           matchId == other.matchId;
+}
+
+class RobotGameToggleTeamCheckInRequest {
+  final String teamNumber;
+  final String matchNumber;
+
+  const RobotGameToggleTeamCheckInRequest({
+    required this.teamNumber,
+    required this.matchNumber,
+  });
+
+  static RobotGameToggleTeamCheckInRequest default_() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameToggleTeamCheckInRequestDefault();
+
+  static RobotGameToggleTeamCheckInRequest fromJsonString(
+          {required String json}) =>
+      TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameToggleTeamCheckInRequestFromJsonString(
+              json: json);
+
+  String toJsonString() => TmsRustLib.instance.api
+          .crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameToggleTeamCheckInRequestToJsonString(
+        that: this,
+      );
+
+  static String toSchema() => TmsRustLib.instance.api
+      .crateInfraNetworkSchemasRobotGameMatchRequestsRobotGameToggleTeamCheckInRequestToSchema();
+
+  @override
+  int get hashCode => teamNumber.hashCode ^ matchNumber.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RobotGameToggleTeamCheckInRequest &&
+          runtimeType == other.runtimeType &&
+          teamNumber == other.teamNumber &&
+          matchNumber == other.matchNumber;
 }

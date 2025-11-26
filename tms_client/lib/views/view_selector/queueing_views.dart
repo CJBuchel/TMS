@@ -32,8 +32,8 @@ class QueueingViews extends StatelessWidget {
         Row(
           children: [
             // Queueing Card
-            if (Provider.of<AuthProvider>(context).hasPermissionAccess(
-                UserPermissions(queuer: true, leadQueuer: true)))
+            if (Provider.of<AuthProvider>(context)
+                .hasPermissionAccess(UserPermissions(queuer: true)))
               Flexible(
                 flex: 1,
                 child: Padding(

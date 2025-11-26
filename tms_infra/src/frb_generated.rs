@@ -37,7 +37,7 @@ use flutter_rust_bridge::{Handler, IntoIntoDart};
 
 flutter_rust_bridge::frb_generated_boilerplate!(default_stream_sink_codec = SseCodec, default_rust_opaque = RustOpaqueMoi, default_rust_auto_opaque = RustAutoOpaqueMoi,);
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -520456492;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -299985328;
 
 // Section: executor
 
@@ -3179,6 +3179,96 @@ fn wire__crate__infra__network_schemas__robot_game_table_requests__robot_game_ta
       deserializer.end();
       transform_result_sse::<_, ()>((move || {
         let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::robot_game_table_requests::RobotGameTableSignalRequest::to_schema())?;
+        Ok(output_ok)
+      })())
+    },
+  )
+}
+fn wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_default_impl(
+  ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+  rust_vec_len_: i32,
+  data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+  FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+    flutter_rust_bridge::for_generated::TaskInfo {
+      debug_name: "robot_game_toggle_team_check_in_request_default",
+      port: None,
+      mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+    },
+    move || {
+      let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+      let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+      deserializer.end();
+      transform_result_sse::<_, ()>((move || {
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest::default())?;
+        Ok(output_ok)
+      })())
+    },
+  )
+}
+fn wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_from_json_string_impl(
+  ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+  rust_vec_len_: i32,
+  data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+  FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+    flutter_rust_bridge::for_generated::TaskInfo {
+      debug_name: "robot_game_toggle_team_check_in_request_from_json_string",
+      port: None,
+      mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+    },
+    move || {
+      let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+      let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+      let api_json = <String>::sse_decode(&mut deserializer);
+      deserializer.end();
+      transform_result_sse::<_, ()>((move || {
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest::from_json_string(&api_json))?;
+        Ok(output_ok)
+      })())
+    },
+  )
+}
+fn wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_to_json_string_impl(
+  ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+  rust_vec_len_: i32,
+  data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+  FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+    flutter_rust_bridge::for_generated::TaskInfo {
+      debug_name: "robot_game_toggle_team_check_in_request_to_json_string",
+      port: None,
+      mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+    },
+    move || {
+      let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+      let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+      let api_that = <crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest>::sse_decode(&mut deserializer);
+      deserializer.end();
+      transform_result_sse::<_, ()>((move || {
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest::to_json_string(&api_that))?;
+        Ok(output_ok)
+      })())
+    },
+  )
+}
+fn wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_to_schema_impl(
+  ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+  rust_vec_len_: i32,
+  data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+  FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+    flutter_rust_bridge::for_generated::TaskInfo {
+      debug_name: "robot_game_toggle_team_check_in_request_to_schema",
+      port: None,
+      mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+    },
+    move || {
+      let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+      let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+      deserializer.end();
+      transform_result_sse::<_, ()>((move || {
+        let output_ok = Result::<_, ()>::Ok(crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest::to_schema())?;
         Ok(output_ok)
       })())
     },
@@ -7041,7 +7131,6 @@ fn wire__crate__infra__database_schemas__user__user_permissions_new_impl(
       let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
       let api_admin = <Option<bool>>::sse_decode(&mut deserializer);
       let api_queuer = <Option<bool>>::sse_decode(&mut deserializer);
-      let api_lead_queuer = <Option<bool>>::sse_decode(&mut deserializer);
       let api_referee = <Option<bool>>::sse_decode(&mut deserializer);
       let api_head_referee = <Option<bool>>::sse_decode(&mut deserializer);
       let api_judge = <Option<bool>>::sse_decode(&mut deserializer);
@@ -7054,7 +7143,6 @@ fn wire__crate__infra__database_schemas__user__user_permissions_new_impl(
         let output_ok = Result::<_, ()>::Ok(crate::infra::database_schemas::user::UserPermissions::new(
           api_admin,
           api_queuer,
-          api_lead_queuer,
           api_referee,
           api_head_referee,
           api_judge,
@@ -8050,6 +8138,18 @@ impl SseDecode for crate::infra::network_schemas::robot_game_table_requests::Rob
   }
 }
 
+impl SseDecode for crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+    let mut var_teamNumber = <String>::sse_decode(deserializer);
+    let mut var_matchNumber = <String>::sse_decode(deserializer);
+    return crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest {
+      team_number: var_teamNumber,
+      match_number: var_matchNumber,
+    };
+  }
+}
+
 impl SseDecode for crate::infra::fll_infra::seasons::fll_2024::Submerged {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -8523,7 +8623,6 @@ impl SseDecode for crate::infra::database_schemas::user::UserPermissions {
   fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
     let mut var_admin = <Option<bool>>::sse_decode(deserializer);
     let mut var_queuer = <Option<bool>>::sse_decode(deserializer);
-    let mut var_leadQueuer = <Option<bool>>::sse_decode(deserializer);
     let mut var_referee = <Option<bool>>::sse_decode(deserializer);
     let mut var_headReferee = <Option<bool>>::sse_decode(deserializer);
     let mut var_judge = <Option<bool>>::sse_decode(deserializer);
@@ -8534,7 +8633,6 @@ impl SseDecode for crate::infra::database_schemas::user::UserPermissions {
     return crate::infra::database_schemas::user::UserPermissions {
       admin: var_admin,
       queuer: var_queuer,
-      lead_queuer: var_leadQueuer,
       referee: var_referee,
       head_referee: var_headReferee,
       judge: var_judge,
@@ -8704,184 +8802,188 @@ fn pde_ffi_dispatcher_sync_impl(func_id: i32, ptr: flutter_rust_bridge::for_gene
     150 => wire__crate__infra__network_schemas__robot_game_table_requests__robot_game_table_signal_request_from_json_string_impl(ptr, rust_vec_len, data_len),
     151 => wire__crate__infra__network_schemas__robot_game_table_requests__robot_game_table_signal_request_to_json_string_impl(ptr, rust_vec_len, data_len),
     152 => wire__crate__infra__network_schemas__robot_game_table_requests__robot_game_table_signal_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    153 => wire__crate__infra__fll_infra__seasons__fll_2024__submerged_get_fll_game_impl(ptr, rust_vec_len, data_len),
-    154 => wire__crate__infra__fll_infra__seasons__fll_2024__submerged_get_season_impl(ptr, rust_vec_len, data_len),
-    155 => wire__crate__infra__fll_infra__seasons__fll_2024__submerged_validate_impl(ptr, rust_vec_len, data_len),
-    156 => wire__crate__infra__database_schemas__team__team_default_impl(ptr, rust_vec_len, data_len),
-    157 => wire__crate__infra__database_schemas__team__team_from_json_string_impl(ptr, rust_vec_len, data_len),
-    158 => wire__crate__infra__network_schemas__team_requests__team_insert_request_default_impl(ptr, rust_vec_len, data_len),
-    159 => wire__crate__infra__network_schemas__team_requests__team_insert_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    160 => wire__crate__infra__network_schemas__team_requests__team_insert_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    161 => wire__crate__infra__network_schemas__team_requests__team_insert_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    162 => wire__crate__infra__network_schemas__team_requests__team_remove_request_default_impl(ptr, rust_vec_len, data_len),
-    163 => wire__crate__infra__network_schemas__team_requests__team_remove_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    164 => wire__crate__infra__network_schemas__team_requests__team_remove_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    165 => wire__crate__infra__network_schemas__team_requests__team_remove_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    166 => wire__crate__infra__database_schemas__team__team_to_json_string_impl(ptr, rust_vec_len, data_len),
-    167 => wire__crate__infra__database_schemas__team__team_to_schema_impl(ptr, rust_vec_len, data_len),
-    168 => wire__crate__infra__database_schemas__category__tms_category_default_impl(ptr, rust_vec_len, data_len),
-    169 => wire__crate__infra__database_schemas__category__tms_category_from_json_string_impl(ptr, rust_vec_len, data_len),
-    170 => wire__crate__infra__database_schemas__category__tms_category_to_json_string_impl(ptr, rust_vec_len, data_len),
-    171 => wire__crate__infra__database_schemas__category__tms_category_to_schema_impl(ptr, rust_vec_len, data_len),
-    172 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_add_duration_impl(ptr, rust_vec_len, data_len),
-    173 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_compare_to_impl(ptr, rust_vec_len, data_len),
-    174 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_default_impl(ptr, rust_vec_len, data_len),
-    175 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_difference_impl(ptr, rust_vec_len, data_len),
-    176 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_duration_impl(ptr, rust_vec_len, data_len),
-    177 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_from_json_string_impl(ptr, rust_vec_len, data_len),
-    178 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_is_after_impl(ptr, rust_vec_len, data_len),
-    179 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_is_before_impl(ptr, rust_vec_len, data_len),
-    180 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_is_same_moment_impl(ptr, rust_vec_len, data_len),
-    181 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_new_impl(ptr, rust_vec_len, data_len),
-    182 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_now_impl(ptr, rust_vec_len, data_len),
-    183 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_add_duration_impl(ptr, rust_vec_len, data_len),
-    184 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_compare_to_impl(ptr, rust_vec_len, data_len),
-    185 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_default_impl(ptr, rust_vec_len, data_len),
-    186 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_difference_impl(ptr, rust_vec_len, data_len),
-    187 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_duration_impl(ptr, rust_vec_len, data_len),
-    188 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_from_json_string_impl(ptr, rust_vec_len, data_len),
-    189 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_is_after_impl(ptr, rust_vec_len, data_len),
-    190 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_is_before_impl(ptr, rust_vec_len, data_len),
-    191 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_is_same_moment_impl(ptr, rust_vec_len, data_len),
-    192 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_new_impl(ptr, rust_vec_len, data_len),
-    193 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_now_impl(ptr, rust_vec_len, data_len),
-    194 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_to_json_string_impl(ptr, rust_vec_len, data_len),
-    195 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_to_schema_impl(ptr, rust_vec_len, data_len),
-    196 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_to_string_impl(ptr, rust_vec_len, data_len),
-    197 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_to_json_string_impl(ptr, rust_vec_len, data_len),
-    198 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_to_schema_impl(ptr, rust_vec_len, data_len),
-    199 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_to_string_impl(ptr, rust_vec_len, data_len),
-    200 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_add_impl(ptr, rust_vec_len, data_len),
-    201 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_difference_impl(ptr, rust_vec_len, data_len),
-    202 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_days_impl(ptr, rust_vec_len, data_len),
-    203 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_hours_impl(ptr, rust_vec_len, data_len),
-    204 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_minutes_impl(ptr, rust_vec_len, data_len),
-    205 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_months_impl(ptr, rust_vec_len, data_len),
-    206 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_seconds_impl(ptr, rust_vec_len, data_len),
-    207 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_years_impl(ptr, rust_vec_len, data_len),
-    208 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_new_impl(ptr, rust_vec_len, data_len),
-    209 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_default_impl(ptr, rust_vec_len, data_len),
-    210 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_from_json_string_impl(ptr, rust_vec_len, data_len),
-    211 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_json_string_impl(ptr, rust_vec_len, data_len),
-    212 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_schema_impl(ptr, rust_vec_len, data_len),
-    213 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_default_impl(ptr, rust_vec_len, data_len),
-    214 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_from_json_string_impl(ptr, rust_vec_len, data_len),
-    215 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_json_string_impl(ptr, rust_vec_len, data_len),
-    216 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_schema_impl(ptr, rust_vec_len, data_len),
-    217 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_default_impl(ptr, rust_vec_len, data_len),
-    218 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_from_json_string_impl(ptr, rust_vec_len, data_len),
-    219 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_to_json_string_impl(ptr, rust_vec_len, data_len),
-    220 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_to_schema_impl(ptr, rust_vec_len, data_len),
-    221 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_default_impl(ptr, rust_vec_len, data_len),
-    222 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_from_json_string_impl(ptr, rust_vec_len, data_len),
-    223 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_to_json_string_impl(ptr, rust_vec_len, data_len),
-    224 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_to_schema_impl(ptr, rust_vec_len, data_len),
-    225 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_add_duration_impl(ptr, rust_vec_len, data_len),
-    226 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_compare_to_impl(ptr, rust_vec_len, data_len),
-    227 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_default_impl(ptr, rust_vec_len, data_len),
-    228 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_difference_impl(ptr, rust_vec_len, data_len),
-    229 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_duration_impl(ptr, rust_vec_len, data_len),
-    230 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_from_json_string_impl(ptr, rust_vec_len, data_len),
-    231 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_is_after_impl(ptr, rust_vec_len, data_len),
-    232 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_is_before_impl(ptr, rust_vec_len, data_len),
-    233 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_is_same_moment_impl(ptr, rust_vec_len, data_len),
-    234 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_new_impl(ptr, rust_vec_len, data_len),
-    235 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_now_impl(ptr, rust_vec_len, data_len),
-    236 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_to_json_string_impl(ptr, rust_vec_len, data_len),
-    237 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_to_schema_impl(ptr, rust_vec_len, data_len),
-    238 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_to_string_impl(ptr, rust_vec_len, data_len),
-    239 => wire__crate__infra__tms_tree_role_default_impl(ptr, rust_vec_len, data_len),
-    240 => wire__crate__infra__tms_tree_role_from_json_string_impl(ptr, rust_vec_len, data_len),
-    241 => wire__crate__infra__tms_tree_role_to_json_string_impl(ptr, rust_vec_len, data_len),
-    242 => wire__crate__infra__tms_tree_role_to_schema_impl(ptr, rust_vec_len, data_len),
-    243 => wire__crate__infra__database_schemas__tournament_config__tournament_config_default_impl(ptr, rust_vec_len, data_len),
-    244 => wire__crate__infra__database_schemas__tournament_config__tournament_config_from_json_string_impl(ptr, rust_vec_len, data_len),
-    245 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_default_impl(ptr, rust_vec_len, data_len),
-    246 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    247 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    248 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    249 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_default_impl(ptr, rust_vec_len, data_len),
-    250 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    251 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    252 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    253 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_default_impl(ptr, rust_vec_len, data_len),
-    254 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    255 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    256 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    257 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_default_impl(ptr, rust_vec_len, data_len),
-    258 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    259 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    260 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    261 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_default_impl(ptr, rust_vec_len, data_len),
-    262 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    263 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    264 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    265 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_default_impl(ptr, rust_vec_len, data_len),
-    266 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    267 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    268 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    269 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_default_impl(ptr, rust_vec_len, data_len),
-    270 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    271 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    272 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    273 => wire__crate__infra__database_schemas__tournament_config__tournament_config_to_json_string_impl(ptr, rust_vec_len, data_len),
-    274 => wire__crate__infra__database_schemas__tournament_config__tournament_config_to_schema_impl(ptr, rust_vec_len, data_len),
-    275 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_default_impl(ptr, rust_vec_len, data_len),
-    276 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_from_json_string_impl(ptr, rust_vec_len, data_len),
-    277 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_get_message_impl(ptr, rust_vec_len, data_len),
-    278 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_get_stringified_code_impl(ptr, rust_vec_len, data_len),
-    279 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_to_json_string_impl(ptr, rust_vec_len, data_len),
-    280 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_to_schema_impl(ptr, rust_vec_len, data_len),
-    281 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_default_impl(ptr, rust_vec_len, data_len),
-    282 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_from_json_string_impl(ptr, rust_vec_len, data_len),
-    283 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_get_message_impl(ptr, rust_vec_len, data_len),
-    284 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_get_stringified_code_impl(ptr, rust_vec_len, data_len),
-    285 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_to_json_string_impl(ptr, rust_vec_len, data_len),
-    286 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_to_schema_impl(ptr, rust_vec_len, data_len),
-    287 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_default_impl(ptr, rust_vec_len, data_len),
-    288 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_from_json_string_impl(ptr, rust_vec_len, data_len),
-    289 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_new_impl(ptr, rust_vec_len, data_len),
-    290 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_to_json_string_impl(ptr, rust_vec_len, data_len),
-    291 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_to_schema_impl(ptr, rust_vec_len, data_len),
-    292 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_default_impl(ptr, rust_vec_len, data_len),
-    293 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_from_json_string_impl(ptr, rust_vec_len, data_len),
-    294 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_to_json_string_impl(ptr, rust_vec_len, data_len),
-    295 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_to_schema_impl(ptr, rust_vec_len, data_len),
-    296 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_default_impl(ptr, rust_vec_len, data_len),
-    297 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_from_json_string_impl(ptr, rust_vec_len, data_len),
-    298 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_get_message_impl(ptr, rust_vec_len, data_len),
-    299 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_get_stringified_code_impl(ptr, rust_vec_len, data_len),
-    300 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_to_json_string_impl(ptr, rust_vec_len, data_len),
-    301 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_to_schema_impl(ptr, rust_vec_len, data_len),
-    302 => wire__crate__infra__fll_infra__seasons__fll_2025__unearthed_get_fll_game_impl(ptr, rust_vec_len, data_len),
-    303 => wire__crate__infra__fll_infra__seasons__fll_2025__unearthed_get_season_impl(ptr, rust_vec_len, data_len),
-    304 => wire__crate__infra__fll_infra__seasons__fll_2025__unearthed_validate_impl(ptr, rust_vec_len, data_len),
-    305 => wire__crate__infra__database_schemas__user__user_default_impl(ptr, rust_vec_len, data_len),
-    306 => wire__crate__infra__database_schemas__user__user_from_json_string_impl(ptr, rust_vec_len, data_len),
-    307 => wire__crate__infra__database_schemas__user__user_get_permissions_impl(ptr, rust_vec_len, data_len),
-    308 => wire__crate__infra__database_schemas__user__user_has_permission_access_impl(ptr, rust_vec_len, data_len),
-    309 => wire__crate__infra__database_schemas__user__user_has_role_impl(ptr, rust_vec_len, data_len),
-    310 => wire__crate__infra__database_schemas__user__user_has_role_access_impl(ptr, rust_vec_len, data_len),
-    311 => wire__crate__infra__network_schemas__user_requests__user_insert_request_default_impl(ptr, rust_vec_len, data_len),
-    312 => wire__crate__infra__network_schemas__user_requests__user_insert_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    313 => wire__crate__infra__network_schemas__user_requests__user_insert_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    314 => wire__crate__infra__network_schemas__user_requests__user_insert_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    315 => wire__crate__infra__database_schemas__user__user_new_impl(ptr, rust_vec_len, data_len),
-    316 => wire__crate__infra__database_schemas__user__user_permissions_default_impl(ptr, rust_vec_len, data_len),
-    317 => wire__crate__infra__database_schemas__user__user_permissions_from_json_string_impl(ptr, rust_vec_len, data_len),
-    318 => wire__crate__infra__database_schemas__user__user_permissions_from_roles_impl(ptr, rust_vec_len, data_len),
-    319 => wire__crate__infra__database_schemas__user__user_permissions_get_merged_permissions_impl(ptr, rust_vec_len, data_len),
-    320 => wire__crate__infra__database_schemas__user__user_permissions_get_roles_impl(ptr, rust_vec_len, data_len),
-    321 => wire__crate__infra__database_schemas__user__user_permissions_has_role_access_impl(ptr, rust_vec_len, data_len),
-    322 => wire__crate__infra__database_schemas__user__user_permissions_new_impl(ptr, rust_vec_len, data_len),
-    323 => wire__crate__infra__database_schemas__user__user_permissions_to_json_string_impl(ptr, rust_vec_len, data_len),
-    324 => wire__crate__infra__database_schemas__user__user_permissions_to_schema_impl(ptr, rust_vec_len, data_len),
-    325 => wire__crate__infra__network_schemas__user_requests__user_remove_request_default_impl(ptr, rust_vec_len, data_len),
-    326 => wire__crate__infra__network_schemas__user_requests__user_remove_request_from_json_string_impl(ptr, rust_vec_len, data_len),
-    327 => wire__crate__infra__network_schemas__user_requests__user_remove_request_to_json_string_impl(ptr, rust_vec_len, data_len),
-    328 => wire__crate__infra__network_schemas__user_requests__user_remove_request_to_schema_impl(ptr, rust_vec_len, data_len),
-    329 => wire__crate__infra__database_schemas__user__user_to_json_string_impl(ptr, rust_vec_len, data_len),
-    330 => wire__crate__infra__database_schemas__user__user_to_schema_impl(ptr, rust_vec_len, data_len),
+    153 => wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_default_impl(ptr, rust_vec_len, data_len),
+    154 => wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    155 => wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    156 => wire__crate__infra__network_schemas__robot_game_match_requests__robot_game_toggle_team_check_in_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    157 => wire__crate__infra__fll_infra__seasons__fll_2024__submerged_get_fll_game_impl(ptr, rust_vec_len, data_len),
+    158 => wire__crate__infra__fll_infra__seasons__fll_2024__submerged_get_season_impl(ptr, rust_vec_len, data_len),
+    159 => wire__crate__infra__fll_infra__seasons__fll_2024__submerged_validate_impl(ptr, rust_vec_len, data_len),
+    160 => wire__crate__infra__database_schemas__team__team_default_impl(ptr, rust_vec_len, data_len),
+    161 => wire__crate__infra__database_schemas__team__team_from_json_string_impl(ptr, rust_vec_len, data_len),
+    162 => wire__crate__infra__network_schemas__team_requests__team_insert_request_default_impl(ptr, rust_vec_len, data_len),
+    163 => wire__crate__infra__network_schemas__team_requests__team_insert_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    164 => wire__crate__infra__network_schemas__team_requests__team_insert_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    165 => wire__crate__infra__network_schemas__team_requests__team_insert_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    166 => wire__crate__infra__network_schemas__team_requests__team_remove_request_default_impl(ptr, rust_vec_len, data_len),
+    167 => wire__crate__infra__network_schemas__team_requests__team_remove_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    168 => wire__crate__infra__network_schemas__team_requests__team_remove_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    169 => wire__crate__infra__network_schemas__team_requests__team_remove_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    170 => wire__crate__infra__database_schemas__team__team_to_json_string_impl(ptr, rust_vec_len, data_len),
+    171 => wire__crate__infra__database_schemas__team__team_to_schema_impl(ptr, rust_vec_len, data_len),
+    172 => wire__crate__infra__database_schemas__category__tms_category_default_impl(ptr, rust_vec_len, data_len),
+    173 => wire__crate__infra__database_schemas__category__tms_category_from_json_string_impl(ptr, rust_vec_len, data_len),
+    174 => wire__crate__infra__database_schemas__category__tms_category_to_json_string_impl(ptr, rust_vec_len, data_len),
+    175 => wire__crate__infra__database_schemas__category__tms_category_to_schema_impl(ptr, rust_vec_len, data_len),
+    176 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_add_duration_impl(ptr, rust_vec_len, data_len),
+    177 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_compare_to_impl(ptr, rust_vec_len, data_len),
+    178 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_default_impl(ptr, rust_vec_len, data_len),
+    179 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_difference_impl(ptr, rust_vec_len, data_len),
+    180 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_duration_impl(ptr, rust_vec_len, data_len),
+    181 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_from_json_string_impl(ptr, rust_vec_len, data_len),
+    182 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_is_after_impl(ptr, rust_vec_len, data_len),
+    183 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_is_before_impl(ptr, rust_vec_len, data_len),
+    184 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_is_same_moment_impl(ptr, rust_vec_len, data_len),
+    185 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_new_impl(ptr, rust_vec_len, data_len),
+    186 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_now_impl(ptr, rust_vec_len, data_len),
+    187 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_add_duration_impl(ptr, rust_vec_len, data_len),
+    188 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_compare_to_impl(ptr, rust_vec_len, data_len),
+    189 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_default_impl(ptr, rust_vec_len, data_len),
+    190 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_difference_impl(ptr, rust_vec_len, data_len),
+    191 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_duration_impl(ptr, rust_vec_len, data_len),
+    192 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_from_json_string_impl(ptr, rust_vec_len, data_len),
+    193 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_is_after_impl(ptr, rust_vec_len, data_len),
+    194 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_is_before_impl(ptr, rust_vec_len, data_len),
+    195 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_is_same_moment_impl(ptr, rust_vec_len, data_len),
+    196 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_new_impl(ptr, rust_vec_len, data_len),
+    197 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_now_impl(ptr, rust_vec_len, data_len),
+    198 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_to_json_string_impl(ptr, rust_vec_len, data_len),
+    199 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_to_schema_impl(ptr, rust_vec_len, data_len),
+    200 => wire__crate__infra__database_schemas__tms_time__tms_date_time__tms_date_time_to_string_impl(ptr, rust_vec_len, data_len),
+    201 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_to_json_string_impl(ptr, rust_vec_len, data_len),
+    202 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_to_schema_impl(ptr, rust_vec_len, data_len),
+    203 => wire__crate__infra__database_schemas__tms_time__tms_date__tms_date_to_string_impl(ptr, rust_vec_len, data_len),
+    204 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_add_impl(ptr, rust_vec_len, data_len),
+    205 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_difference_impl(ptr, rust_vec_len, data_len),
+    206 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_days_impl(ptr, rust_vec_len, data_len),
+    207 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_hours_impl(ptr, rust_vec_len, data_len),
+    208 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_minutes_impl(ptr, rust_vec_len, data_len),
+    209 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_months_impl(ptr, rust_vec_len, data_len),
+    210 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_seconds_impl(ptr, rust_vec_len, data_len),
+    211 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_in_years_impl(ptr, rust_vec_len, data_len),
+    212 => wire__crate__infra__database_schemas__tms_time__tms_duration__tms_duration_new_impl(ptr, rust_vec_len, data_len),
+    213 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_default_impl(ptr, rust_vec_len, data_len),
+    214 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_from_json_string_impl(ptr, rust_vec_len, data_len),
+    215 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_json_string_impl(ptr, rust_vec_len, data_len),
+    216 => wire__crate__infra__network_schemas__socket_protocol__match_state_event__tms_server_match_state_event_to_schema_impl(ptr, rust_vec_len, data_len),
+    217 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_default_impl(ptr, rust_vec_len, data_len),
+    218 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_from_json_string_impl(ptr, rust_vec_len, data_len),
+    219 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_json_string_impl(ptr, rust_vec_len, data_len),
+    220 => wire__crate__infra__network_schemas__socket_protocol__match_time_event__tms_server_match_timer_event_to_schema_impl(ptr, rust_vec_len, data_len),
+    221 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_default_impl(ptr, rust_vec_len, data_len),
+    222 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_from_json_string_impl(ptr, rust_vec_len, data_len),
+    223 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_to_json_string_impl(ptr, rust_vec_len, data_len),
+    224 => wire__crate__infra__network_schemas__socket_protocol__server_socket_protocol__tms_server_socket_message_to_schema_impl(ptr, rust_vec_len, data_len),
+    225 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_default_impl(ptr, rust_vec_len, data_len),
+    226 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_from_json_string_impl(ptr, rust_vec_len, data_len),
+    227 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_to_json_string_impl(ptr, rust_vec_len, data_len),
+    228 => wire__crate__infra__network_schemas__socket_protocol__table_state_event__tms_server_table_state_event_to_schema_impl(ptr, rust_vec_len, data_len),
+    229 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_add_duration_impl(ptr, rust_vec_len, data_len),
+    230 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_compare_to_impl(ptr, rust_vec_len, data_len),
+    231 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_default_impl(ptr, rust_vec_len, data_len),
+    232 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_difference_impl(ptr, rust_vec_len, data_len),
+    233 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_duration_impl(ptr, rust_vec_len, data_len),
+    234 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_from_json_string_impl(ptr, rust_vec_len, data_len),
+    235 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_is_after_impl(ptr, rust_vec_len, data_len),
+    236 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_is_before_impl(ptr, rust_vec_len, data_len),
+    237 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_is_same_moment_impl(ptr, rust_vec_len, data_len),
+    238 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_new_impl(ptr, rust_vec_len, data_len),
+    239 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_now_impl(ptr, rust_vec_len, data_len),
+    240 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_to_json_string_impl(ptr, rust_vec_len, data_len),
+    241 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_to_schema_impl(ptr, rust_vec_len, data_len),
+    242 => wire__crate__infra__database_schemas__tms_time__tms_time__tms_time_to_string_impl(ptr, rust_vec_len, data_len),
+    243 => wire__crate__infra__tms_tree_role_default_impl(ptr, rust_vec_len, data_len),
+    244 => wire__crate__infra__tms_tree_role_from_json_string_impl(ptr, rust_vec_len, data_len),
+    245 => wire__crate__infra__tms_tree_role_to_json_string_impl(ptr, rust_vec_len, data_len),
+    246 => wire__crate__infra__tms_tree_role_to_schema_impl(ptr, rust_vec_len, data_len),
+    247 => wire__crate__infra__database_schemas__tournament_config__tournament_config_default_impl(ptr, rust_vec_len, data_len),
+    248 => wire__crate__infra__database_schemas__tournament_config__tournament_config_from_json_string_impl(ptr, rust_vec_len, data_len),
+    249 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_default_impl(ptr, rust_vec_len, data_len),
+    250 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    251 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    252 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_admin_password_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    253 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_default_impl(ptr, rust_vec_len, data_len),
+    254 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    255 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    256 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_backup_interval_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    257 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_default_impl(ptr, rust_vec_len, data_len),
+    258 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    259 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    260 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_endgame_timer_length_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    261 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_default_impl(ptr, rust_vec_len, data_len),
+    262 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    263 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    264 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_name_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    265 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_default_impl(ptr, rust_vec_len, data_len),
+    266 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    267 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    268 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_retain_backups_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    269 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_default_impl(ptr, rust_vec_len, data_len),
+    270 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    271 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    272 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_season_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    273 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_default_impl(ptr, rust_vec_len, data_len),
+    274 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    275 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    276 => wire__crate__infra__network_schemas__tournament_config_requests__tournament_config_set_timer_length_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    277 => wire__crate__infra__database_schemas__tournament_config__tournament_config_to_json_string_impl(ptr, rust_vec_len, data_len),
+    278 => wire__crate__infra__database_schemas__tournament_config__tournament_config_to_schema_impl(ptr, rust_vec_len, data_len),
+    279 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_default_impl(ptr, rust_vec_len, data_len),
+    280 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_from_json_string_impl(ptr, rust_vec_len, data_len),
+    281 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_get_message_impl(ptr, rust_vec_len, data_len),
+    282 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_get_stringified_code_impl(ptr, rust_vec_len, data_len),
+    283 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_to_json_string_impl(ptr, rust_vec_len, data_len),
+    284 => wire__crate__infra__database_schemas__tournament_errors__tournament_error_code_to_schema_impl(ptr, rust_vec_len, data_len),
+    285 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_default_impl(ptr, rust_vec_len, data_len),
+    286 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_from_json_string_impl(ptr, rust_vec_len, data_len),
+    287 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_get_message_impl(ptr, rust_vec_len, data_len),
+    288 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_get_stringified_code_impl(ptr, rust_vec_len, data_len),
+    289 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_to_json_string_impl(ptr, rust_vec_len, data_len),
+    290 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_code_to_schema_impl(ptr, rust_vec_len, data_len),
+    291 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_default_impl(ptr, rust_vec_len, data_len),
+    292 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_from_json_string_impl(ptr, rust_vec_len, data_len),
+    293 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_new_impl(ptr, rust_vec_len, data_len),
+    294 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_to_json_string_impl(ptr, rust_vec_len, data_len),
+    295 => wire__crate__infra__database_schemas__tournament_integrity_message__tournament_integrity_message_to_schema_impl(ptr, rust_vec_len, data_len),
+    296 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_default_impl(ptr, rust_vec_len, data_len),
+    297 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_from_json_string_impl(ptr, rust_vec_len, data_len),
+    298 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_to_json_string_impl(ptr, rust_vec_len, data_len),
+    299 => wire__crate__infra__database_schemas__tournament_season_blueprint__tournament_season_blueprint_to_schema_impl(ptr, rust_vec_len, data_len),
+    300 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_default_impl(ptr, rust_vec_len, data_len),
+    301 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_from_json_string_impl(ptr, rust_vec_len, data_len),
+    302 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_get_message_impl(ptr, rust_vec_len, data_len),
+    303 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_get_stringified_code_impl(ptr, rust_vec_len, data_len),
+    304 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_to_json_string_impl(ptr, rust_vec_len, data_len),
+    305 => wire__crate__infra__database_schemas__tournament_warnings__tournament_warning_code_to_schema_impl(ptr, rust_vec_len, data_len),
+    306 => wire__crate__infra__fll_infra__seasons__fll_2025__unearthed_get_fll_game_impl(ptr, rust_vec_len, data_len),
+    307 => wire__crate__infra__fll_infra__seasons__fll_2025__unearthed_get_season_impl(ptr, rust_vec_len, data_len),
+    308 => wire__crate__infra__fll_infra__seasons__fll_2025__unearthed_validate_impl(ptr, rust_vec_len, data_len),
+    309 => wire__crate__infra__database_schemas__user__user_default_impl(ptr, rust_vec_len, data_len),
+    310 => wire__crate__infra__database_schemas__user__user_from_json_string_impl(ptr, rust_vec_len, data_len),
+    311 => wire__crate__infra__database_schemas__user__user_get_permissions_impl(ptr, rust_vec_len, data_len),
+    312 => wire__crate__infra__database_schemas__user__user_has_permission_access_impl(ptr, rust_vec_len, data_len),
+    313 => wire__crate__infra__database_schemas__user__user_has_role_impl(ptr, rust_vec_len, data_len),
+    314 => wire__crate__infra__database_schemas__user__user_has_role_access_impl(ptr, rust_vec_len, data_len),
+    315 => wire__crate__infra__network_schemas__user_requests__user_insert_request_default_impl(ptr, rust_vec_len, data_len),
+    316 => wire__crate__infra__network_schemas__user_requests__user_insert_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    317 => wire__crate__infra__network_schemas__user_requests__user_insert_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    318 => wire__crate__infra__network_schemas__user_requests__user_insert_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    319 => wire__crate__infra__database_schemas__user__user_new_impl(ptr, rust_vec_len, data_len),
+    320 => wire__crate__infra__database_schemas__user__user_permissions_default_impl(ptr, rust_vec_len, data_len),
+    321 => wire__crate__infra__database_schemas__user__user_permissions_from_json_string_impl(ptr, rust_vec_len, data_len),
+    322 => wire__crate__infra__database_schemas__user__user_permissions_from_roles_impl(ptr, rust_vec_len, data_len),
+    323 => wire__crate__infra__database_schemas__user__user_permissions_get_merged_permissions_impl(ptr, rust_vec_len, data_len),
+    324 => wire__crate__infra__database_schemas__user__user_permissions_get_roles_impl(ptr, rust_vec_len, data_len),
+    325 => wire__crate__infra__database_schemas__user__user_permissions_has_role_access_impl(ptr, rust_vec_len, data_len),
+    326 => wire__crate__infra__database_schemas__user__user_permissions_new_impl(ptr, rust_vec_len, data_len),
+    327 => wire__crate__infra__database_schemas__user__user_permissions_to_json_string_impl(ptr, rust_vec_len, data_len),
+    328 => wire__crate__infra__database_schemas__user__user_permissions_to_schema_impl(ptr, rust_vec_len, data_len),
+    329 => wire__crate__infra__network_schemas__user_requests__user_remove_request_default_impl(ptr, rust_vec_len, data_len),
+    330 => wire__crate__infra__network_schemas__user_requests__user_remove_request_from_json_string_impl(ptr, rust_vec_len, data_len),
+    331 => wire__crate__infra__network_schemas__user_requests__user_remove_request_to_json_string_impl(ptr, rust_vec_len, data_len),
+    332 => wire__crate__infra__network_schemas__user_requests__user_remove_request_to_schema_impl(ptr, rust_vec_len, data_len),
+    333 => wire__crate__infra__database_schemas__user__user_to_json_string_impl(ptr, rust_vec_len, data_len),
+    334 => wire__crate__infra__database_schemas__user__user_to_schema_impl(ptr, rust_vec_len, data_len),
     _ => unreachable!(),
   }
 }
@@ -9471,6 +9573,18 @@ impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::robot_game
   }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest {
+  fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+    [self.team_number.into_into_dart().into_dart(), self.match_number.into_into_dart().into_dart()].into_dart()
+  }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest {}
+impl flutter_rust_bridge::IntoIntoDart<crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest> for crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest {
+  fn into_into_dart(self) -> crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest {
+    self
+  }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::infra::fll_infra::seasons::fll_2024::Submerged {
   fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
     Vec::<u8>::new().into_dart()
@@ -9997,7 +10111,6 @@ impl flutter_rust_bridge::IntoDart for crate::infra::database_schemas::user::Use
     [
       self.admin.into_into_dart().into_dart(),
       self.queuer.into_into_dart().into_dart(),
-      self.lead_queuer.into_into_dart().into_dart(),
       self.referee.into_into_dart().into_dart(),
       self.head_referee.into_into_dart().into_dart(),
       self.judge.into_into_dart().into_dart(),
@@ -10654,6 +10767,14 @@ impl SseEncode for crate::infra::network_schemas::robot_game_table_requests::Rob
   }
 }
 
+impl SseEncode for crate::infra::network_schemas::robot_game_match_requests::RobotGameToggleTeamCheckInRequest {
+  // Codec=Sse (Serialization based), see doc to use other codecs
+  fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+    <String>::sse_encode(self.team_number, serializer);
+    <String>::sse_encode(self.match_number, serializer);
+  }
+}
+
 impl SseEncode for crate::infra::fll_infra::seasons::fll_2024::Submerged {
   // Codec=Sse (Serialization based), see doc to use other codecs
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
@@ -11062,7 +11183,6 @@ impl SseEncode for crate::infra::database_schemas::user::UserPermissions {
   fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
     <Option<bool>>::sse_encode(self.admin, serializer);
     <Option<bool>>::sse_encode(self.queuer, serializer);
-    <Option<bool>>::sse_encode(self.lead_queuer, serializer);
     <Option<bool>>::sse_encode(self.referee, serializer);
     <Option<bool>>::sse_encode(self.head_referee, serializer);
     <Option<bool>>::sse_encode(self.judge, serializer);

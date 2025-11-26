@@ -17,7 +17,7 @@ echo -e "${G}Running codegen for $TMS_INFRA"
 # build wasm logic
 echo -e "${G}Building wasm for $TMS_INFRA"
 wasm-pack build $TMS_INFRA --target no-modules --out-dir $TMS_FLUTTER/web/pkg --no-typescript --out-name tms_infra --dev -- -Z build-std=std,panic_abort
-(cd $TMS_FLUTTER && flutter_rust_bridge_codegen build-web --dart-root $TMS_FLUTTER --rust-root $TMS_INFRA)
+(cd $TMS_FLUTTER && flutter_rust_bridge_codegen build-web --rust-root $TMS_INFRA)
 
 # run flutter code gen (freezed)
 echo -e "${G}Running freezed for $TMS_FLUTTER"

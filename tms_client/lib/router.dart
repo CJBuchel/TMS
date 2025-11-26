@@ -13,7 +13,6 @@ import 'package:tms/views/judging_sessions/judging_sessions.dart';
 import 'package:tms/views/login/login.dart';
 import 'package:tms/views/login/logout.dart';
 import 'package:tms/views/match_announcer/match_announcer.dart';
-// import 'package:tms/views/match_announcer/match_announcer.dart';
 import 'package:tms/views/match_controller/match_controller.dart';
 import 'package:tms/views/queueing/queueing.dart';
 import 'package:tms/views/referee_scoring/referee_scoring.dart';
@@ -133,7 +132,7 @@ final _protectedRoutes = <GoRoute>[
     name: 'queueing',
     builder: (context, state) => BaseScaffoldDrawerRouter(
       state: state,
-      child: _DelayedViewWrapper(child: NoMobileViewWrapper(child: Queueing())),
+      child: const _DelayedViewWrapper(child: Queueing()),
     ),
   ),
 

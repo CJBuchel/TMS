@@ -40,6 +40,22 @@ impl Default for RobotGameMatchLoadRequest {
   }
 }
 
+#[derive(Serialize, Deserialize, Debug, JsonSchema)]
+pub struct RobotGameToggleTeamCheckInRequest {
+  pub team_number: String,
+  pub match_number: String,
+}
+
+impl Default for RobotGameToggleTeamCheckInRequest {
+  fn default() -> Self {
+    Self {
+      team_number: "".to_string(),
+      match_number: "".to_string(),
+    }
+  }
+}
+
 impl DataSchemeExtensions for RobotGameMatchInsertRequest {}
 impl DataSchemeExtensions for RobotGameMatchRemoveRequest {}
 impl DataSchemeExtensions for RobotGameMatchLoadRequest {}
+impl DataSchemeExtensions for RobotGameToggleTeamCheckInRequest {}

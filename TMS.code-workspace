@@ -1,52 +1,46 @@
 {
-	"folders": [
-		{
-			"name": "TMS",
-			"path": "."
-		},
-		{
-			"name": "tms_client",
-			"path": "tms_client"
-		},
-		{
-			"name": "tms_server",
-			"path": "tms_server"
-		},
-		{
-			"name": "tms_infra",
-			"path": "tms_infra"
-		},
-		{
-			"name": "echo_tree_rs",
-			"path": "echo_tree_rs"
-		},
-		{
-			"name": "echo_tree_infra",
-			"path": "echo_tree_infra"
-		},
-		{
-			"name": "echo_tree_flutter",
-			"path": "echo_tree_flutter"
-		},
-		{
-			"name": "tms_schedule_handler",
-			"path": "tms_schedule_handler"
-		},
-		{
-			"name": "docs",
-			"path": "docs"
-		}
-	],
-	"settings": {
-		"search.exclude": {
-			"**/android": true,
-		},
-		"rust-analyzer.showUnlinkedFileNotification": false,
-		"svg.preview.background": "dark-transparent",
-		"java.compile.nullAnalysis.mode": "automatic",
-		"java.configuration.updateBuildConfiguration": "automatic",
-		"cSpell.words": [
-			"tmsapplicationscheme"
-		],
-	}
+  "folders": [
+    {
+      "name": "tms_client",
+      "path": "tms_client"
+    },
+    {
+      "name": "tms_server",
+      "path": "tms_server"
+    },
+    {
+      "name": "tms_infra",
+      "path": "tms_infra"
+    },
+    {
+      "name": "echo_tree_rs",
+      "path": "echo_tree_rs"
+    },
+    {
+      "name": "echo_tree_infra",
+      "path": "echo_tree_infra"
+    },
+    {
+      "name": "echo_tree_flutter",
+      "path": "echo_tree_flutter"
+    },
+    {
+      "name": "tms_schedule_handler",
+      "path": "tms_schedule_handler"
+    },
+    {
+      "name": "docs",
+      "path": "docs"
+    }
+  ],
+  "settings": {
+    "search.exclude": {
+      "**/android": true
+    },
+    "rust-analyzer.showUnlinkedFileNotification": false,
+    "svg.preview.background": "dark-transparent",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cSpell.words": ["tmsapplicationscheme"]
+  }
 }

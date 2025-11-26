@@ -12,32 +12,32 @@ enum WiFiEncryptionType {
 class FloatingQrButton extends StatelessWidget {
   final ValueNotifier<bool> _isDialOpen = ValueNotifier(false);
 
-  String _getQrWifiData() {
-    // WIFI configs
+  // String _getQrWifiData() {
+  //   // WIFI configs
 
-    // S - SSID
-    // P - Password The wireless password. Leave blank for T:nopass.
-    // T - Type Options: WEP, WPA, WPA2-EAP, or nopass (omit this parameter for nopass).
-    // H - Hidden Set to true if the wireless network is hidden.
-    // E - Enterprise Encryption EAP Method. Options: TTLS, PWD, etc.
-    // A - Enterprise Authentication Anonymous outer identity.
-    // I - Enterprise username Inner identity (username).
-    // PH2 - Enterprise Phase 2 authentication method. Options: MSCHAPV2, TLS, MD5, etc.
+  //   // S - SSID
+  //   // P - Password The wireless password. Leave blank for T:nopass.
+  //   // T - Type Options: WEP, WPA, WPA2-EAP, or nopass (omit this parameter for nopass).
+  //   // H - Hidden Set to true if the wireless network is hidden.
+  //   // E - Enterprise Encryption EAP Method. Options: TTLS, PWD, etc.
+  //   // A - Enterprise Authentication Anonymous outer identity.
+  //   // I - Enterprise username Inner identity (username).
+  //   // PH2 - Enterprise Phase 2 authentication method. Options: MSCHAPV2, TLS, MD5, etc.
 
-    // example regular WPA wifi
-    // WIFI:T:WPA;S:myNetwork;P:mypass;;
+  //   // example regular WPA wifi
+  //   // WIFI:T:WPA;S:myNetwork;P:mypass;;
 
-    // example enterprise PEAP wifi
-    // WIFI:S:myNetwork;T:WPA2-EAP;E:PEAP;PH2:MSCHAPV2;U:myUser;P:myPassword;;
+  //   // example enterprise PEAP wifi
+  //   // WIFI:S:myNetwork;T:WPA2-EAP;E:PEAP;PH2:MSCHAPV2;U:myUser;P:myPassword;;
 
-    String ssid = "mySSID";
-    String password = "myPassword";
+  //   String ssid = "mySSID";
+  //   String password = "myPassword";
 
-    String qrData = "WIFI:T:WPA;S:$ssid;P:$password;;";
-    // String qrData = "tmsapplicationscheme://connect?ip=192.168.178.116&port=8080";
+  //   String qrData = "WIFI:T:WPA;S:$ssid;P:$password;;";
+  //   // String qrData = "tmsapplicationscheme://connect?ip=192.168.178.116&port=8080";
 
-    return qrData;
-  }
+  //   return qrData;
+  // }
 
   void _displayQrCode(
       BuildContext context, String qrData, Color dataColor, Color eyeColor) {

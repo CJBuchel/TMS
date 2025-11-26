@@ -58,7 +58,7 @@ final ThemeData tmsLightTheme = ThemeData.light().copyWith(
     floatingLabelStyle: TextStyle(color: Colors.black),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Colors.blue,
+        color: Colors.black,
         width: 2.0,
       ),
     ),
@@ -136,7 +136,7 @@ final ThemeData tmsDarkTheme = ThemeData.dark().copyWith(
     floatingLabelStyle: TextStyle(color: Colors.white),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(
-        color: Colors.blue,
+        color: Colors.white,
         width: 2.0,
       ),
     ),

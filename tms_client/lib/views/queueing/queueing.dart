@@ -19,27 +19,22 @@ class _QueueItemData {
 class Queueing extends StatelessWidget {
   const Queueing({Key? key}) : super(key: key);
 
-  Widget _matchItem(int listIndex) {
+  Widget _matchItem(GameMatch match) {
     return Selector2<GameMatchProvider, GameMatchStatusProvider,
         _QueueItemData>(
       selector: (_, gameMatchProvider, statusProvider) {
         List<GameMatch> loadedMatches =
             statusProvider.getLoadedMatches(gameMatchProvider.matches);
         return _QueueItemData(
-          match: gameMatchProvider.matches[listIndex],
+          match: match,
           loadedMatches: loadedMatches,
         );
       },
       shouldRebuild: (previous, next) => previous != next,
       builder: (context, data, _) {
-        // Determine background color based on match status
-        Color statusColor = Colors.blue; // Default color
-        if (data.match.completed) {
-          statusColor = Colors.green;
-        } else if (data.loadedMatches
-            .any((m) => m.matchNumber == data.match.matchNumber)) {
-          statusColor = Colors.orange;
-        }
+        bool isLoaded = data.loadedMatches
+            .any((m) => m.matchNumber == data.match.matchNumber);
+        bool isCompleted = data.match.completed;
 
         return Theme(
             data: Theme.of(context).copyWith(
@@ -53,8 +48,8 @@ class Queueing extends StatelessWidget {
             ),
             child: QueueCard(
               match: data.match,
-              loadedMatches: data.loadedMatches,
-              statusColor: statusColor,
+              isLoaded: isLoaded,
+              isCompleted: isCompleted,
             ));
       },
     );
@@ -62,7 +57,11 @@ class Queueing extends StatelessWidget {
 
   Widget _matchList() {
     return Selector<GameMatchProvider, List<GameMatch>>(
-      selector: (_, gameMatchProvider) => gameMatchProvider.matchesByTime,
+      selector: (_, gameMatchProvider) {
+        return gameMatchProvider.matchesByTime
+            .where((match) => !match.completed)
+            .toList();
+      },
       builder: (context, matches, _) {
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -70,7 +69,7 @@ class Queueing extends StatelessWidget {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  return _matchItem(index);
+                  return _matchItem(matches[index]);
                 },
                 childCount: matches.length,
               ),

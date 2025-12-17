@@ -1,9 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tms_client/generated/api/user.pbgrpc.dart';
 import 'package:tms_client/generated/common/common.pbenum.dart';
-import 'package:tms_client/helpers/grpc_error_wrapper.dart';
+import 'package:tms_client/helpers/grpc_call_wrapper.dart';
 import 'package:tms_client/helpers/local_storage.dart';
 import 'package:tms_client/providers/grpc_channel_provider.dart';
+import 'package:tms_client/utils/grpc_result.dart';
 
 part 'auth_provider.g.dart';
 
@@ -56,10 +57,12 @@ class Roles extends _$Roles {
       _rolesKey,
       roles.map((role) => role.value.toString()).toList(),
     );
+    state = roles;
   }
 
   Future<void> clear() async {
     await localStorage.remove(_rolesKey);
+    state = [];
   }
 
   @override
@@ -74,19 +77,31 @@ class Roles extends _$Roles {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UserService extends _$UserService {
-  Future<void> login(String username, String password) async {
+  Future<GrpcResult<LoginResponse>> login(
+    String username,
+    String password,
+  ) async {
     final response = await callGrpcEndpoint(() async {
       final request = LoginRequest(username: username, password: password);
       return await state.login(request);
     });
 
-    // Set the user
-    // final roles = response.roles.map((role) => role.value.toString()).toList();
-    ref.read(usernameProvider.notifier).state = username;
-    ref.read(tokenProvider.notifier).state = response.token;
-    ref.read(rolesProvider.notifier).state = response.roles.toList();
+    if (response is GrpcSuccess<LoginResponse>) {
+      final loginResponse = response.data;
+      ref.read(usernameProvider.notifier).state = username;
+      ref.read(tokenProvider.notifier).state = loginResponse.token;
+      ref.read(rolesProvider.notifier).state = loginResponse.roles.toList();
+    }
+
+    return response;
+  }
+
+  void logout() {
+    ref.read(usernameProvider.notifier).clear();
+    ref.read(tokenProvider.notifier).clear();
+    ref.read(rolesProvider.notifier).clear();
   }
 
   @override

@@ -3,6 +3,7 @@ import 'package:tms_client/colors.dart';
 
 final AppBarTheme _appBarTheme = AppBarTheme(
   backgroundColor: primaryColor,
+
   surfaceTintColor: Colors.transparent,
   foregroundColor: Colors.white,
   centerTitle: true,
@@ -13,6 +14,7 @@ final ElevatedButtonThemeData _elevatedButtonData = ElevatedButtonThemeData(
   style: ButtonStyle(
     elevation: WidgetStateProperty.all<double>(0.0),
     backgroundColor: WidgetStateProperty.all<Color?>(primaryColor),
+
     foregroundColor: WidgetStateProperty.all<Color?>(Colors.white),
     overlayColor: WidgetStateProperty.all<Color?>(primaryColor[800]),
     enableFeedback: true,

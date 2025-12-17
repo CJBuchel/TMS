@@ -176,7 +176,7 @@ final class UserServiceProvider
         argument: null,
         retry: null,
         name: r'userServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -197,7 +197,7 @@ final class UserServiceProvider
   }
 }
 
-String _$userServiceHash() => r'01f916ecca768d7c67cc49e428ce9e1e7e08ba80';
+String _$userServiceHash() => r'c92f265675be028f4701ad494b6609a421b878ab';
 
 abstract class _$UserService extends $Notifier<UserServiceClient> {
   UserServiceClient build();

@@ -8,10 +8,12 @@ import 'package:tms_client/providers/tournament_provider.dart';
 
 class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final GoRouterState state;
+  final bool showActions;
 
-  const BaseAppBar({super.key, required this.state});
+  const BaseAppBar({super.key, required this.state, this.showActions = true});
 
   List<Widget> _actions() {
+    if (!showActions) return [];
     return [BaseAppBarThemeAction(), BaseAppBarLoginAction(state: state)];
   }
 

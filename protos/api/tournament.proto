@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package tms.api;
+
+import "db/db.proto";
+
+message GetTournamentRequest {}
+message GetTournamentResponse {
+  db.Tournament tournament = 1;
+}
+
+message SetTournamentRequest {
+  db.Tournament tournament = 1;
+}
+message SetTournamentResponse {}
+
+message StreamTournamentRequest {}
+message StreamTournamentResponse {
+  db.Tournament tournament = 1;
+}
+
+service TournamentService {
+  rpc GetTournament(GetTournamentRequest) returns (GetTournamentResponse);
+  rpc SetTournament(SetTournamentRequest) returns (SetTournamentResponse);
+  rpc StreamTournament(StreamTournamentRequest) returns (stream StreamTournamentResponse);
+}

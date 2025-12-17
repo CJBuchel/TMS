@@ -1,0 +1,19 @@
+[build]
+rustflags = [
+  "-Dunsafe_code",
+  "-Dwarnings",
+  "-Wclippy::all",
+  "-Wclippy::pedantic",
+  # Disable overly pedantic lints
+  "-Aclippy::must_use_candidate",
+  "-Aclippy::missing_errors_doc",
+  "-Aclippy::missing_panics_doc",
+  "-Aclippy::module_name_repetitions",
+  "-Aclippy::uninlined_format_args",
+  "-Aclippy::doc_markdown",
+  "-Aclippy::default_trait_access",
+  "-Aclippy::too_many_lines",
+  # Enable specific nursery lints
+  "-Wclippy::suboptimal_flops",
+  "-Wclippy::imprecise_flops",
+]

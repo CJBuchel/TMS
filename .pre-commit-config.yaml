@@ -1,0 +1,48 @@
+ci:
+  autofix_commit_msg: "style: auto-fixes from pre-commit.ci hooks"
+  autofix_prs: true
+  autoupdate_commit_msg: "chore: pre-commit autoupdate"
+  autoupdate_schedule: weekly
+
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      # Whitespace and formatting
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+
+      # File checks
+      - id: check-added-large-files
+        args: ["--maxkb=1000"]
+      - id: check-case-conflict
+      - id: check-merge-conflict
+
+      # Syntax validation
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+
+      # Security
+      - id: detect-private-key
+
+      # Git
+      - id: check-symlinks
+      - id: destroyed-symlinks
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.40.0
+    hooks:
+      - id: typos
+        args: []
+        stages: [pre-commit]
+        exclude: ^client/(ios|macos|android|windows|linux)/|client/lib/generated/.*\.(pb|pbjson)\.dart$
+      - id: typos
+        name: commit-msg-typos
+        stages: [commit-msg]

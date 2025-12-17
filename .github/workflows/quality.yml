@@ -1,0 +1,71 @@
+name: Code Quality
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - rebuild
+  pull_request:
+    branches:
+      - main
+      - master
+      - rebuild
+
+jobs:
+  protobuf-check:
+    name: Protobuf Linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+      - uses: dart-lang/setup-dart@v1
+      - name: Activate Dart Protoc
+        run: dart pub global activate protoc_plugin
+      - name: Validate protobufs
+        run: |
+          protoc --proto_path=protos --dart_out=grpc:client/lib/generated protos/common/*.proto protos/api/*.proto protos/db/*.proto
+
+  rust-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt, clippy
+      - name: Format check
+        run: cargo fmt --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+  flutter-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter --version
+      - name: Get dependencies
+        working-directory: client
+        run: flutter pub get
+      - name: Analyze
+        working-directory: client
+        run: flutter analyze
+
+  pre-commit:
+    name: Pre-commit Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1

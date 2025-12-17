@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+package tms.api;
+
+import public "api/tournament.proto";
+import public "api/user.proto";

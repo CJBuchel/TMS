@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package tms.api;
+
+import "common/common.proto";
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  repeated common.Role roles = 2;
+}
+
+message ValidateTokenRequest {}
+message ValidateTokenResponse {}
+
+service UserService {
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package tms.common;
+
+message Timestamp {
+  int64 seconds = 1; // Seconds since the Unix epoch.
+  int32 nanos = 2; // Nanoseconds since the Unix epoch.
+}
+
+enum Role {
+  ADMIN = 0;
+  REFEREE = 1;
+  HEAD_REFEREE = 2;
+  JUDGE = 3;
+  JUDGE_ADVISOR = 4;
+  SCORE_KEEPER = 5;
+  EMCEE = 6;
+  AV = 7;
+}

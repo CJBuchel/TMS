@@ -22,9 +22,9 @@ class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: true,
       title: tournamentStream.when(
         data: (t) => Text(t.tournament.name),
-        loading: () => const Text("N/A"),
+        loading: () => const Text('N/A'),
         error: (error, stack) =>
-            Text("Error: $error", style: TextStyle(color: supportErrorColor)),
+            Text('Error: $error', style: TextStyle(color: supportErrorColor)),
       ),
       actions: _actions(),
     );

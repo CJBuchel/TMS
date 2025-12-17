@@ -29,3 +29,4 @@ jobs:
           publish_branch: gh-pages
           publish_dir: _build
           force_orphan: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

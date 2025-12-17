@@ -8,7 +8,7 @@ void main() async {
   // Ensure flutter binding is initialized
   WidgetsFlutterBinding.ensureInitialized();
 
-  logger.i("Starting TMS Client...");
+  logger.i('Starting TMS Client...');
 
   // Init local storage
   await initializeLocalStorage();

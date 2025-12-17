@@ -47,8 +47,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/images/missions/2023/
-    - assets/images/missions/2024/
     - assets/images/missions/2025/
     - assets/logos/
     - assets/audio/

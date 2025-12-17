@@ -38,7 +38,7 @@ class GrpcChannel extends _$GrpcChannel {
   }
 
   void reconnect() {
-    logger.i("Reconnecting gRPC channel on next access...");
+    logger.i('Reconnecting gRPC channel on next access...');
     ref.invalidateSelf();
   }
 
@@ -56,7 +56,7 @@ class GrpcChannel extends _$GrpcChannel {
       channel.shutdown();
     });
 
-    logger.i("gRPC channel created: $serverIp:$apiPort (TLS: $tls)");
+    logger.i('gRPC channel created: $serverIp:$apiPort (TLS: $tls)');
     return channel;
   }
 }

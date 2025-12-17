@@ -6,7 +6,7 @@ use tokio_stream::{
 use tonic::{Request, Response, Result, Status};
 
 use crate::{
-  core::{auth_helpers::require_permission, events::EVENT_BUS},
+  core::{auth_helpers::require_permission, events::EVENT_BUS, shutdown::with_shutdown},
   generated::{
     api::{
       GetTournamentRequest, GetTournamentResponse, SetTournamentRequest, SetTournamentResponse,
@@ -78,6 +78,9 @@ impl TournamentService for TournamentApi {
       tournament: Some(initial),
     }))
     .chain(stream);
+
+    // Wrap in shutdown
+    let full_stream = with_shutdown(full_stream);
 
     Ok(Response::new(Box::pin(full_stream)))
   }

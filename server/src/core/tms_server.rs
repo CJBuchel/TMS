@@ -87,7 +87,7 @@ impl TmsServer {
       .parse()
       .expect("Error parsing API address");
     let api_server = Api::new(api_socket_addr);
-    let api_handle = tokio::spawn(async move {
+    let mut api_handle = tokio::spawn(async move {
       if let Err(e) = api_server.serve().await {
         log::error!("API Server Error: {:?}", e);
       }
@@ -98,7 +98,7 @@ impl TmsServer {
       .parse()
       .expect("Error parsing API address");
     let web_server = Web::new(web_socket_addr, "client/build/web".to_string());
-    let web_handle = tokio::spawn(async move {
+    let mut web_handle = tokio::spawn(async move {
       if let Err(e) = web_server.serve().await {
         log::error!("Web Server Error: {:?}", e);
       }
@@ -135,17 +135,21 @@ impl TmsServer {
       }
     }
 
-    // Wait for API server to shutdown gracefully
-    log::info!("Waiting for services to shut down...");
-    match tokio::time::timeout(std::time::Duration::from_secs(5), async {
-      let (api_result, web_result) = tokio::join!(api_handle, web_handle);
+    // Wait for services to shutdown gracefully
+
+    let timeout_future = async {
+      let (api_result, web_result) = tokio::join!(&mut api_handle, &mut web_handle);
       api_result.and(web_result)
-    })
-    .await
-    {
+    };
+
+    match tokio::time::timeout(Duration::from_secs(5), timeout_future).await {
       Ok(Ok(())) => log::info!("All services shut down gracefully"),
       Ok(Err(e)) => log::error!("Service task panicked: {:?}", e),
-      Err(_) => log::warn!("Services did not shut down within timeout, terminating..."),
+      Err(_) => {
+        log::warn!("Force aborting...");
+        api_handle.abort();
+        web_handle.abort();
+      }
     }
 
     log::info!("Server exited gracefully");

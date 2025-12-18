@@ -1,20 +1,17 @@
-use std::sync::Arc;
-
 use egui::{Color32, RichText, Visuals};
-use parking_lot::Mutex;
 use server::TmsConfig;
-use tokio::sync::mpsc::Sender;
+use tokio::sync::{mpsc::Sender, watch};
 
 use crate::{GuiMessage, ServerState};
 
 use super::ConfigFields;
 
 pub struct GuiRunner {
-  // Channel to send messages to main thread
+  // Channel to send messages to server management
   pub message_sender: Sender<GuiMessage>,
 
-  // Shared server state
-  server_state: Arc<Mutex<ServerState>>,
+  // Watch receiver for server state (gets notified on changes)
+  state_rx: watch::Receiver<ServerState>,
 
   // UI state
   pub status_text: RichText,
@@ -27,7 +24,7 @@ pub struct GuiRunner {
 impl GuiRunner {
   pub fn new(
     message_sender: Sender<GuiMessage>,
-    server_state: Arc<Mutex<ServerState>>,
+    state_rx: watch::Receiver<ServerState>,
     config: TmsConfig,
     cc: &eframe::CreationContext<'_>,
   ) -> Self {
@@ -40,7 +37,7 @@ impl GuiRunner {
 
     GuiRunner {
       message_sender,
-      server_state,
+      state_rx,
       status_text: RichText::new("Server not running"),
       error_message: None,
 
@@ -50,13 +47,20 @@ impl GuiRunner {
   }
 
   pub fn update_status_text(&mut self) {
-    // Get server state
-    let server_state = self.server_state.lock().clone();
+    // Check if state changed (non-blocking)
+    if self.state_rx.has_changed().unwrap_or(false) {
+      // Mark as seen
+      self.state_rx.borrow_and_update();
+    }
+
+    // Get current server state
+    let server_state = self.state_rx.borrow().clone();
 
     // Update status text
     match server_state {
       ServerState::Running => {
         self.status_text = RichText::new("Server running").color(Color32::GREEN);
+        self.error_message = None;
       }
       ServerState::Stopped => {
         self.status_text = RichText::new("Server not running");
@@ -69,12 +73,11 @@ impl GuiRunner {
   }
 
   pub fn is_server_running(&self) -> bool {
-    let state = self.server_state.lock().clone();
-    matches!(state, ServerState::Running)
+    matches!(*self.state_rx.borrow(), ServerState::Running)
   }
 
   pub fn start_server(&mut self) {
-    // clear error message
+    // Clear error message
     self.error_message = None;
 
     // Create TmsConfig from active_cfg

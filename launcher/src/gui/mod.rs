@@ -1,15 +1,13 @@
 use std::{
   net::{IpAddr, Ipv4Addr},
   str::FromStr,
-  sync::Arc,
 };
 
 use anyhow::Result;
 use egui::IconData;
-use parking_lot::Mutex;
 use runner::GuiRunner;
 use server::TmsConfig;
-use tokio::sync::mpsc::Sender;
+use tokio::sync::{mpsc::Sender, watch};
 
 use crate::{GuiMessage, ServerState};
 mod app;
@@ -83,14 +81,15 @@ fn load_icon_data() -> IconData {
 
 pub fn run_gui(
   message_sender: Sender<GuiMessage>,
-  server_state: Arc<Mutex<ServerState>>,
+  state_rx: watch::Receiver<ServerState>,
   config: TmsConfig,
 ) -> Result<()> {
   let size = [680.0, 440.0];
+  let min_size = [640.0, 400.0];
   let options = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()
       .with_inner_size(size)
-      .with_min_inner_size(size)
+      .with_min_inner_size(min_size)
       .with_icon(std::sync::Arc::new(load_icon_data())),
     ..Default::default()
   };
@@ -102,7 +101,7 @@ pub fn run_gui(
       egui_extras::install_image_loaders(&cc.egui_ctx);
       Ok(Box::<GuiRunner>::new(GuiRunner::new(
         message_sender,
-        server_state,
+        state_rx,
         config,
         cc,
       )))

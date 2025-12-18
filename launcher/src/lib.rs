@@ -23,7 +23,7 @@ pub enum GuiMessage {
 }
 
 /// Run the launcher with GUI
-pub async fn run_launcher(config: TmsConfig) -> Result<()> {
+pub fn run_launcher(config: TmsConfig) -> Result<()> {
   // Create channels
   let (msg_tx, msg_rx) = mpsc::channel::<GuiMessage>(32);
   let (state_tx, state_rx) = watch::channel(ServerState::Stopped);

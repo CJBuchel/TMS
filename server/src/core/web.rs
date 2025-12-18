@@ -18,7 +18,9 @@ use tower_http::{
 use crate::core::shutdown::ShutdownNotifier;
 
 async fn set_wasm_headers(req: Request<Body>, next: Next) -> Response {
-  let is_wasm = req.uri().path().ends_with(".wasm");
+  let is_wasm = std::path::Path::new(req.uri().path())
+    .extension()
+    .is_some_and(|ext| ext.eq_ignore_ascii_case("wasm"));
   let mut response = next.run(req).await;
 
   // Set WASM MIME type

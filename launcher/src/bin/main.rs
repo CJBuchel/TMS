@@ -20,7 +20,7 @@ async fn main() -> Result<()> {
   } else {
     // Run with GUI launcher
     log::info!("Starting TMS Launcher");
-    launcher::run_launcher(config).await?;
+    launcher::run_launcher(config)?;
   }
 
   Ok(())

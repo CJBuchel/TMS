@@ -92,9 +92,9 @@ class UserService extends _$UserService {
 
     if (response is GrpcSuccess<LoginResponse>) {
       final loginResponse = response.data;
-      ref.read(usernameProvider.notifier).state = username;
-      ref.read(tokenProvider.notifier).state = loginResponse.token;
-      ref.read(rolesProvider.notifier).state = loginResponse.roles.toList();
+      ref.read(usernameProvider.notifier).set(username);
+      ref.read(tokenProvider.notifier).set(loginResponse.token);
+      ref.read(rolesProvider.notifier).set(loginResponse.roles.toList());
     }
 
     return response;

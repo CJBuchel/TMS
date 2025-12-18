@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/providers/theme_provider.dart';
-import 'package:tms_client/router.dart';
+import 'package:tms_client/router/router.dart';
 import 'package:tms_client/theme.dart';
 
 class TmsApp extends ConsumerWidget {

@@ -8,7 +8,7 @@ import 'package:tms_client/utils/grpc_result.dart';
 
 part 'auth_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Token extends _$Token {
   final _tokenKey = 'jwt_token';
 
@@ -24,11 +24,12 @@ class Token extends _$Token {
 
   @override
   String? build() {
-    return localStorage.getString(_tokenKey) ?? '';
+    final token = localStorage.getString(_tokenKey);
+    return (token == null || token.isEmpty) ? null : token;
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Username extends _$Username {
   final _usernameKey = 'username';
 
@@ -44,11 +45,12 @@ class Username extends _$Username {
 
   @override
   String? build() {
-    return localStorage.getString(_usernameKey) ?? '';
+    final username = localStorage.getString(_usernameKey);
+    return (username == null || username.isEmpty) ? null : username;
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Roles extends _$Roles {
   final _rolesKey = 'user_roles';
 

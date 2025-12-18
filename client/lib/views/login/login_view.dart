@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/providers/auth_provider.dart';
 import 'package:tms_client/utils/grpc_result.dart';
@@ -71,6 +72,8 @@ class LoginView extends HookConsumerWidget {
 
       if (context.mounted && result is GrpcFailure) {
         PopupDialog.fromGrpcStatus(result: result).show(context);
+      } else if (context.mounted) {
+        context.pop();
       }
       isLoading.value = false;
     }

@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tms_client/generated/api/api.pbgrpc.dart';
+import 'package:tms_client/generated/api/tournament.pbgrpc.dart';
 import 'package:tms_client/helpers/reconnecting_stream.dart';
 import 'package:tms_client/providers/grpc_channel_provider.dart';
 

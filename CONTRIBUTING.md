@@ -94,6 +94,12 @@
 - Use `PascalCase` for class, enum and interface names
 - Use consistent naming conventions
 
+## Programming Guidelines **Flutter**
+- Order of Widget priority
+  - `StatelessWidget` for static content
+  - `ConsumerWidget` for rebuilding content (dependent on providers)
+  - `HooksConsumerWidget` for rebuilding content with inline logic
+
 ## UI Guidelines
 
 ### Font

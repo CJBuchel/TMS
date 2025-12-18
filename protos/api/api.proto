@@ -4,3 +4,11 @@ package tms.api;
 
 import public "api/tournament.proto";
 import public "api/user.proto";
+
+message GetHealthRequest {}
+message GetHealthResponse {}
+
+service HealthService {
+  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
+  rpc StreamHealth(GetHealthRequest) returns (stream GetHealthResponse);
+}

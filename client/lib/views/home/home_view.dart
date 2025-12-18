@@ -1,20 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tms_client/providers/tournament_provider.dart';
+import 'package:tms_client/generated/common/common.pbenum.dart';
+import 'package:tms_client/providers/auth_provider.dart';
+import 'package:tms_client/utils/permissions.dart';
+import 'package:tms_client/views/home/admin_cards.dart';
+import 'package:tms_client/views/home/public_cards.dart';
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
+  Widget _paddedSliver(Widget sliver) {
+    return SliverPadding(padding: const EdgeInsets.all(16.0), sliver: sliver);
+  }
+
+  Widget _bannerWidget(String title) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 28, color: Colors.blueGrey[800]),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tournamentStream = ref.watch(tournamentStreamProvider);
+    final roles = ref.watch(rolesProvider);
 
-    return Center(
-      child: tournamentStream.when(
-        data: (tournament) => Text(tournament.tournament.name),
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stack) => Text('Error: $error'),
-      ),
+    List<Widget> adminCards() {
+      if (roles.any((r) => r.hasPermission(Role.ADMIN))) {
+        return [
+          _bannerWidget('Admin Views'),
+          _paddedSliver(const AdminCards()),
+        ];
+      } else {
+        return [];
+      }
+    }
+
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        // Public cards
+        _bannerWidget('Public Views'),
+        _paddedSliver(const PublicCards()),
+        ...adminCards(),
+      ],
     );
   }
 }

@@ -33,6 +33,15 @@ where
 {
   let mut shutdown_rx = ShutdownNotifier::get().subscribe();
 
+  // Extract just the response type name from Result<ResponseType, Status>
+  let full_type = std::any::type_name::<T>();
+  let stream_type = full_type
+    .split("Result<")
+    .nth(1)
+    .and_then(|s| s.split(',').next())
+    .and_then(|s| s.split("::").last())
+    .unwrap_or(full_type);
+
   async_stream::stream! {
     tokio::pin!(stream);
 
@@ -45,7 +54,7 @@ where
           }
         }
         _ = shutdown_rx.recv() => {
-          log::warn!("Stream terminated due to shutdown signal");
+          log::warn!("Stream<{}> terminated due to shutdown signal", stream_type);
           break;
         }
       }

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/base/app_bar/login_action.dart';
 import 'package:tms_client/base/app_bar/theme_action.dart';
 import 'package:tms_client/colors.dart';
+import 'package:tms_client/providers/health_provider.dart';
 import 'package:tms_client/providers/tournament_provider.dart';
 
 class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -17,17 +18,37 @@ class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
     return [BaseAppBarThemeAction(), BaseAppBarLoginAction(state: state)];
   }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget _title(bool isConnected, WidgetRef ref) {
     final tournamentStream = ref.watch(tournamentStreamProvider);
-    return AppBar(
-      automaticallyImplyLeading: true,
-      title: tournamentStream.when(
-        data: (t) => Text(t.tournament.name),
+
+    if (isConnected) {
+      return tournamentStream.when(
+        data: (data) {
+          return Text(
+            data.tournament.name,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          );
+        },
         loading: () => const Text('N/A'),
         error: (error, stack) =>
             Text('Error: $error', style: TextStyle(color: supportErrorColor)),
-      ),
+      );
+    } else {
+      return Text(
+        'Disconnected',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isConnected = ref.watch(isConnectedProvider).value ?? false;
+
+    return AppBar(
+      backgroundColor: isConnected ? null : supportErrorColor,
+      automaticallyImplyLeading: true,
+      title: _title(isConnected, ref),
       actions: _actions(),
     );
   }

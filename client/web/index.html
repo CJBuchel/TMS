@@ -69,12 +69,21 @@
     </style>
   </head>
   <body>
-    <!-- This div will be replaced by Flutter when it loads -->
+    <!-- This div will be removed once Flutter loads -->
     <div id="loading">
       <img id="loading-icon" src="favicon.svg" alt="TMS" />
       <div id="loading-text">Loading...</div>
     </div>
 
     <script src="flutter_bootstrap.js" async></script>
+    <script>
+      // Remove splash screen when Flutter is ready
+      window.addEventListener("flutter-first-frame", function () {
+        const loading = document.getElementById("loading");
+        if (loading) {
+          loading.remove();
+        }
+      });
+    </script>
   </body>
 </html>

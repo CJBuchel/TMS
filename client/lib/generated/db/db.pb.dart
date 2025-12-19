@@ -15,8 +15,11 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common/common.pbenum.dart' as $0;
+import 'db.pbenum.dart';
 
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
+
+export 'db.pbenum.dart';
 
 class Secret extends $pb.GeneratedMessage {
   factory Secret({
@@ -154,7 +157,8 @@ class Tournament extends $pb.GeneratedMessage {
     $core.int? retainBackups,
     $core.int? endGameTimerTrigger,
     $core.int? gameTimerLength,
-    $core.String? season,
+    Season? season,
+    $core.String? eventKey,
   }) {
     final result = create();
     if (bootstrapped != null) result.bootstrapped = bootstrapped;
@@ -165,6 +169,7 @@ class Tournament extends $pb.GeneratedMessage {
       result.endGameTimerTrigger = endGameTimerTrigger;
     if (gameTimerLength != null) result.gameTimerLength = gameTimerLength;
     if (season != null) result.season = season;
+    if (eventKey != null) result.eventKey = eventKey;
     return result;
   }
 
@@ -191,7 +196,8 @@ class Tournament extends $pb.GeneratedMessage {
         fieldType: $pb.PbFieldType.OU3)
     ..aI(6, _omitFieldNames ? '' : 'gameTimerLength',
         fieldType: $pb.PbFieldType.OU3)
-    ..aOS(7, _omitFieldNames ? '' : 'season')
+    ..aE<Season>(7, _omitFieldNames ? '' : 'season', enumValues: Season.values)
+    ..aOS(8, _omitFieldNames ? '' : 'eventKey')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -267,13 +273,22 @@ class Tournament extends $pb.GeneratedMessage {
   void clearGameTimerLength() => $_clearField(6);
 
   @$pb.TagNumber(7)
-  $core.String get season => $_getSZ(6);
+  Season get season => $_getN(6);
   @$pb.TagNumber(7)
-  set season($core.String value) => $_setString(6, value);
+  set season(Season value) => $_setField(7, value);
   @$pb.TagNumber(7)
   $core.bool hasSeason() => $_has(6);
   @$pb.TagNumber(7)
   void clearSeason() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get eventKey => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set eventKey($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasEventKey() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearEventKey() => $_clearField(8);
 }
 
 const $core.bool _omitFieldNames =

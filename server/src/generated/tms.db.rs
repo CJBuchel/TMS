@@ -27,6 +27,35 @@ pub struct Tournament {
     pub end_game_timer_trigger: u32,
     #[prost(uint32, tag = "6")]
     pub game_timer_length: u32,
-    #[prost(string, optional, tag = "7")]
-    pub season: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(enumeration = "Season", tag = "7")]
+    pub season: i32,
+    #[prost(string, tag = "8")]
+    pub event_key: ::prost::alloc::string::String,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Season {
+    Agnostic = 0,
+    /// Start at 10 to future proof earlier seasons if needed
+    Season2025 = 10,
+}
+impl Season {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Agnostic => "AGNOSTIC",
+            Self::Season2025 => "SEASON_2025",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "AGNOSTIC" => Some(Self::Agnostic),
+            "SEASON_2025" => Some(Self::Season2025),
+            _ => None,
+        }
+    }
 }

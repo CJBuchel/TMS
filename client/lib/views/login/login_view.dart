@@ -78,6 +78,10 @@ class LoginView extends HookConsumerWidget {
       isLoading.value = false;
     }
 
+    void handleLogout() {
+      ref.read(userServiceProvider.notifier).logout();
+    }
+
     Widget loginWidget() {
       return Column(
         children: [
@@ -110,7 +114,7 @@ class LoginView extends HookConsumerWidget {
             width: 200,
             height: 50,
             child: ElevatedButton.icon(
-              onPressed: () => ref.read(userServiceProvider.notifier).logout(),
+              onPressed: () => handleLogout(),
               icon: const Icon(Icons.logout),
               label: const Text('Logout'),
             ),

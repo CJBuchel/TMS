@@ -15,6 +15,19 @@ import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
 
+@$core.Deprecated('Use seasonDescriptor instead')
+const Season$json = {
+  '1': 'Season',
+  '2': [
+    {'1': 'AGNOSTIC', '2': 0},
+    {'1': 'SEASON_2025', '2': 10},
+  ],
+};
+
+/// Descriptor for `Season`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List seasonDescriptor = $convert
+    .base64Decode('CgZTZWFzb24SDAoIQUdOT1NUSUMQABIPCgtTRUFTT05fMjAyNRAK');
+
 @$core.Deprecated('Use secretDescriptor instead')
 const Secret$json = {
   '1': 'Secret',
@@ -71,10 +84,15 @@ const Tournament$json = {
       '5': 13,
       '10': 'gameTimerLength'
     },
-    {'1': 'season', '3': 7, '4': 1, '5': 9, '9': 0, '10': 'season', '17': true},
-  ],
-  '8': [
-    {'1': '_season'},
+    {
+      '1': 'season',
+      '3': 7,
+      '4': 1,
+      '5': 14,
+      '6': '.tms.db.Season',
+      '10': 'season'
+    },
+    {'1': 'event_key', '3': 8, '4': 1, '5': 9, '10': 'eventKey'},
   ],
 };
 
@@ -84,5 +102,5 @@ final $typed_data.Uint8List tournamentDescriptor = $convert.base64Decode(
     'UYAiABKAlSBG5hbWUSJwoPYmFja3VwX2ludGVydmFsGAMgASgNUg5iYWNrdXBJbnRlcnZhbBIl'
     'Cg5yZXRhaW5fYmFja3VwcxgEIAEoDVINcmV0YWluQmFja3VwcxIzChZlbmRfZ2FtZV90aW1lcl'
     '90cmlnZ2VyGAUgASgNUhNlbmRHYW1lVGltZXJUcmlnZ2VyEioKEWdhbWVfdGltZXJfbGVuZ3Ro'
-    'GAYgASgNUg9nYW1lVGltZXJMZW5ndGgSGwoGc2Vhc29uGAcgASgJSABSBnNlYXNvbogBAUIJCg'
-    'dfc2Vhc29u');
+    'GAYgASgNUg9nYW1lVGltZXJMZW5ndGgSJgoGc2Vhc29uGAcgASgOMg4udG1zLmRiLlNlYXNvbl'
+    'IGc2Vhc29uEhsKCWV2ZW50X2tleRgIIAEoCVIIZXZlbnRLZXk=');

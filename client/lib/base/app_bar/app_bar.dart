@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/base/app_bar/login_action.dart';
+import 'package:tms_client/base/app_bar/settings_action.dart';
 import 'package:tms_client/base/app_bar/theme_action.dart';
 import 'package:tms_client/colors.dart';
 import 'package:tms_client/providers/health_provider.dart';
@@ -15,7 +16,11 @@ class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   List<Widget> _actions() {
     if (!showActions) return [];
-    return [BaseAppBarThemeAction(), BaseAppBarLoginAction(state: state)];
+    return [
+      BaseAppBarThemeAction(),
+      SettingsAction(),
+      BaseAppBarLoginAction(state: state),
+    ];
   }
 
   Widget _title(bool isConnected, WidgetRef ref) {
@@ -41,13 +46,27 @@ class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
     }
   }
 
+  Widget _leading(BuildContext context) {
+    // Show home button only when not on home page
+    final isHomePage = state.matchedLocation == '/';
+
+    if (isHomePage) {
+      return SizedBox.shrink(); // Hide button on home page
+    }
+
+    return IconButton(
+      icon: Icon(Icons.home),
+      onPressed: () => context.goNamed('home'),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isConnected = ref.watch(isConnectedProvider).value ?? false;
 
     return AppBar(
       backgroundColor: isConnected ? null : supportErrorColor,
-      automaticallyImplyLeading: true,
+      leading: _leading(context),
       title: _title(isConnected, ref),
       actions: _actions(),
     );

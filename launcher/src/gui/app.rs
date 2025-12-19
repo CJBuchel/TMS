@@ -2,11 +2,8 @@ use std::{net::IpAddr, str::FromStr};
 
 use egui::{Color32, RichText};
 use local_ip_address::local_ip;
-use qrcodegen::{QrCode, QrCodeEcc};
 
 use crate::{GuiMessage, gui::runner::GuiRunner};
-
-use super::qr_code;
 
 impl eframe::App for GuiRunner {
   fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
@@ -209,16 +206,18 @@ impl eframe::App for GuiRunner {
 
     // Right panel
     egui::SidePanel::right("right_panel").show(ctx, |ui| {
-      // generate qr code.
-      let qr = QrCode::encode_text(&server_url, QrCodeEcc::Low).unwrap();
-      let qr_image = qr_code::qr_to_image(&qr, 6);
-
-      let texture_id = "qr_image".to_owned();
-      let texture = ctx.load_texture(texture_id, qr_image, egui::TextureOptions::default());
-
       ui.vertical_centered(|ui| {
         ui.add_space(10.0);
-        ui.image((texture.id(), egui::Vec2::new(150.0, 150.0)));
+
+        // Get or create cached QR code texture
+        if let Some(texture) = self.get_or_create_qr_texture(ctx, &server_url) {
+          ui.image((texture.id(), egui::Vec2::new(150.0, 150.0)));
+        } else {
+          // Fallback if QR generation fails
+          ui.label(RichText::new("QR Code Error").color(Color32::RED));
+          log::warn!("QR code texture unavailable for URL: {}", server_url);
+        }
+
         ui.add_space(10.0);
         ui.hyperlink(server_url);
         ui.add_space(10.0);
@@ -226,9 +225,19 @@ impl eframe::App for GuiRunner {
         ui.add_space(10.0);
 
         // Start/Stop server button
-        let button_text = if is_running { "Stop Server" } else { "Start Server" };
+        let is_transitioning = self.is_server_transitioning();
+        let button_text = if is_running {
+          "Stop Server"
+        } else if is_transitioning {
+          "Please wait..."
+        } else {
+          "Start Server"
+        };
 
-        if ui.button(button_text).clicked() {
+        if ui
+          .add_enabled(!is_transitioning, egui::Button::new(button_text))
+          .clicked()
+        {
           if is_running {
             self.stop_server();
           } else {

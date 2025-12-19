@@ -86,11 +86,27 @@ pub fn run_gui(
 ) -> Result<()> {
   let size = [680.0, 440.0];
   let min_size = [640.0, 400.0];
+
   let options = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()
       .with_inner_size(size)
       .with_min_inner_size(min_size)
       .with_icon(std::sync::Arc::new(load_icon_data())),
+
+    // Workaround for NVIDIA + Wayland + glutin EGL_BAD_PARAMETER errors
+    // Force X11 backend on Linux to avoid intermittent crashes
+    // See: https://github.com/rust-windowing/glutin/issues/1188
+    #[cfg(target_os = "linux")]
+    event_loop_builder: Some(Box::new(|builder| {
+      use winit::platform::x11::EventLoopBuilderExtX11;
+
+      // Force X11 backend when running on Wayland to avoid NVIDIA EGL issues
+      if std::env::var("WAYLAND_DISPLAY").is_ok() {
+        log::warn!("Detected Wayland session - forcing X11 backend to avoid NVIDIA EGL issues");
+        builder.with_x11();
+      }
+    })),
+
     ..Default::default()
   };
 

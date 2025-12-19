@@ -197,7 +197,7 @@ final class UserServiceProvider
   }
 }
 
-String _$userServiceHash() => r'25da9f2c97c6c0e1de51e745ece21d10143293a7';
+String _$userServiceHash() => r'71b6c3a7a3a275c35903b375b36aecc20259bfc4';
 
 abstract class _$UserService extends $Notifier<UserServiceClient> {
   UserServiceClient build();

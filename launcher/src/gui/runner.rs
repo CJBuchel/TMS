@@ -19,6 +19,10 @@ pub struct GuiRunner {
 
   // Config fields (stringified)
   pub active_cfg: ConfigFields,
+
+  // Cached QR code state
+  cached_qr_url: String,
+  cached_qr_texture: Option<egui::TextureHandle>,
 }
 
 impl GuiRunner {
@@ -43,6 +47,10 @@ impl GuiRunner {
 
       // Config fields
       active_cfg: ConfigFields::from(config),
+
+      // Cached QR code state
+      cached_qr_url: String::new(),
+      cached_qr_texture: None,
     }
   }
 
@@ -58,12 +66,21 @@ impl GuiRunner {
 
     // Update status text
     match server_state {
+      ServerState::Starting => {
+        self.status_text = RichText::new("Server starting...").color(Color32::YELLOW);
+        self.error_message = None;
+      }
       ServerState::Running => {
         self.status_text = RichText::new("Server running").color(Color32::GREEN);
         self.error_message = None;
       }
+      ServerState::Stopping => {
+        self.status_text = RichText::new("Server stopping...").color(Color32::YELLOW);
+        self.error_message = None;
+      }
       ServerState::Stopped => {
         self.status_text = RichText::new("Server not running");
+        self.error_message = None;
       }
       ServerState::Error(error) => {
         self.status_text = RichText::new("Server error").color(Color32::RED);
@@ -74,6 +91,10 @@ impl GuiRunner {
 
   pub fn is_server_running(&self) -> bool {
     matches!(*self.state_rx.borrow(), ServerState::Running)
+  }
+
+  pub fn is_server_transitioning(&self) -> bool {
+    matches!(*self.state_rx.borrow(), ServerState::Starting | ServerState::Stopping)
   }
 
   pub fn start_server(&mut self) {
@@ -96,5 +117,32 @@ impl GuiRunner {
       log::error!("Failed to send stop message: {}", e);
       self.error_message = Some("Failed to stop server".to_string());
     }
+  }
+
+  pub fn get_or_create_qr_texture(&mut self, ctx: &egui::Context, server_url: &str) -> Option<&egui::TextureHandle> {
+    // Only regenerate if URL changed
+    if self.cached_qr_url != server_url {
+      log::debug!("Regenerating QR code for URL: {}", server_url);
+
+      // Generate new QR code
+      match qrcodegen::QrCode::encode_text(server_url, qrcodegen::QrCodeEcc::Low) {
+        Ok(qr) => {
+          let qr_image = super::qr_code::qr_to_image(&qr, 6);
+
+          // Load texture - egui handles caching internally by name
+          let texture = ctx.load_texture("qr_code_texture", qr_image, egui::TextureOptions::default());
+
+          self.cached_qr_url = server_url.to_string();
+          self.cached_qr_texture = Some(texture);
+          log::debug!("QR code texture created successfully");
+        }
+        Err(e) => {
+          log::error!("Failed to generate QR code: {:?}", e);
+          return None;
+        }
+      }
+    }
+
+    self.cached_qr_texture.as_ref()
   }
 }

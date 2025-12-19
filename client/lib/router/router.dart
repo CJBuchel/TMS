@@ -109,6 +109,7 @@ GoRouter router(Ref ref) {
         path: _loginRoute,
         builder: (context, state) => BaseScaffold(
           showActions: false,
+          disableRail: true,
           state: state,
           child: DeferredWidget(
             libraryKey: _loginRoute,

@@ -11,7 +11,9 @@ pub mod logging;
 #[derive(Debug, Clone)]
 pub enum ServerState {
   Stopped,
+  Starting,
   Running,
+  Stopping,
   Error(String),
 }
 
@@ -53,8 +55,18 @@ async fn run_server_management(mut msg_rx: mpsc::Receiver<GuiMessage>, state_tx:
           match msg {
             GuiMessage::StopServer => {
               log::info!("Stopping server");
-              if let Some((_, mut handle)) = server_instance.take() {
+              let _ = state_tx.send(ServerState::Stopping);
+
+              if let Some((server_task, mut handle)) = server_instance.take() {
                 handle.shutdown();
+
+                // Wait for server to actually stop (with timeout)
+                match tokio::time::timeout(std::time::Duration::from_secs(5), server_task).await {
+                  Ok(Ok(Ok(()))) => log::info!("Server stopped gracefully"),
+                  Ok(Ok(Err(e))) => log::error!("Server stopped with error: {}", e),
+                  Ok(Err(e)) => log::error!("Server task panicked: {}", e),
+                  Err(_) => log::error!("Server did not stop within 5 seconds"),
+                }
               }
               let _ = state_tx.send(ServerState::Stopped);
             },
@@ -96,9 +108,12 @@ async fn run_server_management(mut msg_rx: mpsc::Receiver<GuiMessage>, state_tx:
         match msg {
           GuiMessage::StartServer(config) => {
             log::info!("Starting server");
+            let _ = state_tx.send(ServerState::Starting);
+
             let (server, handle) = TmsServer::new(Some(config));
             let server_task = tokio::spawn(async move { server.run().await });
             server_instance = Some((server_task, handle));
+
             let _ = state_tx.send(ServerState::Running);
           }
           GuiMessage::Exit => {

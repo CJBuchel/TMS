@@ -1,4 +1,3 @@
-use chrono::Utc;
 use tokio::time::Duration;
 
 use anyhow::Result;
@@ -7,8 +6,6 @@ use tokio::sync::oneshot;
 use crate::{
   TmsConfig,
   core::{api::Api, auth::init_jwt_secret, db::init_db, events::init_event_bus, shutdown::ShutdownNotifier, web::Web},
-  generated::db::Tournament,
-  modules::tournament::TournamentRepository,
 };
 
 const SERVER_TICK_PERIOD_MS: u64 = 2000; // 10
@@ -53,17 +50,9 @@ impl TmsServer {
     (server, handle)
   }
 
-  fn update() -> Result<()> {
-    let mut tournament = Tournament::default();
-    // get current time
-    let now = Utc::now();
-    tournament.name = format!("{} - {}", now.format("%Y-%m-%d"), now.format("%H:%M:%S"));
-
-    match Tournament::set(&tournament) {
-      Ok(()) => Ok(()),
-      Err(e) => Err(e),
-    }
-  }
+  // fn update() -> Result<()> {
+  //   Ok(())
+  // }
 
   pub async fn run(mut self) -> Result<()> {
     log::info!("Running Server with config: {:?}", self.config);
@@ -112,10 +101,10 @@ impl TmsServer {
           // Server updates
 
           let start = std::time::Instant::now();
-          match Self::update() {
-            Ok(()) => {},
-            Err(e) => log::error!("Server update error: {:?}", e),
-          }
+          // match Self::update() {
+          //   Ok(()) => {},
+          //   Err(e) => log::error!("Server update error: {:?}", e),
+          // }
           let duration = start.elapsed();
 
           if duration.as_millis() > u128::from(SERVER_WARNING_THRESHOLD_MS) {

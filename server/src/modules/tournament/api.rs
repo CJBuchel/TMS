@@ -55,11 +55,11 @@ impl TournamentService for TournamentApi {
   ) -> Result<Response<Self::StreamTournamentStream>, Status> {
     let initial = Tournament::get();
 
-    // Subscribe to future updates
     let Some(event_bus) = EVENT_BUS.get() else {
       return Err(Status::internal("Event bus not initialized"));
     };
 
+    // Subscribe to future updates
     let rx = event_bus
       .subscribe::<Tournament>()
       .map_err(|e| Status::internal(format!("Failed to subscribe to tournament events: {}", e)))?;

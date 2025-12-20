@@ -23,6 +23,10 @@ pub struct GuiRunner {
   // Cached QR code state
   cached_qr_url: String,
   cached_qr_texture: Option<egui::TextureHandle>,
+
+  // Cooldown timer to prevent rapid start/stop
+  last_state_change: Option<std::time::Instant>,
+  last_observed_state: ServerState,
 }
 
 impl GuiRunner {
@@ -51,6 +55,10 @@ impl GuiRunner {
       // Cached QR code state
       cached_qr_url: String::new(),
       cached_qr_texture: None,
+
+      // Cooldown timer
+      last_state_change: None,
+      last_observed_state: ServerState::Stopped,
     }
   }
 
@@ -63,6 +71,12 @@ impl GuiRunner {
 
     // Get current server state
     let server_state = self.state_rx.borrow().clone();
+
+    // Track state changes for cooldown timer
+    if !std::mem::discriminant(&server_state).eq(&std::mem::discriminant(&self.last_observed_state)) {
+      self.last_state_change = Some(std::time::Instant::now());
+      self.last_observed_state = server_state.clone();
+    }
 
     // Update status text
     match server_state {
@@ -95,6 +109,26 @@ impl GuiRunner {
 
   pub fn is_server_transitioning(&self) -> bool {
     matches!(*self.state_rx.borrow(), ServerState::Starting | ServerState::Stopping)
+  }
+
+  /// Check if we're in cooldown period (1.5 seconds after any state change)
+  pub fn is_in_cooldown(&self) -> bool {
+    if let Some(last_change) = self.last_state_change {
+      last_change.elapsed() < std::time::Duration::from_millis(1500)
+    } else {
+      false
+    }
+  }
+
+  /// Get remaining cooldown time in milliseconds
+  pub fn remaining_cooldown_ms(&self) -> u64 {
+    if let Some(last_change) = self.last_state_change {
+      let elapsed_duration = last_change.elapsed();
+      let elapsed = elapsed_duration.as_secs() * 1000 + u64::from(elapsed_duration.subsec_millis());
+      1500_u64.saturating_sub(elapsed)
+    } else {
+      0
+    }
   }
 
   pub fn start_server(&mut self) {

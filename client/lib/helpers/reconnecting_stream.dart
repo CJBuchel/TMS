@@ -26,10 +26,7 @@ class ReconnectingStream<T> {
        _maxRetryDelay = maxRetryDelay;
 
   Stream<T> get stream {
-    _controller ??= StreamController<T>.broadcast(
-      onListen: _connect,
-      onCancel: close,
-    );
+    _controller ??= StreamController<T>.broadcast(onListen: _connect);
     return _controller!.stream;
   }
 

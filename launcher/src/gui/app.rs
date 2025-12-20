@@ -226,18 +226,22 @@ impl eframe::App for GuiRunner {
 
         // Start/Stop server button
         let is_transitioning = self.is_server_transitioning();
-        let button_text = if is_running {
-          "Stop Server"
-        } else if is_transitioning {
-          "Please wait..."
+        let is_in_cooldown = self.is_in_cooldown();
+        let is_disabled = is_transitioning || is_in_cooldown;
+
+        let button_text = if is_transitioning {
+          "Please wait...".to_string()
+        } else if is_in_cooldown {
+          let remaining_ms = self.remaining_cooldown_ms().min(10000); // Cap at 10 seconds for display
+          let remaining_secs = (f64::from(remaining_ms as u32) / 1000.0).ceil();
+          format!("Wait {:.0}s...", remaining_secs)
+        } else if is_running {
+          "Stop Server".to_string()
         } else {
-          "Start Server"
+          "Start Server".to_string()
         };
 
-        if ui
-          .add_enabled(!is_transitioning, egui::Button::new(button_text))
-          .clicked()
-        {
+        if ui.add_enabled(!is_disabled, egui::Button::new(button_text)).clicked() {
           if is_running {
             self.stop_server();
           } else {

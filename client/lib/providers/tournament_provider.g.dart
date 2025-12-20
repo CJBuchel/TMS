@@ -54,7 +54,7 @@ final class TournamentServiceProvider
   }
 }
 
-String _$tournamentServiceHash() => r'7274ebc800f359bafca999a9483df09abb7c2b55';
+String _$tournamentServiceHash() => r'87584283641eba17b357c9c4fe5091d431341942';
 
 @ProviderFor(tournamentStream)
 const tournamentStreamProvider = TournamentStreamProvider._();
@@ -75,7 +75,7 @@ final class TournamentStreamProvider
         argument: null,
         retry: null,
         name: r'tournamentStreamProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -95,4 +95,4 @@ final class TournamentStreamProvider
   }
 }
 
-String _$tournamentStreamHash() => r'020f04e5e8a72e0282099943699b6f8816f3ac71';
+String _$tournamentStreamHash() => r'8adbbd7c64db1ee98e8889fbb40d6a23284bf329';

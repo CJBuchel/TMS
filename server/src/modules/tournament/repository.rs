@@ -1,5 +1,6 @@
 use anyhow::Result;
 use database::DataInsert;
+use rand::Rng;
 
 use crate::{
   core::{
@@ -11,6 +12,23 @@ use crate::{
 
 const TOURNAMENT_TABLE_NAME: &str = "tournament";
 const TOURNAMENT_KEY: &str = "tournament";
+
+fn create_default_tournament() -> Tournament {
+  const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let mut rng = rand::rng();
+
+  let event_key: String = (0..10)
+    .map(|_| {
+      let idx = rng.random_range(0..CHARSET.len());
+      CHARSET[idx] as char
+    })
+    .collect();
+
+  Tournament {
+    event_key,
+    ..Default::default()
+  }
+}
 
 pub trait TournamentRepository {
   fn set(record: &Tournament) -> Result<()>;
@@ -55,17 +73,17 @@ impl TournamentRepository for Tournament {
 
   fn get() -> Tournament {
     let Ok(db) = get_db() else {
-      return Tournament::default();
+      return create_default_tournament();
     };
 
     let table = db.get_table(TOURNAMENT_TABLE_NAME);
 
     match table.get(TOURNAMENT_KEY) {
       Ok(Some(record)) => record,
-      Ok(None) => Tournament::default(),
+      Ok(None) => create_default_tournament(),
       Err(e) => {
         log::warn!("Failed to retrieve tournament: {}", e);
-        Tournament::default()
+        create_default_tournament()
       }
     }
   }

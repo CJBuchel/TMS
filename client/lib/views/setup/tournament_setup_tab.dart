@@ -14,18 +14,8 @@ import 'package:tms_client/views/setup/common/file_upload_setting.dart';
 import 'package:tms_client/views/setup/common/locked_text_field_setting.dart';
 import 'package:tms_client/views/setup/common/settings_page_layout.dart';
 import 'package:tms_client/views/setup/common/text_field_setting.dart';
+import 'package:tms_client/widgets/dialogs/confirm_dialog.dart';
 import 'package:tms_client/widgets/dialogs/popup_dialog.dart';
-
-// enum Season {
-//   fall,
-//   winter,
-//   spring,
-//   summer;
-
-//   String get displayName {
-//     return name[0].toUpperCase() + name.substring(1);
-//   }
-// }
 
 class TournamentSetupTab extends HookConsumerWidget {
   const TournamentSetupTab({super.key});
@@ -48,15 +38,13 @@ class TournamentSetupTab extends HookConsumerWidget {
       }
     }
 
-    Future<void> uploadSchedule(Uint8List bytes) async {
+    Future<GrpcResult<UploadScheduleCsvResponse>> uploadSchedule(
+      Uint8List bytes,
+    ) async {
       final req = UploadScheduleCsvRequest(csvData: bytes);
-      final res = await callGrpcEndpoint(
+      return await callGrpcEndpoint(
         () => ref.read(scheduleServiceProvider).uploadScheduleCsv(req),
       );
-
-      if (context.mounted && res is GrpcFailure) {
-        PopupDialog.fromGrpcStatus(result: res).show(context);
-      }
     }
 
     final nameController = useTextEditingController();
@@ -97,13 +85,23 @@ class TournamentSetupTab extends HookConsumerWidget {
         ),
         const SizedBox(height: 24),
         FileUploadSetting(
-          label: 'Schedule Import',
+          label: 'Schedule Upload',
           description: 'Upload a CSV file containing the tournament schedule',
           allowedExtensions: ['csv'],
-          uploadButtonLabel: 'Import',
+          uploadButtonLabel: 'Upload',
           onUpload: (file) async {
             if (file.bytes != null) {
-              uploadSchedule(file.bytes!);
+              ConfirmDialog.warn(
+                title: 'Confirm Upload',
+                message: const Text(
+                  'Uploading a schedule can have impacts on existing data integrity',
+                ),
+                onConfirmAsyncGrpc: () async {
+                  return await uploadSchedule(file.bytes!);
+                },
+                showResultDialog: true,
+                successMessage: const Text('Schedule uploaded successfully!'),
+              ).show(context);
             }
           },
         ),

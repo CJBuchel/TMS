@@ -9,7 +9,7 @@ class PopupDialog extends BaseDialog {
   final DialogType type;
   final List<Widget>? actions;
 
-  PopupDialog._({
+  PopupDialog({
     required this.title,
     required this.message,
     required this.type,
@@ -21,7 +21,7 @@ class PopupDialog extends BaseDialog {
     required Widget message,
     List<Widget>? actions,
   }) {
-    return PopupDialog._(
+    return PopupDialog(
       title: title,
       message: message,
       type: DialogType.info,
@@ -34,7 +34,7 @@ class PopupDialog extends BaseDialog {
     required Widget message,
     List<Widget>? actions,
   }) {
-    return PopupDialog._(
+    return PopupDialog(
       title: title,
       message: message,
       type: DialogType.success,
@@ -47,7 +47,7 @@ class PopupDialog extends BaseDialog {
     required Widget message,
     List<Widget>? actions,
   }) {
-    return PopupDialog._(
+    return PopupDialog(
       title: title,
       message: message,
       type: DialogType.error,
@@ -60,7 +60,7 @@ class PopupDialog extends BaseDialog {
     required Widget message,
     List<Widget>? actions,
   }) {
-    return PopupDialog._(
+    return PopupDialog(
       title: title,
       message: message,
       type: DialogType.warn,
@@ -76,7 +76,7 @@ class PopupDialog extends BaseDialog {
       case GrpcSuccess():
         return PopupDialog.success(
           title: 'Success',
-          message: successMessage ?? Text('Success'),
+          message: successMessage ?? const Text('Success'),
         );
       case GrpcFailure(userMessage: final msg, statusCode: final code):
         return PopupDialog.error(
@@ -85,9 +85,9 @@ class PopupDialog extends BaseDialog {
             children: [
               Text(
                 'Status: $code',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text('Failed: $msg'),
             ],
           ),
@@ -95,36 +95,30 @@ class PopupDialog extends BaseDialog {
     }
   }
 
-  Widget _buildTitle() {
-    IconData iconData;
-    Color color;
-
+  Color get _bannerColor {
     switch (type) {
       case DialogType.error:
-        iconData = Icons.error;
-        color = Colors.white;
-        break;
+        return supportErrorColor;
       case DialogType.info:
-        iconData = Icons.info;
-        color = Colors.white;
-        break;
+        return supportInfoColor;
       case DialogType.warn:
-        iconData = Icons.warning;
-        color = Colors.white;
-        break;
+        return supportWarningColor;
       case DialogType.success:
-        iconData = Icons.check_circle;
-        color = Colors.white;
-        break;
+        return supportSuccessColor;
     }
+  }
 
+  Widget _buildTitle() {
     return Row(
       children: [
-        Icon(iconData, color: color),
+        Icon(type.icon, color: Colors.white),
         const SizedBox(width: 8),
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.bold, color: color),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ],
     );
@@ -132,23 +126,6 @@ class PopupDialog extends BaseDialog {
 
   @override
   void show(BuildContext context) {
-    Color bannerColor;
-
-    switch (type) {
-      case DialogType.error:
-        bannerColor = supportErrorColor;
-        break;
-      case DialogType.info:
-        bannerColor = supportInfoColor;
-        break;
-      case DialogType.warn:
-        bannerColor = supportWarningColor;
-        break;
-      case DialogType.success:
-        bannerColor = supportSuccessColor;
-        break;
-    }
-
     const radius = 8.0;
 
     showDialog<void>(
@@ -171,7 +148,7 @@ class PopupDialog extends BaseDialog {
                   // Paint-dipped banner
                   Container(
                     decoration: BoxDecoration(
-                      color: bannerColor,
+                      color: _bannerColor,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(radius),
                         topRight: Radius.circular(radius),
@@ -183,19 +160,27 @@ class PopupDialog extends BaseDialog {
                   // Content
                   Padding(padding: const EdgeInsets.all(24), child: message),
                   // Actions
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16, bottom: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ...actions ?? [],
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: const Text('OK'),
-                        ),
-                      ],
+                  if (actions != null && actions!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16, bottom: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: actions!,
+                      ),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16, bottom: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

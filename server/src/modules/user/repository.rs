@@ -3,7 +3,13 @@ use std::collections::HashMap;
 use anyhow::Result;
 use database::DataInsert;
 
-use crate::{core::db::get_db, generated::db::User};
+use crate::{
+  core::{
+    db::get_db,
+    events::{ChangeEvent, ChangeOperation, EVENT_BUS},
+  },
+  generated::db::User,
+};
 
 const USER_TABLE_NAME: &str = "users";
 
@@ -27,6 +33,18 @@ impl UserRepository for User {
     };
 
     let id = table.insert(data)?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not initialized"));
+    };
+
+    event_bus.publish(ChangeEvent {
+      operation: ChangeOperation::Create,
+      id: id.clone(),
+      data: Some(record.clone()),
+    })?;
+
     Ok((id, record.clone()))
   }
 
@@ -40,13 +58,38 @@ impl UserRepository for User {
     };
 
     table.insert(data)?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not initialized"));
+    };
+
+    event_bus.publish(ChangeEvent {
+      operation: ChangeOperation::Update,
+      id: id.to_string(),
+      data: Some(record.clone()),
+    })?;
+
     Ok(())
   }
 
   fn remove(id: &str) -> Result<()> {
     let db = get_db()?;
     let table = db.get_table(USER_TABLE_NAME);
-    table.remove(id)
+    table.remove(id)?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not initialized"));
+    };
+
+    event_bus.publish(ChangeEvent::<User> {
+      operation: ChangeOperation::Delete,
+      id: id.to_string(),
+      data: None,
+    })?;
+
+    Ok(())
   }
 
   fn get(id: &str) -> Result<Option<User>> {

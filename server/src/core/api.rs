@@ -6,12 +6,13 @@ use tonic_web::GrpcWebLayer;
 use tower_http::cors::{Any, CorsLayer};
 
 use crate::{
-  core::{auth_interceptors::auth_interceptor, shutdown::ShutdownNotifier},
+  auth::auth_interceptors::auth_interceptor,
+  core::shutdown::ShutdownNotifier,
   generated::api::{
-    health_service_server::HealthServiceServer, tournament_service_server::TournamentServiceServer,
-    user_service_server::UserServiceServer,
+    health_service_server::HealthServiceServer, schedule_service_server::ScheduleServiceServer,
+    tournament_service_server::TournamentServiceServer, user_service_server::UserServiceServer,
   },
-  modules::{health::HealthApi, tournament::TournamentApi, user::UserApi},
+  modules::{health::HealthApi, schedule::api::ScheduleApi, tournament::TournamentApi, user::UserApi},
 };
 
 pub struct Api {
@@ -54,6 +55,10 @@ impl Api {
       .add_service(UserServiceServer::with_interceptor(UserApi {}, auth_interceptor))
       .add_service(TournamentServiceServer::with_interceptor(
         TournamentApi {},
+        auth_interceptor,
+      ))
+      .add_service(ScheduleServiceServer::with_interceptor(
+        ScheduleApi {},
         auth_interceptor,
       ));
 

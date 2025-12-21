@@ -7,7 +7,7 @@ use crate::{
     db::get_db,
     events::{ChangeEvent, ChangeOperation, EVENT_BUS},
   },
-  generated::db::Tournament,
+  generated::db::{Season, Tournament},
 };
 
 const TOURNAMENT_TABLE_NAME: &str = "tournament";
@@ -26,6 +26,7 @@ fn create_default_tournament() -> Tournament {
 
   Tournament {
     event_key,
+    season: Season::Season2025 as i32,
     ..Default::default()
   }
 }

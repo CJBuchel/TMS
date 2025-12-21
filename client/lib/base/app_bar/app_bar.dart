@@ -7,7 +7,6 @@ import 'package:tms_client/base/app_bar/theme_action.dart';
 import 'package:tms_client/colors.dart';
 import 'package:tms_client/providers/health_provider.dart';
 import 'package:tms_client/providers/tournament_provider.dart';
-import 'package:tms_client/utils/logger.dart';
 
 class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final GoRouterState state;
@@ -26,8 +25,6 @@ class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   Widget _title(bool isConnected, WidgetRef ref) {
     final tournamentStream = ref.watch(tournamentStreamProvider);
-
-    logger.i('td updated');
 
     if (isConnected) {
       return tournamentStream.when(

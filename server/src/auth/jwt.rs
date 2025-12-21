@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 use crate::{
-  core::permissions::RolePermissions,
+  auth::permissions::RolePermissions,
   generated::{common::Role, db::Secret},
   modules::secret::SecretRepository,
 };

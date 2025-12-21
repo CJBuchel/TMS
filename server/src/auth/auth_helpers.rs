@@ -1,7 +1,7 @@
 use tonic::{Request, Status};
 
 use crate::{
-  core::{auth::Claims, auth_interceptors::AuthContext},
+  auth::{auth_interceptors::AuthContext, jwt::Claims},
   generated::common::Role,
 };
 

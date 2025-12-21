@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:tms_client/views/setup/setting_row.dart';
+import 'package:tms_client/views/setup/common/setting_row.dart';
 
 /// Reusable locked text field setting with unlock/update functionality
 /// and optional warning message

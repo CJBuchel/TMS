@@ -32,6 +32,75 @@ pub struct Tournament {
     #[prost(string, tag = "8")]
     pub event_key: ::prost::alloc::string::String,
 }
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct Team {
+    #[prost(string, tag = "1")]
+    pub team_number: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub name: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub affiliation: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TableAssignment {
+    #[prost(string, tag = "1")]
+    pub table_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub team_id: ::prost::alloc::string::String,
+    #[prost(bool, tag = "3")]
+    pub score_submitted: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GameMatch {
+    #[prost(string, tag = "1")]
+    pub match_number: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub start_time: ::core::option::Option<super::common::TmsDateTime>,
+    #[prost(message, optional, tag = "3")]
+    pub end_time: ::core::option::Option<super::common::TmsDateTime>,
+    #[prost(message, repeated, tag = "4")]
+    pub assignments: ::prost::alloc::vec::Vec<TableAssignment>,
+    #[prost(bool, tag = "5")]
+    pub completed: bool,
+    #[prost(enumeration = "MatchType", tag = "6")]
+    pub match_type: i32,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PodAssignment {
+    #[prost(string, tag = "1")]
+    pub pod_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub team_id: ::prost::alloc::string::String,
+    #[prost(bool, tag = "3")]
+    pub core_values_submitted: bool,
+    #[prost(bool, tag = "4")]
+    pub innovation_submitted: bool,
+    #[prost(bool, tag = "5")]
+    pub robot_design_submitted: bool,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JudgingSession {
+    #[prost(string, tag = "1")]
+    pub session_number: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub start_time: ::core::option::Option<super::common::TmsDateTime>,
+    #[prost(message, optional, tag = "3")]
+    pub end_time: ::core::option::Option<super::common::TmsDateTime>,
+    #[prost(message, repeated, tag = "4")]
+    pub assignments: ::prost::alloc::vec::Vec<PodAssignment>,
+    #[prost(bool, tag = "5")]
+    pub complete: bool,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TableName {
+    #[prost(string, tag = "1")]
+    pub table_name: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct PodName {
+    #[prost(string, tag = "2")]
+    pub pod_name: ::prost::alloc::string::String,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum Season {
@@ -55,6 +124,32 @@ impl Season {
         match value {
             "AGNOSTIC" => Some(Self::Agnostic),
             "SEASON_2025" => Some(Self::Season2025),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum MatchType {
+    Ranking = 0,
+    Practice = 1,
+}
+impl MatchType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Self::Ranking => "RANKING",
+            Self::Practice => "PRACTICE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "RANKING" => Some(Self::Ranking),
+            "PRACTICE" => Some(Self::Practice),
             _ => None,
         }
     }

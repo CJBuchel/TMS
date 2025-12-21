@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package tms.api;
+
+message UploadScheduleCsvRequest {
+  bytes csv_data = 1;
+}
+message UploadScheduleCsvResponse {}
+
+service ScheduleService {
+  rpc UploadScheduleCsv(UploadScheduleCsvRequest) returns (UploadScheduleCsvResponse);
+}

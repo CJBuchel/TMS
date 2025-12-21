@@ -1,5 +1,5 @@
 use crate::{
-  core::{auth::Auth, auth_helpers::require_auth},
+  auth::{auth_helpers::require_auth, jwt::Auth},
   generated::{
     api::{LoginRequest, LoginResponse, ValidateTokenRequest, ValidateTokenResponse, user_service_server::UserService},
     common::Role,

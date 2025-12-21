@@ -5,7 +5,8 @@ use tokio::sync::oneshot;
 
 use crate::{
   TmsConfig,
-  core::{api::Api, auth::init_jwt_secret, db::init_db, events::init_event_bus, shutdown::ShutdownNotifier, web::Web},
+  auth::jwt::init_jwt_secret,
+  core::{api::Api, db::init_db, events::init_event_bus, shutdown::ShutdownNotifier, web::Web},
 };
 
 const SERVER_TICK_PERIOD_MS: u64 = 2000; // 10
@@ -65,8 +66,8 @@ impl TmsServer {
     let mut interval = tokio::time::interval(Duration::from_millis(SERVER_TICK_PERIOD_MS));
 
     // Middleware Setups
-    init_db(&self.config)?;
     init_event_bus(1024)?;
+    init_db(&self.config)?;
     init_jwt_secret()?;
 
     // Create serving address

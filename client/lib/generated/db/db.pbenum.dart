@@ -31,5 +31,24 @@ class Season extends $pb.ProtobufEnum {
   const Season._(super.value, super.name);
 }
 
+class MatchType extends $pb.ProtobufEnum {
+  static const MatchType RANKING =
+      MatchType._(0, _omitEnumNames ? '' : 'RANKING');
+  static const MatchType PRACTICE =
+      MatchType._(1, _omitEnumNames ? '' : 'PRACTICE');
+
+  static const $core.List<MatchType> values = <MatchType>[
+    RANKING,
+    PRACTICE,
+  ];
+
+  static final $core.List<MatchType?> _byValue =
+      $pb.ProtobufEnum.$_initByValueList(values, 1);
+  static MatchType? valueOf($core.int value) =>
+      value < 0 || value >= _byValue.length ? null : _byValue[value];
+
+  const MatchType._(super.value, super.name);
+}
+
 const $core.bool _omitEnumNames =
     $core.bool.fromEnvironment('protobuf.omit_enum_names');

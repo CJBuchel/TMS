@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tms_client/views/setup/setting_row.dart';
+import 'package:tms_client/views/setup/common/setting_row.dart';
 
 /// Reusable text field setting with update button
 class TextFieldSetting extends StatelessWidget {

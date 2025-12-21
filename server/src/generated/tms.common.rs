@@ -8,6 +8,41 @@ pub struct Timestamp {
     #[prost(int32, tag = "2")]
     pub nanos: i32,
 }
+/// Represents a date (year, month, day)
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TmsDate {
+    /// Year (e.g., 2024)
+    #[prost(int32, tag = "1")]
+    pub year: i32,
+    /// Month (1-12)
+    #[prost(int32, tag = "2")]
+    pub month: i32,
+    /// Day (1-31)
+    #[prost(int32, tag = "3")]
+    pub day: i32,
+}
+/// Represents a time of day
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TmsTime {
+    /// Hour (0-23)
+    #[prost(uint32, tag = "1")]
+    pub hour: u32,
+    /// Minute (0-59)
+    #[prost(uint32, tag = "2")]
+    pub minute: u32,
+    /// Second (0-59)
+    #[prost(uint32, tag = "3")]
+    pub second: u32,
+}
+/// Represents a date and/or time
+/// Can contain just date, just time, or both
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TmsDateTime {
+    #[prost(message, optional, tag = "1")]
+    pub date: ::core::option::Option<TmsDate>,
+    #[prost(message, optional, tag = "2")]
+    pub time: ::core::option::Option<TmsTime>,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum Role {

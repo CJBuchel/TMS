@@ -6,7 +6,8 @@ use tokio_stream::{
 use tonic::{Request, Response, Result, Status};
 
 use crate::{
-  core::{auth_helpers::require_permission, events::EVENT_BUS, shutdown::with_shutdown},
+  auth::auth_helpers::require_permission,
+  core::{events::EVENT_BUS, shutdown::with_shutdown},
   generated::{
     api::{
       GetTournamentRequest, GetTournamentResponse, SetTournamentRequest, SetTournamentResponse,
@@ -39,9 +40,11 @@ impl TournamentService for TournamentApi {
     require_permission(&request, Role::Admin)?;
     let request = request.into_inner();
 
-    let Some(request) = request.tournament else {
+    let Some(mut request) = request.tournament else {
       return Err(Status::invalid_argument("Tournament is required"));
     };
+
+    request.bootstrapped = true;
 
     match Tournament::set(&request) {
       Ok(()) => Ok(Response::new(SetTournamentResponse {})),

@@ -1,4 +1,10 @@
+pub mod game_match;
 pub mod health;
+pub mod judging_session;
+pub mod pod_name;
+pub mod schedule;
 pub mod secret;
+pub mod table_name;
+pub mod team;
 pub mod tournament;
 pub mod user;

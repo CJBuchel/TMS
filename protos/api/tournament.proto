@@ -19,8 +19,12 @@ message StreamTournamentResponse {
   db.Tournament tournament = 1;
 }
 
+message DeleteTournamentRequest {}
+message DeleteTournamentResponse {}
+
 service TournamentService {
   rpc GetTournament(GetTournamentRequest) returns (GetTournamentResponse);
   rpc SetTournament(SetTournamentRequest) returns (SetTournamentResponse);
   rpc StreamTournament(StreamTournamentRequest) returns (stream StreamTournamentResponse);
+  rpc DeleteTournament(DeleteTournamentRequest) returns (DeleteTournamentResponse);
 }

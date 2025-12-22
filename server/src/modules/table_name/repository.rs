@@ -15,6 +15,7 @@ const TABLE_TABLE_NAME: &str = "table_names";
 pub trait TableRepository {
   fn add(record: &TableName) -> Result<(String, TableName)>;
   fn get_by_name(table_name: &str) -> Result<HashMap<String, TableName>>;
+  fn clear() -> Result<()>;
 }
 
 impl TableRepository for TableName {
@@ -53,5 +54,11 @@ impl TableRepository for TableName {
     let tables: HashMap<String, TableName> = tables.into_iter().filter(|(_, t)| t.table_name == table_name).collect();
 
     Ok(tables)
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(TABLE_TABLE_NAME);
+    table.clear()
   }
 }

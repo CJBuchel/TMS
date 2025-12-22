@@ -15,6 +15,7 @@ const GAME_MATCH_TABLE_NAME: &str = "matches";
 pub trait GameMatchRepository {
   fn add(record: &GameMatch) -> Result<(String, GameMatch)>;
   fn get_by_match_number(match_number: &str) -> Result<HashMap<String, GameMatch>>;
+  fn clear() -> Result<()>;
 }
 
 impl GameMatchRepository for GameMatch {
@@ -56,5 +57,11 @@ impl GameMatchRepository for GameMatch {
       .collect();
 
     Ok(matches)
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(GAME_MATCH_TABLE_NAME);
+    table.clear()
   }
 }

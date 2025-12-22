@@ -34,6 +34,7 @@ fn create_default_tournament() -> Tournament {
 pub trait TournamentRepository {
   fn set(record: &Tournament) -> Result<()>;
   fn get() -> Tournament;
+  fn clear() -> Result<()>;
 }
 
 impl TournamentRepository for Tournament {
@@ -87,5 +88,11 @@ impl TournamentRepository for Tournament {
         create_default_tournament()
       }
     }
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(TOURNAMENT_TABLE_NAME);
+    table.clear()
   }
 }

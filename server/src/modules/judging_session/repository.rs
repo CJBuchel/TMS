@@ -15,6 +15,7 @@ const JUDGING_SESSION_TABLE_NAME: &str = "judging_sessions";
 pub trait JudgingSessionRepository {
   fn add(record: &JudgingSession) -> Result<(String, JudgingSession)>;
   fn get_by_session_number(session_number: &str) -> Result<HashMap<String, JudgingSession>>;
+  fn clear() -> Result<()>;
 }
 
 impl JudgingSessionRepository for JudgingSession {
@@ -56,5 +57,11 @@ impl JudgingSessionRepository for JudgingSession {
       .collect();
 
     Ok(sessions)
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(JUDGING_SESSION_TABLE_NAME);
+    table.clear()
   }
 }

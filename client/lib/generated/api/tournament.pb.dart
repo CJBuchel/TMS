@@ -307,6 +307,84 @@ class StreamTournamentResponse extends $pb.GeneratedMessage {
   $1.Tournament ensureTournament() => $_ensure(0);
 }
 
+class DeleteTournamentRequest extends $pb.GeneratedMessage {
+  factory DeleteTournamentRequest() => create();
+
+  DeleteTournamentRequest._();
+
+  factory DeleteTournamentRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteTournamentRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteTournamentRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'tms.api'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteTournamentRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteTournamentRequest copyWith(
+          void Function(DeleteTournamentRequest) updates) =>
+      super.copyWith((message) => updates(message as DeleteTournamentRequest))
+          as DeleteTournamentRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteTournamentRequest create() => DeleteTournamentRequest._();
+  @$core.override
+  DeleteTournamentRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteTournamentRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteTournamentRequest>(create);
+  static DeleteTournamentRequest? _defaultInstance;
+}
+
+class DeleteTournamentResponse extends $pb.GeneratedMessage {
+  factory DeleteTournamentResponse() => create();
+
+  DeleteTournamentResponse._();
+
+  factory DeleteTournamentResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory DeleteTournamentResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteTournamentResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'tms.api'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteTournamentResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteTournamentResponse copyWith(
+          void Function(DeleteTournamentResponse) updates) =>
+      super.copyWith((message) => updates(message as DeleteTournamentResponse))
+          as DeleteTournamentResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static DeleteTournamentResponse create() => DeleteTournamentResponse._();
+  @$core.override
+  DeleteTournamentResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static DeleteTournamentResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteTournamentResponse>(create);
+  static DeleteTournamentResponse? _defaultInstance;
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

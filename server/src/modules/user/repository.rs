@@ -20,6 +20,7 @@ pub trait UserRepository {
   fn get(id: &str) -> Result<Option<User>>;
   fn get_all() -> Result<HashMap<String, User>>;
   fn get_by_username(username: &str) -> Result<HashMap<String, User>>;
+  fn clear() -> Result<()>;
 }
 
 impl UserRepository for User {
@@ -108,5 +109,11 @@ impl UserRepository for User {
     let db = get_db()?;
     let table = db.get_table(USER_TABLE_NAME);
     table.get_by_search_indexes(vec![username.to_string()])
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(USER_TABLE_NAME);
+    table.clear()
   }
 }

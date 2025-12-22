@@ -102,3 +102,21 @@ final $typed_data.Uint8List streamTournamentResponseDescriptor =
     $convert.base64Decode(
         'ChhTdHJlYW1Ub3VybmFtZW50UmVzcG9uc2USMgoKdG91cm5hbWVudBgBIAEoCzISLnRtcy5kYi'
         '5Ub3VybmFtZW50Ugp0b3VybmFtZW50');
+
+@$core.Deprecated('Use deleteTournamentRequestDescriptor instead')
+const DeleteTournamentRequest$json = {
+  '1': 'DeleteTournamentRequest',
+};
+
+/// Descriptor for `DeleteTournamentRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteTournamentRequestDescriptor =
+    $convert.base64Decode('ChdEZWxldGVUb3VybmFtZW50UmVxdWVzdA==');
+
+@$core.Deprecated('Use deleteTournamentResponseDescriptor instead')
+const DeleteTournamentResponse$json = {
+  '1': 'DeleteTournamentResponse',
+};
+
+/// Descriptor for `DeleteTournamentResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteTournamentResponseDescriptor =
+    $convert.base64Decode('ChhEZWxldGVUb3VybmFtZW50UmVzcG9uc2U=');

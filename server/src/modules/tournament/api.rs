@@ -10,13 +10,17 @@ use crate::{
   core::{events::EVENT_BUS, shutdown::with_shutdown},
   generated::{
     api::{
-      GetTournamentRequest, GetTournamentResponse, SetTournamentRequest, SetTournamentResponse,
-      StreamTournamentRequest, StreamTournamentResponse, tournament_service_server::TournamentService,
+      DeleteTournamentRequest, DeleteTournamentResponse, GetTournamentRequest, GetTournamentResponse,
+      SetTournamentRequest, SetTournamentResponse, StreamTournamentRequest, StreamTournamentResponse,
+      tournament_service_server::TournamentService,
     },
     common::Role,
-    db::Tournament,
+    db::{GameMatch, JudgingSession, PodName, TableName, Team, Tournament, User},
   },
-  modules::tournament::TournamentRepository,
+  modules::{
+    game_match::GameMatchRepository, judging_session::JudgingSessionRepository, pod_name::PodRepository,
+    table_name::TableRepository, team::TeamRepository, tournament::TournamentRepository, user::UserRepository,
+  },
 };
 
 pub struct TournamentApi;
@@ -86,5 +90,25 @@ impl TournamentService for TournamentApi {
     let full_stream = with_shutdown(full_stream);
 
     Ok(Response::new(Box::pin(full_stream)))
+  }
+
+  async fn delete_tournament(
+    &self,
+    request: Request<DeleteTournamentRequest>,
+  ) -> Result<Response<DeleteTournamentResponse>, Status> {
+    require_permission(&request, Role::Admin)?;
+
+    // Clear all tournament-related data
+    Tournament::clear().map_err(|e| Status::internal(format!("Failed to clear tournament data: {}", e)))?;
+    User::clear().map_err(|e| Status::internal(format!("Failed to clear user data: {}", e)))?;
+    Team::clear().map_err(|e| Status::internal(format!("Failed to clear team data: {}", e)))?;
+    GameMatch::clear().map_err(|e| Status::internal(format!("Failed to clear match data: {}", e)))?;
+    TableName::clear().map_err(|e| Status::internal(format!("Failed to clear table name data: {}", e)))?;
+    PodName::clear().map_err(|e| Status::internal(format!("Failed to clear pod name data: {}", e)))?;
+    JudgingSession::clear().map_err(|e| Status::internal(format!("Failed to clear judging session data: {}", e)))?;
+
+    log::info!("All tournament data cleared");
+
+    Ok(Response::new(DeleteTournamentResponse {}))
   }
 }

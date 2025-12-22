@@ -20,7 +20,19 @@ impl Database {
     Ok(Self { db })
   }
 
+  /// Get a table from the database. (Creates if it doesn't exist)
   pub fn get_table(&self, name: &str) -> Table {
     Table::get_table(name, self.db.clone())
+  }
+
+  /// Deletes all records in the database
+  pub fn clear(&self) -> Result<()> {
+    match self.db.clear() {
+      Ok(()) => Ok(()),
+      Err(e) => {
+        log::error!("Failed to clear database: {}", e);
+        Err(anyhow::anyhow!(e))
+      }
+    }
   }
 }

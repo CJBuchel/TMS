@@ -1,10 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tms_client/generated/api/user.pbgrpc.dart';
 import 'package:tms_client/generated/common/common.pbenum.dart';
+import 'package:tms_client/helpers/auth_interceptor.dart';
 import 'package:tms_client/helpers/grpc_call_wrapper.dart';
 import 'package:tms_client/helpers/local_storage.dart';
 import 'package:tms_client/providers/grpc_channel_provider.dart';
 import 'package:tms_client/utils/grpc_result.dart';
+import 'package:tms_client/utils/logger.dart';
 
 part 'auth_provider.g.dart';
 
@@ -100,6 +102,31 @@ class UserService extends _$UserService {
     return response;
   }
 
+  Future<bool> validateToken() async {
+    final response = await callGrpcEndpoint(() async {
+      final request = ValidateTokenRequest();
+      return await state.validateToken(request);
+    });
+
+    // On success, token is valid
+    if (response is GrpcSuccess<ValidateTokenResponse>) {
+      logger.i('Validated Auth Token');
+      return true;
+    }
+
+    if (response is GrpcFailure<ValidateTokenResponse>) {
+      // If it's an unauthenticated error (status code 16), the token is invalid
+      if (response.statusCode == 16) {
+        logger.i('Invalid Auth Token');
+        return false;
+      }
+      // For other errors (network, timeout, etc), assume token is still valid
+      return true;
+    }
+
+    return true;
+  }
+
   void logout() {
     ref.read(usernameProvider.notifier).clear();
     ref.read(tokenProvider.notifier).clear();
@@ -109,7 +136,9 @@ class UserService extends _$UserService {
   @override
   UserServiceClient build() {
     final channel = ref.watch(grpcChannelProvider);
-    return UserServiceClient(channel);
+    final token = ref.watch(tokenProvider);
+    final options = authCallOptions(token);
+    return UserServiceClient(channel, options: options);
   }
 }
 

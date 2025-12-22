@@ -15,6 +15,7 @@ const TEAM_TABLE_NAME: &str = "teams";
 pub trait TeamRepository {
   fn add(record: &Team) -> Result<(String, Team)>;
   fn get_by_number(team_number: &str) -> Result<HashMap<String, Team>>;
+  fn clear() -> Result<()>;
 }
 
 impl TeamRepository for Team {
@@ -60,5 +61,11 @@ impl TeamRepository for Team {
       .collect();
 
     Ok(teams)
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(TEAM_TABLE_NAME);
+    table.clear()
   }
 }

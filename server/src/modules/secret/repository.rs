@@ -15,6 +15,7 @@ fn generate_secret() -> Vec<u8> {
 pub trait SecretRepository {
   fn set(record: &Secret) -> Result<()>;
   fn get() -> Result<Secret>;
+  fn clear() -> Result<()>;
 }
 
 impl SecretRepository for Secret {
@@ -51,7 +52,7 @@ impl SecretRepository for Secret {
     let record = if let Some(r) = record {
       r
     } else {
-      log::warn!("JWT Secret not found, generating...");
+      log::warn!("JWT Secret not found in DB, generating new one...");
       let secret_bytes = generate_secret();
       let secret = Secret { secret_bytes };
       Self::set(&secret)?;
@@ -59,5 +60,11 @@ impl SecretRepository for Secret {
     };
 
     Ok(record)
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(SECRET_TABLE_NAME);
+    table.clear()
   }
 }

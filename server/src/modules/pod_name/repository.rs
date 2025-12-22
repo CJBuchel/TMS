@@ -15,6 +15,7 @@ const POD_TABLE_NAME: &str = "pod_names";
 pub trait PodRepository {
   fn add(record: &PodName) -> Result<(String, PodName)>;
   fn get_by_name(pod_name: &str) -> Result<HashMap<String, PodName>>;
+  fn clear() -> Result<()>;
 }
 
 impl PodRepository for PodName {
@@ -53,5 +54,11 @@ impl PodRepository for PodName {
     let pods: HashMap<String, PodName> = pods.into_iter().filter(|(_, pod)| pod.pod_name == pod_name).collect();
 
     Ok(pods)
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(POD_TABLE_NAME);
+    table.clear()
   }
 }

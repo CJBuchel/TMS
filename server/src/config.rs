@@ -41,9 +41,9 @@ pub struct TmsConfig {
   #[arg(long, default_value = "key.pem")]
   pub key_path: String,
 
-  /// Admin password
-  #[arg(long, default_value = "admin")]
-  pub admin_password: String,
+  /// Admin password (if not provided, uses default or existing password in DB)
+  #[arg(long)]
+  pub admin_password: Option<String>,
 
   /// TMS Mobi Reverse Proxy Token
   #[arg(long)]

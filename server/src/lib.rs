@@ -2,6 +2,7 @@
 mod config;
 pub use config::*;
 
+pub mod auth;
 pub mod core;
 pub mod generated;
 pub mod modules;

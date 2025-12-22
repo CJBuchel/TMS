@@ -54,7 +54,7 @@ final class TournamentServiceProvider
   }
 }
 
-String _$tournamentServiceHash() => r'7274ebc800f359bafca999a9483df09abb7c2b55';
+String _$tournamentServiceHash() => r'ff12460c01631a990cbb514f0dd846fdd6c20860';
 
 @ProviderFor(tournamentStream)
 const tournamentStreamProvider = TournamentStreamProvider._();

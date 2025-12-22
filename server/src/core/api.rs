@@ -6,9 +6,16 @@ use tonic_web::GrpcWebLayer;
 use tower_http::cors::{Any, CorsLayer};
 
 use crate::{
-  core::{auth_interceptors::auth_interceptor, shutdown::ShutdownNotifier},
-  generated::api::{tournament_service_server::TournamentServiceServer, user_service_server::UserServiceServer},
-  modules::{tournament::TournamentApi, user::UserApi},
+  auth::auth_interceptors::auth_interceptor,
+  core::shutdown::ShutdownNotifier,
+  generated::api::{
+    game_match_service_server::GameMatchServiceServer, health_service_server::HealthServiceServer,
+    schedule_service_server::ScheduleServiceServer, tournament_service_server::TournamentServiceServer,
+    user_service_server::UserServiceServer,
+  },
+  modules::{
+    game_match::GameMatchApi, health::HealthApi, schedule::api::ScheduleApi, tournament::TournamentApi, user::UserApi,
+  },
 };
 
 pub struct Api {
@@ -23,11 +30,7 @@ impl Api {
   pub async fn serve(&self) -> Result<()> {
     let mut shutdown_rx = ShutdownNotifier::get().subscribe();
 
-    let cors = CorsLayer::new()
-      .allow_origin(Any)
-      .allow_headers(Any)
-      .allow_methods(Any)
-      .expose_headers(Any);
+    let cors = CorsLayer::new().allow_origin(Any).allow_headers(Any).allow_methods(Any).expose_headers(Any);
 
     let router = Server::builder()
       // Enable HTTP/1.1 for gRPC-Web (browsers)
@@ -47,11 +50,11 @@ impl Api {
       // Add gRPC-Web layer support
       .layer(GrpcWebLayer::new())
       // Add services
+      .add_service(HealthServiceServer::new(HealthApi {}))
       .add_service(UserServiceServer::with_interceptor(UserApi {}, auth_interceptor))
-      .add_service(TournamentServiceServer::with_interceptor(
-        TournamentApi {},
-        auth_interceptor,
-      ));
+      .add_service(GameMatchServiceServer::with_interceptor(GameMatchApi {}, auth_interceptor))
+      .add_service(TournamentServiceServer::with_interceptor(TournamentApi {}, auth_interceptor))
+      .add_service(ScheduleServiceServer::with_interceptor(ScheduleApi {}, auth_interceptor));
 
     match router
       .serve_with_shutdown(self.addr, async move {

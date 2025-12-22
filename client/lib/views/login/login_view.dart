@@ -1,30 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/providers/auth_provider.dart';
-import 'package:tms_client/utils/logger.dart';
+import 'package:tms_client/utils/grpc_result.dart';
+import 'package:tms_client/widgets/dialogs/popup_dialog.dart';
 
-class LoginView extends ConsumerWidget {
-  LoginView({super.key});
-
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  void _loginController(BuildContext context, WidgetRef ref) async {
-    final nt = ref.read(userServiceProvider.notifier);
-    try {
-      await nt.login(_usernameController.text, _passwordController.text);
-    } catch (e) {
-      logger.e('Login Error: $e');
-    }
-
-    // if (status == HttpStatus.ok) {
-    //   context.canPop() ? context.pop() : GoRouter.of(context).go('/');
-    // } else {
-    //   ScaffoldMessenger.of(
-    //     context,
-    //   ).showSnackBar(SnackBar(content: Text('Login failed')));
-    // }
-  }
+class LoginView extends HookConsumerWidget {
+  const LoginView({super.key});
 
   Widget _logo() {
     return Row(
@@ -32,19 +15,19 @@ class LoginView extends ConsumerWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 25),
-          child: Image.asset('assets/logos/TMS_Logo.png', width: 200),
+          child: Image.asset('assets/logos/TMS_Logo.png', width: 150),
         ),
       ],
     );
   }
 
-  Widget _username() {
+  Widget _username(TextEditingController controller) {
     return SizedBox(
       width: 400,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 25),
         child: TextField(
-          controller: _usernameController,
+          controller: controller,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             labelText: 'Username',
@@ -55,13 +38,13 @@ class LoginView extends ConsumerWidget {
     );
   }
 
-  Widget _password() {
+  Widget _password(TextEditingController controller) {
     return SizedBox(
       width: 400,
       child: Padding(
         padding: const EdgeInsets.only(left: 0, right: 0, bottom: 25),
         child: TextField(
-          controller: _passwordController,
+          controller: controller,
           obscureText: true,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
@@ -73,32 +56,78 @@ class LoginView extends ConsumerWidget {
     );
   }
 
-  Widget _loginButton(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: 200,
-      height: 50,
-      child: ElevatedButton.icon(
-        onPressed: () => _loginController(context, ref),
-        icon: const Icon(Icons.login),
-        label: const Text('Login'),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final usernameController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final isLoading = useState(false);
+    final isLoggedIn = ref.watch(isLoggedInProvider);
+    final username = ref.watch(usernameProvider);
+
+    void handleLogin() async {
+      isLoading.value = true;
+      final result = await ref
+          .read(userServiceProvider.notifier)
+          .login(usernameController.text, passwordController.text);
+
+      if (context.mounted && result is GrpcFailure) {
+        PopupDialog.fromGrpcStatus(result: result).show(context);
+      } else if (context.mounted) {
+        context.pop();
+      }
+      isLoading.value = false;
+    }
+
+    void handleLogout() {
+      ref.read(userServiceProvider.notifier).logout();
+    }
+
+    Widget loginWidget() {
+      return Column(
+        children: [
+          _logo(),
+          _username(usernameController),
+          _password(passwordController),
+          if (isLoading.value)
+            const CircularProgressIndicator()
+          else
+            SizedBox(
+              width: 200,
+              height: 50,
+              child: ElevatedButton.icon(
+                onPressed: handleLogin,
+                icon: const Icon(Icons.login),
+                label: const Text('Login'),
+              ),
+            ),
+        ],
+      );
+    }
+
+    Widget logoutWidget() {
+      return Column(
+        children: [
+          _logo(),
+          Text('Logged in as $username'),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: 200,
+            height: 50,
+            child: ElevatedButton.icon(
+              onPressed: () => handleLogout(),
+              icon: const Icon(Icons.logout),
+              label: const Text('Logout'),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Center(
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              _logo(),
-              _username(),
-              _password(),
-              _loginButton(context, ref),
-            ],
-          ),
+          child: isLoggedIn ? logoutWidget() : loginWidget(),
         ),
       ),
     );

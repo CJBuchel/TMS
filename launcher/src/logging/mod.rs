@@ -33,9 +33,7 @@ fn create_config() -> Result<Config> {
   let stdout_log_level = LevelFilter::Info; // always log info to console
 
   let stdout_appender = ConsoleAppender::builder()
-    .encoder(Box::new(PatternEncoder::new(
-      "[{d(%Y-%m-%d %H:%M:%S)} {h({l})}] {h({m})}{n}",
-    )))
+    .encoder(Box::new(PatternEncoder::new("[{d(%Y-%m-%d %H:%M:%S)} {h({l})}] {h({m})}{n}")))
     .build();
 
   let size_trigger = SizeTrigger::new(1024 * 1024 * 10); // 10MB
@@ -45,9 +43,7 @@ fn create_config() -> Result<Config> {
 
   // logging to file
   let rolling_appender = RollingFileAppender::builder()
-    .encoder(Box::new(PatternEncoder::new(
-      "[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {h({m})}{n}",
-    )))
+    .encoder(Box::new(PatternEncoder::new("[{d(%Y-%m-%d %H:%M:%S)} {h({l})} {M} LINE: {L}] {h({m})}{n}")))
     .build("logs/tms.log", Box::new(policy))?;
 
   // Build configuration with filters
@@ -59,12 +55,7 @@ fn create_config() -> Result<Config> {
     )
     .appender(Appender::builder().build("rolling_appender", Box::new(rolling_appender)))
     // Root logger configuration
-    .build(
-      Root::builder()
-        .appender("stdout_appender")
-        .appender("rolling_appender")
-        .build(log_level),
-    )?;
+    .build(Root::builder().appender("stdout_appender").appender("rolling_appender").build(log_level))?;
 
   Ok(config)
 }

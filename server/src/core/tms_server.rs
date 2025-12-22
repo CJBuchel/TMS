@@ -1,4 +1,3 @@
-use chrono::Utc;
 use tokio::time::Duration;
 
 use anyhow::Result;
@@ -6,9 +5,8 @@ use tokio::sync::oneshot;
 
 use crate::{
   TmsConfig,
-  core::{api::Api, auth::init_jwt_secret, db::init_db, events::init_event_bus, shutdown::ShutdownNotifier, web::Web},
-  generated::db::Tournament,
-  modules::tournament::TournamentRepository,
+  auth::jwt::init_jwt_secret,
+  core::{api::Api, db::init_db, events::init_event_bus, shutdown::ShutdownNotifier, web::Web},
 };
 
 const SERVER_TICK_PERIOD_MS: u64 = 2000; // 10
@@ -41,29 +39,16 @@ impl TmsServer {
 
     let (shutdown_tx, shutdown_rx) = oneshot::channel();
 
-    let server = Self {
-      config,
-      shutdown_rx: Some(shutdown_rx),
-    };
+    let server = Self { config, shutdown_rx: Some(shutdown_rx) };
 
-    let handle = TmsServerHandle {
-      shutdown_tx: Some(shutdown_tx),
-    };
+    let handle = TmsServerHandle { shutdown_tx: Some(shutdown_tx) };
 
     (server, handle)
   }
 
-  fn update() -> Result<()> {
-    let mut tournament = Tournament::default();
-    // get current time
-    let now = Utc::now();
-    tournament.name = format!("{} - {}", now.format("%Y-%m-%d"), now.format("%H:%M:%S"));
-
-    match Tournament::set(&tournament) {
-      Ok(()) => Ok(()),
-      Err(e) => Err(e),
-    }
-  }
+  // fn update() -> Result<()> {
+  //   Ok(())
+  // }
 
   pub async fn run(mut self) -> Result<()> {
     log::info!("Running Server with config: {:?}", self.config);
@@ -76,29 +61,27 @@ impl TmsServer {
     let mut interval = tokio::time::interval(Duration::from_millis(SERVER_TICK_PERIOD_MS));
 
     // Middleware Setups
-    init_db(&self.config)?;
     init_event_bus(1024)?;
+    init_db(&self.config)?;
     init_jwt_secret()?;
 
     // Create serving address
 
     // Start API server
-    let api_socket_addr = format!("{}:{}", self.config.addr, self.config.api_port)
-      .parse()
-      .expect("Error parsing API address");
+    let api_socket_addr =
+      format!("{}:{}", self.config.addr, self.config.api_port).parse().expect("Error parsing API address");
     let api_server = Api::new(api_socket_addr);
-    let api_handle = tokio::spawn(async move {
+    let mut api_handle = tokio::spawn(async move {
       if let Err(e) = api_server.serve().await {
         log::error!("API Server Error: {:?}", e);
       }
     });
 
     // Start Web Server
-    let web_socket_addr = format!("{}:{}", self.config.addr, self.config.web_port)
-      .parse()
-      .expect("Error parsing API address");
+    let web_socket_addr =
+      format!("{}:{}", self.config.addr, self.config.web_port).parse().expect("Error parsing API address");
     let web_server = Web::new(web_socket_addr, "client/build/web".to_string());
-    let web_handle = tokio::spawn(async move {
+    let mut web_handle = tokio::spawn(async move {
       if let Err(e) = web_server.serve().await {
         log::error!("Web Server Error: {:?}", e);
       }
@@ -112,10 +95,10 @@ impl TmsServer {
           // Server updates
 
           let start = std::time::Instant::now();
-          match Self::update() {
-            Ok(()) => {},
-            Err(e) => log::error!("Server update error: {:?}", e),
-          }
+          // match Self::update() {
+          //   Ok(()) => {},
+          //   Err(e) => log::error!("Server update error: {:?}", e),
+          // }
           let duration = start.elapsed();
 
           if duration.as_millis() > u128::from(SERVER_WARNING_THRESHOLD_MS) {
@@ -135,17 +118,21 @@ impl TmsServer {
       }
     }
 
-    // Wait for API server to shutdown gracefully
-    log::info!("Waiting for services to shut down...");
-    match tokio::time::timeout(std::time::Duration::from_secs(5), async {
-      let (api_result, web_result) = tokio::join!(api_handle, web_handle);
+    // Wait for services to shutdown gracefully
+
+    let timeout_future = async {
+      let (api_result, web_result) = tokio::join!(&mut api_handle, &mut web_handle);
       api_result.and(web_result)
-    })
-    .await
-    {
+    };
+
+    match tokio::time::timeout(Duration::from_secs(5), timeout_future).await {
       Ok(Ok(())) => log::info!("All services shut down gracefully"),
       Ok(Err(e)) => log::error!("Service task panicked: {:?}", e),
-      Err(_) => log::warn!("Services did not shut down within timeout, terminating..."),
+      Err(_) => {
+        log::warn!("Force aborting...");
+        api_handle.abort();
+        web_handle.abort();
+      }
     }
 
     log::info!("Server exited gracefully");

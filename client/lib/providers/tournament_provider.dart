@@ -1,6 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tms_client/generated/api/api.pbgrpc.dart';
+import 'package:tms_client/generated/api/tournament.pbgrpc.dart';
+import 'package:tms_client/helpers/auth_interceptor.dart';
 import 'package:tms_client/helpers/reconnecting_stream.dart';
+import 'package:tms_client/providers/auth_provider.dart';
 import 'package:tms_client/providers/grpc_channel_provider.dart';
 
 part 'tournament_provider.g.dart';
@@ -8,7 +10,10 @@ part 'tournament_provider.g.dart';
 @Riverpod(keepAlive: true)
 TournamentServiceClient tournamentService(Ref ref) {
   final channel = ref.watch(grpcChannelProvider);
-  return TournamentServiceClient(channel);
+  final token = ref.watch(tokenProvider);
+  final options = authCallOptions(token);
+
+  return TournamentServiceClient(channel, options: options);
 }
 
 @riverpod

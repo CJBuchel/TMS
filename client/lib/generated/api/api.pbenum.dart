@@ -10,5 +10,7 @@
 // ignore_for_file: deprecated_member_use_from_same_package, library_prefixes
 // ignore_for_file: non_constant_identifier_names, prefer_relative_imports
 
+export 'game_match.pbenum.dart';
+export 'schedule.pbenum.dart';
 export 'tournament.pbenum.dart';
 export 'user.pbenum.dart';

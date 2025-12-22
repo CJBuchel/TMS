@@ -1,7 +1,13 @@
 use crate::{
-  core::{auth::Auth, auth_helpers::require_auth},
+  auth::{
+    auth_helpers::{require_auth, require_permission},
+    jwt::Auth,
+  },
   generated::{
-    api::{LoginRequest, LoginResponse, ValidateTokenRequest, ValidateTokenResponse, user_service_server::UserService},
+    api::{
+      LoginRequest, LoginResponse, UpdateAdminPasswordRequest, UpdateAdminPasswordResponse, ValidateTokenRequest,
+      ValidateTokenResponse, user_service_server::UserService,
+    },
     common::Role,
     db::User,
   },
@@ -47,10 +53,7 @@ impl UserService for UserApi {
       Err(e) => return Err(Status::internal(e.to_string())),
     };
 
-    Ok(Response::new(LoginResponse {
-      token,
-      roles: user.roles,
-    }))
+    Ok(Response::new(LoginResponse { token, roles: user.roles }))
   }
 
   async fn validate_token(
@@ -59,5 +62,18 @@ impl UserService for UserApi {
   ) -> Result<Response<ValidateTokenResponse>, Status> {
     require_auth(&request)?;
     Ok(Response::new(ValidateTokenResponse {}))
+  }
+
+  async fn update_admin_password(
+    &self,
+    request: Request<UpdateAdminPasswordRequest>,
+  ) -> Result<Response<UpdateAdminPasswordResponse>, Status> {
+    require_permission(&request, Role::Admin)?;
+    let request = request.into_inner();
+
+    match User::set_admin_password(&request.password) {
+      Ok(()) => Ok(Response::new(UpdateAdminPasswordResponse {})),
+      Err(e) => Err(Status::internal(e.to_string())),
+    }
   }
 }

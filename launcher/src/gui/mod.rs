@@ -1,17 +1,14 @@
 use std::{
   net::{IpAddr, Ipv4Addr},
   str::FromStr,
-  sync::Arc,
 };
 
 use anyhow::Result;
 use egui::IconData;
-use parking_lot::Mutex;
 use runner::GuiRunner;
 use server::TmsConfig;
-use tokio::sync::mpsc::Sender;
 
-use crate::{GuiMessage, ServerState};
+use crate::ServerManager;
 mod app;
 mod qr_code;
 mod runner;
@@ -43,17 +40,9 @@ impl From<ConfigFields> for TmsConfig {
       tls: fields.tls,
       cert_path: fields.cert_path,
       key_path: fields.key_path,
-      admin_password: fields.admin_password,
-      proxy_token: if fields.proxy_token.is_empty() {
-        None
-      } else {
-        Some(fields.proxy_token)
-      },
-      proxy_domain: if fields.proxy_domain.is_empty() {
-        None
-      } else {
-        Some(fields.proxy_domain)
-      },
+      admin_password: if fields.admin_password.is_empty() { None } else { Some(fields.admin_password) },
+      proxy_token: if fields.proxy_token.is_empty() { None } else { Some(fields.proxy_token) },
+      proxy_domain: if fields.proxy_domain.is_empty() { None } else { Some(fields.proxy_domain) },
     }
   }
 }
@@ -69,7 +58,7 @@ impl From<TmsConfig> for ConfigFields {
       tls: config.tls,
       cert_path: config.cert_path.clone(),
       key_path: config.key_path.clone(),
-      admin_password: config.admin_password.clone(),
+      admin_password: config.admin_password.unwrap_or_default(),
       proxy_token: config.proxy_token.unwrap_or_default(),
       proxy_domain: config.proxy_domain.unwrap_or_default(),
     }
@@ -81,17 +70,30 @@ fn load_icon_data() -> IconData {
   eframe::icon_data::from_png_bytes(include_bytes!("../../assets/TMS_Logo.png")).expect("Failed to load icon")
 }
 
-pub fn run_gui(
-  message_sender: Sender<GuiMessage>,
-  server_state: Arc<Mutex<ServerState>>,
-  config: TmsConfig,
-) -> Result<()> {
+pub fn run_gui(server_manager: ServerManager, config: TmsConfig) -> Result<()> {
   let size = [680.0, 440.0];
+  let min_size = [640.0, 400.0];
+
   let options = eframe::NativeOptions {
     viewport: egui::ViewportBuilder::default()
       .with_inner_size(size)
-      .with_min_inner_size(size)
+      .with_min_inner_size(min_size)
       .with_icon(std::sync::Arc::new(load_icon_data())),
+
+    // Workaround for NVIDIA + Wayland + glutin EGL_BAD_PARAMETER errors
+    // Force X11 backend on Linux to avoid intermittent crashes
+    // See: https://github.com/rust-windowing/glutin/issues/1188
+    #[cfg(target_os = "linux")]
+    event_loop_builder: Some(Box::new(|builder| {
+      use winit::platform::x11::EventLoopBuilderExtX11;
+
+      // Force X11 backend when running on Wayland to avoid NVIDIA EGL issues
+      if std::env::var("WAYLAND_DISPLAY").is_ok() {
+        log::warn!("Detected Wayland session - forcing X11 backend to avoid NVIDIA EGL issues");
+        builder.with_x11();
+      }
+    })),
+
     ..Default::default()
   };
 
@@ -100,12 +102,7 @@ pub fn run_gui(
     options,
     Box::new(|cc| {
       egui_extras::install_image_loaders(&cc.egui_ctx);
-      Ok(Box::<GuiRunner>::new(GuiRunner::new(
-        message_sender,
-        server_state,
-        config,
-        cc,
-      )))
+      Ok(Box::<GuiRunner>::new(GuiRunner::new(server_manager, config, cc)))
     }),
   );
 

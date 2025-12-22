@@ -55,6 +55,13 @@ class TournamentServiceClient extends $grpc.Client {
         options: options);
   }
 
+  $grpc.ResponseFuture<$0.DeleteTournamentResponse> deleteTournament(
+    $0.DeleteTournamentRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteTournament, request, options: options);
+  }
+
   // method descriptors
 
   static final _$getTournament =
@@ -72,6 +79,11 @@ class TournamentServiceClient extends $grpc.Client {
       '/tms.api.TournamentService/StreamTournament',
       ($0.StreamTournamentRequest value) => value.writeToBuffer(),
       $0.StreamTournamentResponse.fromBuffer);
+  static final _$deleteTournament = $grpc.ClientMethod<
+          $0.DeleteTournamentRequest, $0.DeleteTournamentResponse>(
+      '/tms.api.TournamentService/DeleteTournament',
+      ($0.DeleteTournamentRequest value) => value.writeToBuffer(),
+      $0.DeleteTournamentResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('tms.api.TournamentService')
@@ -106,6 +118,15 @@ abstract class TournamentServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.StreamTournamentRequest.fromBuffer(value),
         ($0.StreamTournamentResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteTournamentRequest,
+            $0.DeleteTournamentResponse>(
+        'DeleteTournament',
+        deleteTournament_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.DeleteTournamentRequest.fromBuffer(value),
+        ($0.DeleteTournamentResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.GetTournamentResponse> getTournament_Pre(
@@ -134,4 +155,13 @@ abstract class TournamentServiceBase extends $grpc.Service {
 
   $async.Stream<$0.StreamTournamentResponse> streamTournament(
       $grpc.ServiceCall call, $0.StreamTournamentRequest request);
+
+  $async.Future<$0.DeleteTournamentResponse> deleteTournament_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.DeleteTournamentRequest> $request) async {
+    return deleteTournament($call, await $request);
+  }
+
+  $async.Future<$0.DeleteTournamentResponse> deleteTournament(
+      $grpc.ServiceCall call, $0.DeleteTournamentRequest request);
 }

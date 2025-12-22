@@ -1,7 +1,7 @@
 use tonic::{Request, Status};
 
 use crate::{
-  core::auth::{Auth, Claims},
+  auth::jwt::{Auth, AuthError, Claims},
   generated::common::Role,
 };
 
@@ -20,11 +20,7 @@ pub struct AuthContext {
 /// Use this for services with mixed public/private endpoints
 pub fn auth_interceptor(mut req: Request<()>) -> Result<Request<()>, Status> {
   // Try to get token from metadata
-  let token = req
-    .metadata()
-    .get("authorization")
-    .and_then(|v| v.to_str().ok())
-    .and_then(|s| s.strip_prefix("Bearer "));
+  let token = req.metadata().get("authorization").and_then(|v| v.to_str().ok()).and_then(|s| s.strip_prefix("Bearer "));
 
   // Validate token if present
   let claims = if let Some(token) = token {
@@ -66,9 +62,9 @@ pub fn require_permission_interceptor(
 
     // Verify token
     let claims = Auth::validate_token(token).map_err(|e| match e {
-      crate::core::auth::AuthError::Expired => Status::unauthenticated("Token expired"),
-      crate::core::auth::AuthError::Invalid => Status::unauthenticated("Invalid token"),
-      crate::core::auth::AuthError::DecodingError(_) => Status::unauthenticated("Token decoding failed"),
+      AuthError::Expired => Status::unauthenticated("Token expired"),
+      AuthError::Invalid => Status::unauthenticated("Invalid token"),
+      AuthError::DecodingError(_) => Status::unauthenticated("Token decoding failed"),
     })?;
 
     // Check permissions (ANY of the required roles)

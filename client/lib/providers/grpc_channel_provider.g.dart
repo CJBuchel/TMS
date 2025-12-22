@@ -41,7 +41,7 @@ final class GrpcChannelProvider
   }
 }
 
-String _$grpcChannelHash() => r'bd0ecfa7b2e0c1fee02513b7bb447fdc871eb48e';
+String _$grpcChannelHash() => r'9d81ca665b9f37abc1ee5bfd3df142e2d9dcb623';
 
 abstract class _$GrpcChannel extends $Notifier<ClientChannel> {
   ClientChannel build();

@@ -19,7 +19,7 @@ final class TokenProvider extends $NotifierProvider<Token, String?> {
         argument: null,
         retry: null,
         name: r'tokenProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -40,7 +40,7 @@ final class TokenProvider extends $NotifierProvider<Token, String?> {
   }
 }
 
-String _$tokenHash() => r'742c6f0dceed47fd21ef483ee5bd1cfbe84452eb';
+String _$tokenHash() => r'417412ee1a3b9982f5454a22f48671832629a6ef';
 
 abstract class _$Token extends $Notifier<String?> {
   String? build();
@@ -71,7 +71,7 @@ final class UsernameProvider extends $NotifierProvider<Username, String?> {
         argument: null,
         retry: null,
         name: r'usernameProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -92,7 +92,7 @@ final class UsernameProvider extends $NotifierProvider<Username, String?> {
   }
 }
 
-String _$usernameHash() => r'95c4763340cdefacdd4ccc2c1ed2448f5465f816';
+String _$usernameHash() => r'6f440800238e9bf2bfdd1380de34f206ffa172b7';
 
 abstract class _$Username extends $Notifier<String?> {
   String? build();
@@ -123,7 +123,7 @@ final class RolesProvider extends $NotifierProvider<Roles, List<Role>> {
         argument: null,
         retry: null,
         name: r'rolesProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -144,7 +144,7 @@ final class RolesProvider extends $NotifierProvider<Roles, List<Role>> {
   }
 }
 
-String _$rolesHash() => r'cb924bdd7f7fd257384cc0420c42e6812016abfe';
+String _$rolesHash() => r'76b762e570f745fb5e48fc79e94784f42e7e2669';
 
 abstract class _$Roles extends $Notifier<List<Role>> {
   List<Role> build();
@@ -176,7 +176,7 @@ final class UserServiceProvider
         argument: null,
         retry: null,
         name: r'userServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -197,7 +197,7 @@ final class UserServiceProvider
   }
 }
 
-String _$userServiceHash() => r'01f916ecca768d7c67cc49e428ce9e1e7e08ba80';
+String _$userServiceHash() => r'72ab69d62237bc6575facc9e0b835be36a919bd1';
 
 abstract class _$UserService extends $Notifier<UserServiceClient> {
   UserServiceClient build();
@@ -229,7 +229,7 @@ final class IsLoggedInProvider extends $FunctionalProvider<bool, bool, bool>
         argument: null,
         retry: null,
         name: r'isLoggedInProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -256,4 +256,4 @@ final class IsLoggedInProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isLoggedInHash() => r'b7ba28896cfb94019d6b962a2ee1c7392d3171ae';
+String _$isLoggedInHash() => r'55854175bbde37cc8bbce06e9d85b2e4f6cb5a39';

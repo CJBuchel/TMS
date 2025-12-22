@@ -1,7 +1,14 @@
 use std::net::SocketAddr;
 
 use anyhow::Result;
-use axum::{Router, routing::get};
+use axum::{
+  Router,
+  body::Body,
+  http::{HeaderValue, Request, header},
+  middleware::{self, Next},
+  response::Response,
+  routing::get,
+};
 use tower::ServiceBuilder;
 use tower_http::{
   cors::{Any, CorsLayer},
@@ -9,6 +16,26 @@ use tower_http::{
 };
 
 use crate::core::shutdown::ShutdownNotifier;
+
+async fn set_wasm_headers(req: Request<Body>, next: Next) -> Response {
+  let is_wasm = std::path::Path::new(req.uri().path()).extension().is_some_and(|ext| ext.eq_ignore_ascii_case("wasm"));
+  let mut response = next.run(req).await;
+
+  // Set WASM MIME type
+  if is_wasm {
+    response.headers_mut().insert(header::CONTENT_TYPE, HeaderValue::from_static("application/wasm"));
+  }
+
+  // Enable cross-origin isolation for WASM threading (required for skwasm)
+  response
+    .headers_mut()
+    .insert(header::HeaderName::from_static("cross-origin-opener-policy"), HeaderValue::from_static("same-origin"));
+  response
+    .headers_mut()
+    .insert(header::HeaderName::from_static("cross-origin-embedder-policy"), HeaderValue::from_static("require-corp"));
+
+  response
+}
 
 pub struct Web {
   addr: SocketAddr,
@@ -23,11 +50,7 @@ impl Web {
   pub async fn serve(&self) -> Result<()> {
     let mut shutdown_rx = ShutdownNotifier::get().subscribe();
 
-    let cors = CorsLayer::new()
-      .allow_origin(Any)
-      .allow_headers(Any)
-      .allow_methods(Any)
-      .expose_headers(Any);
+    let cors = CorsLayer::new().allow_origin(Any).allow_headers(Any).allow_methods(Any).expose_headers(Any);
 
     // Create router with static file serving
     let app = Router::new()
@@ -38,6 +61,8 @@ impl Web {
           .layer(cors)
           .service(ServeDir::new("client/build/web").fallback(ServeFile::new("client/build/web/index.html"))),
       )
+      // Add WASM headers middleware
+      .layer(middleware::from_fn(set_wasm_headers))
       // fallback to error 404
       .layer(CorsLayer::permissive());
 

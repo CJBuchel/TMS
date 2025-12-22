@@ -1,20 +1,44 @@
 use anyhow::Result;
 use database::DataInsert;
+use rand::Rng;
 
 use crate::{
   core::{
     db::get_db,
     events::{ChangeEvent, ChangeOperation, EVENT_BUS},
   },
-  generated::db::Tournament,
+  generated::db::{Season, Tournament},
 };
 
 const TOURNAMENT_TABLE_NAME: &str = "tournament";
 const TOURNAMENT_KEY: &str = "tournament";
 
+fn create_default_tournament() -> Tournament {
+  const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let mut rng = rand::rng();
+
+  let event_key: String = (0..10)
+    .map(|_| {
+      let idx = rng.random_range(0..CHARSET.len());
+      CHARSET[idx] as char
+    })
+    .collect();
+
+  Tournament {
+    event_key,
+    backup_interval: 10,
+    retain_backups: 5,
+    game_timer_length: 150,
+    end_game_timer_trigger: 30,
+    season: Season::Season2025 as i32,
+    ..Default::default()
+  }
+}
+
 pub trait TournamentRepository {
   fn set(record: &Tournament) -> Result<()>;
   fn get() -> Tournament;
+  fn clear() -> Result<()>;
 }
 
 impl TournamentRepository for Tournament {
@@ -44,7 +68,7 @@ impl TournamentRepository for Tournament {
       return Err(anyhow::anyhow!("Event bus not available"));
     };
 
-    event_bus.publish(ChangeEvent {
+    event_bus.publish(ChangeEvent::Record {
       operation: ChangeOperation::Update,
       id: TOURNAMENT_KEY.to_string(),
       data: Some(record.clone()),
@@ -55,18 +79,33 @@ impl TournamentRepository for Tournament {
 
   fn get() -> Tournament {
     let Ok(db) = get_db() else {
-      return Tournament::default();
+      return create_default_tournament();
     };
 
     let table = db.get_table(TOURNAMENT_TABLE_NAME);
 
     match table.get(TOURNAMENT_KEY) {
       Ok(Some(record)) => record,
-      Ok(None) => Tournament::default(),
+      Ok(None) => create_default_tournament(),
       Err(e) => {
         log::warn!("Failed to retrieve tournament: {}", e);
-        Tournament::default()
+        create_default_tournament()
       }
     }
+  }
+
+  fn clear() -> Result<()> {
+    let db = get_db()?;
+    let table = db.get_table(TOURNAMENT_TABLE_NAME);
+    table.clear()?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not available"));
+    };
+
+    event_bus.publish(ChangeEvent::<Tournament>::Table)?;
+
+    Ok(())
   }
 }

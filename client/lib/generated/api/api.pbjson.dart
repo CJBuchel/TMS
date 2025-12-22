@@ -14,3 +14,21 @@
 import 'dart:convert' as $convert;
 import 'dart:core' as $core;
 import 'dart:typed_data' as $typed_data;
+
+@$core.Deprecated('Use getHealthRequestDescriptor instead')
+const GetHealthRequest$json = {
+  '1': 'GetHealthRequest',
+};
+
+/// Descriptor for `GetHealthRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getHealthRequestDescriptor =
+    $convert.base64Decode('ChBHZXRIZWFsdGhSZXF1ZXN0');
+
+@$core.Deprecated('Use getHealthResponseDescriptor instead')
+const GetHealthResponse$json = {
+  '1': 'GetHealthResponse',
+};
+
+/// Descriptor for `GetHealthResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getHealthResponseDescriptor =
+    $convert.base64Decode('ChFHZXRIZWFsdGhSZXNwb25zZQ==');

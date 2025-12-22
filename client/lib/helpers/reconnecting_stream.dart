@@ -10,9 +10,11 @@ class ReconnectingStream<T> {
   final Duration _maxRetryDelay;
 
   StreamController<T>? _controller;
+  StreamController<bool>? _connectionStateController;
   StreamSubscription<T>? _subscription;
   Timer? _retryTimer;
   bool _closed = false;
+  bool _isConnected = false;
   int _retryCount = 0;
 
   ReconnectingStream(
@@ -24,11 +26,39 @@ class ReconnectingStream<T> {
        _maxRetryDelay = maxRetryDelay;
 
   Stream<T> get stream {
-    _controller ??= StreamController<T>.broadcast(
-      onListen: _connect,
-      onCancel: close,
-    );
+    _controller ??= StreamController<T>.broadcast(onListen: _connect);
     return _controller!.stream;
+  }
+
+  /// Stream that emits true when connected, false when disconnected
+  Stream<bool> get connectionState async* {
+    // Emit initial state immediately
+    yield _isConnected;
+
+    // Ensure controller exists and start connecting
+    if (_connectionStateController == null) {
+      _connectionStateController = StreamController<bool>.broadcast();
+
+      // Start connecting when first listener attaches
+      if (!_closed && _subscription == null && _retryTimer == null) {
+        _connect();
+      }
+    }
+
+    // Then yield all subsequent changes
+    await for (final value in _connectionStateController!.stream) {
+      yield value;
+    }
+  }
+
+  /// Current connection status
+  bool get isConnected => _isConnected;
+
+  void _setConnectionState(bool connected) {
+    if (_isConnected != connected) {
+      _isConnected = connected;
+      _connectionStateController?.add(connected);
+    }
   }
 
   Future<void> _connect() async {
@@ -36,9 +66,14 @@ class ReconnectingStream<T> {
 
     try {
       final grpcStream = await _createStream();
+      bool firstDataReceived = false;
       _subscription = grpcStream.listen(
         (data) {
           if (!_closed) {
+            if (!firstDataReceived) {
+              firstDataReceived = true;
+              _setConnectionState(true); // Only set connected after first data
+            }
             _retryCount = 0; // Reset on successful data
             _controller?.add(data);
           }
@@ -46,12 +81,14 @@ class ReconnectingStream<T> {
         onError: (Object error, StackTrace stackTrace) {
           if (!_closed) {
             logger.w('Stream error: $error');
+            _setConnectionState(false);
             _scheduleReconnect();
           }
         },
         onDone: () {
           if (!_closed) {
             logger.i('Stream ended, reconnecting...');
+            _setConnectionState(false);
             _scheduleReconnect();
           }
         },
@@ -59,6 +96,7 @@ class ReconnectingStream<T> {
     } catch (e) {
       if (!_closed) {
         logger.e('Failed to connect: $e');
+        _setConnectionState(false);
         _scheduleReconnect();
       }
     }
@@ -82,8 +120,10 @@ class ReconnectingStream<T> {
 
   void close() {
     _closed = true;
+    _setConnectionState(false);
     _retryTimer?.cancel();
     _subscription?.cancel();
     _controller?.close();
+    _connectionStateController?.close();
   }
 }

@@ -20,8 +20,8 @@ import 'api.pb.dart' as $0;
 
 export 'api.pb.dart';
 
-@$pb.GrpcServiceName('tms.api.TournamentService')
-class TournamentServiceClient extends $grpc.Client {
+@$pb.GrpcServiceName('tms.api.HealthService')
+class HealthServiceClient extends $grpc.Client {
   /// The hostname for this service.
   static const $core.String defaultHost = '';
 
@@ -30,108 +30,72 @@ class TournamentServiceClient extends $grpc.Client {
     '',
   ];
 
-  TournamentServiceClient(super.channel, {super.options, super.interceptors});
+  HealthServiceClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.GetTournamentResponse> getTournament(
-    $0.GetTournamentRequest request, {
+  $grpc.ResponseFuture<$0.GetHealthResponse> getHealth(
+    $0.GetHealthRequest request, {
     $grpc.CallOptions? options,
   }) {
-    return $createUnaryCall(_$getTournament, request, options: options);
+    return $createUnaryCall(_$getHealth, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.SetTournamentResponse> setTournament(
-    $0.SetTournamentRequest request, {
-    $grpc.CallOptions? options,
-  }) {
-    return $createUnaryCall(_$setTournament, request, options: options);
-  }
-
-  $grpc.ResponseStream<$0.StreamTournamentResponse> streamTournament(
-    $0.StreamTournamentRequest request, {
+  $grpc.ResponseStream<$0.GetHealthResponse> streamHealth(
+    $0.GetHealthRequest request, {
     $grpc.CallOptions? options,
   }) {
     return $createStreamingCall(
-        _$streamTournament, $async.Stream.fromIterable([request]),
+        _$streamHealth, $async.Stream.fromIterable([request]),
         options: options);
   }
 
   // method descriptors
 
-  static final _$getTournament =
-      $grpc.ClientMethod<$0.GetTournamentRequest, $0.GetTournamentResponse>(
-          '/tms.api.TournamentService/GetTournament',
-          ($0.GetTournamentRequest value) => value.writeToBuffer(),
-          $0.GetTournamentResponse.fromBuffer);
-  static final _$setTournament =
-      $grpc.ClientMethod<$0.SetTournamentRequest, $0.SetTournamentResponse>(
-          '/tms.api.TournamentService/SetTournament',
-          ($0.SetTournamentRequest value) => value.writeToBuffer(),
-          $0.SetTournamentResponse.fromBuffer);
-  static final _$streamTournament = $grpc.ClientMethod<
-          $0.StreamTournamentRequest, $0.StreamTournamentResponse>(
-      '/tms.api.TournamentService/StreamTournament',
-      ($0.StreamTournamentRequest value) => value.writeToBuffer(),
-      $0.StreamTournamentResponse.fromBuffer);
+  static final _$getHealth =
+      $grpc.ClientMethod<$0.GetHealthRequest, $0.GetHealthResponse>(
+          '/tms.api.HealthService/GetHealth',
+          ($0.GetHealthRequest value) => value.writeToBuffer(),
+          $0.GetHealthResponse.fromBuffer);
+  static final _$streamHealth =
+      $grpc.ClientMethod<$0.GetHealthRequest, $0.GetHealthResponse>(
+          '/tms.api.HealthService/StreamHealth',
+          ($0.GetHealthRequest value) => value.writeToBuffer(),
+          $0.GetHealthResponse.fromBuffer);
 }
 
-@$pb.GrpcServiceName('tms.api.TournamentService')
-abstract class TournamentServiceBase extends $grpc.Service {
-  $core.String get $name => 'tms.api.TournamentService';
+@$pb.GrpcServiceName('tms.api.HealthService')
+abstract class HealthServiceBase extends $grpc.Service {
+  $core.String get $name => 'tms.api.HealthService';
 
-  TournamentServiceBase() {
-    $addMethod(
-        $grpc.ServiceMethod<$0.GetTournamentRequest, $0.GetTournamentResponse>(
-            'GetTournament',
-            getTournament_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.GetTournamentRequest.fromBuffer(value),
-            ($0.GetTournamentResponse value) => value.writeToBuffer()));
-    $addMethod(
-        $grpc.ServiceMethod<$0.SetTournamentRequest, $0.SetTournamentResponse>(
-            'SetTournament',
-            setTournament_Pre,
-            false,
-            false,
-            ($core.List<$core.int> value) =>
-                $0.SetTournamentRequest.fromBuffer(value),
-            ($0.SetTournamentResponse value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.StreamTournamentRequest,
-            $0.StreamTournamentResponse>(
-        'StreamTournament',
-        streamTournament_Pre,
+  HealthServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.GetHealthRequest, $0.GetHealthResponse>(
+        'GetHealth',
+        getHealth_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.GetHealthRequest.fromBuffer(value),
+        ($0.GetHealthResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetHealthRequest, $0.GetHealthResponse>(
+        'StreamHealth',
+        streamHealth_Pre,
         false,
         true,
-        ($core.List<$core.int> value) =>
-            $0.StreamTournamentRequest.fromBuffer(value),
-        ($0.StreamTournamentResponse value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $0.GetHealthRequest.fromBuffer(value),
+        ($0.GetHealthResponse value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.GetTournamentResponse> getTournament_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.GetTournamentRequest> $request) async {
-    return getTournament($call, await $request);
+  $async.Future<$0.GetHealthResponse> getHealth_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.GetHealthRequest> $request) async {
+    return getHealth($call, await $request);
   }
 
-  $async.Future<$0.GetTournamentResponse> getTournament(
-      $grpc.ServiceCall call, $0.GetTournamentRequest request);
+  $async.Future<$0.GetHealthResponse> getHealth(
+      $grpc.ServiceCall call, $0.GetHealthRequest request);
 
-  $async.Future<$0.SetTournamentResponse> setTournament_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.SetTournamentRequest> $request) async {
-    return setTournament($call, await $request);
+  $async.Stream<$0.GetHealthResponse> streamHealth_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.GetHealthRequest> $request) async* {
+    yield* streamHealth($call, await $request);
   }
 
-  $async.Future<$0.SetTournamentResponse> setTournament(
-      $grpc.ServiceCall call, $0.SetTournamentRequest request);
-
-  $async.Stream<$0.StreamTournamentResponse> streamTournament_Pre(
-      $grpc.ServiceCall $call,
-      $async.Future<$0.StreamTournamentRequest> $request) async* {
-    yield* streamTournament($call, await $request);
-  }
-
-  $async.Stream<$0.StreamTournamentResponse> streamTournament(
-      $grpc.ServiceCall call, $0.StreamTournamentRequest request);
+  $async.Stream<$0.GetHealthResponse> streamHealth(
+      $grpc.ServiceCall call, $0.GetHealthRequest request);
 }

@@ -14,6 +14,11 @@ message User {
   repeated common.Role roles = 3;
 }
 
+enum Season {
+  AGNOSTIC = 0;
+  SEASON_2025 = 10; // Start at 10 to future proof earlier seasons if needed
+}
+
 message Tournament {
   bool bootstrapped = 1;
   string name = 2;
@@ -21,5 +26,56 @@ message Tournament {
   uint32 retain_backups = 4;
   uint32 end_game_timer_trigger = 5;
   uint32 game_timer_length = 6;
-  optional string season = 7;
+  Season season = 7;
+  string event_key = 8;
+}
+
+message Team {
+  string team_number = 1;
+  string name = 2;
+  string affiliation = 3;
+}
+
+message TableAssignment {
+  string table_id = 1;
+  string team_id = 2;
+  bool score_submitted = 3;
+}
+
+enum MatchType {
+  RANKING = 0;
+  PRACTICE = 1;
+}
+
+message GameMatch {
+  string match_number = 1;
+  common.TmsDateTime start_time = 2;
+  common.TmsDateTime end_time = 3;
+  repeated TableAssignment assignments = 4;
+  bool completed = 5;
+  MatchType match_type = 6;
+}
+
+message PodAssignment {
+  string pod_id = 1;
+  string team_id = 2;
+  bool core_values_submitted = 3;
+  bool innovation_submitted = 4;
+  bool robot_design_submitted = 5;
+}
+
+message JudgingSession {
+  string session_number = 1;
+  common.TmsDateTime start_time = 2;
+  common.TmsDateTime end_time = 3;
+  repeated PodAssignment assignments = 4;
+  bool complete = 5;
+}
+
+message TableName {
+  string table_name = 1;
+}
+
+message PodName {
+  string pod_name = 2;
 }

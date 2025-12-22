@@ -150,10 +150,7 @@ impl Table {
   // -- Public Functions --
   //
   pub fn get_table(name: &str, db: sled::Db) -> Self {
-    Self {
-      name: name.to_string(),
-      db,
-    }
+    Self { name: name.to_string(), db }
   }
 
   /// Insert record into the table (returns id of the record)
@@ -312,5 +309,35 @@ impl Table {
     };
 
     Ok(records)
+  }
+
+  /// Clear all records from the table (deletes both data and search indexes)
+  pub fn clear(&self) -> Result<()> {
+    let mut batch_update = sled::Batch::default();
+
+    // Scan for all keys with this table's prefix (format: {table_name}:*)
+    let prefix = format!("{}:", self.name);
+
+    for item in self.db.scan_prefix(prefix.as_bytes()) {
+      let (key, _) = match item {
+        Ok(item) => item,
+        Err(e) => {
+          log::error!("Failed to scan keys for clearing table: {}", e);
+          return Err(anyhow::anyhow!(e));
+        }
+      };
+
+      batch_update.remove(key);
+    }
+
+    match self.db.apply_batch(batch_update) {
+      Ok(()) => (),
+      Err(e) => {
+        log::error!("Failed to clear table: {}", e);
+        return Err(anyhow::anyhow!(e));
+      }
+    }
+
+    Ok(())
   }
 }

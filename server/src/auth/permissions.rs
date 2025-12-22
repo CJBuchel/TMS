@@ -26,9 +26,7 @@ impl Default for RoleGraph {
 
 impl RoleGraph {
   pub fn new() -> Self {
-    Self {
-      inheritance: HashMap::new(),
-    }
+    Self { inheritance: HashMap::new() }
   }
 
   // Add a role with no inheritance

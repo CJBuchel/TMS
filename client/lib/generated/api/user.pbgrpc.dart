@@ -46,6 +46,13 @@ class UserServiceClient extends $grpc.Client {
     return $createUnaryCall(_$validateToken, request, options: options);
   }
 
+  $grpc.ResponseFuture<$0.UpdateAdminPasswordResponse> updateAdminPassword(
+    $0.UpdateAdminPasswordRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updateAdminPassword, request, options: options);
+  }
+
   // method descriptors
 
   static final _$login = $grpc.ClientMethod<$0.LoginRequest, $0.LoginResponse>(
@@ -57,6 +64,11 @@ class UserServiceClient extends $grpc.Client {
           '/tms.api.UserService/ValidateToken',
           ($0.ValidateTokenRequest value) => value.writeToBuffer(),
           $0.ValidateTokenResponse.fromBuffer);
+  static final _$updateAdminPassword = $grpc.ClientMethod<
+          $0.UpdateAdminPasswordRequest, $0.UpdateAdminPasswordResponse>(
+      '/tms.api.UserService/UpdateAdminPassword',
+      ($0.UpdateAdminPasswordRequest value) => value.writeToBuffer(),
+      $0.UpdateAdminPasswordResponse.fromBuffer);
 }
 
 @$pb.GrpcServiceName('tms.api.UserService')
@@ -80,6 +92,15 @@ abstract class UserServiceBase extends $grpc.Service {
             ($core.List<$core.int> value) =>
                 $0.ValidateTokenRequest.fromBuffer(value),
             ($0.ValidateTokenResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UpdateAdminPasswordRequest,
+            $0.UpdateAdminPasswordResponse>(
+        'UpdateAdminPassword',
+        updateAdminPassword_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.UpdateAdminPasswordRequest.fromBuffer(value),
+        ($0.UpdateAdminPasswordResponse value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.LoginResponse> login_Pre(
@@ -98,4 +119,13 @@ abstract class UserServiceBase extends $grpc.Service {
 
   $async.Future<$0.ValidateTokenResponse> validateToken(
       $grpc.ServiceCall call, $0.ValidateTokenRequest request);
+
+  $async.Future<$0.UpdateAdminPasswordResponse> updateAdminPassword_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.UpdateAdminPasswordRequest> $request) async {
+    return updateAdminPassword($call, await $request);
+  }
+
+  $async.Future<$0.UpdateAdminPasswordResponse> updateAdminPassword(
+      $grpc.ServiceCall call, $0.UpdateAdminPasswordRequest request);
 }

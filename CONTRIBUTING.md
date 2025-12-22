@@ -94,6 +94,12 @@
 - Use `PascalCase` for class, enum and interface names
 - Use consistent naming conventions
 
+## Programming Guidelines **Flutter**
+- Order of Widget priority
+  - `StatelessWidget` for static content
+  - `ConsumerWidget` for rebuilding content (dependent on providers)
+  - `HooksConsumerWidget` for rebuilding content with inline logic
+
 ## UI Guidelines
 
 ### Font
@@ -109,7 +115,7 @@
 | **Color Type** | **Color Name** | **Hex Code** |
 |----------------|----------------|--------------|
 | Primary | Mint Green | #009485 |
-| Secondary | Persian Blue | #4741BA |
+| Secondary | Persian Blue | #009485 |
 | Supporting Error | Red | #D92B2B |
 | Supporting Warning | Orange | #D9822B |
 | Supporting Success | Green | #2BD92B |

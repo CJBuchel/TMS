@@ -17,7 +17,13 @@ message LoginResponse {
 message ValidateTokenRequest {}
 message ValidateTokenResponse {}
 
+message UpdateAdminPasswordRequest {
+  string password = 1;
+}
+message UpdateAdminPasswordResponse {}
+
 service UserService {
   rpc Login(LoginRequest) returns (LoginResponse);
   rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc UpdateAdminPassword(UpdateAdminPasswordRequest) returns (UpdateAdminPasswordResponse);
 }

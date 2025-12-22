@@ -4,12 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/generated/api/schedule.pbgrpc.dart';
 import 'package:tms_client/generated/api/tournament.pbgrpc.dart';
-import 'package:tms_client/generated/db/db.pb.dart';
+import 'package:tms_client/generated/api/user.pbgrpc.dart';
 import 'package:tms_client/helpers/grpc_call_wrapper.dart';
+import 'package:tms_client/hooks/use_tournament_updater.dart';
+import 'package:tms_client/providers/auth_provider.dart';
 import 'package:tms_client/providers/schedule_provider.dart';
-import 'package:tms_client/providers/tournament_provider.dart';
 import 'package:tms_client/utils/grpc_result.dart';
-import 'package:tms_client/views/setup/common/dropdown_setting.dart';
 import 'package:tms_client/views/setup/common/file_upload_setting.dart';
 import 'package:tms_client/views/setup/common/locked_text_field_setting.dart';
 import 'package:tms_client/views/setup/common/settings_page_layout.dart';
@@ -18,25 +18,12 @@ import 'package:tms_client/widgets/dialogs/confirm_dialog.dart';
 import 'package:tms_client/widgets/dialogs/popup_dialog.dart';
 
 class TournamentSetupTab extends HookConsumerWidget {
-  const TournamentSetupTab({super.key});
+  final AsyncValue<StreamTournamentResponse> tournament;
+  const TournamentSetupTab({super.key, required this.tournament});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tournament = ref.watch(tournamentStreamProvider);
-
-    Future<void> updateTournament(void Function(Tournament) modify) async {
-      final updated = tournament.value!.tournament.deepCopy();
-      modify(updated);
-
-      final req = SetTournamentRequest(tournament: updated);
-      final res = await callGrpcEndpoint(
-        () => ref.read(tournamentServiceProvider).setTournament(req),
-      );
-
-      if (context.mounted && res is GrpcFailure) {
-        PopupDialog.fromGrpcStatus(result: res).show(context);
-      }
-    }
+    final updateTournament = useTournamentUpdater(ref);
 
     Future<GrpcResult<UploadScheduleCsvResponse>> uploadSchedule(
       Uint8List bytes,
@@ -48,8 +35,8 @@ class TournamentSetupTab extends HookConsumerWidget {
     }
 
     final nameController = useTextEditingController();
+    final adminPasswordController = useTextEditingController();
     final eventKeyController = useTextEditingController();
-    final selectedSeason = useState<Season>(Season.SEASON_2025);
 
     // Update text controllers when tournament data changes
     useEffect(
@@ -57,14 +44,12 @@ class TournamentSetupTab extends HookConsumerWidget {
         if (tournament.value != null) {
           nameController.text = tournament.value!.tournament.name;
           eventKeyController.text = tournament.value!.tournament.eventKey;
-          selectedSeason.value = tournament.value!.tournament.season;
         }
         return null;
       },
       [
         tournament.value?.tournament.name,
         tournament.value?.tournament.eventKey,
-        tournament.value?.tournament.season,
       ],
     );
 
@@ -78,9 +63,34 @@ class TournamentSetupTab extends HookConsumerWidget {
           controller: nameController,
           hintText: 'Enter tournament name',
           onUpdate: () async {
-            await updateTournament((t) {
-              t.name = nameController.text;
-            });
+            await updateTournament(
+              tournament.value!.tournament,
+              (t) => t.name = nameController.text,
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+        TextFieldSetting(
+          label: 'Admin Password',
+          description: 'Update the admin password for this event',
+          controller: adminPasswordController,
+          hintText: 'Enter password',
+          obscureText: true,
+          onUpdate: () async {
+            final res = await callGrpcEndpoint(
+              () => ref
+                  .read(userServiceProvider)
+                  .updateAdminPassword(
+                    UpdateAdminPasswordRequest(
+                      password: adminPasswordController.text,
+                    ),
+                  ),
+            );
+
+            // Show error dialog if request failed
+            if (context.mounted) {
+              PopupDialog.fromGrpcStatus(result: res).show(context);
+            }
           },
         ),
         const SizedBox(height: 24),
@@ -106,37 +116,18 @@ class TournamentSetupTab extends HookConsumerWidget {
           },
         ),
         const SizedBox(height: 24),
-        DropdownSetting<Season>(
-          label: 'Season',
-          description: 'The season this tournament takes place in',
-          value: selectedSeason.value,
-          items: Season.values.map((season) {
-            return DropdownMenuItem(value: season, child: Text(season.name));
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) {
-              selectedSeason.value = value;
-            }
-          },
-          onUpdate: () async {
-            await updateTournament((t) {
-              t.season = selectedSeason.value;
-            });
-          },
-        ),
-        const SizedBox(height: 24),
-        LockedTextFieldSetting(
+        LockedTextFieldSetting.danger(
           label: 'Event Key',
           description: 'Unique identifier for this tournament event',
           controller: eventKeyController,
           hintText: 'Enter event key',
-          useErrorStyle: true,
-          warningMessage:
+          noticeMessage:
               'WARNING: Changing the event key can cause data inconsistencies and break integrations. Only modify if absolutely necessary.',
           onUpdate: () async {
-            await updateTournament((t) {
-              t.eventKey = eventKeyController.text;
-            });
+            await updateTournament(
+              tournament.value!.tournament,
+              (t) => t.eventKey = eventKeyController.text,
+            );
           },
         ),
       ],

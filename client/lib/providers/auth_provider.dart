@@ -142,7 +142,7 @@ class UserService extends _$UserService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 bool isLoggedIn(Ref ref) {
   final token = ref.watch(tokenProvider);
   return token?.isNotEmpty ?? false;

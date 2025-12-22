@@ -224,6 +224,103 @@ class ValidateTokenResponse extends $pb.GeneratedMessage {
   static ValidateTokenResponse? _defaultInstance;
 }
 
+class UpdateAdminPasswordRequest extends $pb.GeneratedMessage {
+  factory UpdateAdminPasswordRequest({
+    $core.String? password,
+  }) {
+    final result = create();
+    if (password != null) result.password = password;
+    return result;
+  }
+
+  UpdateAdminPasswordRequest._();
+
+  factory UpdateAdminPasswordRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateAdminPasswordRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateAdminPasswordRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'tms.api'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'password')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAdminPasswordRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAdminPasswordRequest copyWith(
+          void Function(UpdateAdminPasswordRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as UpdateAdminPasswordRequest))
+          as UpdateAdminPasswordRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateAdminPasswordRequest create() => UpdateAdminPasswordRequest._();
+  @$core.override
+  UpdateAdminPasswordRequest createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateAdminPasswordRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateAdminPasswordRequest>(create);
+  static UpdateAdminPasswordRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get password => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set password($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPassword() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPassword() => $_clearField(1);
+}
+
+class UpdateAdminPasswordResponse extends $pb.GeneratedMessage {
+  factory UpdateAdminPasswordResponse() => create();
+
+  UpdateAdminPasswordResponse._();
+
+  factory UpdateAdminPasswordResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory UpdateAdminPasswordResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateAdminPasswordResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'tms.api'),
+      createEmptyInstance: create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAdminPasswordResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateAdminPasswordResponse copyWith(
+          void Function(UpdateAdminPasswordResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as UpdateAdminPasswordResponse))
+          as UpdateAdminPasswordResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static UpdateAdminPasswordResponse create() =>
+      UpdateAdminPasswordResponse._();
+  @$core.override
+  UpdateAdminPasswordResponse createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static UpdateAdminPasswordResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateAdminPasswordResponse>(create);
+  static UpdateAdminPasswordResponse? _defaultInstance;
+}
+
 const $core.bool _omitFieldNames =
     $core.bool.fromEnvironment('protobuf.omit_field_names');
 const $core.bool _omitMessageNames =

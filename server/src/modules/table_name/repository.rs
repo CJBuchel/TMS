@@ -35,7 +35,7 @@ impl TableRepository for TableName {
       return Err(anyhow::anyhow!("Event bus not initialized"));
     };
 
-    event_bus.publish(ChangeEvent {
+    event_bus.publish(ChangeEvent::Record {
       operation: ChangeOperation::Create,
       id: id.clone(),
       data: Some(record.clone()),
@@ -59,6 +59,15 @@ impl TableRepository for TableName {
   fn clear() -> Result<()> {
     let db = get_db()?;
     let table = db.get_table(TABLE_TABLE_NAME);
-    table.clear()
+    table.clear()?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not initialized"));
+    };
+
+    event_bus.publish(ChangeEvent::<TableName>::Table)?;
+
+    Ok(())
   }
 }

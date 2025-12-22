@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package tms.api;
+
+import "db/db.proto";
+
+message GameMatchResponse {
+  string id = 1;
+  db.GameMatch game_match = 2;
+}
+
+message StreamMatchesRequest {}
+message StreamMatchesResponse {
+  repeated GameMatchResponse game_matches = 1;
+}
+
+service GameMatchService {
+  rpc StreamMatches(StreamMatchesRequest) returns (stream StreamMatchesResponse);
+}

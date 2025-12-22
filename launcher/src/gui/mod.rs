@@ -7,9 +7,8 @@ use anyhow::Result;
 use egui::IconData;
 use runner::GuiRunner;
 use server::TmsConfig;
-use tokio::sync::{mpsc::Sender, watch};
 
-use crate::{GuiMessage, ServerState};
+use crate::ServerManager;
 mod app;
 mod qr_code;
 mod runner;
@@ -41,17 +40,9 @@ impl From<ConfigFields> for TmsConfig {
       tls: fields.tls,
       cert_path: fields.cert_path,
       key_path: fields.key_path,
-      admin_password: fields.admin_password,
-      proxy_token: if fields.proxy_token.is_empty() {
-        None
-      } else {
-        Some(fields.proxy_token)
-      },
-      proxy_domain: if fields.proxy_domain.is_empty() {
-        None
-      } else {
-        Some(fields.proxy_domain)
-      },
+      admin_password: if fields.admin_password.is_empty() { None } else { Some(fields.admin_password) },
+      proxy_token: if fields.proxy_token.is_empty() { None } else { Some(fields.proxy_token) },
+      proxy_domain: if fields.proxy_domain.is_empty() { None } else { Some(fields.proxy_domain) },
     }
   }
 }
@@ -67,7 +58,7 @@ impl From<TmsConfig> for ConfigFields {
       tls: config.tls,
       cert_path: config.cert_path.clone(),
       key_path: config.key_path.clone(),
-      admin_password: config.admin_password.clone(),
+      admin_password: config.admin_password.unwrap_or_default(),
       proxy_token: config.proxy_token.unwrap_or_default(),
       proxy_domain: config.proxy_domain.unwrap_or_default(),
     }
@@ -79,11 +70,7 @@ fn load_icon_data() -> IconData {
   eframe::icon_data::from_png_bytes(include_bytes!("../../assets/TMS_Logo.png")).expect("Failed to load icon")
 }
 
-pub fn run_gui(
-  message_sender: Sender<GuiMessage>,
-  state_rx: watch::Receiver<ServerState>,
-  config: TmsConfig,
-) -> Result<()> {
+pub fn run_gui(server_manager: ServerManager, config: TmsConfig) -> Result<()> {
   let size = [680.0, 440.0];
   let min_size = [640.0, 400.0];
 
@@ -115,12 +102,7 @@ pub fn run_gui(
     options,
     Box::new(|cc| {
       egui_extras::install_image_loaders(&cc.egui_ctx);
-      Ok(Box::<GuiRunner>::new(GuiRunner::new(
-        message_sender,
-        state_rx,
-        config,
-        cc,
-      )))
+      Ok(Box::<GuiRunner>::new(GuiRunner::new(server_manager, config, cc)))
     }),
   );
 

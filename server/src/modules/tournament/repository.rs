@@ -26,6 +26,10 @@ fn create_default_tournament() -> Tournament {
 
   Tournament {
     event_key,
+    backup_interval: 10,
+    retain_backups: 5,
+    game_timer_length: 150,
+    end_game_timer_trigger: 30,
     season: Season::Season2025 as i32,
     ..Default::default()
   }
@@ -64,7 +68,7 @@ impl TournamentRepository for Tournament {
       return Err(anyhow::anyhow!("Event bus not available"));
     };
 
-    event_bus.publish(ChangeEvent {
+    event_bus.publish(ChangeEvent::Record {
       operation: ChangeOperation::Update,
       id: TOURNAMENT_KEY.to_string(),
       data: Some(record.clone()),
@@ -93,6 +97,15 @@ impl TournamentRepository for Tournament {
   fn clear() -> Result<()> {
     let db = get_db()?;
     let table = db.get_table(TOURNAMENT_TABLE_NAME);
-    table.clear()
+    table.clear()?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not available"));
+    };
+
+    event_bus.publish(ChangeEvent::<Tournament>::Table)?;
+
+    Ok(())
   }
 }

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tms_client/router/app_routes.dart';
 
 class BaseRail extends HookConsumerWidget {
   const BaseRail({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = useState(0);
+    // Derive selected index from current route instead of local state
+    final selectedIndex = AppRoute.currentRailIndex(context) ?? 0;
     final isExtended = useState(false);
     return Positioned(
       left: 0,
@@ -19,10 +21,11 @@ class BaseRail extends HookConsumerWidget {
             extended: isExtended.value,
             minWidth: 48,
             minExtendedWidth: 200,
-            selectedIndex: selectedIndex.value,
+            selectedIndex: selectedIndex,
             onDestinationSelected: (index) {
-              selectedIndex.value = index;
-              // Handle navigation here
+              // Type-safe navigation using the enum
+              final route = AppRoute.fromRailIndex(index);
+              route?.go(context);
             },
             leading: Padding(
               padding: const EdgeInsets.only(bottom: 30, top: 20),
@@ -33,7 +36,6 @@ class BaseRail extends HookConsumerWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  // foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 ),
                 icon: Icon(isExtended.value ? Icons.chevron_left : Icons.menu),
                 onPressed: () => isExtended.value = !isExtended.value,
@@ -41,12 +43,12 @@ class BaseRail extends HookConsumerWidget {
             ),
             destinations: const [
               NavigationRailDestination(
-                icon: Icon(Icons.settings),
+                icon: Icon(Icons.handyman),
                 label: Text('Settings'),
               ),
               NavigationRailDestination(
-                icon: Icon(Icons.info),
-                label: Text('Information'),
+                icon: Icon(Icons.shuffle),
+                label: Text('Match Controller'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.help),

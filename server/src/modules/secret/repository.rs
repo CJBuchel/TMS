@@ -3,7 +3,13 @@ use std::vec;
 use anyhow::Result;
 use database::DataInsert;
 
-use crate::{core::db::get_db, generated::db::Secret};
+use crate::{
+  core::{
+    db::get_db,
+    events::{ChangeEvent, EVENT_BUS},
+  },
+  generated::db::Secret,
+};
 
 const SECRET_TABLE_NAME: &str = "jwt_secret";
 const SECRET_KEY: &str = "jwt_secret";
@@ -65,6 +71,15 @@ impl SecretRepository for Secret {
   fn clear() -> Result<()> {
     let db = get_db()?;
     let table = db.get_table(SECRET_TABLE_NAME);
-    table.clear()
+    table.clear()?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not initialized"));
+    };
+
+    event_bus.publish(ChangeEvent::<Secret>::Table)?;
+
+    Ok(())
   }
 }

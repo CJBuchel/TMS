@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tms_client/providers/tournament_provider.dart';
+import 'package:tms_client/views/setup/database_setup_tab.dart';
+import 'package:tms_client/views/setup/game_setup_tab.dart';
 import 'package:tms_client/views/setup/tournament_setup_tab.dart';
 
 class SetupView extends HookConsumerWidget {
@@ -9,6 +12,7 @@ class SetupView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tabController = useTabController(initialLength: 3);
+    final tournament = ref.watch(tournamentStreamProvider);
 
     return Column(
       children: [
@@ -17,38 +21,20 @@ class SetupView extends HookConsumerWidget {
           tabs: const [
             Tab(text: 'Tournament Setup'),
             Tab(text: 'Game Setup'),
-            Tab(text: 'User Setup'),
+            Tab(text: 'Database Setup'),
           ],
         ),
         Expanded(
           child: TabBarView(
             controller: tabController,
-            children: const [
-              TournamentSetupTab(),
-              _GameSetupTab(),
-              _UserSetupTab(),
+            children: [
+              TournamentSetupTab(tournament: tournament),
+              GameSetupTab(tournament: tournament),
+              DatabaseSetupTab(tournament: tournament),
             ],
           ),
         ),
       ],
     );
-  }
-}
-
-class _GameSetupTab extends StatelessWidget {
-  const _GameSetupTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Game Setup Content'));
-  }
-}
-
-class _UserSetupTab extends StatelessWidget {
-  const _UserSetupTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('User Setup Content'));
   }
 }

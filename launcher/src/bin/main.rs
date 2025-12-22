@@ -2,11 +2,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use anyhow::Result;
-use launcher::logging;
-use server::{TmsConfig, core::tms_server::TmsServer};
+use launcher::{ServerManager, logging};
+use server::TmsConfig;
 
-#[tokio::main]
-async fn main() -> Result<()> {
+fn main() -> Result<()> {
   // Init logger
   logging::init_logging().expect("Failed to initialize logger");
 
@@ -14,9 +13,9 @@ async fn main() -> Result<()> {
   let config = TmsConfig::parse_from_cli();
 
   if config.no_gui {
-    // Run server directly (headless mode)
+    // Run server in headless mode with auto-start
     log::info!("Starting TMS (Headless)");
-    run_headless(config).await?;
+    run_headless(config)?;
   } else {
     // Run with GUI launcher
     log::info!("Starting TMS Launcher");
@@ -26,41 +25,32 @@ async fn main() -> Result<()> {
   Ok(())
 }
 
-async fn run_headless(config: TmsConfig) -> Result<()> {
-  let (server, mut handle) = TmsServer::new(Some(config));
-  let mut server_task = tokio::spawn(async move { server.run().await });
+fn run_headless(config: TmsConfig) -> Result<()> {
+  // Create server manager with dedicated runtime
+  let server_manager = ServerManager::new()?;
 
-  // Setup Ctrl+C handler
-  let shutdown_signal = async {
-    tokio::signal::ctrl_c().await.expect("Failed to listen for Ctrl+C");
-    log::info!("Received shutdown signal (Ctrl+C)");
-  };
+  // Start server immediately in headless mode
+  log::info!("Starting server in headless mode");
+  server_manager.start(config)?;
 
-  // Wait for shutdown or server exit
-  tokio::select! {
-    result = &mut server_task => {
-      match result {
-        Ok(Ok(())) => log::info!("Server exited gracefully"),
-        Ok(Err(e)) => log::error!("Server exited with error: {}", e),
-        Err(e) => log::error!("Server task panicked: {}", e),
-      }
-    },
-    () = shutdown_signal => {
-      log::info!("Shutting down server...");
-      handle.shutdown();
+  // Wait for Ctrl+C signal
+  log::info!("Server running. Press Ctrl+C to shutdown.");
 
-      // Wait for server to stop (5 second timeout)
-      match tokio::time::timeout(std::time::Duration::from_secs(5), server_task).await {
-        Ok(Ok(Ok(()))) => log::info!("Server stopped gracefully"),
-        Ok(Ok(Err(e))) => log::error!("Server stopped with error: {}", e),
-        Ok(Err(e)) => log::error!("Server task panicked: {}", e),
-        Err(_) => {
-          log::error!("Server did not stop within 5 seconds");
-          std::process::exit(1);
-        }
-      }
+  // Set up Ctrl+C handler using a simple blocking approach
+  match ctrlc::set_handler(move || {
+    log::info!("Received Ctrl+C signal, shutting down...");
+    std::process::exit(0);
+  }) {
+    Ok(()) => {
+      // Block forever until Ctrl+C
+      std::thread::park();
+    }
+    Err(e) => {
+      log::error!("Failed to set Ctrl+C handler: {}", e);
+      return Err(anyhow::anyhow!("Failed to set Ctrl+C handler"));
     }
   }
 
+  // ServerManager will be dropped on exit, triggering graceful shutdown
   Ok(())
 }

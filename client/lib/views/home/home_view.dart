@@ -5,6 +5,7 @@ import 'package:tms_client/providers/auth_provider.dart';
 import 'package:tms_client/utils/permissions.dart';
 import 'package:tms_client/views/home/admin_cards.dart';
 import 'package:tms_client/views/home/public_cards.dart';
+import 'package:tms_client/views/home/referee_cards.dart';
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
@@ -31,12 +32,9 @@ class HomeView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final roles = ref.watch(rolesProvider);
 
-    List<Widget> adminCards() {
-      if (roles.any((r) => r.hasPermission(Role.ADMIN))) {
-        return [
-          _bannerWidget('Admin Views'),
-          _paddedSliver(const AdminCards()),
-        ];
+    List<Widget> protectedCard(String title, Widget card, List<Role> required) {
+      if (required.any((req) => roles.any((r) => r.hasPermission(req)))) {
+        return [_bannerWidget(title), _paddedSliver(card)];
       } else {
         return [];
       }
@@ -48,7 +46,10 @@ class HomeView extends ConsumerWidget {
         // Public cards
         _bannerWidget('Public Views'),
         _paddedSliver(const PublicCards()),
-        ...adminCards(),
+        ...protectedCard('Admin Views', AdminCards(), [Role.ADMIN]),
+        ...protectedCard('Referee Views', RefereeCards(roles: roles), [
+          Role.REFEREE,
+        ]),
       ],
     );
   }

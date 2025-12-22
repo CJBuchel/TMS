@@ -1,17 +1,16 @@
 use std::{net::IpAddr, str::FromStr};
 
 use egui::{Color32, RichText};
-use local_ip_address::local_ip;
 
-use crate::{GuiMessage, gui::runner::GuiRunner};
+use crate::gui::runner::GuiRunner;
 
 impl eframe::App for GuiRunner {
   fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
     // Update status text
     self.update_status_text();
 
-    // Get local IP address
-    let local_ip = local_ip().unwrap_or(IpAddr::V4(std::net::Ipv4Addr::LOCALHOST));
+    // Use cached local IP address (calling local_ip() every frame leaks netlink sockets)
+    let local_ip = self.cached_local_ip;
 
     // Server URL
     let protocol = if self.active_cfg.tls { "https" } else { "http" };
@@ -25,11 +24,7 @@ impl eframe::App for GuiRunner {
 
     // Header panel
     egui::TopBottomPanel::top("header")
-      .frame(
-        egui::Frame::NONE
-          .fill(teal_color)
-          .inner_margin(egui::Margin::symmetric(10, 10)),
-      )
+      .frame(egui::Frame::NONE.fill(teal_color).inner_margin(egui::Margin::symmetric(10, 10)))
       .show(ctx, |ui| {
         ui.horizontal(|ui| {
           ui.image(egui::include_image!("../../assets/TMS_Logo.png"));
@@ -49,17 +44,15 @@ impl eframe::App for GuiRunner {
           !is_running,
           egui::TextEdit::singleline(&mut self.active_cfg.admin_password)
             .desired_width(150.0)
-            .password(true),
+            .password(true)
+            .hint_text("Using default..."),
         );
       });
 
       // Server binding
       ui.horizontal(|ui| {
         ui.label("Binding:");
-        ui.add_enabled(
-          !is_running,
-          egui::TextEdit::singleline(&mut self.active_cfg.bind_address).desired_width(150.0),
-        );
+        ui.add_enabled(!is_running, egui::TextEdit::singleline(&mut self.active_cfg.bind_address).desired_width(150.0));
         if IpAddr::from_str(&self.active_cfg.bind_address).is_err() {
           ui.label(RichText::new("Invalid IP").color(Color32::RED));
         }
@@ -69,10 +62,7 @@ impl eframe::App for GuiRunner {
       ui.horizontal(|ui| {
         ui.label("Web Port:");
         let mut port_text = self.active_cfg.web_port.clone();
-        let response = ui.add_enabled(
-          !is_running,
-          egui::TextEdit::singleline(&mut port_text).desired_width(150.0),
-        );
+        let response = ui.add_enabled(!is_running, egui::TextEdit::singleline(&mut port_text).desired_width(150.0));
         if response.changed() {
           if port_text.is_empty() {
             self.active_cfg.web_port = port_text;
@@ -86,10 +76,7 @@ impl eframe::App for GuiRunner {
       ui.horizontal(|ui| {
         ui.label("API Port:");
         let mut port_text = self.active_cfg.api_port.clone();
-        let response = ui.add_enabled(
-          !is_running,
-          egui::TextEdit::singleline(&mut port_text).desired_width(150.0),
-        );
+        let response = ui.add_enabled(!is_running, egui::TextEdit::singleline(&mut port_text).desired_width(150.0));
         if response.changed() {
           if port_text.is_empty() {
             self.active_cfg.api_port = port_text;
@@ -103,10 +90,7 @@ impl eframe::App for GuiRunner {
       ui.horizontal(|ui| {
         ui.label("Proxy Token:");
         let mut token_text = self.active_cfg.proxy_token.clone();
-        let response = ui.add_enabled(
-          !is_running,
-          egui::TextEdit::singleline(&mut token_text).desired_width(150.0),
-        );
+        let response = ui.add_enabled(!is_running, egui::TextEdit::singleline(&mut token_text).desired_width(150.0));
         if response.changed() {
           self.active_cfg.proxy_token = token_text;
         }
@@ -116,10 +100,7 @@ impl eframe::App for GuiRunner {
       ui.horizontal(|ui| {
         ui.label("Proxy Domain:");
         let mut domain_text = self.active_cfg.proxy_domain.clone();
-        let response = ui.add_enabled(
-          !is_running,
-          egui::TextEdit::singleline(&mut domain_text).desired_width(150.0),
-        );
+        let response = ui.add_enabled(!is_running, egui::TextEdit::singleline(&mut domain_text).desired_width(150.0));
         if response.changed() {
           self.active_cfg.proxy_domain = domain_text;
         }
@@ -162,10 +143,7 @@ impl eframe::App for GuiRunner {
         ui.label("Certificate Path:");
         ui.horizontal(|ui| {
           // Display the current path
-          ui.add_enabled(
-            !is_running,
-            egui::TextEdit::singleline(&mut self.active_cfg.cert_path).desired_width(150.0),
-          );
+          ui.add_enabled(!is_running, egui::TextEdit::singleline(&mut self.active_cfg.cert_path).desired_width(150.0));
 
           // Browse button
           if ui.add_enabled(!is_running, egui::Button::new("Browse...")).clicked()
@@ -183,10 +161,7 @@ impl eframe::App for GuiRunner {
         ui.label("Key Path:");
         ui.horizontal(|ui| {
           // Display the current path
-          ui.add_enabled(
-            !is_running,
-            egui::TextEdit::singleline(&mut self.active_cfg.key_path).desired_width(150.0),
-          );
+          ui.add_enabled(!is_running, egui::TextEdit::singleline(&mut self.active_cfg.key_path).desired_width(150.0));
 
           // Browse button
           if ui.add_enabled(!is_running, egui::Button::new("Browse...")).clicked()
@@ -256,9 +231,7 @@ impl eframe::App for GuiRunner {
   }
 
   fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
-    // Send exit message
-    if let Err(e) = self.message_sender.try_send(GuiMessage::Exit) {
-      log::error!("Failed to send exit message: {}", e);
-    }
+    // ServerManager will automatically shutdown when dropped
+    log::info!("GUI window closing, ServerManager will handle cleanup");
   }
 }

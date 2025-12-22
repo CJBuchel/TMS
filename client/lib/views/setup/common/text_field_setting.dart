@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tms_client/views/setup/common/setting_row.dart';
 
 /// Reusable text field setting with update button
@@ -9,6 +10,9 @@ class TextFieldSetting extends StatelessWidget {
   final String hintText;
   final VoidCallback onUpdate;
   final bool enabled;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType? keyboardType;
+  final bool obscureText;
 
   const TextFieldSetting({
     super.key,
@@ -18,6 +22,9 @@ class TextFieldSetting extends StatelessWidget {
     required this.hintText,
     required this.onUpdate,
     this.enabled = true,
+    this.inputFormatters,
+    this.keyboardType,
+    this.obscureText = false,
   });
 
   @override
@@ -31,6 +38,9 @@ class TextFieldSetting extends StatelessWidget {
             child: TextField(
               controller: controller,
               enabled: enabled,
+              inputFormatters: inputFormatters,
+              keyboardType: keyboardType,
+              obscureText: obscureText,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 hintText: hintText,

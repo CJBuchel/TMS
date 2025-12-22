@@ -7,7 +7,7 @@ use tonic::{Request, Response, Result, Status};
 
 use crate::{
   auth::auth_helpers::require_permission,
-  core::{events::EVENT_BUS, shutdown::with_shutdown},
+  core::{db::recreate_default_admin, events::EVENT_BUS, shutdown::with_shutdown},
   generated::{
     api::{
       DeleteTournamentRequest, DeleteTournamentResponse, GetTournamentRequest, GetTournamentResponse,
@@ -72,7 +72,17 @@ impl TournamentService for TournamentApi {
       .map_err(|e| Status::internal(format!("Failed to subscribe to tournament events: {}", e)))?;
 
     let stream = BroadcastStream::new(rx).filter_map(|result| match result {
-      Ok(event) => Some(Ok(StreamTournamentResponse { tournament: event.data })),
+      Ok(event) => match event {
+        crate::core::events::ChangeEvent::Record { data, .. } => {
+          Some(Ok(StreamTournamentResponse { tournament: data }))
+        }
+        crate::core::events::ChangeEvent::Table => {
+          // Table changed, get full tournament
+          Some(Ok(StreamTournamentResponse {
+            tournament: Some(Tournament::get()),
+          }))
+        }
+      },
       Err(BroadcastStreamRecvError::Lagged(n)) => {
         // Client fell behind, they'll get next update
         log::warn!("Client lagged by {} messages", n);
@@ -107,7 +117,10 @@ impl TournamentService for TournamentApi {
     PodName::clear().map_err(|e| Status::internal(format!("Failed to clear pod name data: {}", e)))?;
     JudgingSession::clear().map_err(|e| Status::internal(format!("Failed to clear judging session data: {}", e)))?;
 
-    log::info!("All tournament data cleared");
+    // Recreate admin user with default password after clearing users
+    recreate_default_admin().map_err(|e| Status::internal(format!("Failed to recreate admin user: {}", e)))?;
+
+    log::info!("All tournament data cleared and admin user recreated with default password");
 
     Ok(Response::new(DeleteTournamentResponse {}))
   }

@@ -229,7 +229,7 @@ final class IsLoggedInProvider extends $FunctionalProvider<bool, bool, bool>
         argument: null,
         retry: null,
         name: r'isLoggedInProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -256,4 +256,4 @@ final class IsLoggedInProvider extends $FunctionalProvider<bool, bool, bool>
   }
 }
 
-String _$isLoggedInHash() => r'b7ba28896cfb94019d6b962a2ee1c7392d3171ae';
+String _$isLoggedInHash() => r'55854175bbde37cc8bbce06e9d85b2e4f6cb5a39';

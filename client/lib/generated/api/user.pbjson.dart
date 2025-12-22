@@ -67,3 +67,26 @@ const ValidateTokenResponse$json = {
 /// Descriptor for `ValidateTokenResponse`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List validateTokenResponseDescriptor =
     $convert.base64Decode('ChVWYWxpZGF0ZVRva2VuUmVzcG9uc2U=');
+
+@$core.Deprecated('Use updateAdminPasswordRequestDescriptor instead')
+const UpdateAdminPasswordRequest$json = {
+  '1': 'UpdateAdminPasswordRequest',
+  '2': [
+    {'1': 'password', '3': 1, '4': 1, '5': 9, '10': 'password'},
+  ],
+};
+
+/// Descriptor for `UpdateAdminPasswordRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateAdminPasswordRequestDescriptor =
+    $convert.base64Decode(
+        'ChpVcGRhdGVBZG1pblBhc3N3b3JkUmVxdWVzdBIaCghwYXNzd29yZBgBIAEoCVIIcGFzc3dvcm'
+        'Q=');
+
+@$core.Deprecated('Use updateAdminPasswordResponseDescriptor instead')
+const UpdateAdminPasswordResponse$json = {
+  '1': 'UpdateAdminPasswordResponse',
+};
+
+/// Descriptor for `UpdateAdminPasswordResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateAdminPasswordResponseDescriptor =
+    $convert.base64Decode('ChtVcGRhdGVBZG1pblBhc3N3b3JkUmVzcG9uc2U=');

@@ -1,28 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tms_client/base/base_scaffold.dart';
 import 'package:tms_client/providers/auth_provider.dart';
+import 'package:tms_client/router/app_routes.dart';
 import 'package:tms_client/router/deferred_widget.dart';
 import 'package:tms_client/views/home/home_view.dart' deferred as home;
 import 'package:tms_client/views/login/login_view.dart' deferred as login;
 import 'package:tms_client/views/setup/setup_view.dart' deferred as setup;
+import 'package:tms_client/views/match_controller/match_controller_view.dart'
+    deferred as match_controller;
 
 part 'router.g.dart';
 
-final _homeRoute = '/';
-final _loginRoute = '/login';
-final _adminRoute = '/admin';
-final _setupRoute = '/setup';
+final _protectedRoute = '/protected';
 
-/// Creates a page with a standard fade + slide up transition
-CustomTransitionPage<void> buildTransitionPage({
+/// Wrapper that delays showing the child until it has completed its first build.
+///
+/// This prevents the animation from starting while the widget is still building,
+/// which would cause visible jank. The widget builds off-screen first, then
+/// the animation reveals it smoothly.
+class _DelayedAnimationWrapper extends HookWidget {
+  final Widget child;
+
+  const _DelayedAnimationWrapper({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final isReady = useState(false);
+
+    useEffect(() {
+      // Wait for the widget to complete its first frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        isReady.value = true;
+      });
+      return null;
+    }, []);
+
+    if (!isReady.value) {
+      // Widget is building - show it invisibly so it can complete its build
+      return Opacity(opacity: 0.0, child: child);
+    }
+
+    // Widget is ready - show it normally and let the animation proceed
+    return child;
+  }
+}
+
+/// Creates a page with a fade + slide up transition.
+///
+/// The animation waits for the widget to complete its first build before
+/// starting, ensuring smooth transitions without visible widget rebuilds.
+CustomTransitionPage<void> _buildTransitionPage({
   required LocalKey key,
   required Widget child,
 }) {
   return CustomTransitionPage(
     key: key,
-    child: child,
+    child: _DelayedAnimationWrapper(child: child),
+    transitionDuration: const Duration(milliseconds: 350),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return Container(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -52,7 +89,7 @@ GoRouter router(Ref ref) {
   final isLoggedIn = ref.watch(isLoggedInProvider);
 
   return GoRouter(
-    initialLocation: _homeRoute,
+    initialLocation: AppRoute.home.path,
     routes: <RouteBase>[
       // Shell Routes (for standard displays)
       ShellRoute(
@@ -63,12 +100,12 @@ GoRouter router(Ref ref) {
         },
         routes: [
           GoRoute(
-            name: 'home',
-            path: _homeRoute,
-            pageBuilder: (context, state) => buildTransitionPage(
+            name: AppRoute.home.name,
+            path: AppRoute.home.path,
+            pageBuilder: (context, state) => _buildTransitionPage(
               key: state.pageKey,
               child: DeferredWidget(
-                libraryKey: _homeRoute,
+                libraryKey: AppRoute.home.path,
                 libraryLoader: home.loadLibrary,
                 builder: (context) => home.HomeView(),
               ),
@@ -77,24 +114,36 @@ GoRouter router(Ref ref) {
 
           // Protected Admin routes
           GoRoute(
-            name: 'admin',
-            path: _adminRoute,
+            path: _protectedRoute,
             redirect: (context, state) {
               if (!isLoggedIn) {
-                return _loginRoute;
+                return AppRoute.login.path;
               }
               return null;
             },
             routes: [
               GoRoute(
-                name: 'setup',
-                path: _setupRoute,
-                pageBuilder: (context, state) => buildTransitionPage(
+                name: AppRoute.setup.name,
+                path: AppRoute.setup.path,
+                pageBuilder: (context, state) => _buildTransitionPage(
                   key: state.pageKey,
                   child: DeferredWidget(
-                    libraryKey: _setupRoute,
+                    libraryKey: AppRoute.setup.path,
                     libraryLoader: setup.loadLibrary,
                     builder: (context) => setup.SetupView(),
+                  ),
+                ),
+              ),
+              GoRoute(
+                name: AppRoute.matchController.name,
+                path: AppRoute.matchController.path,
+                pageBuilder: (context, state) => _buildTransitionPage(
+                  key: state.pageKey,
+                  child: DeferredWidget(
+                    libraryKey: AppRoute.matchController.path,
+                    libraryLoader: match_controller.loadLibrary,
+                    builder: (context) =>
+                        match_controller.MatchControllerView(),
                   ),
                 ),
               ),
@@ -105,14 +154,14 @@ GoRouter router(Ref ref) {
 
       // Standalone Routes
       GoRoute(
-        name: 'login',
-        path: _loginRoute,
+        name: AppRoute.login.name,
+        path: AppRoute.login.path,
         builder: (context, state) => BaseScaffold(
           showActions: false,
           disableRail: true,
           state: state,
           child: DeferredWidget(
-            libraryKey: _loginRoute,
+            libraryKey: AppRoute.login.path,
             libraryLoader: login.loadLibrary,
             builder: (context) => login.LoginView(),
           ),

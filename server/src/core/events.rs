@@ -13,10 +13,13 @@ pub enum ChangeOperation {
 }
 
 #[derive(Clone, Debug)]
-pub struct ChangeEvent<T> {
-  pub operation: ChangeOperation,
-  pub id: String,      // Record ID
-  pub data: Option<T>, // None for deletes, Some for create/update
+pub enum ChangeEvent<T> {
+  Record {
+    operation: ChangeOperation,
+    id: String,
+    data: Option<T>, // None for Delete, Some for Create/Update
+  },
+  Table, // Signals entire table changed - type T indicates which table
 }
 
 pub struct EventBus {

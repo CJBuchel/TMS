@@ -35,7 +35,7 @@ impl PodRepository for PodName {
       return Err(anyhow::anyhow!("Event bus not initialized"));
     };
 
-    event_bus.publish(ChangeEvent {
+    event_bus.publish(ChangeEvent::Record {
       operation: ChangeOperation::Create,
       id: id.clone(),
       data: Some(record.clone()),
@@ -59,6 +59,15 @@ impl PodRepository for PodName {
   fn clear() -> Result<()> {
     let db = get_db()?;
     let table = db.get_table(POD_TABLE_NAME);
-    table.clear()
+    table.clear()?;
+
+    let Some(event_bus) = EVENT_BUS.get() else {
+      log::error!("Event bus not initialized");
+      return Err(anyhow::anyhow!("Event bus not initialized"));
+    };
+
+    event_bus.publish(ChangeEvent::<PodName>::Table)?;
+
+    Ok(())
   }
 }

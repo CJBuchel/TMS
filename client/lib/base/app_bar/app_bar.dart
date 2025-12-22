@@ -7,6 +7,7 @@ import 'package:tms_client/base/app_bar/theme_action.dart';
 import 'package:tms_client/colors.dart';
 import 'package:tms_client/providers/health_provider.dart';
 import 'package:tms_client/providers/tournament_provider.dart';
+import 'package:tms_client/router/app_routes.dart';
 
 class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final GoRouterState state;
@@ -56,7 +57,7 @@ class BaseAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
     return IconButton(
       icon: Icon(Icons.home),
-      onPressed: () => context.goNamed('home'),
+      onPressed: () => AppRoute.home.go(context),
     );
   }
 

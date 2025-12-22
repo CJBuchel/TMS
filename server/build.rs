@@ -18,10 +18,7 @@ fn find_workspace_root() -> PathBuf {
       current = parent.to_path_buf();
     } else {
       // Fallback: return one level up from manifest dir
-      return PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .unwrap()
-        .to_path_buf();
+      return PathBuf::from(env!("CARGO_MANIFEST_DIR")).parent().unwrap().to_path_buf();
     }
   }
 }

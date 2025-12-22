@@ -67,10 +67,7 @@ impl Block for ScheduledPracticeMatches {
                 if let Some(on_table_name) = table_names.get(i)
                   && !team_number.trim().is_empty()
                 {
-                  table_assignments.push(ScheduledTableAssignmentT {
-                    table_name: on_table_name.clone(),
-                    team_number,
-                  });
+                  table_assignments.push(ScheduledTableAssignmentT { table_name: on_table_name.clone(), team_number });
                 }
               }
             }

@@ -79,10 +79,7 @@ impl Block for ScheduledJudging {
                 if let Some(room_name) = judging_pod_names.get(i)
                   && !team_number.trim().is_empty()
                 {
-                  let in_pod = ScheduledPodAssignmentT {
-                    pod_name: room_name.clone(),
-                    team_number,
-                  };
+                  let in_pod = ScheduledPodAssignmentT { pod_name: room_name.clone(), team_number };
                   pod_assignments.push(in_pod);
                 }
               }
@@ -99,9 +96,6 @@ impl Block for ScheduledJudging {
       }
     }
 
-    Ok(ScheduledJudging {
-      pod_names: judging_pod_names,
-      sessions,
-    })
+    Ok(ScheduledJudging { pod_names: judging_pod_names, sessions })
   }
 }

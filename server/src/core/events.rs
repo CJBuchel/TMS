@@ -29,10 +29,7 @@ pub struct EventBus {
 
 impl EventBus {
   fn new(capacity: usize) -> Self {
-    Self {
-      channels: DashMap::new(),
-      capacity,
-    }
+    Self { channels: DashMap::new(), capacity }
   }
 
   pub fn publish<T: Clone + Send + Sync + 'static>(&self, event: ChangeEvent<T>) -> Result<()> {
@@ -71,9 +68,7 @@ pub fn init_event_bus(capacity: usize) -> Result<()> {
   } else {
     log::info!("Initializing Event Bus");
     let bus = EventBus::new(capacity);
-    EVENT_BUS
-      .set(bus)
-      .map_err(|_| anyhow::anyhow!("Failed to set Event Bus"))?;
+    EVENT_BUS.set(bus).map_err(|_| anyhow::anyhow!("Failed to set Event Bus"))?;
   }
 
   Ok(())

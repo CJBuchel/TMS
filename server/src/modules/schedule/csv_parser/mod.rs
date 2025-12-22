@@ -42,17 +42,9 @@ impl CsvToSchedule for CsvParser {
 
     let judging_schedule = ScheduledJudging::from_csv(csv).ok();
 
-    let table_names = if let Some(matches) = matches_schedule.clone() {
-      matches.table_names
-    } else {
-      Vec::new()
-    };
+    let table_names = if let Some(matches) = matches_schedule.clone() { matches.table_names } else { Vec::new() };
 
-    let pod_names = if let Some(judging) = judging_schedule.clone() {
-      judging.pod_names
-    } else {
-      Vec::new()
-    };
+    let pod_names = if let Some(judging) = judging_schedule.clone() { judging.pod_names } else { Vec::new() };
 
     let schedule = Schedule {
       scheduled_teams: teams_schedule,

@@ -24,28 +24,15 @@ fn extract_single<T: Clone>(
 ) -> std::result::Result<(String, T), Status> {
   if map.is_empty() {
     log::error!("No {} found with identifier: {}", entity_type, identifier);
-    return Err(Status::not_found(format!(
-      "No {} found with identifier: {}",
-      entity_type, identifier
-    )));
+    return Err(Status::not_found(format!("No {} found with identifier: {}", entity_type, identifier)));
   }
 
   if map.len() > 1 {
-    log::error!(
-      "Multiple {}s found with the same identifier: {}",
-      entity_type,
-      identifier
-    );
-    return Err(Status::internal(format!(
-      "Multiple {}s found with the same identifier: {}",
-      entity_type, identifier
-    )));
+    log::error!("Multiple {}s found with the same identifier: {}", entity_type, identifier);
+    return Err(Status::internal(format!("Multiple {}s found with the same identifier: {}", entity_type, identifier)));
   }
 
-  map
-    .into_iter()
-    .next()
-    .ok_or_else(|| Status::internal(format!("{} not found", entity_type)))
+  map.into_iter().next().ok_or_else(|| Status::internal(format!("{} not found", entity_type)))
 }
 
 #[tonic::async_trait]
@@ -67,11 +54,7 @@ impl ScheduleService for ScheduleApi {
     if let Some(scheduled_teams) = schedule.scheduled_teams {
       log::info!("Adding {} teams...", scheduled_teams.teams.len());
       for team in scheduled_teams.teams {
-        let t = Team {
-          team_number: team.team_number.clone(),
-          name: team.name,
-          affiliation: team.affiliation,
-        };
+        let t = Team { team_number: team.team_number.clone(), name: team.name, affiliation: team.affiliation };
         match Team::add(&t) {
           Ok(_) => log::info!("  ✓ Added team {}", team.team_number),
           Err(e) => {
@@ -86,9 +69,7 @@ impl ScheduleService for ScheduleApi {
     let tables = schedule.table_names;
     log::info!("Adding {} tables...", tables.len());
     for table in tables {
-      let t = TableName {
-        table_name: table.clone(),
-      };
+      let t = TableName { table_name: table.clone() };
       match TableName::add(&t) {
         Ok(_) => log::info!("  ✓ Added table {}", table),
         Err(e) => {
@@ -122,11 +103,7 @@ impl ScheduleService for ScheduleApi {
           };
           let (team_id, _) = extract_single(team_map, &assignment.team_number, "team")?;
 
-          table_assignments.push(TableAssignment {
-            table_id,
-            team_id,
-            score_submitted: false,
-          });
+          table_assignments.push(TableAssignment { table_id, team_id, score_submitted: false });
         }
 
         let m = GameMatch {
@@ -150,10 +127,7 @@ impl ScheduleService for ScheduleApi {
 
     // setup practice matches
     if let Some(scheduled_practice_matches) = schedule.scheduled_practice_matches {
-      log::info!(
-        "Adding {} practice matches...",
-        scheduled_practice_matches.matches.len()
-      );
+      log::info!("Adding {} practice matches...", scheduled_practice_matches.matches.len());
       for game_match in scheduled_practice_matches.matches {
         let mut table_assignments: Vec<TableAssignment> = Vec::new();
         for assignment in game_match.table_assignments {
@@ -175,11 +149,7 @@ impl ScheduleService for ScheduleApi {
           };
           let (team_id, _) = extract_single(team_map, &assignment.team_number, "team")?;
 
-          table_assignments.push(TableAssignment {
-            table_id,
-            team_id,
-            score_submitted: false,
-          });
+          table_assignments.push(TableAssignment { table_id, team_id, score_submitted: false });
         }
 
         let m = GameMatch {

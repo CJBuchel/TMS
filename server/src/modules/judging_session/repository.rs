@@ -22,11 +22,7 @@ impl JudgingSessionRepository for JudgingSession {
   fn add(record: &JudgingSession) -> Result<(String, JudgingSession)> {
     let db = get_db()?;
     let table = db.get_table(JUDGING_SESSION_TABLE_NAME);
-    let data = DataInsert {
-      id: None,
-      value: record.clone(),
-      search_indexes: vec![record.session_number.clone()],
-    };
+    let data = DataInsert { id: None, value: record.clone(), search_indexes: vec![record.session_number.clone()] };
 
     let id = table.insert(data)?;
 
@@ -51,10 +47,8 @@ impl JudgingSessionRepository for JudgingSession {
     let sessions = table.get_by_search_indexes::<JudgingSession>(vec![session_number.to_string()])?;
 
     // filter for exact session number
-    let sessions: HashMap<String, JudgingSession> = sessions
-      .into_iter()
-      .filter(|(_, session)| session.session_number == session_number)
-      .collect();
+    let sessions: HashMap<String, JudgingSession> =
+      sessions.into_iter().filter(|(_, session)| session.session_number == session_number).collect();
 
     Ok(sessions)
   }

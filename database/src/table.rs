@@ -150,10 +150,7 @@ impl Table {
   // -- Public Functions --
   //
   pub fn get_table(name: &str, db: sled::Db) -> Self {
-    Self {
-      name: name.to_string(),
-      db,
-    }
+    Self { name: name.to_string(), db }
   }
 
   /// Insert record into the table (returns id of the record)

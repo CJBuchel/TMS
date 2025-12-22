@@ -101,12 +101,7 @@ impl Auth {
 
     let roles: Vec<String> = roles.iter().map(|r| r.as_str_name().to_string()).collect();
 
-    let claims = Claims {
-      sub: user_id.to_string(),
-      roles,
-      exp,
-      iat: chrono::Utc::now().timestamp(),
-    };
+    let claims = Claims { sub: user_id.to_string(), roles, exp, iat: chrono::Utc::now().timestamp() };
 
     let encoding_key = Self::encoding_key()?;
     let header = jsonwebtoken::Header::default();

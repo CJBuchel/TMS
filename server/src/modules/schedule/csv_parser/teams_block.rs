@@ -36,11 +36,7 @@ impl Block for ScheduledTeams {
 
         // Only add team if we have at least a team number
         if !team_number.trim().is_empty() {
-          let team = ScheduleTeamT {
-            team_number,
-            name,
-            affiliation,
-          };
+          let team = ScheduleTeamT { team_number, name, affiliation };
           teams.push(team);
         }
       }

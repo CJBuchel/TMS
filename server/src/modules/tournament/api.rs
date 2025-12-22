@@ -30,9 +30,7 @@ impl TournamentService for TournamentApi {
   type StreamTournamentStream = Pin<Box<dyn Stream<Item = Result<StreamTournamentResponse, Status>> + Send>>;
 
   async fn get_tournament(&self, _: Request<GetTournamentRequest>) -> Result<Response<GetTournamentResponse>, Status> {
-    let response = GetTournamentResponse {
-      tournament: Some(Tournament::get()),
-    };
+    let response = GetTournamentResponse { tournament: Some(Tournament::get()) };
 
     Ok(Response::new(response))
   }
@@ -78,9 +76,7 @@ impl TournamentService for TournamentApi {
         }
         crate::core::events::ChangeEvent::Table => {
           // Table changed, get full tournament
-          Some(Ok(StreamTournamentResponse {
-            tournament: Some(Tournament::get()),
-          }))
+          Some(Ok(StreamTournamentResponse { tournament: Some(Tournament::get()) }))
         }
       },
       Err(BroadcastStreamRecvError::Lagged(n)) => {
@@ -91,10 +87,7 @@ impl TournamentService for TournamentApi {
     });
 
     // Combine initial + stream
-    let full_stream = tokio_stream::once(Ok(StreamTournamentResponse {
-      tournament: Some(initial),
-    }))
-    .chain(stream);
+    let full_stream = tokio_stream::once(Ok(StreamTournamentResponse { tournament: Some(initial) })).chain(stream);
 
     // Wrap in shutdown
     let full_stream = with_shutdown(full_stream);

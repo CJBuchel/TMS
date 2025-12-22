@@ -20,11 +20,7 @@ pub struct AuthContext {
 /// Use this for services with mixed public/private endpoints
 pub fn auth_interceptor(mut req: Request<()>) -> Result<Request<()>, Status> {
   // Try to get token from metadata
-  let token = req
-    .metadata()
-    .get("authorization")
-    .and_then(|v| v.to_str().ok())
-    .and_then(|s| s.strip_prefix("Bearer "));
+  let token = req.metadata().get("authorization").and_then(|v| v.to_str().ok()).and_then(|s| s.strip_prefix("Bearer "));
 
   // Validate token if present
   let claims = if let Some(token) = token {

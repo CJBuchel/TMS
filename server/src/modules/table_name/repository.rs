@@ -22,11 +22,7 @@ impl TableRepository for TableName {
   fn add(record: &TableName) -> Result<(String, TableName)> {
     let db = get_db()?;
     let table = db.get_table(TABLE_TABLE_NAME);
-    let data = DataInsert {
-      id: None,
-      value: record.clone(),
-      search_indexes: vec![record.table_name.clone()],
-    };
+    let data = DataInsert { id: None, value: record.clone(), search_indexes: vec![record.table_name.clone()] };
 
     let id = table.insert(data)?;
 

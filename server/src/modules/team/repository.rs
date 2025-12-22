@@ -25,11 +25,7 @@ impl TeamRepository for Team {
     let data = DataInsert {
       id: None,
       value: record.clone(),
-      search_indexes: vec![
-        record.team_number.clone(),
-        record.name.clone(),
-        record.affiliation.clone(),
-      ],
+      search_indexes: vec![record.team_number.clone(), record.name.clone(), record.affiliation.clone()],
     };
 
     let id = table.insert(data)?;
@@ -55,10 +51,7 @@ impl TeamRepository for Team {
     let teams = table.get_by_search_indexes::<Team>(vec![team_number.to_string()])?;
 
     // filter for exact team number
-    let teams: HashMap<String, Team> = teams
-      .into_iter()
-      .filter(|(_, team)| team.team_number == team_number)
-      .collect();
+    let teams: HashMap<String, Team> = teams.into_iter().filter(|(_, team)| team.team_number == team_number).collect();
 
     Ok(teams)
   }

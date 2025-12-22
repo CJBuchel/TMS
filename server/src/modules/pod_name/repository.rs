@@ -22,11 +22,7 @@ impl PodRepository for PodName {
   fn add(record: &PodName) -> Result<(String, PodName)> {
     let db = get_db()?;
     let table = db.get_table(POD_TABLE_NAME);
-    let data = DataInsert {
-      id: None,
-      value: record.clone(),
-      search_indexes: vec![record.pod_name.clone()],
-    };
+    let data = DataInsert { id: None, value: record.clone(), search_indexes: vec![record.pod_name.clone()] };
 
     let id = table.insert(data)?;
 

@@ -43,11 +43,7 @@ pub fn require_all_permissions<T>(req: &Request<T>, required: &[Role]) -> Result
 
   if !claims.has_all_permissions(required) {
     let user_roles = claims.roles();
-    let missing: Vec<_> = required
-      .iter()
-      .filter(|role| !claims.has_permission(role))
-      .map(Role::as_str_name)
-      .collect();
+    let missing: Vec<_> = required.iter().filter(|role| !claims.has_permission(role)).map(Role::as_str_name).collect();
 
     return Err(Status::permission_denied(format!(
       "Missing required permissions: {}. User has roles: {:?}",

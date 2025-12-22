@@ -30,11 +30,7 @@ impl SecretRepository for Secret {
 
     let table = db.get_table(SECRET_TABLE_NAME);
 
-    let data = DataInsert {
-      id: Some(SECRET_KEY.to_string()),
-      value: record.clone(),
-      search_indexes: vec![],
-    };
+    let data = DataInsert { id: Some(SECRET_KEY.to_string()), value: record.clone(), search_indexes: vec![] };
 
     match table.insert(data) {
       Ok(_) => {

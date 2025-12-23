@@ -7,7 +7,10 @@ use tokio_stream::{
 use tonic::{Request, Response, Status};
 
 use crate::{
-  core::{events::EVENT_BUS, shutdown::with_shutdown},
+  core::{
+    events::{ChangeEvent, EVENT_BUS},
+    shutdown::with_shutdown,
+  },
   generated::{
     api::{
       GameMatchResponse, StreamMatchesRequest, StreamMatchesResponse, game_match_service_server::GameMatchService,
@@ -45,13 +48,13 @@ impl GameMatchService for GameMatchApi {
 
     let stream = BroadcastStream::new(rx).filter_map(|result| match result {
       Ok(event) => match event {
-        crate::core::events::ChangeEvent::Record { id, data, .. } => {
+        ChangeEvent::Record { id, data, .. } => {
           // Single match update
           data.map(|game_match| {
             Ok(StreamMatchesResponse { game_matches: vec![GameMatchResponse { id, game_match: Some(game_match) }] })
           })
         }
-        crate::core::events::ChangeEvent::Table => {
+        ChangeEvent::Table => {
           // Table changed, send all matches again
           match GameMatch::get_all() {
             Ok(matches) => {
@@ -67,6 +70,7 @@ impl GameMatchService for GameMatchApi {
             }
           }
         }
+        _ => None, // Ignore other event types
       },
       Err(BroadcastStreamRecvError::Lagged(n)) => {
         log::warn!("Client lagged by {} messages", n);

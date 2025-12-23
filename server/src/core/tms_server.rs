@@ -62,12 +62,7 @@ impl TmsServer {
     // Schedule background services
     self.scheduler.schedule(IntegrityCheckService::with_default_interval(), shutdown_notifier);
 
-    // Add more scheduled services here as needed:
-    // self.scheduler.schedule(BackupService::new(Duration::from_secs(300)), shutdown_notifier);
-
     log::info!("Scheduled {} background service(s)", self.scheduler.count());
-
-    // Create serving address
 
     // Start API server
     let api_socket_addr =

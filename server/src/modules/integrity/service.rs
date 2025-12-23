@@ -466,29 +466,6 @@ impl IntegrityChecker {
 
   // ===== Public API =====
 
-  /// Run all integrity checks and publish results to event bus
-  pub fn check_and_publish() -> Result<Vec<IntegrityMessage>> {
-    let messages = Self::check_all()?;
-
-    // Update cache
-    if let Ok(mut cache) = INTEGRITY_CACHE.write() {
-      cache.clone_from(&messages);
-    }
-
-    // Publish to event bus
-    if let Some(event_bus) = EVENT_BUS.get() {
-      // Publish a "Table" event to signal complete refresh of integrity messages
-      event_bus.publish(ChangeEvent::<IntegrityMessage>::Table)?;
-    }
-
-    Ok(messages)
-  }
-
-  /// Get cached integrity check results (fast, doesn't run checks)
-  pub fn get_cached() -> Vec<IntegrityMessage> {
-    INTEGRITY_CACHE.read().ok().map(|cache| cache.clone()).unwrap_or_default()
-  }
-
   /// Run all integrity checks on the database (doesn't publish to event bus)
   pub fn check_all() -> Result<Vec<IntegrityMessage>> {
     let db = get_db()?;
@@ -513,6 +490,28 @@ impl IntegrityChecker {
 
     Ok(checker.messages)
   }
+
+  /// Get cached integrity check results (fast, doesn't run checks)
+  pub fn get_cached() -> Vec<IntegrityMessage> {
+    INTEGRITY_CACHE.read().ok().map(|cache| cache.clone()).unwrap_or_default()
+  }
+
+  /// Run all integrity checks and publish results to event bus
+  pub fn check_and_publish() -> Result<Vec<IntegrityMessage>> {
+    let messages = Self::check_all()?;
+
+    // Update cache
+    if let Ok(mut cache) = INTEGRITY_CACHE.write() {
+      cache.clone_from(&messages);
+    }
+
+    // Publish to event bus
+    if let Some(event_bus) = EVENT_BUS.get() {
+      event_bus.publish(ChangeEvent::IntegrityUpdate { data: messages.clone() })?;
+    }
+
+    Ok(messages)
+  }
 }
 
 /// Scheduled service that runs integrity checks periodically
@@ -527,7 +526,7 @@ impl IntegrityCheckService {
 
   /// Create with default 30-second interval
   pub fn with_default_interval() -> Self {
-    Self::new(Duration::from_secs(30))
+    Self::new(Duration::from_secs(5))
   }
 }
 

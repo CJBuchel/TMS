@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package tms.api;
+
+import "common/common.proto";
+
+message GetIntegrityMessagesRequest {}
+message GetIntegrityMessagesResponse {
+  repeated common.IntegrityMessage messages = 1;
+}
+
+message StreamIntegrityMessagesRequest {}
+message StreamIntegrityMessagesResponse {
+  repeated common.IntegrityMessage messages = 1;
+}
+
+service IntegrityService {
+  rpc GetIntegrityMessages(GetIntegrityMessagesRequest) returns (GetIntegrityMessagesResponse) {}
+  rpc StreamIntegrityMessages(StreamIntegrityMessagesRequest) returns (stream StreamIntegrityMessagesResponse) {}
+}

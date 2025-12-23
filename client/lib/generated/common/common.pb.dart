@@ -15,6 +15,8 @@ import 'dart:core' as $core;
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'common.pbenum.dart';
+
 export 'package:protobuf/protobuf.dart' show GeneratedMessageGenericExtensions;
 
 export 'common.pbenum.dart';
@@ -310,6 +312,209 @@ class TmsDateTime extends $pb.GeneratedMessage {
   void clearTime() => $_clearField(2);
   @$pb.TagNumber(2)
   TmsTime ensureTime() => $_ensure(1);
+}
+
+class IntegrityContext extends $pb.GeneratedMessage {
+  factory IntegrityContext({
+    $core.Iterable<$core.String>? contextKeys,
+    $core.String? teamNumber,
+    $core.String? matchNumber,
+    $core.String? sessionNumber,
+    $core.String? tableName,
+    $core.String? podName,
+  }) {
+    final result = create();
+    if (contextKeys != null) result.contextKeys.addAll(contextKeys);
+    if (teamNumber != null) result.teamNumber = teamNumber;
+    if (matchNumber != null) result.matchNumber = matchNumber;
+    if (sessionNumber != null) result.sessionNumber = sessionNumber;
+    if (tableName != null) result.tableName = tableName;
+    if (podName != null) result.podName = podName;
+    return result;
+  }
+
+  IntegrityContext._();
+
+  factory IntegrityContext.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory IntegrityContext.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'IntegrityContext',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'tms.common'),
+      createEmptyInstance: create)
+    ..pPS(1, _omitFieldNames ? '' : 'contextKeys')
+    ..aOS(2, _omitFieldNames ? '' : 'teamNumber')
+    ..aOS(3, _omitFieldNames ? '' : 'matchNumber')
+    ..aOS(4, _omitFieldNames ? '' : 'sessionNumber')
+    ..aOS(5, _omitFieldNames ? '' : 'tableName')
+    ..aOS(6, _omitFieldNames ? '' : 'podName')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IntegrityContext clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IntegrityContext copyWith(void Function(IntegrityContext) updates) =>
+      super.copyWith((message) => updates(message as IntegrityContext))
+          as IntegrityContext;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static IntegrityContext create() => IntegrityContext._();
+  @$core.override
+  IntegrityContext createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static IntegrityContext getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<IntegrityContext>(create);
+  static IntegrityContext? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get contextKeys => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.String get teamNumber => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set teamNumber($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTeamNumber() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTeamNumber() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get matchNumber => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set matchNumber($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasMatchNumber() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMatchNumber() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get sessionNumber => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set sessionNumber($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSessionNumber() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSessionNumber() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get tableName => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set tableName($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasTableName() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTableName() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get podName => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set podName($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasPodName() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearPodName() => $_clearField(6);
+}
+
+class IntegrityMessage extends $pb.GeneratedMessage {
+  factory IntegrityMessage({
+    IntegrityCode? code,
+    IntegritySeverity? severity,
+    IntegrityContext? context,
+    $core.String? formattedMessage,
+  }) {
+    final result = create();
+    if (code != null) result.code = code;
+    if (severity != null) result.severity = severity;
+    if (context != null) result.context = context;
+    if (formattedMessage != null) result.formattedMessage = formattedMessage;
+    return result;
+  }
+
+  IntegrityMessage._();
+
+  factory IntegrityMessage.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory IntegrityMessage.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'IntegrityMessage',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'tms.common'),
+      createEmptyInstance: create)
+    ..aE<IntegrityCode>(1, _omitFieldNames ? '' : 'code',
+        enumValues: IntegrityCode.values)
+    ..aE<IntegritySeverity>(2, _omitFieldNames ? '' : 'severity',
+        enumValues: IntegritySeverity.values)
+    ..aOM<IntegrityContext>(3, _omitFieldNames ? '' : 'context',
+        subBuilder: IntegrityContext.create)
+    ..aOS(4, _omitFieldNames ? '' : 'formattedMessage')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IntegrityMessage clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  IntegrityMessage copyWith(void Function(IntegrityMessage) updates) =>
+      super.copyWith((message) => updates(message as IntegrityMessage))
+          as IntegrityMessage;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static IntegrityMessage create() => IntegrityMessage._();
+  @$core.override
+  IntegrityMessage createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static IntegrityMessage getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<IntegrityMessage>(create);
+  static IntegrityMessage? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  IntegrityCode get code => $_getN(0);
+  @$pb.TagNumber(1)
+  set code(IntegrityCode value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCode() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  IntegritySeverity get severity => $_getN(1);
+  @$pb.TagNumber(2)
+  set severity(IntegritySeverity value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSeverity() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSeverity() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  IntegrityContext get context => $_getN(2);
+  @$pb.TagNumber(3)
+  set context(IntegrityContext value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasContext() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearContext() => $_clearField(3);
+  @$pb.TagNumber(3)
+  IntegrityContext ensureContext() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.String get formattedMessage => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set formattedMessage($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasFormattedMessage() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearFormattedMessage() => $_clearField(4);
 }
 
 const $core.bool _omitFieldNames =

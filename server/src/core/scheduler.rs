@@ -5,10 +5,6 @@ use tokio::task::JoinHandle;
 
 use crate::core::shutdown::ShutdownNotifier;
 
-// ============================================================================
-// Trait Definition
-// ============================================================================
-
 /// Trait for services that run on a schedule
 pub trait ScheduledService: Send + 'static {
   /// How often this service should run
@@ -26,10 +22,6 @@ pub trait ScheduledService: Send + 'static {
   /// Execute the service logic
   fn execute(&mut self) -> Result<()>;
 }
-
-// ============================================================================
-// Service Scheduler (spawns individual services)
-// ============================================================================
 
 /// Scheduler for background services
 pub struct ServiceScheduler;
@@ -90,10 +82,6 @@ impl ServiceScheduler {
     })
   }
 }
-
-// ============================================================================
-// Schedule Manager (manages all scheduled services)
-// ============================================================================
 
 /// Manages all scheduled background services
 #[derive(Default)]

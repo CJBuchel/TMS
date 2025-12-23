@@ -36,6 +36,71 @@ final $typed_data.Uint8List roleDescriptor = $convert.base64Decode(
     'dFEAMSEQoNSlVER0VfQURWSVNPUhAEEhAKDFNDT1JFX0tFRVBFUhAFEgkKBUVNQ0VFEAYSBgoC'
     'QVYQBw==');
 
+@$core.Deprecated('Use integrityCodeDescriptor instead')
+const IntegrityCode$json = {
+  '1': 'IntegrityCode',
+  '2': [
+    {'1': 'E000', '2': 0},
+    {'1': 'E001', '2': 1},
+    {'1': 'E002', '2': 2},
+    {'1': 'E003', '2': 3},
+    {'1': 'E004', '2': 4},
+    {'1': 'E005', '2': 5},
+    {'1': 'E006', '2': 6},
+    {'1': 'E007', '2': 7},
+    {'1': 'E008', '2': 8},
+    {'1': 'E009', '2': 9},
+    {'1': 'E010', '2': 10},
+    {'1': 'E011', '2': 11},
+    {'1': 'E012', '2': 12},
+    {'1': 'E013', '2': 13},
+    {'1': 'W000', '2': 1000},
+    {'1': 'W001', '2': 1001},
+    {'1': 'W002', '2': 1002},
+    {'1': 'W003', '2': 1003},
+    {'1': 'W004', '2': 1004},
+    {'1': 'W005', '2': 1005},
+    {'1': 'W006', '2': 1006},
+    {'1': 'W007', '2': 1007},
+    {'1': 'W008', '2': 1008},
+    {'1': 'W009', '2': 1009},
+    {'1': 'W010', '2': 1010},
+    {'1': 'W011', '2': 1011},
+    {'1': 'W012', '2': 1012},
+    {'1': 'W013', '2': 1013},
+    {'1': 'W014', '2': 1014},
+    {'1': 'W015', '2': 1015},
+    {'1': 'W016', '2': 1016},
+    {'1': 'W017', '2': 1017},
+    {'1': 'W018', '2': 1018},
+  ],
+};
+
+/// Descriptor for `IntegrityCode`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List integrityCodeDescriptor = $convert.base64Decode(
+    'Cg1JbnRlZ3JpdHlDb2RlEggKBEUwMDAQABIICgRFMDAxEAESCAoERTAwMhACEggKBEUwMDMQAx'
+    'IICgRFMDA0EAQSCAoERTAwNRAFEggKBEUwMDYQBhIICgRFMDA3EAcSCAoERTAwOBAIEggKBEUw'
+    'MDkQCRIICgRFMDEwEAoSCAoERTAxMRALEggKBEUwMTIQDBIICgRFMDEzEA0SCQoEVzAwMBDoBx'
+    'IJCgRXMDAxEOkHEgkKBFcwMDIQ6gcSCQoEVzAwMxDrBxIJCgRXMDA0EOwHEgkKBFcwMDUQ7QcS'
+    'CQoEVzAwNhDuBxIJCgRXMDA3EO8HEgkKBFcwMDgQ8AcSCQoEVzAwORDxBxIJCgRXMDEwEPIHEg'
+    'kKBFcwMTEQ8wcSCQoEVzAxMhD0BxIJCgRXMDEzEPUHEgkKBFcwMTQQ9gcSCQoEVzAxNRD3BxIJ'
+    'CgRXMDE2EPgHEgkKBFcwMTcQ+QcSCQoEVzAxOBD6Bw==');
+
+@$core.Deprecated('Use integritySeverityDescriptor instead')
+const IntegritySeverity$json = {
+  '1': 'IntegritySeverity',
+  '2': [
+    {'1': 'UNSPECIFIED', '2': 0},
+    {'1': 'ERROR', '2': 1},
+    {'1': 'WARNING', '2': 2},
+  ],
+};
+
+/// Descriptor for `IntegritySeverity`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List integritySeverityDescriptor = $convert.base64Decode(
+    'ChFJbnRlZ3JpdHlTZXZlcml0eRIPCgtVTlNQRUNJRklFRBAAEgkKBUVSUk9SEAESCwoHV0FSTk'
+    'lORxAC');
+
 @$core.Deprecated('Use timestampDescriptor instead')
 const Timestamp$json = {
   '1': 'Timestamp',
@@ -116,3 +181,118 @@ final $typed_data.Uint8List tmsDateTimeDescriptor = $convert.base64Decode(
     'CgtUbXNEYXRlVGltZRIsCgRkYXRlGAEgASgLMhMudG1zLmNvbW1vbi5UbXNEYXRlSABSBGRhdG'
     'WIAQESLAoEdGltZRgCIAEoCzITLnRtcy5jb21tb24uVG1zVGltZUgBUgR0aW1liAEBQgcKBV9k'
     'YXRlQgcKBV90aW1l');
+
+@$core.Deprecated('Use integrityContextDescriptor instead')
+const IntegrityContext$json = {
+  '1': 'IntegrityContext',
+  '2': [
+    {'1': 'context_keys', '3': 1, '4': 3, '5': 9, '10': 'contextKeys'},
+    {
+      '1': 'team_number',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'teamNumber',
+      '17': true
+    },
+    {
+      '1': 'match_number',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'matchNumber',
+      '17': true
+    },
+    {
+      '1': 'session_number',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'sessionNumber',
+      '17': true
+    },
+    {
+      '1': 'table_name',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 3,
+      '10': 'tableName',
+      '17': true
+    },
+    {
+      '1': 'pod_name',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 4,
+      '10': 'podName',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_team_number'},
+    {'1': '_match_number'},
+    {'1': '_session_number'},
+    {'1': '_table_name'},
+    {'1': '_pod_name'},
+  ],
+};
+
+/// Descriptor for `IntegrityContext`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List integrityContextDescriptor = $convert.base64Decode(
+    'ChBJbnRlZ3JpdHlDb250ZXh0EiEKDGNvbnRleHRfa2V5cxgBIAMoCVILY29udGV4dEtleXMSJA'
+    'oLdGVhbV9udW1iZXIYAiABKAlIAFIKdGVhbU51bWJlcogBARImCgxtYXRjaF9udW1iZXIYAyAB'
+    'KAlIAVILbWF0Y2hOdW1iZXKIAQESKgoOc2Vzc2lvbl9udW1iZXIYBCABKAlIAlINc2Vzc2lvbk'
+    '51bWJlcogBARIiCgp0YWJsZV9uYW1lGAUgASgJSANSCXRhYmxlTmFtZYgBARIeCghwb2RfbmFt'
+    'ZRgGIAEoCUgEUgdwb2ROYW1liAEBQg4KDF90ZWFtX251bWJlckIPCg1fbWF0Y2hfbnVtYmVyQh'
+    'EKD19zZXNzaW9uX251bWJlckINCgtfdGFibGVfbmFtZUILCglfcG9kX25hbWU=');
+
+@$core.Deprecated('Use integrityMessageDescriptor instead')
+const IntegrityMessage$json = {
+  '1': 'IntegrityMessage',
+  '2': [
+    {
+      '1': 'code',
+      '3': 1,
+      '4': 1,
+      '5': 14,
+      '6': '.tms.common.IntegrityCode',
+      '10': 'code'
+    },
+    {
+      '1': 'severity',
+      '3': 2,
+      '4': 1,
+      '5': 14,
+      '6': '.tms.common.IntegritySeverity',
+      '10': 'severity'
+    },
+    {
+      '1': 'context',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.tms.common.IntegrityContext',
+      '10': 'context'
+    },
+    {
+      '1': 'formatted_message',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '10': 'formattedMessage'
+    },
+  ],
+};
+
+/// Descriptor for `IntegrityMessage`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List integrityMessageDescriptor = $convert.base64Decode(
+    'ChBJbnRlZ3JpdHlNZXNzYWdlEi0KBGNvZGUYASABKA4yGS50bXMuY29tbW9uLkludGVncml0eU'
+    'NvZGVSBGNvZGUSOQoIc2V2ZXJpdHkYAiABKA4yHS50bXMuY29tbW9uLkludGVncml0eVNldmVy'
+    'aXR5UghzZXZlcml0eRI2Cgdjb250ZXh0GAMgASgLMhwudG1zLmNvbW1vbi5JbnRlZ3JpdHlDb2'
+    '50ZXh0Ugdjb250ZXh0EisKEWZvcm1hdHRlZF9tZXNzYWdlGAQgASgJUhBmb3JtYXR0ZWRNZXNz'
+    'YWdl');

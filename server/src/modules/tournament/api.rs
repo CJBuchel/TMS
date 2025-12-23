@@ -7,7 +7,11 @@ use tonic::{Request, Response, Result, Status};
 
 use crate::{
   auth::auth_helpers::require_permission,
-  core::{db::recreate_default_admin, events::EVENT_BUS, shutdown::with_shutdown},
+  core::{
+    db::recreate_default_admin,
+    events::{ChangeEvent, EVENT_BUS},
+    shutdown::with_shutdown,
+  },
   generated::{
     api::{
       DeleteTournamentRequest, DeleteTournamentResponse, GetTournamentRequest, GetTournamentResponse,
@@ -71,13 +75,12 @@ impl TournamentService for TournamentApi {
 
     let stream = BroadcastStream::new(rx).filter_map(|result| match result {
       Ok(event) => match event {
-        crate::core::events::ChangeEvent::Record { data, .. } => {
-          Some(Ok(StreamTournamentResponse { tournament: data }))
-        }
-        crate::core::events::ChangeEvent::Table => {
+        ChangeEvent::Record { data, .. } => Some(Ok(StreamTournamentResponse { tournament: data })),
+        ChangeEvent::Table => {
           // Table changed, get full tournament
           Some(Ok(StreamTournamentResponse { tournament: Some(Tournament::get()) }))
         }
+        _ => None, // Ignore other event types
       },
       Err(BroadcastStreamRecvError::Lagged(n)) => {
         // Client fell behind, they'll get next update

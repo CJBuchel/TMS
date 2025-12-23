@@ -14,12 +14,21 @@ pub enum ChangeOperation {
 
 #[derive(Clone, Debug)]
 pub enum ChangeEvent<T> {
+  /// A single database record changed
   Record {
     operation: ChangeOperation,
     id: String,
     data: Option<T>, // None for Delete, Some for Create/Update
   },
-  Table, // Signals entire table changed - type T indicates which table
+
+  /// A database table changed
+  Table,
+
+  /// Integrity check completed with results
+  IntegrityUpdate { data: T },
+
+  /// Generic message published to a topic (fallback for future use)
+  Message { topic: String, data: T },
 }
 
 pub struct EventBus {
@@ -32,6 +41,7 @@ impl EventBus {
     Self { channels: DashMap::new(), capacity }
   }
 
+  /// Publish an event
   pub fn publish<T: Clone + Send + Sync + 'static>(&self, event: ChangeEvent<T>) -> Result<()> {
     // Only publish if there are subscribers
     if let Some(sender_box) = self.channels.get(&TypeId::of::<T>()) {
@@ -45,6 +55,7 @@ impl EventBus {
     Ok(())
   }
 
+  /// Subscribe to events for a specific type
   pub fn subscribe<T: Clone + Send + Sync + 'static>(&self) -> Result<broadcast::Receiver<ChangeEvent<T>>> {
     let sender_box = self.channels.entry(TypeId::of::<T>()).or_insert_with(|| {
       let (tx, _rx) = broadcast::channel::<ChangeEvent<T>>(self.capacity);

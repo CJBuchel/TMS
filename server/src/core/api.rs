@@ -10,11 +10,12 @@ use crate::{
   core::shutdown::ShutdownNotifier,
   generated::api::{
     game_match_service_server::GameMatchServiceServer, health_service_server::HealthServiceServer,
-    schedule_service_server::ScheduleServiceServer, tournament_service_server::TournamentServiceServer,
-    user_service_server::UserServiceServer,
+    integrity_service_server::IntegrityServiceServer, schedule_service_server::ScheduleServiceServer,
+    tournament_service_server::TournamentServiceServer, user_service_server::UserServiceServer,
   },
   modules::{
-    game_match::GameMatchApi, health::HealthApi, schedule::api::ScheduleApi, tournament::TournamentApi, user::UserApi,
+    game_match::GameMatchApi, health::HealthApi, integrity::IntegrityApi, schedule::api::ScheduleApi,
+    tournament::TournamentApi, user::UserApi,
   },
 };
 
@@ -54,7 +55,8 @@ impl Api {
       .add_service(UserServiceServer::with_interceptor(UserApi {}, auth_interceptor))
       .add_service(GameMatchServiceServer::with_interceptor(GameMatchApi {}, auth_interceptor))
       .add_service(TournamentServiceServer::with_interceptor(TournamentApi {}, auth_interceptor))
-      .add_service(ScheduleServiceServer::with_interceptor(ScheduleApi {}, auth_interceptor));
+      .add_service(ScheduleServiceServer::with_interceptor(ScheduleApi {}, auth_interceptor))
+      .add_service(IntegrityServiceServer::new(IntegrityApi {}));
 
     match router
       .serve_with_shutdown(self.addr, async move {

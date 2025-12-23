@@ -7,7 +7,5 @@ edition = "2024"
 anyhow = "1.0.100"
 log = "0.4.29"
 prost = "0.14.1"
-prost-types = "0.14.1"
 sled = "0.34.7"
-tokio = "1.48.0"
 uuid = { version = "1.19.0", features = ["v7"] }

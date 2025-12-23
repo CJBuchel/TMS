@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:protobuf/protobuf.dart';
 
-/// Helper methods for storing and retrieving protobuf messages in local storage.
-///
 /// Protobuf messages are serialized to binary, then encoded as base64 strings
 /// for compatibility with SharedPreferences (which only supports strings).
-class ProtobufStorage {
+class ProtobufHelper {
   /// Encode a single protobuf message to a base64 string
   static String encode<T extends GeneratedMessage>(T message) {
     final bytes = message.writeToBuffer();

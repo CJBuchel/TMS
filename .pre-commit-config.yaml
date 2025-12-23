@@ -46,3 +46,7 @@ repos:
       - id: typos
         name: commit-msg-typos
         stages: [commit-msg]
+  - repo: https://github.com/est31/cargo-udeps
+    rev: v0.1.60
+    hooks:
+      - id: udeps

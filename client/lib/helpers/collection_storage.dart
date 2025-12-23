@@ -1,6 +1,6 @@
 import 'package:protobuf/protobuf.dart';
 import 'package:tms_client/helpers/local_storage.dart';
-import 'package:tms_client/helpers/protobuf_storage.dart';
+import 'package:tms_client/helpers/protobuf_helper.dart';
 
 /// Helper for storing and retrieving collections of protobuf messages.
 ///
@@ -35,7 +35,7 @@ class CollectionStorage<T extends GeneratedMessage> {
     if (encoded == null) return null;
 
     try {
-      return ProtobufStorage.decode(encoded, fromBuffer);
+      return ProtobufHelper.decode(encoded, fromBuffer);
     } catch (e) {
       return null;
     }
@@ -43,7 +43,7 @@ class CollectionStorage<T extends GeneratedMessage> {
 
   /// Save a single item
   Future<void> set(String id, T item) async {
-    final encoded = ProtobufStorage.encode(item);
+    final encoded = ProtobufHelper.encode(item);
     await localStorage.setString(_itemKey(id), encoded);
 
     // Add to index if not already present
@@ -59,7 +59,7 @@ class CollectionStorage<T extends GeneratedMessage> {
     final ids = <String>[];
 
     for (final entry in items.entries) {
-      final encoded = ProtobufStorage.encode(entry.value);
+      final encoded = ProtobufHelper.encode(entry.value);
       await localStorage.setString(_itemKey(entry.key), encoded);
       ids.add(entry.key);
     }

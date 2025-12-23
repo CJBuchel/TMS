@@ -10,7 +10,7 @@ use crate::{
   generated::db::TableName,
 };
 
-const TABLE_TABLE_NAME: &str = "table_names";
+pub const TABLE_TABLE_NAME: &str = "table_names";
 
 pub trait TableRepository {
   fn add(record: &TableName) -> Result<(String, TableName)>;

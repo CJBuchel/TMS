@@ -10,7 +10,7 @@ use crate::{
   generated::db::JudgingSession,
 };
 
-const JUDGING_SESSION_TABLE_NAME: &str = "judging_sessions";
+pub const JUDGING_SESSION_TABLE_NAME: &str = "judging_sessions";
 
 pub trait JudgingSessionRepository {
   fn add(record: &JudgingSession) -> Result<(String, JudgingSession)>;

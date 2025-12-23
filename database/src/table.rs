@@ -311,6 +311,35 @@ impl Table {
     Ok(records)
   }
 
+  /// Scan all records in the table as an iterator (memory efficient)
+  /// Returns an iterator of (id, record) tuples
+  pub fn scan<T: Message + Default>(&self) -> impl Iterator<Item = Result<(String, T)>> + '_ {
+    let prefix = format!("{}:{}:", self.name, DATA_PREFIX);
+    let table_name = self.name.clone();
+
+    self.db.scan_prefix(prefix.as_bytes()).map(move |item| {
+      let (key, value) = item.map_err(|e| {
+        log::error!("Failed to scan key: {}", e);
+        anyhow::anyhow!(e)
+      })?;
+
+      // Extract ID from key like "teams:data:uuid"
+      let key_str = String::from_utf8(key.to_vec()).map_err(|e| {
+        log::error!("Failed to convert key to string: {}", e);
+        anyhow::anyhow!(e)
+      })?;
+
+      let id = key_str.strip_prefix(&format!("{}:{}:", table_name, DATA_PREFIX)).unwrap_or_default().to_string();
+
+      let record: T = Message::decode(value.as_ref()).map_err(|e| {
+        log::error!("Failed to decode record from db: {}", e);
+        anyhow::anyhow!(e)
+      })?;
+
+      Ok((id, record))
+    })
+  }
+
   /// Clear all records from the table (deletes both data and search indexes)
   pub fn clear(&self) -> Result<()> {
     let mut batch_update = sled::Batch::default();

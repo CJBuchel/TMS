@@ -1,5 +1,6 @@
 pub mod game_match;
 pub mod health;
+pub mod integrity;
 pub mod judging_session;
 pub mod pod_name;
 pub mod schedule;

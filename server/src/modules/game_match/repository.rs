@@ -10,7 +10,7 @@ use crate::{
   generated::db::GameMatch,
 };
 
-const GAME_MATCH_TABLE_NAME: &str = "matches";
+pub const GAME_MATCH_TABLE_NAME: &str = "matches";
 
 pub trait GameMatchRepository {
   fn add(record: &GameMatch) -> Result<(String, GameMatch)>;

@@ -10,7 +10,7 @@ use crate::{
   generated::db::PodName,
 };
 
-const POD_TABLE_NAME: &str = "pod_names";
+pub const POD_TABLE_NAME: &str = "pod_names";
 
 pub trait PodRepository {
   fn add(record: &PodName) -> Result<(String, PodName)>;

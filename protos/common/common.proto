@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package tms.common;
 
+import public "common/integrity.proto";
+
 message Timestamp {
   int64 seconds = 1; // Seconds since the Unix epoch.
   int32 nanos = 2; // Nanoseconds since the Unix epoch.

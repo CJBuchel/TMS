@@ -6,15 +6,16 @@ use tokio::sync::oneshot;
 use crate::{
   TmsConfig,
   auth::jwt::init_jwt_secret,
-  core::{api::Api, db::init_db, events::init_event_bus, shutdown::ShutdownNotifier, web::Web},
+  core::{
+    api::Api, db::init_db, events::init_event_bus, scheduler::ScheduleManager, shutdown::ShutdownNotifier, web::Web,
+  },
+  modules::integrity::IntegrityCheckService,
 };
-
-const SERVER_TICK_PERIOD_MS: u64 = 2000; // 10
-const SERVER_WARNING_THRESHOLD_MS: u64 = 100; // 100
 
 pub struct TmsServer {
   config: TmsConfig,
   shutdown_rx: Option<oneshot::Receiver<()>>,
+  scheduler: ScheduleManager,
 }
 
 pub struct TmsServerHandle {
@@ -39,31 +40,32 @@ impl TmsServer {
 
     let (shutdown_tx, shutdown_rx) = oneshot::channel();
 
-    let server = Self { config, shutdown_rx: Some(shutdown_rx) };
+    let server = Self { config, shutdown_rx: Some(shutdown_rx), scheduler: ScheduleManager::new() };
 
     let handle = TmsServerHandle { shutdown_tx: Some(shutdown_tx) };
 
     (server, handle)
   }
 
-  // fn update() -> Result<()> {
-  //   Ok(())
-  // }
-
   pub async fn run(mut self) -> Result<()> {
     log::info!("Running Server with config: {:?}", self.config);
 
     // Take the shutdown receiver (can only be used once)
-    let mut shutdown_rx = self.shutdown_rx.take().expect("Server can only have one instance");
+    let shutdown_rx = self.shutdown_rx.take().expect("Server can only have one instance");
     let shutdown_notifier = ShutdownNotifier::get();
-
-    // Create interval for regular server ticks
-    let mut interval = tokio::time::interval(Duration::from_millis(SERVER_TICK_PERIOD_MS));
 
     // Middleware Setups
     init_event_bus(1024)?;
     init_db(&self.config)?;
     init_jwt_secret()?;
+
+    // Schedule background services
+    self.scheduler.schedule(IntegrityCheckService::with_default_interval(), shutdown_notifier);
+
+    // Add more scheduled services here as needed:
+    // self.scheduler.schedule(BackupService::new(Duration::from_secs(300)), shutdown_notifier);
+
+    log::info!("Scheduled {} background service(s)", self.scheduler.count());
 
     // Create serving address
 
@@ -87,51 +89,36 @@ impl TmsServer {
       }
     });
 
-    // Main server loop
-    loop {
-      tokio::select! {
-        // Regular server tick
-        _ = interval.tick() => {
-          // Server updates
+    // Wait for shutdown signal
+    shutdown_rx.await.ok();
+    log::info!("Server received shutdown signal");
 
-          let start = std::time::Instant::now();
-          // match Self::update() {
-          //   Ok(()) => {},
-          //   Err(e) => log::error!("Server update error: {:?}", e),
-          // }
-          let duration = start.elapsed();
-
-          if duration.as_millis() > u128::from(SERVER_WARNING_THRESHOLD_MS) {
-            log::warn!("Server work took {}ms (threshold: {}ms)",
-                      duration.as_millis(),
-                      SERVER_WARNING_THRESHOLD_MS);
-          }
-        }
-
-        // Check for shutdown signal
-        _ = &mut shutdown_rx => {
-          log::info!("Server received shutdown signal");
-          // Notify all services listening for the shutdown
-          shutdown_notifier.notify();
-          break;
-        }
-      }
-    }
+    // Notify all services to begin graceful shutdown
+    shutdown_notifier.notify();
 
     // Wait for services to shutdown gracefully
 
     let timeout_future = async {
       let (api_result, web_result) = tokio::join!(&mut api_handle, &mut web_handle);
-      api_result.and(web_result)
+      let combined_result = api_result.and(web_result);
+
+      // Wait for scheduled services
+      if let Err(e) = self.scheduler.wait_all().await {
+        log::error!("Scheduled services error: {:?}", e);
+        return combined_result;
+      }
+
+      combined_result
     };
 
     match tokio::time::timeout(Duration::from_secs(5), timeout_future).await {
       Ok(Ok(())) => log::info!("All services shut down gracefully"),
       Ok(Err(e)) => log::error!("Service task panicked: {:?}", e),
       Err(_) => {
-        log::warn!("Force aborting...");
+        log::warn!("Shutdown timeout - force aborting...");
         api_handle.abort();
         web_handle.abort();
+        self.scheduler.abort_all();
       }
     }
 

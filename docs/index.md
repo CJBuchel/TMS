@@ -1,17 +1,16 @@
-# Welcome to MkDocs
+# Overview
+# TMS
+The Tournament Management System (TMS) is an [open source] digital alternative designed to streamline scoring and management of teams in [FLL].
+Operating on a locally hosted server to score, store and ignore.
+[open source]: https://opensource.com/resources/what-open-source
+[FLL]: https://www.firstlegoleague.org/
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Initially focused on robot game scoring, TMS has evolved to provide an ongoing list of features. Including:
 
-## Commands
+- Schedule management and live shuffling
+- Real-time pit displays of upcoming matches and judging sessions
+- Native iOS and Android builds for offline storage/scoring
+- Managed timers with game sounds
+- Dedicated screens for announcers, referees, and officials
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+With ongoing development, TMS aims to introduce further enhancements, reducing reliance on paper systems and streamlining the experience for FLL teams, volunteers and organizers alike.

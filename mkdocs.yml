@@ -2,10 +2,27 @@
 site_name: TMS Documentation
 site_url: https://cjbuchel.github.io/TMS/
 site_author: Connor (CJ) Buchel
+site_description: >-
+  Tournament Management System - Documentation for FLL digital scoring and team management
 
 # Repository information
 repo_name: CJBuchel/TMS
 repo_url: https://github.com/CJBuchel/TMS/
+edit_uri: edit/master/docs/
+
+# Navigation structure - customize this based on your content
+nav:
+  - Home: index.md
+  # - Getting Started:
+  #     - Installation: getting-started/installation.md
+  #     - Quick Start: getting-started/quick-start.md
+  #     - Configuration: getting-started/configuration.md
+  - User Guide:
+      - Overview: guides/guides.md
+  - Support:
+      - Bug Reports: support/bug_reports.md
+      - Change Requests: support/change_requests.md
+      - Q&A: https://github.com/CJBuchel/TMS/discussions
 
 # Site configuration
 theme:
@@ -15,3 +32,112 @@ theme:
     code: "Ubuntu Mono"
   logo: assets/TMS_Logo.svg
   favicon: assets/TMS_Logo.svg
+
+  # Color scheme with your primary color
+  palette:
+    # dark theme
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+      primary: teal
+      accent: indigo
+
+    # light theme
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+      primary: teal
+      accent: indigo
+
+  # Navigation features
+  features:
+    # Navigation
+    - navigation.instant # Faster page loading (SPA-like behavior)
+    - navigation.instant.prefetch # Prefetch pages on hover
+    - navigation.instant.progress # Show loading progress bar
+    - navigation.tracking # Update URL with active anchor
+    - navigation.tabs # Top-level sections as tabs
+    - navigation.tabs.sticky # Tabs remain visible when scrolling
+    - navigation.sections # Top-level sections are rendered as groups
+    - navigation.expand # Expand all sections by default
+    - navigation.path # Show breadcrumb navigation path
+    - navigation.indexes # Allow section index pages
+    - navigation.top # "Back to top" button
+
+    # Search
+    - search.suggest # Show search suggestions
+    - search.highlight # Highlight search terms on page
+    - search.share # Share search results via URL
+
+    # Table of contents
+    - toc.follow # Sidebar automatically scrolls to active heading
+    - toc.integrate # Integrate TOC into navigation (left sidebar only)
+
+    # Content
+    - content.code.copy # Copy button for code blocks
+    - content.code.annotate # Allow annotations in code blocks
+    - content.tabs.link # Link content tabs across pages
+    - content.tooltips # Enable tooltips for abbreviations
+    - content.action.edit # Edit button on pages
+    - content.action.view # View source button on pages
+
+# Extensions
+markdown_extensions:
+  # Python Markdown extensions
+  - abbr # Abbreviations/tooltips
+  - admonition # Call-out blocks (notes, warnings, etc.)
+  - attr_list # Add HTML attributes to elements
+  - def_list # Definition lists
+  - footnotes # Footnote support
+  - md_in_html # Markdown inside HTML
+  - tables # Table support
+  - toc:
+      permalink: true # Add permanent links to headings
+      permalink_title: Anchor link to this section
+      toc_depth: 3 # Max depth for TOC
+
+  # PyMdown Extensions (advanced features)
+  - pymdownx.arithmatex: # Math notation support
+      generic: true
+  - pymdownx.betterem: # Better emphasis handling
+      smart_enable: all
+  - pymdownx.caret # Superscript (^text^) and insert (^^text^^)
+  - pymdownx.mark # Highlighting (==text==)
+  - pymdownx.tilde # Subscript (~text~) and delete (~~text~~)
+  - pymdownx.critic # Track changes
+  - pymdownx.details # Collapsible details/summary
+  - pymdownx.highlight: # Code highlighting
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite # Inline code highlighting
+  - pymdownx.keys # Keyboard keys (++ctrl+alt+del++)
+  - pymdownx.magiclink: # Auto-link URLs and GitHub references
+      repo_url_shorthand: true
+      user: CJBuchel
+      repo: TMS
+  - pymdownx.smartsymbols # Smart symbols (arrows, fractions, etc.)
+  - pymdownx.snippets: # Include external files
+      check_paths: true
+  - pymdownx.superfences: # Nested code blocks, diagrams
+  - pymdownx.tabbed: # Tabbed content blocks
+      alternate_style: true
+  - pymdownx.tasklist: # Task lists with checkboxes
+      custom_checkbox: true
+
+# Plugins
+plugins:
+  - search: # Search functionality
+      lang: en
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - tags # Tag support for pages
+
+# Extra configuration
+extra:
+  # Social links in footer
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/CJBuchel/TMS
+      name: TMS on GitHub

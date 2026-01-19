@@ -12,13 +12,14 @@ use crate::{
 
 pub const TABLE_TABLE_NAME: &str = "table_names";
 
-pub trait TableRepository {
+pub trait TableNameRepository {
   fn add(record: &TableName) -> Result<(String, TableName)>;
   fn get_by_name(table_name: &str) -> Result<HashMap<String, TableName>>;
+  fn get_all() -> Result<HashMap<String, TableName>>;
   fn clear() -> Result<()>;
 }
 
-impl TableRepository for TableName {
+impl TableNameRepository for TableName {
   fn add(record: &TableName) -> Result<(String, TableName)> {
     let db = get_db()?;
     let table = db.get_table(TABLE_TABLE_NAME);
@@ -50,6 +51,13 @@ impl TableRepository for TableName {
     let tables: HashMap<String, TableName> = tables.into_iter().filter(|(_, t)| t.table_name == table_name).collect();
 
     Ok(tables)
+  }
+
+  fn get_all() -> Result<HashMap<String, TableName>> {
+    let db = get_db()?;
+    let table = db.get_table(TABLE_TABLE_NAME);
+    let table_names = table.get_all::<TableName>()?;
+    Ok(table_names)
   }
 
   fn clear() -> Result<()> {

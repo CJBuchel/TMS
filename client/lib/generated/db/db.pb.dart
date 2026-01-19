@@ -373,11 +373,13 @@ class TableAssignment extends $pb.GeneratedMessage {
     $core.String? tableId,
     $core.String? teamId,
     $core.bool? scoreSubmitted,
+    $0.TmsDateTime? scoreSubmittedAt,
   }) {
     final result = create();
     if (tableId != null) result.tableId = tableId;
     if (teamId != null) result.teamId = teamId;
     if (scoreSubmitted != null) result.scoreSubmitted = scoreSubmitted;
+    if (scoreSubmittedAt != null) result.scoreSubmittedAt = scoreSubmittedAt;
     return result;
   }
 
@@ -397,6 +399,8 @@ class TableAssignment extends $pb.GeneratedMessage {
     ..aOS(1, _omitFieldNames ? '' : 'tableId')
     ..aOS(2, _omitFieldNames ? '' : 'teamId')
     ..aOB(3, _omitFieldNames ? '' : 'scoreSubmitted')
+    ..aOM<$0.TmsDateTime>(4, _omitFieldNames ? '' : 'scoreSubmittedAt',
+        subBuilder: $0.TmsDateTime.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -444,6 +448,17 @@ class TableAssignment extends $pb.GeneratedMessage {
   $core.bool hasScoreSubmitted() => $_has(2);
   @$pb.TagNumber(3)
   void clearScoreSubmitted() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $0.TmsDateTime get scoreSubmittedAt => $_getN(3);
+  @$pb.TagNumber(4)
+  set scoreSubmittedAt($0.TmsDateTime value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasScoreSubmittedAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearScoreSubmittedAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $0.TmsDateTime ensureScoreSubmittedAt() => $_ensure(3);
 }
 
 class GameMatch extends $pb.GeneratedMessage {
@@ -453,6 +468,7 @@ class GameMatch extends $pb.GeneratedMessage {
     $0.TmsDateTime? endTime,
     $core.Iterable<TableAssignment>? assignments,
     $core.bool? completed,
+    $0.TmsDateTime? completedAt,
     MatchType? matchType,
   }) {
     final result = create();
@@ -461,6 +477,7 @@ class GameMatch extends $pb.GeneratedMessage {
     if (endTime != null) result.endTime = endTime;
     if (assignments != null) result.assignments.addAll(assignments);
     if (completed != null) result.completed = completed;
+    if (completedAt != null) result.completedAt = completedAt;
     if (matchType != null) result.matchType = matchType;
     return result;
   }
@@ -486,7 +503,9 @@ class GameMatch extends $pb.GeneratedMessage {
     ..pPM<TableAssignment>(4, _omitFieldNames ? '' : 'assignments',
         subBuilder: TableAssignment.create)
     ..aOB(5, _omitFieldNames ? '' : 'completed')
-    ..aE<MatchType>(6, _omitFieldNames ? '' : 'matchType',
+    ..aOM<$0.TmsDateTime>(6, _omitFieldNames ? '' : 'completedAt',
+        subBuilder: $0.TmsDateTime.create)
+    ..aE<MatchType>(7, _omitFieldNames ? '' : 'matchType',
         enumValues: MatchType.values)
     ..hasRequiredFields = false;
 
@@ -552,13 +571,24 @@ class GameMatch extends $pb.GeneratedMessage {
   void clearCompleted() => $_clearField(5);
 
   @$pb.TagNumber(6)
-  MatchType get matchType => $_getN(5);
+  $0.TmsDateTime get completedAt => $_getN(5);
   @$pb.TagNumber(6)
-  set matchType(MatchType value) => $_setField(6, value);
+  set completedAt($0.TmsDateTime value) => $_setField(6, value);
   @$pb.TagNumber(6)
-  $core.bool hasMatchType() => $_has(5);
+  $core.bool hasCompletedAt() => $_has(5);
   @$pb.TagNumber(6)
-  void clearMatchType() => $_clearField(6);
+  void clearCompletedAt() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $0.TmsDateTime ensureCompletedAt() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  MatchType get matchType => $_getN(6);
+  @$pb.TagNumber(7)
+  set matchType(MatchType value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasMatchType() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMatchType() => $_clearField(7);
 }
 
 class PodAssignment extends $pb.GeneratedMessage {

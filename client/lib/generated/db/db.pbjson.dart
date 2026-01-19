@@ -140,13 +140,23 @@ const TableAssignment$json = {
     {'1': 'table_id', '3': 1, '4': 1, '5': 9, '10': 'tableId'},
     {'1': 'team_id', '3': 2, '4': 1, '5': 9, '10': 'teamId'},
     {'1': 'score_submitted', '3': 3, '4': 1, '5': 8, '10': 'scoreSubmitted'},
+    {
+      '1': 'score_submitted_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.tms.common.TmsDateTime',
+      '10': 'scoreSubmittedAt'
+    },
   ],
 };
 
 /// Descriptor for `TableAssignment`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List tableAssignmentDescriptor = $convert.base64Decode(
     'Cg9UYWJsZUFzc2lnbm1lbnQSGQoIdGFibGVfaWQYASABKAlSB3RhYmxlSWQSFwoHdGVhbV9pZB'
-    'gCIAEoCVIGdGVhbUlkEicKD3Njb3JlX3N1Ym1pdHRlZBgDIAEoCFIOc2NvcmVTdWJtaXR0ZWQ=');
+    'gCIAEoCVIGdGVhbUlkEicKD3Njb3JlX3N1Ym1pdHRlZBgDIAEoCFIOc2NvcmVTdWJtaXR0ZWQS'
+    'RQoSc2NvcmVfc3VibWl0dGVkX2F0GAQgASgLMhcudG1zLmNvbW1vbi5UbXNEYXRlVGltZVIQc2'
+    'NvcmVTdWJtaXR0ZWRBdA==');
 
 @$core.Deprecated('Use gameMatchDescriptor instead')
 const GameMatch$json = {
@@ -179,8 +189,16 @@ const GameMatch$json = {
     },
     {'1': 'completed', '3': 5, '4': 1, '5': 8, '10': 'completed'},
     {
-      '1': 'match_type',
+      '1': 'completed_at',
       '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.tms.common.TmsDateTime',
+      '10': 'completedAt'
+    },
+    {
+      '1': 'match_type',
+      '3': 7,
       '4': 1,
       '5': 14,
       '6': '.tms.db.MatchType',
@@ -195,8 +213,9 @@ final $typed_data.Uint8List gameMatchDescriptor = $convert.base64Decode(
     '90aW1lGAIgASgLMhcudG1zLmNvbW1vbi5UbXNEYXRlVGltZVIJc3RhcnRUaW1lEjIKCGVuZF90'
     'aW1lGAMgASgLMhcudG1zLmNvbW1vbi5UbXNEYXRlVGltZVIHZW5kVGltZRI5Cgthc3NpZ25tZW'
     '50cxgEIAMoCzIXLnRtcy5kYi5UYWJsZUFzc2lnbm1lbnRSC2Fzc2lnbm1lbnRzEhwKCWNvbXBs'
-    'ZXRlZBgFIAEoCFIJY29tcGxldGVkEjAKCm1hdGNoX3R5cGUYBiABKA4yES50bXMuZGIuTWF0Y2'
-    'hUeXBlUgltYXRjaFR5cGU=');
+    'ZXRlZBgFIAEoCFIJY29tcGxldGVkEjoKDGNvbXBsZXRlZF9hdBgGIAEoCzIXLnRtcy5jb21tb2'
+    '4uVG1zRGF0ZVRpbWVSC2NvbXBsZXRlZEF0EjAKCm1hdGNoX3R5cGUYByABKA4yES50bXMuZGIu'
+    'TWF0Y2hUeXBlUgltYXRjaFR5cGU=');
 
 @$core.Deprecated('Use podAssignmentDescriptor instead')
 const PodAssignment$json = {

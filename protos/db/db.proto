@@ -40,6 +40,7 @@ message TableAssignment {
   string table_id = 1;
   string team_id = 2;
   bool score_submitted = 3;
+  common.TmsDateTime score_submitted_at = 4;
 }
 
 enum MatchType {
@@ -53,7 +54,8 @@ message GameMatch {
   common.TmsDateTime end_time = 3;
   repeated TableAssignment assignments = 4;
   bool completed = 5;
-  MatchType match_type = 6;
+  common.TmsDateTime completed_at = 6;
+  MatchType match_type = 7;
 }
 
 message PodAssignment {

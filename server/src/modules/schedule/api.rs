@@ -10,7 +10,7 @@ use crate::{
   },
   modules::{
     game_match::GameMatchRepository, judging_session::JudgingSessionRepository, pod_name::PodRepository,
-    schedule::Schedule, table_name::TableRepository, team::TeamRepository,
+    schedule::Schedule, table_name::TableNameRepository, team::TeamRepository,
   },
 };
 

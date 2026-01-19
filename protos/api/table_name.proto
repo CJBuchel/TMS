@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package tms.api;
+
+import "db/db.proto";
+
+message TableNameResponse {
+  string id = 1;
+  db.TableName table_name = 2;
+}
+
+message StreamTableNamesRequest {}
+message StreamTableNamesResponse {
+  repeated TableNameResponse table_names = 1;
+}
+
+service TableNameService {
+  rpc StreamTableNames(StreamTableNamesRequest) returns (stream StreamTableNamesResponse);
+}

@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tms_client/providers/shared_ticker_provider.dart';
 
-class TimeUntil extends HookConsumerWidget {
+String _secondsToTimeString(int totalSeconds) {
+  int absSeconds = totalSeconds.abs();
+  int hours = absSeconds ~/ 3600;
+  int minutes = (absSeconds % 3600) ~/ 60;
+  int seconds = absSeconds % 60;
+
+  if (hours == 0 && minutes == 0) {
+    return '$seconds';
+  } else if (hours == 0) {
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  } else {
+    return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
+class TimeUntil extends ConsumerWidget {
   final TextStyle? positiveStyle;
   final String? positiveLeader;
   final TextStyle? negativeStyle;
@@ -21,59 +35,30 @@ class TimeUntil extends HookConsumerWidget {
     this.timeOfDayOnly = false,
   });
 
-  String _secondsToTimeString(int totalSeconds) {
-    int absSeconds = totalSeconds.abs();
-    int hours = absSeconds ~/ 3600;
-    int minutes = (absSeconds % 3600) ~/ 60;
-    int seconds = absSeconds % 60;
-
-    if (hours == 0 && minutes == 0) {
-      // Less than a minute: show just seconds
-      return '$seconds';
-    } else if (hours == 0) {
-      // Less than an hour: show M:SS format
-      return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  int _calculateDifference(DateTime now) {
+    if (timeOfDayOnly) {
+      final targetSeconds = time.hour * 3600 + time.minute * 60 + time.second;
+      final nowSeconds = now.hour * 3600 + now.minute * 60 + now.second;
+      return targetSeconds - nowSeconds;
     } else {
-      // More than an hour: show H:MM:SS format
-      return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+      return time.difference(now).inSeconds;
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final difference = useState(0);
+    // Watch the shared ticker - all widgets update together
+    final tickerState = ref.watch(
+      sharedTickerProvider(const Duration(seconds: 1)),
+    );
+    final now = tickerState.value ?? DateTime.now();
+    final difference = _calculateDifference(now);
+    final timeString = _secondsToTimeString(difference);
+    final isNegative = difference < 0;
 
-    useEffect(() {
-      final ticker = Ticker((elapsed) {
-        final now = DateTime.now();
-
-        if (timeOfDayOnly) {
-          // Calculate difference based only on time of day, ignoring date
-          final targetSeconds =
-              time.hour * 3600 + time.minute * 60 + time.second;
-          final nowSeconds = now.hour * 3600 + now.minute * 60 + now.second;
-          difference.value = targetSeconds - nowSeconds;
-        } else {
-          // Normal datetime difference
-          difference.value = time.difference(now).inSeconds;
-        }
-      });
-
-      ticker.start();
-
-      return ticker.dispose;
-    }, [time, timeOfDayOnly]);
-
-    final timeString = _secondsToTimeString(difference.value);
-    final isNegative = difference.value < 0;
-
-    return RepaintBoundary(
-      child: Text(
-        isNegative
-            ? '$negativeLeader$timeString'
-            : '$positiveLeader$timeString',
-        style: isNegative ? negativeStyle : positiveStyle,
-      ),
+    return Text(
+      isNegative ? '$negativeLeader$timeString' : '$positiveLeader$timeString',
+      style: isNegative ? negativeStyle : positiveStyle,
     );
   }
 }

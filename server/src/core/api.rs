@@ -11,12 +11,12 @@ use crate::{
   generated::api::{
     game_match_service_server::GameMatchServiceServer, health_service_server::HealthServiceServer,
     integrity_service_server::IntegrityServiceServer, schedule_service_server::ScheduleServiceServer,
-    team_service_server::TeamServiceServer, tournament_service_server::TournamentServiceServer,
-    user_service_server::UserServiceServer,
+    table_name_service_server::TableNameServiceServer, team_service_server::TeamServiceServer,
+    tournament_service_server::TournamentServiceServer, user_service_server::UserServiceServer,
   },
   modules::{
-    game_match::GameMatchApi, health::HealthApi, integrity::IntegrityApi, schedule::api::ScheduleApi, team::TeamApi,
-    tournament::TournamentApi, user::UserApi,
+    game_match::GameMatchApi, health::HealthApi, integrity::IntegrityApi, schedule::api::ScheduleApi,
+    table_name::TableNameApi, team::TeamApi, tournament::TournamentApi, user::UserApi,
   },
 };
 
@@ -56,6 +56,7 @@ impl Api {
       .add_service(UserServiceServer::with_interceptor(UserApi {}, auth_interceptor))
       .add_service(GameMatchServiceServer::with_interceptor(GameMatchApi {}, auth_interceptor))
       .add_service(TeamServiceServer::with_interceptor(TeamApi {}, auth_interceptor))
+      .add_service(TableNameServiceServer::with_interceptor(TableNameApi {}, auth_interceptor))
       .add_service(TournamentServiceServer::with_interceptor(TournamentApi {}, auth_interceptor))
       .add_service(ScheduleServiceServer::with_interceptor(ScheduleApi {}, auth_interceptor))
       .add_service(IntegrityServiceServer::new(IntegrityApi {}));

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/colors.dart';
 import 'package:tms_client/generated/db/db.pb.dart';
+import 'package:tms_client/providers/table_name_provider.dart';
 import 'package:tms_client/providers/team_provider.dart';
 import 'package:tms_client/utils/time.dart';
+import 'package:tms_client/views/match_controller/match_selector/tile_table_assignment.dart';
 import 'package:tms_client/widgets/time_until.dart';
 
 class MatchTile extends ConsumerWidget {
@@ -28,7 +30,12 @@ class MatchTile extends ConsumerWidget {
 
   Widget tableAssignment(WidgetRef ref, TableAssignment assignment) {
     final team = ref.watch(teamProvider(assignment.teamId));
-    return Text(team?.name ?? 'Unknown');
+    final tableName = ref.watch(tableNameProvider(assignment.tableId));
+    return TileTableAssignment(
+      assignment: assignment,
+      team: team,
+      tableName: tableName,
+    );
   }
 
   @override
@@ -37,35 +44,72 @@ class MatchTile extends ConsumerWidget {
     final startTimeStr = convertTimeToString(startTime);
 
     return ExpansionTile(
-      leading: Row(
-        mainAxisSize: MainAxisSize.min,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
+      collapsedBackgroundColor: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.black),
+      ),
+      collapsedShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.black),
+      ),
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        child: Text(
+          match.matchNumber,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      title: Row(
         children: [
-          // Match Number
-          Text('#${match.matchNumber}'),
-          const SizedBox(width: 8),
-          // Times
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(startTimeStr),
-              TimeUntil(
-                time: startTime,
-                timeOfDayOnly: true,
-                positiveStyle: TextStyle(color: supportSuccessColor),
-                negativeStyle: TextStyle(color: supportErrorColor),
-              ),
-            ],
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  startTimeStr,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                TimeUntil(
+                  time: startTime,
+                  timeOfDayOnly: true,
+                  positiveStyle: TextStyle(
+                    color: supportSuccessColor,
+                    fontSize: 12,
+                  ),
+                  negativeStyle: TextStyle(
+                    color: supportErrorColor,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: match.assignments
+                  .map(
+                    (assignment) => Expanded(
+                      flex: 1,
+                      child: tableAssignment(ref, assignment),
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ],
       ),
-      title: Row(
-        children: match.assignments
-            .map((assignment) => tableAssignment(ref, assignment))
-            .toList(),
-      ),
-      // subtitle: Text('Subtitle'),
-      // trailing: Icon(Icons.arrow_drop_down),
-      children: [Text('Expanded')],
+      children: const [Text('Expanded')],
     );
   }
 }

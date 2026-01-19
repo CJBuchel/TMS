@@ -23,7 +23,7 @@ use crate::{
   },
   modules::{
     game_match::GameMatchRepository, judging_session::JudgingSessionRepository, pod_name::PodRepository,
-    table_name::TableRepository, team::TeamRepository, tournament::TournamentRepository, user::UserRepository,
+    table_name::TableNameRepository, team::TeamRepository, tournament::TournamentRepository, user::UserRepository,
   },
 };
 

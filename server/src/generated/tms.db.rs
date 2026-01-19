@@ -49,6 +49,8 @@ pub struct TableAssignment {
     pub team_id: ::prost::alloc::string::String,
     #[prost(bool, tag = "3")]
     pub score_submitted: bool,
+    #[prost(message, optional, tag = "4")]
+    pub score_submitted_at: ::core::option::Option<super::common::TmsDateTime>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GameMatch {
@@ -62,7 +64,9 @@ pub struct GameMatch {
     pub assignments: ::prost::alloc::vec::Vec<TableAssignment>,
     #[prost(bool, tag = "5")]
     pub completed: bool,
-    #[prost(enumeration = "MatchType", tag = "6")]
+    #[prost(message, optional, tag = "6")]
+    pub completed_at: ::core::option::Option<super::common::TmsDateTime>,
+    #[prost(enumeration = "MatchType", tag = "7")]
     pub match_type: i32,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]

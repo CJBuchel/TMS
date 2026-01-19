@@ -103,7 +103,12 @@ impl ScheduleService for ScheduleApi {
           };
           let (team_id, _) = extract_single(team_map, &assignment.team_number, "team")?;
 
-          table_assignments.push(TableAssignment { table_id, team_id, score_submitted: false });
+          table_assignments.push(TableAssignment {
+            table_id,
+            team_id,
+            score_submitted: false,
+            score_submitted_at: None,
+          });
         }
 
         let m = GameMatch {
@@ -112,6 +117,7 @@ impl ScheduleService for ScheduleApi {
           end_time: Some(game_match.end_time),
           assignments: table_assignments,
           completed: false,
+          completed_at: None,
           match_type: MatchType::Ranking.into(),
         };
 
@@ -149,7 +155,12 @@ impl ScheduleService for ScheduleApi {
           };
           let (team_id, _) = extract_single(team_map, &assignment.team_number, "team")?;
 
-          table_assignments.push(TableAssignment { table_id, team_id, score_submitted: false });
+          table_assignments.push(TableAssignment {
+            table_id,
+            team_id,
+            score_submitted: false,
+            score_submitted_at: None,
+          });
         }
 
         let m = GameMatch {
@@ -158,6 +169,7 @@ impl ScheduleService for ScheduleApi {
           end_time: Some(game_match.end_time),
           assignments: table_assignments,
           completed: false,
+          completed_at: None,
           match_type: MatchType::Practice.into(),
         };
 

@@ -6,6 +6,7 @@ import public "api/game_match.proto";
 import public "api/schedule.proto";
 import public "api/tournament.proto";
 import public "api/user.proto";
+import public "api/team.proto";
 
 message GetHealthRequest {}
 message GetHealthResponse {}

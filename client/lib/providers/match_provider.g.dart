@@ -129,7 +129,7 @@ final class MatchesProvider
   }
 }
 
-String _$matchesHash() => r'60fa8043a2db4d84fbd5f919208bfe85cfefebf6';
+String _$matchesHash() => r'93b9ca0815899eb94c396e1f538084b918afc016';
 
 abstract class _$Matches extends $Notifier<Map<String, GameMatch>> {
   Map<String, GameMatch> build();

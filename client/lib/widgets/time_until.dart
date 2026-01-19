@@ -27,7 +27,16 @@ class TimeUntil extends HookConsumerWidget {
     int minutes = (absSeconds % 3600) ~/ 60;
     int seconds = absSeconds % 60;
 
-    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    if (hours == 0 && minutes == 0) {
+      // Less than a minute: show just seconds
+      return '$seconds';
+    } else if (hours == 0) {
+      // Less than an hour: show M:SS format
+      return '$minutes:${seconds.toString().padLeft(2, '0')}';
+    } else {
+      // More than an hour: show H:MM:SS format
+      return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    }
   }
 
   @override

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package tms.api;
+
+import "db/db.proto";
+
+message TeamResponse {
+  string id = 1;
+  db.Team team = 2;
+}
+
+message StreamTeamsRequest {}
+message StreamTeamsResponse {
+  repeated TeamResponse teams = 1;
+}
+
+service TeamService {
+  rpc StreamTeams(StreamTeamsRequest) returns (stream StreamTeamsResponse);
+}

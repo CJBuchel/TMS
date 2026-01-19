@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tms_client/colors.dart';
 import 'package:tms_client/generated/db/db.pb.dart';
+import 'package:tms_client/providers/team_provider.dart';
 import 'package:tms_client/utils/time.dart';
 import 'package:tms_client/widgets/time_until.dart';
 
@@ -24,26 +26,42 @@ class MatchTile extends ConsumerWidget {
     return '$hour:$minute $period';
   }
 
+  Widget tableAssignment(WidgetRef ref, TableAssignment assignment) {
+    final team = ref.watch(teamProvider(assignment.tableId));
+    return Text(team?.name ?? 'Unknown');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startTime = match.startTime.toNextOccurrence();
     final startTimeStr = convertTimeToString(startTime);
 
     return ExpansionTile(
-      leading: Column(
+      leading: Row(
         children: [
-          Text(startTimeStr),
-          TimeUntil(
-            time: startTime,
-            timeOfDayOnly: true,
-            positiveStyle: TextStyle(color: Colors.green),
-            negativeStyle: TextStyle(color: Colors.red),
+          // Match Number
+          Text('#${match.matchNumber}'),
+          // Times
+          Column(
+            children: [
+              Text(startTimeStr),
+              TimeUntil(
+                time: startTime,
+                timeOfDayOnly: true,
+                positiveStyle: TextStyle(color: supportSuccessColor),
+                negativeStyle: TextStyle(color: supportErrorColor),
+              ),
+            ],
           ),
         ],
       ),
-      title: Text(match.matchNumber),
-      subtitle: Text('Subtitle'),
-      trailing: Text('Trailing'),
+      title: Row(
+        children: match.assignments
+            .map((assignment) => tableAssignment(ref, assignment))
+            .toList(),
+      ),
+      // subtitle: Text('Subtitle'),
+      trailing: Icon(Icons.arrow_drop_down),
       children: [Text('Expanded')],
     );
   }

@@ -35,26 +35,6 @@ Stream<StreamMatchesResponse> matchesStream(Ref ref) {
 class Matches extends _$Matches {
   late final CollectionStorage<GameMatch> _storage;
 
-  /// Manually update a single match
-  Future<void> updateMatch(String id, GameMatch match) async {
-    await _storage.set(id, match);
-    state = {...state, id: match};
-  }
-
-  /// Remove a match
-  Future<void> removeMatch(String id) async {
-    await _storage.remove(id);
-    final newState = {...state};
-    newState.remove(id);
-    state = newState;
-  }
-
-  /// Clear all matches
-  Future<void> clear() async {
-    await _storage.clear();
-    state = {};
-  }
-
   @override
   Map<String, GameMatch> build() {
     _storage = CollectionStorage(
@@ -65,34 +45,16 @@ class Matches extends _$Matches {
     // Load from local storage
     final localMatches = _storage.getAll();
 
-    // Listen to stream updates
-    ref.listen(matchesStreamProvider, (previous, next) {
-      next.when(
-        data: (response) {
-          final updates = <String, GameMatch>{};
-
-          for (final matchResponse in response.gameMatches) {
-            if (matchResponse.hasGameMatch()) {
-              final id = matchResponse.id;
-              final match = matchResponse.gameMatch;
-
-              // Save to local storage
-              _storage.set(id, match);
-              updates[id] = match;
-            }
-          }
-
-          // Update state with all changes
-          if (updates.isNotEmpty) {
-            state = {...state, ...updates};
-          }
-        },
-        loading: () {},
-        error: (error, stack) {
-          // On error, continue using local storage
-        },
-      );
-    });
+    // Bind to stream updates
+    _storage.bindToStream(
+      ref: ref,
+      streamProvider: matchesStreamProvider,
+      extractItems: (response) => response.gameMatches,
+      hasItem: (item) => item.hasGameMatch(),
+      getId: (item) => item.id,
+      getItem: (item) => item.gameMatch,
+      onUpdate: (updates) => state = {...state, ...updates},
+    );
 
     return localMatches;
   }

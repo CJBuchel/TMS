@@ -15,6 +15,7 @@ pub const TEAM_TABLE_NAME: &str = "teams";
 pub trait TeamRepository {
   fn add(record: &Team) -> Result<(String, Team)>;
   fn get_by_number(team_number: &str) -> Result<HashMap<String, Team>>;
+  fn get_all() -> Result<HashMap<String, Team>>;
   fn clear() -> Result<()>;
 }
 
@@ -53,6 +54,13 @@ impl TeamRepository for Team {
     // filter for exact team number
     let teams: HashMap<String, Team> = teams.into_iter().filter(|(_, team)| team.team_number == team_number).collect();
 
+    Ok(teams)
+  }
+
+  fn get_all() -> Result<HashMap<String, Team>> {
+    let db = get_db()?;
+    let table = db.get_table(TEAM_TABLE_NAME);
+    let teams = table.get_all::<Team>()?;
     Ok(teams)
   }
 

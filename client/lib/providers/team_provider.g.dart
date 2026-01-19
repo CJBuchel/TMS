@@ -205,7 +205,7 @@ final class TeamProvider extends $FunctionalProvider<Team?, Team?, Team?>
   }
 }
 
-String _$teamHash() => r'3de6afd88e2636b36b832ea6a2704909ef6c4cbe';
+String _$teamHash() => r'69d256c54ab5c35cc77930fed0d76e1ac3e19723';
 
 final class TeamFamily extends $Family
     with $FunctionalFamilyOverride<Team?, String> {

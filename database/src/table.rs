@@ -282,13 +282,14 @@ impl Table {
 
   /// Get all records
   pub fn get_all<T: Message + Default>(&self) -> Result<HashMap<String, T>> {
-    let prefix = format!("{}:{}", self.name, DATA_PREFIX);
+    let prefix = format!("{}:{}:", self.name, DATA_PREFIX);
 
     let mut records: HashMap<String, T> = HashMap::new();
 
     for item in self.db.scan_prefix(prefix.as_bytes()) {
-      let (id, value) = item?;
-      let id: String = String::from_utf8(id.to_vec())?;
+      let (key, value) = item?;
+      let key_str = String::from_utf8(key.to_vec())?;
+      let id = key_str.strip_prefix(&prefix).unwrap_or(&key_str).to_string();
       let record: T = Message::decode(value.to_vec().as_slice())?;
       records.insert(id, record);
     }

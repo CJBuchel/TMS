@@ -27,7 +27,7 @@ class MatchTile extends ConsumerWidget {
   }
 
   Widget tableAssignment(WidgetRef ref, TableAssignment assignment) {
-    final team = ref.watch(teamProvider(assignment.tableId));
+    final team = ref.watch(teamProvider(assignment.teamId));
     return Text(team?.name ?? 'Unknown');
   }
 
@@ -38,11 +38,14 @@ class MatchTile extends ConsumerWidget {
 
     return ExpansionTile(
       leading: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Match Number
           Text('#${match.matchNumber}'),
+          const SizedBox(width: 8),
           // Times
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(startTimeStr),
               TimeUntil(
@@ -61,7 +64,7 @@ class MatchTile extends ConsumerWidget {
             .toList(),
       ),
       // subtitle: Text('Subtitle'),
-      trailing: Icon(Icons.arrow_drop_down),
+      // trailing: Icon(Icons.arrow_drop_down),
       children: [Text('Expanded')],
     );
   }

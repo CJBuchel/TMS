@@ -18,7 +18,12 @@ class TileTableAssignment extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(appThemeModeProvider);
-    final bool isDarkMode = themeMode == ThemeMode.dark;
+    final bool isDarkMode = switch (themeMode) {
+      ThemeMode.dark => true,
+      ThemeMode.light => false,
+      ThemeMode.system =>
+        MediaQuery.platformBrightnessOf(context) == Brightness.dark,
+    };
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5),

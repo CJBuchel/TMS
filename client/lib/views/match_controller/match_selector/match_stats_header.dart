@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tms_client/colors.dart';
-import 'package:tms_client/utils/logger.dart';
+import 'package:tms_client/views/match_controller/match_selector/match_stats_popup.dart';
+import 'package:tms_client/widgets/dialogs/popup_dialog.dart';
 
 class MatchStatsHeader extends StatelessWidget {
   final int round;
@@ -64,9 +65,12 @@ class MatchStatsHeader extends StatelessWidget {
           CircleAvatar(
             backgroundColor: secondaryColor,
             child: IconButton(
-              icon: Icon(Icons.bar_chart_rounded),
+              icon: Icon(Icons.bar_chart_rounded, color: Colors.white),
               onPressed: () {
-                TmsLogger().d('@TODO, add stats popup');
+                PopupDialog.info(
+                  title: 'Match Statistics',
+                  message: MatchStatsPopup(),
+                ).show(context);
               },
             ),
           ),

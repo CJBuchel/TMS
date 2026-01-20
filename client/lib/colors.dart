@@ -9,6 +9,13 @@ const _supportSuccessColor = Color(0xFF2BD92B);
 const _supportInfoColor = Color(0xFF2B65D9);
 const _neutralColor = Color(0xFF20222F);
 
+// Surface color for dark theme backgrounds and containers
+// Base is mid-tone so shades work well for container progression
+const _surfaceColor = Color(0xFF282A31);
+
+// Light surface color for light theme backgrounds and containers
+const _lightSurfaceColor = Color(0xFFDAE1DE);
+
 MaterialColor _createMaterialColor(Color color) {
   final strengths = <double>[.05, .1, .2, .3, .4, .5, .6, .7, .8, .9];
   final swatch = <int, Color>{};
@@ -33,6 +40,8 @@ final supportWarningColor = _createMaterialColor(_supportWarningColor);
 final supportSuccessColor = _createMaterialColor(_supportSuccessColor);
 final supportInfoColor = _createMaterialColor(_supportInfoColor);
 final neutralColor = _createMaterialColor(_neutralColor);
+final surfaceColor = _createMaterialColor(_surfaceColor);
+final lightSurfaceColor = _createMaterialColor(_lightSurfaceColor);
 
 // Vibrant colors palette - avoiding cyan/teal/blue to prevent clash with primary/secondary
 const _vibrantColorPalette = [

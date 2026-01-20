@@ -59,3 +59,43 @@ class Matches extends _$Matches {
     return localMatches;
   }
 }
+
+@riverpod
+Map<String, GameMatch> completedMatches(Ref ref) {
+  final matches = ref.watch(matchesProvider);
+  return Map.fromEntries(
+    matches.entries.where((entry) => entry.value.completed),
+  );
+}
+
+@riverpod
+Map<String, GameMatch> incompleteMatches(Ref ref) {
+  final matches = ref.watch(matchesProvider);
+  return Map.fromEntries(
+    matches.entries.where((entry) => !entry.value.completed),
+  );
+}
+
+@riverpod
+Map<String, GameMatch> notFullyScoredMatches(Ref ref) {
+  final matches = ref.watch(matchesProvider);
+  return Map.fromEntries(
+    matches.entries.where(
+      (entry) =>
+          entry.value.completed &&
+          !entry.value.assignments.every((a) => a.scoreSubmitted),
+    ),
+  );
+}
+
+@riverpod
+Map<String, GameMatch> fullyScoredMatches(Ref ref) {
+  final matches = ref.watch(matchesProvider);
+  return Map.fromEntries(
+    matches.entries.where(
+      (entry) =>
+          entry.value.completed &&
+          entry.value.assignments.every((a) => a.scoreSubmitted),
+    ),
+  );
+}

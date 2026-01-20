@@ -22,6 +22,7 @@ class TmsApp extends ConsumerWidget {
       themeMode: themeMode,
       theme: lightTheme,
       darkTheme: darkTheme,
+      themeAnimationDuration: Duration.zero,
     );
   }
 }

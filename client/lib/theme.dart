@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tms_client/colors.dart';
 
 ThemeData _buildTheme(Brightness brightness) {
-  Color? surfaceColor = brightness == Brightness.dark
-      ? neutralColor
-      : neutralColor[5];
+  final bool isDark = brightness == Brightness.dark;
 
   final colorScheme = ColorScheme.fromSeed(
     brightness: brightness,
@@ -12,7 +10,13 @@ ThemeData _buildTheme(Brightness brightness) {
     primary: primaryColor,
     secondary: secondaryColor,
     error: supportErrorColor,
-    surface: surfaceColor,
+    // Dark: neutral base with lighter containers | Light: lightSurfaceColor shades
+    surface: isDark ? neutralColor : lightSurfaceColor[50],
+    surfaceContainerLowest: isDark ? surfaceColor[900] : Colors.white,
+    surfaceContainerLow: isDark ? surfaceColor[800] : lightSurfaceColor[100],
+    surfaceContainer: isDark ? surfaceColor[700] : lightSurfaceColor[200],
+    surfaceContainerHigh: isDark ? surfaceColor[600] : lightSurfaceColor[300],
+    surfaceContainerHighest: isDark ? surfaceColor : lightSurfaceColor[400],
   );
 
   return ThemeData(

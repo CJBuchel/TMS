@@ -107,7 +107,7 @@ class MatchSelector extends HookConsumerWidget {
         final prevEndTime = matches[i - 1].value.startTime.toDateTime();
         final currentStartTime = matches[i].value.startTime.toDateTime();
         final gap = currentStartTime.difference(prevEndTime);
-        if (gap.inMinutes > 10) {
+        if (gap.inMinutes >= 10) {
           items.add(breakIndicator(gap));
         }
       }
@@ -134,7 +134,9 @@ class MatchSelector extends HookConsumerWidget {
         .where((entry) => entry.value.completed)
         .toList();
     final scheduledMatches = matchList
-        .where((entry) => !entry.value.completed)
+        .where(
+          (entry) => !entry.value.assignments.every((a) => a.scoreSubmitted),
+        )
         .toList();
 
     if (matchList.isEmpty) {

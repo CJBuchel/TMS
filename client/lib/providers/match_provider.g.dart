@@ -150,3 +150,193 @@ abstract class _$Matches extends $Notifier<Map<String, GameMatch>> {
     element.handleValue(ref, created);
   }
 }
+
+@ProviderFor(completedMatches)
+const completedMatchesProvider = CompletedMatchesProvider._();
+
+final class CompletedMatchesProvider
+    extends
+        $FunctionalProvider<
+          Map<String, GameMatch>,
+          Map<String, GameMatch>,
+          Map<String, GameMatch>
+        >
+    with $Provider<Map<String, GameMatch>> {
+  const CompletedMatchesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'completedMatchesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$completedMatchesHash();
+
+  @$internal
+  @override
+  $ProviderElement<Map<String, GameMatch>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Map<String, GameMatch> create(Ref ref) {
+    return completedMatches(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, GameMatch> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, GameMatch>>(value),
+    );
+  }
+}
+
+String _$completedMatchesHash() => r'02ee72fd1cfc2a3698f5315253e99d52eaf6e212';
+
+@ProviderFor(incompleteMatches)
+const incompleteMatchesProvider = IncompleteMatchesProvider._();
+
+final class IncompleteMatchesProvider
+    extends
+        $FunctionalProvider<
+          Map<String, GameMatch>,
+          Map<String, GameMatch>,
+          Map<String, GameMatch>
+        >
+    with $Provider<Map<String, GameMatch>> {
+  const IncompleteMatchesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'incompleteMatchesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$incompleteMatchesHash();
+
+  @$internal
+  @override
+  $ProviderElement<Map<String, GameMatch>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Map<String, GameMatch> create(Ref ref) {
+    return incompleteMatches(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, GameMatch> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, GameMatch>>(value),
+    );
+  }
+}
+
+String _$incompleteMatchesHash() => r'199518be9d437192c7f0d3445a72596355cbec3e';
+
+@ProviderFor(notFullyScoredMatches)
+const notFullyScoredMatchesProvider = NotFullyScoredMatchesProvider._();
+
+final class NotFullyScoredMatchesProvider
+    extends
+        $FunctionalProvider<
+          Map<String, GameMatch>,
+          Map<String, GameMatch>,
+          Map<String, GameMatch>
+        >
+    with $Provider<Map<String, GameMatch>> {
+  const NotFullyScoredMatchesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notFullyScoredMatchesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$notFullyScoredMatchesHash();
+
+  @$internal
+  @override
+  $ProviderElement<Map<String, GameMatch>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Map<String, GameMatch> create(Ref ref) {
+    return notFullyScoredMatches(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, GameMatch> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, GameMatch>>(value),
+    );
+  }
+}
+
+String _$notFullyScoredMatchesHash() =>
+    r'77277f334b10616929f64ca0b8aeb588daad56df';
+
+@ProviderFor(fullyScoredMatches)
+const fullyScoredMatchesProvider = FullyScoredMatchesProvider._();
+
+final class FullyScoredMatchesProvider
+    extends
+        $FunctionalProvider<
+          Map<String, GameMatch>,
+          Map<String, GameMatch>,
+          Map<String, GameMatch>
+        >
+    with $Provider<Map<String, GameMatch>> {
+  const FullyScoredMatchesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fullyScoredMatchesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fullyScoredMatchesHash();
+
+  @$internal
+  @override
+  $ProviderElement<Map<String, GameMatch>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Map<String, GameMatch> create(Ref ref) {
+    return fullyScoredMatches(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Map<String, GameMatch> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Map<String, GameMatch>>(value),
+    );
+  }
+}
+
+String _$fullyScoredMatchesHash() =>
+    r'c0221236a4f0f0fe8b9be68a90abf87eded84b2b';

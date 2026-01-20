@@ -29,7 +29,7 @@ class TileTableAssignment extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(horizontal: 5),
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+        color: Theme.of(context).cardTheme.color,
         border: Border.all(
           width: 1,
           color: isDarkMode ? Colors.black : Colors.grey,

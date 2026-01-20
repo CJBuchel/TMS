@@ -4,6 +4,9 @@ import 'package:tms_client/colors.dart';
 ThemeData _buildTheme(Brightness brightness) {
   final bool isDark = brightness == Brightness.dark;
 
+  // Subtle primary-tinted white for light mode cards/popups
+  final lightCardColor = Color.lerp(Colors.white, primaryColor[50], 0.3)!;
+
   final colorScheme = ColorScheme.fromSeed(
     brightness: brightness,
     seedColor: primaryColor,
@@ -46,7 +49,7 @@ ThemeData _buildTheme(Brightness brightness) {
     cardTheme: CardThemeData(
       elevation: 4,
       shadowColor: Colors.black26,
-      color: colorScheme.surfaceContainerHigh,
+      color: isDark ? surfaceColor[600] : lightCardColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusGeometry.circular(16),
       ),

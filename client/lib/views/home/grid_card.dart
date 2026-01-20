@@ -23,6 +23,7 @@ class GridCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
+      color: Theme.of(context).colorScheme.surfaceContainerHigh,
       child: Container(
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: secondaryColor, width: 8)),

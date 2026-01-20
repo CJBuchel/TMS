@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tms_client/generated/db/db.pb.dart';
 import 'package:tms_client/providers/match_provider.dart';
+import 'package:tms_client/utils/statistics.dart';
 import 'package:tms_client/utils/time.dart';
 import 'package:tms_client/views/match_controller/match_selector/match_stats_header.dart';
 import 'package:tms_client/views/match_controller/match_selector/match_tile.dart';
@@ -35,35 +36,6 @@ class MatchSelector extends HookConsumerWidget {
         ],
       ),
     );
-  }
-
-  /// Calculate expected cycle time from first two matches' start times
-  Duration? calculateExpectedCycleTime(
-    List<MapEntry<String, GameMatch>> allMatches,
-  ) {
-    if (allMatches.length < 2) return null;
-    final first = allMatches[0].value.startTime.toDateTime();
-    final second = allMatches[1].value.startTime.toDateTime();
-    return second.difference(first);
-  }
-
-  /// Calculate last cycle time from the two most recently completed matches
-  Duration? calculateLastCycleTime(
-    List<MapEntry<String, GameMatch>> completedMatches,
-  ) {
-    if (completedMatches.length < 2) return null;
-
-    // Sort by completed_at time
-    final sorted = completedMatches.toList()
-      ..sort((a, b) {
-        final aTime = a.value.completedAt.toDateTime();
-        final bTime = b.value.completedAt.toDateTime();
-        return aTime.compareTo(bTime);
-      });
-
-    final secondLast = sorted[sorted.length - 2].value.completedAt.toDateTime();
-    final last = sorted[sorted.length - 1].value.completedAt.toDateTime();
-    return last.difference(secondLast);
   }
 
   /// Calculate round number based on how many times the teams in the first match
@@ -149,8 +121,14 @@ class MatchSelector extends HookConsumerWidget {
     );
     final totalMatches = matchList.length;
     final completedCount = completedMatches.length;
-    final expectedCycleTime = calculateExpectedCycleTime(matchList);
-    final lastCycleTime = calculateLastCycleTime(completedMatches);
+
+    final expectedCycleTime = getFirstPairCycleTime(
+      matchList.map((e) => e.value).toList(),
+    );
+
+    final lastCycleTime = getLastPairCycleTime(
+      completedMatches.map((e) => e.value).toList(),
+    );
 
     return Column(
       children: [

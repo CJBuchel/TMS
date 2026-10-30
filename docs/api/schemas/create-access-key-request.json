@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CreateAccessKeyRequest",
+  "type": "object",
+  "properties": {
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "label": {
+      "type": "string"
+    },
+    "pod_id": {
+      "description": "Binds a judge (or judge advisor) station to a pod.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "default": null
+    },
+    "role": {
+      "$ref": "#/$defs/Role"
+    },
+    "table_id": {
+      "description": "Binds a referee (or head referee) station to a table.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "default": null
+    }
+  },
+  "required": [
+    "label",
+    "role"
+  ],
+  "$defs": {
+    "Role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "head_referee",
+        "referee",
+        "judge_advisor",
+        "judge",
+        "queuer",
+        "emcee",
+        "scorekeeper",
+        "display"
+      ]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update judging_slots set queue_state = $4, queue_previous = null, queue_changed_at = now(), queue_changed_by = 'pod timer'\n     where session_id = $1 and pod_id = $2 and team_id is not null and queue_state = any($3)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "slot_queue_state[]",
+            "kind": {
+              "Array": {
+                "Custom": {
+                  "name": "slot_queue_state",
+                  "kind": {
+                    "Enum": [
+                      "not_called",
+                      "called",
+                      "on_way",
+                      "waiting",
+                      "at_table",
+                      "ready",
+                      "running",
+                      "done",
+                      "no_show",
+                      "scratched"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e07d05fae839cb108661b4e81bc29d247787f8af7da411d58c2a8f0a0a2e0ff3"
+}

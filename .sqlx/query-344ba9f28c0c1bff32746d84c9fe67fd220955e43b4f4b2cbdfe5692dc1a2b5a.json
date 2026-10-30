@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update events set status = 'draft' where status = 'active' and id <> $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "344ba9f28c0c1bff32746d84c9fe67fd220955e43b4f4b2cbdfe5692dc1a2b5a"
+}

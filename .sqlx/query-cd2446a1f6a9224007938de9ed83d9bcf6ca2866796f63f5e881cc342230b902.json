@@ -1,0 +1,152 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set display_name = $2, roles = $3, disabled = $4,\n              tokens_valid_after = coalesce($5, tokens_valid_after)\n       where id = $1\n       returning id, username, display_name, roles as \"roles: Vec<Role>\", disabled, must_change_password, created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "username",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "username"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "display_name",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "display_name"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "roles: Vec<Role>",
+        "type_info": {
+          "Custom": {
+            "name": "role[]",
+            "kind": {
+              "Array": {
+                "Custom": {
+                  "name": "role",
+                  "kind": {
+                    "Enum": [
+                      "admin",
+                      "head_referee",
+                      "referee",
+                      "judge_advisor",
+                      "judge",
+                      "queuer",
+                      "emcee",
+                      "scorekeeper",
+                      "display"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "roles"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "disabled",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "disabled"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "must_change_password",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "must_change_password"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "created_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        {
+          "Custom": {
+            "name": "role[]",
+            "kind": {
+              "Array": {
+                "Custom": {
+                  "name": "role",
+                  "kind": {
+                    "Enum": [
+                      "admin",
+                      "head_referee",
+                      "referee",
+                      "judge_advisor",
+                      "judge",
+                      "queuer",
+                      "emcee",
+                      "scorekeeper",
+                      "display"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Bool",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "cd2446a1f6a9224007938de9ed83d9bcf6ca2866796f63f5e881cc342230b902"
+}

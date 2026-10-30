@@ -1,0 +1,26 @@
+# systemd unit for a TMS server on a Linux machine without a desktop.
+#
+# 1. Unzip the release to /opt/tms (so /opt/tms/tms and /opt/tms/web exist).
+# 2. sudo useradd --system --home /var/lib/tms --create-home tms
+# 3. sudo cp tms.service /etc/systemd/system/ && sudo systemctl daemon-reload
+# 4. sudo systemctl enable --now tms
+# 5. journalctl -u tms shows the first start's one-time admin password.
+
+[Unit]
+Description=TMS tournament management server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=tms
+Group=tms
+WorkingDirectory=/var/lib/tms
+ExecStart=/opt/tms/tms --headless --no-qr --data-dir /var/lib/tms/data --web-dir /opt/tms/web
+# The embedded PostgreSQL shuts down cleanly on SIGINT, like Ctrl+C in a terminal.
+KillSignal=SIGINT
+TimeoutStopSec=60
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

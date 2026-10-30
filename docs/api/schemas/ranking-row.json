@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RankingRow",
+  "description": "One team's line on the scoreboard.",
+  "type": "object",
+  "properties": {
+    "best": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint16",
+      "maximum": 65535,
+      "minimum": 0
+    },
+    "rank": {
+      "description": "Competition ranking: tied teams share a rank and the next rank is skipped (1, 1, 3).",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "scores": {
+      "description": "One entry per ranking round; `None` until the round has a published score.",
+      "type": "array",
+      "items": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "format": "uint16",
+        "maximum": 65535,
+        "minimum": 0
+      }
+    },
+    "team_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "team_id",
+    "rank",
+    "scores"
+  ]
+}

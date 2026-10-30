@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, number, scheduled_start, scheduled_end from judging_sessions where event_id = $1 order by scheduled_start, number",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_sessions",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "number",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "judging_sessions",
+            "name": "number"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "scheduled_start",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "judging_sessions",
+            "name": "scheduled_start"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "scheduled_end",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "judging_sessions",
+            "name": "scheduled_end"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "df92dff18ae4a8292898552f08b31f7abf5cf0de496ed9db8ad5de9c39ae33d7"
+}

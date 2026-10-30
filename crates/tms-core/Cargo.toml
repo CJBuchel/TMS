@@ -1,0 +1,23 @@
+[package]
+name = "tms-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+default = []
+sqlx = ["dep:sqlx"]
+schema = ["dep:schemars"]
+
+[dependencies]
+tms-seasons.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+thiserror.workspace = true
+schemars = { workspace = true, optional = true }
+sqlx = { version = "0.9", default-features = false, features = ["postgres", "uuid", "chrono", "macros"], optional = true }
+
+[lints]
+workspace = true

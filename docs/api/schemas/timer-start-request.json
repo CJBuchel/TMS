@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TimerStartRequest",
+  "type": "object",
+  "properties": {
+    "countdown": {
+      "description": "Run the event's countdown before the match starts.",
+      "type": "boolean",
+      "default": false
+    },
+    "force": {
+      "description": "Start although some teams are not ready (head referee only).",
+      "type": "boolean",
+      "default": false
+    },
+    "reason": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

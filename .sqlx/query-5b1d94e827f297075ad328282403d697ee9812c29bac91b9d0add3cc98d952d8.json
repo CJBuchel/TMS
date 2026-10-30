@@ -1,0 +1,168 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select s.id, s.match_id, s.table_id, s.team_id, s.round,\n              (select c.status from scoresheets c\n               where c.slot_id = s.id and c.status in ('published', 'submitted', 'superseded')\n               order by c.status = 'published' desc, c.status = 'submitted' desc limit 1) as \"sheet: ScoresheetStatus\",\n              s.queue_state as \"queue: QueueState\", s.queue_previous as \"queue_previous: QueueState\",\n              s.queue_changed_at\n       from match_slots s\n       join game_matches m on m.id = s.match_id\n       join game_tables t on t.id = s.table_id\n       where m.event_id = $1 and ($2::uuid[] is null or m.id = any($2))\n       order by t.sort_order",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "match_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "match_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "table_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "table_id"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "round",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "round"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "sheet: ScoresheetStatus",
+        "type_info": {
+          "Custom": {
+            "name": "scoresheet_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "published",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "origin": "Expression"
+      },
+      {
+        "ordinal": 6,
+        "name": "queue: QueueState",
+        "type_info": {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "queue_state"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "queue_previous: QueueState",
+        "type_info": {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "queue_previous"
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "queue_changed_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "queue_changed_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "UuidArray"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      null,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "5b1d94e827f297075ad328282403d697ee9812c29bac91b9d0add3cc98d952d8"
+}

@@ -1,0 +1,33 @@
+site_name: TMS
+site_description: FIRST LEGO League tournament management
+docs_dir: docs
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      toggle: { icon: material/weather-sunny, name: Light mode }
+markdown_extensions:
+  - admonition
+  - tables
+  - pymdownx.superfences
+  - pymdownx.highlight
+nav:
+  - Home: index.md
+  - Running TMS: ops.md
+  - Guides:
+      - Who does what: guides/roles.md
+      - Setting up tablets: guides/tablets.md
+  - Adding a season: seasons.md
+  - Development: development.md
+  - API:
+      - REST: api/rest.md
+      - Live feed: api/websocket.md

@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into pod_timers (pod_id) values ($1) on conflict (pod_id) do nothing",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "82a4bd6aa022a10a341f96f4a997f1135db5ea6e7559ce528848d89fa4662266"
+}

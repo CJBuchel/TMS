@@ -1,0 +1,213 @@
+@import "tailwindcss";
+@source "./src/**/*.rs";
+@source "../tms-ui/src/**/*.rs";
+
+/* Dark mode follows the OS unless the user picked a theme, which sets data-theme on <html>. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* ---- Design tokens. Light theme is the default. ---- */
+:root {
+  color-scheme: light;
+  --tms-radius: 8px;
+  --tms-shadow: 0 1px 2px rgb(16 24 40 / 0.04), 0 2px 6px rgb(16 24 40 / 0.05);
+  --tms-bg: #f2f4f7;
+  --tms-surface: #ffffff;
+  --tms-surface-2: #f0f2f5;
+  --tms-line: #e1e5eb;
+  --tms-line-strong: #c3cad4;
+  --tms-fg: #14171c;
+  --tms-muted: #5b6472;
+  --tms-focus: #0b6bcb;
+  --tms-on-primary: #ffffff;
+  --tms-on-warning: #1d1400;
+
+  --tms-primary: #00796c;
+  --tms-primary-strong: #005f55;
+  --tms-primary-soft: #e0f2ef;
+  --tms-info: #0b6bcb;
+  --tms-info-strong: #084f96;
+  --tms-info-soft: #e3effb;
+  --tms-success: #1e7d32;
+  --tms-success-strong: #165e26;
+  --tms-success-soft: #e4f3e6;
+  --tms-warning: #d98a00;
+  --tms-warning-strong: #8a5500;
+  --tms-warning-soft: #fdf1dc;
+  --tms-danger: #c62828;
+  --tms-danger-strong: #9a1c1c;
+  --tms-danger-soft: #fbe5e5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    color-scheme: dark;
+    --tms-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.25);
+    --tms-bg: #0f1115;
+    --tms-surface: #181b21;
+    --tms-surface-2: #21252d;
+    --tms-line: #2a2f38;
+    --tms-line-strong: #4a5160;
+    --tms-fg: #e8eaee;
+    --tms-muted: #9aa3b2;
+    --tms-focus: #5aa9ff;
+    --tms-primary: #14a394;
+    --tms-primary-strong: #2fc2b2;
+    --tms-primary-soft: #0e2f2b;
+    --tms-info: #3d8ee6;
+    --tms-info-strong: #8cc2ff;
+    --tms-info-soft: #13253a;
+    --tms-success: #2e9b44;
+    --tms-success-strong: #7fd68f;
+    --tms-success-soft: #142a18;
+    --tms-warning: #e3a21a;
+    --tms-warning-strong: #ffd27a;
+    --tms-warning-soft: #33260b;
+    --tms-danger: #e04646;
+    --tms-danger-strong: #ff9a9a;
+    --tms-danger-soft: #3a1515;
+  }
+}
+
+:root[data-theme=dark] {
+  color-scheme: dark;
+  --tms-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 2px 8px rgb(0 0 0 / 0.25);
+  --tms-bg: #0f1115;
+  --tms-surface: #181b21;
+  --tms-surface-2: #21252d;
+  --tms-line: #2a2f38;
+  --tms-line-strong: #4a5160;
+  --tms-fg: #e8eaee;
+  --tms-muted: #9aa3b2;
+  --tms-focus: #5aa9ff;
+  --tms-primary: #14a394;
+  --tms-primary-strong: #2fc2b2;
+  --tms-primary-soft: #0e2f2b;
+  --tms-info: #3d8ee6;
+  --tms-info-strong: #8cc2ff;
+  --tms-info-soft: #13253a;
+  --tms-success: #2e9b44;
+  --tms-success-strong: #7fd68f;
+  --tms-success-soft: #142a18;
+  --tms-warning: #e3a21a;
+  --tms-warning-strong: #ffd27a;
+  --tms-warning-soft: #33260b;
+  --tms-danger: #e04646;
+  --tms-danger-strong: #ff9a9a;
+  --tms-danger-soft: #3a1515;
+}
+
+/* ---- Tokens exposed as Tailwind utilities: bg-surface, text-muted, border-line, bg-danger-soft, ... ---- */
+@theme inline {
+  --radius-tms: var(--tms-radius);
+  --radius-control: var(--tms-radius);
+  --radius-panel: calc(var(--tms-radius) * 1.5);
+  --shadow-panel: var(--tms-shadow);
+  --color-bg: var(--tms-bg);
+  --color-surface: var(--tms-surface);
+  --color-surface-2: var(--tms-surface-2);
+  --color-line: var(--tms-line);
+  --color-line-strong: var(--tms-line-strong);
+  --color-fg: var(--tms-fg);
+  --color-muted: var(--tms-muted);
+  --color-focus: var(--tms-focus);
+  --color-on-primary: var(--tms-on-primary);
+  --color-on-warning: var(--tms-on-warning);
+  --color-primary: var(--tms-primary);
+  --color-primary-strong: var(--tms-primary-strong);
+  --color-primary-soft: var(--tms-primary-soft);
+  --color-info: var(--tms-info);
+  --color-info-strong: var(--tms-info-strong);
+  --color-info-soft: var(--tms-info-soft);
+  --color-success: var(--tms-success);
+  --color-success-strong: var(--tms-success-strong);
+  --color-success-soft: var(--tms-success-soft);
+  --color-warning: var(--tms-warning);
+  --color-warning-strong: var(--tms-warning-strong);
+  --color-warning-soft: var(--tms-warning-soft);
+  --color-danger: var(--tms-danger);
+  --color-danger-strong: var(--tms-danger-strong);
+  --color-danger-soft: var(--tms-danger-soft);
+  --font-sans: "Inter", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@layer base {
+  html, body { height: 100%; }
+  /* Whatever scrolls into view lands below the sticky top bar, not under it. */
+  html { scroll-padding-top: 4rem; }
+  body {
+    background: var(--tms-bg);
+    color: var(--tms-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* ---- Venue screens: always dark and high contrast, whatever the device's theme. ---- */
+.stage {
+  color-scheme: dark;
+  --tms-bg: #07090c;
+  --tms-surface: #10141a;
+  --tms-surface-2: #18202a;
+  --tms-line: #222b36;
+  --tms-line-strong: #364252;
+  --tms-fg: #f3f5f8;
+  --tms-muted: #8e9aab;
+  --tms-primary: #19c2ae;
+  --tms-primary-strong: #5ee6d4;
+  --tms-primary-soft: #0b2b28;
+  --tms-info: #4ea3ff;
+  --tms-info-strong: #9ccbff;
+  --tms-info-soft: #10243b;
+  --tms-success: #34c759;
+  --tms-success-strong: #7ee49a;
+  --tms-success-soft: #0f2a17;
+  --tms-warning: #ffb020;
+  --tms-warning-strong: #ffd27a;
+  --tms-warning-soft: #33260b;
+  --tms-danger: #ff4d4f;
+  --tms-danger-strong: #ff9a9a;
+  --tms-danger-soft: #3a1515;
+}
+
+/* The scoreboard's list scrolls up through two copies of itself, so it loops without a jump. */
+@keyframes tms-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.tms-scroll { animation: tms-scroll var(--tms-scroll-seconds, 60s) linear infinite; }
+
+@keyframes tms-pulse {
+  50% { opacity: 0.45; }
+}
+.tms-pulse { animation: tms-pulse 1s ease-in-out infinite; }
+
+@keyframes tms-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+.tms-rise { animation: tms-rise 0.6s ease-out both; }
+
+@keyframes tms-slide {
+  from { transform: translateX(-100%); }
+  to { transform: none; }
+}
+.tms-slide { animation: tms-slide 0.18s ease-out both; }
+
+@keyframes tms-pop {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.tms-pop { animation: tms-pop 0.14s ease-out both; }
+
+/* Printing a sheet such as the access key cards prints only that sheet. */
+@media print {
+  body * { visibility: hidden; }
+  .tms-print, .tms-print * { visibility: visible; }
+  .tms-print { position: absolute; inset: 0 auto auto 0; width: 100%; overflow: visible; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tms-scroll, .tms-pulse, .tms-rise, .tms-slide, .tms-pop { animation: none; }
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from revoked_tokens where expires_at < now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "25e148a5f00ee2e6439333ccd13c736a1090b0001f68067d65414266cbc3e186"
+}

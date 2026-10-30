@@ -1,0 +1,31 @@
+# Rust / Dioxus build output
+/target/
+
+# Release bundles from scripts/release.sh
+/dist/
+
+# MkDocs build output
+/site/
+
+# Local runtime data
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+.env
+.env.*
+
+# Node tooling (e2e scripts)
+node_modules/
+
+# Logs
+*.log
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db

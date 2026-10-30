@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update judging_slots\n     set team_id = $2, queue_state = 'not_called', queue_previous = null, queue_changed_at = null,\n         queue_changed_by = null\n     where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2f83dbcdc7ba5305e5a672154a5f87dd2d7fe8e45014f5708eab7c57eccc431f"
+}

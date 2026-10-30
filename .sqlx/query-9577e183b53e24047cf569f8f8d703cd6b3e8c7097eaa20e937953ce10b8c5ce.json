@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update access_keys set revoked_at = now() where event_id = $1 and revoked_at is null returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "9577e183b53e24047cf569f8f8d703cd6b3e8c7097eaa20e937953ce10b8c5ce"
+}

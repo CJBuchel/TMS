@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ReviewRequest",
+  "type": "object",
+  "properties": {
+    "note": {
+      "description": "Required when rejecting; shown to the referee.",
+      "type": "string",
+      "default": ""
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update banners set active = false where id = $1 and active returning event_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "event_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "banners",
+            "name": "event_id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "ac422941f2f79161235f7703588b33d5faa75b9943ccb0364a3094d7fc16f05b"
+}

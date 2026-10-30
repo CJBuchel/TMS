@@ -1,0 +1,38 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select jti, expires_at from revoked_tokens",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "jti",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "revoked_tokens",
+            "name": "jti"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "expires_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "revoked_tokens",
+            "name": "expires_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "5c7a54f561c2cda242ea3c687197e59b887096d10b33d3c7f88420c495a900fa"
+}

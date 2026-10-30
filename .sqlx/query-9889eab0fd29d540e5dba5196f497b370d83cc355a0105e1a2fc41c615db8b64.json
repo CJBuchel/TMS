@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select status as \"status: RubricStatus\" from rubrics where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "status: RubricStatus",
+        "type_info": {
+          "Custom": {
+            "name": "rubric_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "accepted",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "status"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "9889eab0fd29d540e5dba5196f497b370d83cc355a0105e1a2fc41c615db8b64"
+}

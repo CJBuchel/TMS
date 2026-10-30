@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CreateBannerRequest",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/BannerSeverity"
+    }
+  },
+  "required": [
+    "severity",
+    "message"
+  ],
+  "$defs": {
+    "BannerSeverity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select distinct initcap(m.kind::text) || ' ' || m.number as \"label!\"\n       from game_matches m\n       join match_slots s on s.match_id = m.id\n       join game_matches this on this.id = $1\n       where m.event_id = this.event_id and m.state = 'finished' and m.scheduled_start < this.scheduled_start\n         and s.team_id is not null\n         and s.table_id in (select table_id from match_slots where match_id = $1)\n         and not exists (select 1 from scoresheets c where c.slot_id = s.id and c.status in ('published', 'submitted', 'superseded'))",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "label!",
+        "type_info": "Text",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "493c4d583c05eafbbb70125bcf896ba02c363f1ca45e1394d372cde6e0ec5dc2"
+}

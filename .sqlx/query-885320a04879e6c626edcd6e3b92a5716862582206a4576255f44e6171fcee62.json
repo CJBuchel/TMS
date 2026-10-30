@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select distinct initcap(m.kind::text) || ' ' || m.number as \"label!\"\n       from game_matches m\n       join match_slots s on s.match_id = m.id\n       where m.id <> $1 and m.state = 'staged'\n         and m.event_id = (select event_id from game_matches where id = $1)\n         and s.table_id in (select table_id from match_slots where match_id = $1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "label!",
+        "type_info": "Text",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "885320a04879e6c626edcd6e3b92a5716862582206a4576255f44e6171fcee62"
+}

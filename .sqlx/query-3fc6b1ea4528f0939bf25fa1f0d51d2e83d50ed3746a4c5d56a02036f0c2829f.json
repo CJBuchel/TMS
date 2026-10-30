@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update match_timers set run_id = $2, phase = $3, starts_at = $4, countdown_ms = $5, duration_ms = $6,\n            endgame_ms = $7, match_ids = $8\n     where event_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "timer_phase",
+            "kind": {
+              "Enum": [
+                "idle",
+                "countdown",
+                "running",
+                "endgame",
+                "ended",
+                "aborted"
+              ]
+            }
+          }
+        },
+        "Timestamptz",
+        "Int4",
+        "Int4",
+        "Int4",
+        "UuidArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "3fc6b1ea4528f0939bf25fa1f0d51d2e83d50ed3746a4c5d56a02036f0c2829f"
+}

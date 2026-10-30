@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update rubrics set status = $2, review_note = coalesce($3, review_note), reviewed_by = $4, reviewed_at = now()\n     where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        {
+          "Custom": {
+            "name": "rubric_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "accepted",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f05abda7726c4631cb652e3af71fccf166c230e73b76ac2495f290d179174c8d"
+}

@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scoresheet",
+  "description": "A stored scoresheet, as head referees and referees see it.",
+  "type": "object",
+  "properties": {
+    "answers": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ScoresheetFlag"
+      }
+    },
+    "gp": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "format": "uint8",
+      "maximum": 255,
+      "minimum": 0
+    },
+    "gp_comment": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "issues": {
+      "description": "Warnings the season raised when the sheet arrived.",
+      "type": "array",
+      "items": true
+    },
+    "kind": {
+      "$ref": "#/$defs/MatchKind"
+    },
+    "match_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "no_show": {
+      "type": "boolean"
+    },
+    "private_comment": {
+      "type": "string"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "referee_name": {
+      "type": "string"
+    },
+    "review_note": {
+      "description": "The head referee's note, shown to the referee when a sheet is rejected.",
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "reviewed_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "round": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "score": {
+      "type": "integer",
+      "format": "uint16",
+      "maximum": 65535,
+      "minimum": 0
+    },
+    "slot_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "status": {
+      "$ref": "#/$defs/ScoresheetStatus"
+    },
+    "submitted_by": {
+      "description": "The login that sent it: `user:<name>` or `key:<label>`.",
+      "type": "string"
+    },
+    "table_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "team_agreed": {
+      "type": "boolean"
+    },
+    "team_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "team_initials": {
+      "type": "string"
+    },
+    "team_number": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "event_id",
+    "team_id",
+    "team_number",
+    "kind",
+    "round",
+    "submitted_by",
+    "referee_name",
+    "status",
+    "flags",
+    "no_show",
+    "score",
+    "gp_comment",
+    "answers",
+    "issues",
+    "team_agreed",
+    "team_initials",
+    "private_comment",
+    "review_note",
+    "created_at",
+    "received_at"
+  ],
+  "$defs": {
+    "MatchKind": {
+      "type": "string",
+      "enum": [
+        "practice",
+        "ranking"
+      ]
+    },
+    "ScoresheetFlag": {
+      "description": "Why a sheet waits for the head referee even when the event publishes automatically.",
+      "oneOf": [
+        {
+          "description": "The team already has a published sheet for this round.",
+          "type": "string",
+          "const": "duplicate_round"
+        },
+        {
+          "description": "The season raised a warning, such as more seeds planted than released.",
+          "type": "string",
+          "const": "warnings"
+        },
+        {
+          "description": "The device's total differed from the server's; the server's total was kept.",
+          "type": "string",
+          "const": "score_recomputed"
+        }
+      ]
+    },
+    "ScoresheetStatus": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "rejected"
+          ]
+        },
+        {
+          "description": "Waiting for the head referee.",
+          "type": "string",
+          "const": "submitted"
+        },
+        {
+          "description": "Counts for ranking.",
+          "type": "string",
+          "const": "published"
+        },
+        {
+          "description": "Replaced by a later sheet for the same round.",
+          "type": "string",
+          "const": "superseded"
+        }
+      ]
+    }
+  }
+}

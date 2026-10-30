@@ -1,0 +1,53 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update judging_slots set queue_state = $2, queue_previous = $3, queue_changed_at = now(), queue_changed_by = $4\n     where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b4df161e8fde97f311fd10576f31849a2f926309bdd4ba2b481be9a5f418dde6"
+}

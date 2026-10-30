@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update game_matches set scheduled_start = $2, scheduled_end = $3 where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e323f77f8c22487e709de293ce02b88586fb4abc2241030a5885873c2762f142"
+}

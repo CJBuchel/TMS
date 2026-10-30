@@ -1,0 +1,124 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update access_keys k set last_used_at = now()\n       from events e\n       where k.key_hash = $1 and e.id = k.event_id and e.status <> 'archived'\n         and k.revoked_at is null and (k.expires_at is null or k.expires_at > now())\n       returning k.id, k.event_id, k.label, k.roles as \"roles: Vec<Role>\", k.table_id, k.pod_id, k.expires_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "event_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "event_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "label",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "label"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "roles: Vec<Role>",
+        "type_info": {
+          "Custom": {
+            "name": "role[]",
+            "kind": {
+              "Array": {
+                "Custom": {
+                  "name": "role",
+                  "kind": {
+                    "Enum": [
+                      "admin",
+                      "head_referee",
+                      "referee",
+                      "judge_advisor",
+                      "judge",
+                      "queuer",
+                      "emcee",
+                      "scorekeeper",
+                      "display"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "roles"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "table_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "table_id"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "pod_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "pod_id"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "expires_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "access_keys",
+            "name": "expires_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "fb70c84a56558c87cf98b187e1af49817d31f2c5d5be844037cc8a763bc2816a"
+}

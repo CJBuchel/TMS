@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select status as \"status: ScoresheetStatus\" from scoresheets where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "status: ScoresheetStatus",
+        "type_info": {
+          "Custom": {
+            "name": "scoresheet_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "published",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "status"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "98451c7b9f864293157a12fe6d19d5b9d72dcdec16be29e7650cb78d435f2313"
+}

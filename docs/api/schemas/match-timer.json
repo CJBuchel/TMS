@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MatchTimer",
+  "description": "The event's match timer. Live phases follow from `starts_at` and the clock, so every device computes the\nsame time remaining from one message.",
+  "type": "object",
+  "properties": {
+    "countdown_ms": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "duration_ms": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "endgame_ms": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "match_ids": {
+      "description": "The matches this run is for.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "phase": {
+      "$ref": "#/$defs/TimerPhase"
+    },
+    "starts_at": {
+      "description": "Match time zero, after any countdown.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "event_id",
+    "phase",
+    "countdown_ms",
+    "duration_ms",
+    "endgame_ms",
+    "match_ids"
+  ],
+  "$defs": {
+    "TimerPhase": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "idle",
+            "countdown",
+            "running",
+            "ended",
+            "aborted"
+          ]
+        },
+        {
+          "description": "The last part of the match, shown in a warning colour.",
+          "type": "string",
+          "const": "endgame"
+        }
+      ]
+    }
+  }
+}

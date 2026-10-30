@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  # The PostgreSQL bundle is downloaded from GitHub at build time; the token avoids API rate limits.
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# No database service: builds check SQL against the committed .sqlx/ data (a stale entry fails the build),
+# and tests start their own embedded PostgreSQL.
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - name: Install dx
+        run: cargo install dioxus-cli --version 0.7.10 --locked
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Build client (also generates Tailwind CSS)
+        run: dx build --package tms-client --platform web --release
+      - name: Clippy (server, database, launcher)
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Clippy (client and UI, WASM)
+        run: cargo clippy -p tms-client -p tms-ui --target wasm32-unknown-unknown -- -D warnings
+      - name: Test
+        run: cargo test
+
+  release:
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - name: Install dx
+        run: cargo install dioxus-cli --version 0.7.10 --locked
+      - name: Build the release folder and zip
+        shell: bash
+        run: scripts/release.sh
+      # The zip is the release: the tms program, its web folder and a README.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tms-${{ runner.os }}-${{ runner.arch }}
+          path: dist/*.zip
+          if-no-files-found: error

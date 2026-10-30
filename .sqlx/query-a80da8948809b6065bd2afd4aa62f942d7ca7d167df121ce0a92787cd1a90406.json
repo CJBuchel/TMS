@@ -1,0 +1,362 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select c.id, c.event_id, c.team_id, t.number as team_number, c.kind as \"kind: MatchKind\", c.round, c.match_id,\n              c.slot_id, c.table_id, c.submitted_by, c.referee_name, c.status as \"status: ScoresheetStatus\", c.flags,\n              c.no_show, c.score, c.gp, c.gp_comment, c.answers as \"answers: Json<Answers>\",\n              c.issues as \"issues: Json<Vec<Issue>>\", c.team_agreed, c.team_initials, c.private_comment,\n              c.review_note, c.created_at, c.received_at, c.reviewed_by, c.reviewed_at\n       from scoresheets c join teams t on t.id = c.team_id\n       where c.event_id = $1 order by c.received_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "event_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "event_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "team_number",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "teams",
+            "name": "number"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "kind: MatchKind",
+        "type_info": {
+          "Custom": {
+            "name": "match_kind",
+            "kind": {
+              "Enum": [
+                "practice",
+                "ranking"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "kind"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "round",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "round"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "match_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "match_id"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "slot_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "slot_id"
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "table_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "table_id"
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "submitted_by",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "submitted_by"
+          }
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "referee_name",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "referee_name"
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "status: ScoresheetStatus",
+        "type_info": {
+          "Custom": {
+            "name": "scoresheet_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "published",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "status"
+          }
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "flags",
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "flags"
+          }
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "no_show",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "no_show"
+          }
+        }
+      },
+      {
+        "ordinal": 14,
+        "name": "score",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "score"
+          }
+        }
+      },
+      {
+        "ordinal": 15,
+        "name": "gp",
+        "type_info": "Int2",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "gp"
+          }
+        }
+      },
+      {
+        "ordinal": 16,
+        "name": "gp_comment",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "gp_comment"
+          }
+        }
+      },
+      {
+        "ordinal": 17,
+        "name": "answers: Json<Answers>",
+        "type_info": "Jsonb",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "answers"
+          }
+        }
+      },
+      {
+        "ordinal": 18,
+        "name": "issues: Json<Vec<Issue>>",
+        "type_info": "Jsonb",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "issues"
+          }
+        }
+      },
+      {
+        "ordinal": 19,
+        "name": "team_agreed",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "team_agreed"
+          }
+        }
+      },
+      {
+        "ordinal": 20,
+        "name": "team_initials",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "team_initials"
+          }
+        }
+      },
+      {
+        "ordinal": 21,
+        "name": "private_comment",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "private_comment"
+          }
+        }
+      },
+      {
+        "ordinal": 22,
+        "name": "review_note",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "review_note"
+          }
+        }
+      },
+      {
+        "ordinal": 23,
+        "name": "created_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "ordinal": 24,
+        "name": "received_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "received_at"
+          }
+        }
+      },
+      {
+        "ordinal": 25,
+        "name": "reviewed_by",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "reviewed_by"
+          }
+        }
+      },
+      {
+        "ordinal": 26,
+        "name": "reviewed_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "reviewed_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "a80da8948809b6065bd2afd4aa62f942d7ca7d167df121ce0a92787cd1a90406"
+}

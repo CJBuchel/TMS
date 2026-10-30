@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update game_tables set sort_order = $3 where id = $1 and event_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7f21854e6cd972752f9ac40f98a1f70b40f9c1a969101236e99f26d32aa01d16"
+}

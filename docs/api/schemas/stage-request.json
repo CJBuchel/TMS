@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "StageRequest",
+  "type": "object",
+  "properties": {
+    "force": {
+      "description": "Stage even though an earlier match on the same tables still has a team without a scoresheet.",
+      "type": "boolean",
+      "default": false
+    },
+    "reason": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

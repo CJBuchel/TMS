@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into revoked_tokens (jti, expires_at) values ($1, $2) on conflict (jti) do nothing",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f78ec242ade630d2a7a8b4895d4f05d585c48b1b5de5ebd181505ee70348803b"
+}

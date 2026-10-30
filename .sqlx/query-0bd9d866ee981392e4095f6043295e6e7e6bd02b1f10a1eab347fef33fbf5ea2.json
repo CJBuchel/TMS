@@ -1,0 +1,124 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select j.event_id, s.session_id, s.pod_id, s.team_id, s.queue_state as \"state: QueueState\",\n              s.queue_previous as \"previous: QueueState\"\n       from judging_slots s join judging_sessions j on j.id = s.session_id\n       where s.id = $1 for update of s",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "event_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_sessions",
+            "name": "event_id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "session_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "session_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "pod_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "pod_id"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "state: QueueState",
+        "type_info": {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "queue_state"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "previous: QueueState",
+        "type_info": {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "queue_previous"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "0bd9d866ee981392e4095f6043295e6e7e6bd02b1f10a1eab347fef33fbf5ea2"
+}

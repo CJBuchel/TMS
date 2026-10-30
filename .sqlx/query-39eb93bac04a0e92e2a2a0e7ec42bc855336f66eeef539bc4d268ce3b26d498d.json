@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update match_slots set queue_state = 'not_called', queue_previous = null, queue_changed_at = now(),\n            queue_changed_by = $2\n     where match_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "39eb93bac04a0e92e2a2a0e7ec42bc855336f66eeef539bc4d268ce3b26d498d"
+}

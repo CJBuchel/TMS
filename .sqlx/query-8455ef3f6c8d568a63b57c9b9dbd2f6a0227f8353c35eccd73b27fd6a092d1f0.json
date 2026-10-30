@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update game_matches set state = 'staged', started_at = null where id = any($1) and state = 'running' returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "UuidArray"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8455ef3f6c8d568a63b57c9b9dbd2f6a0227f8353c35eccd73b27fd6a092d1f0"
+}

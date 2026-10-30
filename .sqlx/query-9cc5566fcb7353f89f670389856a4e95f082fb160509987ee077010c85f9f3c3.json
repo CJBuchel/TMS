@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select finalized_at, finalized_by, ceremony_shown from deliberation_state where event_id = $1 for update",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "finalized_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "deliberation_state",
+            "name": "finalized_at"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "finalized_by",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "deliberation_state",
+            "name": "finalized_by"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "ceremony_shown",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "deliberation_state",
+            "name": "ceremony_shown"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "9cc5566fcb7353f89f670389856a4e95f082fb160509987ee077010c85f9f3c3"
+}

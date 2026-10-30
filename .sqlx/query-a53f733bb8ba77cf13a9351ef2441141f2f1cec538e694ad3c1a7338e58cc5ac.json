@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select w.award_id, w.team_id, w.place, w.note, w.assigned_by\n     from award_winners w join awards a on a.id = w.award_id\n     where a.event_id = $1 order by a.sort_order, w.place",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "award_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "award_winners",
+            "name": "award_id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "award_winners",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "place",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "award_winners",
+            "name": "place"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "note",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "award_winners",
+            "name": "note"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "assigned_by",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "award_winners",
+            "name": "assigned_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a53f733bb8ba77cf13a9351ef2441141f2f1cec538e694ad3c1a7338e58cc5ac"
+}

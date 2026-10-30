@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update users set password_hash = $2, must_change_password = $3, tokens_valid_after = $4 where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Bool",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "db0900362b5d1dc2291efd47bb14a4a14d56359f1ff72eee9b3ae2e1989c49ac"
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SyncScoresheetsRequest",
+  "type": "object",
+  "properties": {
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ScoresheetDoc"
+      }
+    }
+  },
+  "required": [
+    "documents"
+  ],
+  "$defs": {
+    "MatchKind": {
+      "type": "string",
+      "enum": [
+        "practice",
+        "ranking"
+      ]
+    },
+    "ScoresheetDoc": {
+      "description": "A scoresheet as the referee's device writes it. The id is made on the device, so sending it twice is harmless.",
+      "type": "object",
+      "properties": {
+        "answers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "event_code": {
+          "description": "The event code shown on the device, kept with the sheet so a sheet from another event is easy to spot.",
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "gp": {
+          "description": "Gracious Professionalism: 2, 3 or 4.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0
+        },
+        "gp_comment": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "$ref": "#/$defs/MatchKind"
+        },
+        "no_show": {
+          "type": "boolean"
+        },
+        "private_comment": {
+          "description": "Seen by head referees only.",
+          "type": "string"
+        },
+        "referee_name": {
+          "type": "string"
+        },
+        "round": {
+          "description": "Needed when there is no slot.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "schema_version": {
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "score": {
+          "description": "The total the device showed. The server recomputes it.",
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "season_id": {
+          "type": "string"
+        },
+        "slot_id": {
+          "description": "The scheduled slot this sheet is for, if any. The server takes the kind and round from it.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "table_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "team_agreed": {
+          "type": "boolean"
+        },
+        "team_initials": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "event_code",
+        "season_id",
+        "schema_version",
+        "team_number",
+        "kind",
+        "referee_name",
+        "no_show",
+        "answers",
+        "score",
+        "gp_comment",
+        "team_agreed",
+        "team_initials",
+        "private_comment",
+        "created_at"
+      ]
+    }
+  }
+}

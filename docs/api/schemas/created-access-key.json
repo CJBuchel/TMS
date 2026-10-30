@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CreatedAccessKey",
+  "description": "Returned once on creation. The plaintext key is never retrievable again.",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string"
+    },
+    "summary": {
+      "$ref": "#/$defs/AccessKeySummary"
+    }
+  },
+  "required": [
+    "key",
+    "summary"
+  ],
+  "$defs": {
+    "AccessKeySummary": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "expires_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "label": {
+          "type": "string"
+        },
+        "last_used_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "pod_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "revoked_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Role"
+          }
+        },
+        "table_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "prefix",
+        "label",
+        "roles",
+        "created_at"
+      ]
+    },
+    "Role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "head_referee",
+        "referee",
+        "judge_advisor",
+        "judge",
+        "queuer",
+        "emcee",
+        "scorekeeper",
+        "display"
+      ]
+    }
+  }
+}

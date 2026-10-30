@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update deliberation_state\n     set finalized_at = case when $2::text is null then null else now() end, finalized_by = $2, ceremony_shown = 0\n     where event_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9c8e585aad988452355a10b954787fe9d9b21b2c2a6d9504b3d184f2a92c2996"
+}

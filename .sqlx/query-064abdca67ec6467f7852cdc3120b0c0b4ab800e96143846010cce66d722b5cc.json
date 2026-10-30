@@ -1,0 +1,47 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into rubrics (id, event_id, event_code, season_id, schema_version, team_id, slot_id, pod_id, judge_names,\n         submitted_by_user, submitted_by_key, submitted_by, status, duplicate, scores, exceeds_comments, feedback,\n         nominations, innovation_project, robot_design, core_values_rows, created_at)\n       values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)\n       on conflict (id) do nothing",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Text",
+        "Int4",
+        "Uuid",
+        "Uuid",
+        "Uuid",
+        "Text",
+        "Uuid",
+        "Uuid",
+        "Text",
+        {
+          "Custom": {
+            "name": "rubric_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "accepted",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "Bool",
+        "Jsonb",
+        "Jsonb",
+        "Jsonb",
+        "TextArray",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "064abdca67ec6467f7852cdc3120b0c0b4ab800e96143846010cce66d722b5cc"
+}

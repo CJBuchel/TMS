@@ -1,0 +1,30 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select (select count(*) from game_matches where event_id = $1) as \"matches!\",\n              (select count(*) from judging_sessions where event_id = $1) as \"sessions!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "matches!",
+        "type_info": "Int8",
+        "origin": "Expression"
+      },
+      {
+        "ordinal": 1,
+        "name": "sessions!",
+        "type_info": "Int8",
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "461cebb49a21cbd083ab2d975b9c419f21f6e27e8b989f7a175ca751920b2599"
+}

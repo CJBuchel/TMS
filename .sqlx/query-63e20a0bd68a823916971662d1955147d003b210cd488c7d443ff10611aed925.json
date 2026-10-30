@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select finalized_at from deliberation_state where event_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "finalized_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "deliberation_state",
+            "name": "finalized_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "63e20a0bd68a823916971662d1955147d003b210cd488c7d443ff10611aed925"
+}

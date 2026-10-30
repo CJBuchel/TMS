@@ -1,0 +1,29 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update scoresheets set status = $2, review_note = coalesce($3, review_note),\n            reviewed_by = coalesce($4, reviewed_by), reviewed_at = case when $4::text is null then reviewed_at else now() end\n     where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        {
+          "Custom": {
+            "name": "scoresheet_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "published",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "bdf692da0f3dbb1f26f7dbcbb5909ca0ce0b37e652dc92bcfa0125aa9a37e8f5"
+}

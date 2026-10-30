@@ -1,0 +1,144 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select s.id, s.session_id, s.pod_id, s.team_id,\n              s.queue_state as \"queue: QueueState\", s.queue_previous as \"queue_previous: QueueState\",\n              (select r.status from rubrics r\n               where r.team_id = s.team_id and r.status in ('accepted', 'submitted')\n               order by r.status = 'accepted' desc limit 1) as \"rubric: RubricStatus\"\n       from judging_slots s\n       join judging_sessions j on j.id = s.session_id\n       join pods p on p.id = s.pod_id\n       where j.event_id = $1 and ($2::uuid[] is null or j.id = any($2)) order by p.sort_order",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "session_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "session_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "pod_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "pod_id"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "queue: QueueState",
+        "type_info": {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "queue_state"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "queue_previous: QueueState",
+        "type_info": {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "judging_slots",
+            "name": "queue_previous"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "rubric: RubricStatus",
+        "type_info": {
+          "Custom": {
+            "name": "rubric_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "accepted",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "origin": "Expression"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "UuidArray"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      null
+    ]
+  },
+  "hash": "caac1c2fb5d11e838d0126f11950c5dc8ec8510f52db64e5d20c8bcb6be74bac"
+}

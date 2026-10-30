@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update match_slots s set round = null\n     from game_matches m\n     where m.id = s.match_id and m.event_id = $1 and s.team_id is null and s.round is not null",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "3e46b5a88eeb1568b4a19c29c792beb0e44645d91e495a4e6ad2de99ff895963"
+}

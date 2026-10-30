@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into match_timers (event_id, run_id, countdown_ms, duration_ms, endgame_ms) values ($1, $2, $3, $4, $5)\n     on conflict (event_id) do nothing",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "de28e14caab0939be1b7fbb2427fa3192800cdb416678437f8f3a76f93d2336e"
+}

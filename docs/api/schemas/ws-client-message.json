@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ClientMessage",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "client_build": {
+          "type": "string"
+        },
+        "token": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "const": "hello"
+        },
+        "v": {
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        }
+      },
+      "required": [
+        "type",
+        "v",
+        "client_build"
+      ]
+    },
+    {
+      "description": "The complete desired subscription set. Replaces the previous set; duplicates are ignored.",
+      "type": "object",
+      "properties": {
+        "topics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Topic"
+          }
+        },
+        "type": {
+          "type": "string",
+          "const": "set_subscriptions"
+        }
+      },
+      "required": [
+        "type",
+        "topics"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "client_ms": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string",
+          "const": "time_sync"
+        }
+      },
+      "required": [
+        "type",
+        "client_ms"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "pong"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    {
+      "description": "From a station device: how many scoresheets and rubrics it holds that the server has not accepted yet.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "device_status"
+        },
+        "waiting": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "type",
+        "waiting"
+      ]
+    }
+  ],
+  "$defs": {
+    "Topic": {
+      "description": "Subscription topic: `name`, `name/<id>` or `name?<key>=<id>`.",
+      "type": "string",
+      "enum": [
+        "event",
+        "banners",
+        "teams",
+        "tables",
+        "pods",
+        "matches",
+        "judging_sessions",
+        "blocks",
+        "timer",
+        "rankings",
+        "scoresheets",
+        "presence",
+        "pod_timers",
+        "rubrics",
+        "deliberation",
+        "ceremony",
+        "issues"
+      ]
+    }
+  }
+}

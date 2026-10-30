@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into deliberation_state (event_id) values ($1) on conflict (event_id) do nothing",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "d4c9e54b807e0c7a325c59b54462752744e9d50543e8e97aa8396cc25626699d"
+}

@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SyncScoresheetsResponse",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SyncResult"
+      }
+    }
+  },
+  "required": [
+    "results"
+  ],
+  "$defs": {
+    "ScoresheetStatus": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "rejected"
+          ]
+        },
+        {
+          "description": "Waiting for the head referee.",
+          "type": "string",
+          "const": "submitted"
+        },
+        {
+          "description": "Counts for ranking.",
+          "type": "string",
+          "const": "published"
+        },
+        {
+          "description": "Replaced by a later sheet for the same round.",
+          "type": "string",
+          "const": "superseded"
+        }
+      ]
+    },
+    "SyncResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "oneOf": [
+        {
+          "description": "Stored. `status` says whether it counts yet.",
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "const": "accepted"
+            },
+            "status": {
+              "$ref": "#/$defs/ScoresheetStatus"
+            }
+          },
+          "required": [
+            "outcome",
+            "status"
+          ]
+        },
+        {
+          "description": "Already stored earlier; treat as accepted.",
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "const": "duplicate"
+            },
+            "status": {
+              "$ref": "#/$defs/ScoresheetStatus"
+            }
+          },
+          "required": [
+            "outcome",
+            "status"
+          ]
+        },
+        {
+          "description": "Stored nowhere: the server can't tell which team or round it is for. Fix the sheet and send it again.",
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "type": "string",
+              "const": "needs_binding"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "outcome",
+            "reason"
+          ]
+        },
+        {
+          "description": "Stored nowhere: the sheet is wrong for this event or has errors.",
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "issues": {
+              "type": "array",
+              "items": true
+            },
+            "message": {
+              "type": "string"
+            },
+            "outcome": {
+              "type": "string",
+              "const": "rejected"
+            }
+          },
+          "required": [
+            "outcome",
+            "code",
+            "message",
+            "issues"
+          ]
+        }
+      ],
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

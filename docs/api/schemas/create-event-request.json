@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CreateEventRequest",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "ends_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "name": {
+      "type": "string"
+    },
+    "season_id": {
+      "type": "string"
+    },
+    "starts_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "timezone": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "code",
+    "name",
+    "season_id",
+    "timezone",
+    "starts_on",
+    "ends_on"
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AuthResponse",
+  "type": "object",
+  "properties": {
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "identity": {
+      "$ref": "#/$defs/Identity"
+    },
+    "token": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "token",
+    "expires_at",
+    "identity"
+  ],
+  "$defs": {
+    "Identity": {
+      "type": "object",
+      "properties": {
+        "must_change_password": {
+          "type": "boolean"
+        },
+        "principal": {
+          "$ref": "#/$defs/Principal"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Role"
+          }
+        }
+      },
+      "required": [
+        "principal",
+        "roles",
+        "must_change_password"
+      ]
+    },
+    "Principal": {
+      "description": "Who a login token belongs to: a user or an event access key.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "display_name": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "user"
+            },
+            "user_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "username": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "user_id",
+            "username",
+            "display_name"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "event_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "key_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "kind": {
+              "type": "string",
+              "const": "key"
+            },
+            "label": {
+              "type": "string"
+            },
+            "pod_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "uuid",
+              "default": null
+            },
+            "table_id": {
+              "description": "The table or pod this device serves, when the key was bound to one.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "uuid",
+              "default": null
+            }
+          },
+          "required": [
+            "kind",
+            "key_id",
+            "event_id",
+            "label"
+          ]
+        }
+      ]
+    },
+    "Role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "head_referee",
+        "referee",
+        "judge_advisor",
+        "judge",
+        "queuer",
+        "emcee",
+        "scorekeeper",
+        "display"
+      ]
+    }
+  }
+}

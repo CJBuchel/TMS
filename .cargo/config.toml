@@ -1,0 +1,7 @@
+[env]
+# PostgreSQL major version bundled into the `tms` binary by postgresql_embedded's build script.
+# The archive is downloaded once per version and target, then cached in ~/.theseus.
+POSTGRESQL_VERSION = "^17"
+# sqlx checks queries against the committed .sqlx/ data, so no database is needed to build.
+# `cargo sqlx prepare` overrides this when regenerating that data (see docs/development.md).
+SQLX_OFFLINE = "true"

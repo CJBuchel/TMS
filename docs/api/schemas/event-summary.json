@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EventSummary",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "ends_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "season_id": {
+      "type": "string"
+    },
+    "settings": {
+      "$ref": "#/$defs/EventSettings",
+      "default": {
+        "advancement_slots": 0,
+        "countdown_seconds": 5,
+        "endgame_seconds": 30,
+        "gp_comment_required": true,
+        "judging_buffer_minutes": 15,
+        "judging_match_gap_minutes": 15,
+        "judging_session_minutes": 30,
+        "match_seconds": 150,
+        "practice_rounds": 1,
+        "queue_call_minutes": 10,
+        "queue_soon_minutes": 20,
+        "ranking_rounds": 3,
+        "rubric_review": "auto",
+        "scoresheet_review": "auto_publish",
+        "start_needs_ready": true,
+        "team_agreement_required": true
+      }
+    },
+    "starts_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "$ref": "#/$defs/EventStatus"
+    },
+    "timezone": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "code",
+    "name",
+    "season_id",
+    "timezone",
+    "starts_on",
+    "ends_on",
+    "status"
+  ],
+  "$defs": {
+    "EventSettings": {
+      "description": "Per-event rules and timings. Stored as JSON on the event; missing fields take their defaults, so new\nsettings never break older events.",
+      "type": "object",
+      "properties": {
+        "advancement_slots": {
+          "description": "How many teams advance to the next level of competition; 0 when none do.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 0,
+          "minimum": 0
+        },
+        "countdown_seconds": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 5,
+          "minimum": 0
+        },
+        "endgame_seconds": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 30,
+          "minimum": 0
+        },
+        "gp_comment_required": {
+          "description": "A Gracious Professionalism score other than 3 needs a comment.",
+          "type": "boolean",
+          "default": true
+        },
+        "judging_buffer_minutes": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 15,
+          "minimum": 0
+        },
+        "judging_match_gap_minutes": {
+          "description": "Minimum time between a team's judging session and any of its matches, used by schedule checks.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 15,
+          "minimum": 0
+        },
+        "judging_session_minutes": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 30,
+          "minimum": 0
+        },
+        "match_seconds": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 150,
+          "minimum": 0
+        },
+        "practice_rounds": {
+          "type": "integer",
+          "format": "uint8",
+          "default": 1,
+          "maximum": 255,
+          "minimum": 0
+        },
+        "queue_call_minutes": {
+          "description": "How far ahead of a match a team should be queueing: its status becomes \"Queue now\".",
+          "type": "integer",
+          "format": "uint32",
+          "default": 10,
+          "minimum": 0
+        },
+        "queue_soon_minutes": {
+          "description": "How far ahead of a match a team is shown as \"Soon\", so queuers can find it before it is due.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 20,
+          "minimum": 0
+        },
+        "ranking_rounds": {
+          "type": "integer",
+          "format": "uint8",
+          "default": 3,
+          "maximum": 255,
+          "minimum": 0
+        },
+        "rubric_review": {
+          "description": "Whether rubrics count straight away (a second one for a team waits) or wait for the judge advisor.",
+          "$ref": "#/$defs/RubricReview",
+          "default": "auto"
+        },
+        "scoresheet_review": {
+          "$ref": "#/$defs/ScoresheetReview",
+          "default": "auto_publish"
+        },
+        "start_needs_ready": {
+          "description": "The match timer only starts once every team is ready, a no-show or scratched (the head referee can override).",
+          "type": "boolean",
+          "default": true
+        },
+        "team_agreement_required": {
+          "description": "The team confirms the scoresheet before it is submitted.",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "EventStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "archived"
+      ]
+    },
+    "RubricReview": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "judge_advisor_review"
+      ]
+    },
+    "ScoresheetReview": {
+      "oneOf": [
+        {
+          "description": "Valid sheets count straight away; the head referee sees flagged ones.",
+          "type": "string",
+          "const": "auto_publish"
+        },
+        {
+          "description": "Every sheet waits for the head referee.",
+          "type": "string",
+          "const": "head_referee_review"
+        }
+      ]
+    }
+  }
+}

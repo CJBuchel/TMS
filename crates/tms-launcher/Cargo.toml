@@ -1,0 +1,47 @@
+[package]
+name = "tms-launcher"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "The `tms` program: the launcher window, and the server with its embedded database"
+
+[[bin]]
+name = "tms"
+path = "src/main.rs"
+
+[features]
+default = ["embedded-db", "gui"]
+embedded-db = ["tms-db/embedded"]
+# The launcher window. Without it, `tms` runs the server in the terminal.
+gui = ["dep:eframe", "dep:rfd", "dep:opener"]
+
+[dependencies]
+tms-core = { workspace = true }
+tms-db = { workspace = true, default-features = false }
+tms-server = { workspace = true }
+anyhow = "1"
+chrono.workspace = true
+uuid.workspace = true
+clap = { version = "4", features = ["derive", "env"] }
+local-ip-address = "0.6"
+qrcode = { version = "0.14", default-features = false, features = ["svg"] }
+serde = { workspace = true }
+serde_json.workspace = true
+toml = "1"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-appender = "0.2"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+eframe = { version = "0.37", optional = true, default-features = false, features = ["default_fonts", "glow", "wayland", "x11", "accesskit", "clipboard"] }
+rfd = { version = "0.17", optional = true }
+opener = { version = "0.9", optional = true }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_System_Console", "Win32_System_Power"] }
+
+[dev-dependencies]
+egui_kittest = { version = "0.37", features = ["wgpu", "snapshot"] }
+
+[lints]
+workspace = true

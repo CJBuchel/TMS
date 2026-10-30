@@ -1,0 +1,133 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into awards (id, event_id, kind, name, places, sort_order) values ($1, $2, $3, $4, $5, $6)\n       returning id, event_id, kind as \"kind: AwardKind\", name, places, sort_order",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "awards",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "event_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "awards",
+            "name": "event_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "kind: AwardKind",
+        "type_info": {
+          "Custom": {
+            "name": "award_kind",
+            "kind": {
+              "Enum": [
+                "champions",
+                "core_values",
+                "innovation_project",
+                "robot_design",
+                "robot_performance",
+                "coach_mentor",
+                "engineering_excellence",
+                "breakthrough",
+                "rising_all_star",
+                "motivate",
+                "peer",
+                "local"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "awards",
+            "name": "kind"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "name",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "awards",
+            "name": "name"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "places",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "awards",
+            "name": "places"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "sort_order",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "awards",
+            "name": "sort_order"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "award_kind",
+            "kind": {
+              "Enum": [
+                "champions",
+                "core_values",
+                "innovation_project",
+                "robot_design",
+                "robot_performance",
+                "coach_mentor",
+                "engineering_excellence",
+                "breakthrough",
+                "rising_all_star",
+                "motivate",
+                "peer",
+                "local"
+              ]
+            }
+          }
+        },
+        "Text",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "cb253c5a2ef252130af6be9ed6b7f5b7140cd81abb02da49ba06ffe503e49d6d"
+}

@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update pod_timers set session_id = $2, phase = $3, phase_started_at = $4, phase_ms = $5 where pod_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Int4",
+        "Timestamptz",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "aa43ad66ecbbe230020245427be44050060ad4e71a6193a17ea8c6cd7240b3d3"
+}

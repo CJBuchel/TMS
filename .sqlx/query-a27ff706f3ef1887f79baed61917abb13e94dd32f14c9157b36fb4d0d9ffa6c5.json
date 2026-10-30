@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update awards set sort_order = $3 where id = $1 and event_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a27ff706f3ef1887f79baed61917abb13e94dd32f14c9157b36fb4d0d9ffa6c5"
+}

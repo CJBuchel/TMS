@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update deliberation_state set ceremony_shown = $2 where event_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8ba87831dd0e962321d60e46bd770a161ded1d21f00ea5b239299c6234f5e376"
+}

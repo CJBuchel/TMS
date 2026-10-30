@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update pods set sort_order = $3 where id = $1 and event_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "95f331cef68d1eecee0b24384807c3b37af11b29d9aca4733749fc550cb1d6df"
+}

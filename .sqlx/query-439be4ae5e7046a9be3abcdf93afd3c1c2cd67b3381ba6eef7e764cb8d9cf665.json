@@ -1,0 +1,57 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into users (id, username, display_name, password_hash, roles, must_change_password)\n       values ($1, $2, $3, $4, $5, $6) returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Text",
+        "Text",
+        "Text",
+        {
+          "Custom": {
+            "name": "role[]",
+            "kind": {
+              "Array": {
+                "Custom": {
+                  "name": "role",
+                  "kind": {
+                    "Enum": [
+                      "admin",
+                      "head_referee",
+                      "referee",
+                      "judge_advisor",
+                      "judge",
+                      "queuer",
+                      "emcee",
+                      "scorekeeper",
+                      "display"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Bool"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "439be4ae5e7046a9be3abcdf93afd3c1c2cd67b3381ba6eef7e764cb8d9cf665"
+}

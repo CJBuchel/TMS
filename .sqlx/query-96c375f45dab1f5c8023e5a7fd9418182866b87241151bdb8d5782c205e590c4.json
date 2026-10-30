@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update match_slots s set round = r.n\n     from (select s2.id,\n                  (row_number() over (partition by s2.team_id, m.kind order by m.scheduled_start, m.number))::int as n\n           from match_slots s2 join game_matches m on m.id = s2.match_id\n           where m.event_id = $1 and s2.team_id is not null and m.state <> 'cancelled') r\n     where s.id = r.id and s.round is distinct from r.n",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "96c375f45dab1f5c8023e5a7fd9418182866b87241151bdb8d5782c205e590c4"
+}

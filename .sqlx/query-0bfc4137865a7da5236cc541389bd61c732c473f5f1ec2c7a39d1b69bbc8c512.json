@@ -1,0 +1,59 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update match_slots set queue_state = $3, queue_previous = null, queue_changed_at = now(), queue_changed_by = 'timer'\n     where match_id = any($1) and team_id is not null and queue_state = any($2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "UuidArray",
+        {
+          "Custom": {
+            "name": "slot_queue_state[]",
+            "kind": {
+              "Array": {
+                "Custom": {
+                  "name": "slot_queue_state",
+                  "kind": {
+                    "Enum": [
+                      "not_called",
+                      "called",
+                      "on_way",
+                      "waiting",
+                      "at_table",
+                      "ready",
+                      "running",
+                      "done",
+                      "no_show",
+                      "scratched"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "Custom": {
+            "name": "slot_queue_state",
+            "kind": {
+              "Enum": [
+                "not_called",
+                "called",
+                "on_way",
+                "waiting",
+                "at_table",
+                "ready",
+                "running",
+                "done",
+                "no_show",
+                "scratched"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0bfc4137865a7da5236cc541389bd61c732c473f5f1ec2c7a39d1b69bbc8c512"
+}

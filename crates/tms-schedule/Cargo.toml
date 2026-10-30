@@ -1,0 +1,16 @@
+[package]
+name = "tms-schedule"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Schedule import (Tournament-in-a-Box CSV), generation, and the bridge to the schedule checks"
+
+[dependencies]
+tms-core.workspace = true
+chrono.workspace = true
+uuid.workspace = true
+chrono-tz = "0.10"
+csv = "1"
+
+[lints]
+workspace = true

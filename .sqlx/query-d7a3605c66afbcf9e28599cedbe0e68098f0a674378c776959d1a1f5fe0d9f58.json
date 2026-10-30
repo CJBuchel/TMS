@@ -1,0 +1,43 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into game_matches (id, event_id, kind, number, scheduled_start, scheduled_end) values ($1, $2, $3, $4, $5, $6) returning id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "match_kind",
+            "kind": {
+              "Enum": [
+                "practice",
+                "ranking"
+              ]
+            }
+          }
+        },
+        "Int4",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d7a3605c66afbcf9e28599cedbe0e68098f0a674378c776959d1a1f5fe0d9f58"
+}

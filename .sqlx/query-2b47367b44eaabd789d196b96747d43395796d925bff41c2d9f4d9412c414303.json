@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into server_secrets (name, value) values ($1, $2) on conflict (name) do nothing",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2b47367b44eaabd789d196b96747d43395796d925bff41c2d9f4d9412c414303"
+}

@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select team_id from advancements where event_id = $1 order by position",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "advancements",
+            "name": "team_id"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "25ab0a71155b09c8c84e732adcc2c29d20ddf7af1f7061285bd089f52a8e3fed"
+}

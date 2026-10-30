@@ -1,0 +1,19 @@
+[application]
+name = "tms-client"
+
+[web]
+# Release builds write .br/.gz next to each asset; tms-server serves them to browsers that accept them.
+pre_compress = true
+
+[web.app]
+title = "TMS"
+
+[web.wasm_opt]
+level = "z"
+
+# `dx serve` forwards API and live-feed traffic to a locally running tms-server (WebSockets included).
+[[web.proxy]]
+backend = "http://127.0.0.1:8080/api/"
+
+[[web.proxy]]
+backend = "http://127.0.0.1:8080/ws"

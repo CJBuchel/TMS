@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update game_matches set state = $2,\n            started_at = case when $2 in ('scheduled'::match_state, 'staged'::match_state) then null else started_at end,\n            finished_at = case when $2 in ('scheduled'::match_state, 'staged'::match_state) then null else finished_at end\n     where id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        {
+          "Custom": {
+            "name": "match_state",
+            "kind": {
+              "Enum": [
+                "scheduled",
+                "staged",
+                "running",
+                "finished",
+                "cancelled"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "94593cc819252996047d1033b7a79c807f4a4833429b7b97ba42557dad11036b"
+}

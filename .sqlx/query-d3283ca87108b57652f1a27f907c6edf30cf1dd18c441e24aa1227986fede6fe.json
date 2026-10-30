@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select p.id as pod_id, t.session_id as \"session_id?\", t.phase as \"phase?\",\n              t.phase_started_at as \"phase_started_at?\", t.phase_ms as \"phase_ms?\"\n       from pods p left join pod_timers t on t.pod_id = p.id\n       where p.event_id = $1 order by p.sort_order",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "pod_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "pods",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "session_id?",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "pod_timers",
+            "name": "session_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "phase?",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "pod_timers",
+            "name": "phase"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "phase_started_at?",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "pod_timers",
+            "name": "phase_started_at"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "phase_ms?",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "pod_timers",
+            "name": "phase_ms"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "d3283ca87108b57652f1a27f907c6edf30cf1dd18c441e24aa1227986fede6fe"
+}

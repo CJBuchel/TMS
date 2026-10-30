@@ -1,0 +1,280 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select r.id, r.event_id, r.team_id, t.number as team_number, r.slot_id, r.pod_id, r.judge_names, r.submitted_by,\n              r.status as \"status: RubricStatus\", r.duplicate, r.scores as \"scores: Json<BTreeMap<String, u8>>\",\n              r.exceeds_comments as \"exceeds_comments: Json<BTreeMap<String, String>>\",\n              r.feedback as \"feedback: Json<Feedback>\", r.nominations, r.innovation_project, r.robot_design,\n              r.core_values_rows, r.review_note, r.created_at, r.received_at, r.reviewed_by\n       from rubrics r join teams t on t.id = r.team_id\n       where r.event_id = $1 order by r.received_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "event_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "event_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "team_number",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "teams",
+            "name": "number"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "slot_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "slot_id"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "pod_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "pod_id"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "judge_names",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "judge_names"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "submitted_by",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "submitted_by"
+          }
+        }
+      },
+      {
+        "ordinal": 8,
+        "name": "status: RubricStatus",
+        "type_info": {
+          "Custom": {
+            "name": "rubric_status",
+            "kind": {
+              "Enum": [
+                "submitted",
+                "accepted",
+                "rejected",
+                "superseded"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "status"
+          }
+        }
+      },
+      {
+        "ordinal": 9,
+        "name": "duplicate",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "duplicate"
+          }
+        }
+      },
+      {
+        "ordinal": 10,
+        "name": "scores: Json<BTreeMap<String, u8>>",
+        "type_info": "Jsonb",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "scores"
+          }
+        }
+      },
+      {
+        "ordinal": 11,
+        "name": "exceeds_comments: Json<BTreeMap<String, String>>",
+        "type_info": "Jsonb",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "exceeds_comments"
+          }
+        }
+      },
+      {
+        "ordinal": 12,
+        "name": "feedback: Json<Feedback>",
+        "type_info": "Jsonb",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "feedback"
+          }
+        }
+      },
+      {
+        "ordinal": 13,
+        "name": "nominations",
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "nominations"
+          }
+        }
+      },
+      {
+        "ordinal": 14,
+        "name": "innovation_project",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "innovation_project"
+          }
+        }
+      },
+      {
+        "ordinal": 15,
+        "name": "robot_design",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "robot_design"
+          }
+        }
+      },
+      {
+        "ordinal": 16,
+        "name": "core_values_rows",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "core_values_rows"
+          }
+        }
+      },
+      {
+        "ordinal": 17,
+        "name": "review_note",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "review_note"
+          }
+        }
+      },
+      {
+        "ordinal": 18,
+        "name": "created_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "created_at"
+          }
+        }
+      },
+      {
+        "ordinal": 19,
+        "name": "received_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "received_at"
+          }
+        }
+      },
+      {
+        "ordinal": 20,
+        "name": "reviewed_by",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "reviewed_by"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "1d1543bbedd8551d47dacd6cdc91dc9ef998a3b0ce9b677f1dd3a67d180055bd"
+}

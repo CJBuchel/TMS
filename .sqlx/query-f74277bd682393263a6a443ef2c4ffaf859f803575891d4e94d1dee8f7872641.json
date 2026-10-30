@@ -1,0 +1,136 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, kind as \"kind: MatchKind\", number, scheduled_start, scheduled_end,\n              state as \"state: MatchState\", started_at, finished_at\n       from game_matches\n       where event_id = $1 and ($2::uuid[] is null or id = any($2))\n       order by scheduled_start, kind, number",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "kind: MatchKind",
+        "type_info": {
+          "Custom": {
+            "name": "match_kind",
+            "kind": {
+              "Enum": [
+                "practice",
+                "ranking"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "kind"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "number",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "number"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "scheduled_start",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "scheduled_start"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "scheduled_end",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "scheduled_end"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "state: MatchState",
+        "type_info": {
+          "Custom": {
+            "name": "match_state",
+            "kind": {
+              "Enum": [
+                "scheduled",
+                "staged",
+                "running",
+                "finished",
+                "cancelled"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "state"
+          }
+        }
+      },
+      {
+        "ordinal": 6,
+        "name": "started_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "started_at"
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "finished_at",
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "finished_at"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "UuidArray"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "f74277bd682393263a6a443ef2c4ffaf859f803575891d4e94d1dee8f7872641"
+}

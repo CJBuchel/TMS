@@ -1,0 +1,2173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ServerMessage",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Role"
+          }
+        },
+        "server_ms": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string",
+          "const": "welcome"
+        },
+        "v": {
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        }
+      },
+      "required": [
+        "type",
+        "v",
+        "server_ms",
+        "roles"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TopicItem"
+          }
+        },
+        "topic": {
+          "$ref": "#/$defs/Topic"
+        },
+        "type": {
+          "type": "string",
+          "const": "snapshot"
+        }
+      },
+      "required": [
+        "type",
+        "topic",
+        "items"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "item": {
+          "$ref": "#/$defs/TopicItem"
+        },
+        "topic": {
+          "$ref": "#/$defs/Topic"
+        },
+        "type": {
+          "type": "string",
+          "const": "upsert"
+        }
+      },
+      "required": [
+        "type",
+        "topic",
+        "item"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "topic": {
+          "$ref": "#/$defs/Topic"
+        },
+        "type": {
+          "type": "string",
+          "const": "delete"
+        }
+      },
+      "required": [
+        "type",
+        "topic",
+        "id"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "client_ms": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "server_ms": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "type": "string",
+          "const": "time_sync"
+        }
+      },
+      "required": [
+        "type",
+        "client_ms",
+        "server_ms"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "const": "error"
+        }
+      },
+      "required": [
+        "type",
+        "code",
+        "message"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "ping"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  ],
+  "$defs": {
+    "Award": {
+      "description": "An award this event presents, with how many places.",
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "$ref": "#/$defs/AwardKind"
+        },
+        "name": {
+          "type": "string"
+        },
+        "places": {
+          "type": "integer",
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0
+        },
+        "sort_order": {
+          "description": "Ceremony order.",
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "kind",
+        "name",
+        "places",
+        "sort_order"
+      ]
+    },
+    "AwardKind": {
+      "type": "string",
+      "enum": [
+        "champions",
+        "core_values",
+        "innovation_project",
+        "robot_design",
+        "robot_performance",
+        "coach_mentor",
+        "engineering_excellence",
+        "breakthrough",
+        "rising_all_star",
+        "motivate",
+        "peer",
+        "local"
+      ]
+    },
+    "AwardWinner": {
+      "type": "object",
+      "properties": {
+        "assigned_by": {
+          "type": "string"
+        },
+        "award_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "note": {
+          "description": "Why the award skipped a higher-ranked eligible team; required when it did.",
+          "type": "string"
+        },
+        "place": {
+          "type": "integer",
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0
+        },
+        "team_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "award_id",
+        "team_id",
+        "place",
+        "note",
+        "assigned_by"
+      ]
+    },
+    "Banner": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message": {
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/BannerSeverity"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "severity",
+        "message",
+        "created_at"
+      ]
+    },
+    "BannerSeverity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ]
+    },
+    "BlockKind": {
+      "type": "string",
+      "enum": [
+        "break",
+        "ceremony",
+        "meeting",
+        "other"
+      ]
+    },
+    "Ceremony": {
+      "description": "What the venue screen shows during the awards ceremony: only what has been revealed.",
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "shown": {
+          "description": "How many slides have been revealed.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "slides": {
+          "description": "The revealed slides, in ceremony order.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CeremonySlide"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "event_id",
+        "shown",
+        "total",
+        "slides"
+      ]
+    },
+    "CeremonySlide": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "winners": {
+          "description": "Lowest place first, as they are read out.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CeremonyWinner"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "winners"
+      ]
+    },
+    "CeremonyWinner": {
+      "type": "object",
+      "properties": {
+        "place": {
+          "description": "\"1st\", \"2nd\"; empty for single-place awards and advancement.",
+          "type": "string"
+        },
+        "team_name": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "place",
+        "team_number",
+        "team_name"
+      ]
+    },
+    "Deliberation": {
+      "description": "Everything the judge advisor deliberates with, kept current on the `deliberation` topic.",
+      "type": "object",
+      "properties": {
+        "advancement_slots": {
+          "description": "How many teams advance, from the event settings.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "advancing": {
+          "description": "Advancing teams, in order.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "awards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Award"
+          }
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "finalized": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Finalized"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nominations": {
+          "description": "Candidates the judges selected on accepted rubrics.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/Nomination"
+            }
+          }
+        },
+        "teams": {
+          "description": "In team number order.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TeamScores"
+          }
+        },
+        "winners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AwardWinner"
+          }
+        }
+      },
+      "required": [
+        "event_id",
+        "teams",
+        "nominations",
+        "awards",
+        "winners",
+        "advancement_slots",
+        "advancing"
+      ]
+    },
+    "EventSettings": {
+      "description": "Per-event rules and timings. Stored as JSON on the event; missing fields take their defaults, so new\nsettings never break older events.",
+      "type": "object",
+      "properties": {
+        "advancement_slots": {
+          "description": "How many teams advance to the next level of competition; 0 when none do.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 0,
+          "minimum": 0
+        },
+        "countdown_seconds": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 5,
+          "minimum": 0
+        },
+        "endgame_seconds": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 30,
+          "minimum": 0
+        },
+        "gp_comment_required": {
+          "description": "A Gracious Professionalism score other than 3 needs a comment.",
+          "type": "boolean",
+          "default": true
+        },
+        "judging_buffer_minutes": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 15,
+          "minimum": 0
+        },
+        "judging_match_gap_minutes": {
+          "description": "Minimum time between a team's judging session and any of its matches, used by schedule checks.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 15,
+          "minimum": 0
+        },
+        "judging_session_minutes": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 30,
+          "minimum": 0
+        },
+        "match_seconds": {
+          "type": "integer",
+          "format": "uint32",
+          "default": 150,
+          "minimum": 0
+        },
+        "practice_rounds": {
+          "type": "integer",
+          "format": "uint8",
+          "default": 1,
+          "maximum": 255,
+          "minimum": 0
+        },
+        "queue_call_minutes": {
+          "description": "How far ahead of a match a team should be queueing: its status becomes \"Queue now\".",
+          "type": "integer",
+          "format": "uint32",
+          "default": 10,
+          "minimum": 0
+        },
+        "queue_soon_minutes": {
+          "description": "How far ahead of a match a team is shown as \"Soon\", so queuers can find it before it is due.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 20,
+          "minimum": 0
+        },
+        "ranking_rounds": {
+          "type": "integer",
+          "format": "uint8",
+          "default": 3,
+          "maximum": 255,
+          "minimum": 0
+        },
+        "rubric_review": {
+          "description": "Whether rubrics count straight away (a second one for a team waits) or wait for the judge advisor.",
+          "$ref": "#/$defs/RubricReview",
+          "default": "auto"
+        },
+        "scoresheet_review": {
+          "$ref": "#/$defs/ScoresheetReview",
+          "default": "auto_publish"
+        },
+        "start_needs_ready": {
+          "description": "The match timer only starts once every team is ready, a no-show or scratched (the head referee can override).",
+          "type": "boolean",
+          "default": true
+        },
+        "team_agreement_required": {
+          "description": "The team confirms the scoresheet before it is submitted.",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "EventStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "archived"
+      ]
+    },
+    "EventSummary": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "ends_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "season_id": {
+          "type": "string"
+        },
+        "settings": {
+          "$ref": "#/$defs/EventSettings",
+          "default": {
+            "advancement_slots": 0,
+            "countdown_seconds": 5,
+            "endgame_seconds": 30,
+            "gp_comment_required": true,
+            "judging_buffer_minutes": 15,
+            "judging_match_gap_minutes": 15,
+            "judging_session_minutes": 30,
+            "match_seconds": 150,
+            "practice_rounds": 1,
+            "queue_call_minutes": 10,
+            "queue_soon_minutes": 20,
+            "ranking_rounds": 3,
+            "rubric_review": "auto",
+            "scoresheet_review": "auto_publish",
+            "start_needs_ready": true,
+            "team_agreement_required": true
+          }
+        },
+        "starts_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "$ref": "#/$defs/EventStatus"
+        },
+        "timezone": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "name",
+        "season_id",
+        "timezone",
+        "starts_on",
+        "ends_on",
+        "status"
+      ]
+    },
+    "Feedback": {
+      "description": "The feedback page: \"Great job\" and \"Think about\" for each area.",
+      "type": "object",
+      "properties": {
+        "core_values_great": {
+          "type": "string",
+          "default": ""
+        },
+        "core_values_think": {
+          "type": "string",
+          "default": ""
+        },
+        "innovation_project_great": {
+          "type": "string",
+          "default": ""
+        },
+        "innovation_project_think": {
+          "type": "string",
+          "default": ""
+        },
+        "robot_design_great": {
+          "type": "string",
+          "default": ""
+        },
+        "robot_design_think": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "Finalized": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "by": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "at",
+        "by"
+      ]
+    },
+    "GameMatch": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "finished_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "$ref": "#/$defs/MatchKind"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "scheduled_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "scheduled_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MatchSlot"
+          }
+        },
+        "started_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "state": {
+          "$ref": "#/$defs/MatchState"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "kind",
+        "number",
+        "scheduled_start",
+        "scheduled_end",
+        "state",
+        "slots"
+      ]
+    },
+    "GameTable": {
+      "description": "A competition table. Tables play in pairs by `sort_order`: positions 0 and 1 face each other, then 2 and 3.",
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sort_order": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "name",
+        "sort_order"
+      ]
+    },
+    "Hundredths": {
+      "description": "A score in hundredths of a point. Gracious Professionalism from four or five matches is scaled by 0.75 or\n0.6, so Core Values can be fractional.",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "IssueCode": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "no_judging",
+            "extra_judging"
+          ]
+        },
+        {
+          "description": "A team is in two places at once.",
+          "type": "string",
+          "const": "overlap"
+        },
+        {
+          "description": "A team's match is too close to its judging session.",
+          "type": "string",
+          "const": "judging_gap"
+        },
+        {
+          "description": "A team has more or fewer ranking matches than the event has rounds.",
+          "type": "string",
+          "const": "ranking_count"
+        },
+        {
+          "description": "Two matches use one table at the same time.",
+          "type": "string",
+          "const": "table_clash"
+        },
+        {
+          "description": "Two sessions use one pod at the same time.",
+          "type": "string",
+          "const": "pod_clash"
+        },
+        {
+          "description": "A team's matches follow each other with little time between.",
+          "type": "string",
+          "const": "back_to_back"
+        },
+        {
+          "description": "A team meets the same opponent in more than one ranking match.",
+          "type": "string",
+          "const": "same_opponent"
+        },
+        {
+          "description": "A match or session is scheduled during a break, ceremony or meeting.",
+          "type": "string",
+          "const": "block_overlap"
+        }
+      ]
+    },
+    "IssueSeverity": {
+      "oneOf": [
+        {
+          "description": "The schedule can't run as written.",
+          "type": "string",
+          "const": "error"
+        },
+        {
+          "description": "It can run, but a team or volunteer will have a worse day.",
+          "type": "string",
+          "const": "warning"
+        }
+      ]
+    },
+    "JudgingSession": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "number": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "scheduled_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "scheduled_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JudgingSlot"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "number",
+        "scheduled_start",
+        "scheduled_end",
+        "slots"
+      ]
+    },
+    "JudgingSlot": {
+      "description": "One team in one pod in one judging session.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "pod_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "queue": {
+          "description": "Where the team is: called, outside the room (`waiting`), in the room (`at_table`), in session\n(`running`), done, or a no-show.",
+          "$ref": "#/$defs/QueueState"
+        },
+        "queue_previous": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QueueState"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rubric": {
+          "description": "The team's rubric status: accepted if there is one, otherwise one waiting for review.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RubricStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "team_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id",
+        "pod_id",
+        "queue"
+      ]
+    },
+    "MatchKind": {
+      "type": "string",
+      "enum": [
+        "practice",
+        "ranking"
+      ]
+    },
+    "MatchSlot": {
+      "description": "One team at one table in one match.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "queue": {
+          "description": "Where the team is on its way to this match.",
+          "$ref": "#/$defs/QueueState"
+        },
+        "queue_changed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "queue_previous": {
+          "description": "The state before the last change, which undo returns to.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QueueState"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "round": {
+          "description": "Which of the team's matches of this kind this is: 1 for its first ranking match, and so on.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int32"
+        },
+        "sheet": {
+          "description": "The slot's scoresheet: published if there is one, otherwise one waiting for review. Scores are not shown here,\nbecause this topic is public.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScoresheetStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "table_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "team_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id",
+        "table_id",
+        "queue"
+      ]
+    },
+    "MatchState": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "scheduled",
+            "running",
+            "finished",
+            "cancelled"
+          ]
+        },
+        {
+          "description": "On deck: the next start of the match timer runs it.",
+          "type": "string",
+          "const": "staged"
+        }
+      ]
+    },
+    "MatchTimer": {
+      "description": "The event's match timer. Live phases follow from `starts_at` and the clock, so every device computes the\nsame time remaining from one message.",
+      "type": "object",
+      "properties": {
+        "countdown_ms": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "duration_ms": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "endgame_ms": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "match_ids": {
+          "description": "The matches this run is for.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "phase": {
+          "$ref": "#/$defs/TimerPhase"
+        },
+        "starts_at": {
+          "description": "Match time zero, after any countdown.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "event_id",
+        "phase",
+        "countdown_ms",
+        "duration_ms",
+        "endgame_ms",
+        "match_ids"
+      ]
+    },
+    "Nomination": {
+      "type": "string",
+      "enum": [
+        "breakthrough",
+        "rising_all_star",
+        "motivate"
+      ]
+    },
+    "Pod": {
+      "description": "A judging room or group of judges.",
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "room": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sort_order": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "name",
+        "sort_order"
+      ]
+    },
+    "PodTimer": {
+      "description": "A pod's timer: which phase of which session it is in, and when that phase ends.",
+      "type": "object",
+      "properties": {
+        "phase": {
+          "description": "Index into the session phases; `None` when the pod is idle.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint",
+          "minimum": 0
+        },
+        "phase_ms": {
+          "description": "The phase's length, including any minutes added.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "phase_started_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "pod_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "session_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "pod_id",
+        "phase_ms"
+      ]
+    },
+    "Presence": {
+      "description": "A station device logged in with an access key and connected to the live feed right now.",
+      "type": "object",
+      "properties": {
+        "connections": {
+          "description": "Open connections with this key (a reloaded tab can briefly have two).",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "key_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "label": {
+          "type": "string"
+        },
+        "pod_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "role": {
+          "$ref": "#/$defs/Role"
+        },
+        "since": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "table_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "waiting": {
+          "description": "Scoresheets and rubrics kept on the device that the server has not accepted yet, as the device reports.",
+          "type": "integer",
+          "format": "uint32",
+          "default": 0,
+          "minimum": 0
+        }
+      },
+      "required": [
+        "key_id",
+        "label",
+        "role",
+        "connections",
+        "since"
+      ]
+    },
+    "QueueState": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "not_called",
+            "called",
+            "on_way",
+            "at_table",
+            "ready",
+            "running",
+            "done",
+            "no_show"
+          ]
+        },
+        {
+          "description": "In the queue area beside the field, waiting to be sent to the table.",
+          "type": "string",
+          "const": "waiting"
+        },
+        {
+          "description": "Not playing this match, by the head referee's decision.",
+          "type": "string",
+          "const": "scratched"
+        }
+      ]
+    },
+    "RankingRow": {
+      "description": "One team's line on the scoreboard.",
+      "type": "object",
+      "properties": {
+        "best": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "rank": {
+          "description": "Competition ranking: tied teams share a rank and the next rank is skipped (1, 1, 3).",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "scores": {
+          "description": "One entry per ranking round; `None` until the round has a published score.",
+          "type": "array",
+          "items": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "uint16",
+            "maximum": 65535,
+            "minimum": 0
+          }
+        },
+        "team_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "team_id",
+        "rank",
+        "scores"
+      ]
+    },
+    "Role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "head_referee",
+        "referee",
+        "judge_advisor",
+        "judge",
+        "queuer",
+        "emcee",
+        "scorekeeper",
+        "display"
+      ]
+    },
+    "Rubric": {
+      "description": "A stored rubric, as judges and the judge advisor see it.",
+      "type": "object",
+      "properties": {
+        "core_values_rows": {
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duplicate": {
+          "description": "The team already has an accepted rubric.",
+          "type": "boolean"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "exceeds_comments": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "feedback": {
+          "$ref": "#/$defs/Feedback"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "innovation_project": {
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "judge_names": {
+          "type": "string"
+        },
+        "nominations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Nomination"
+          }
+        },
+        "pod_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "received_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "review_note": {
+          "type": "string"
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "robot_design": {
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "scores": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "uint8",
+            "maximum": 255,
+            "minimum": 0
+          }
+        },
+        "slot_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "status": {
+          "$ref": "#/$defs/RubricStatus"
+        },
+        "submitted_by": {
+          "type": "string"
+        },
+        "team_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "team_id",
+        "team_number",
+        "judge_names",
+        "submitted_by",
+        "status",
+        "duplicate",
+        "scores",
+        "exceeds_comments",
+        "feedback",
+        "nominations",
+        "innovation_project",
+        "robot_design",
+        "core_values_rows",
+        "review_note",
+        "created_at",
+        "received_at"
+      ]
+    },
+    "RubricReview": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "judge_advisor_review"
+      ]
+    },
+    "RubricStatus": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "accepted",
+        "rejected",
+        "superseded"
+      ]
+    },
+    "ScheduleBlock": {
+      "description": "Something on the event timetable that is not a match or judging session: lunch, opening ceremony, briefings.",
+      "type": "object",
+      "properties": {
+        "ends_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "$ref": "#/$defs/BlockKind"
+        },
+        "name": {
+          "type": "string"
+        },
+        "starts_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "kind",
+        "name",
+        "starts_at",
+        "ends_at"
+      ]
+    },
+    "ScheduleIssue": {
+      "description": "One problem with the schedule. Its id follows from what it is about, so the same problem keeps its id.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/IssueCode"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message": {
+          "type": "string"
+        },
+        "refs": {
+          "description": "Matches and sessions involved.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "severity": {
+          "$ref": "#/$defs/IssueSeverity"
+        },
+        "team_id": {
+          "description": "The team this is about; `None` for event-wide issues such as a table used twice at once.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "severity",
+        "refs",
+        "message"
+      ]
+    },
+    "Scoresheet": {
+      "description": "A stored scoresheet, as head referees and referees see it.",
+      "type": "object",
+      "properties": {
+        "answers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ScoresheetFlag"
+          }
+        },
+        "gp": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint8",
+          "maximum": 255,
+          "minimum": 0
+        },
+        "gp_comment": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "issues": {
+          "description": "Warnings the season raised when the sheet arrived.",
+          "type": "array",
+          "items": true
+        },
+        "kind": {
+          "$ref": "#/$defs/MatchKind"
+        },
+        "match_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "no_show": {
+          "type": "boolean"
+        },
+        "private_comment": {
+          "type": "string"
+        },
+        "received_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "referee_name": {
+          "type": "string"
+        },
+        "review_note": {
+          "description": "The head referee's note, shown to the referee when a sheet is rejected.",
+          "type": "string"
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "round": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "score": {
+          "type": "integer",
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "slot_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "status": {
+          "$ref": "#/$defs/ScoresheetStatus"
+        },
+        "submitted_by": {
+          "description": "The login that sent it: `user:<name>` or `key:<label>`.",
+          "type": "string"
+        },
+        "table_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "team_agreed": {
+          "type": "boolean"
+        },
+        "team_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "team_initials": {
+          "type": "string"
+        },
+        "team_number": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "team_id",
+        "team_number",
+        "kind",
+        "round",
+        "submitted_by",
+        "referee_name",
+        "status",
+        "flags",
+        "no_show",
+        "score",
+        "gp_comment",
+        "answers",
+        "issues",
+        "team_agreed",
+        "team_initials",
+        "private_comment",
+        "review_note",
+        "created_at",
+        "received_at"
+      ]
+    },
+    "ScoresheetFlag": {
+      "description": "Why a sheet waits for the head referee even when the event publishes automatically.",
+      "oneOf": [
+        {
+          "description": "The team already has a published sheet for this round.",
+          "type": "string",
+          "const": "duplicate_round"
+        },
+        {
+          "description": "The season raised a warning, such as more seeds planted than released.",
+          "type": "string",
+          "const": "warnings"
+        },
+        {
+          "description": "The device's total differed from the server's; the server's total was kept.",
+          "type": "string",
+          "const": "score_recomputed"
+        }
+      ]
+    },
+    "ScoresheetReview": {
+      "oneOf": [
+        {
+          "description": "Valid sheets count straight away; the head referee sees flagged ones.",
+          "type": "string",
+          "const": "auto_publish"
+        },
+        {
+          "description": "Every sheet waits for the head referee.",
+          "type": "string",
+          "const": "head_referee_review"
+        }
+      ]
+    },
+    "ScoresheetStatus": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "rejected"
+          ]
+        },
+        {
+          "description": "Waiting for the head referee.",
+          "type": "string",
+          "const": "submitted"
+        },
+        {
+          "description": "Counts for ranking.",
+          "type": "string",
+          "const": "published"
+        },
+        {
+          "description": "Replaced by a later sheet for the same round.",
+          "type": "string",
+          "const": "superseded"
+        }
+      ]
+    },
+    "Team": {
+      "type": "object",
+      "properties": {
+        "affiliation": {
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "number": {
+          "description": "The team's FIRST number, as text (\"1234\").",
+          "type": "string"
+        },
+        "pit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "event_id",
+        "number",
+        "name",
+        "affiliation",
+        "notes"
+      ]
+    },
+    "TeamScores": {
+      "description": "One team's line of the spreadsheet's Results and Rankings page.",
+      "type": "object",
+      "properties": {
+        "champions_rank": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "champions_score": {
+          "description": "Sum of the four ranks; lowest is best.",
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "core_values": {
+          "description": "Core Values rows from both rubrics plus the Gracious Professionalism score.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Hundredths"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "core_values_rank": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "gracious_professionalism": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Hundredths"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "innovation_project": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "innovation_project_rank": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "robot_design": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "robot_design_rank": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "robot_game": {
+          "description": "Best ranking match score.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0
+        },
+        "robot_game_rank": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0
+        },
+        "robot_game_scores": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint16",
+            "maximum": 65535,
+            "minimum": 0
+          }
+        },
+        "team_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "team_id",
+        "robot_game_scores",
+        "innovation_project_rank",
+        "robot_design_rank",
+        "core_values_rank",
+        "robot_game_rank",
+        "champions_score",
+        "champions_rank"
+      ]
+    },
+    "TimerPhase": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "idle",
+            "countdown",
+            "running",
+            "ended",
+            "aborted"
+          ]
+        },
+        {
+          "description": "The last part of the match, shown in a warning colour.",
+          "type": "string",
+          "const": "endgame"
+        }
+      ]
+    },
+    "Topic": {
+      "description": "Subscription topic: `name`, `name/<id>` or `name?<key>=<id>`.",
+      "type": "string",
+      "enum": [
+        "event",
+        "banners",
+        "teams",
+        "tables",
+        "pods",
+        "matches",
+        "judging_sessions",
+        "blocks",
+        "timer",
+        "rankings",
+        "scoresheets",
+        "presence",
+        "pod_timers",
+        "rubrics",
+        "deliberation",
+        "ceremony",
+        "issues"
+      ]
+    },
+    "TopicItem": {
+      "description": "`{\"kind\": \"match\", \"data\": {...}}`: the data sits in its own field so its fields can never clash with the tag.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/EventSummary"
+            },
+            "kind": {
+              "type": "string",
+              "const": "event"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Banner"
+            },
+            "kind": {
+              "type": "string",
+              "const": "banner"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Team"
+            },
+            "kind": {
+              "type": "string",
+              "const": "team"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/GameTable"
+            },
+            "kind": {
+              "type": "string",
+              "const": "table"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Pod"
+            },
+            "kind": {
+              "type": "string",
+              "const": "pod"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/GameMatch"
+            },
+            "kind": {
+              "type": "string",
+              "const": "match"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/JudgingSession"
+            },
+            "kind": {
+              "type": "string",
+              "const": "judging_session"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/ScheduleBlock"
+            },
+            "kind": {
+              "type": "string",
+              "const": "block"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/MatchTimer"
+            },
+            "kind": {
+              "type": "string",
+              "const": "timer"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/RankingRow"
+            },
+            "kind": {
+              "type": "string",
+              "const": "ranking"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Scoresheet"
+            },
+            "kind": {
+              "type": "string",
+              "const": "scoresheet"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Presence"
+            },
+            "kind": {
+              "type": "string",
+              "const": "presence"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/PodTimer"
+            },
+            "kind": {
+              "type": "string",
+              "const": "pod_timer"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Rubric"
+            },
+            "kind": {
+              "type": "string",
+              "const": "rubric"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Deliberation"
+            },
+            "kind": {
+              "type": "string",
+              "const": "deliberation"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Ceremony"
+            },
+            "kind": {
+              "type": "string",
+              "const": "ceremony"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/ScheduleIssue"
+            },
+            "kind": {
+              "type": "string",
+              "const": "issue"
+            }
+          },
+          "required": [
+            "kind",
+            "data"
+          ]
+        }
+      ]
+    }
+  }
+}

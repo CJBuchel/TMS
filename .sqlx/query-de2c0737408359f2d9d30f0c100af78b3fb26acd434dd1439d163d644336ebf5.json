@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select team_id, nominations from rubrics\n     where event_id = $1 and status = 'accepted' and cardinality(nominations) > 0",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "nominations",
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "rubrics",
+            "name": "nominations"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "de2c0737408359f2d9d30f0c100af78b3fb26acd434dd1439d163d644336ebf5"
+}

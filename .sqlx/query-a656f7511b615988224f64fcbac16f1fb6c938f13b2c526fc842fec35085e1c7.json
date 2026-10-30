@@ -1,0 +1,98 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select m.event_id, s.match_id, s.table_id, s.team_id, m.kind as \"kind: MatchKind\", s.round\n       from match_slots s join game_matches m on m.id = s.match_id where s.id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "event_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "event_id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "match_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "match_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "table_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "table_id"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "kind: MatchKind",
+        "type_info": {
+          "Custom": {
+            "name": "match_kind",
+            "kind": {
+              "Enum": [
+                "practice",
+                "ranking"
+              ]
+            }
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "game_matches",
+            "name": "kind"
+          }
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "round",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "match_slots",
+            "name": "round"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "a656f7511b615988224f64fcbac16f1fb6c938f13b2c526fc842fec35085e1c7"
+}

@@ -1,0 +1,64 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select team_id, round, score, no_show from scoresheets\n     where event_id = $1 and kind = 'ranking' and status = 'published'",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "team_id",
+        "type_info": "Uuid",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "team_id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "round",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "round"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "score",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "score"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "no_show",
+        "type_info": "Bool",
+        "origin": {
+          "Table": {
+            "table": "scoresheets",
+            "name": "no_show"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "e40fdf88d4725de762327acf3b7ea2b1d2395c974f6498084d7970e4d11a1dda"
+}

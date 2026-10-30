@@ -1,0 +1,3 @@
+# Rust defaults except: 2-space indentation and a 120-character line width.
+tab_spaces = 2
+max_width = 120

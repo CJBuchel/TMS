@@ -13,6 +13,32 @@ pub struct StreamMatchesResponse {
     #[prost(message, repeated, tag = "1")]
     pub game_matches: ::prost::alloc::vec::Vec<GameMatchResponse>,
 }
+/// Records the team's signature agreeing to the score for one table in a match.
+/// The team is resolved server side from the table assignment.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SubmitSignatureRequest {
+    #[prost(string, tag = "1")]
+    pub match_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub table_id: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", tag = "3")]
+    pub signature_png: ::prost::alloc::vec::Vec<u8>,
+}
+#[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct SubmitSignatureResponse {}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetSignatureRequest {
+    #[prost(string, tag = "1")]
+    pub match_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub table_id: ::prost::alloc::string::String,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct GetSignatureResponse {
+    /// Unset if the team has not signed yet
+    #[prost(message, optional, tag = "1")]
+    pub signature: ::core::option::Option<super::db::TeamSignature>,
+}
 /// Generated client implementations.
 pub mod game_match_service_client {
     #![allow(
@@ -128,6 +154,54 @@ pub mod game_match_service_client {
                 .insert(GrpcMethod::new("tms.api.GameMatchService", "StreamMatches"));
             self.inner.server_streaming(req, path, codec).await
         }
+        pub async fn submit_signature(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SubmitSignatureRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::SubmitSignatureResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tms.api.GameMatchService/SubmitSignature",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("tms.api.GameMatchService", "SubmitSignature"));
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_signature(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSignatureRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetSignatureResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/tms.api.GameMatchService/GetSignature",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("tms.api.GameMatchService", "GetSignature"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -154,6 +228,20 @@ pub mod game_match_service_server {
             request: tonic::Request<super::StreamMatchesRequest>,
         ) -> std::result::Result<
             tonic::Response<Self::StreamMatchesStream>,
+            tonic::Status,
+        >;
+        async fn submit_signature(
+            &self,
+            request: tonic::Request<super::SubmitSignatureRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::SubmitSignatureResponse>,
+            tonic::Status,
+        >;
+        async fn get_signature(
+            &self,
+            request: tonic::Request<super::GetSignatureRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetSignatureResponse>,
             tonic::Status,
         >;
     }
@@ -276,6 +364,98 @@ pub mod game_match_service_server {
                                 max_encoding_message_size,
                             );
                         let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/tms.api.GameMatchService/SubmitSignature" => {
+                    #[allow(non_camel_case_types)]
+                    struct SubmitSignatureSvc<T: GameMatchService>(pub Arc<T>);
+                    impl<
+                        T: GameMatchService,
+                    > tonic::server::UnaryService<super::SubmitSignatureRequest>
+                    for SubmitSignatureSvc<T> {
+                        type Response = super::SubmitSignatureResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::SubmitSignatureRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as GameMatchService>::submit_signature(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = SubmitSignatureSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/tms.api.GameMatchService/GetSignature" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetSignatureSvc<T: GameMatchService>(pub Arc<T>);
+                    impl<
+                        T: GameMatchService,
+                    > tonic::server::UnaryService<super::GetSignatureRequest>
+                    for GetSignatureSvc<T> {
+                        type Response = super::GetSignatureResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::GetSignatureRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as GameMatchService>::get_signature(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = GetSignatureSvc(inner);
+                        let codec = tonic_prost::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
                         Ok(res)
                     };
                     Box::pin(fut)

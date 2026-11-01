@@ -79,3 +79,12 @@ message TableName {
 message PodName {
   string pod_name = 2;
 }
+
+// A team's hand-drawn sign-off agreeing to the score of a match.
+message TeamSignature {
+  string match_id = 1;
+  string table_id = 2;
+  string team_id = 3;
+  bytes signature_png = 4;
+  uint64 signed_at_unix_ms = 5;
+}

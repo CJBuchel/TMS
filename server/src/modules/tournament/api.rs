@@ -15,11 +15,12 @@ use crate::{
       tournament_service_server::TournamentService,
     },
     common::Role,
-    db::{GameMatch, JudgingSession, PodName, TableName, Team, Tournament, User},
+    db::{GameMatch, JudgingSession, PodName, TableName, Team, TeamSignature, Tournament, User},
   },
   modules::{
     game_match::GameMatchRepository, judging_session::JudgingSessionRepository, pod_name::PodRepository,
-    table_name::TableRepository, team::TeamRepository, tournament::TournamentRepository, user::UserRepository,
+    table_name::TableRepository, team::TeamRepository, team_signature::TeamSignatureRepository,
+    tournament::TournamentRepository, user::UserRepository,
   },
 };
 
@@ -106,6 +107,7 @@ impl TournamentService for TournamentApi {
     User::clear().map_err(|e| Status::internal(format!("Failed to clear user data: {}", e)))?;
     Team::clear().map_err(|e| Status::internal(format!("Failed to clear team data: {}", e)))?;
     GameMatch::clear().map_err(|e| Status::internal(format!("Failed to clear match data: {}", e)))?;
+    TeamSignature::clear().map_err(|e| Status::internal(format!("Failed to clear signature data: {}", e)))?;
     TableName::clear().map_err(|e| Status::internal(format!("Failed to clear table name data: {}", e)))?;
     PodName::clear().map_err(|e| Status::internal(format!("Failed to clear pod name data: {}", e)))?;
     JudgingSession::clear().map_err(|e| Status::internal(format!("Failed to clear judging session data: {}", e)))?;

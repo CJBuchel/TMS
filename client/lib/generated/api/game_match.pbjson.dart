@@ -64,3 +64,67 @@ const StreamMatchesResponse$json = {
 final $typed_data.Uint8List streamMatchesResponseDescriptor = $convert.base64Decode(
     'ChVTdHJlYW1NYXRjaGVzUmVzcG9uc2USPQoMZ2FtZV9tYXRjaGVzGAEgAygLMhoudG1zLmFwaS'
     '5HYW1lTWF0Y2hSZXNwb25zZVILZ2FtZU1hdGNoZXM=');
+
+@$core.Deprecated('Use submitSignatureRequestDescriptor instead')
+const SubmitSignatureRequest$json = {
+  '1': 'SubmitSignatureRequest',
+  '2': [
+    {'1': 'match_id', '3': 1, '4': 1, '5': 9, '10': 'matchId'},
+    {'1': 'table_id', '3': 2, '4': 1, '5': 9, '10': 'tableId'},
+    {'1': 'signature_png', '3': 3, '4': 1, '5': 12, '10': 'signaturePng'},
+  ],
+};
+
+/// Descriptor for `SubmitSignatureRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List submitSignatureRequestDescriptor = $convert.base64Decode(
+    'ChZTdWJtaXRTaWduYXR1cmVSZXF1ZXN0EhkKCG1hdGNoX2lkGAEgASgJUgdtYXRjaElkEhkKCH'
+    'RhYmxlX2lkGAIgASgJUgd0YWJsZUlkEiMKDXNpZ25hdHVyZV9wbmcYAyABKAxSDHNpZ25hdHVy'
+    'ZVBuZw==');
+
+@$core.Deprecated('Use submitSignatureResponseDescriptor instead')
+const SubmitSignatureResponse$json = {
+  '1': 'SubmitSignatureResponse',
+};
+
+/// Descriptor for `SubmitSignatureResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List submitSignatureResponseDescriptor =
+    $convert.base64Decode('ChdTdWJtaXRTaWduYXR1cmVSZXNwb25zZQ==');
+
+@$core.Deprecated('Use getSignatureRequestDescriptor instead')
+const GetSignatureRequest$json = {
+  '1': 'GetSignatureRequest',
+  '2': [
+    {'1': 'match_id', '3': 1, '4': 1, '5': 9, '10': 'matchId'},
+    {'1': 'table_id', '3': 2, '4': 1, '5': 9, '10': 'tableId'},
+  ],
+};
+
+/// Descriptor for `GetSignatureRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getSignatureRequestDescriptor = $convert.base64Decode(
+    'ChNHZXRTaWduYXR1cmVSZXF1ZXN0EhkKCG1hdGNoX2lkGAEgASgJUgdtYXRjaElkEhkKCHRhYm'
+    'xlX2lkGAIgASgJUgd0YWJsZUlk');
+
+@$core.Deprecated('Use getSignatureResponseDescriptor instead')
+const GetSignatureResponse$json = {
+  '1': 'GetSignatureResponse',
+  '2': [
+    {
+      '1': 'signature',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.tms.db.TeamSignature',
+      '9': 0,
+      '10': 'signature',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_signature'},
+  ],
+};
+
+/// Descriptor for `GetSignatureResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getSignatureResponseDescriptor = $convert.base64Decode(
+    'ChRHZXRTaWduYXR1cmVSZXNwb25zZRI4CglzaWduYXR1cmUYASABKAsyFS50bXMuZGIuVGVhbV'
+    'NpZ25hdHVyZUgAUglzaWduYXR1cmWIAQFCDAoKX3NpZ25hdHVyZQ==');

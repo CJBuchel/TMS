@@ -6,5 +6,6 @@ pub mod schedule;
 pub mod secret;
 pub mod table_name;
 pub mod team;
+pub mod team_signature;
 pub mod tournament;
 pub mod user;

@@ -101,6 +101,20 @@ pub struct PodName {
     #[prost(string, tag = "2")]
     pub pod_name: ::prost::alloc::string::String,
 }
+/// A team's hand-drawn sign-off agreeing to the score of a match.
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct TeamSignature {
+    #[prost(string, tag = "1")]
+    pub match_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub table_id: ::prost::alloc::string::String,
+    #[prost(string, tag = "3")]
+    pub team_id: ::prost::alloc::string::String,
+    #[prost(bytes = "vec", tag = "4")]
+    pub signature_png: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag = "5")]
+    pub signed_at_unix_ms: u64,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum Season {

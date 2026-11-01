@@ -11,6 +11,7 @@ import 'package:tms_client/views/login/login_view.dart' deferred as login;
 import 'package:tms_client/views/setup/setup_view.dart' deferred as setup;
 import 'package:tms_client/views/match_controller/match_controller_view.dart'
     deferred as match_controller;
+import 'package:tms_client/views/referee/referee_view.dart' deferred as referee;
 
 part 'router.g.dart';
 
@@ -144,6 +145,18 @@ GoRouter router(Ref ref) {
                     libraryLoader: match_controller.loadLibrary,
                     builder: (context) =>
                         match_controller.MatchControllerView(),
+                  ),
+                ),
+              ),
+              GoRoute(
+                name: AppRoute.referee.name,
+                path: AppRoute.referee.path,
+                pageBuilder: (context, state) => _buildTransitionPage(
+                  key: state.pageKey,
+                  child: DeferredWidget(
+                    libraryKey: AppRoute.referee.path,
+                    libraryLoader: referee.loadLibrary,
+                    builder: (context) => referee.RefereeView(),
                   ),
                 ),
               ),

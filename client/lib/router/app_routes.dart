@@ -31,11 +31,12 @@ enum AppRoute {
     railIndex: 1,
   ),
 
+  referee(path: '/referee', name: 'referee', railIndex: null),
+
   // Future routes (placeholders for cards that don't navigate yet)
   scoreboard(path: '/scoreboard', name: 'scoreboard', railIndex: null),
   timer(path: '/timer', name: 'timer', railIndex: null),
-  dashboard(path: '/dashboard', name: 'dashboard', railIndex: null),
-  referee(path: '/referee', name: 'referee', railIndex: null);
+  dashboard(path: '/dashboard', name: 'dashboard', railIndex: null);
 
   const AppRoute({
     required this.path,

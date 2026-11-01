@@ -12,6 +12,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 import '../common/common.pb.dart' as $0;
@@ -873,6 +874,112 @@ class PodName extends $pb.GeneratedMessage {
   $core.bool hasPodName() => $_has(0);
   @$pb.TagNumber(2)
   void clearPodName() => $_clearField(2);
+}
+
+/// A team's hand-drawn sign-off agreeing to the score of a match.
+class TeamSignature extends $pb.GeneratedMessage {
+  factory TeamSignature({
+    $core.String? matchId,
+    $core.String? tableId,
+    $core.String? teamId,
+    $core.List<$core.int>? signaturePng,
+    $fixnum.Int64? signedAtUnixMs,
+  }) {
+    final result = create();
+    if (matchId != null) result.matchId = matchId;
+    if (tableId != null) result.tableId = tableId;
+    if (teamId != null) result.teamId = teamId;
+    if (signaturePng != null) result.signaturePng = signaturePng;
+    if (signedAtUnixMs != null) result.signedAtUnixMs = signedAtUnixMs;
+    return result;
+  }
+
+  TeamSignature._();
+
+  factory TeamSignature.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory TeamSignature.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'TeamSignature',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'tms.db'),
+      createEmptyInstance: create)
+    ..aOS(1, _omitFieldNames ? '' : 'matchId')
+    ..aOS(2, _omitFieldNames ? '' : 'tableId')
+    ..aOS(3, _omitFieldNames ? '' : 'teamId')
+    ..a<$core.List<$core.int>>(
+        4, _omitFieldNames ? '' : 'signaturePng', $pb.PbFieldType.OY)
+    ..a<$fixnum.Int64>(
+        5, _omitFieldNames ? '' : 'signedAtUnixMs', $pb.PbFieldType.OU6,
+        defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TeamSignature clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  TeamSignature copyWith(void Function(TeamSignature) updates) =>
+      super.copyWith((message) => updates(message as TeamSignature))
+          as TeamSignature;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static TeamSignature create() => TeamSignature._();
+  @$core.override
+  TeamSignature createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static TeamSignature getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<TeamSignature>(create);
+  static TeamSignature? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get matchId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set matchId($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasMatchId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearMatchId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get tableId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set tableId($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasTableId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearTableId() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get teamId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set teamId($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasTeamId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearTeamId() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.List<$core.int> get signaturePng => $_getN(3);
+  @$pb.TagNumber(4)
+  set signaturePng($core.List<$core.int> value) => $_setBytes(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasSignaturePng() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSignaturePng() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $fixnum.Int64 get signedAtUnixMs => $_getI64(4);
+  @$pb.TagNumber(5)
+  set signedAtUnixMs($fixnum.Int64 value) => $_setInt64(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasSignedAtUnixMs() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSignedAtUnixMs() => $_clearField(5);
 }
 
 const $core.bool _omitFieldNames =

@@ -14,6 +14,26 @@ message StreamMatchesResponse {
   repeated GameMatchResponse game_matches = 1;
 }
 
+// Records the team's signature agreeing to the score for one table in a match.
+// The team is resolved server side from the table assignment.
+message SubmitSignatureRequest {
+  string match_id = 1;
+  string table_id = 2;
+  bytes signature_png = 3;
+}
+message SubmitSignatureResponse {}
+
+message GetSignatureRequest {
+  string match_id = 1;
+  string table_id = 2;
+}
+message GetSignatureResponse {
+  // Unset if the team has not signed yet
+  optional db.TeamSignature signature = 1;
+}
+
 service GameMatchService {
   rpc StreamMatches(StreamMatchesRequest) returns (stream StreamMatchesResponse);
+  rpc SubmitSignature(SubmitSignatureRequest) returns (SubmitSignatureResponse);
+  rpc GetSignature(GetSignatureRequest) returns (GetSignatureResponse);
 }

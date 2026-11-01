@@ -299,3 +299,22 @@ const PodName$json = {
 /// Descriptor for `PodName`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List podNameDescriptor =
     $convert.base64Decode('CgdQb2ROYW1lEhkKCHBvZF9uYW1lGAIgASgJUgdwb2ROYW1l');
+
+@$core.Deprecated('Use teamSignatureDescriptor instead')
+const TeamSignature$json = {
+  '1': 'TeamSignature',
+  '2': [
+    {'1': 'match_id', '3': 1, '4': 1, '5': 9, '10': 'matchId'},
+    {'1': 'table_id', '3': 2, '4': 1, '5': 9, '10': 'tableId'},
+    {'1': 'team_id', '3': 3, '4': 1, '5': 9, '10': 'teamId'},
+    {'1': 'signature_png', '3': 4, '4': 1, '5': 12, '10': 'signaturePng'},
+    {'1': 'signed_at_unix_ms', '3': 5, '4': 1, '5': 4, '10': 'signedAtUnixMs'},
+  ],
+};
+
+/// Descriptor for `TeamSignature`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List teamSignatureDescriptor = $convert.base64Decode(
+    'Cg1UZWFtU2lnbmF0dXJlEhkKCG1hdGNoX2lkGAEgASgJUgdtYXRjaElkEhkKCHRhYmxlX2lkGA'
+    'IgASgJUgd0YWJsZUlkEhcKB3RlYW1faWQYAyABKAlSBnRlYW1JZBIjCg1zaWduYXR1cmVfcG5n'
+    'GAQgASgMUgxzaWduYXR1cmVQbmcSKQoRc2lnbmVkX2F0X3VuaXhfbXMYBSABKARSDnNpZ25lZE'
+    'F0VW5peE1z');
